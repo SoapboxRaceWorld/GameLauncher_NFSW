@@ -10,6 +10,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.IO;
 using System.Xml;
+using GameLauncher.Properties;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -69,43 +70,45 @@ namespace GameLauncher {
             ConsoleLog("Log initialized", "info");
             ConsoleLog("GameLauncher initialized", "info");
 
+            email.Text = Settings.Default.email.ToString();
+            if (Settings.Default.rememberme == 1) {
+                rememberMe.Checked = true;
+            }
+
             //Fetch serverlist, and disable if failed to fetch.
-            try
-            {
+            var response = "";
+            try {
                 WebClient wc = new WebClientWithTimeout();
                 wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)");
                 string serverurl = "https://raw.githubusercontent.com/nilzao/soapbox-race-hill/master/serverlist-v2.txt";
-                var response = wc.DownloadString(serverurl);
+                response = wc.DownloadString(serverurl);
                 ConsoleLog("Fetching " + serverurl, "info");
 
                 if (String.IsNullOrEmpty(response)) {
-                    MessageBox.Show("Failed to fetch serverlist:\r\nServerlist is empty.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    System.Windows.Forms.Application.Exit();
+                    ConsoleLog("Failed to fetch serverlist. Serverlist is empty", "error");
+                    response = "Development Server;http://localhost:1337/";
                 }
+            } catch (Exception ex) {
+                ConsoleLog("Failed to fetch serverlist. " + ex.Message , "error");
+                response = "Development Server;http://localhost:1337/";
+            }
 
-                //Time to add servers
-                serverPick.DisplayMember = "Text";
-                serverPick.ValueMember = "Value";
+            //Time to add servers
+            serverPick.DisplayMember = "Text";
+            serverPick.ValueMember = "Value";
 
-                List<Object> items = new List<Object>();
+            List<Object> items = new List<Object>();
 
-                String[] substrings = response.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-                foreach (var substring in substrings)
+            String[] substrings = response.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+            foreach (var substring in substrings)
+            {
+                if (!String.IsNullOrEmpty(substring))
                 {
-                    if (!String.IsNullOrEmpty(substring))
-                    {
-                        String[] substrings2 = substring.Split(new string[] { ";" }, StringSplitOptions.None);
-                        items.Add(new { Text = substrings2[0], Value = substrings2[1] });
-                    }
+                    String[] substrings2 = substring.Split(new string[] { ";" }, StringSplitOptions.None);
+                    items.Add(new { Text = substrings2[0], Value = substrings2[1] });
                 }
-                serverPick.DataSource = items;
-
             }
-            catch (Exception ex) {
-                MessageBox.Show("Failed to fetch serverlist:\r\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                System.Windows.Forms.Application.Exit();
-            }
-
+            serverPick.DataSource = items;
 
             serverStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.749999f, FontStyle.Bold, GraphicsUnit.Point, 0);
             serverStatusImg.Location = new Point(-16, -16);
@@ -149,46 +152,57 @@ namespace GameLauncher {
             this.minimizebtn.BackgroundImage = ((System.Drawing.Image)(Properties.Resources.minimize));
         }
 
-        private void loginButton_Click(object sender, EventArgs e)
-        {
+        private void loginButton_Click(object sender, EventArgs e) {
             string serverIP = serverPick.SelectedValue.ToString();
             string username = email.Text.ToString();
+            string encryptedpassword = "";
+            string serverLoginResponse = "";
 
             HashAlgorithm algorithm = SHA1.Create();
             StringBuilder sb = new StringBuilder();
             foreach (byte b in algorithm.ComputeHash(Encoding.UTF8.GetBytes(password.Text.ToString()))) {
                 sb.Append(b.ToString("X2"));
             }
-            string encryptedpassword = sb.ToString();
+
+            encryptedpassword = sb.ToString();
+            ConsoleLog("Remember account details is set to " + rememberMe.Checked.ToString(), "info");
+
+            if (rememberMe.Checked) {
+                Settings.Default.email = username;
+                Settings.Default.rememberme = 1;
+                Settings.Default.Save();
+            }
 
             ConsoleLog("Trying to login into " + serverPick.GetItemText(serverPick.SelectedItem) + " (" + serverIP + ")", "info");
 
-            try
-            {
+            try {
                 WebClient wc = new WebClientWithTimeout();
                 wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)");
 
                 string BuildURL = serverIP + "/soapbox-race-core/Engine.svc/User/authenticateUser?email=" + username + "&password=" + encryptedpassword;
-                var response = wc.DownloadString(BuildURL);
+                ConsoleLog("Full URL: " + BuildURL, "info");
 
-                ConsoleLog("Looks like its success, but XML Parser is not implemented, yet." + response.Replace("\n", "").Replace("  ", ""), "warning");
-            }
-            catch (WebException ex) {
+                serverLoginResponse = wc.DownloadString(BuildURL);
+            } catch (WebException ex) {
                 if (ex.Status == WebExceptionStatus.ProtocolError) {
                     HttpWebResponse serverReply = (HttpWebResponse)ex.Response;
                     if ((int)serverReply.StatusCode == 500) {
                         using (StreamReader sr = new StreamReader(serverReply.GetResponseStream())) {
-                            var response = sr.ReadToEnd();
-                            ConsoleLog("Looks like its success, but XML Parser is not implemented, yet." + response.Replace("\n", "").Replace("  ", ""), "warning");
+                            serverLoginResponse = sr.ReadToEnd();
                         }
                     } else {
-                        //Yup, its an error
+                        serverLoginResponse = "ERROR";
                         ConsoleLog("Failed to login to server: " + ex.Message, "error");
                     }
                 } else {
+                    serverLoginResponse = "ERROR";
                     ConsoleLog("Failed to login to server: " + ex.Message, "error");
                 }
             }
+
+            string consoleXMLOutput = serverLoginResponse.Replace("\r", "").Replace("\n", "").Replace("  ", "").Replace("	", "");
+            ConsoleLog("Looks like its success, but XML Parser is not implemented, yet." + consoleXMLOutput, "warning");
+
         }
     }
 }

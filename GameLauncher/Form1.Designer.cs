@@ -39,6 +39,7 @@
             this.loginButton = new System.Windows.Forms.Label();
             this.currentWindowInfo = new System.Windows.Forms.Label();
             this.consoleLog = new System.Windows.Forms.RichTextBox();
+            this.rememberMe = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
@@ -68,17 +69,18 @@
             // 
             // email
             // 
-            this.email.Location = new System.Drawing.Point(34, 182);
+            this.email.Location = new System.Drawing.Point(33, 183);
             this.email.Name = "email";
-            this.email.Size = new System.Drawing.Size(209, 20);
+            this.email.Size = new System.Drawing.Size(210, 20);
             this.email.TabIndex = 1;
             // 
             // password
             // 
-            this.password.Location = new System.Drawing.Point(277, 182);
+            this.password.Location = new System.Drawing.Point(276, 183);
+            this.password.MaxLength = 16;
             this.password.Name = "password";
             this.password.PasswordChar = '•';
-            this.password.Size = new System.Drawing.Size(209, 20);
+            this.password.Size = new System.Drawing.Size(210, 20);
             this.password.TabIndex = 2;
             // 
             // serverStatus
@@ -151,12 +153,27 @@
             this.consoleLog.TabIndex = 9;
             this.consoleLog.Text = "";
             // 
+            // rememberMe
+            // 
+            this.rememberMe.AutoSize = true;
+            this.rememberMe.BackColor = System.Drawing.Color.Transparent;
+            this.rememberMe.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.rememberMe.ForeColor = System.Drawing.Color.White;
+            this.rememberMe.Location = new System.Drawing.Point(33, 209);
+            this.rememberMe.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.rememberMe.Name = "rememberMe";
+            this.rememberMe.Size = new System.Drawing.Size(268, 21);
+            this.rememberMe.TabIndex = 3;
+            this.rememberMe.Text = "REMEMBER MY EMAIL ADDRESS";
+            this.rememberMe.UseVisualStyleBackColor = false;
+            // 
             // mainScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.ClientSize = new System.Drawing.Size(790, 490);
+            this.Controls.Add(this.rememberMe);
             this.Controls.Add(this.consoleLog);
             this.Controls.Add(this.currentWindowInfo);
             this.Controls.Add(this.loginButton);
@@ -195,6 +212,7 @@
         private System.Windows.Forms.Label loginButton;
         private System.Windows.Forms.Label currentWindowInfo;
         private System.Windows.Forms.RichTextBox consoleLog;
+        private System.Windows.Forms.CheckBox rememberMe;
     }
 }
 
