@@ -38,6 +38,7 @@
             this.serverPick = new System.Windows.Forms.ComboBox();
             this.loginButton = new System.Windows.Forms.Label();
             this.currentWindowInfo = new System.Windows.Forms.Label();
+            this.consoleLog = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
@@ -137,12 +138,26 @@
             this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN:";
             this.currentWindowInfo.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
+            // consoleLog
+            // 
+            this.consoleLog.BackColor = System.Drawing.Color.Black;
+            this.consoleLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.consoleLog.ForeColor = System.Drawing.Color.White;
+            this.consoleLog.Location = new System.Drawing.Point(35, 389);
+            this.consoleLog.Name = "consoleLog";
+            this.consoleLog.ReadOnly = true;
+            this.consoleLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.consoleLog.Size = new System.Drawing.Size(719, 88);
+            this.consoleLog.TabIndex = 9;
+            this.consoleLog.Text = "";
+            // 
             // mainScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.ClientSize = new System.Drawing.Size(790, 490);
+            this.Controls.Add(this.consoleLog);
             this.Controls.Add(this.currentWindowInfo);
             this.Controls.Add(this.loginButton);
             this.Controls.Add(this.serverPick);
@@ -153,6 +168,8 @@
             this.Controls.Add(this.minimizebtn);
             this.Controls.Add(this.closebtn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "mainScreen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GameLauncher";
@@ -177,6 +194,7 @@
         private System.Windows.Forms.ComboBox serverPick;
         private System.Windows.Forms.Label loginButton;
         private System.Windows.Forms.Label currentWindowInfo;
+        private System.Windows.Forms.RichTextBox consoleLog;
     }
 }
 

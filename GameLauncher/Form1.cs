@@ -16,6 +16,32 @@ namespace GameLauncher {
         private const int WM_NCHITTEST = 0x84;
         private const int HT_CLIENT = 0x1;
         private const int HT_CAPTION = 0x2;
+        public int DEBUG = 1;
+
+        public void ConsoleLog(string e, string type) {
+            consoleLog.SelectionStart = consoleLog.TextLength;
+            consoleLog.SelectionLength = 0;
+            consoleLog.SelectionFont = new Font(consoleLog.Font, FontStyle.Bold);
+            consoleLog.SelectionColor = Color.Gray;
+            consoleLog.AppendText("[" + DateTime.Now.ToString() + "] ");
+
+            if (type == "warning") {
+                consoleLog.SelectionColor = Color.Yellow;
+                consoleLog.AppendText("[WARN] ");
+            } else if(type == "info") {
+                consoleLog.SelectionColor = Color.Cyan;
+                consoleLog.AppendText("[INFO] ");
+            } else if(type == "error") {
+                consoleLog.SelectionColor = Color.Red;
+                consoleLog.AppendText("[ERROR] ");
+            }
+
+            consoleLog.SelectionColor = consoleLog.ForeColor;
+            consoleLog.SelectionFont = new Font(consoleLog.Font, FontStyle.Regular);
+            consoleLog.AppendText(e);
+            consoleLog.AppendText("\r\n");
+            consoleLog.ScrollToCaret();
+        }
 
         protected override void WndProc(ref Message m) {
             base.WndProc(ref m);
@@ -25,6 +51,8 @@ namespace GameLauncher {
         }
 
         public mainScreen() {
+            MaximizeBox = false;
+
             InitializeComponent();
 
             closebtn.MouseEnter += new EventHandler(closebtn_MouseEnter);
@@ -37,12 +65,18 @@ namespace GameLauncher {
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
-            //First, fetch serverlist, and disable if failed to fetch.
-            try {
+            //Console output to textbox
+            ConsoleLog("Log initialized", "info");
+            ConsoleLog("GameLauncher initialized", "info");
+
+            //Fetch serverlist, and disable if failed to fetch.
+            try
+            {
                 WebClient wc = new WebClientWithTimeout();
                 wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)");
                 string serverurl = "https://raw.githubusercontent.com/nilzao/soapbox-race-hill/master/serverlist-v2.txt";
                 var response = wc.DownloadString(serverurl);
+                ConsoleLog("Fetching " + serverurl, "info");
 
                 if (String.IsNullOrEmpty(response)) {
                     MessageBox.Show("Failed to fetch serverlist:\r\nServerlist is empty.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -77,10 +111,10 @@ namespace GameLauncher {
             serverStatusImg.Location = new Point(-16, -16);
 
             //ONLINE: 
-            serverStatusImg.Location = new Point(20, 323);
-            serverStatusImg.BackgroundImage = ((System.Drawing.Image)(Properties.Resources.server_online));
-            serverStatus.ForeColor = Color.FromArgb(181, 255, 33);
-            serverStatus.Text = "This server is currenly up and running.";
+            //serverStatusImg.Location = new Point(20, 323);
+            //serverStatusImg.BackgroundImage = ((System.Drawing.Image)(Properties.Resources.server_online));
+            //serverStatus.ForeColor = Color.FromArgb(181, 255, 33);
+            //serverStatus.Text = "This server is currenly up and running.";
 
             //OFFLINE: 
             //serverStatusImg.Location = new Point(20, 335); 
@@ -127,29 +161,32 @@ namespace GameLauncher {
             }
             string encryptedpassword = sb.ToString();
 
-            try {
+            ConsoleLog("Trying to login into " + serverPick.GetItemText(serverPick.SelectedItem) + " (" + serverIP + ")", "info");
+
+            try
+            {
                 WebClient wc = new WebClientWithTimeout();
                 wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)");
 
                 string BuildURL = serverIP + "/soapbox-race-core/Engine.svc/User/authenticateUser?email=" + username + "&password=" + encryptedpassword;
                 var response = wc.DownloadString(BuildURL);
 
-                MessageBox.Show(response);
-            } catch (WebException ex) {
+                ConsoleLog("Looks like its success, but XML Parser is not implemented, yet." + response.Replace("\n", "").Replace("  ", ""), "warning");
+            }
+            catch (WebException ex) {
                 if (ex.Status == WebExceptionStatus.ProtocolError) {
                     HttpWebResponse serverReply = (HttpWebResponse)ex.Response;
                     if ((int)serverReply.StatusCode == 500) {
                         using (StreamReader sr = new StreamReader(serverReply.GetResponseStream())) {
                             var response = sr.ReadToEnd();
-
-                            MessageBox.Show(response);
+                            ConsoleLog("Looks like its success, but XML Parser is not implemented, yet." + response.Replace("\n", "").Replace("  ", ""), "warning");
                         }
                     } else {
                         //Yup, its an error
-                        MessageBox.Show("Failed to login to server:\r\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ConsoleLog("Failed to login to server: " + ex.Message, "error");
                     }
                 } else {
-                    MessageBox.Show("Failed to login to server:\r\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ConsoleLog("Failed to login to server: " + ex.Message, "error");
                 }
             }
         }
