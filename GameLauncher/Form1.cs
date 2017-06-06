@@ -71,9 +71,9 @@ namespace GameLauncher {
             minimizebtn.MouseLeave += new EventHandler(minimizebtn_MouseLeave);
             minimizebtn.Click += new EventHandler(minimizebtn_Click);
 
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainScreen_MouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainScreen_MouseMove);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mainScreen_MouseUp);
+            this.MouseDown += new MouseEventHandler(this.mainScreen_MouseDown);
+            this.MouseMove += new MouseEventHandler(this.mainScreen_MouseMove);
+            this.MouseUp += new MouseEventHandler(this.mainScreen_MouseUp);
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
