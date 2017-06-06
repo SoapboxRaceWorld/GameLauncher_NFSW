@@ -14,10 +14,21 @@ using GameLauncher.Properties;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
-        private const int WM_NCHITTEST = 0x84;
-        private const int HT_CLIENT = 0x1;
-        private const int HT_CAPTION = 0x2;
-        public int DEBUG = 1;
+        Point mouseDownPoint = Point.Empty;
+
+        private void mainScreen_MouseDown(object sender, MouseEventArgs e) {
+            mouseDownPoint = new Point(e.X, e.Y);
+        }
+
+        private void mainScreen_MouseUp(object sender, MouseEventArgs e) {
+            mouseDownPoint = Point.Empty;
+        }
+
+        private void mainScreen_MouseMove(object sender, MouseEventArgs e) {
+            if (mouseDownPoint.IsEmpty) { return; }
+            Form f = sender as Form;
+            f.Location = new Point(f.Location.X + (e.X - mouseDownPoint.X), f.Location.Y + (e.Y - mouseDownPoint.Y));
+        }
 
         public void ConsoleLog(string e, string type) {
             consoleLog.SelectionStart = consoleLog.TextLength;
@@ -35,6 +46,9 @@ namespace GameLauncher {
             } else if(type == "error") {
                 consoleLog.SelectionColor = Color.Red;
                 consoleLog.AppendText("[ERROR] ");
+            } else if(type == "success") {
+                consoleLog.SelectionColor = Color.Lime;
+                consoleLog.AppendText("[SUCCESS] ");
             }
 
             consoleLog.SelectionColor = consoleLog.ForeColor;
@@ -42,13 +56,6 @@ namespace GameLauncher {
             consoleLog.AppendText(e);
             consoleLog.AppendText("\r\n");
             consoleLog.ScrollToCaret();
-        }
-
-        protected override void WndProc(ref Message m) {
-            base.WndProc(ref m);
-            if (m.Msg == WM_NCHITTEST) {
-                m.Result = (IntPtr)(HT_CAPTION);
-            }
         }
 
         public mainScreen() {
@@ -63,6 +70,10 @@ namespace GameLauncher {
             minimizebtn.MouseEnter += new EventHandler(minimizebtn_MouseEnter);
             minimizebtn.MouseLeave += new EventHandler(minimizebtn_MouseLeave);
             minimizebtn.Click += new EventHandler(minimizebtn_Click);
+
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainScreen_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainScreen_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mainScreen_MouseUp);
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
