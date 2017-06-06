@@ -111,56 +111,54 @@ namespace GameLauncher {
             List<Object> items = new List<Object>();
 
             String[] substrings = response.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-            foreach (var substring in substrings)
-            {
-                if (!String.IsNullOrEmpty(substring))
-                {
+            foreach (var substring in substrings) {
+                if (!String.IsNullOrEmpty(substring)) {
                     String[] substrings2 = substring.Split(new string[] { ";" }, StringSplitOptions.None);
                     items.Add(new { Text = substrings2[0], Value = substrings2[1] });
                 }
             }
-            serverPick.DataSource = items;
 
-            serverStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.749999f, FontStyle.Bold, GraphicsUnit.Point, 0);
+            serverPick.DataSource = items;
+            serverStatus.Font = new Font("Microsoft Sans Serif", 9.749999f, FontStyle.Bold, GraphicsUnit.Point, 0);
             serverStatusImg.Location = new Point(-16, -16);
 
             //ONLINE: 
             //serverStatusImg.Location = new Point(20, 323);
-            //serverStatusImg.BackgroundImage = ((System.Drawing.Image)(Properties.Resources.server_online));
+            //serverStatusImg.BackgroundImage = Properties.Resources.server_online;
             //serverStatus.ForeColor = Color.FromArgb(181, 255, 33);
             //serverStatus.Text = "This server is currenly up and running.";
 
             //OFFLINE: 
             //serverStatusImg.Location = new Point(20, 335); 
-            //serverStatusImg.BackgroundImage = ((System.Drawing.Image)(Properties.Resources.server_offline));
+            //serverStatusImg.BackgroundImage = Properties.Resources.server_offline;
             //serverStatus.ForeColor = Color.FromArgb(227, 88, 50);
             //serverStatus.Text = "This server is currently down. Thanks for your patience.";
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
-            this.closebtn.BackgroundImage = ((System.Drawing.Image)(Properties.Resources.close_click));
-            System.Windows.Forms.Application.Exit();
+            this.closebtn.BackgroundImage = Properties.Resources.close_click;
+            Application.Exit();
         }
 
         private void closebtn_MouseEnter(object sender, EventArgs e) {
-            this.closebtn.BackgroundImage = ((System.Drawing.Image)(Properties.Resources.close_hover));
+            this.closebtn.BackgroundImage = Properties.Resources.close_hover;
         }
 
         private void closebtn_MouseLeave(object sender, EventArgs e) {
-            this.closebtn.BackgroundImage = ((System.Drawing.Image)(Properties.Resources.close));
+            this.closebtn.BackgroundImage = Properties.Resources.close;
         }
 
         private void minimizebtn_Click(object sender, EventArgs e) {
-            this.minimizebtn.BackgroundImage = ((System.Drawing.Image)(Properties.Resources.minimize_click));
+            this.minimizebtn.BackgroundImage = Properties.Resources.minimize_click;
             this.WindowState = FormWindowState.Minimized;
         }
 
         private void minimizebtn_MouseEnter(object sender, EventArgs e) {
-            this.minimizebtn.BackgroundImage = ((System.Drawing.Image)(Properties.Resources.minimize_hover));
+            this.minimizebtn.BackgroundImage = Properties.Resources.minimize_hover;
         }
 
         private void minimizebtn_MouseLeave(object sender, EventArgs e) {
-            this.minimizebtn.BackgroundImage = ((System.Drawing.Image)(Properties.Resources.minimize));
+            this.minimizebtn.BackgroundImage = Properties.Resources.minimize;
         }
 
         private void loginButton_Click(object sender, EventArgs e) {
@@ -213,7 +211,6 @@ namespace GameLauncher {
 
             string consoleXMLOutput = serverLoginResponse.Replace("\r", "").Replace("\n", "").Replace("  ", "").Replace("	", "");
             ConsoleLog("Looks like its success, but XML Parser is not implemented, yet." + consoleXMLOutput, "warning");
-
         }
     }
 }
