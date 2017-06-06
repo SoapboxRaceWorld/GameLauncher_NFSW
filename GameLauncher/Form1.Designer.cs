@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainScreen));
             this.closebtn = new System.Windows.Forms.PictureBox();
             this.minimizebtn = new System.Windows.Forms.PictureBox();
@@ -40,6 +41,8 @@
             this.currentWindowInfo = new System.Windows.Forms.Label();
             this.consoleLog = new System.Windows.Forms.RichTextBox();
             this.rememberMe = new System.Windows.Forms.CheckBox();
+            this.clearConsole = new System.Windows.Forms.Button();
+            this.Timeout = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
@@ -120,12 +123,13 @@
             this.loginButton.BackColor = System.Drawing.Color.Transparent;
             this.loginButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.loginButton.ForeColor = System.Drawing.Color.Silver;
+            this.loginButton.Image = global::GameLauncher.Properties.Resources.button_disable;
             this.loginButton.Location = new System.Drawing.Point(340, 250);
             this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(35, 13);
+            this.loginButton.Padding = new System.Windows.Forms.Padding(53, 12, 53, 12);
+            this.loginButton.Size = new System.Drawing.Size(149, 37);
             this.loginButton.TabIndex = 6;
-            this.loginButton.Text = "label1";
-            this.loginButton.Click += new System.EventHandler(this.loginButton_Click);
+            this.loginButton.Text = "LOG IN";
             // 
             // currentWindowInfo
             // 
@@ -148,7 +152,7 @@
             this.consoleLog.Location = new System.Drawing.Point(35, 389);
             this.consoleLog.Name = "consoleLog";
             this.consoleLog.ReadOnly = true;
-            this.consoleLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.consoleLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.consoleLog.Size = new System.Drawing.Size(719, 88);
             this.consoleLog.TabIndex = 9;
             this.consoleLog.Text = "";
@@ -167,12 +171,27 @@
             this.rememberMe.Text = "REMEMBER MY EMAIL ADDRESS";
             this.rememberMe.UseVisualStyleBackColor = false;
             // 
+            // clearConsole
+            // 
+            this.clearConsole.Location = new System.Drawing.Point(758, 387);
+            this.clearConsole.Name = "clearConsole";
+            this.clearConsole.Size = new System.Drawing.Size(10, 92);
+            this.clearConsole.TabIndex = 10;
+            this.clearConsole.Text = "Clear Console";
+            this.clearConsole.UseVisualStyleBackColor = true;
+            this.clearConsole.Click += new System.EventHandler(this.clearConsole_Click);
+            // 
+            // Timeout
+            // 
+            this.Timeout.Interval = 3000;
+            // 
             // mainScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.ClientSize = new System.Drawing.Size(790, 490);
+            this.Controls.Add(this.clearConsole);
             this.Controls.Add(this.rememberMe);
             this.Controls.Add(this.consoleLog);
             this.Controls.Add(this.currentWindowInfo);
@@ -213,6 +232,8 @@
         private System.Windows.Forms.Label currentWindowInfo;
         private System.Windows.Forms.RichTextBox consoleLog;
         private System.Windows.Forms.CheckBox rememberMe;
+        private System.Windows.Forms.Button clearConsole;
+        private System.Windows.Forms.Timer Timeout;
     }
 }
 

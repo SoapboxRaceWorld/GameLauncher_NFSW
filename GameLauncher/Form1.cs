@@ -10,7 +10,9 @@ using System.Net;
 using System.Security.Cryptography;
 using System.IO;
 using System.Xml;
+using System.Threading.Tasks;
 using GameLauncher.Properties;
+using SlimDX.DirectInput;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -59,9 +61,10 @@ namespace GameLauncher {
         }
 
         public mainScreen() {
-            MaximizeBox = false;
-
             InitializeComponent();
+
+            MaximizeBox = false;
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
 
             closebtn.MouseEnter += new EventHandler(closebtn_MouseEnter);
             closebtn.MouseLeave += new EventHandler(closebtn_MouseLeave);
@@ -70,6 +73,14 @@ namespace GameLauncher {
             minimizebtn.MouseEnter += new EventHandler(minimizebtn_MouseEnter);
             minimizebtn.MouseLeave += new EventHandler(minimizebtn_MouseLeave);
             minimizebtn.Click += new EventHandler(minimizebtn_Click);
+
+            loginButton.MouseEnter += new EventHandler(loginButton_MouseEnter);
+            loginButton.MouseLeave += new EventHandler(loginButton_MouseLeave);
+            loginButton.Click += new EventHandler(loginButton_Click);
+            loginButton.MouseUp += new MouseEventHandler(loginButton_MouseUp);
+            loginButton.MouseDown += new MouseEventHandler(loginButton_MouseDown);
+
+            serverPick.TextChanged += new EventHandler(serverPick_TextChanged);
 
             this.MouseDown += new MouseEventHandler(this.mainScreen_MouseDown);
             this.MouseMove += new MouseEventHandler(this.mainScreen_MouseMove);
@@ -80,6 +91,19 @@ namespace GameLauncher {
             //Console output to textbox
             ConsoleLog("Log initialized", "info");
             ConsoleLog("GameLauncher initialized", "info");
+
+            //Detect controller (if any)
+            var directInput = new DirectInput();
+            var controllerName = "";
+
+            foreach (var deviceInstance in directInput.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly)) {
+                controllerName = deviceInstance.ProductName;
+                if(controllerName == "Wireless Controller") {
+                    ConsoleLog("Found a controller. However, this controller might not work without a valid controller emulation, like DS4Windows", "warning");
+                } else {
+                    ConsoleLog("Found a valid controller: " + controllerName, "success");
+                }
+            }
 
             email.Text = Settings.Default.email.ToString();
             if (Settings.Default.rememberme == 1) {
@@ -120,19 +144,6 @@ namespace GameLauncher {
 
             serverPick.DataSource = items;
             serverStatus.Font = new Font("Microsoft Sans Serif", 9.749999f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            serverStatusImg.Location = new Point(-16, -16);
-
-            //ONLINE: 
-            //serverStatusImg.Location = new Point(20, 323);
-            //serverStatusImg.BackgroundImage = Properties.Resources.server_online;
-            //serverStatus.ForeColor = Color.FromArgb(181, 255, 33);
-            //serverStatus.Text = "This server is currenly up and running.";
-
-            //OFFLINE: 
-            //serverStatusImg.Location = new Point(20, 335); 
-            //serverStatusImg.BackgroundImage = Properties.Resources.server_offline;
-            //serverStatus.ForeColor = Color.FromArgb(227, 88, 50);
-            //serverStatus.Text = "This server is currently down. Thanks for your patience.";
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
@@ -161,7 +172,17 @@ namespace GameLauncher {
             this.minimizebtn.BackgroundImage = Properties.Resources.minimize;
         }
 
+        private void loginButton_MouseUp(object sender, EventArgs e) {
+            this.loginButton.Image = Properties.Resources.button_hover;
+        }
+
+        private void loginButton_MouseDown(object sender, EventArgs e) {
+            this.loginButton.Image = Properties.Resources.button_click;
+        }
+
         private void loginButton_Click(object sender, EventArgs e) {
+            this.loginButton.Image = Properties.Resources.button_hover;
+
             string serverIP = serverPick.SelectedValue.ToString();
             string username = email.Text.ToString();
             string encryptedpassword = "";
@@ -179,8 +200,12 @@ namespace GameLauncher {
             if (rememberMe.Checked) {
                 Settings.Default.email = username;
                 Settings.Default.rememberme = 1;
-                Settings.Default.Save();
+            } else {
+                Settings.Default.email = "";
+                Settings.Default.rememberme = 0;
             }
+
+            Settings.Default.Save();
 
             ConsoleLog("Trying to login into " + serverPick.GetItemText(serverPick.SelectedItem) + " (" + serverIP + ")", "info");
 
@@ -200,17 +225,52 @@ namespace GameLauncher {
                             serverLoginResponse = sr.ReadToEnd();
                         }
                     } else {
-                        serverLoginResponse = "ERROR";
-                        ConsoleLog("Failed to login to server: " + ex.Message, "error");
+                        serverLoginResponse = ex.Message;
                     }
                 } else {
-                    serverLoginResponse = "ERROR";
-                    ConsoleLog("Failed to login to server: " + ex.Message, "error");
+                    serverLoginResponse = ex.Message;
                 }
             }
 
             string consoleXMLOutput = serverLoginResponse.Replace("\r", "").Replace("\n", "").Replace("  ", "").Replace("	", "");
-            ConsoleLog("Looks like its success, but XML Parser is not implemented, yet." + consoleXMLOutput, "warning");
+            ConsoleLog("Looks like its success, but XML Parser is not implemented, yet: " + consoleXMLOutput, "warning");
+        }
+
+        private void loginButton_MouseEnter(object sender, EventArgs e) {
+            this.loginButton.Image = Properties.Resources.button_hover;
+        }
+
+        private void loginButton_MouseLeave(object sender, EventArgs e) {
+            this.loginButton.Image = Properties.Resources.button_disable;
+        }
+
+        private void clearConsole_Click(object sender, EventArgs e) {
+            consoleLog.Text = "";
+        }
+
+        private void serverPick_TextChanged(object sender, EventArgs e) {
+            string serverIP = serverPick.SelectedValue.ToString();
+
+            serverStatusImg.Location = new Point(-16, -16);
+            serverStatus.ForeColor = Color.White;
+            serverStatus.Text = "Retrieving server status...";
+
+            var client = new WebClient();
+            Uri StringToUri = new Uri(serverIP + "/soapbox-race-core/Engine.svc/");
+            client.DownloadStringAsync(StringToUri);
+            client.DownloadStringCompleted += (sender2, e2) => {
+                if (e2.Error != null) {
+                    serverStatusImg.Location = new Point(20, 335);
+                    serverStatusImg.BackgroundImage = Properties.Resources.server_offline;
+                    serverStatus.ForeColor = Color.FromArgb(227, 88, 50);
+                    serverStatus.Text = "This server is currently down. Thanks for your patience.";
+                } else {
+                    serverStatusImg.Location = new Point(20, 323);
+                    serverStatusImg.BackgroundImage = Properties.Resources.server_online;
+                    serverStatus.ForeColor = Color.FromArgb(181, 255, 33);
+                    serverStatus.Text = "This server is currenly up and running.";
+                }
+            };
         }
     }
 }
