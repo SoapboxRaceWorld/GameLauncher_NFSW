@@ -168,19 +168,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\button_click1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\button_disable1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\button_enable1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\button_hover1.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\button_hover.png" />
+    <None Include="Resources\button_enable.png" />
+    <None Include="Resources\button_disable.png" />
+    <None Include="Resources\button_click.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

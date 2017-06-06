@@ -10,7 +10,6 @@ using System.Net;
 using System.Security.Cryptography;
 using System.IO;
 using System.Xml;
-using System.Threading.Tasks;
 using GameLauncher.Properties;
 using SlimDX.DirectInput;
 
