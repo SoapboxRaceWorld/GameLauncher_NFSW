@@ -43,6 +43,7 @@
             this.rememberMe = new System.Windows.Forms.CheckBox();
             this.clearConsole = new System.Windows.Forms.Button();
             this.Timeout = new System.Windows.Forms.Timer(this.components);
+            this.onlineCount = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
@@ -185,12 +186,26 @@
             // 
             this.Timeout.Interval = 3000;
             // 
+            // onlineCount
+            // 
+            this.onlineCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.onlineCount.BackColor = System.Drawing.Color.Transparent;
+            this.onlineCount.ForeColor = System.Drawing.Color.White;
+            this.onlineCount.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.onlineCount.Location = new System.Drawing.Point(607, 329);
+            this.onlineCount.Name = "onlineCount";
+            this.onlineCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.onlineCount.Size = new System.Drawing.Size(161, 13);
+            this.onlineCount.TabIndex = 11;
+            this.onlineCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // mainScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.ClientSize = new System.Drawing.Size(790, 490);
+            this.Controls.Add(this.onlineCount);
             this.Controls.Add(this.clearConsole);
             this.Controls.Add(this.rememberMe);
             this.Controls.Add(this.consoleLog);
@@ -234,6 +249,7 @@
         private System.Windows.Forms.CheckBox rememberMe;
         private System.Windows.Forms.Button clearConsole;
         private System.Windows.Forms.Timer Timeout;
+        private System.Windows.Forms.Label onlineCount;
     }
 }
 

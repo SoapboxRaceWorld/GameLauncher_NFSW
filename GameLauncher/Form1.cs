@@ -114,18 +114,13 @@ namespace GameLauncher {
             try {
                 WebClient wc = new WebClientWithTimeout();
                 wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)");
-                string serverurl = "https://raw.githubusercontent.com/nilzao/soapbox-race-hill/master/serverlist-v2.txt";
+                string serverurl = "http://nfsw.metonator.ct8.pl/serverlist.txt";
                 response = wc.DownloadString(serverurl);
                 ConsoleLog("Fetching " + serverurl, "info");
-
-                if (String.IsNullOrEmpty(response)) {
-                    ConsoleLog("Failed to fetch serverlist. Serverlist is empty", "error");
-                    response = "Development Server;http://localhost:1337/";
-                }
             } catch (Exception ex) {
                 ConsoleLog("Failed to fetch serverlist. " + ex.Message , "error");
-                response = "Development Server;http://localhost:1337/";
             }
+
 
             //Time to add servers
             serverPick.DisplayMember = "Text";
@@ -143,6 +138,7 @@ namespace GameLauncher {
 
             serverPick.DataSource = items;
             serverStatus.Font = new Font("Microsoft Sans Serif", 9.749999f, FontStyle.Bold, GraphicsUnit.Point, 0);
+            onlineCount.Font = new Font("Microsoft Sans Serif", 9.749999f, FontStyle.Bold, GraphicsUnit.Point, 0);
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
@@ -212,7 +208,7 @@ namespace GameLauncher {
                 WebClient wc = new WebClientWithTimeout();
                 wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)");
 
-                string BuildURL = serverIP + "/soapbox-race-core/Engine.svc/User/authenticateUser?email=" + username + "&password=" + encryptedpassword;
+                string BuildURL = serverIP + "User/authenticateUser?email=" + username + "&password=" + encryptedpassword;
                 ConsoleLog("Full URL: " + BuildURL, "info");
 
                 serverLoginResponse = wc.DownloadString(BuildURL);
@@ -253,9 +249,10 @@ namespace GameLauncher {
             serverStatusImg.Location = new Point(-16, -16);
             serverStatus.ForeColor = Color.White;
             serverStatus.Text = "Retrieving server status...";
+            onlineCount.Text = "";
 
             var client = new WebClient();
-            Uri StringToUri = new Uri(serverIP + "/soapbox-race-core/Engine.svc/");
+            Uri StringToUri = new Uri(serverIP + "OnlineUsers/getOnline");
             client.DownloadStringAsync(StringToUri);
             client.DownloadStringCompleted += (sender2, e2) => {
                 if (e2.Error != null) {
@@ -263,11 +260,13 @@ namespace GameLauncher {
                     serverStatusImg.BackgroundImage = Properties.Resources.server_offline;
                     serverStatus.ForeColor = Color.FromArgb(227, 88, 50);
                     serverStatus.Text = "This server is currently down. Thanks for your patience.";
-                } else {
+                }
+                else {
                     serverStatusImg.Location = new Point(20, 323);
                     serverStatusImg.BackgroundImage = Properties.Resources.server_online;
                     serverStatus.ForeColor = Color.FromArgb(181, 255, 33);
                     serverStatus.Text = "This server is currenly up and running.";
+                    onlineCount.Text = "Players on server: " + e2.Result;
                 }
             };
         }
