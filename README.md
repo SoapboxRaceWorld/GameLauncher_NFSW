@@ -1,4 +1,4 @@
-# GameLauncher_NFSW
+# GameLauncher_NFSW [![Build Status](https://travis-ci.org/metonator/GameLauncher_NFSW.svg?branch=master)](https://travis-ci.org/metonator/GameLauncher_NFSW)
 A Rewrite of GameLauncher taken from Need For Speed: World Edit Add topics
 
 ## Todo
