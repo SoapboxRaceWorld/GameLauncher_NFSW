@@ -12,6 +12,10 @@ using System.IO;
 using System.Xml;
 using GameLauncher.Properties;
 using SlimDX.DirectInput;
+using System.Drawing.Text;
+using System.Runtime.InteropServices;
+using System.Reflection;
+using GameLauncher.Resources;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -61,6 +65,7 @@ namespace GameLauncher {
 
         public mainScreen() {
             InitializeComponent();
+            ApplyEmbeddedFonts();
 
             MaximizeBox = false;
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
@@ -98,6 +103,7 @@ namespace GameLauncher {
             foreach (var deviceInstance in directInput.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly)) {
                 controllerName = deviceInstance.ProductName;
                 if(controllerName == "Wireless Controller") {
+                    /* @TODO@ Detection of 3rd party gamepad emulation like DS4Windows or InputMapper */
                     ConsoleLog("Found a controller. However, this controller might not work without a valid controller emulation, like DS4Windows", "warning");
                 } else {
                     ConsoleLog("Found a valid controller: " + controllerName, "success");
@@ -113,7 +119,8 @@ namespace GameLauncher {
             var response = "";
             try {
                 WebClient wc = new WebClientWithTimeout();
-                wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)");
+                wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
+
                 string serverurl = "http://nfsw.metonator.ct8.pl/serverlist.txt";
                 response = wc.DownloadString(serverurl);
                 ConsoleLog("Fetching " + serverurl, "info");
@@ -206,7 +213,7 @@ namespace GameLauncher {
 
             try {
                 WebClient wc = new WebClientWithTimeout();
-                wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)");
+                wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
 
                 string BuildURL = serverIP + "User/authenticateUser?email=" + username + "&password=" + encryptedpassword;
                 ConsoleLog("Full URL: " + BuildURL, "info");
@@ -260,8 +267,7 @@ namespace GameLauncher {
                     serverStatusImg.BackgroundImage = Properties.Resources.server_offline;
                     serverStatus.ForeColor = Color.FromArgb(227, 88, 50);
                     serverStatus.Text = "This server is currently down. Thanks for your patience.";
-                }
-                else {
+                } else {
                     serverStatusImg.Location = new Point(20, 323);
                     serverStatusImg.BackgroundImage = Properties.Resources.server_online;
                     serverStatus.ForeColor = Color.FromArgb(181, 255, 33);
@@ -269,6 +275,19 @@ namespace GameLauncher {
                     onlineCount.Text = "Players on server: " + e2.Result;
                 }
             };
+        }
+
+        private void ApplyEmbeddedFonts() {
+            FontFamily fontFamily   = FontWrapper.Instance.GetFontFamily("Font_MyriadProSemiCondBold.ttf");
+            FontFamily fontFamily2  = FontWrapper.Instance.GetFontFamily("Font_Register.ttf");
+            FontFamily fontFamily3  = FontWrapper.Instance.GetFontFamily("Font_RegisterBoldItalic.ttf");
+            FontFamily fontFamily4  = FontWrapper.Instance.GetFontFamily("Font_RegisterBold.ttf");
+
+            currentWindowInfo.Font  = new Font(fontFamily3, 12.75f, FontStyle.Italic);
+            rememberMe.Font         = new Font(fontFamily, 9f, FontStyle.Bold);
+            loginButton.Font        = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
+            serverStatus.Font       = new Font(fontFamily, 9.749999f, FontStyle.Bold);
+            onlineCount.Font        = new Font(fontFamily, 9.749999f, FontStyle.Bold);
         }
     }
 }

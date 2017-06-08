@@ -140,10 +140,11 @@
             this.currentWindowInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
             this.currentWindowInfo.Location = new System.Drawing.Point(69, 116);
             this.currentWindowInfo.Name = "currentWindowInfo";
-            this.currentWindowInfo.Size = new System.Drawing.Size(419, 20);
+            this.currentWindowInfo.Size = new System.Drawing.Size(437, 25);
             this.currentWindowInfo.TabIndex = 7;
             this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN:";
             this.currentWindowInfo.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.currentWindowInfo.UseCompatibleTextRendering = true;
             // 
             // consoleLog
             // 
@@ -154,7 +155,7 @@
             this.consoleLog.Name = "consoleLog";
             this.consoleLog.ReadOnly = true;
             this.consoleLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.consoleLog.Size = new System.Drawing.Size(719, 88);
+            this.consoleLog.Size = new System.Drawing.Size(719, 87);
             this.consoleLog.TabIndex = 9;
             this.consoleLog.Text = "";
             // 
@@ -195,7 +196,7 @@
             this.onlineCount.Location = new System.Drawing.Point(607, 329);
             this.onlineCount.Name = "onlineCount";
             this.onlineCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.onlineCount.Size = new System.Drawing.Size(161, 13);
+            this.onlineCount.Size = new System.Drawing.Size(161, 21);
             this.onlineCount.TabIndex = 11;
             this.onlineCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
