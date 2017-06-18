@@ -317,7 +317,7 @@ namespace GameLauncher {
                         String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
                         var proc = Process.Start(filename, cParams);
                         Application.Exit();
-                    } catch (Exception ex) {
+                    } catch (Exception) {
                         ConsoleLog("Logged in. But i cannot find NFSW executable file. Are you sure you've copied all files?", "error");
                     }
                 }
