@@ -92,7 +92,7 @@
             this.serverStatus.AutoSize = true;
             this.serverStatus.BackColor = System.Drawing.Color.Transparent;
             this.serverStatus.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.serverStatus.Location = new System.Drawing.Point(44, 329);
+            this.serverStatus.Location = new System.Drawing.Point(44, 322);
             this.serverStatus.Name = "serverStatus";
             this.serverStatus.Size = new System.Drawing.Size(127, 13);
             this.serverStatus.TabIndex = 3;
@@ -125,7 +125,7 @@
             this.loginButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.loginButton.ForeColor = System.Drawing.Color.Silver;
             this.loginButton.Image = global::GameLauncher.Properties.Resources.button_disable;
-            this.loginButton.Location = new System.Drawing.Point(340, 250);
+            this.loginButton.Location = new System.Drawing.Point(325, 240);
             this.loginButton.Name = "loginButton";
             this.loginButton.Padding = new System.Windows.Forms.Padding(53, 12, 53, 12);
             this.loginButton.Size = new System.Drawing.Size(149, 37);
@@ -189,15 +189,14 @@
             // 
             // onlineCount
             // 
-            this.onlineCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.onlineCount.AutoSize = true;
             this.onlineCount.BackColor = System.Drawing.Color.Transparent;
-            this.onlineCount.ForeColor = System.Drawing.Color.White;
-            this.onlineCount.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.onlineCount.Location = new System.Drawing.Point(607, 329);
+            this.onlineCount.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.onlineCount.Location = new System.Drawing.Point(44, 337);
             this.onlineCount.Name = "onlineCount";
-            this.onlineCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.onlineCount.Size = new System.Drawing.Size(161, 21);
+            this.onlineCount.Size = new System.Drawing.Size(127, 13);
             this.onlineCount.TabIndex = 11;
+            this.onlineCount.Text = "Retrieving server status...";
             this.onlineCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // mainScreen

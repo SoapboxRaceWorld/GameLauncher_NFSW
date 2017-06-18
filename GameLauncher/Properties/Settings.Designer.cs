@@ -58,5 +58,17 @@ namespace GameLauncher.Properties {
                 this["serverentry"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("nfsw")]
+        public string InstallationDirectory {
+            get {
+                return ((string)(this["InstallationDirectory"]));
+            }
+            set {
+                this["InstallationDirectory"] = value;
+            }
+        }
     }
 }

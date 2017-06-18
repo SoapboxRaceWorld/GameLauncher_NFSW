@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using System.Diagnostics;
 using System.Net;
 using System.Security.Cryptography;
 using System.IO;
 using System.Xml;
 using GameLauncher.Properties;
 using SlimDX.DirectInput;
-using System.Drawing.Text;
-using System.Runtime.InteropServices;
-using System.Reflection;
 using GameLauncher.Resources;
+using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -39,19 +35,20 @@ namespace GameLauncher {
             consoleLog.SelectionStart = consoleLog.TextLength;
             consoleLog.SelectionLength = 0;
             consoleLog.SelectionFont = new Font(consoleLog.Font, FontStyle.Bold);
+
             consoleLog.SelectionColor = Color.Gray;
-            consoleLog.AppendText("[" + DateTime.Now.ToString() + "] ");
+            consoleLog.AppendText("[" + DateTime.Now.ToString("HH:mm:ss") + "] ");
 
             if (type == "warning") {
                 consoleLog.SelectionColor = Color.Yellow;
                 consoleLog.AppendText("[WARN] ");
-            } else if(type == "info") {
+            } else if (type == "info") {
                 consoleLog.SelectionColor = Color.Cyan;
                 consoleLog.AppendText("[INFO] ");
-            } else if(type == "error") {
+            } else if (type == "error") {
                 consoleLog.SelectionColor = Color.Red;
                 consoleLog.AppendText("[ERROR] ");
-            } else if(type == "success") {
+            } else if (type == "success") {
                 consoleLog.SelectionColor = Color.Lime;
                 consoleLog.AppendText("[SUCCESS] ");
             }
@@ -89,12 +86,62 @@ namespace GameLauncher {
             this.MouseDown += new MouseEventHandler(this.mainScreen_MouseDown);
             this.MouseMove += new MouseEventHandler(this.mainScreen_MouseMove);
             this.MouseUp += new MouseEventHandler(this.mainScreen_MouseUp);
+
+            //Somewhere here we will setup the game installation directory
+            if (String.IsNullOrEmpty(Settings.Default.InstallationDirectory)) {
+                var openFolder = new CommonOpenFileDialog();
+                openFolder.InitialDirectory = "";
+                openFolder.IsFolderPicker = true;
+                openFolder.Title = "GameLauncher: Please pick up a directory to install NFSW.";
+                var result = openFolder.ShowDialog();
+
+                if (result == CommonFileDialogResult.Ok) {
+                    Settings.Default.InstallationDirectory = openFolder.FileName;
+                    Settings.Default.Save();
+                } else if(result == CommonFileDialogResult.Cancel) {
+                    System.Environment.Exit(1);
+                }
+            }
+
+            if (!Directory.Exists(Settings.Default.InstallationDirectory + "/nfsw")) {
+                Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw");
+                Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw/cache");
+                File.Create(Settings.Default.InstallationDirectory + "/nfsw/keep.this");
+                File.Create(Settings.Default.InstallationDirectory + "/nfsw/cache/keep.this");
+            }
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
             //Console output to textbox
             ConsoleLog("Log initialized", "info");
             ConsoleLog("GameLauncher initialized", "info");
+            ConsoleLog("Installation directory: " + Settings.Default.InstallationDirectory, "info");
+
+            //Silly way to detect mono
+            int SysVersion = (int)Environment.OSVersion.Platform;
+            bool mono = (SysVersion == 4 || SysVersion == 6 || SysVersion == 128);
+
+            //Silly way to detect wine
+            bool wine;
+            try {
+                RegistryKey regKey = Registry.CurrentUser;
+                RegistryKey rkTest = regKey.OpenSubKey(@"Software\Wine");
+
+                if(String.IsNullOrEmpty(rkTest.ToString())) {
+                    wine = false;
+                } else {
+                    wine = true;
+                }
+            } catch {
+                wine = false;
+            }
+
+            //Console log with warning
+            if (mono == true) {
+                ConsoleLog("Detected OS: Linux using Mono", "warning");
+            } else if (wine == true) {
+                ConsoleLog("Detected OS: Linux using Wine", "warning");
+            }
 
             //Detect controller (if any)
             var directInput = new DirectInput();
@@ -102,13 +149,16 @@ namespace GameLauncher {
 
             foreach (var deviceInstance in directInput.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly)) {
                 controllerName = deviceInstance.ProductName;
-                if(controllerName == "Wireless Controller") {
+                if (controllerName == "Wireless Controller") {
                     /* @TODO@ Detection of 3rd party gamepad emulation like DS4Windows or InputMapper */
-                    ConsoleLog("Found a controller. However, this controller might not work without a valid controller emulation, like DS4Windows", "warning");
+                    ConsoleLog("Found a controller. However, this controller might not work without a valid controller emulation, like DS4Windows or InputMapper", "warning");
                 } else {
                     ConsoleLog("Found a valid controller: " + controllerName, "success");
                 }
             }
+
+            //Detect modules inside gamefolder
+            //nfswMODULENAME.dll
 
             email.Text = Settings.Default.email.ToString();
             if (Settings.Default.rememberme == 1) {
@@ -125,7 +175,7 @@ namespace GameLauncher {
                 response = wc.DownloadString(serverurl);
                 ConsoleLog("Fetching " + serverurl, "info");
             } catch (Exception ex) {
-                ConsoleLog("Failed to fetch serverlist. " + ex.Message , "error");
+                ConsoleLog("Failed to fetch serverlist. " + ex.Message, "error");
             }
 
 
@@ -144,8 +194,8 @@ namespace GameLauncher {
             }
 
             serverPick.DataSource = items;
-            serverStatus.Font = new Font("Microsoft Sans Serif", 9.749999f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            onlineCount.Font = new Font("Microsoft Sans Serif", 9.749999f, FontStyle.Bold, GraphicsUnit.Point, 0);
+
+            serverStatusImg.Location = new Point(-16, -16);
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
@@ -215,7 +265,7 @@ namespace GameLauncher {
                 WebClient wc = new WebClientWithTimeout();
                 wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
 
-                string BuildURL = serverIP + "User/authenticateUser?email=" + username + "&password=" + encryptedpassword;
+                string BuildURL = serverIP + "User/authenticateUser?email=" + username + "&password=" + encryptedpassword.ToLower();
                 ConsoleLog("Full URL: " + BuildURL, "info");
 
                 serverLoginResponse = wc.DownloadString(BuildURL);
@@ -247,7 +297,8 @@ namespace GameLauncher {
         }
 
         private void clearConsole_Click(object sender, EventArgs e) {
-            consoleLog.Text = "";
+            consoleLog.ForeColor = Color.Gray;
+            consoleLog.Text = "Console cleaned.";
         }
 
         private void serverPick_TextChanged(object sender, EventArgs e) {
@@ -256,6 +307,7 @@ namespace GameLauncher {
             serverStatusImg.Location = new Point(-16, -16);
             serverStatus.ForeColor = Color.White;
             serverStatus.Text = "Retrieving server status...";
+            serverStatus.Location = new Point(44, 329);
             onlineCount.Text = "";
 
             var client = new WebClient();
@@ -267,27 +319,31 @@ namespace GameLauncher {
                     serverStatusImg.BackgroundImage = Properties.Resources.server_offline;
                     serverStatus.ForeColor = Color.FromArgb(227, 88, 50);
                     serverStatus.Text = "This server is currently down. Thanks for your patience.";
+                    serverStatus.Location = new Point(44, 329);
                 } else {
                     serverStatusImg.Location = new Point(20, 323);
                     serverStatusImg.BackgroundImage = Properties.Resources.server_online;
                     serverStatus.ForeColor = Color.FromArgb(181, 255, 33);
                     serverStatus.Text = "This server is currenly up and running.";
+                    serverStatus.Location = new Point(44, 322);
                     onlineCount.Text = "Players on server: " + e2.Result;
                 }
             };
         }
 
         private void ApplyEmbeddedFonts() {
-            FontFamily fontFamily   = FontWrapper.Instance.GetFontFamily("Font_MyriadProSemiCondBold.ttf");
-            FontFamily fontFamily2  = FontWrapper.Instance.GetFontFamily("Font_Register.ttf");
-            FontFamily fontFamily3  = FontWrapper.Instance.GetFontFamily("Font_RegisterBoldItalic.ttf");
-            FontFamily fontFamily4  = FontWrapper.Instance.GetFontFamily("Font_RegisterBold.ttf");
+            FontFamily fontFamily = FontWrapper.Instance.GetFontFamily("Font_MyriadProSemiCondBold.ttf");
+            FontFamily fontFamily2 = FontWrapper.Instance.GetFontFamily("Font_Register.ttf");
+            FontFamily fontFamily3 = FontWrapper.Instance.GetFontFamily("Font_RegisterBoldItalic.ttf");
+            FontFamily fontFamily4 = FontWrapper.Instance.GetFontFamily("Font_RegisterDemiBold.ttf");
+            FontFamily fontFamily5 = FontWrapper.Instance.GetFontFamily("Font_RegisterBold.ttf");
+            FontFamily fontFamily6 = FontWrapper.Instance.GetFontFamily("Font_MyriadProSemiCond.ttf");
 
-            currentWindowInfo.Font  = new Font(fontFamily3, 12.75f, FontStyle.Italic);
-            rememberMe.Font         = new Font(fontFamily, 9f, FontStyle.Bold);
-            loginButton.Font        = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
-            serverStatus.Font       = new Font(fontFamily, 9.749999f, FontStyle.Bold);
-            onlineCount.Font        = new Font(fontFamily, 9.749999f, FontStyle.Bold);
+            currentWindowInfo.Font = new Font(fontFamily3, 12.75f, FontStyle.Italic);
+            rememberMe.Font = new Font(fontFamily, 9f, FontStyle.Bold);
+            loginButton.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
+            serverStatus.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
+            onlineCount.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
         }
     }
 }
