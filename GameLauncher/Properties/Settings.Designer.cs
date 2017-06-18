@@ -61,7 +61,7 @@ namespace GameLauncher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("nfsw")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string InstallationDirectory {
             get {
                 return ((string)(this["InstallationDirectory"]));

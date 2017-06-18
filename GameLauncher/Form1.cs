@@ -12,6 +12,7 @@ using SlimDX.DirectInput;
 using GameLauncher.Resources;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Diagnostics;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -67,6 +68,15 @@ namespace GameLauncher {
             MaximizeBox = false;
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
 
+            //First of all, we need to check if files exists
+            String[] files = { "SlimDX.dll", "Microsoft.WindowsAPICodePack.dll", "Microsoft.WindowsAPICodePack.Shell.dll" };
+            foreach(string file in files) {
+                if (!File.Exists(file)) {
+                    MessageBox.Show("Cannot find " + file + " - Exiting");
+                    System.Environment.Exit(1);
+                }
+            }
+
             closebtn.MouseEnter += new EventHandler(closebtn_MouseEnter);
             closebtn.MouseLeave += new EventHandler(closebtn_MouseLeave);
             closebtn.Click += new EventHandler(closebtn_Click);
@@ -87,6 +97,10 @@ namespace GameLauncher {
             this.MouseMove += new MouseEventHandler(this.mainScreen_MouseMove);
             this.MouseUp += new MouseEventHandler(this.mainScreen_MouseUp);
 
+            //Command-line Arguments
+            string[] args = Environment.GetCommandLineArgs();
+
+
             //Somewhere here we will setup the game installation directory
             if (String.IsNullOrEmpty(Settings.Default.InstallationDirectory)) {
                 var openFolder = new CommonOpenFileDialog();
@@ -105,9 +119,11 @@ namespace GameLauncher {
 
             if (!Directory.Exists(Settings.Default.InstallationDirectory + "/nfsw")) {
                 Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw");
-                Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw/cache");
-                File.Create(Settings.Default.InstallationDirectory + "/nfsw/keep.this");
-                File.Create(Settings.Default.InstallationDirectory + "/nfsw/cache/keep.this");
+                Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw/Cache");
+                Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw/Data");
+                File.Create(Settings.Default.InstallationDirectory + "/nfsw/Cache/keep.this");
+                File.Create(Settings.Default.InstallationDirectory + "/nfsw/Data/put.your.nfsw.exe.here");
+                Process.Start(@"" + Settings.Default.InstallationDirectory + "/nfsw/Data/");
             }
         }
 
@@ -184,6 +200,7 @@ namespace GameLauncher {
             serverPick.ValueMember = "Value";
 
             List<Object> items = new List<Object>();
+            response += "Development server;http://localhost:7331/nfsw/Engine.svc";
 
             String[] substrings = response.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             foreach (var substring in substrings) {
@@ -193,8 +210,8 @@ namespace GameLauncher {
                 }
             }
 
-            serverPick.DataSource = items;
 
+            serverPick.DataSource = items;
             serverStatusImg.Location = new Point(-16, -16);
         }
 
@@ -247,7 +264,6 @@ namespace GameLauncher {
             }
 
             encryptedpassword = sb.ToString();
-            ConsoleLog("Remember account details is set to " + rememberMe.Checked.ToString(), "info");
 
             if (rememberMe.Checked) {
                 Settings.Default.email = username;
@@ -265,8 +281,7 @@ namespace GameLauncher {
                 WebClient wc = new WebClientWithTimeout();
                 wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
 
-                string BuildURL = serverIP + "User/authenticateUser?email=" + username + "&password=" + encryptedpassword.ToLower();
-                ConsoleLog("Full URL: " + BuildURL, "info");
+                string BuildURL = serverIP + "/User/authenticateUser?email=" + username + "&password=" + encryptedpassword.ToLower();
 
                 serverLoginResponse = wc.DownloadString(BuildURL);
             } catch (WebException ex) {
@@ -284,8 +299,29 @@ namespace GameLauncher {
                 }
             }
 
-            string consoleXMLOutput = serverLoginResponse.Replace("\r", "").Replace("\n", "").Replace("  ", "").Replace("	", "");
-            ConsoleLog("Looks like its success, but XML Parser is not implemented, yet: " + consoleXMLOutput, "warning");
+            XmlDocument SBRW_XML = new XmlDocument();
+            SBRW_XML.LoadXml(serverLoginResponse);
+            var nodes = SBRW_XML.SelectNodes("LoginStatusVO");
+
+            foreach (XmlNode childrenNode in nodes) {
+                String UserId = childrenNode["UserId"].InnerText;
+                String LoginToken = childrenNode["LoginToken"].InnerText;
+                String Description = childrenNode["Description"].InnerText;
+
+                if (Description == "LOGIN ERROR") {
+                    ConsoleLog("Invalid username or password.", "error");
+                } else {
+                    try {
+                        string filename = Settings.Default.InstallationDirectory.ToString() + "\\nfsw\\Data\\nfsw.exe";
+                        ConsoleLog("Logged in. Starting " + filename + ".", "success");
+                        String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
+                        var proc = Process.Start(filename, cParams);
+                        Application.Exit();
+                    } catch (Exception ex) {
+                        ConsoleLog("Logged in. But i cannot find NFSW executable file. Are you sure you've copied all files?", "error");
+                    }
+                }
+            }
         }
 
         private void loginButton_MouseEnter(object sender, EventArgs e) {
@@ -311,7 +347,7 @@ namespace GameLauncher {
             onlineCount.Text = "";
 
             var client = new WebClient();
-            Uri StringToUri = new Uri(serverIP + "OnlineUsers/getOnline");
+            Uri StringToUri = new Uri(serverIP + "/OnlineUsers/getOnline");
             client.DownloadStringAsync(StringToUri);
             client.DownloadStringCompleted += (sender2, e2) => {
                 if (e2.Error != null) {
