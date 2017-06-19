@@ -10,13 +10,19 @@ using System.Xml;
 using GameLauncher.Properties;
 using SlimDX.DirectInput;
 using GameLauncher.Resources;
+using GameLauncher.Server;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
+using System.Threading;
+using System.Net.Sockets;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
         Point mouseDownPoint = Point.Empty;
+        bool loginEnabled;
+        bool serverEnabled;
+        bool builtinserver = false;
 
         private void mainScreen_MouseDown(object sender, MouseEventArgs e) {
             mouseDownPoint = new Point(e.X, e.Y);
@@ -90,6 +96,9 @@ namespace GameLauncher {
             loginButton.Click += new EventHandler(loginButton_Click);
             loginButton.MouseUp += new MouseEventHandler(loginButton_MouseUp);
             loginButton.MouseDown += new MouseEventHandler(loginButton_MouseDown);
+
+            email.KeyUp += new KeyEventHandler(loginbuttonenabler);
+            password.KeyUp += new KeyEventHandler(loginbuttonenabler);
 
             serverPick.TextChanged += new EventHandler(serverPick_TextChanged);
 
@@ -200,7 +209,7 @@ namespace GameLauncher {
             serverPick.ValueMember = "Value";
 
             List<Object> items = new List<Object>();
-            response += "Development server;http://localhost:7331/nfsw/Engine.svc";
+            response += "Offline Built-In Server;http://localhost:7331/nfsw/Engine.svc";
 
             String[] substrings = response.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             foreach (var substring in substrings) {
@@ -213,6 +222,9 @@ namespace GameLauncher {
 
             serverPick.DataSource = items;
             serverStatusImg.Location = new Point(-16, -16);
+            loginEnabled = false;
+            serverEnabled = false;
+            this.loginButton.Image = Properties.Resources.button_disable;
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
@@ -241,15 +253,37 @@ namespace GameLauncher {
             this.minimizebtn.BackgroundImage = Properties.Resources.minimize;
         }
 
+        private void loginbuttonenabler(object sender, EventArgs e) {
+            if (String.IsNullOrEmpty(email.Text) || String.IsNullOrEmpty(password.Text)) {
+                loginEnabled = false;
+                this.loginButton.Image = Properties.Resources.button_disable;
+            } else {
+                loginEnabled = true;
+                this.loginButton.Image = Properties.Resources.button_enable;
+            }
+        }
+
         private void loginButton_MouseUp(object sender, EventArgs e) {
-            this.loginButton.Image = Properties.Resources.button_hover;
+            if (loginEnabled == true || builtinserver == true) {
+                this.loginButton.Image = Properties.Resources.button_hover;
+            } else {
+                this.loginButton.Image = Properties.Resources.button_disable;
+            }
         }
 
         private void loginButton_MouseDown(object sender, EventArgs e) {
-            this.loginButton.Image = Properties.Resources.button_click;
+            if (loginEnabled == true || builtinserver == true) {
+                this.loginButton.Image = Properties.Resources.button_click;
+            } else {
+                this.loginButton.Image = Properties.Resources.button_disable;
+            }
         }
 
         private void loginButton_Click(object sender, EventArgs e) {
+            if((loginEnabled == false || serverEnabled == false) && builtinserver == false) {
+                return;
+            }
+
             this.loginButton.Image = Properties.Resources.button_hover;
 
             string serverIP = serverPick.SelectedValue.ToString();
@@ -276,6 +310,12 @@ namespace GameLauncher {
             Settings.Default.Save();
 
             ConsoleLog("Trying to login into " + serverPick.GetItemText(serverPick.SelectedItem) + " (" + serverIP + ")", "info");
+
+            if(builtinserver == true) {
+                MessageBox.Show(null, "Careful: This built-in server is in alpha! Use it at your own risk.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
+                //Here should i include builtin server, still have to guess how it works...
+            }
 
             try {
                 WebClient wc = new WebClientWithTimeout();
@@ -313,10 +353,19 @@ namespace GameLauncher {
                 } else {
                     try {
                         string filename = Settings.Default.InstallationDirectory.ToString() + "\\nfsw\\Data\\nfsw.exe";
-                        ConsoleLog("Logged in. Starting " + filename + ".", "success");
+                        ConsoleLog("Logged in. Starting game (" + filename + ").", "success");
                         String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
                         var proc = Process.Start(filename, cParams);
-                        Application.Exit();
+                        proc.Exited += new EventHandler(ClosedNFSW);
+
+                        if (builtinserver == true) {
+                            //Do not close, instead, just log actions
+                            ConsoleLog("SoapBox Built-In Initialized, waiting for queries", "success");
+                        } else {
+                            ConsoleLog("Closing myself in 5 seconds.", "warning");
+                            Thread.Sleep(5000);
+                            Application.Exit();
+                        }
                     } catch (Exception) {
                         ConsoleLog("Logged in. But i cannot find NFSW executable file. Are you sure you've copied all files?", "error");
                     }
@@ -324,12 +373,25 @@ namespace GameLauncher {
             }
         }
 
+        private void ClosedNFSW(object sender, EventArgs e) {
+            ConsoleLog("User quitted from NFSW. Closing GameLauncher.", "success");
+            Application.Exit();
+        }
+
         private void loginButton_MouseEnter(object sender, EventArgs e) {
-            this.loginButton.Image = Properties.Resources.button_hover;
+            if (loginEnabled == true || builtinserver == true) {
+                this.loginButton.Image = Properties.Resources.button_hover;
+            } else {
+                this.loginButton.Image = Properties.Resources.button_disable;
+            }
         }
 
         private void loginButton_MouseLeave(object sender, EventArgs e) {
-            this.loginButton.Image = Properties.Resources.button_disable;
+            if (loginEnabled == true || builtinserver == true) {
+                this.loginButton.Image = Properties.Resources.button_enable;
+            } else {
+                this.loginButton.Image = Properties.Resources.button_disable;
+            }
         }
 
         private void clearConsole_Click(object sender, EventArgs e) {
@@ -339,12 +401,25 @@ namespace GameLauncher {
 
         private void serverPick_TextChanged(object sender, EventArgs e) {
             string serverIP = serverPick.SelectedValue.ToString();
+            string numplayers;
 
             serverStatusImg.Location = new Point(-16, -16);
             serverStatus.ForeColor = Color.White;
             serverStatus.Text = "Retrieving server status...";
             serverStatus.Location = new Point(44, 329);
             onlineCount.Text = "";
+
+            if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server") {
+                builtinserver = true;
+                this.loginButton.Image = Properties.Resources.button_enable;
+                this.loginButton.Text = "LAUNCH";
+
+                WebServer.Instance.CreateServer();
+            } else {
+                builtinserver = false;
+                this.loginButton.Image = Properties.Resources.button_disable;
+                this.loginButton.Text = "LOG IN";
+            }
 
             var client = new WebClient();
             Uri StringToUri = new Uri(serverIP + "/OnlineUsers/getOnline");
@@ -356,13 +431,22 @@ namespace GameLauncher {
                     serverStatus.ForeColor = Color.FromArgb(227, 88, 50);
                     serverStatus.Text = "This server is currently down. Thanks for your patience.";
                     serverStatus.Location = new Point(44, 329);
+                    serverEnabled = false;
                 } else {
                     serverStatusImg.Location = new Point(20, 323);
                     serverStatusImg.BackgroundImage = Properties.Resources.server_online;
                     serverStatus.ForeColor = Color.FromArgb(181, 255, 33);
                     serverStatus.Text = "This server is currenly up and running.";
                     serverStatus.Location = new Point(44, 322);
-                    onlineCount.Text = "Players on server: " + e2.Result;
+
+                    if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server") {
+                        numplayers = "1337";
+                    } else {
+                        numplayers = e2.Result;
+                    }
+
+                    onlineCount.Text = "Players on server: " + numplayers;
+                    serverEnabled = true;
                 }
             };
         }

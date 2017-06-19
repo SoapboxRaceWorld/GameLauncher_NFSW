@@ -37,13 +37,13 @@
             this.serverStatus = new System.Windows.Forms.Label();
             this.serverStatusImg = new System.Windows.Forms.PictureBox();
             this.serverPick = new System.Windows.Forms.ComboBox();
-            this.loginButton = new System.Windows.Forms.Label();
             this.currentWindowInfo = new System.Windows.Forms.Label();
             this.consoleLog = new System.Windows.Forms.RichTextBox();
             this.rememberMe = new System.Windows.Forms.CheckBox();
             this.clearConsole = new System.Windows.Forms.Button();
             this.Timeout = new System.Windows.Forms.Timer(this.components);
             this.onlineCount = new System.Windows.Forms.Label();
+            this.loginButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
@@ -118,20 +118,6 @@
             this.serverPick.Size = new System.Drawing.Size(204, 21);
             this.serverPick.TabIndex = 5;
             // 
-            // loginButton
-            // 
-            this.loginButton.AutoSize = true;
-            this.loginButton.BackColor = System.Drawing.Color.Transparent;
-            this.loginButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.loginButton.ForeColor = System.Drawing.Color.Silver;
-            this.loginButton.Image = global::GameLauncher.Properties.Resources.button_disable;
-            this.loginButton.Location = new System.Drawing.Point(325, 240);
-            this.loginButton.Name = "loginButton";
-            this.loginButton.Padding = new System.Windows.Forms.Padding(53, 12, 53, 12);
-            this.loginButton.Size = new System.Drawing.Size(149, 37);
-            this.loginButton.TabIndex = 6;
-            this.loginButton.Text = "LOG IN";
-            // 
             // currentWindowInfo
             // 
             this.currentWindowInfo.AutoSize = true;
@@ -199,18 +185,34 @@
             this.onlineCount.Text = "Retrieving server status...";
             this.onlineCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // loginButton
+            // 
+            this.loginButton.BackColor = System.Drawing.Color.Transparent;
+            this.loginButton.FlatAppearance.BorderSize = 0;
+            this.loginButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.loginButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.loginButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.loginButton.ForeColor = System.Drawing.Color.White;
+            this.loginButton.Image = global::GameLauncher.Properties.Resources.button_enable;
+            this.loginButton.Location = new System.Drawing.Point(339, 245);
+            this.loginButton.Name = "loginButton";
+            this.loginButton.Size = new System.Drawing.Size(147, 36);
+            this.loginButton.TabIndex = 12;
+            this.loginButton.Text = "LOG IN";
+            this.loginButton.UseVisualStyleBackColor = false;
+            // 
             // mainScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.ClientSize = new System.Drawing.Size(790, 490);
+            this.Controls.Add(this.loginButton);
             this.Controls.Add(this.onlineCount);
             this.Controls.Add(this.clearConsole);
             this.Controls.Add(this.rememberMe);
             this.Controls.Add(this.consoleLog);
             this.Controls.Add(this.currentWindowInfo);
-            this.Controls.Add(this.loginButton);
             this.Controls.Add(this.serverPick);
             this.Controls.Add(this.serverStatusImg);
             this.Controls.Add(this.serverStatus);
@@ -243,13 +245,13 @@
         private System.Windows.Forms.Label serverStatus;
         private System.Windows.Forms.PictureBox serverStatusImg;
         private System.Windows.Forms.ComboBox serverPick;
-        private System.Windows.Forms.Label loginButton;
         private System.Windows.Forms.Label currentWindowInfo;
         private System.Windows.Forms.RichTextBox consoleLog;
         private System.Windows.Forms.CheckBox rememberMe;
         private System.Windows.Forms.Button clearConsole;
         private System.Windows.Forms.Timer Timeout;
         private System.Windows.Forms.Label onlineCount;
+        private System.Windows.Forms.Button loginButton;
     }
 }
 
