@@ -10,7 +10,6 @@ using System.Xml;
 using GameLauncher.Properties;
 using SlimDX.DirectInput;
 using GameLauncher.Resources;
-using GameLauncher.Server;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
@@ -313,8 +312,6 @@ namespace GameLauncher {
 
             if(builtinserver == true) {
                 MessageBox.Show(null, "Careful: This built-in server is in alpha! Use it at your own risk.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
-                //Here should i include builtin server, still have to guess how it works...
             }
 
             try {
@@ -356,10 +353,12 @@ namespace GameLauncher {
                         ConsoleLog("Logged in. Starting game (" + filename + ").", "success");
                         String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
                         var proc = Process.Start(filename, cParams);
-                        proc.Exited += new EventHandler(ClosedNFSW);
+                        proc.EnableRaisingEvents = true;
+                        proc.Exited += (sender2, e2) => {
+                            Application.Exit();
+                        };
 
                         if (builtinserver == true) {
-                            //Do not close, instead, just log actions
                             ConsoleLog("SoapBox Built-In Initialized, waiting for queries", "success");
                         } else {
                             ConsoleLog("Closing myself in 5 seconds.", "warning");
@@ -371,11 +370,6 @@ namespace GameLauncher {
                     }
                 }
             }
-        }
-
-        private void ClosedNFSW(object sender, EventArgs e) {
-            ConsoleLog("User quitted from NFSW. Closing GameLauncher.", "success");
-            Application.Exit();
         }
 
         private void loginButton_MouseEnter(object sender, EventArgs e) {
@@ -413,8 +407,6 @@ namespace GameLauncher {
                 builtinserver = true;
                 this.loginButton.Image = Properties.Resources.button_enable;
                 this.loginButton.Text = "LAUNCH";
-
-                WebServer.Instance.CreateServer();
             } else {
                 builtinserver = false;
                 this.loginButton.Image = Properties.Resources.button_disable;
