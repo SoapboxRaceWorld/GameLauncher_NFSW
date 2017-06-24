@@ -14,7 +14,7 @@ using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
 using System.Threading;
-using System.Net.Sockets;
+using System.Net.NetworkInformation;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -57,6 +57,9 @@ namespace GameLauncher {
             } else if (type == "success") {
                 consoleLog.SelectionColor = Color.Lime;
                 consoleLog.AppendText("[SUCCESS] ");
+            } else if (type == "ping") {
+                consoleLog.SelectionColor = Color.DarkOrange;
+                consoleLog.AppendText("[PING] ");
             }
 
             consoleLog.SelectionColor = consoleLog.ForeColor;
@@ -129,10 +132,14 @@ namespace GameLauncher {
                 Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw");
                 Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw/Cache");
                 Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw/Data");
+                Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw/Data/Modules");
                 File.Create(Settings.Default.InstallationDirectory + "/nfsw/Cache/keep.this");
                 File.Create(Settings.Default.InstallationDirectory + "/nfsw/Data/put.your.nfsw.exe.here");
                 Process.Start(@"" + Settings.Default.InstallationDirectory + "/nfsw/Data/");
             }
+
+            registerText.Text = "DON'T HAVE AN ACCOUNT?\nCLICK HERE TO CREATE ONE NOW...";
+
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
@@ -162,9 +169,9 @@ namespace GameLauncher {
 
             //Console log with warning
             if (mono == true) {
-                ConsoleLog("Detected OS: Linux using Mono", "warning");
+                ConsoleLog("Detected OS: Linux using Mono - Note that game might not launch.", "warning");
             } else if (wine == true) {
-                ConsoleLog("Detected OS: Linux using Wine", "warning");
+                ConsoleLog("Detected OS: Linux using Wine - Note that game might not launch.", "warning");
             }
 
             //Detect controller (if any)
@@ -176,13 +183,11 @@ namespace GameLauncher {
                 if (controllerName == "Wireless Controller") {
                     /* @TODO@ Detection of 3rd party gamepad emulation like DS4Windows or InputMapper */
                     ConsoleLog("Found a controller. However, this controller might not work without a valid controller emulation, like DS4Windows or InputMapper", "warning");
-                } else {
-                    ConsoleLog("Found a valid controller: " + controllerName, "success");
                 }
             }
 
             //Detect modules inside gamefolder
-            //nfswMODULENAME.dll
+            //modules/MODULENAME..dll vs. modules/MODULENAME.asi
 
             email.Text = Settings.Default.email.ToString();
             if (Settings.Default.rememberme == 1) {
@@ -395,7 +400,8 @@ namespace GameLauncher {
 
         private void serverPick_TextChanged(object sender, EventArgs e) {
             string serverIP = serverPick.SelectedValue.ToString();
-            string numplayers;
+            string numPlayers;
+            string serverName = serverPick.GetItemText(serverPick.SelectedItem);
 
             serverStatusImg.Location = new Point(-16, -16);
             serverStatus.ForeColor = Color.White;
@@ -431,14 +437,24 @@ namespace GameLauncher {
                     serverStatus.Text = "This server is currenly up and running.";
                     serverStatus.Location = new Point(44, 322);
 
-                    if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server") {
-                        numplayers = "1337";
+                    if (serverName == "Offline Built-In Server") {
+                        numPlayers = "1337";
                     } else {
-                        numplayers = e2.Result;
+                        numPlayers = e2.Result;
                     }
 
-                    onlineCount.Text = "Players on server: " + numplayers;
+                    onlineCount.Text = "Players on server: " + numPlayers;
                     serverEnabled = true;
+                }
+            };
+
+            Ping pingSender = new Ping();
+            pingSender.SendAsync(StringToUri.Host, 10000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
+            pingSender.PingCompleted += (sender2, e2) => {
+                PingReply reply = e2.Reply;
+
+                if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
+                    ConsoleLog("This PC <---> " + serverName + ": " + reply.RoundtripTime + "ms", "ping");
                 }
             };
         }
@@ -456,6 +472,27 @@ namespace GameLauncher {
             loginButton.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
             serverStatus.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
             onlineCount.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
+            registerText.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
+        }
+
+        private void registerText_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            this.BackgroundImage = Properties.Resources.settingsbg;
+            this.currentWindowInfo.Text = "REGISTER ON " + serverPick.GetItemText(serverPick.SelectedItem).ToUpper();
+            LoginFormHideElements();
+        }
+
+        private void LoginFormHideElements() {
+            this.rememberMe.Hide();
+            this.loginButton.Hide();
+            this.serverStatus.Hide();
+            this.onlineCount.Hide();
+            this.registerText.Hide();
+            this.serverPick.Hide();
+            this.serverStatusImg.Hide();
+            this.consoleLog.Hide();
+            this.clearConsole.Hide();
+            this.email.Hide();
+            this.password.Hide();
         }
     }
 }

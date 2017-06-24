@@ -44,6 +44,7 @@
             this.Timeout = new System.Windows.Forms.Timer(this.components);
             this.onlineCount = new System.Windows.Forms.Label();
             this.loginButton = new System.Windows.Forms.Button();
+            this.registerText = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
@@ -139,7 +140,6 @@
             this.consoleLog.ForeColor = System.Drawing.Color.White;
             this.consoleLog.Location = new System.Drawing.Point(35, 389);
             this.consoleLog.Name = "consoleLog";
-            this.consoleLog.ReadOnly = true;
             this.consoleLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.consoleLog.Size = new System.Drawing.Size(719, 87);
             this.consoleLog.TabIndex = 9;
@@ -201,12 +201,29 @@
             this.loginButton.Text = "LOG IN";
             this.loginButton.UseVisualStyleBackColor = false;
             // 
+            // registerText
+            // 
+            this.registerText.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(181)))), ((int)(((byte)(255)))), ((int)(((byte)(33)))));
+            this.registerText.AutoSize = true;
+            this.registerText.BackColor = System.Drawing.Color.Transparent;
+            this.registerText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.registerText.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(181)))), ((int)(((byte)(255)))), ((int)(((byte)(33)))));
+            this.registerText.Location = new System.Drawing.Point(527, 260);
+            this.registerText.Name = "registerText";
+            this.registerText.Size = new System.Drawing.Size(83, 15);
+            this.registerText.TabIndex = 13;
+            this.registerText.TabStop = true;
+            this.registerText.Text = "regsiterText";
+            this.registerText.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(181)))), ((int)(((byte)(255)))), ((int)(((byte)(33)))));
+            this.registerText.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.registerText_LinkClicked);
+            // 
             // mainScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.ClientSize = new System.Drawing.Size(790, 490);
+            this.Controls.Add(this.registerText);
             this.Controls.Add(this.loginButton);
             this.Controls.Add(this.onlineCount);
             this.Controls.Add(this.clearConsole);
@@ -252,6 +269,7 @@
         private System.Windows.Forms.Timer Timeout;
         private System.Windows.Forms.Label onlineCount;
         private System.Windows.Forms.Button loginButton;
+        private System.Windows.Forms.LinkLabel registerText;
     }
 }
 
