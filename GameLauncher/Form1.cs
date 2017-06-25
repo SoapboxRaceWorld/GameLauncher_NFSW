@@ -233,6 +233,15 @@ namespace GameLauncher {
 
         private void closebtn_Click(object sender, EventArgs e) {
             this.closebtn.BackgroundImage = Properties.Resources.close_click;
+            if(!Directory.Exists("logs")) {
+                Directory.CreateDirectory("logs");
+            }
+
+            long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
+            ticks /= 10000000;
+            string timestamp = ticks.ToString();
+            consoleLog.SaveFile("logs/" + timestamp + ".log", RichTextBoxStreamType.PlainText);
+
             Application.Exit();
         }
 
@@ -291,6 +300,7 @@ namespace GameLauncher {
             this.loginButton.Image = Properties.Resources.button_hover;
 
             string serverIP = serverPick.SelectedValue.ToString();
+            string serverName = serverPick.GetItemText(serverPick.SelectedItem);
             string username = email.Text.ToString();
             string encryptedpassword = "";
             string serverLoginResponse = "";
@@ -343,12 +353,40 @@ namespace GameLauncher {
 
             XmlDocument SBRW_XML = new XmlDocument();
             SBRW_XML.LoadXml(serverLoginResponse);
-            var nodes = SBRW_XML.SelectNodes("LoginStatusVO");
+            XmlNodeList nodes = null;
+
+            String Description = "";
+            String LoginToken = "";
+            String UserId = "";
+
+            if (serverName == "World Revival") {
+                try {
+                    if(SBRW_XML.SelectSingleNode("EngineExceptionTrans") != null) {
+                        nodes = SBRW_XML.SelectNodes("EngineExceptionTrans");
+                    } else {
+                        nodes = SBRW_XML.SelectNodes("LoginData");
+                    }
+                } catch(Exception) {
+                    nodes = SBRW_XML.SelectNodes("LoginData");
+                }
+            }
+            else {
+                nodes = SBRW_XML.SelectNodes("LoginStatusVO");
+            }
 
             foreach (XmlNode childrenNode in nodes) {
-                String UserId = childrenNode["UserId"].InnerText;
-                String LoginToken = childrenNode["LoginToken"].InnerText;
-                String Description = childrenNode["Description"].InnerText;
+                if (serverName == "World Revival") {
+                    try {
+                        UserId = childrenNode["UserId"].InnerText;
+                        LoginToken = childrenNode["LoginToken"].InnerText;
+                    } catch {
+                        Description = "LOGIN ERROR";
+                    }
+                } else {
+                    UserId = childrenNode["UserId"].InnerText;
+                    LoginToken = childrenNode["LoginToken"].InnerText;
+                    Description = childrenNode["Description"].InnerText;
+                }
 
                 if (Description == "LOGIN ERROR") {
                     ConsoleLog("Invalid username or password.", "error");
@@ -439,6 +477,12 @@ namespace GameLauncher {
 
                     if (serverName == "Offline Built-In Server") {
                         numPlayers = "1337";
+                    } else if(serverName == "World Revival") {
+                        //JSON... and Dedicated API... c'mon WorldRevival...
+                        Uri StringToUri2 = new Uri("http://world-revival.fr/api/GetStatus.php");
+                        var reply = client.DownloadString(StringToUri2);
+                        String[] substrings = reply.Split(new string[] { "\"" }, StringSplitOptions.None);
+                        numPlayers = substrings[9];
                     } else {
                         numPlayers = e2.Result;
                     }
@@ -449,7 +493,7 @@ namespace GameLauncher {
             };
 
             Ping pingSender = new Ping();
-            pingSender.SendAsync(StringToUri.Host, 10000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
+            pingSender.SendAsync(StringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
             pingSender.PingCompleted += (sender2, e2) => {
                 PingReply reply = e2.Reply;
 

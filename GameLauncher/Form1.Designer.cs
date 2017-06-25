@@ -45,6 +45,7 @@
             this.onlineCount = new System.Windows.Forms.Label();
             this.loginButton = new System.Windows.Forms.Button();
             this.registerText = new System.Windows.Forms.LinkLabel();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
@@ -217,12 +218,21 @@
             this.registerText.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(181)))), ((int)(((byte)(255)))), ((int)(((byte)(33)))));
             this.registerText.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.registerText_LinkClicked);
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Black;
+            this.panel1.Location = new System.Drawing.Point(526, 105);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(249, 118);
+            this.panel1.TabIndex = 14;
+            // 
             // mainScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.ClientSize = new System.Drawing.Size(790, 490);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.registerText);
             this.Controls.Add(this.loginButton);
             this.Controls.Add(this.onlineCount);
@@ -270,6 +280,7 @@
         private System.Windows.Forms.Label onlineCount;
         private System.Windows.Forms.Button loginButton;
         private System.Windows.Forms.LinkLabel registerText;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 
