@@ -45,10 +45,18 @@
             this.onlineCount = new System.Windows.Forms.Label();
             this.loginButton = new System.Windows.Forms.Button();
             this.registerText = new System.Windows.Forms.LinkLabel();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.emailLabel = new System.Windows.Forms.Label();
+            this.passwordLabel = new System.Windows.Forms.Label();
+            this.troubleLabel = new System.Windows.Forms.Label();
+            this.githubLink = new System.Windows.Forms.LinkLabel();
+            this.forgotPassword = new System.Windows.Forms.LinkLabel();
+            this.registerButton = new System.Windows.Forms.Button();
+            this.selectServerLabel = new System.Windows.Forms.Label();
+            this.settingsButton = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             this.SuspendLayout();
             // 
             // closebtn
@@ -115,9 +123,9 @@
             // 
             this.serverPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.serverPick.FormattingEnabled = true;
-            this.serverPick.Location = new System.Drawing.Point(564, 49);
+            this.serverPick.Location = new System.Drawing.Point(548, 47);
             this.serverPick.Name = "serverPick";
-            this.serverPick.Size = new System.Drawing.Size(204, 21);
+            this.serverPick.Size = new System.Drawing.Size(188, 21);
             this.serverPick.TabIndex = 5;
             // 
             // currentWindowInfo
@@ -195,9 +203,9 @@
             this.loginButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.loginButton.ForeColor = System.Drawing.Color.White;
             this.loginButton.Image = global::GameLauncher.Properties.Resources.button_enable;
-            this.loginButton.Location = new System.Drawing.Point(339, 245);
+            this.loginButton.Location = new System.Drawing.Point(340, 250);
             this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(147, 36);
+            this.loginButton.Size = new System.Drawing.Size(149, 37);
             this.loginButton.TabIndex = 12;
             this.loginButton.Text = "LOG IN";
             this.loginButton.UseVisualStyleBackColor = false;
@@ -218,13 +226,117 @@
             this.registerText.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(181)))), ((int)(((byte)(255)))), ((int)(((byte)(33)))));
             this.registerText.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.registerText_LinkClicked);
             // 
-            // panel1
+            // emailLabel
             // 
-            this.panel1.BackColor = System.Drawing.Color.Black;
-            this.panel1.Location = new System.Drawing.Point(526, 105);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(249, 118);
-            this.panel1.TabIndex = 14;
+            this.emailLabel.AutoSize = true;
+            this.emailLabel.BackColor = System.Drawing.Color.Transparent;
+            this.emailLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.emailLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.emailLabel.Location = new System.Drawing.Point(30, 161);
+            this.emailLabel.Name = "emailLabel";
+            this.emailLabel.Size = new System.Drawing.Size(131, 18);
+            this.emailLabel.TabIndex = 14;
+            this.emailLabel.Text = "EMAIL ADDRESS:";
+            this.emailLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // passwordLabel
+            // 
+            this.passwordLabel.AutoSize = true;
+            this.passwordLabel.BackColor = System.Drawing.Color.Transparent;
+            this.passwordLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.passwordLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.passwordLabel.Location = new System.Drawing.Point(276, 161);
+            this.passwordLabel.Name = "passwordLabel";
+            this.passwordLabel.Size = new System.Drawing.Size(100, 18);
+            this.passwordLabel.TabIndex = 15;
+            this.passwordLabel.Text = "PASSWORD:";
+            this.passwordLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // troubleLabel
+            // 
+            this.troubleLabel.AutoSize = true;
+            this.troubleLabel.BackColor = System.Drawing.Color.Transparent;
+            this.troubleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.troubleLabel.ForeColor = System.Drawing.Color.White;
+            this.troubleLabel.Location = new System.Drawing.Point(30, 255);
+            this.troubleLabel.Name = "troubleLabel";
+            this.troubleLabel.Size = new System.Drawing.Size(148, 16);
+            this.troubleLabel.TabIndex = 16;
+            this.troubleLabel.Text = "HAVING TROUBLE?";
+            // 
+            // githubLink
+            // 
+            this.githubLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.githubLink.AutoSize = true;
+            this.githubLink.BackColor = System.Drawing.Color.Transparent;
+            this.githubLink.DisabledLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.githubLink.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.githubLink.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.githubLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.githubLink.Location = new System.Drawing.Point(30, 271);
+            this.githubLink.Name = "githubLink";
+            this.githubLink.Size = new System.Drawing.Size(195, 16);
+            this.githubLink.TabIndex = 17;
+            this.githubLink.TabStop = true;
+            this.githubLink.Text = "Visit our customer service page";
+            this.githubLink.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            // 
+            // forgotPassword
+            // 
+            this.forgotPassword.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.forgotPassword.BackColor = System.Drawing.Color.Transparent;
+            this.forgotPassword.DisabledLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.forgotPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.forgotPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.forgotPassword.LinkArea = new System.Windows.Forms.LinkArea(0, 100);
+            this.forgotPassword.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.forgotPassword.Location = new System.Drawing.Point(276, 206);
+            this.forgotPassword.Name = "forgotPassword";
+            this.forgotPassword.Size = new System.Drawing.Size(210, 21);
+            this.forgotPassword.TabIndex = 18;
+            this.forgotPassword.TabStop = true;
+            this.forgotPassword.Text = "I forgot my password.";
+            this.forgotPassword.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.forgotPassword.UseCompatibleTextRendering = true;
+            this.forgotPassword.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            // 
+            // registerButton
+            // 
+            this.registerButton.BackColor = System.Drawing.Color.Transparent;
+            this.registerButton.FlatAppearance.BorderSize = 0;
+            this.registerButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.registerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.registerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.registerButton.ForeColor = System.Drawing.Color.White;
+            this.registerButton.Image = global::GameLauncher.Properties.Resources.button_enable;
+            this.registerButton.Location = new System.Drawing.Point(613, 420);
+            this.registerButton.Name = "registerButton";
+            this.registerButton.Size = new System.Drawing.Size(149, 37);
+            this.registerButton.TabIndex = 19;
+            this.registerButton.Text = "REGISTER";
+            this.registerButton.UseVisualStyleBackColor = false;
+            // 
+            // selectServerLabel
+            // 
+            this.selectServerLabel.BackColor = System.Drawing.Color.Transparent;
+            this.selectServerLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.selectServerLabel.ForeColor = System.Drawing.Color.White;
+            this.selectServerLabel.Location = new System.Drawing.Point(376, 51);
+            this.selectServerLabel.Name = "selectServerLabel";
+            this.selectServerLabel.Size = new System.Drawing.Size(171, 15);
+            this.selectServerLabel.TabIndex = 20;
+            this.selectServerLabel.Text = "SELECT SERVER:";
+            this.selectServerLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // settingsButton
+            // 
+            this.settingsButton.BackColor = System.Drawing.Color.Transparent;
+            this.settingsButton.BackgroundImage = global::GameLauncher.Properties.Resources.settingsbtn;
+            this.settingsButton.Location = new System.Drawing.Point(741, 44);
+            this.settingsButton.Name = "settingsButton";
+            this.settingsButton.Size = new System.Drawing.Size(31, 29);
+            this.settingsButton.TabIndex = 21;
+            this.settingsButton.TabStop = false;
             // 
             // mainScreen
             // 
@@ -232,7 +344,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.ClientSize = new System.Drawing.Size(790, 490);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.settingsButton);
+            this.Controls.Add(this.selectServerLabel);
+            this.Controls.Add(this.registerButton);
+            this.Controls.Add(this.forgotPassword);
+            this.Controls.Add(this.githubLink);
+            this.Controls.Add(this.troubleLabel);
+            this.Controls.Add(this.passwordLabel);
+            this.Controls.Add(this.emailLabel);
             this.Controls.Add(this.registerText);
             this.Controls.Add(this.loginButton);
             this.Controls.Add(this.onlineCount);
@@ -258,6 +377,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -280,7 +400,14 @@
         private System.Windows.Forms.Label onlineCount;
         private System.Windows.Forms.Button loginButton;
         private System.Windows.Forms.LinkLabel registerText;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label emailLabel;
+        private System.Windows.Forms.Label passwordLabel;
+        private System.Windows.Forms.Label troubleLabel;
+        private System.Windows.Forms.LinkLabel githubLink;
+        private System.Windows.Forms.LinkLabel forgotPassword;
+        private System.Windows.Forms.Button registerButton;
+        private System.Windows.Forms.Label selectServerLabel;
+        private System.Windows.Forms.PictureBox settingsButton;
     }
 }
 

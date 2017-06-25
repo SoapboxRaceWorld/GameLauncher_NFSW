@@ -80,7 +80,7 @@ namespace GameLauncher {
             String[] files = { "SlimDX.dll", "Microsoft.WindowsAPICodePack.dll", "Microsoft.WindowsAPICodePack.Shell.dll" };
             foreach(string file in files) {
                 if (!File.Exists(file)) {
-                    MessageBox.Show("Cannot find " + file + " - Exiting");
+                    MessageBox.Show(null, "Cannot find " + file + " - Exiting", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     System.Environment.Exit(1);
                 }
             }
@@ -88,6 +88,10 @@ namespace GameLauncher {
             closebtn.MouseEnter += new EventHandler(closebtn_MouseEnter);
             closebtn.MouseLeave += new EventHandler(closebtn_MouseLeave);
             closebtn.Click += new EventHandler(closebtn_Click);
+
+            settingsButton.MouseEnter += new EventHandler(settingsButton_MouseEnter);
+            settingsButton.MouseLeave += new EventHandler(settingsButton_MouseLeave);
+            settingsButton.Click += new EventHandler(settingsButton_Click);
 
             minimizebtn.MouseEnter += new EventHandler(minimizebtn_MouseEnter);
             minimizebtn.MouseLeave += new EventHandler(minimizebtn_MouseLeave);
@@ -99,10 +103,21 @@ namespace GameLauncher {
             loginButton.MouseUp += new MouseEventHandler(loginButton_MouseUp);
             loginButton.MouseDown += new MouseEventHandler(loginButton_MouseDown);
 
+            registerButton.MouseEnter += new EventHandler(registerButton_MouseEnter);
+            registerButton.MouseLeave += new EventHandler(registerButton_MouseLeave);
+            registerButton.MouseUp += new MouseEventHandler(registerButton_MouseUp);
+            registerButton.MouseDown += new MouseEventHandler(registerButton_MouseDown);
+            registerButton.Click += new EventHandler(registerButton_Click);
+
             email.KeyUp += new KeyEventHandler(loginbuttonenabler);
             password.KeyUp += new KeyEventHandler(loginbuttonenabler);
 
+            email.PreviewKeyDown += new PreviewKeyDownEventHandler(loginEnter);
+            password.PreviewKeyDown += new PreviewKeyDownEventHandler(loginEnter);
+
             serverPick.TextChanged += new EventHandler(serverPick_TextChanged);
+            forgotPassword.LinkClicked += new LinkLabelLinkClickedEventHandler(forgotPassword_LinkClicked);
+            githubLink.LinkClicked += new LinkLabelLinkClickedEventHandler(githubLink_LinkClicked);
 
             this.MouseDown += new MouseEventHandler(this.mainScreen_MouseDown);
             this.MouseMove += new MouseEventHandler(this.mainScreen_MouseMove);
@@ -229,6 +244,8 @@ namespace GameLauncher {
             loginEnabled = false;
             serverEnabled = false;
             this.loginButton.Image = Properties.Resources.button_disable;
+            this.loginButton.ForeColor = Color.FromArgb(128, 128, 128);
+            RegisterFormHideElements();
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
@@ -266,13 +283,22 @@ namespace GameLauncher {
             this.minimizebtn.BackgroundImage = Properties.Resources.minimize;
         }
 
+        private void loginEnter(object sender, PreviewKeyDownEventArgs e) {
+            if (e.KeyCode == Keys.Return && loginEnabled == true) {
+                loginButton_Click(sender, e);
+            }
+        }
+
         private void loginbuttonenabler(object sender, EventArgs e) {
             if (String.IsNullOrEmpty(email.Text) || String.IsNullOrEmpty(password.Text)) {
                 loginEnabled = false;
                 this.loginButton.Image = Properties.Resources.button_disable;
-            } else {
+                this.loginButton.ForeColor = Color.Gray;
+            }
+            else {
                 loginEnabled = true;
                 this.loginButton.Image = Properties.Resources.button_enable;
+                this.loginButton.ForeColor = Color.White;
             }
         }
 
@@ -296,8 +322,6 @@ namespace GameLauncher {
             if((loginEnabled == false || serverEnabled == false) && builtinserver == false) {
                 return;
             }
-
-            this.loginButton.Image = Properties.Resources.button_hover;
 
             string serverIP = serverPick.SelectedValue.ToString();
             string serverName = serverPick.GetItemText(serverPick.SelectedItem);
@@ -514,18 +538,46 @@ namespace GameLauncher {
             currentWindowInfo.Font = new Font(fontFamily3, 12.75f, FontStyle.Italic);
             rememberMe.Font = new Font(fontFamily, 9f, FontStyle.Bold);
             loginButton.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
+            registerButton.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
             serverStatus.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
             onlineCount.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
             registerText.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
+            emailLabel.Font = new Font(fontFamily4, 11f);
+            passwordLabel.Font = new Font(fontFamily4, 11f);
+            troubleLabel.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
+            githubLink.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
+            forgotPassword.Font = new Font(fontFamily, 9f);
+            selectServerLabel.Font = new System.Drawing.Font(fontFamily, 9.749999f, FontStyle.Bold);
         }
 
         private void registerText_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            this.BackgroundImage = Properties.Resources.settingsbg;
-            this.currentWindowInfo.Text = "REGISTER ON " + serverPick.GetItemText(serverPick.SelectedItem).ToUpper();
-            LoginFormHideElements();
+            if(serverPick.GetItemText(serverPick.SelectedItem) == "World Revival") {
+                ConsoleLog("Redirecting into Registration page", "info");
+                Process.Start("http://world-revival.fr/user/register");
+            } else {
+                this.BackgroundImage = Properties.Resources.settingsbg;
+                this.currentWindowInfo.Text = "REGISTER ON " + serverPick.GetItemText(serverPick.SelectedItem).ToUpper();
+                LoginFormHideElements();
+                RegisterFormShowElements();
+            }
         }
 
-        private void LoginFormHideElements() {
+        private void forgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            if (serverPick.GetItemText(serverPick.SelectedItem) == "World Revival") {
+                ConsoleLog("Redirecting into Reset Password page", "info");
+                Process.Start("http://world-revival.fr/user/reset");
+            } else {
+                MessageBox.Show(null, "This server does not have that ability, yet.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void githubLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            ConsoleLog("Redirecting into GitHub Issue page", "info");
+            Process.Start("https://github.com/metonator/GameLauncher_NFSW/issues");
+        }
+
+        private void LoginFormHideElements()
+        {
             this.rememberMe.Hide();
             this.loginButton.Hide();
             this.serverStatus.Hide();
@@ -537,6 +589,85 @@ namespace GameLauncher {
             this.clearConsole.Hide();
             this.email.Hide();
             this.password.Hide();
+            this.emailLabel.Hide();
+            this.passwordLabel.Hide();
+            this.troubleLabel.Hide();
+            this.githubLink.Hide();
+            this.forgotPassword.Hide();
+            this.selectServerLabel.Hide();
+        }
+
+        private void LoginFormShowElements() {
+            this.rememberMe.Show();
+            this.loginButton.Show();
+            this.serverStatus.Show();
+            this.onlineCount.Show();
+            this.registerText.Show();
+            this.serverPick.Show();
+            this.serverStatusImg.Show();
+            this.consoleLog.Show();
+            this.clearConsole.Show();
+            this.email.Show();
+            this.password.Show();
+            this.emailLabel.Show();
+            this.passwordLabel.Show();
+            this.troubleLabel.Show();
+            this.githubLink.Show();
+            this.forgotPassword.Show();
+            this.selectServerLabel.Show();
+        }
+
+        /* 
+         * REGISTER PAGE LAYOUT 
+         * Because why should i close Form1 and create/open Form2 if it will look a bit more responsive...
+         */
+
+        private void RegisterFormHideElements() {
+            this.registerButton.Hide();
+        }
+
+        private void RegisterFormShowElements() {
+            this.registerButton.Show();
+        }
+
+        private void registerButton_MouseEnter(object sender, EventArgs e) {
+            this.registerButton.Image = Properties.Resources.button_hover;
+        }
+
+        private void registerButton_MouseLeave(object sender, EventArgs e) {
+            this.registerButton.Image = Properties.Resources.button_enable;
+        }
+
+        private void registerButton_MouseUp(object sender, EventArgs e) {
+            this.registerButton.Image = Properties.Resources.button_hover;
+        }
+
+        private void registerButton_MouseDown(object sender, EventArgs e) {
+            this.registerButton.Image = Properties.Resources.button_click;
+        }
+
+        private void registerButton_Click(object sender, EventArgs e) {
+            this.BackgroundImage = Properties.Resources.loginbg;
+            RegisterFormHideElements();
+            LoginFormShowElements();
+        }
+
+        /*
+         * SETTINGS PAGE LAYOUT
+         * A random description
+         */
+
+        private void settingsButton_Click(object sender, EventArgs e) {
+            this.settingsButton.BackgroundImage = Properties.Resources.settingsbtn_click;
+            ConsoleLog("Settings comming soon.", "error");
+        }
+
+        private void settingsButton_MouseEnter(object sender, EventArgs e) {
+            this.settingsButton.BackgroundImage = Properties.Resources.settingsbtn_hover;
+        }
+
+        private void settingsButton_MouseLeave(object sender, EventArgs e) {
+            this.settingsButton.BackgroundImage = Properties.Resources.settingsbtn;
         }
     }
 }
