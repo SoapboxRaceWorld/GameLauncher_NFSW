@@ -412,7 +412,7 @@ namespace GameLauncher {
                     Description = childrenNode["Description"].InnerText;
                 }
 
-                if (Description == "LOGIN ERROR") {
+                if (String.IsNullOrEmpty(LoginToken)) {
                     ConsoleLog("Invalid username or password.", "error");
                 } else {
                     try {
@@ -461,6 +461,11 @@ namespace GameLauncher {
         }
 
         private void serverPick_TextChanged(object sender, EventArgs e) {
+            loginEnabled = false;
+            this.loginButton.Image = Properties.Resources.button_disable;
+            this.loginButton.ForeColor = Color.Gray;
+            this.password.Text = "";
+
             string serverIP = serverPick.SelectedValue.ToString();
             string numPlayers;
             string serverName = serverPick.GetItemText(serverPick.SelectedItem);
@@ -475,10 +480,12 @@ namespace GameLauncher {
                 builtinserver = true;
                 this.loginButton.Image = Properties.Resources.button_enable;
                 this.loginButton.Text = "LAUNCH";
+                this.loginButton.ForeColor = Color.White;
             } else {
                 builtinserver = false;
                 this.loginButton.Image = Properties.Resources.button_disable;
                 this.loginButton.Text = "LOG IN";
+                this.loginButton.ForeColor = Color.Gray;
             }
 
             var client = new WebClient();
