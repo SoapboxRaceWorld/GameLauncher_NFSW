@@ -15,6 +15,8 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
 using System.Threading;
 using System.Net.NetworkInformation;
+using Newtonsoft.Json;
+using SoapBox.JsonScheme;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -77,8 +79,8 @@ namespace GameLauncher {
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
 
             //First of all, we need to check if files exists
-            String[] files = { "SlimDX.dll", "Microsoft.WindowsAPICodePack.dll", "Microsoft.WindowsAPICodePack.Shell.dll" };
-            foreach(string file in files) {
+            String[] files = { "SlimDX.dll", "Microsoft.WindowsAPICodePack.dll", "Microsoft.WindowsAPICodePack.Shell.dll", "Newtonsoft.Json.dll" };
+            foreach (string file in files) {
                 if (!File.Exists(file)) {
                     MessageBox.Show(null, "Cannot find " + file + " - Exiting", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     System.Environment.Exit(1);
@@ -489,7 +491,9 @@ namespace GameLauncher {
             }
 
             var client = new WebClient();
-            Uri StringToUri = new Uri(serverIP + "/OnlineUsers/getOnline");
+            client.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
+
+            Uri StringToUri = new Uri(serverIP + "/GetServerInformation");
             client.DownloadStringAsync(StringToUri);
             client.DownloadStringCompleted += (sender2, e2) => {
                 if (e2.Error != null) {
@@ -507,29 +511,30 @@ namespace GameLauncher {
                     serverStatus.Location = new Point(44, 322);
 
                     if (serverName == "Offline Built-In Server") {
-                        numPlayers = "1337";
+                        numPlayers = "∞";
                     } else if(serverName == "World Revival") {
                         //JSON... and Dedicated API... c'mon WorldRevival...
                         Uri StringToUri2 = new Uri("http://world-revival.fr/api/GetStatus.php");
                         var reply = client.DownloadString(StringToUri2);
-                        String[] substrings = reply.Split(new string[] { "\"" }, StringSplitOptions.None);
-                        numPlayers = substrings[9];
+                        GetStatus json = JsonConvert.DeserializeObject<GetStatus>(reply);
+                        numPlayers = json.server.slots + " out of " + json.server.maxslots;
                     } else {
-                        numPlayers = e2.Result;
+                        GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
+                        numPlayers = json.onlineNumber + " out of " + json.numberOfRegistered;
                     }
 
                     onlineCount.Text = "Players on server: " + numPlayers;
                     serverEnabled = true;
-                }
-            };
 
-            Ping pingSender = new Ping();
-            pingSender.SendAsync(StringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
-            pingSender.PingCompleted += (sender2, e2) => {
-                PingReply reply = e2.Reply;
+                    Ping pingSender = new Ping();
+                    pingSender.SendAsync(StringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
+                    pingSender.PingCompleted += (sender3, e3) => {
+                        PingReply reply = e3.Reply;
 
-                if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
-                    ConsoleLog("This PC <---> " + serverName + ": " + reply.RoundtripTime + "ms", "ping");
+                        if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
+                            ConsoleLog("This PC <---> " + serverName + ": " + reply.RoundtripTime + "ms", "ping");
+                        }
+                    };
                 }
             };
         }
