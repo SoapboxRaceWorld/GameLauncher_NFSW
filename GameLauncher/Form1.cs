@@ -574,7 +574,7 @@ namespace GameLauncher {
                 ConsoleLog("Redirecting into Reset Password page", "info");
                 Process.Start("http://world-revival.fr/user/reset");
             } else {
-                MessageBox.Show(null, "This server does not have that ability, yet.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Process.Start(serverPick.SelectedValue.ToString().Replace("Engine.svc", "") + "forgotPasswd.jsp");
             }
         }
 
