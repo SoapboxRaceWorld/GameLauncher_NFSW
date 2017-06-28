@@ -490,13 +490,17 @@ namespace GameLauncher {
                 this.loginButton.ForeColor = Color.Gray;
             }
 
-            var client = new WebClient();
+            var client = new WebClientWithTimeout();
             client.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
 
             Uri StringToUri = new Uri(serverIP + "/GetServerInformation");
+            client.CancelAsync();
             client.DownloadStringAsync(StringToUri);
             client.DownloadStringCompleted += (sender2, e2) => {
-                if (e2.Error != null) {
+                if (e2.Cancelled) {
+                    client.CancelAsync();
+                    return;
+                } else if (e2.Error != null) {
                     serverStatusImg.Location = new Point(20, 335);
                     serverStatusImg.BackgroundImage = Properties.Resources.server_offline;
                     serverStatus.ForeColor = Color.FromArgb(227, 88, 50);

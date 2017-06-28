@@ -6,15 +6,13 @@ using System.IO.Compression;
 
 namespace GameLauncher
 {
-    public class WebClientWithTimeout : WebClient
-    {
-        protected override WebRequest GetWebRequest(Uri address)
-        {
-            HttpWebRequest wr = base.GetWebRequest(address) as HttpWebRequest;
-            wr.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
-            wr.Timeout = 3000;
-
+    public class WebClientWithTimeout : WebClient {
+        protected override WebRequest GetWebRequest(Uri address) {
+            var wr = base.GetWebRequest(address);
+            wr.Timeout = 1000;
             return wr;
         }
     }
+
+
 }
