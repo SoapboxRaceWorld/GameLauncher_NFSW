@@ -25,17 +25,17 @@ namespace GameLauncher {
         bool serverEnabled;
         bool builtinserver = false;
 
-        private void mainScreen_MouseDown(object sender, MouseEventArgs e) {
+        private void moveWindow_MouseDown(object sender, MouseEventArgs e) {
             mouseDownPoint = new Point(e.X, e.Y);
         }
 
-        private void mainScreen_MouseUp(object sender, MouseEventArgs e) {
+        private void moveWindow_MouseUp(object sender, MouseEventArgs e) {
             mouseDownPoint = Point.Empty;
         }
 
-        private void mainScreen_MouseMove(object sender, MouseEventArgs e) {
+        private void moveWindow_MouseMove(object sender, MouseEventArgs e) {
             if (mouseDownPoint.IsEmpty) { return; }
-            Form f = sender as Form;
+            Form f = this as Form;
             f.Location = new Point(f.Location.X + (e.X - mouseDownPoint.X), f.Location.Y + (e.Y - mouseDownPoint.Y));
         }
 
@@ -121,31 +121,42 @@ namespace GameLauncher {
             forgotPassword.LinkClicked += new LinkLabelLinkClickedEventHandler(forgotPassword_LinkClicked);
             githubLink.LinkClicked += new LinkLabelLinkClickedEventHandler(githubLink_LinkClicked);
 
-            this.MouseDown += new MouseEventHandler(this.mainScreen_MouseDown);
-            this.MouseMove += new MouseEventHandler(this.mainScreen_MouseMove);
-            this.MouseUp += new MouseEventHandler(this.mainScreen_MouseUp);
+            moveWindow.MouseDown += new MouseEventHandler(moveWindow_MouseDown);
+            moveWindow.MouseMove += new MouseEventHandler(moveWindow_MouseMove);
+            moveWindow.MouseUp += new MouseEventHandler(moveWindow_MouseUp);
 
             //Command-line Arguments
             string[] args = Environment.GetCommandLineArgs();
 
 
             //Somewhere here we will setup the game installation directory
-            if (String.IsNullOrEmpty(Settings.Default.InstallationDirectory)) {
+            directoryInstallation();
+
+            registerText.Text = "DON'T HAVE AN ACCOUNT?\nCLICK HERE TO CREATE ONE NOW...";
+        }
+
+        public void directoryInstallation(bool bypass = false) {
+            if (String.IsNullOrEmpty(Settings.Default.InstallationDirectory) || bypass == true) {
                 var openFolder = new CommonOpenFileDialog();
                 openFolder.InitialDirectory = "";
                 openFolder.IsFolderPicker = true;
-                openFolder.Title = "GameLauncher: Please pick up a directory to install NFSW.";
+                openFolder.Title = "GameLauncher: Please pick up a directory with NFSW.";
                 var result = openFolder.ShowDialog();
 
                 if (result == CommonFileDialogResult.Ok) {
                     Settings.Default.InstallationDirectory = openFolder.FileName;
                     Settings.Default.Save();
-                } else if(result == CommonFileDialogResult.Cancel) {
+                } else if (result == CommonFileDialogResult.Cancel) {
                     System.Environment.Exit(1);
                 }
             }
 
-            if (!Directory.Exists(Settings.Default.InstallationDirectory + "/nfsw")) {
+            if(!File.Exists(Settings.Default.InstallationDirectory + "/nfsw.exe")) {
+                MessageBox.Show(null, "There's no 'Need For Speed: World' installation over there. Try again.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                directoryInstallation(true);
+            }
+
+            /*if (!Directory.Exists(Settings.Default.InstallationDirectory)) {
                 Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw");
                 Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw/Cache");
                 Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw/Data");
@@ -153,10 +164,7 @@ namespace GameLauncher {
                 File.Create(Settings.Default.InstallationDirectory + "/nfsw/Cache/keep.this");
                 File.Create(Settings.Default.InstallationDirectory + "/nfsw/Data/put.your.nfsw.exe.here");
                 Process.Start(@"" + Settings.Default.InstallationDirectory + "/nfsw/Data/");
-            }
-
-            registerText.Text = "DON'T HAVE AN ACCOUNT?\nCLICK HERE TO CREATE ONE NOW...";
-
+            }*/
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
@@ -572,7 +580,7 @@ namespace GameLauncher {
                 Process.Start("http://world-revival.fr/user/register");
             } else {
                 this.BackgroundImage = Properties.Resources.settingsbg;
-                this.currentWindowInfo.Text = "REGISTER ON " + serverPick.GetItemText(serverPick.SelectedItem).ToUpper();
+                this.currentWindowInfo.Text = "REGISTER ON " + serverPick.GetItemText(serverPick.SelectedItem).ToUpper() + ":";
                 LoginFormHideElements();
                 RegisterFormShowElements();
             }
@@ -664,6 +672,7 @@ namespace GameLauncher {
 
         private void registerButton_Click(object sender, EventArgs e) {
             this.BackgroundImage = Properties.Resources.loginbg;
+            this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN:";
             RegisterFormHideElements();
             LoginFormShowElements();
         }

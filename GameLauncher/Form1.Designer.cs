@@ -53,6 +53,7 @@
             this.registerButton = new System.Windows.Forms.Button();
             this.selectServerLabel = new System.Windows.Forms.Label();
             this.settingsButton = new System.Windows.Forms.PictureBox();
+            this.moveWindow = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
@@ -338,6 +339,14 @@
             this.settingsButton.TabIndex = 21;
             this.settingsButton.TabStop = false;
             // 
+            // moveWindow
+            // 
+            this.moveWindow.BackColor = System.Drawing.Color.Transparent;
+            this.moveWindow.Location = new System.Drawing.Point(0, 0);
+            this.moveWindow.Name = "moveWindow";
+            this.moveWindow.Size = new System.Drawing.Size(790, 88);
+            this.moveWindow.TabIndex = 1;
+            // 
             // mainScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -366,6 +375,7 @@
             this.Controls.Add(this.email);
             this.Controls.Add(this.minimizebtn);
             this.Controls.Add(this.closebtn);
+            this.Controls.Add(this.moveWindow);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -408,6 +418,7 @@
         private System.Windows.Forms.Button registerButton;
         private System.Windows.Forms.Label selectServerLabel;
         private System.Windows.Forms.PictureBox settingsButton;
+        private System.Windows.Forms.Panel moveWindow;
     }
 }
 
