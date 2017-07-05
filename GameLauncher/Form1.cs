@@ -426,7 +426,7 @@ namespace GameLauncher {
                     ConsoleLog("Invalid username or password.", "error");
                 } else {
                     try {
-                        string filename = Settings.Default.InstallationDirectory.ToString() + "\\nfsw\\Data\\nfsw.exe";
+                        string filename = Settings.Default.InstallationDirectory.ToString() + "\\nfsw.exe";
                         ConsoleLog("Logged in. Starting game (" + filename + ").", "success");
                         String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
                         var proc = Process.Start(filename, cParams);
@@ -466,8 +466,8 @@ namespace GameLauncher {
         }
 
         private void clearConsole_Click(object sender, EventArgs e) {
-            consoleLog.ForeColor = Color.Gray;
-            consoleLog.Text = "Console cleaned.";
+            consoleLog.SelectionColor = Color.Gray;
+            consoleLog.Text = "Console cleaned.\n";
         }
 
         private void serverPick_TextChanged(object sender, EventArgs e) {
@@ -545,6 +545,8 @@ namespace GameLauncher {
 
                         if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
                             ConsoleLog("This PC <---> " + serverName + ": " + reply.RoundtripTime + "ms", "ping");
+                        } else {
+                            ConsoleLog(serverName + " doesn't allow pinging.", "ping");
                         }
                     };
                 }

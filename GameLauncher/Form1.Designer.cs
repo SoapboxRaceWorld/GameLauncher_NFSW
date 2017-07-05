@@ -342,9 +342,9 @@
             // moveWindow
             // 
             this.moveWindow.BackColor = System.Drawing.Color.Transparent;
-            this.moveWindow.Location = new System.Drawing.Point(0, 0);
+            this.moveWindow.Location = new System.Drawing.Point(1, 1);
             this.moveWindow.Name = "moveWindow";
-            this.moveWindow.Size = new System.Drawing.Size(790, 88);
+            this.moveWindow.Size = new System.Drawing.Size(788, 87);
             this.moveWindow.TabIndex = 1;
             // 
             // mainScreen
