@@ -78,15 +78,6 @@ namespace GameLauncher {
             MaximizeBox = false;
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
 
-            //First of all, we need to check if files exists
-            String[] files = { "SlimDX.dll", "Microsoft.WindowsAPICodePack.dll", "Microsoft.WindowsAPICodePack.Shell.dll", "Newtonsoft.Json.dll" };
-            foreach (string file in files) {
-                if (!File.Exists(file)) {
-                    MessageBox.Show(null, "Cannot find " + file + " - Exiting", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    System.Environment.Exit(1);
-                }
-            }
-
             closebtn.MouseEnter += new EventHandler(closebtn_MouseEnter);
             closebtn.MouseLeave += new EventHandler(closebtn_MouseLeave);
             closebtn.Click += new EventHandler(closebtn_Click);
@@ -147,7 +138,7 @@ namespace GameLauncher {
                     Settings.Default.InstallationDirectory = openFolder.FileName;
                     Settings.Default.Save();
                 } else if (result == CommonFileDialogResult.Cancel) {
-                    System.Environment.Exit(1);
+                    closebtn_Click(null, null);
                 }
             }
 
@@ -210,9 +201,6 @@ namespace GameLauncher {
                     ConsoleLog("Found a controller. However, this controller might not work without a valid controller emulation, like DS4Windows or InputMapper", "warning");
                 }
             }
-
-            //Detect modules inside gamefolder
-            //modules/MODULENAME..dll vs. modules/MODULENAME.asi
 
             email.Text = Settings.Default.email.ToString();
             if (Settings.Default.rememberme == 1) {
@@ -431,8 +419,9 @@ namespace GameLauncher {
                         String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
                         var proc = Process.Start(filename, cParams);
                         proc.EnableRaisingEvents = true;
+
                         proc.Exited += (sender2, e2) => {
-                            Application.Exit();
+                            closebtn_Click(sender2, e2);
                         };
 
                         if (builtinserver == true) {
@@ -440,7 +429,7 @@ namespace GameLauncher {
                         } else {
                             ConsoleLog("Closing myself in 5 seconds.", "warning");
                             Thread.Sleep(5000);
-                            Application.Exit();
+                            closebtn_Click(sender, e);
                         }
                     } catch (Exception) {
                         ConsoleLog("Logged in. But i cannot find NFSW executable file. Are you sure you've copied all files?", "error");

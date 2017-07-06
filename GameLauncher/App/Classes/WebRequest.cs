@@ -4,8 +4,7 @@ using System.Net;
 using System.Text;
 using System.IO.Compression;
 
-namespace GameLauncher
-{
+namespace GameLauncher {
     public class WebClientWithTimeout : WebClient {
         protected override WebRequest GetWebRequest(Uri address) {
             var wr = base.GetWebRequest(address);
@@ -13,6 +12,4 @@ namespace GameLauncher
             return wr;
         }
     }
-
-
 }

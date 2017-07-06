@@ -38,7 +38,7 @@ namespace GameLauncher.Resources {
         }
 
         private int LoadEmbeddedFont(string fontName) {
-            Stream manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("GameLauncher." + fontName);
+            Stream manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("GameLauncher.Fonts." + fontName);
             IntPtr intPtr = Marshal.AllocCoTaskMem((int)manifestResourceStream.Length);
             byte[] array = new byte[manifestResourceStream.Length];
             manifestResourceStream.Read(array, 0, (int)manifestResourceStream.Length);
