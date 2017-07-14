@@ -7,8 +7,6 @@ using System.Net;
 using System.Security.Cryptography;
 using System.IO;
 using System.Xml;
-using GameLauncher.Properties;
-using SlimDX.DirectInput;
 using GameLauncher.Resources;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -17,13 +15,17 @@ using System.Threading;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json;
 using SoapBox.JsonScheme;
+using GameLauncher.App.Classes;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
+
         Point mouseDownPoint = Point.Empty;
         bool loginEnabled;
         bool serverEnabled;
         bool builtinserver = false;
+        bool useSavedPassword;
+        IniFile SettingFile = new IniFile("Settings.ini");
 
         private void moveWindow_MouseDown(object sender, MouseEventArgs e) {
             mouseDownPoint = new Point(e.X, e.Y);
@@ -127,7 +129,7 @@ namespace GameLauncher {
         }
 
         public void directoryInstallation(bool bypass = false) {
-            if (String.IsNullOrEmpty(Settings.Default.InstallationDirectory) || bypass == true) {
+            if (!SettingFile.KeyExists("InstallationDirectory") || bypass == true) {
                 var openFolder = new CommonOpenFileDialog();
                 openFolder.InitialDirectory = "";
                 openFolder.IsFolderPicker = true;
@@ -135,26 +137,25 @@ namespace GameLauncher {
                 var result = openFolder.ShowDialog();
 
                 if (result == CommonFileDialogResult.Ok) {
-                    Settings.Default.InstallationDirectory = openFolder.FileName;
-                    Settings.Default.Save();
+                    SettingFile.Write("InstallationDirectory", openFolder.FileName);
                 } else if (result == CommonFileDialogResult.Cancel) {
                     closebtn_Click(null, null);
                 }
             }
 
-            if(!File.Exists(Settings.Default.InstallationDirectory + "/nfsw.exe")) {
+            if(!File.Exists(SettingFile.Read("InstallationDirectory") + "/nfsw.exe")) {
                 MessageBox.Show(null, "There's no 'Need For Speed: World' installation over there. Try again.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 directoryInstallation(true);
             }
 
-            /*if (!Directory.Exists(Settings.Default.InstallationDirectory)) {
-                Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw");
-                Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw/Cache");
-                Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw/Data");
-                Directory.CreateDirectory(Settings.Default.InstallationDirectory + "/nfsw/Data/Modules");
-                File.Create(Settings.Default.InstallationDirectory + "/nfsw/Cache/keep.this");
-                File.Create(Settings.Default.InstallationDirectory + "/nfsw/Data/put.your.nfsw.exe.here");
-                Process.Start(@"" + Settings.Default.InstallationDirectory + "/nfsw/Data/");
+            /*if (!Directory.Exists(SettingFile.Read("InstallationDirectory"))) {
+                Directory.CreateDirectory(SettingFile.Read("InstallationDirectory")  + "/nfsw");
+                Directory.CreateDirectory(SettingFile.Read("InstallationDirectory")  + "/nfsw/Cache");
+                Directory.CreateDirectory(SettingFile.Read("InstallationDirectory")  + "/nfsw/Data");
+                Directory.CreateDirectory(SettingFile.Read("InstallationDirectory")  + "/nfsw/Data/Modules");
+                File.Create(SettingFile.Read("InstallationDirectory")  + "/nfsw/Cache/keep.this");
+                File.Create(SettingFile.Read("InstallationDirectory")  + "/nfsw/Data/put.your.nfsw.exe.here");
+                Process.Start(@"" + SettingFile.Read("InstallationDirectory")  + "/nfsw/Data/");
             }*/
         }
 
@@ -162,7 +163,7 @@ namespace GameLauncher {
             //Console output to textbox
             ConsoleLog("Log initialized", "info");
             ConsoleLog("GameLauncher initialized", "info");
-            ConsoleLog("Installation directory: " + Settings.Default.InstallationDirectory, "info");
+            ConsoleLog("Installation directory: " + SettingFile.Read("InstallationDirectory"), "info");
 
             //Silly way to detect mono
             int SysVersion = (int)Environment.OSVersion.Platform;
@@ -190,20 +191,8 @@ namespace GameLauncher {
                 ConsoleLog("Detected OS: Linux using Wine - Note that game might not launch.", "warning");
             }
 
-            //Detect controller (if any)
-            var directInput = new DirectInput();
-            var controllerName = "";
-
-            foreach (var deviceInstance in directInput.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly)) {
-                controllerName = deviceInstance.ProductName;
-                if (controllerName == "Wireless Controller") {
-                    /* @TODO@ Detection of 3rd party gamepad emulation like DS4Windows or InputMapper */
-                    ConsoleLog("Found a controller. However, this controller might not work without a valid controller emulation, like DS4Windows or InputMapper", "warning");
-                }
-            }
-
-            email.Text = Settings.Default.email.ToString();
-            if (Settings.Default.rememberme == 1) {
+            email.Text = SettingFile.Read("AccountEmail");
+            if (!String.IsNullOrEmpty(SettingFile.Read("AccountEmail")) && !String.IsNullOrEmpty(SettingFile.Read("Password"))) {
                 rememberMe.Checked = true;
             }
 
@@ -239,10 +228,22 @@ namespace GameLauncher {
 
             serverPick.DataSource = items;
             serverStatusImg.Location = new Point(-16, -16);
-            loginEnabled = false;
-            serverEnabled = false;
-            this.loginButton.Image = Properties.Resources.button_disable;
-            this.loginButton.ForeColor = Color.FromArgb(128, 128, 128);
+
+            if (SettingFile.KeyExists("Password")) {
+                loginEnabled = true;
+                serverEnabled = true;
+                useSavedPassword = true;
+                this.loginButton.Image = Properties.Resources.button_enable;
+                this.loginButton.ForeColor = Color.White;
+                ConsoleLog("Password recovered from Settings.ini file", "success");
+            } else {
+                loginEnabled = false;
+                serverEnabled = false;
+                useSavedPassword = false;
+                this.loginButton.Image = Properties.Resources.button_disable;
+                this.loginButton.ForeColor = Color.Gray;
+            }
+
             RegisterFormHideElements();
         }
 
@@ -257,6 +258,7 @@ namespace GameLauncher {
             string timestamp = ticks.ToString();
             consoleLog.SaveFile("logs/" + timestamp + ".log", RichTextBoxStreamType.PlainText);
 
+            Application.ExitThread();
             Application.Exit();
         }
 
@@ -298,6 +300,8 @@ namespace GameLauncher {
                 this.loginButton.Image = Properties.Resources.button_enable;
                 this.loginButton.ForeColor = Color.White;
             }
+
+            useSavedPassword = false;
         }
 
         private void loginButton_MouseUp(object sender, EventArgs e) {
@@ -333,17 +337,21 @@ namespace GameLauncher {
                 sb.Append(b.ToString("X2"));
             }
 
-            encryptedpassword = sb.ToString();
-
-            if (rememberMe.Checked) {
-                Settings.Default.email = username;
-                Settings.Default.rememberme = 1;
+            if (useSavedPassword) {
+                encryptedpassword = SettingFile.Read("Password");
             } else {
-                Settings.Default.email = "";
-                Settings.Default.rememberme = 0;
+                encryptedpassword = sb.ToString();
             }
 
-            Settings.Default.Save();
+            if (rememberMe.Checked) {
+                SettingFile.Write("AccountEmail", username);
+                SettingFile.Write("Password", encryptedpassword.ToLower());
+            } else {
+                SettingFile.DeleteKey("AccountEmail");
+                SettingFile.DeleteKey("Password");
+            }
+
+
 
             ConsoleLog("Trying to login into " + serverPick.GetItemText(serverPick.SelectedItem) + " (" + serverIP + ")", "info");
 
@@ -356,6 +364,7 @@ namespace GameLauncher {
                 wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
 
                 string BuildURL = serverIP + "/User/authenticateUser?email=" + username + "&password=" + encryptedpassword.ToLower();
+                ConsoleLog(BuildURL, "info");
 
                 serverLoginResponse = wc.DownloadString(BuildURL);
             } catch (WebException ex) {
@@ -414,7 +423,12 @@ namespace GameLauncher {
                     ConsoleLog("Invalid username or password.", "error");
                 } else {
                     try {
-                        string filename = Settings.Default.InstallationDirectory.ToString() + "\\nfsw.exe";
+                        /*this.BackgroundImage = Properties.Resources.playbg;
+                        this.currentWindowInfo.Hide();
+                        LoginFormHideElements();
+                        DownloadFormShowElements();*/
+
+                        string filename = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
                         ConsoleLog("Logged in. Starting game (" + filename + ").", "success");
                         String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
                         var proc = Process.Start(filename, cParams);
@@ -441,16 +455,20 @@ namespace GameLauncher {
         private void loginButton_MouseEnter(object sender, EventArgs e) {
             if (loginEnabled == true || builtinserver == true) {
                 this.loginButton.Image = Properties.Resources.button_hover;
+                this.loginButton.ForeColor = Color.White;
             } else {
                 this.loginButton.Image = Properties.Resources.button_disable;
+                this.loginButton.ForeColor = Color.Gray;
             }
         }
 
         private void loginButton_MouseLeave(object sender, EventArgs e) {
             if (loginEnabled == true || builtinserver == true) {
                 this.loginButton.Image = Properties.Resources.button_enable;
+                this.loginButton.ForeColor = Color.White;
             } else {
                 this.loginButton.Image = Properties.Resources.button_disable;
+                this.loginButton.ForeColor = Color.Gray;
             }
         }
 
@@ -562,7 +580,7 @@ namespace GameLauncher {
             troubleLabel.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
             githubLink.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
             forgotPassword.Font = new Font(fontFamily, 9f);
-            selectServerLabel.Font = new System.Drawing.Font(fontFamily, 9.749999f, FontStyle.Bold);
+            selectServerLabel.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
         }
 
         private void registerText_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
@@ -591,8 +609,7 @@ namespace GameLauncher {
             Process.Start("https://github.com/metonator/GameLauncher_NFSW/issues");
         }
 
-        private void LoginFormHideElements()
-        {
+        private void LoginFormHideElements() {
             this.rememberMe.Hide();
             this.loginButton.Hide();
             this.serverStatus.Hide();
@@ -610,6 +627,7 @@ namespace GameLauncher {
             this.githubLink.Hide();
             this.forgotPassword.Hide();
             this.selectServerLabel.Hide();
+            this.settingsButton.Hide();
         }
 
         private void LoginFormShowElements() {
@@ -630,6 +648,7 @@ namespace GameLauncher {
             this.githubLink.Show();
             this.forgotPassword.Show();
             this.selectServerLabel.Show();
+            this.settingsButton.Show();
         }
 
         /* 
@@ -670,7 +689,6 @@ namespace GameLauncher {
 
         /*
          * SETTINGS PAGE LAYOUT
-         * A random description
          */
 
         private void settingsButton_Click(object sender, EventArgs e) {
@@ -684,6 +702,14 @@ namespace GameLauncher {
 
         private void settingsButton_MouseLeave(object sender, EventArgs e) {
             this.settingsButton.BackgroundImage = Properties.Resources.settingsbtn;
+        }
+
+        /*
+         * DOWNLOAD PAGE LAYOUT
+         */
+
+        private void DownloadFormShowElements() {
+
         }
     }
 }
