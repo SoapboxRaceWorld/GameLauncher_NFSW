@@ -19,12 +19,12 @@ using GameLauncher.App.Classes;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
-
         Point mouseDownPoint = Point.Empty;
         bool loginEnabled;
         bool serverEnabled;
         bool builtinserver = false;
         bool useSavedPassword;
+        bool skipServerTrigger = false;
         IniFile SettingFile = new IniFile("Settings.ini");
 
         private void moveWindow_MouseDown(object sender, MouseEventArgs e) {
@@ -209,7 +209,6 @@ namespace GameLauncher {
                 ConsoleLog("Failed to fetch serverlist. " + ex.Message, "error");
             }
 
-
             //Time to add servers
             serverPick.DisplayMember = "Text";
             serverPick.ValueMember = "Value";
@@ -225,8 +224,13 @@ namespace GameLauncher {
                 }
             }
 
-
             serverPick.DataSource = items;
+
+            if(SettingFile.KeyExists("Server")) {
+                skipServerTrigger = true;
+                serverPick.SelectedValue = SettingFile.Read("Server");
+            }
+
             serverStatusImg.Location = new Point(-16, -16);
 
             if (SettingFile.KeyExists("Password")) {
@@ -257,6 +261,8 @@ namespace GameLauncher {
             ticks /= 10000000;
             string timestamp = ticks.ToString();
             consoleLog.SaveFile("logs/" + timestamp + ".log", RichTextBoxStreamType.PlainText);
+
+            SettingFile.Write("Server", serverPick.SelectedValue.ToString());
 
             Application.ExitThread();
             Application.Exit();
@@ -478,6 +484,8 @@ namespace GameLauncher {
         }
 
         private void serverPick_TextChanged(object sender, EventArgs e) {
+            if (!skipServerTrigger) { return; }
+
             loginEnabled = false;
             this.loginButton.Image = Properties.Resources.button_disable;
             this.loginButton.ForeColor = Color.Gray;
@@ -521,6 +529,7 @@ namespace GameLauncher {
                     serverStatus.ForeColor = Color.FromArgb(227, 88, 50);
                     serverStatus.Text = "This server is currently down. Thanks for your patience.";
                     serverStatus.Location = new Point(44, 329);
+                    onlineCount.Text = "";
                     serverEnabled = false;
                 } else {
                     serverStatusImg.Location = new Point(20, 323);
