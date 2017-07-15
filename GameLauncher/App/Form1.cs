@@ -121,7 +121,6 @@ namespace GameLauncher {
             //Command-line Arguments
             string[] args = Environment.GetCommandLineArgs();
 
-
             //Somewhere here we will setup the game installation directory
             directoryInstallation();
 
@@ -225,10 +224,21 @@ namespace GameLauncher {
             }
 
             serverPick.DataSource = items;
+            serverPick.SelectedIndex = 0;
+
+            //Silliest way to prevent doublecall of TextChanged event...
+            if(!SettingFile.KeyExists("Server")) {
+                SettingFile.Write("Server", serverPick.SelectedValue.ToString());
+            }
 
             if(SettingFile.KeyExists("Server")) {
                 skipServerTrigger = true;
                 serverPick.SelectedValue = SettingFile.Read("Server");
+
+                //I don't know other way to fix this call...
+                if(serverPick.SelectedIndex == 0) {
+                    serverPick_TextChanged(sender, e);
+                }
             }
 
             serverStatusImg.Location = new Point(-16, -16);
@@ -248,7 +258,7 @@ namespace GameLauncher {
                 this.loginButton.ForeColor = Color.Gray;
             }
 
-            RegisterFormHideElements();
+            RegisterFormElements(false);
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
@@ -490,6 +500,9 @@ namespace GameLauncher {
             this.loginButton.Image = Properties.Resources.button_disable;
             this.loginButton.ForeColor = Color.Gray;
             this.password.Text = "";
+            string verticalImageUrl = "";
+            verticalBanner.Image = null;
+            verticalBanner.BackColor = Color.Transparent;
 
             string serverIP = serverPick.SelectedValue.ToString();
             string numPlayers;
@@ -548,11 +561,46 @@ namespace GameLauncher {
                         numPlayers = json.server.slots + " out of " + json.server.maxslots;
                     } else {
                         GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
+                        
+                        if (!String.IsNullOrEmpty(json.bannerUrl)) {
+                            Uri uriResult;
+                            bool result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+                            if (result) {
+                                verticalImageUrl = json.bannerUrl;
+                            } else {
+                                verticalImageUrl = null;
+                            }
+                        } else {
+                            verticalImageUrl = null;
+                        }
+
                         numPlayers = json.onlineNumber + " out of " + json.numberOfRegistered;
                     }
 
                     onlineCount.Text = "Players on server: " + numPlayers;
                     serverEnabled = true;
+
+                    if (!String.IsNullOrEmpty(verticalImageUrl)) {
+                        var client2 = new WebClientWithTimeout();
+                        client.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
+                        Uri StringToUri3 = new Uri(verticalImageUrl);
+                        client2.DownloadDataAsync(StringToUri3);
+                        client2.DownloadDataCompleted += (sender4, e4) => {
+                            if (e4.Cancelled) {
+                                client2.CancelAsync();
+                                return;
+                            } else if (e4.Error != null) {
+                                //What? 
+                            } else {
+                                Image image;
+                                MemoryStream memoryStream = new MemoryStream(e4.Result);
+                                image = Image.FromStream(memoryStream);
+                                verticalBanner.Image = image;
+                                verticalBanner.BackColor = Color.Black;
+                            }
+                        };
+                    }
 
                     Ping pingSender = new Ping();
                     pingSender.SendAsync(StringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
@@ -599,8 +647,8 @@ namespace GameLauncher {
             } else {
                 this.BackgroundImage = Properties.Resources.settingsbg;
                 this.currentWindowInfo.Text = "REGISTER ON " + serverPick.GetItemText(serverPick.SelectedItem).ToUpper() + ":";
-                LoginFormHideElements();
-                RegisterFormShowElements();
+                LoginFormElements(false);
+                RegisterFormElements(true);
             }
         }
 
@@ -618,46 +666,26 @@ namespace GameLauncher {
             Process.Start("https://github.com/metonator/GameLauncher_NFSW/issues");
         }
 
-        private void LoginFormHideElements() {
-            this.rememberMe.Hide();
-            this.loginButton.Hide();
-            this.serverStatus.Hide();
-            this.onlineCount.Hide();
-            this.registerText.Hide();
-            this.serverPick.Hide();
-            this.serverStatusImg.Hide();
-            this.consoleLog.Hide();
-            this.clearConsole.Hide();
-            this.email.Hide();
-            this.password.Hide();
-            this.emailLabel.Hide();
-            this.passwordLabel.Hide();
-            this.troubleLabel.Hide();
-            this.githubLink.Hide();
-            this.forgotPassword.Hide();
-            this.selectServerLabel.Hide();
-            this.settingsButton.Hide();
-        }
-
-        private void LoginFormShowElements() {
-            this.rememberMe.Show();
-            this.loginButton.Show();
-            this.serverStatus.Show();
-            this.onlineCount.Show();
-            this.registerText.Show();
-            this.serverPick.Show();
-            this.serverStatusImg.Show();
-            this.consoleLog.Show();
-            this.clearConsole.Show();
-            this.email.Show();
-            this.password.Show();
-            this.emailLabel.Show();
-            this.passwordLabel.Show();
-            this.troubleLabel.Show();
-            this.githubLink.Show();
-            this.forgotPassword.Show();
-            this.selectServerLabel.Show();
-            this.settingsButton.Show();
+        private void LoginFormElements(bool hideElements = false) {
+            this.rememberMe.Visible = hideElements;
+            this.loginButton.Visible = hideElements;
+            this.serverStatus.Visible = hideElements;
+            this.onlineCount.Visible = hideElements;
+            this.registerText.Visible = hideElements;
+            this.serverPick.Visible = hideElements;
+            this.serverStatusImg.Visible = hideElements;
+            this.consoleLog.Visible = hideElements;
+            this.clearConsole.Visible = hideElements;
+            this.email.Visible = hideElements;
+            this.password.Visible = hideElements;
+            this.emailLabel.Visible = hideElements;
+            this.passwordLabel.Visible = hideElements;
+            this.troubleLabel.Visible = hideElements;
+            this.githubLink.Visible = hideElements;
+            this.forgotPassword.Visible = hideElements;
+            this.selectServerLabel.Visible = hideElements;
+            this.settingsButton.Visible = hideElements;
+            this.verticalBanner.Visible = hideElements;
         }
 
         /* 
@@ -665,12 +693,8 @@ namespace GameLauncher {
          * Because why should i close Form1 and create/open Form2 if it will look a bit more responsive...
          */
 
-        private void RegisterFormHideElements() {
-            this.registerButton.Hide();
-        }
-
-        private void RegisterFormShowElements() {
-            this.registerButton.Show();
+        private void RegisterFormElements(bool hideElements = true) {
+            this.registerButton.Visible = hideElements;
         }
 
         private void registerButton_MouseEnter(object sender, EventArgs e) {
@@ -692,8 +716,8 @@ namespace GameLauncher {
         private void registerButton_Click(object sender, EventArgs e) {
             this.BackgroundImage = Properties.Resources.loginbg;
             this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN:";
-            RegisterFormHideElements();
-            LoginFormShowElements();
+            RegisterFormElements(false);
+            LoginFormElements(true);
         }
 
         /*

@@ -54,10 +54,12 @@
             this.selectServerLabel = new System.Windows.Forms.Label();
             this.settingsButton = new System.Windows.Forms.PictureBox();
             this.moveWindow = new System.Windows.Forms.Panel();
+            this.verticalBanner = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
             this.SuspendLayout();
             // 
             // closebtn
@@ -150,6 +152,7 @@
             this.consoleLog.ForeColor = System.Drawing.Color.White;
             this.consoleLog.Location = new System.Drawing.Point(35, 389);
             this.consoleLog.Name = "consoleLog";
+            this.consoleLog.ReadOnly = true;
             this.consoleLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.consoleLog.Size = new System.Drawing.Size(719, 87);
             this.consoleLog.TabIndex = 9;
@@ -347,12 +350,23 @@
             this.moveWindow.Size = new System.Drawing.Size(788, 87);
             this.moveWindow.TabIndex = 1;
             // 
+            // verticalBanner
+            // 
+            this.verticalBanner.BackColor = System.Drawing.Color.Transparent;
+            this.verticalBanner.Location = new System.Drawing.Point(526, 105);
+            this.verticalBanner.Name = "verticalBanner";
+            this.verticalBanner.Size = new System.Drawing.Size(249, 118);
+            this.verticalBanner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.verticalBanner.TabIndex = 22;
+            this.verticalBanner.TabStop = false;
+            // 
             // mainScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.ClientSize = new System.Drawing.Size(790, 490);
+            this.Controls.Add(this.verticalBanner);
             this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.selectServerLabel);
             this.Controls.Add(this.registerButton);
@@ -388,6 +402,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -419,6 +434,7 @@
         private System.Windows.Forms.Label selectServerLabel;
         private System.Windows.Forms.PictureBox settingsButton;
         private System.Windows.Forms.Panel moveWindow;
+        private System.Windows.Forms.PictureBox verticalBanner;
     }
 }
 
