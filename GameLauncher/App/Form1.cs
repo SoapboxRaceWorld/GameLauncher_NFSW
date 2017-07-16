@@ -104,13 +104,19 @@ namespace GameLauncher {
             registerButton.MouseDown += new MouseEventHandler(registerButton_MouseDown);
             registerButton.Click += new EventHandler(registerButton_Click);
 
-            email.KeyUp += new KeyEventHandler(loginbuttonenabler);
-            password.KeyUp += new KeyEventHandler(loginbuttonenabler);
+            settingsSave.MouseEnter += new EventHandler(settingsSave_MouseEnter);
+            settingsSave.MouseLeave += new EventHandler(settingsSave_MouseLeave);
+            settingsSave.MouseUp += new MouseEventHandler(settingsSave_MouseUp);
+            settingsSave.MouseDown += new MouseEventHandler(settingsSave_MouseDown);
+            settingsSave.Click += new EventHandler(settingsSave_Click);
 
+            email.KeyUp += new KeyEventHandler(loginbuttonenabler);
             email.PreviewKeyDown += new PreviewKeyDownEventHandler(loginEnter);
+            password.KeyUp += new KeyEventHandler(loginbuttonenabler);
             password.PreviewKeyDown += new PreviewKeyDownEventHandler(loginEnter);
 
             serverPick.TextChanged += new EventHandler(serverPick_TextChanged);
+
             forgotPassword.LinkClicked += new LinkLabelLinkClickedEventHandler(forgotPassword_LinkClicked);
             githubLink.LinkClicked += new LinkLabelLinkClickedEventHandler(githubLink_LinkClicked);
 
@@ -138,13 +144,17 @@ namespace GameLauncher {
                 if (result == CommonFileDialogResult.Ok) {
                     SettingFile.Write("InstallationDirectory", openFolder.FileName);
                 } else if (result == CommonFileDialogResult.Cancel) {
-                    closebtn_Click(null, null);
+                    Environment.Exit(Environment.ExitCode);
                 }
             }
 
             if(!File.Exists(SettingFile.Read("InstallationDirectory") + "/nfsw.exe")) {
-                MessageBox.Show(null, "There's no 'Need For Speed: World' installation over there. Try again.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                directoryInstallation(true);
+                DialogResult InstallerAsk = MessageBox.Show(null, "There's no 'Need For Speed: World' installation over there. Do you wanna select new installation directory?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                if(InstallerAsk == DialogResult.Yes) {
+                    directoryInstallation(true);
+                } else {
+                    Environment.Exit(Environment.ExitCode);
+                }
             }
 
             /*if (!Directory.Exists(SettingFile.Read("InstallationDirectory"))) {
@@ -258,7 +268,48 @@ namespace GameLauncher {
                 this.loginButton.ForeColor = Color.Gray;
             }
 
+            //Add downloadable languages to settingLanguage
+            settingsLanguage.DisplayMember = "Text";
+            settingsLanguage.ValueMember = "Value";
+
+            var languages = new[] { 
+                new { Text = "English", Value = "EN" },
+                new { Text = "Deutsch", Value = "DE" },
+                new { Text = "Español", Value = "ES" },
+                new { Text = "Français", Value = "FR" },
+                new { Text = "Polski", Value = "PL" },
+                new { Text = "Русский", Value = "RU" },
+                new { Text = "Português (Brasil)", Value = "PT" },
+                new { Text = "繁體中文", Value = "TC" },
+                new { Text = "简体中文", Value = "SC" },
+                new { Text = "ภาษาไทย", Value = "TH" },
+                new { Text = "Türkçe", Value = "TR" },
+            };
+
+            settingsLanguage.DataSource = languages;
+
+            if(SettingFile.KeyExists("Language", "Downloader")) {
+                settingsLanguage.SelectedValue = SettingFile.Read("Language", "Downloader");
+            }
+
+            //Add downloadable quality to settingLanguage
+            settingsQuality.DisplayMember = "Text";
+            settingsQuality.ValueMember = "Value";
+
+            var quality = new[] { 
+                new { Text = "Standard", Value = "0" },
+                new { Text = "Maximum", Value = "1" },
+            };
+
+            settingsQuality.DataSource = quality;
+
+            if(SettingFile.KeyExists("TracksHigh", "Downloader")) {
+                settingsQuality.SelectedValue = SettingFile.Read("TracksHigh", "Downloader");
+            }
+
+            //Hide other windows
             RegisterFormElements(false);
+            SettingsFormElements(false);
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
@@ -273,6 +324,8 @@ namespace GameLauncher {
             consoleLog.SaveFile("logs/" + timestamp + ".log", RichTextBoxStreamType.PlainText);
 
             SettingFile.Write("Server", serverPick.SelectedValue.ToString());
+            SettingFile.Write("Language", settingsLanguage.SelectedValue.ToString(), "Downloader");
+            SettingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString(), "Downloader");
 
             Application.ExitThread();
             Application.Exit();
@@ -629,6 +682,7 @@ namespace GameLauncher {
             rememberMe.Font = new Font(fontFamily, 9f, FontStyle.Bold);
             loginButton.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
             registerButton.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
+            settingsSave.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
             serverStatus.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
             onlineCount.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
             registerText.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
@@ -638,6 +692,10 @@ namespace GameLauncher {
             githubLink.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
             forgotPassword.Font = new Font(fontFamily, 9f);
             selectServerLabel.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
+            settingsLanguageText.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
+            settingsLanguageDesc.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
+            settingsQualityText.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
+            settingsQualityDesc.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
         }
 
         private void registerText_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
@@ -726,7 +784,10 @@ namespace GameLauncher {
 
         private void settingsButton_Click(object sender, EventArgs e) {
             this.settingsButton.BackgroundImage = Properties.Resources.settingsbtn_click;
-            ConsoleLog("Settings comming soon.", "error");
+            this.BackgroundImage = Properties.Resources.settingsbg;
+            this.currentWindowInfo.Text = "PLEASE SELECT YOUR GAME SETTINGS:";
+            SettingsFormElements(true);
+            LoginFormElements(false);
         }
 
         private void settingsButton_MouseEnter(object sender, EventArgs e) {
@@ -735,6 +796,39 @@ namespace GameLauncher {
 
         private void settingsButton_MouseLeave(object sender, EventArgs e) {
             this.settingsButton.BackgroundImage = Properties.Resources.settingsbtn;
+        }
+
+        private void settingsSave_MouseEnter(object sender, EventArgs e) {
+            this.settingsSave.Image = Properties.Resources.button_hover;
+        }
+
+        private void settingsSave_MouseLeave(object sender, EventArgs e) {
+            this.settingsSave.Image = Properties.Resources.button_enable;
+        }
+
+        private void settingsSave_MouseUp(object sender, EventArgs e) {
+            this.settingsSave.Image = Properties.Resources.button_hover;
+        }
+
+        private void settingsSave_MouseDown(object sender, EventArgs e) {
+            this.settingsSave.Image = Properties.Resources.button_click;
+        }
+
+        private void settingsSave_Click(object sender, EventArgs e) {
+            this.BackgroundImage = Properties.Resources.loginbg;
+            this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN:";
+            SettingsFormElements(false);
+            LoginFormElements(true);
+        }
+
+        private void SettingsFormElements(bool hideElements = true) {
+            this.settingsSave.Visible = hideElements;
+            this.settingsLanguage.Visible = hideElements;
+            this.settingsLanguageText.Visible = hideElements;
+            this.settingsLanguageDesc.Visible = hideElements;
+            this.settingsQuality.Visible = hideElements;
+            this.settingsQualityText.Visible = hideElements;
+            this.settingsQualityDesc.Visible = hideElements;
         }
 
         /*

@@ -55,6 +55,13 @@
             this.settingsButton = new System.Windows.Forms.PictureBox();
             this.moveWindow = new System.Windows.Forms.Panel();
             this.verticalBanner = new System.Windows.Forms.PictureBox();
+            this.settingsSave = new System.Windows.Forms.Button();
+            this.settingsLanguage = new System.Windows.Forms.ComboBox();
+            this.settingsLanguageText = new System.Windows.Forms.Label();
+            this.settingsQuality = new System.Windows.Forms.ComboBox();
+            this.settingsQualityText = new System.Windows.Forms.Label();
+            this.settingsLanguageDesc = new System.Windows.Forms.Label();
+            this.settingsQualityDesc = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
@@ -125,6 +132,7 @@
             // serverPick
             // 
             this.serverPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.serverPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.serverPick.FormattingEnabled = true;
             this.serverPick.Location = new System.Drawing.Point(548, 47);
             this.serverPick.Name = "serverPick";
@@ -360,12 +368,102 @@
             this.verticalBanner.TabIndex = 22;
             this.verticalBanner.TabStop = false;
             // 
+            // settingsSave
+            // 
+            this.settingsSave.BackColor = System.Drawing.Color.Transparent;
+            this.settingsSave.FlatAppearance.BorderSize = 0;
+            this.settingsSave.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.settingsSave.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.settingsSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.settingsSave.ForeColor = System.Drawing.Color.White;
+            this.settingsSave.Image = global::GameLauncher.Properties.Resources.button_enable;
+            this.settingsSave.Location = new System.Drawing.Point(613, 420);
+            this.settingsSave.Name = "settingsSave";
+            this.settingsSave.Size = new System.Drawing.Size(149, 37);
+            this.settingsSave.TabIndex = 23;
+            this.settingsSave.Text = "SAVE";
+            this.settingsSave.UseVisualStyleBackColor = false;
+            // 
+            // settingsLanguage
+            // 
+            this.settingsLanguage.BackColor = System.Drawing.Color.White;
+            this.settingsLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.settingsLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.settingsLanguage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.settingsLanguage.FormattingEnabled = true;
+            this.settingsLanguage.Location = new System.Drawing.Point(77, 198);
+            this.settingsLanguage.Name = "settingsLanguage";
+            this.settingsLanguage.Size = new System.Drawing.Size(185, 21);
+            this.settingsLanguage.TabIndex = 24;
+            // 
+            // settingsLanguageText
+            // 
+            this.settingsLanguageText.AutoSize = true;
+            this.settingsLanguageText.BackColor = System.Drawing.Color.Transparent;
+            this.settingsLanguageText.ForeColor = System.Drawing.Color.White;
+            this.settingsLanguageText.Location = new System.Drawing.Point(74, 180);
+            this.settingsLanguageText.Name = "settingsLanguageText";
+            this.settingsLanguageText.Size = new System.Drawing.Size(113, 13);
+            this.settingsLanguageText.TabIndex = 25;
+            this.settingsLanguageText.Text = "SELECT LANGUAGE:";
+            // 
+            // settingsQuality
+            // 
+            this.settingsQuality.BackColor = System.Drawing.Color.White;
+            this.settingsQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.settingsQuality.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.settingsQuality.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.settingsQuality.FormattingEnabled = true;
+            this.settingsQuality.Location = new System.Drawing.Point(77, 269);
+            this.settingsQuality.Name = "settingsQuality";
+            this.settingsQuality.Size = new System.Drawing.Size(185, 21);
+            this.settingsQuality.TabIndex = 26;
+            // 
+            // settingsQualityText
+            // 
+            this.settingsQualityText.AutoSize = true;
+            this.settingsQualityText.BackColor = System.Drawing.Color.Transparent;
+            this.settingsQualityText.ForeColor = System.Drawing.Color.White;
+            this.settingsQualityText.Location = new System.Drawing.Point(74, 251);
+            this.settingsQualityText.Name = "settingsQualityText";
+            this.settingsQualityText.Size = new System.Drawing.Size(145, 13);
+            this.settingsQualityText.TabIndex = 27;
+            this.settingsQualityText.Text = "SELECT DOWNLOAD SIZE:";
+            // 
+            // settingsLanguageDesc
+            // 
+            this.settingsLanguageDesc.BackColor = System.Drawing.Color.Transparent;
+            this.settingsLanguageDesc.ForeColor = System.Drawing.Color.White;
+            this.settingsLanguageDesc.Location = new System.Drawing.Point(314, 179);
+            this.settingsLanguageDesc.Name = "settingsLanguageDesc";
+            this.settingsLanguageDesc.Size = new System.Drawing.Size(427, 56);
+            this.settingsLanguageDesc.TabIndex = 28;
+            this.settingsLanguageDesc.Text = "Select the language that the game text and audio should be displayed in. This wil" +
+    "l not affect your chat or server options.";
+            // 
+            // settingsQualityDesc
+            // 
+            this.settingsQualityDesc.BackColor = System.Drawing.Color.Transparent;
+            this.settingsQualityDesc.ForeColor = System.Drawing.Color.White;
+            this.settingsQualityDesc.Location = new System.Drawing.Point(313, 242);
+            this.settingsQualityDesc.Name = "settingsQualityDesc";
+            this.settingsQualityDesc.Size = new System.Drawing.Size(405, 85);
+            this.settingsQualityDesc.TabIndex = 29;
+            this.settingsQualityDesc.Text = resources.GetString("settingsQualityDesc.Text");
+            // 
             // mainScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.ClientSize = new System.Drawing.Size(790, 490);
+            this.Controls.Add(this.settingsQualityDesc);
+            this.Controls.Add(this.settingsLanguageDesc);
+            this.Controls.Add(this.settingsQualityText);
+            this.Controls.Add(this.settingsQuality);
+            this.Controls.Add(this.settingsLanguageText);
+            this.Controls.Add(this.settingsLanguage);
+            this.Controls.Add(this.settingsSave);
             this.Controls.Add(this.verticalBanner);
             this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.selectServerLabel);
@@ -435,6 +533,13 @@
         private System.Windows.Forms.PictureBox settingsButton;
         private System.Windows.Forms.Panel moveWindow;
         private System.Windows.Forms.PictureBox verticalBanner;
+        private System.Windows.Forms.Button settingsSave;
+        private System.Windows.Forms.ComboBox settingsLanguage;
+        private System.Windows.Forms.Label settingsLanguageText;
+        private System.Windows.Forms.ComboBox settingsQuality;
+        private System.Windows.Forms.Label settingsQualityText;
+        private System.Windows.Forms.Label settingsLanguageDesc;
+        private System.Windows.Forms.Label settingsQualityDesc;
     }
 }
 

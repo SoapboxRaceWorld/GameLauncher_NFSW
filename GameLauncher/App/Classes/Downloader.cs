@@ -30,7 +30,7 @@ namespace GameLauncher.App.Classes {
 
             IntPtr intPtr2 = new IntPtr(num);
             byte[] numArray2 = new byte[num];
-            int num1 = LZMA.LzmaUncompress(numArray2, ref intPtr2, numArray, ref intPtr, numArray1, intPtr1);
+            int num1 = NativeFunctions.LzmaUncompress(numArray2, ref intPtr2, numArray, ref intPtr, numArray1, intPtr1);
 
             if (num1 != 0) {
                 MessageBox.Show("Failed to uncompress file.");
