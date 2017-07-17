@@ -26,6 +26,7 @@ namespace GameLauncher {
         bool useSavedPassword;
         bool skipServerTrigger = false;
         IniFile SettingFile = new IniFile("Settings.ini");
+        string UserSettings = Environment.ExpandEnvironmentVariables("%AppData%\\Need for Speed World\\Settings\\UserSettings.xml");
 
         private void moveWindow_MouseDown(object sender, MouseEventArgs e) {
             mouseDownPoint = new Point(e.X, e.Y);
@@ -259,7 +260,7 @@ namespace GameLauncher {
                 useSavedPassword = true;
                 this.loginButton.Image = Properties.Resources.button_enable;
                 this.loginButton.ForeColor = Color.White;
-                ConsoleLog("Password recovered from Settings.ini file", "success");
+                ConsoleLog("Password recovered from Settings.ini file.", "success");
             } else {
                 loginEnabled = false;
                 serverEnabled = false;
@@ -307,6 +308,11 @@ namespace GameLauncher {
                 settingsQuality.SelectedValue = SettingFile.Read("TracksHigh", "Downloader");
             }
 
+            //Detect UserSettings
+            if(File.Exists(UserSettings)) {
+                ConsoleLog("Found Game Config under UserSettings.xml file.", "success");
+            }
+
             //Hide other windows
             RegisterFormElements(false);
             SettingsFormElements(false);
@@ -324,8 +330,6 @@ namespace GameLauncher {
             consoleLog.SaveFile("logs/" + timestamp + ".log", RichTextBoxStreamType.PlainText);
 
             SettingFile.Write("Server", serverPick.SelectedValue.ToString());
-            SettingFile.Write("Language", settingsLanguage.SelectedValue.ToString(), "Downloader");
-            SettingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString(), "Downloader");
 
             Application.ExitThread();
             Application.Exit();
@@ -815,6 +819,45 @@ namespace GameLauncher {
         }
 
         private void settingsSave_Click(object sender, EventArgs e) {
+            SettingFile.Write("Language", settingsLanguage.SelectedValue.ToString(), "Downloader");
+            SettingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString(), "Downloader");
+
+            XmlDocument UserSettingsXML = new XmlDocument();
+            if(File.Exists(UserSettings)) {
+                try {
+                    //File has been found, lets change Language setting
+                    UserSettingsXML.Load(UserSettings);
+                    XmlNode Language = UserSettingsXML.SelectSingleNode("Settings/UI/Language");
+                    Language.InnerText = settingsLanguage.SelectedValue.ToString();
+                } catch {
+                    //XML is Corrupted... let's delete it and create new one
+                    File.Delete(UserSettings);
+
+                    XmlNode Setting = UserSettingsXML.AppendChild(UserSettingsXML.CreateElement("Settings"));
+                    XmlNode PersistentValue = Setting.AppendChild(UserSettingsXML.CreateElement("PersistentValue"));
+                    XmlNode Chat = PersistentValue.AppendChild(UserSettingsXML.CreateElement("Chat"));
+                    XmlNode UI = Setting.AppendChild(UserSettingsXML.CreateElement("UI"));
+
+                    Chat.InnerXml   = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue.ToString() +"</DefaultChatGroup>";
+                    UI.InnerXml     = "<Language Type=\"string\">" + settingsLanguage.SelectedValue.ToString() + "</Language>";
+
+			        DirectoryInfo directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(UserSettings));
+                }
+            } else {
+                //There's no file like that, let's create it
+                XmlNode Setting = UserSettingsXML.AppendChild(UserSettingsXML.CreateElement("Settings"));
+                XmlNode PersistentValue = Setting.AppendChild(UserSettingsXML.CreateElement("PersistentValue"));
+                XmlNode Chat = PersistentValue.AppendChild(UserSettingsXML.CreateElement("Chat"));
+                XmlNode UI = Setting.AppendChild(UserSettingsXML.CreateElement("UI"));
+
+                Chat.InnerXml   = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue.ToString() +"</DefaultChatGroup>";
+                UI.InnerXml     = "<Language Type=\"string\">" + settingsLanguage.SelectedValue.ToString() + "</Language>";
+
+			    DirectoryInfo directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(UserSettings));
+            }
+
+            UserSettingsXML.Save(UserSettings);
+
             this.BackgroundImage = Properties.Resources.loginbg;
             this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN:";
             SettingsFormElements(false);
