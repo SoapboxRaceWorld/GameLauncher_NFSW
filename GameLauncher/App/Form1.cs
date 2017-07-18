@@ -576,7 +576,7 @@ namespace GameLauncher {
                     serverStatusImg.Location = new Point(20, 323);
                     serverStatusImg.BackgroundImage = Properties.Resources.server_online;
                     serverStatus.ForeColor = Color.FromArgb(181, 255, 33);
-                    serverStatus.Text = "This server is currenly up and running.";
+                    serverStatus.Text = "This server is currently up and running.";
                     serverStatus.Location = new Point(44, 322);
 
                     if (serverName == "Offline Built-In Server") {
@@ -818,7 +818,7 @@ namespace GameLauncher {
                     if(ticketRequired) {
                         BuildURL = serverIP + "/User/createUser?email=" + registerEmail.Text + "&password=" + encryptedpassword.ToLower() + "&inviteTicket=" + registerTicket.Text;
                     } else {
-                        BuildURL = serverIP + "/User/createUser?email=" + registerEmail.Text + "&password=" + encryptedpassword;
+                        BuildURL = serverIP + "/User/createUser?email=" + registerEmail.Text + "&password=" + encryptedpassword.ToLower();
                     }
 
                     serverLoginResponse = wc.DownloadString(BuildURL);
