@@ -213,6 +213,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\registerbg.png" />
     <None Include="Resources\button_hover.png" />
     <None Include="Resources\button_enable.png" />
     <None Include="Resources\button_disable.png" />

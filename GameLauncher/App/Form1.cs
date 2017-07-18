@@ -25,6 +25,7 @@ namespace GameLauncher {
         bool builtinserver = false;
         bool useSavedPassword;
         bool skipServerTrigger = false;
+        bool ticketRequired;
         IniFile SettingFile = new IniFile("Settings.ini");
         string UserSettings = Environment.ExpandEnvironmentVariables("%AppData%\\Need for Speed World\\Settings\\UserSettings.xml");
 
@@ -457,71 +458,41 @@ namespace GameLauncher {
 
             XmlDocument SBRW_XML = new XmlDocument();
             SBRW_XML.LoadXml(serverLoginResponse);
-            XmlNodeList nodes = null;
 
-            String Description = "";
+            XmlNode DescriptionNode;
+            XmlNode LoginTokenNode;
+            XmlNode UserIdNode;
+
             String LoginToken = "";
             String UserId = "";
 
-            if (serverName == "World Revival") {
-                try {
-                    if(SBRW_XML.SelectSingleNode("EngineExceptionTrans") != null) {
-                        nodes = SBRW_XML.SelectNodes("EngineExceptionTrans");
-                    } else {
-                        nodes = SBRW_XML.SelectNodes("LoginData");
-                    }
-                } catch(Exception) {
-                    nodes = SBRW_XML.SelectNodes("LoginData");
-                }
-            }
-            else {
-                nodes = SBRW_XML.SelectNodes("LoginStatusVO");
-            }
+            DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
+            LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
+            UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
 
-            foreach (XmlNode childrenNode in nodes) {
-                if (serverName == "World Revival") {
-                    try {
-                        UserId = childrenNode["UserId"].InnerText;
-                        LoginToken = childrenNode["LoginToken"].InnerText;
-                    } catch {
-                        Description = "LOGIN ERROR";
-                    }
+            if(String.IsNullOrEmpty(DescriptionNode.InnerText)) {
+                UserId = UserIdNode.InnerText;
+                LoginToken = LoginTokenNode.InnerText;
+
+                string filename = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
+                ConsoleLog("Logged in. Starting game (" + filename + ").", "success");
+                String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
+                var proc = Process.Start(filename, cParams);
+                proc.EnableRaisingEvents = true;
+
+                proc.Exited += (sender2, e2) => {
+                    closebtn_Click(sender2, e2);
+                };
+
+                if (builtinserver == true) {
+                    ConsoleLog("SoapBox Built-In Initialized, waiting for queries", "success");
                 } else {
-                    UserId = childrenNode["UserId"].InnerText;
-                    LoginToken = childrenNode["LoginToken"].InnerText;
-                    Description = childrenNode["Description"].InnerText;
+                    ConsoleLog("Closing myself in 5 seconds.", "warning");
+                    Thread.Sleep(5000);
+                    closebtn_Click(sender, e);
                 }
-
-                if (String.IsNullOrEmpty(LoginToken)) {
-                    ConsoleLog("Invalid username or password.", "error");
-                } else {
-                    try {
-                        /*this.BackgroundImage = Properties.Resources.playbg;
-                        this.currentWindowInfo.Hide();
-                        LoginFormHideElements();
-                        DownloadFormShowElements();*/
-
-                        string filename = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
-                        ConsoleLog("Logged in. Starting game (" + filename + ").", "success");
-                        String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
-                        var proc = Process.Start(filename, cParams);
-                        proc.EnableRaisingEvents = true;
-
-                        proc.Exited += (sender2, e2) => {
-                            closebtn_Click(sender2, e2);
-                        };
-
-                        if (builtinserver == true) {
-                            ConsoleLog("SoapBox Built-In Initialized, waiting for queries", "success");
-                        } else {
-                            ConsoleLog("Closing myself in 5 seconds.", "warning");
-                            Thread.Sleep(5000);
-                            closebtn_Click(sender, e);
-                        }
-                    } catch (Exception) {
-                        ConsoleLog("Logged in. But i cannot find NFSW executable file. Are you sure you've copied all files?", "error");
-                    }
-                }
+            } else {
+                 ConsoleLog("Invalid username or password.", "error");
             }
         }
 
@@ -610,12 +581,6 @@ namespace GameLauncher {
 
                     if (serverName == "Offline Built-In Server") {
                         numPlayers = "∞";
-                    } else if(serverName == "World Revival") {
-                        //JSON... and Dedicated API... c'mon WorldRevival...
-                        Uri StringToUri2 = new Uri("http://world-revival.fr/api/GetStatus.php");
-                        var reply = client.DownloadString(StringToUri2);
-                        GetStatus json = JsonConvert.DeserializeObject<GetStatus>(reply);
-                        numPlayers = json.server.slots + " out of " + json.server.maxslots;
                     } else {
                         GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
                         
@@ -630,6 +595,14 @@ namespace GameLauncher {
                             }
                         } else {
                             verticalImageUrl = null;
+                        }
+
+                        if(String.IsNullOrEmpty(json.requireTicket)) {
+                            ticketRequired = true;
+                        } else if(json.requireTicket == "true") {
+                            ticketRequired = true;
+                        } else {
+                            ticketRequired = false;
                         }
 
                         numPlayers = json.onlineNumber + " out of " + json.numberOfRegistered;
@@ -700,27 +673,23 @@ namespace GameLauncher {
             settingsLanguageDesc.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
             settingsQualityText.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
             settingsQualityDesc.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
+            registerEmailText.Font = new Font(fontFamily4, 11f);
+            registerPasswordText.Font = new Font(fontFamily4, 11f);
+            registerConfirmPasswordText.Font = new Font(fontFamily4, 11f);
+            registerTicketText.Font = new Font(fontFamily4, 11f);
+            registerAgree.Font = new Font(fontFamily2, 9.749999f);
+
         }
 
         private void registerText_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            if(serverPick.GetItemText(serverPick.SelectedItem) == "World Revival") {
-                ConsoleLog("Redirecting into Registration page", "info");
-                Process.Start("http://world-revival.fr/user/register");
-            } else {
-                this.BackgroundImage = Properties.Resources.settingsbg;
-                this.currentWindowInfo.Text = "REGISTER ON " + serverPick.GetItemText(serverPick.SelectedItem).ToUpper() + ":";
-                LoginFormElements(false);
-                RegisterFormElements(true);
-            }
+            this.BackgroundImage = Properties.Resources.registerbg;
+            this.currentWindowInfo.Text = "REGISTER ON " + serverPick.GetItemText(serverPick.SelectedItem).ToUpper() + ":";
+            LoginFormElements(false);
+            RegisterFormElements(true);
         }
 
         private void forgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            if (serverPick.GetItemText(serverPick.SelectedItem) == "World Revival") {
-                ConsoleLog("Redirecting into Reset Password page", "info");
-                Process.Start("http://world-revival.fr/user/reset");
-            } else {
-                Process.Start(serverPick.SelectedValue.ToString().Replace("Engine.svc", "") + "forgotPasswd.jsp");
-            }
+            Process.Start(serverPick.SelectedValue.ToString().Replace("Engine.svc", "") + "forgotPasswd.jsp");
         }
 
         private void githubLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
@@ -757,6 +726,26 @@ namespace GameLauncher {
 
         private void RegisterFormElements(bool hideElements = true) {
             this.registerButton.Visible = hideElements;
+            this.registerEmail.Visible = hideElements;
+            this.registerEmailText.Visible = hideElements;
+            this.registerPassword.Visible = hideElements;
+            this.registerPasswordText.Visible = hideElements;
+            this.registerConfirmPassword.Visible = hideElements;
+            this.registerConfirmPasswordText.Visible = hideElements;
+            this.registerAgree.Visible = hideElements;
+
+            //Restore some loginform elements
+            this.consoleLog.Visible = true;
+            this.clearConsole.Visible = true;
+            this.verticalBanner.Visible = true;
+
+            if(ticketRequired) {
+                this.registerTicket.Visible = hideElements;
+                this.registerTicketText.Visible = hideElements;
+            } else {
+                this.registerTicket.Visible = false;
+                this.registerTicketText.Visible = false;
+            }
         }
 
         private void registerButton_MouseEnter(object sender, EventArgs e) {
@@ -776,10 +765,122 @@ namespace GameLauncher {
         }
 
         private void registerButton_Click(object sender, EventArgs e) {
-            this.BackgroundImage = Properties.Resources.loginbg;
+            bool registerSuccess = true;
+
+            if(String.IsNullOrEmpty(registerEmail.Text)) {
+                ConsoleLog("Please enter your email", "error");
+                registerSuccess = false;
+            }
+
+            if(String.IsNullOrEmpty(registerTicket.Text) && ticketRequired == true) {
+                ConsoleLog("Please enter your ticket", "error");
+                registerSuccess = false;
+            }
+
+            if(String.IsNullOrEmpty(registerPassword.Text)) {
+                ConsoleLog("Please enter your password", "error");
+                registerSuccess = false;
+            }
+
+            if(String.IsNullOrEmpty(registerConfirmPassword.Text)) {
+                ConsoleLog("Please confirm your password", "error");
+                registerSuccess = false;
+            }
+
+            if(registerConfirmPassword.Text != registerPassword.Text) {
+                ConsoleLog("Passwords doesn't match", "error");
+            }
+
+            if(!registerAgree.Checked) {
+                ConsoleLog("You have not agreed to the Terms of Service", "error");
+                registerSuccess = false;
+            }
+
+            if(registerSuccess == true) {
+                string serverIP = serverPick.SelectedValue.ToString();
+                string serverName = serverPick.GetItemText(serverPick.SelectedItem);
+                string encryptedpassword = "";
+                string serverLoginResponse = "";
+                string BuildURL;
+
+                HashAlgorithm algorithm = SHA1.Create();
+                StringBuilder sb = new StringBuilder();
+                foreach (byte b in algorithm.ComputeHash(Encoding.UTF8.GetBytes(registerPassword.Text.ToString()))) {
+                    sb.Append(b.ToString("X2"));
+                }
+
+                encryptedpassword = sb.ToString();
+
+                try {
+                    WebClient wc = new WebClientWithTimeout();
+                    wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
+
+                    if(ticketRequired) {
+                        BuildURL = serverIP + "/User/createUser?email=" + registerEmail.Text + "&password=" + encryptedpassword.ToLower() + "&inviteTicket=" + registerTicket.Text;
+                    } else {
+                        BuildURL = serverIP + "/User/createUser?email=" + registerEmail.Text + "&password=" + encryptedpassword;
+                    }
+
+                    serverLoginResponse = wc.DownloadString(BuildURL);
+                } catch (WebException ex) {
+                    if (ex.Status == WebExceptionStatus.ProtocolError) {
+                        HttpWebResponse serverReply = (HttpWebResponse)ex.Response;
+                        if ((int)serverReply.StatusCode == 500) {
+                            using (StreamReader sr = new StreamReader(serverReply.GetResponseStream())) {
+                                serverLoginResponse = sr.ReadToEnd();
+                            }
+                        } else {
+                            serverLoginResponse = ex.Message;
+                        }
+                    } else {
+                        serverLoginResponse = ex.Message;
+                    }
+                }
+
+                XmlDocument SBRW_XML = new XmlDocument();
+                SBRW_XML.LoadXml(serverLoginResponse);
+
+                XmlNode DescriptionNode;
+                XmlNode LoginTokenNode;
+                XmlNode UserIdNode;
+
+                String LoginToken = "";
+                String UserId = "";
+
+                DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
+                LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
+                UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
+
+                if(String.IsNullOrEmpty(DescriptionNode.InnerText)) {
+                    UserId = UserIdNode.InnerText;
+                    LoginToken = LoginTokenNode.InnerText;
+
+                    string filename = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
+                    ConsoleLog("Logged in. Starting game (" + filename + ").", "success");
+                    String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
+                    var proc = Process.Start(filename, cParams);
+                    proc.EnableRaisingEvents = true;
+
+                    proc.Exited += (sender2, e2) => {
+                        closebtn_Click(sender2, e2);
+                    };
+
+                    if (builtinserver == true) {
+                        ConsoleLog("SoapBox Built-In Initialized, waiting for queries", "success");
+                    } else {
+                        ConsoleLog("Closing myself in 5 seconds.", "warning");
+                        Thread.Sleep(5000);
+                        closebtn_Click(sender, e);
+                    }
+                } else {
+                     ConsoleLog(DescriptionNode.InnerText, "error");
+                }
+            }
+
+            /*this.BackgroundImage = Properties.Resources.loginbg;
             this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN:";
             RegisterFormElements(false);
-            LoginFormElements(true);
+            LoginFormElements(true);*/
         }
 
         /*

@@ -16,7 +16,7 @@ namespace SoapBox.JsonScheme {
         public List<string> activatedHolidaySceneryGroups { get; set; }
         public List<string> disactivatedHolidaySceneryGroups { get; set; }
         public int onlineNumber { get; set; }
-        public bool requireTicket { get; set; }
+        public string requireTicket { get; set; }
         public string serverVersion { get; set; }
     }
 

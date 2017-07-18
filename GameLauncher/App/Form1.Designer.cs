@@ -62,6 +62,15 @@
             this.settingsQualityText = new System.Windows.Forms.Label();
             this.settingsLanguageDesc = new System.Windows.Forms.Label();
             this.settingsQualityDesc = new System.Windows.Forms.Label();
+            this.registerEmail = new System.Windows.Forms.TextBox();
+            this.registerTicket = new System.Windows.Forms.TextBox();
+            this.registerPassword = new System.Windows.Forms.TextBox();
+            this.registerConfirmPassword = new System.Windows.Forms.TextBox();
+            this.registerEmailText = new System.Windows.Forms.Label();
+            this.registerPasswordText = new System.Windows.Forms.Label();
+            this.registerTicketText = new System.Windows.Forms.Label();
+            this.registerConfirmPasswordText = new System.Windows.Forms.Label();
+            this.registerAgree = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
@@ -321,7 +330,7 @@
             this.registerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.registerButton.ForeColor = System.Drawing.Color.White;
             this.registerButton.Image = global::GameLauncher.Properties.Resources.button_enable;
-            this.registerButton.Location = new System.Drawing.Point(613, 420);
+            this.registerButton.Location = new System.Drawing.Point(623, 319);
             this.registerButton.Name = "registerButton";
             this.registerButton.Size = new System.Drawing.Size(149, 37);
             this.registerButton.TabIndex = 19;
@@ -451,19 +460,121 @@
             this.settingsQualityDesc.TabIndex = 29;
             this.settingsQualityDesc.Text = resources.GetString("settingsQualityDesc.Text");
             // 
+            // registerEmail
+            // 
+            this.registerEmail.Location = new System.Drawing.Point(33, 183);
+            this.registerEmail.Name = "registerEmail";
+            this.registerEmail.Size = new System.Drawing.Size(210, 20);
+            this.registerEmail.TabIndex = 30;
+            // 
+            // registerTicket
+            // 
+            this.registerTicket.Location = new System.Drawing.Point(33, 245);
+            this.registerTicket.Name = "registerTicket";
+            this.registerTicket.Size = new System.Drawing.Size(210, 20);
+            this.registerTicket.TabIndex = 31;
+            // 
+            // registerPassword
+            // 
+            this.registerPassword.Location = new System.Drawing.Point(276, 183);
+            this.registerPassword.Name = "registerPassword";
+            this.registerPassword.PasswordChar = '•';
+            this.registerPassword.Size = new System.Drawing.Size(210, 20);
+            this.registerPassword.TabIndex = 32;
+            // 
+            // registerConfirmPassword
+            // 
+            this.registerConfirmPassword.Location = new System.Drawing.Point(276, 245);
+            this.registerConfirmPassword.Name = "registerConfirmPassword";
+            this.registerConfirmPassword.PasswordChar = '•';
+            this.registerConfirmPassword.Size = new System.Drawing.Size(210, 20);
+            this.registerConfirmPassword.TabIndex = 33;
+            // 
+            // registerEmailText
+            // 
+            this.registerEmailText.AutoSize = true;
+            this.registerEmailText.BackColor = System.Drawing.Color.Transparent;
+            this.registerEmailText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.registerEmailText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.registerEmailText.Location = new System.Drawing.Point(30, 161);
+            this.registerEmailText.Name = "registerEmailText";
+            this.registerEmailText.Size = new System.Drawing.Size(131, 18);
+            this.registerEmailText.TabIndex = 34;
+            this.registerEmailText.Text = "EMAIL ADDRESS:";
+            this.registerEmailText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // registerPasswordText
+            // 
+            this.registerPasswordText.AutoSize = true;
+            this.registerPasswordText.BackColor = System.Drawing.Color.Transparent;
+            this.registerPasswordText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.registerPasswordText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.registerPasswordText.Location = new System.Drawing.Point(276, 161);
+            this.registerPasswordText.Name = "registerPasswordText";
+            this.registerPasswordText.Size = new System.Drawing.Size(100, 18);
+            this.registerPasswordText.TabIndex = 35;
+            this.registerPasswordText.Text = "PASSWORD:";
+            this.registerPasswordText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // registerTicketText
+            // 
+            this.registerTicketText.AutoSize = true;
+            this.registerTicketText.BackColor = System.Drawing.Color.Transparent;
+            this.registerTicketText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.registerTicketText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.registerTicketText.Location = new System.Drawing.Point(30, 224);
+            this.registerTicketText.Name = "registerTicketText";
+            this.registerTicketText.Size = new System.Drawing.Size(64, 18);
+            this.registerTicketText.TabIndex = 36;
+            this.registerTicketText.Text = "TICKET:";
+            this.registerTicketText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // registerConfirmPasswordText
+            // 
+            this.registerConfirmPasswordText.AutoSize = true;
+            this.registerConfirmPasswordText.BackColor = System.Drawing.Color.Transparent;
+            this.registerConfirmPasswordText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.registerConfirmPasswordText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.registerConfirmPasswordText.Location = new System.Drawing.Point(276, 224);
+            this.registerConfirmPasswordText.Name = "registerConfirmPasswordText";
+            this.registerConfirmPasswordText.Size = new System.Drawing.Size(174, 18);
+            this.registerConfirmPasswordText.TabIndex = 37;
+            this.registerConfirmPasswordText.Text = "CONFIRM PASSWORD:";
+            this.registerConfirmPasswordText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // registerAgree
+            // 
+            this.registerAgree.AutoSize = true;
+            this.registerAgree.BackColor = System.Drawing.Color.Transparent;
+            this.registerAgree.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.registerAgree.Location = new System.Drawing.Point(33, 330);
+            this.registerAgree.Name = "registerAgree";
+            this.registerAgree.Size = new System.Drawing.Size(333, 17);
+            this.registerAgree.TabIndex = 38;
+            this.registerAgree.Text = "BY REGISTERING YOU AGREE TO THE TERMS OF SERVICE";
+            this.registerAgree.UseVisualStyleBackColor = false;
+            // 
             // mainScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.ClientSize = new System.Drawing.Size(790, 490);
+            this.Controls.Add(this.registerAgree);
+            this.Controls.Add(this.registerConfirmPasswordText);
+            this.Controls.Add(this.registerTicketText);
+            this.Controls.Add(this.registerPasswordText);
+            this.Controls.Add(this.registerEmailText);
+            this.Controls.Add(this.registerConfirmPassword);
+            this.Controls.Add(this.registerPassword);
+            this.Controls.Add(this.registerTicket);
+            this.Controls.Add(this.registerEmail);
             this.Controls.Add(this.settingsQualityDesc);
             this.Controls.Add(this.settingsLanguageDesc);
             this.Controls.Add(this.settingsQualityText);
             this.Controls.Add(this.settingsQuality);
             this.Controls.Add(this.settingsLanguageText);
             this.Controls.Add(this.settingsLanguage);
-            this.Controls.Add(this.settingsSave);
             this.Controls.Add(this.verticalBanner);
             this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.selectServerLabel);
@@ -488,6 +599,7 @@
             this.Controls.Add(this.minimizebtn);
             this.Controls.Add(this.closebtn);
             this.Controls.Add(this.moveWindow);
+            this.Controls.Add(this.settingsSave);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -540,6 +652,15 @@
         private System.Windows.Forms.Label settingsQualityText;
         private System.Windows.Forms.Label settingsLanguageDesc;
         private System.Windows.Forms.Label settingsQualityDesc;
+        private System.Windows.Forms.TextBox registerEmail;
+        private System.Windows.Forms.TextBox registerTicket;
+        private System.Windows.Forms.TextBox registerPassword;
+        private System.Windows.Forms.TextBox registerConfirmPassword;
+        private System.Windows.Forms.Label registerEmailText;
+        private System.Windows.Forms.Label registerPasswordText;
+        private System.Windows.Forms.Label registerTicketText;
+        private System.Windows.Forms.Label registerConfirmPasswordText;
+        private System.Windows.Forms.CheckBox registerAgree;
     }
 }
 

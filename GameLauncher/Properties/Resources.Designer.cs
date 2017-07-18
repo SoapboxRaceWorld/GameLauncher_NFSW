@@ -47,7 +47,7 @@ namespace GameLauncher.Properties {
         }
         
         /// <summary>
-        ///   Zastępuje właściwość CurrentUICulture bieżącego wątku dla wszystkich
+        ///   Przesłania właściwość CurrentUICulture bieżącego wątku dla wszystkich
         ///   przypadków przeszukiwania zasobów za pomocą tej klasy zasobów wymagającej zdefiniowania typu.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
@@ -176,6 +176,16 @@ namespace GameLauncher.Properties {
         internal static System.Drawing.Bitmap playbg {
             get {
                 object obj = ResourceManager.GetObject("playbg", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap registerbg {
+            get {
+                object obj = ResourceManager.GetObject("registerbg", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
