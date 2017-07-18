@@ -476,7 +476,7 @@ namespace GameLauncher {
 
                 string filename = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
                 ConsoleLog("Logged in. Starting game (" + filename + ").", "success");
-                String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
+                String cParams = settingsLanguage.SelectedValue + " " + serverIP + " " + LoginToken + " " + UserId;
                 var proc = Process.Start(filename, cParams);
                 proc.EnableRaisingEvents = true;
 
@@ -856,8 +856,8 @@ namespace GameLauncher {
                     LoginToken = LoginTokenNode.InnerText;
 
                     string filename = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
-                    ConsoleLog("Logged in. Starting game (" + filename + ").", "success");
-                    String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
+                    ConsoleLog("Registered in. Starting game (" + filename + ").", "success");
+                    String cParams = settingsLanguage.SelectedValue + " " + serverIP + " " + LoginToken + " " + UserId;
                     var proc = Process.Start(filename, cParams);
                     proc.EnableRaisingEvents = true;
 
@@ -876,11 +876,6 @@ namespace GameLauncher {
                      ConsoleLog(DescriptionNode.InnerText, "error");
                 }
             }
-
-            /*this.BackgroundImage = Properties.Resources.loginbg;
-            this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN:";
-            RegisterFormElements(false);
-            LoginFormElements(true);*/
         }
 
         /*
