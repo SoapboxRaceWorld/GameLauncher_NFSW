@@ -16,10 +16,6 @@ using System.Net.NetworkInformation;
 using Newtonsoft.Json;
 using SoapBox.JsonScheme;
 using GameLauncher.App.Classes;
-using GameLauncher.Resources;
-using System.Resources;
-using System.Collections;
-using System.Reflection;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
