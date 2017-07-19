@@ -16,6 +16,7 @@ using System.Net.NetworkInformation;
 using Newtonsoft.Json;
 using SoapBox.JsonScheme;
 using GameLauncher.App.Classes;
+using System.Text.RegularExpressions;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -734,6 +735,14 @@ namespace GameLauncher {
          * Because why should i close Form1 and create/open Form2 if it will look a bit more responsive...
          */
 
+        public bool validateEmail(string email) {
+            String theEmailPattern = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
+                                   + "@"
+                                   + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
+
+            return Regex.IsMatch(email, theEmailPattern);
+        }
+
         private void RegisterFormElements(bool hideElements = true) {
             this.registerButton.Visible = hideElements;
             this.registerEmail.Visible = hideElements;
@@ -776,9 +785,13 @@ namespace GameLauncher {
 
         private void registerButton_Click(object sender, EventArgs e) {
             bool registerSuccess = true;
+            ConsoleLog("Registering... Please wait", "info");
 
             if(String.IsNullOrEmpty(registerEmail.Text)) {
                 ConsoleLog("Please enter your email", "error");
+                registerSuccess = false;
+            } else if(validateEmail(registerEmail.Text) == false) {
+                ConsoleLog("Please enter your correct email", "error");
                 registerSuccess = false;
             }
 
