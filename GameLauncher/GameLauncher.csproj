@@ -115,6 +115,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\Classes\ExtractResource.cs" />
     <Compile Include="App\Classes\IniFile.cs" />
     <Compile Include="App\Classes\NativeFunctions.cs" />
     <Compile Include="App\Classes\WebRequest.cs">
@@ -135,14 +136,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="app.config" />
     <EmbeddedResource Include="Fonts\Font_MyriadProSemiCondBold.ttf" />
     <EmbeddedResource Include="Fonts\Font_Register.ttf" />
@@ -156,11 +152,20 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="SoapBoxModules\udpcrc.soapbox.module" />
+    <EmbeddedResource Include="SoapBoxModules\udpcrypt1.soapbox.module" />
+    <EmbeddedResource Include="SoapBoxModules\udpcrypt2.soapbox.module" />
+    <EmbeddedResource Include="SoapBoxModules\xmppsubject.soapbox.module" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\loginbg.png" />
@@ -213,11 +218,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <EmbeddedResource Include="SoapBoxModules\lightfx.dll" />
     <None Include="Resources\registerbg.png" />
     <None Include="Resources\button_hover.png" />
     <None Include="Resources\button_enable.png" />
     <None Include="Resources\button_disable.png" />
     <None Include="Resources\button_click.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

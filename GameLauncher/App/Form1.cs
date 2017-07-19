@@ -16,6 +16,10 @@ using System.Net.NetworkInformation;
 using Newtonsoft.Json;
 using SoapBox.JsonScheme;
 using GameLauncher.App.Classes;
+using GameLauncher.Resources;
+using System.Resources;
+using System.Collections;
+using System.Reflection;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -312,6 +316,16 @@ namespace GameLauncher {
             //Detect UserSettings
             if(File.Exists(UserSettings)) {
                 ConsoleLog("Found Game Config under UserSettings.xml file.", "success");
+            }
+
+            //Soapbox Modules (without them Freeroam might fail)
+            if(!File.Exists(SettingFile.Read("InstallationDirectory") + "/lightfx.dll")) {
+                File.WriteAllBytes(SettingFile.Read("InstallationDirectory") + "/lightfx.dll", ExtractResource.AsByte("GameLauncher.SoapBoxModules.lightfx.dll"));
+                Directory.CreateDirectory(SettingFile.Read("InstallationDirectory") + "/modules");
+                File.WriteAllText(SettingFile.Read("InstallationDirectory") + "/modules/udpcrc.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrc.soapbox.module"));
+                File.WriteAllText(SettingFile.Read("InstallationDirectory") + "/modules/udpcrypt1.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrypt1.soapbox.module"));
+                File.WriteAllText(SettingFile.Read("InstallationDirectory") + "/modules/udpcrypt2.soapbox.module",  ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrypt2.soapbox.module"));
+                File.WriteAllText(SettingFile.Read("InstallationDirectory") + "/modules/xmppsubject.soapbox.module",  ExtractResource.AsString("GameLauncher.SoapBoxModules.xmppsubject.soapbox.module"));
             }
 
             //Hide other windows
