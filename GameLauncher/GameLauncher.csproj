@@ -115,6 +115,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\Classes\Downloader.cs" />
     <Compile Include="App\Classes\ExtractResource.cs" />
     <Compile Include="App\Classes\IniFile.cs" />
     <Compile Include="App\Classes\NativeFunctions.cs" />
@@ -218,6 +219,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\playButton_click.png" />
+    <None Include="Resources\playButton_hover.png" />
+    <None Include="Resources\playButton_enable.png" />
+    <None Include="Resources\playButton_disable.png" />
     <EmbeddedResource Include="SoapBoxModules\lightfx.dll" />
     <None Include="Resources\registerbg.png" />
     <None Include="Resources\button_hover.png" />

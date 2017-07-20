@@ -7,17 +7,17 @@ using System.Net;
 using System.Security.Cryptography;
 using System.IO;
 using System.Xml;
-using GameLauncher.Resources;
-using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
 using System.Threading;
-using System.Net.NetworkInformation;
-using Newtonsoft.Json;
-using SoapBox.JsonScheme;
-using GameLauncher.App.Classes;
 using System.Text.RegularExpressions;
 using System.Reflection;
+using System.Net.NetworkInformation;
+using GameLauncher.Resources;
+using GameLauncher.App.Classes;
+using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using Newtonsoft.Json;
+using SoapBox.JsonScheme;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -29,6 +29,10 @@ namespace GameLauncher {
         bool skipServerTrigger = false;
         bool ticketRequired;
         bool serverlistloaded = false;
+
+        String LoginToken = "";
+        String UserId = "";
+        String serverIP = "";
 
         IniFile SettingFile = new IniFile("Settings.ini");
         string UserSettings = Environment.ExpandEnvironmentVariables("%AppData%\\Need for Speed World\\Settings\\UserSettings.xml");
@@ -130,6 +134,12 @@ namespace GameLauncher {
             moveWindow.MouseMove += new MouseEventHandler(moveWindow_MouseMove);
             moveWindow.MouseUp += new MouseEventHandler(moveWindow_MouseUp);
 
+            playButton.MouseEnter += new EventHandler(playButton_MouseEnter);
+            playButton.MouseLeave += new EventHandler(playButton_MouseLeave);
+            playButton.Click += new EventHandler(playButton_Click);
+            playButton.MouseUp += new MouseEventHandler(playButton_MouseUp);
+            playButton.MouseDown += new MouseEventHandler(playButton_MouseDown);
+
             //Command-line Arguments
             string[] args = Environment.GetCommandLineArgs();
 
@@ -142,6 +152,12 @@ namespace GameLauncher {
                 IntPtr colorcursorhandle = User32.LoadCursorFromFile(SettingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur");
                 mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle }); 
                 this.Cursor = mycursor;
+            }
+
+            //Skinning ability
+            if(!Directory.Exists("Themes")) {
+                Directory.CreateDirectory("Themes");
+                File.WriteAllText("Themes/ReadMe.txt", "Put your GLS Files in this directory.");
             }
 
             registerText.Text = "DON'T HAVE AN ACCOUNT?\nCLICK HERE TO CREATE ONE NOW...";
@@ -343,18 +359,19 @@ namespace GameLauncher {
             //Hide other windows
             RegisterFormElements(false);
             SettingsFormElements(false);
+            DownloadFormElements(false);
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
             this.closebtn.BackgroundImage = Properties.Resources.close_click;
-            if(!Directory.Exists("logs")) {
-                Directory.CreateDirectory("logs");
+            if(!Directory.Exists("Logs")) {
+                Directory.CreateDirectory("Logs");
             }
 
             long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
             ticks /= 10000000;
             string timestamp = ticks.ToString();
-            consoleLog.SaveFile("logs/" + timestamp + ".log", RichTextBoxStreamType.PlainText);
+            consoleLog.SaveFile("Logs/" + timestamp + ".log", RichTextBoxStreamType.PlainText);
 
             if(serverlistloaded == true) {
                 SettingFile.Write("Server", serverPick.SelectedValue.ToString());
@@ -427,7 +444,7 @@ namespace GameLauncher {
                 return;
             }
 
-            string serverIP = serverPick.SelectedValue.ToString();
+            serverIP = serverPick.SelectedValue.ToString();
             string serverName = serverPick.GetItemText(serverPick.SelectedItem);
             string username = email.Text.ToString();
             string encryptedpassword = "";
@@ -490,9 +507,6 @@ namespace GameLauncher {
             XmlNode LoginTokenNode;
             XmlNode UserIdNode;
 
-            String LoginToken = "";
-            String UserId = "";
-
             DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
             LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
             UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
@@ -501,23 +515,13 @@ namespace GameLauncher {
                 UserId = UserIdNode.InnerText;
                 LoginToken = LoginTokenNode.InnerText;
 
-                string filename = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
-                ConsoleLog("Logged in. Starting game (" + filename + ").", "success");
-                String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
-                var proc = Process.Start(filename, cParams);
-                proc.EnableRaisingEvents = true;
-
-                proc.Exited += (sender2, e2) => {
-                    closebtn_Click(sender2, e2);
-                };
-
-                if (builtinserver == true) {
-                    ConsoleLog("SoapBox Built-In Initialized, waiting for queries", "success");
-                } else {
-                    ConsoleLog("Closing myself in 5 seconds.", "warning");
-                    Thread.Sleep(5000);
-                    closebtn_Click(sender, e);
-                }
+                this.BackgroundImage = Properties.Resources.playbg;
+                this.currentWindowInfo.Visible = false;
+                playLoggedInAs.Text = "LOGGED IN AS " + email.Text.ToUpper();
+                LoginFormElements(false);
+                DownloadFormElements(true);
+                
+                this.playProgressText.Text = "DOWNLOAD COMPLETED";                 
             } else {
                  ConsoleLog("Invalid username or password.", "error");
             }
@@ -705,7 +709,7 @@ namespace GameLauncher {
             registerConfirmPasswordText.Font = new Font(fontFamily4, 11f);
             registerTicketText.Font = new Font(fontFamily4, 11f);
             registerAgree.Font = new Font(fontFamily2, 9.749999f);
-
+            playButton.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
         }
 
         private void registerText_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
@@ -836,7 +840,7 @@ namespace GameLauncher {
             }
 
             if(registerSuccess == true) {
-                string serverIP = serverPick.SelectedValue.ToString();
+                serverIP = serverPick.SelectedValue.ToString();
                 string serverName = serverPick.GetItemText(serverPick.SelectedItem);
                 string encryptedpassword = "";
                 string serverLoginResponse = "";
@@ -883,9 +887,6 @@ namespace GameLauncher {
                 XmlNode LoginTokenNode;
                 XmlNode UserIdNode;
 
-                String LoginToken = "";
-                String UserId = "";
-
                 DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
                 LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
                 UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
@@ -894,23 +895,16 @@ namespace GameLauncher {
                     UserId = UserIdNode.InnerText;
                     LoginToken = LoginTokenNode.InnerText;
 
-                    string filename = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
-                    ConsoleLog("Registered in. Starting game (" + filename + ").", "success");
-                    String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
-                    var proc = Process.Start(filename, cParams);
-                    proc.EnableRaisingEvents = true;
+                    this.BackgroundImage = Properties.Resources.playbg;
+                    this.currentWindowInfo.Visible = false;
+                    playLoggedInAs.Text = "REGISTERED IN AS " + email.Text.ToUpper();
+                    RegisterFormElements(false);
+                    DownloadFormElements(true);
 
-                    proc.Exited += (sender2, e2) => {
-                        closebtn_Click(sender2, e2);
-                    };
-
-                    if (builtinserver == true) {
-                        ConsoleLog("SoapBox Built-In Initialized, waiting for queries", "success");
-                    } else {
-                        ConsoleLog("Closing myself in 5 seconds.", "warning");
-                        Thread.Sleep(5000);
-                        closebtn_Click(sender, e);
-                    }
+                    this.consoleLog.Hide();
+                    this.clearConsole.Hide();
+                
+                    this.playProgressText.Text = "DOWNLOAD COMPLETED";  
                 } else {
                      ConsoleLog(DescriptionNode.InnerText, "error");
                 }
@@ -1013,8 +1007,52 @@ namespace GameLauncher {
          * DOWNLOAD PAGE LAYOUT
          */
 
-        private void DownloadFormShowElements() {
+        private void DownloadFormElements(bool hideElements = true) {
+            this.playLoggedInAs.Visible = hideElements;
+            this.playProgress.Visible = hideElements;
+            this.playProgressText.Visible = hideElements;
+            this.playButton.Visible = hideElements;
+        }
 
+        private void LaunchGame(string UserId, string LoginToken, string ServerIP) {
+            string filename = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
+            String cParams = "US " + ServerIP + " " + LoginToken + " " + UserId;
+            var proc = Process.Start(filename, cParams);
+            proc.EnableRaisingEvents = true;
+
+            proc.Exited += (sender2, e2) => {
+                closebtn_Click(sender2, e2);
+            };
+
+            if (builtinserver == true) {
+                ConsoleLog("SoapBox Built-In Initialized, waiting for queries", "success");
+            } else {
+                ConsoleLog("Closing myself in 5 seconds.", "warning");
+                Thread.Sleep(5000);
+                closebtn_Click(null, null);
+            }
+        }
+
+        private void playButton_Click(object sender, EventArgs e) {
+            this.playButton.Image = Properties.Resources.playButton_enable;
+            this.playProgressText.Text = "LOADING GAME. LAUNCHER WILL CLOSE ITSELF IN 5 SECONDS";
+            LaunchGame(UserId, LoginToken, serverIP);
+        }
+
+        private void playButton_MouseUp(object sender, EventArgs e) {
+            this.playButton.Image = Properties.Resources.playButton_hover;
+        }
+
+        private void playButton_MouseDown(object sender, EventArgs e) {
+            this.playButton.Image = Properties.Resources.playButton_click;
+        }
+
+        private void playButton_MouseEnter(object sender, EventArgs e) {
+            this.playButton.Image = Properties.Resources.playButton_hover;
+        }
+
+        private void playButton_MouseLeave(object sender, EventArgs e) {
+            this.playButton.Image = Properties.Resources.playButton_enable;
         }
     }
 }
