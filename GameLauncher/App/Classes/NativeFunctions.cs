@@ -17,4 +17,9 @@ namespace GameLauncher.App.Classes {
         [DllImport("kernel32", CharSet = CharSet.Auto, ExactSpelling = false)]
         public static extern int GetDiskFreeSpaceEx(string lpDirectoryName, out ulong lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
     }
+
+    internal static class User32 {
+        [DllImport("user32.dll")]
+        public static extern IntPtr LoadCursorFromFile(string filename);
+    }
 }

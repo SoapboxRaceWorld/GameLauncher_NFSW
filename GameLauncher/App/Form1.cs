@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using SoapBox.JsonScheme;
 using GameLauncher.App.Classes;
 using System.Text.RegularExpressions;
+using System.Reflection;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -132,6 +133,14 @@ namespace GameLauncher {
 
             //Somewhere here we will setup the game installation directory
             directoryInstallation();
+
+            //Replace cursor
+            if(File.Exists(SettingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur")) {
+                Cursor mycursor = new Cursor(Cursor.Current.Handle); 
+                IntPtr colorcursorhandle = User32.LoadCursorFromFile(SettingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur");
+                mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle }); 
+                this.Cursor = mycursor;
+            }
 
             registerText.Text = "DON'T HAVE AN ACCOUNT?\nCLICK HERE TO CREATE ONE NOW...";
         }

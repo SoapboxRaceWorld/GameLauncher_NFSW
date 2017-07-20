@@ -218,7 +218,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
-    <None Include="Resources\SBRW_Logo_FB3.png" />
     <EmbeddedResource Include="SoapBoxModules\lightfx.dll" />
     <None Include="Resources\registerbg.png" />
     <None Include="Resources\button_hover.png" />
