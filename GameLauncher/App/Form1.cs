@@ -356,6 +356,12 @@ namespace GameLauncher {
                 File.WriteAllText(SettingFile.Read("InstallationDirectory") + "/modules/xmppsubject.soapbox.module",  ExtractResource.AsString("GameLauncher.SoapBoxModules.xmppsubject.soapbox.module"));
             }
 
+            //Trigger login button for offline
+            if(builtinserver == true) {
+                this.loginButton.ForeColor = Color.White;
+                this.loginButton.Image = Properties.Resources.button_enable;
+            }
+
             //Hide other windows
             RegisterFormElements(false);
             SettingsFormElements(false);
@@ -371,7 +377,10 @@ namespace GameLauncher {
             long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
             ticks /= 10000000;
             string timestamp = ticks.ToString();
-            consoleLog.SaveFile("Logs/" + timestamp + ".log", RichTextBoxStreamType.PlainText);
+
+            try {
+                consoleLog.SaveFile("Logs/" + timestamp + ".log", RichTextBoxStreamType.PlainText);
+            } catch { }
 
             if(serverlistloaded == true) {
                 SettingFile.Write("Server", serverPick.SelectedValue.ToString());
@@ -501,7 +510,12 @@ namespace GameLauncher {
             }
 
             XmlDocument SBRW_XML = new XmlDocument();
-            SBRW_XML.LoadXml(serverLoginResponse);
+
+            if(builtinserver == false) {
+                SBRW_XML.LoadXml(serverLoginResponse);
+            } else {
+                SBRW_XML.LoadXml("<LoginStatusVO><UserId>1</UserId><LoginToken>aaaaaaaa-aaaa-aaaa-aaaaaaaa</LoginToken><Description/></LoginStatusVO>");
+            }
 
             XmlNode DescriptionNode;
             XmlNode LoginTokenNode;
@@ -517,7 +531,13 @@ namespace GameLauncher {
 
                 this.BackgroundImage = Properties.Resources.playbg;
                 this.currentWindowInfo.Visible = false;
-                playLoggedInAs.Text = "LOGGED IN AS " + email.Text.ToUpper();
+
+                if(builtinserver == false) {
+                    playLoggedInAs.Text = "LOGGED IN AS " + email.Text.ToUpper();
+                } else {
+                    playLoggedInAs.Text = "LOGGED IN AS ROOT@SOAPBOX";
+                }
+
                 LoginFormElements(false);
                 DownloadFormElements(true);
                 
@@ -556,7 +576,7 @@ namespace GameLauncher {
             if (!skipServerTrigger) { return; }
 
             loginEnabled = false;
-            this.loginButton.Image = Properties.Resources.button_disable;
+
             this.loginButton.ForeColor = Color.Gray;
             this.password.Text = "";
             string verticalImageUrl = "";
@@ -1023,19 +1043,25 @@ namespace GameLauncher {
             proc.Exited += (sender2, e2) => {
                 closebtn_Click(sender2, e2);
             };
-
-            if (builtinserver == true) {
-                ConsoleLog("SoapBox Built-In Initialized, waiting for queries", "success");
-            } else {
-                ConsoleLog("Closing myself in 5 seconds.", "warning");
-                Thread.Sleep(5000);
-                closebtn_Click(null, null);
-            }
         }
 
         private void playButton_Click(object sender, EventArgs e) {
             this.playButton.Image = Properties.Resources.playButton_enable;
-            this.playProgressText.Text = "LOADING GAME. LAUNCHER WILL CLOSE ITSELF IN 5 SECONDS";
+
+            if(builtinserver == true) {
+                this.playProgressText.Text = "SOAPBOX SERVER LAUNCHED. WAITING FOR QUERIES";
+            } else {
+                int secondsToCloseLauncher = 5;
+
+                while(secondsToCloseLauncher > 0) {
+                    this.playProgressText.Text = "LOADING GAME. LAUNCHER WILL CLOSE ITSELF IN " + secondsToCloseLauncher + " SECONDS";
+                    Delay.WaitSeconds(1);
+                    secondsToCloseLauncher--;
+                }
+
+                closebtn_Click(null, null);
+            }
+
             LaunchGame(UserId, LoginToken, serverIP);
         }
 
