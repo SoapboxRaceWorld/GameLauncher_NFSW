@@ -28,6 +28,8 @@ namespace GameLauncher {
         bool useSavedPassword;
         bool skipServerTrigger = false;
         bool ticketRequired;
+        bool serverlistloaded = false;
+
         IniFile SettingFile = new IniFile("Settings.ini");
         string UserSettings = Environment.ExpandEnvironmentVariables("%AppData%\\Need for Speed World\\Settings\\UserSettings.xml");
 
@@ -226,6 +228,8 @@ namespace GameLauncher {
                 string serverurl = "http://nfsw.metonator.ct8.pl/serverlist.txt";
                 response = wc.DownloadString(serverurl);
                 ConsoleLog("Fetching " + serverurl, "info");
+
+                serverlistloaded = true;
             } catch (Exception ex) {
                 ConsoleLog("Failed to fetch serverlist. " + ex.Message, "error");
             }
@@ -249,17 +253,19 @@ namespace GameLauncher {
             serverPick.SelectedIndex = 0;
 
             //Silliest way to prevent doublecall of TextChanged event...
-            if(!SettingFile.KeyExists("Server")) {
-                SettingFile.Write("Server", serverPick.SelectedValue.ToString());
-            }
+            if(serverlistloaded == true) {
+                if(!SettingFile.KeyExists("Server")) {
+                    SettingFile.Write("Server", serverPick.SelectedValue.ToString());
+                }
 
-            if(SettingFile.KeyExists("Server")) {
-                skipServerTrigger = true;
-                serverPick.SelectedValue = SettingFile.Read("Server");
+                if(SettingFile.KeyExists("Server")) {
+                    skipServerTrigger = true;
+                    serverPick.SelectedValue = SettingFile.Read("Server");
 
-                //I don't know other way to fix this call...
-                if(serverPick.SelectedIndex == 0) {
-                    serverPick_TextChanged(sender, e);
+                    //I don't know other way to fix this call...
+                    if(serverPick.SelectedIndex == 0) {
+                        serverPick_TextChanged(sender, e);
+                    }
                 }
             }
 
@@ -321,7 +327,7 @@ namespace GameLauncher {
 
             //Detect UserSettings
             if(File.Exists(UserSettings)) {
-                ConsoleLog("Found Game Config under UserSettings.xml file.", "success");
+                ConsoleLog("Found Game Config under " + UserSettings + " file.", "success");
             }
 
             //Soapbox Modules (without them Freeroam might fail)
@@ -350,7 +356,9 @@ namespace GameLauncher {
             string timestamp = ticks.ToString();
             consoleLog.SaveFile("logs/" + timestamp + ".log", RichTextBoxStreamType.PlainText);
 
-            SettingFile.Write("Server", serverPick.SelectedValue.ToString());
+            if(serverlistloaded == true) {
+                SettingFile.Write("Server", serverPick.SelectedValue.ToString());
+            }
 
             Application.ExitThread();
             Application.Exit();
@@ -458,7 +466,6 @@ namespace GameLauncher {
                 wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
 
                 string BuildURL = serverIP + "/User/authenticateUser?email=" + username + "&password=" + encryptedpassword.ToLower();
-                ConsoleLog(BuildURL, "info");
 
                 serverLoginResponse = wc.DownloadString(BuildURL);
             } catch (WebException ex) {
@@ -496,7 +503,7 @@ namespace GameLauncher {
 
                 string filename = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
                 ConsoleLog("Logged in. Starting game (" + filename + ").", "success");
-                String cParams = settingsLanguage.SelectedValue + " " + serverIP + " " + LoginToken + " " + UserId;
+                String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
                 var proc = Process.Start(filename, cParams);
                 proc.EnableRaisingEvents = true;
 
@@ -889,7 +896,7 @@ namespace GameLauncher {
 
                     string filename = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
                     ConsoleLog("Registered in. Starting game (" + filename + ").", "success");
-                    String cParams = settingsLanguage.SelectedValue + " " + serverIP + " " + LoginToken + " " + UserId;
+                    String cParams = "US " + serverIP + " " + LoginToken + " " + UserId;
                     var proc = Process.Start(filename, cParams);
                     proc.EnableRaisingEvents = true;
 
