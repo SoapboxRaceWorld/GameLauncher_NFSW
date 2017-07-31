@@ -19,15 +19,4 @@ namespace SoapBox.JsonScheme {
         public string requireTicket { get; set; }
         public string serverVersion { get; set; }
     }
-
-    //WorldRevival
-    public class Server {
-        public string status { get; set; }
-        public string slots { get; set; }
-        public string maxslots { get; set; }
-    }
-
-    public class GetStatus {
-        public Server server { get; set; }
-    }
 }

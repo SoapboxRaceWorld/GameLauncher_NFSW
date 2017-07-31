@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // Ogólne informacje o zestawie są kontrolowane poprzez następujący 
 // zestaw atrybutów. Zmień wartości tych atrybutów, aby zmodyfikować informacje
 // powiązane z zestawem.
-[assembly: AssemblyTitle("NFSW Launcher")]
-[assembly: AssemblyDescription("NFSW Game Launcher")]
+[assembly: AssemblyTitle("GameLauncher")]
+[assembly: AssemblyDescription("GameLauncher for Need For Speed(TM): World")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NFSW Launcher")]
-[assembly: AssemblyCopyright("Open Source")]
+[assembly: AssemblyProduct("GameLauncher")]
+[assembly: AssemblyCopyright("OpenSource")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

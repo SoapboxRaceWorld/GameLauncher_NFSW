@@ -8,7 +8,7 @@ namespace GameLauncher {
     public class WebClientWithTimeout : WebClient {
         protected override WebRequest GetWebRequest(Uri address) {
             var wr = base.GetWebRequest(address);
-            wr.Timeout = 1000;
+            wr.Timeout = 3000;
             return wr;
         }
     }

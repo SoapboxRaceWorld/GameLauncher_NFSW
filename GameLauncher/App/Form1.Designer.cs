@@ -75,6 +75,7 @@
             this.playProgress = new System.Windows.Forms.ProgressBar();
             this.playProgressText = new System.Windows.Forms.Label();
             this.playButton = new System.Windows.Forms.Button();
+            this.Notification = new System.Windows.Forms.NotifyIcon(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
@@ -608,6 +609,11 @@
             this.playButton.Text = "LAUNCH";
             this.playButton.UseVisualStyleBackColor = false;
             // 
+            // Notification
+            // 
+            this.Notification.Text = "notifyIcon1";
+            this.Notification.Visible = true;
+            // 
             // mainScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -723,6 +729,7 @@
         private System.Windows.Forms.ProgressBar playProgress;
         private System.Windows.Forms.Label playProgressText;
         private System.Windows.Forms.Button playButton;
+        private System.Windows.Forms.NotifyIcon Notification;
     }
 }
 

@@ -29,6 +29,7 @@ namespace GameLauncher {
         bool skipServerTrigger = false;
         bool ticketRequired;
         bool serverlistloaded = false;
+        bool windowMoved = false;
 
         String LoginToken = "";
         String UserId = "";
@@ -49,6 +50,7 @@ namespace GameLauncher {
             if (mouseDownPoint.IsEmpty) { return; }
             Form f = this as Form;
             f.Location = new Point(f.Location.X + (e.X - mouseDownPoint.X), f.Location.Y + (e.Y - mouseDownPoint.Y));
+            windowMoved = true;
         }
 
         public void ConsoleLog(string e, string type) {
@@ -86,6 +88,13 @@ namespace GameLauncher {
         public mainScreen() {
             InitializeComponent();
             ApplyEmbeddedFonts();
+
+            if(SettingFile.KeyExists("LauncherPosX") || SettingFile.KeyExists("LauncherPosY")) {
+                StartPosition = FormStartPosition.Manual;
+                int PosX = Int32.Parse(SettingFile.Read("LauncherPosX"));
+                int PosY = Int32.Parse(SettingFile.Read("LauncherPosY"));
+                Location = new Point(PosX, PosY);
+            }
 
             MaximizeBox = false;
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
@@ -148,9 +157,9 @@ namespace GameLauncher {
 
             //Replace cursor
             if(File.Exists(SettingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur")) {
-                Cursor mycursor = new Cursor(Cursor.Current.Handle); 
+                Cursor mycursor = new Cursor(Cursor.Current.Handle);
                 IntPtr colorcursorhandle = User32.LoadCursorFromFile(SettingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur");
-                mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle }); 
+                mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
                 this.Cursor = mycursor;
             }
 
@@ -200,6 +209,18 @@ namespace GameLauncher {
 
         private void mainScreen_Load(object sender, EventArgs e) {
             //Console output to textbox
+
+            ContextMenu = new ContextMenu();
+            ContextMenu.MenuItems.Add(new MenuItem("&Check for updates"));
+            ContextMenu.MenuItems.Add(new MenuItem("&Settings", settingsButton_Click));
+            ContextMenu.MenuItems.Add("-");
+            ContextMenu.MenuItems.Add(new MenuItem("&Close", closebtn_Click));
+
+            Notification.ContextMenu = ContextMenu;
+            Notification.Icon = new Icon(Icon, Icon.Width, Icon.Height);
+            Notification.Text = "GameLauncher";
+            Notification.Visible = true;
+
             ConsoleLog("Log initialized", "info");
             ConsoleLog("GameLauncher initialized", "info");
             ConsoleLog("Installation directory: " + SettingFile.Read("InstallationDirectory"), "info");
@@ -306,7 +327,7 @@ namespace GameLauncher {
             settingsLanguage.DisplayMember = "Text";
             settingsLanguage.ValueMember = "Value";
 
-            var languages = new[] { 
+            var languages = new[] {
                 new { Text = "English", Value = "EN" },
                 new { Text = "Deutsch", Value = "DE" },
                 new { Text = "Español", Value = "ES" },
@@ -322,23 +343,23 @@ namespace GameLauncher {
 
             settingsLanguage.DataSource = languages;
 
-            if(SettingFile.KeyExists("Language", "Downloader")) {
-                settingsLanguage.SelectedValue = SettingFile.Read("Language", "Downloader");
+            if(SettingFile.KeyExists("Language")) {
+                settingsLanguage.SelectedValue = SettingFile.Read("Language");
             }
 
             //Add downloadable quality to settingLanguage
             settingsQuality.DisplayMember = "Text";
             settingsQuality.ValueMember = "Value";
 
-            var quality = new[] { 
+            var quality = new[] {
                 new { Text = "Standard", Value = "0" },
                 new { Text = "Maximum", Value = "1" },
             };
 
             settingsQuality.DataSource = quality;
 
-            if(SettingFile.KeyExists("TracksHigh", "Downloader")) {
-                settingsQuality.SelectedValue = SettingFile.Read("TracksHigh", "Downloader");
+            if(SettingFile.KeyExists("TracksHigh")) {
+                settingsQuality.SelectedValue = SettingFile.Read("TracksHigh");
             }
 
             //Detect UserSettings
@@ -384,6 +405,11 @@ namespace GameLauncher {
 
             if(serverlistloaded == true) {
                 SettingFile.Write("Server", serverPick.SelectedValue.ToString());
+            }
+
+            if(windowMoved) {
+                SettingFile.Write("LauncherPosX", this.Location.X.ToString());
+                SettingFile.Write("LauncherPosY", this.Location.Y.ToString());
             }
 
             Application.ExitThread();
@@ -540,8 +566,8 @@ namespace GameLauncher {
 
                 LoginFormElements(false);
                 DownloadFormElements(true);
-                
-                this.playProgressText.Text = "DOWNLOAD COMPLETED";                 
+
+                this.playProgressText.Text = "DOWNLOAD COMPLETED";
             } else {
                  ConsoleLog("Invalid username or password.", "error");
             }
@@ -634,7 +660,7 @@ namespace GameLauncher {
                         numPlayers = "∞";
                     } else {
                         GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
-                        
+
                         if (!String.IsNullOrEmpty(json.bannerUrl)) {
                             Uri uriResult;
                             bool result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
@@ -672,7 +698,7 @@ namespace GameLauncher {
                                 client2.CancelAsync();
                                 return;
                             } else if (e4.Error != null) {
-                                //What? 
+                                //What?
                             } else {
                                 Image image;
                                 MemoryStream memoryStream = new MemoryStream(e4.Result);
@@ -718,7 +744,7 @@ namespace GameLauncher {
             passwordLabel.Font = new Font(fontFamily4, 11f);
             troubleLabel.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
             githubLink.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
-            forgotPassword.Font = new Font(fontFamily, 9f);
+            forgotPassword.Font = new Font(fontFamily, 9f, FontStyle.Bold);
             selectServerLabel.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
             settingsLanguageText.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
             settingsLanguageDesc.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
@@ -728,7 +754,7 @@ namespace GameLauncher {
             registerPasswordText.Font = new Font(fontFamily4, 11f);
             registerConfirmPasswordText.Font = new Font(fontFamily4, 11f);
             registerTicketText.Font = new Font(fontFamily4, 11f);
-            registerAgree.Font = new Font(fontFamily2, 9.749999f);
+            registerAgree.Font = new Font(fontFamily2, 9.749999f, FontStyle.Bold | FontStyle.Italic);
             playButton.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
         }
 
@@ -770,8 +796,8 @@ namespace GameLauncher {
             this.verticalBanner.Visible = hideElements;
         }
 
-        /* 
-         * REGISTER PAGE LAYOUT 
+        /*
+         * REGISTER PAGE LAYOUT
          * Because why should i close Form1 and create/open Form2 if it will look a bit more responsive...
          */
 
@@ -923,8 +949,8 @@ namespace GameLauncher {
 
                     this.consoleLog.Hide();
                     this.clearConsole.Hide();
-                
-                    this.playProgressText.Text = "DOWNLOAD COMPLETED";  
+
+                    this.playProgressText.Text = "DOWNLOAD COMPLETED";
                 } else {
                      ConsoleLog(DescriptionNode.InnerText, "error");
                 }
@@ -936,6 +962,10 @@ namespace GameLauncher {
          */
 
         private void settingsButton_Click(object sender, EventArgs e) {
+            if(WindowState == FormWindowState.Minimized) { 
+                WindowState = FormWindowState.Normal; 
+            }
+
             this.settingsButton.BackgroundImage = Properties.Resources.settingsbtn_click;
             this.BackgroundImage = Properties.Resources.settingsbg;
             this.currentWindowInfo.Text = "PLEASE SELECT YOUR GAME SETTINGS:";
@@ -968,8 +998,8 @@ namespace GameLauncher {
         }
 
         private void settingsSave_Click(object sender, EventArgs e) {
-            SettingFile.Write("Language", settingsLanguage.SelectedValue.ToString(), "Downloader");
-            SettingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString(), "Downloader");
+            SettingFile.Write("Language", settingsLanguage.SelectedValue.ToString());
+            SettingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString());
 
             XmlDocument UserSettingsXML = new XmlDocument();
             if(File.Exists(UserSettings)) {
