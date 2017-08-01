@@ -116,7 +116,6 @@
             // password
             // 
             this.password.Location = new System.Drawing.Point(276, 183);
-            this.password.MaxLength = 16;
             this.password.Name = "password";
             this.password.PasswordChar = '•';
             this.password.Size = new System.Drawing.Size(210, 20);
