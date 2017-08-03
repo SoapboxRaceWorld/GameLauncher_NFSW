@@ -268,7 +268,12 @@ namespace GameLauncher {
 
                 serverlistloaded = true;
             } catch (Exception ex) {
-                ConsoleLog("Failed to fetch serverlist. " + ex.Message, "error");
+                if(File.Exists("ServerCache")) {
+                    response = File.ReadAllText("ServerCache");
+                    ConsoleLog("Fetched Serverlist from Cache", "warning");
+                } else {
+                    ConsoleLog("Failed to fetch serverlist. " + ex.Message, "error");
+                }
             }
 
             //Time to add servers
