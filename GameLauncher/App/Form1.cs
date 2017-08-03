@@ -130,9 +130,9 @@ namespace GameLauncher {
             settingsSave.Click += new EventHandler(settingsSave_Click);
 
             email.KeyUp += new KeyEventHandler(loginbuttonenabler);
-            email.PreviewKeyDown += new PreviewKeyDownEventHandler(loginEnter);
+            email.KeyDown += new KeyEventHandler(loginEnter);
             password.KeyUp += new KeyEventHandler(loginbuttonenabler);
-            password.PreviewKeyDown += new PreviewKeyDownEventHandler(loginEnter);
+            password.KeyDown += new KeyEventHandler(loginEnter);
 
             serverPick.TextChanged += new EventHandler(serverPick_TextChanged);
 
@@ -153,7 +153,7 @@ namespace GameLauncher {
             string[] args = Environment.GetCommandLineArgs();
 
             //Somewhere here we will setup the game installation directory
-            directoryInstallation();
+            //directoryInstallation();
 
             //Replace cursor
             if(File.Exists(SettingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur")) {
@@ -437,9 +437,12 @@ namespace GameLauncher {
             this.minimizebtn.BackgroundImage = Properties.Resources.minimize;
         }
 
-        private void loginEnter(object sender, PreviewKeyDownEventArgs e) {
+        private void loginEnter(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Return && loginEnabled == true) {
-                loginButton_Click(sender, e);
+                loginButton_Click(null, null);
+                e.SuppressKeyPress = true;
+            } else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.V) {
+                e.SuppressKeyPress = true;
             }
         }
 
@@ -765,13 +768,13 @@ namespace GameLauncher {
             RegisterFormElements(true);
         }
 
-        private void forgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            Process.Start(serverPick.SelectedValue.ToString().Replace("Engine.svc", "") + "forgotPasswd.jsp");
-        }
-
         private void githubLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             ConsoleLog("Redirecting into GitHub Issue page", "info");
             Process.Start("https://github.com/metonator/GameLauncher_NFSW/issues");
+        }
+
+        private void forgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            Process.Start(serverPick.SelectedValue.ToString().Replace("Engine.svc", "") + "forgotPasswd.jsp");
         }
 
         private void LoginFormElements(bool hideElements = false) {

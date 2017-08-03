@@ -49,7 +49,6 @@
             this.passwordLabel = new System.Windows.Forms.Label();
             this.troubleLabel = new System.Windows.Forms.Label();
             this.githubLink = new System.Windows.Forms.LinkLabel();
-            this.forgotPassword = new System.Windows.Forms.LinkLabel();
             this.registerButton = new System.Windows.Forms.Button();
             this.selectServerLabel = new System.Windows.Forms.Label();
             this.settingsButton = new System.Windows.Forms.PictureBox();
@@ -76,6 +75,7 @@
             this.playProgressText = new System.Windows.Forms.Label();
             this.playButton = new System.Windows.Forms.Button();
             this.Notification = new System.Windows.Forms.NotifyIcon(this.components);
+            this.forgotPassword = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
@@ -176,7 +176,7 @@
             this.consoleLog.Name = "consoleLog";
             this.consoleLog.ReadOnly = true;
             this.consoleLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.consoleLog.Size = new System.Drawing.Size(719, 87);
+            this.consoleLog.Size = new System.Drawing.Size(701, 87);
             this.consoleLog.TabIndex = 9;
             this.consoleLog.Text = "";
             // 
@@ -196,11 +196,11 @@
             // 
             // clearConsole
             // 
-            this.clearConsole.Location = new System.Drawing.Point(758, 387);
+            this.clearConsole.Location = new System.Drawing.Point(745, 389);
             this.clearConsole.Name = "clearConsole";
-            this.clearConsole.Size = new System.Drawing.Size(10, 92);
+            this.clearConsole.Size = new System.Drawing.Size(17, 17);
             this.clearConsole.TabIndex = 10;
-            this.clearConsole.Text = "Clear Console";
+            this.clearConsole.Text = "X";
             this.clearConsole.UseVisualStyleBackColor = true;
             this.clearConsole.Click += new System.EventHandler(this.clearConsole_Click);
             // 
@@ -301,30 +301,11 @@
             this.githubLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
             this.githubLink.Location = new System.Drawing.Point(30, 271);
             this.githubLink.Name = "githubLink";
-            this.githubLink.Size = new System.Drawing.Size(195, 16);
+            this.githubLink.Size = new System.Drawing.Size(186, 16);
             this.githubLink.TabIndex = 17;
             this.githubLink.TabStop = true;
-            this.githubLink.Text = "Visit our customer service page";
+            this.githubLink.Text = "Visit our \"GitHub Issues\" page";
             this.githubLink.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
-            // 
-            // forgotPassword
-            // 
-            this.forgotPassword.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
-            this.forgotPassword.BackColor = System.Drawing.Color.Transparent;
-            this.forgotPassword.DisabledLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
-            this.forgotPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.forgotPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
-            this.forgotPassword.LinkArea = new System.Windows.Forms.LinkArea(0, 100);
-            this.forgotPassword.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
-            this.forgotPassword.Location = new System.Drawing.Point(276, 206);
-            this.forgotPassword.Name = "forgotPassword";
-            this.forgotPassword.Size = new System.Drawing.Size(210, 21);
-            this.forgotPassword.TabIndex = 18;
-            this.forgotPassword.TabStop = true;
-            this.forgotPassword.Text = "I forgot my password.";
-            this.forgotPassword.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            this.forgotPassword.UseCompatibleTextRendering = true;
-            this.forgotPassword.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
             // 
             // registerButton
             // 
@@ -613,6 +594,25 @@
             this.Notification.Text = "notifyIcon1";
             this.Notification.Visible = true;
             // 
+            // forgotPassword
+            // 
+            this.forgotPassword.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.forgotPassword.BackColor = System.Drawing.Color.Transparent;
+            this.forgotPassword.DisabledLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.forgotPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.forgotPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.forgotPassword.LinkArea = new System.Windows.Forms.LinkArea(0, 100);
+            this.forgotPassword.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.forgotPassword.Location = new System.Drawing.Point(276, 206);
+            this.forgotPassword.Name = "forgotPassword";
+            this.forgotPassword.Size = new System.Drawing.Size(210, 21);
+            this.forgotPassword.TabIndex = 0;
+            this.forgotPassword.TabStop = true;
+            this.forgotPassword.Text = "I forgot my password.";
+            this.forgotPassword.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.forgotPassword.UseCompatibleTextRendering = true;
+            this.forgotPassword.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            // 
             // mainScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -632,7 +632,6 @@
             this.Controls.Add(this.registerTicket);
             this.Controls.Add(this.registerEmail);
             this.Controls.Add(this.settingsQualityDesc);
-            this.Controls.Add(this.settingsLanguageDesc);
             this.Controls.Add(this.settingsQualityText);
             this.Controls.Add(this.settingsQuality);
             this.Controls.Add(this.settingsLanguageText);
@@ -661,6 +660,7 @@
             this.Controls.Add(this.closebtn);
             this.Controls.Add(this.moveWindow);
             this.Controls.Add(this.settingsSave);
+            this.Controls.Add(this.settingsLanguageDesc);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -702,7 +702,6 @@
         private System.Windows.Forms.Label passwordLabel;
         private System.Windows.Forms.Label troubleLabel;
         private System.Windows.Forms.LinkLabel githubLink;
-        private System.Windows.Forms.LinkLabel forgotPassword;
         private System.Windows.Forms.Button registerButton;
         private System.Windows.Forms.Label selectServerLabel;
         private System.Windows.Forms.PictureBox settingsButton;
@@ -729,6 +728,7 @@
         private System.Windows.Forms.Label playProgressText;
         private System.Windows.Forms.Button playButton;
         private System.Windows.Forms.NotifyIcon Notification;
+        private System.Windows.Forms.LinkLabel forgotPassword;
     }
 }
 
