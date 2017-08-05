@@ -83,12 +83,18 @@ namespace GameLauncher {
             consoleLog.SelectionFont = new Font(consoleLog.Font, FontStyle.Regular);
             consoleLog.AppendText(e);
             consoleLog.AppendText("\r\n");
-            consoleLog.ScrollToCaret();
+
+            if(DetectLinux.WineDetected() == false) {
+                consoleLog.ScrollToCaret();
+            }
         }
 
         public mainScreen() {
             InitializeComponent();
-            ApplyEmbeddedFonts();
+
+            if(DetectLinux.LinuxDetected() == false) {
+                ApplyEmbeddedFonts();
+            }
 
             if(SettingFile.KeyExists("LauncherPosX") || SettingFile.KeyExists("LauncherPosY")) {
                 StartPosition = FormStartPosition.Manual;
@@ -225,32 +231,6 @@ namespace GameLauncher {
             ConsoleLog("Log initialized", "info");
             ConsoleLog("GameLauncher initialized", "info");
             ConsoleLog("Installation directory: " + SettingFile.Read("InstallationDirectory"), "info");
-
-            //Silly way to detect mono
-            int SysVersion = (int)Environment.OSVersion.Platform;
-            bool mono = (SysVersion == 4 || SysVersion == 6 || SysVersion == 128);
-
-            //Silly way to detect wine
-            bool wine;
-            try {
-                RegistryKey regKey = Registry.CurrentUser;
-                RegistryKey rkTest = regKey.OpenSubKey(@"Software\Wine");
-
-                if(String.IsNullOrEmpty(rkTest.ToString())) {
-                    wine = false;
-                } else {
-                    wine = true;
-                }
-            } catch {
-                wine = false;
-            }
-
-            //Console log with warning
-            if (mono == true) {
-                ConsoleLog("Detected OS: Linux using Mono - Note that game might not launch.", "warning");
-            } else if (wine == true) {
-                ConsoleLog("Detected OS: Linux using Wine - Note that game might not launch.", "warning");
-            }
 
             email.Text = SettingFile.Read("AccountEmail");
             if (!String.IsNullOrEmpty(SettingFile.Read("AccountEmail")) && !String.IsNullOrEmpty(SettingFile.Read("Password"))) {

@@ -5,11 +5,28 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes;
+using Microsoft.Win32;
 
 namespace GameLauncher {
     static class Program {
         [STAThread]
         static void Main() {
+            int SysVersion = (int)Environment.OSVersion.Platform;
+            bool mono = DetectLinux.MonoDetected();
+            bool wine = DetectLinux.WineDetected();
+            bool linux = DetectLinux.LinuxDetected();
+            string extraLinuxInfo = "";
+
+            //Console log with warning
+            if (mono == true) {
+                linux = true;
+                Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+                MessageBox.Show(null, "Detected OS: Linux using Mono. Linux support is still under alpha stage. Therefore, launcher could not launch.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            } else if (wine == true) {
+                linux = true;
+                MessageBox.Show(null, "Detected OS: Linux using Wine. Linux support is still under alpha stage. Therefore, launcher could not launch.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
             Mutex mutex = new Mutex(false, "GameLauncherNFSW");
             try {
                 if (mutex.WaitOne(0, false)) {
@@ -30,6 +47,7 @@ namespace GameLauncher {
                             message += "• " + file + "\n";
                         }
 
+                        message += "\nCurrent directory: " + Directory.GetCurrentDirectory();
                         message += "\nYou will be moved to the project page for re-download.";
 
                         MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -46,7 +64,11 @@ namespace GameLauncher {
                         Application.SetCompatibleTextRenderingDefault(false);
                         Application.Run(new mainScreen());
                     } catch(Exception ex) {
-                        MessageBox.Show(null, ex.Message + "\n\n" + ex.StackTrace, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if(linux == true) {
+                            extraLinuxInfo = "\n\nAditionally, please report that you're using Wine/Mono Runtime and your Linux Distro";
+                        }
+
+                        MessageBox.Show(null, "Failed to launch GameLauncher. " + ex.Message + "\n\nStack Trace:\n" + ex.StackTrace + extraLinuxInfo, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Environment.Exit(1);
                     }
                 } else {
