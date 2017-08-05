@@ -219,9 +219,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="icon.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="icon.ico" />
     <None Include="Resources\playButton_click.png" />
     <None Include="Resources\playButton_hover.png" />
     <None Include="Resources\playButton_enable.png" />

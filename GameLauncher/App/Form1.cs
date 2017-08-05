@@ -34,6 +34,7 @@ namespace GameLauncher {
         String LoginToken = "";
         String UserId = "";
         String serverIP = "";
+        String serverCacheKey = "18051995"; // Try to guess what this means for me :)
 
         IniFile SettingFile = new IniFile("Settings.ini");
         string UserSettings = Environment.ExpandEnvironmentVariables("%AppData%\\Need for Speed World\\Settings\\UserSettings.xml");
@@ -153,7 +154,7 @@ namespace GameLauncher {
             string[] args = Environment.GetCommandLineArgs();
 
             //Somewhere here we will setup the game installation directory
-            //directoryInstallation();
+            directoryInstallation();
 
             //Replace cursor
             if(File.Exists(SettingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur")) {
@@ -267,9 +268,37 @@ namespace GameLauncher {
                 ConsoleLog("Fetching " + serverurl, "info");
 
                 serverlistloaded = true;
+
+                try {
+                    FileStream fileStream = new FileStream("ServerCache", FileMode.Create);
+
+                    DESCryptoServiceProvider dESCryptoServiceProvider = new DESCryptoServiceProvider() {
+                        Key = Encoding.ASCII.GetBytes(serverCacheKey),
+                        IV = Encoding.ASCII.GetBytes(serverCacheKey)
+                    };
+
+                    CryptoStream cryptoStream = new CryptoStream(fileStream, dESCryptoServiceProvider.CreateEncryptor(), CryptoStreamMode.Write);
+                    StreamWriter streamWriter = new StreamWriter(cryptoStream);
+                    streamWriter.Write(response);
+                    streamWriter.Close();
+                    ConsoleLog("Successfully created ServerCache", "success");
+                } catch (Exception ex) {
+                    ConsoleLog("Failed to create cached serverlist. " + ex.Message, "error");
+                }
             } catch (Exception ex) {
                 if(File.Exists("ServerCache")) {
-                    response = File.ReadAllText("ServerCache");
+                    FileStream fileStream = new FileStream("ServerCache", FileMode.Open);
+
+                    DESCryptoServiceProvider dESCryptoServiceProvider = new DESCryptoServiceProvider() {
+                        Key = Encoding.ASCII.GetBytes(serverCacheKey),
+                        IV = Encoding.ASCII.GetBytes(serverCacheKey)
+                    };
+
+                    CryptoStream cryptoStream = new CryptoStream(fileStream, dESCryptoServiceProvider.CreateDecryptor(), CryptoStreamMode.Read);
+                    StreamReader streamReader = new StreamReader(cryptoStream);
+                    response = streamReader.ReadToEnd();
+
+                    serverlistloaded = true;
                     ConsoleLog("Fetched Serverlist from Cache", "warning");
                 } else {
                     ConsoleLog("Failed to fetch serverlist. " + ex.Message, "error");
@@ -723,9 +752,9 @@ namespace GameLauncher {
                         PingReply reply = e3.Reply;
 
                         if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
-                            ConsoleLog("This PC <---> " + serverName + ": " + reply.RoundtripTime + "ms", "ping");
+                            onlineCount.Text += ". Server ping is " + reply.RoundtripTime + "ms";
                         } else {
-                            ConsoleLog(serverName + " doesn't allow pinging.", "ping");
+                            onlineCount.Text += ". Server doesn't allow pinging.";
                         }
                     };
                 }
