@@ -14,10 +14,10 @@ using System.Reflection;
 using System.Net.NetworkInformation;
 using GameLauncher.Resources;
 using GameLauncher.App.Classes;
-using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
 using SoapBox.JsonScheme;
+using GameLauncher.App.Classes.Events;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -30,6 +30,7 @@ namespace GameLauncher {
         bool ticketRequired;
         bool serverlistloaded = false;
         bool windowMoved = false;
+        bool playenabled = false;
 
         String LoginToken = "";
         String UserId = "";
@@ -218,7 +219,8 @@ namespace GameLauncher {
             //Console output to textbox
 
             ContextMenu = new ContextMenu();
-            ContextMenu.MenuItems.Add(new MenuItem("&Check for updates"));
+            ContextMenu.MenuItems.Add(new MenuItem("&Check for updates", Updater.checkForUpdate));
+            ContextMenu.MenuItems.Add(new MenuItem("&About", About.showAbout));
             ContextMenu.MenuItems.Add(new MenuItem("&Settings", settingsButton_Click));
             ContextMenu.MenuItems.Add("-");
             ContextMenu.MenuItems.Add(new MenuItem("&Close", closebtn_Click));
@@ -405,17 +407,12 @@ namespace GameLauncher {
 
         private void closebtn_Click(object sender, EventArgs e) {
             this.closebtn.BackgroundImage = Properties.Resources.close_click;
-            if(!Directory.Exists("Logs")) {
-                Directory.CreateDirectory("Logs");
-            }
+
+            Notification.Visible = false;
 
             long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
             ticks /= 10000000;
             string timestamp = ticks.ToString();
-
-            try {
-                consoleLog.SaveFile("Logs/" + timestamp + ".log", RichTextBoxStreamType.PlainText);
-            } catch { }
 
             if(serverlistloaded == true) {
                 SettingFile.Write("Server", serverPick.SelectedValue.ToString());
@@ -426,8 +423,16 @@ namespace GameLauncher {
                 SettingFile.Write("LauncherPosY", this.Location.Y.ToString());
             }
 
-            Application.ExitThread();
-            Application.Exit();
+            try {
+                if (!Directory.Exists("Logs")) {
+                    Directory.CreateDirectory("Logs");
+                }
+                consoleLog.SaveFile("Logs/" + timestamp + ".log", RichTextBoxStreamType.PlainText);
+            }
+            catch { }
+
+            //Dirty way to terminate application (sometimes Application.Exit() didn't really quitted, was still running in background)
+            Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
         }
 
         private void closebtn_MouseEnter(object sender, EventArgs e) {
@@ -575,16 +580,16 @@ namespace GameLauncher {
                 this.BackgroundImage = Properties.Resources.playbg;
                 this.currentWindowInfo.Visible = false;
 
-                if(builtinserver == false) {
+                if (builtinserver == false) {
                     playLoggedInAs.Text = "LOGGED IN AS " + email.Text.ToUpper();
                 } else {
-                    playLoggedInAs.Text = "LOGGED IN AS ROOT@SOAPBOX";
+                    playLoggedInAs.Text = "LOGGED IN AS LOCALHOST";
                 }
 
                 LoginFormElements(false);
                 DownloadFormElements(true);
 
-                this.playProgressText.Text = "DOWNLOAD COMPLETED";
+                launchNFSW();
             } else {
                  ConsoleLog("Invalid username or password.", "error");
             }
@@ -608,11 +613,6 @@ namespace GameLauncher {
                 this.loginButton.Image = Properties.Resources.button_disable;
                 this.loginButton.ForeColor = Color.Gray;
             }
-        }
-
-        private void clearConsole_Click(object sender, EventArgs e) {
-            consoleLog.SelectionColor = Color.Gray;
-            consoleLog.Text = "Console cleaned.\n";
         }
 
         private void serverPick_TextChanged(object sender, EventArgs e) {
@@ -800,7 +800,6 @@ namespace GameLauncher {
             this.serverPick.Visible = hideElements;
             this.serverStatusImg.Visible = hideElements;
             this.consoleLog.Visible = hideElements;
-            this.clearConsole.Visible = hideElements;
             this.email.Visible = hideElements;
             this.password.Visible = hideElements;
             this.emailLabel.Visible = hideElements;
@@ -838,7 +837,6 @@ namespace GameLauncher {
 
             //Restore some loginform elements
             this.consoleLog.Visible = true;
-            this.clearConsole.Visible = true;
             this.verticalBanner.Visible = true;
 
             if(ticketRequired) {
@@ -965,7 +963,8 @@ namespace GameLauncher {
                     DownloadFormElements(true);
 
                     this.consoleLog.Hide();
-                    this.clearConsole.Hide();
+
+                    launchNFSW();
 
                     this.playProgressText.Text = "DOWNLOAD COMPLETED";
                 } else {
@@ -1093,6 +1092,10 @@ namespace GameLauncher {
         }
 
         private void playButton_Click(object sender, EventArgs e) {
+            if(playenabled == false) {
+                return;
+            }
+
             this.playButton.Image = Properties.Resources.playButton_enable;
 
             if(builtinserver == true) {
@@ -1113,19 +1116,53 @@ namespace GameLauncher {
         }
 
         private void playButton_MouseUp(object sender, EventArgs e) {
+            if (playenabled == false) {
+                return;
+            }
+
             this.playButton.Image = Properties.Resources.playButton_hover;
         }
 
         private void playButton_MouseDown(object sender, EventArgs e) {
+            if (playenabled == false) {
+                return;
+            }
+
             this.playButton.Image = Properties.Resources.playButton_click;
         }
 
         private void playButton_MouseEnter(object sender, EventArgs e) {
+            if (playenabled == false) {
+                return;
+            }
+
             this.playButton.Image = Properties.Resources.playButton_hover;
         }
 
         private void playButton_MouseLeave(object sender, EventArgs e) {
+            if (playenabled == false) {
+                return;
+            }
+
             this.playButton.Image = Properties.Resources.playButton_enable;
+        }
+
+        private void launchNFSW() {
+            this.playButton.Image = Properties.Resources.playButton_disable;
+            this.playButton.ForeColor = Color.Gray;
+
+            this.playProgressText.Text = "PLEASE WAIT...";
+            Delay.WaitSeconds(1);
+
+            Downloader.selectMirror(Downloader.Mirror.Tiktalik);
+            Downloader.ValidateFiles();
+            Downloader.StartDownload();
+
+            playenabled = true;
+            this.playProgress.Value = 100;
+            this.playButton.Image = Properties.Resources.playButton_enable;
+            this.playButton.ForeColor = Color.White;
+            this.playProgressText.Text = "DOWNLOAD COMPLETED";
         }
     }
 }

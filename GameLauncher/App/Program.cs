@@ -5,7 +5,6 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes;
-using Microsoft.Win32;
 
 namespace GameLauncher {
     static class Program {
@@ -19,19 +18,22 @@ namespace GameLauncher {
 
             //Console log with warning
             if (mono == true) {
-                linux = true;
                 Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
                 MessageBox.Show(null, "Detected OS: Linux using Mono. Linux support is still under alpha stage. Therefore, launcher could not launch.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             } else if (wine == true) {
-                linux = true;
                 MessageBox.Show(null, "Detected OS: Linux using Wine. Linux support is still under alpha stage. Therefore, launcher could not launch.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-            Mutex mutex = new Mutex(false, "GameLauncherNFSW");
+            //Add LZMA.dll on the fly (used for decompression of section{int}.dll files)
+            if (!File.Exists("LZMA.dll")) {
+                File.WriteAllBytes("LZMA.dll", ExtractResource.AsByte("GameLauncher.LZMA.LZMA.dll"));
+            }
+
+            Mutex mutex = new Mutex(false, "GameLauncherNFSW-MeTonaTOR"); //Forgot about other launchers...
             try {
                 if (mutex.WaitOne(0, false)) {
                     //First of all, we need to check if files exists
-                    String[] files = { "Microsoft.WindowsAPICodePack.dll", "Microsoft.WindowsAPICodePack.Shell.dll", "Newtonsoft.Json.dll" };
+                    String[] files = { "Microsoft.WindowsAPICodePack.dll", "Microsoft.WindowsAPICodePack.Shell.dll", "Newtonsoft.Json.dll", "LZMA.dll" };
                     List<string> missingfiles = new List<string>();
 
                     foreach (string file in files) {

@@ -40,7 +40,6 @@
             this.currentWindowInfo = new System.Windows.Forms.Label();
             this.consoleLog = new System.Windows.Forms.RichTextBox();
             this.rememberMe = new System.Windows.Forms.CheckBox();
-            this.clearConsole = new System.Windows.Forms.Button();
             this.Timeout = new System.Windows.Forms.Timer(this.components);
             this.onlineCount = new System.Windows.Forms.Label();
             this.loginButton = new System.Windows.Forms.Button();
@@ -176,7 +175,7 @@
             this.consoleLog.Name = "consoleLog";
             this.consoleLog.ReadOnly = true;
             this.consoleLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.consoleLog.Size = new System.Drawing.Size(701, 87);
+            this.consoleLog.Size = new System.Drawing.Size(719, 87);
             this.consoleLog.TabIndex = 9;
             this.consoleLog.Text = "";
             // 
@@ -193,16 +192,6 @@
             this.rememberMe.TabIndex = 3;
             this.rememberMe.Text = "REMEMBER MY EMAIL ADDRESS";
             this.rememberMe.UseVisualStyleBackColor = false;
-            // 
-            // clearConsole
-            // 
-            this.clearConsole.Location = new System.Drawing.Point(745, 389);
-            this.clearConsole.Name = "clearConsole";
-            this.clearConsole.Size = new System.Drawing.Size(17, 17);
-            this.clearConsole.TabIndex = 10;
-            this.clearConsole.Text = "X";
-            this.clearConsole.UseVisualStyleBackColor = true;
-            this.clearConsole.Click += new System.EventHandler(this.clearConsole_Click);
             // 
             // Timeout
             // 
@@ -647,7 +636,6 @@
             this.Controls.Add(this.registerText);
             this.Controls.Add(this.loginButton);
             this.Controls.Add(this.onlineCount);
-            this.Controls.Add(this.clearConsole);
             this.Controls.Add(this.rememberMe);
             this.Controls.Add(this.consoleLog);
             this.Controls.Add(this.currentWindowInfo);
@@ -693,7 +681,6 @@
         private System.Windows.Forms.Label currentWindowInfo;
         private System.Windows.Forms.RichTextBox consoleLog;
         private System.Windows.Forms.CheckBox rememberMe;
-        private System.Windows.Forms.Button clearConsole;
         private System.Windows.Forms.Timer Timeout;
         private System.Windows.Forms.Label onlineCount;
         private System.Windows.Forms.Button loginButton;
