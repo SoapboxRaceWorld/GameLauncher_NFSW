@@ -1097,8 +1097,9 @@ namespace GameLauncher {
             }
 
             this.playButton.Image = Properties.Resources.playButton_enable;
+            LaunchGame(UserId, LoginToken, serverIP);
 
-            if(builtinserver == true) {
+            if (builtinserver == true) {
                 this.playProgressText.Text = "SOAPBOX SERVER LAUNCHED. WAITING FOR QUERIES";
             } else {
                 int secondsToCloseLauncher = 5;
@@ -1111,8 +1112,6 @@ namespace GameLauncher {
 
                 closebtn_Click(null, null);
             }
-
-            LaunchGame(UserId, LoginToken, serverIP);
         }
 
         private void playButton_MouseUp(object sender, EventArgs e) {
