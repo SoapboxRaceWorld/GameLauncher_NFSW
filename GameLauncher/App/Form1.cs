@@ -363,6 +363,7 @@ namespace GameLauncher {
             }
 
             //Soapbox Modules (without them Freeroam might fail)
+            Directory.CreateDirectory(SettingFile.Read("InstallationDirectory"));
             if(!File.Exists(SettingFile.Read("InstallationDirectory") + "/lightfx.dll")) {
                 File.WriteAllBytes(SettingFile.Read("InstallationDirectory") + "/lightfx.dll", ExtractResource.AsByte("GameLauncher.SoapBoxModules.lightfx.dll"));
                 Directory.CreateDirectory(SettingFile.Read("InstallationDirectory") + "/modules");
@@ -1183,8 +1184,7 @@ namespace GameLauncher {
 
                 speechFile = SettingFile.Read("Language").ToLower();
                 speechSize = Convert.ToUInt64(speechSizeNode.InnerText);
-            } catch(Exception ex) {
-                MessageBox.Show(ex.Message + ". " + "http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client/" + SettingFile.Read("Language").ToLower() + "/index.xml");
+            } catch(Exception) {
                 speechFile = "en";
                 speechSize = 141805935;
             }
