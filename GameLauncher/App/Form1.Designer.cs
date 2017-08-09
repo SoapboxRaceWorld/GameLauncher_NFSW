@@ -712,10 +712,10 @@
         private System.Windows.Forms.CheckBox registerAgree;
         private System.Windows.Forms.Label playLoggedInAs;
         private System.Windows.Forms.ProgressBar playProgress;
-        private System.Windows.Forms.Label playProgressText;
         private System.Windows.Forms.Button playButton;
         private System.Windows.Forms.NotifyIcon Notification;
         private System.Windows.Forms.LinkLabel forgotPassword;
+        internal System.Windows.Forms.Label playProgressText;
     }
 }
 

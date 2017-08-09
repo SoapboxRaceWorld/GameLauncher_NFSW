@@ -32,6 +32,8 @@ namespace GameLauncher {
         bool windowMoved = false;
         bool playenabled = false;
 
+        DateTime DownloadStartTime;
+
         String LoginToken = "";
         String UserId = "";
         String serverIP = "";
@@ -161,10 +163,22 @@ namespace GameLauncher {
             string[] args = Environment.GetCommandLineArgs();
 
             //Somewhere here we will setup the game installation directory
-            directoryInstallation();
+            if (String.IsNullOrEmpty(SettingFile.Read("InstallationDirectory"))) {
+                CommonOpenFileDialog openFolder = new CommonOpenFileDialog();
+                openFolder.InitialDirectory = "";
+                openFolder.IsFolderPicker = true;
+                openFolder.Title = "GameLauncher: Please pick up a directory where NFSW is located or has to be installed.";
+                CommonFileDialogResult result = openFolder.ShowDialog();
+
+                if (result == CommonFileDialogResult.Ok) {
+                    SettingFile.Write("InstallationDirectory", openFolder.FileName);
+                } else {
+                    Environment.Exit(Environment.ExitCode);
+                }
+            }
 
             //Replace cursor
-            if(File.Exists(SettingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur")) {
+            if (File.Exists(SettingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur")) {
                 Cursor mycursor = new Cursor(Cursor.Current.Handle);
                 IntPtr colorcursorhandle = User32.LoadCursorFromFile(SettingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur");
                 mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
@@ -178,41 +192,6 @@ namespace GameLauncher {
             }
 
             registerText.Text = "DON'T HAVE AN ACCOUNT?\nCLICK HERE TO CREATE ONE NOW...";
-        }
-
-        public void directoryInstallation(bool bypass = false) {
-            if (!SettingFile.KeyExists("InstallationDirectory") || bypass == true) {
-                var openFolder = new CommonOpenFileDialog();
-                openFolder.InitialDirectory = "";
-                openFolder.IsFolderPicker = true;
-                openFolder.Title = "GameLauncher: Please pick up a directory with NFSW.";
-                var result = openFolder.ShowDialog();
-
-                if (result == CommonFileDialogResult.Ok) {
-                    SettingFile.Write("InstallationDirectory", openFolder.FileName);
-                } else if (result == CommonFileDialogResult.Cancel) {
-                    Environment.Exit(Environment.ExitCode);
-                }
-            }
-
-            if(!File.Exists(SettingFile.Read("InstallationDirectory") + "/nfsw.exe")) {
-                DialogResult InstallerAsk = MessageBox.Show(null, "There's no 'Need For Speed: World' installation over there. Do you wanna select new installation directory?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-                if(InstallerAsk == DialogResult.Yes) {
-                    directoryInstallation(true);
-                } else {
-                    Environment.Exit(Environment.ExitCode);
-                }
-            }
-
-            /*if (!Directory.Exists(SettingFile.Read("InstallationDirectory"))) {
-                Directory.CreateDirectory(SettingFile.Read("InstallationDirectory")  + "/nfsw");
-                Directory.CreateDirectory(SettingFile.Read("InstallationDirectory")  + "/nfsw/Cache");
-                Directory.CreateDirectory(SettingFile.Read("InstallationDirectory")  + "/nfsw/Data");
-                Directory.CreateDirectory(SettingFile.Read("InstallationDirectory")  + "/nfsw/Data/Modules");
-                File.Create(SettingFile.Read("InstallationDirectory")  + "/nfsw/Cache/keep.this");
-                File.Create(SettingFile.Read("InstallationDirectory")  + "/nfsw/Data/put.your.nfsw.exe.here");
-                Process.Start(@"" + SettingFile.Read("InstallationDirectory")  + "/nfsw/Data/");
-            }*/
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
@@ -1153,15 +1132,141 @@ namespace GameLauncher {
             this.playProgressText.Text = "PLEASE WAIT...";
             Delay.WaitSeconds(1);
 
-            Downloader.selectMirror(Downloader.Mirror.Tiktalik);
-            Downloader.ValidateFiles();
-            Downloader.StartDownload();
+            if(!File.Exists(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe")) { 
+                MessageBox.Show(null, "This downloader is in alpha. Please report every issue you will notice (except slow downloading, we know about it)", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DownloadBaseFiles();
+            } else {
+                OnDownloadFinished();
+            }
+        }
 
+        public void DownloadBaseFiles() {
+            DownloadStartTime = DateTime.Now;
+
+            Downloader downloader = new Downloader(this, 3, 2, 16) {
+                ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdated),
+                DownloadFinished = new DownloadFinished(this.DownloadTracksFiles),
+                DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
+                ShowMessage = new ShowMessage(this.OnShowMessage)
+            };
+
+            downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "", SettingFile.Read("InstallationDirectory"), false, false, 1130632198);
+        }
+
+        public void DownloadTracksFiles() {
+            DownloadStartTime = DateTime.Now;
+
+            Downloader downloader = new Downloader(this, 3, 2, 16) {
+                ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdated),
+                DownloadFinished = new DownloadFinished(this.DownloadSpeechFiles),
+                DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
+                ShowMessage = new ShowMessage(this.OnShowMessage)
+            };
+
+            downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "Tracks", SettingFile.Read("InstallationDirectory"), false, false, 615494528);
+        }
+
+        public void DownloadSpeechFiles() {
+            string speechFile;
+            ulong speechSize;
+
+            try {
+                WebClient wc = new WebClientWithTimeout();
+                wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
+                string response = wc.DownloadString("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client/" + SettingFile.Read("Language").ToLower() + "/index.xml");
+
+                response = response.Substring(3, response.Length - 3);
+
+                XmlDocument SpeechFileXML = new XmlDocument();
+                SpeechFileXML.LoadXml(response);
+                XmlNode speechSizeNode = SpeechFileXML.SelectSingleNode("index/header/compressed");
+
+                speechFile = SettingFile.Read("Language").ToLower();
+                speechSize = Convert.ToUInt64(speechSizeNode.InnerText);
+            } catch(Exception ex) {
+                MessageBox.Show(ex.Message + ". " + "http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client/" + SettingFile.Read("Language").ToLower() + "/index.xml");
+                speechFile = "en";
+                speechSize = 141805935;
+            }
+
+            DownloadStartTime = DateTime.Now;
+
+            Downloader downloader = new Downloader(this, 3, 2, 16) {
+                ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdated),
+                DownloadFinished = new DownloadFinished(this.DownloadTracksHighFiles),
+                DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
+                ShowMessage = new ShowMessage(this.OnShowMessage)
+            };
+
+            downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", speechFile, SettingFile.Read("InstallationDirectory"), false, false, speechSize);
+        }
+
+        public void DownloadTracksHighFiles() {
+            DownloadStartTime = DateTime.Now;
+
+            Downloader downloader = new Downloader(this, 3, 2, 16) {
+                ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdated),
+                DownloadFinished = new DownloadFinished(this.OnDownloadFinished),
+                DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
+                ShowMessage = new ShowMessage(this.OnShowMessage)
+            };
+
+            if (SettingFile.Read("TracksHigh") == "1") {
+                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "TracksHigh", SettingFile.Read("InstallationDirectory"), false, false, 278397707);
+            }
+        }
+
+        //EA Downloader compatibility (sorry EA)
+        private string FormatFileSize(long byteCount) {
+            double[] numArray = new double[] { 1073741824, 1048576, 1024, 0 };
+            string[] strArrays = new string[] { "GB", "MB", "KB", "Bytes" };
+            for (int i = 0; i < (int)numArray.Length; i++) {
+                if ((double)byteCount >= numArray[i]) {
+                    return string.Concat(string.Format("{0:0.00}", (double)byteCount / numArray[i]), strArrays[i]);
+                }
+            }
+
+            return "0 Bytes";
+        }
+
+        private string EstimateFinishTime(long current, long total) {
+            double num = (double)current / (double)total;
+            if (num < 0.0500000007450581)
+            {
+                return "ESTIMATING...";
+            }
+            TimeSpan now = DateTime.Now - this.DownloadStartTime;
+            TimeSpan timeSpan = TimeSpan.FromTicks((long)((double)now.Ticks / num)) - now;
+            object hours = timeSpan.Hours;
+            string str = timeSpan.Minutes.ToString("D02");
+            int seconds = timeSpan.Seconds;
+            return string.Format("{0}:{1}:{2}", hours, str, seconds.ToString("D02"));
+        }
+
+        private void OnDownloadProgressUpdated(long downloadLength, long downloadCurrent, long compressedLength, string filename) {
+            if (downloadCurrent < compressedLength) {
+                int width = this.playProgressText.Width;
+                this.playProgressText.Text = string.Format("DOWNLOADING ({0}/{1}) - TIME REMAINING : {2}", this.FormatFileSize(downloadCurrent), this.FormatFileSize(compressedLength), this.EstimateFinishTime(downloadCurrent, compressedLength));
+            }
+
+            this.playProgress.Value = (int)((long)100 * downloadCurrent / compressedLength);
+        }
+
+        private void OnDownloadFinished() {
             playenabled = true;
             this.playProgress.Value = 100;
             this.playButton.Image = Properties.Resources.playButton_enable;
             this.playButton.ForeColor = Color.White;
             this.playProgressText.Text = "DOWNLOAD COMPLETED";
+        }
+
+        private void OnDownloadFailed(Exception ex) {
+            this.playProgress.Value = 0;
+            this.playProgressText.Text = "DOWNLOAD FAILED!";
+        }
+
+        private void OnShowMessage(string message, string header) {
+            MessageBox.Show(message, header);
         }
     }
 }
