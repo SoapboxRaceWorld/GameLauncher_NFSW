@@ -939,15 +939,12 @@ namespace GameLauncher {
 
                     this.BackgroundImage = Properties.Resources.playbg;
                     this.currentWindowInfo.Visible = false;
-                    playLoggedInAs.Text = "REGISTERED IN AS " + email.Text.ToUpper();
+
+                    playLoggedInAs.Text = "REGISTERED IN AS " + registerEmail.Text.ToUpper();
                     RegisterFormElements(false);
                     DownloadFormElements(true);
 
-                    this.consoleLog.Hide();
-
                     launchNFSW();
-
-                    this.playProgressText.Text = "DOWNLOAD COMPLETED";
                 } else {
                      ConsoleLog(DescriptionNode.InnerText, "error");
                 }
