@@ -38,6 +38,7 @@ namespace GameLauncher {
         String UserId = "";
         String serverIP = "";
         String serverCacheKey = "18051995"; // Try to guess what this means for me :)
+        String langInfo;
 
         IniFile SettingFile = new IniFile("Settings.ini");
         string UserSettings = Environment.ExpandEnvironmentVariables("%AppData%\\Need for Speed World\\Settings\\UserSettings.xml");
@@ -1133,41 +1134,67 @@ namespace GameLauncher {
             this.playProgressText.Text = "PLEASE WAIT...";
             Delay.WaitSeconds(1);
 
-            if(!File.Exists(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe")) { 
+            string speechFile;
+
+            try {
+                WebClient wc = new WebClientWithTimeout();
+                wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
+                string response = wc.DownloadString("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client/" + SettingFile.Read("Language").ToLower() + "/index.xml");
+                speechFile = SettingFile.Read("Language").ToLower();
+            } catch (Exception) {
+                speechFile = "en";
+            }
+
+            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechhdr_" + speechFile + ".big")) { 
                 MessageBox.Show(null, "This downloader is in alpha. Please report every issue you will notice (except slow downloading, we know about it)", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                DownloadBaseFiles();
+                this.playProgressText.Text = "LOADING FILELIST FOR DOWNLOAD...";
+                DownloadCoreFiles();
             } else {
                 OnDownloadFinished();
             }
         }
 
-        public void DownloadBaseFiles() {
-            DownloadStartTime = DateTime.Now;
+        public void DownloadCoreFiles() {
+            this.playProgressText.Text = "CHECKING CORE FILES...";
 
-            Downloader downloader = new Downloader(this, 3, 2, 16) {
-                ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdated),
-                DownloadFinished = new DownloadFinished(this.DownloadTracksFiles),
-                DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
-                ShowMessage = new ShowMessage(this.OnShowMessage)
-            };
+            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe")) {
+                DownloadStartTime = DateTime.Now;
 
-            downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "", SettingFile.Read("InstallationDirectory"), false, false, 1130632198);
+                Downloader downloader = new Downloader(this, 3, 2, 16) {
+                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdatedCore),
+                    DownloadFinished = new DownloadFinished(this.DownloadTracksFiles),
+                    DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
+                    ShowMessage = new ShowMessage(this.OnShowMessage)
+                };
+
+                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "", SettingFile.Read("InstallationDirectory"), false, false, 1130632198);
+            } else {
+                DownloadTracksFiles();
+            }
         }
 
         public void DownloadTracksFiles() {
-            DownloadStartTime = DateTime.Now;
+            this.playProgressText.Text = "CHECKING TRACKS FILES...";
 
-            Downloader downloader = new Downloader(this, 3, 2, 16) {
-                ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdated),
-                DownloadFinished = new DownloadFinished(this.DownloadSpeechFiles),
-                DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
-                ShowMessage = new ShowMessage(this.OnShowMessage)
-            };
+            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Tracks\\STREAML5RA_98.BUN")) {
+                DownloadStartTime = DateTime.Now;
 
-            downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "Tracks", SettingFile.Read("InstallationDirectory"), false, false, 615494528);
+                Downloader downloader = new Downloader(this, 3, 2, 16) {
+                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdatedTracks),
+                    DownloadFinished = new DownloadFinished(this.DownloadSpeechFiles),
+                    DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
+                    ShowMessage = new ShowMessage(this.OnShowMessage)
+                };
+
+                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "Tracks", SettingFile.Read("InstallationDirectory"), false, false, 615494528);
+            } else {
+                DownloadSpeechFiles();
+            }
         }
 
         public void DownloadSpeechFiles() {
+            this.playProgressText.Text = "LOOKING FOR COMPATIBLE SPEECH FILES...";
+
             string speechFile;
             ulong speechSize;
 
@@ -1184,34 +1211,44 @@ namespace GameLauncher {
 
                 speechFile = SettingFile.Read("Language").ToLower();
                 speechSize = Convert.ToUInt64(speechSizeNode.InnerText);
+                langInfo = settingsLanguage.GetItemText(settingsLanguage.SelectedItem).ToUpper();
             } catch(Exception) {
                 speechFile = "en";
                 speechSize = 141805935;
+                langInfo = "ENGLISH";
             }
+            
+            this.playProgressText.Text = "CHECKING " + langInfo + " SPEECH FILES...";
 
-            DownloadStartTime = DateTime.Now;
+            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big")) {
+                DownloadStartTime = DateTime.Now;
 
-            Downloader downloader = new Downloader(this, 3, 2, 16) {
-                ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdated),
-                DownloadFinished = new DownloadFinished(this.DownloadTracksHighFiles),
-                DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
-                ShowMessage = new ShowMessage(this.OnShowMessage)
-            };
+                Downloader downloader = new Downloader(this, 3, 2, 16) {
+                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdatedSpeech),
+                    DownloadFinished = new DownloadFinished(this.DownloadTracksHighFiles),
+                    DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
+                    ShowMessage = new ShowMessage(this.OnShowMessage)
+                };
 
-            downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", speechFile, SettingFile.Read("InstallationDirectory"), false, false, speechSize);
+                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", speechFile, SettingFile.Read("InstallationDirectory"), false, false, speechSize);
+            } else {
+                DownloadTracksHighFiles();
+            }
         }
 
         public void DownloadTracksHighFiles() {
-            DownloadStartTime = DateTime.Now;
+            this.playProgressText.Text = "CHECKING TRACKSHIGH FILES...";
 
-            Downloader downloader = new Downloader(this, 3, 2, 16) {
-                ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdated),
-                DownloadFinished = new DownloadFinished(this.OnDownloadFinished),
-                DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
-                ShowMessage = new ShowMessage(this.OnShowMessage)
-            };
+            if (SettingFile.Read("TracksHigh") == "1" && !File.Exists(SettingFile.Read("InstallationDirectory") + "\\TracksHigh\\STREAML5RA_98.BUN")) {
+                DownloadStartTime = DateTime.Now;
 
-            if (SettingFile.Read("TracksHigh") == "1") {
+                Downloader downloader = new Downloader(this, 3, 2, 16) {
+                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdatedTracksHigh),
+                    DownloadFinished = new DownloadFinished(this.OnDownloadFinished),
+                    DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
+                    ShowMessage = new ShowMessage(this.OnShowMessage)
+                };
+
                 downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "TracksHigh", SettingFile.Read("InstallationDirectory"), false, false, 278397707);
             }
         }
@@ -1243,21 +1280,105 @@ namespace GameLauncher {
             return string.Format("{0}:{1}:{2}", hours, str, seconds.ToString("D02"));
         }
 
-        private void OnDownloadProgressUpdated(long downloadLength, long downloadCurrent, long compressedLength, string filename) {
+        private void OnDownloadProgressUpdatedCore(long downloadLength, long downloadCurrent, long compressedLength, string filename) {
             if (downloadCurrent < compressedLength) {
                 int width = this.playProgressText.Width;
-                this.playProgressText.Text = string.Format("DOWNLOADING ({0}/{1}) - TIME REMAINING : {2}", this.FormatFileSize(downloadCurrent), this.FormatFileSize(compressedLength), this.EstimateFinishTime(downloadCurrent, compressedLength));
+                this.playProgressText.Text = string.Format("DOWNLOADING CORE FILES ({0}/{1}) - TIME REMAINING : {2}", this.FormatFileSize(downloadCurrent), this.FormatFileSize(compressedLength), this.EstimateFinishTime(downloadCurrent, compressedLength));
             }
 
             this.playProgress.Value = (int)((long)100 * downloadCurrent / compressedLength);
         }
 
+        private void OnDownloadProgressUpdatedSpeech(long downloadLength, long downloadCurrent, long compressedLength, string filename) {
+            if (downloadCurrent < compressedLength) {
+                int width = this.playProgressText.Width;
+                this.playProgressText.Text = string.Format("DOWNLOADING " + langInfo + " SPEECH FILES ({0}/{1}) - TIME REMAINING : {2}", this.FormatFileSize(downloadCurrent), this.FormatFileSize(compressedLength), this.EstimateFinishTime(downloadCurrent, compressedLength));
+            }
+
+            this.playProgress.Value = (int)((long)100 * downloadCurrent / compressedLength);
+        }
+
+        private void OnDownloadProgressUpdatedTracks(long downloadLength, long downloadCurrent, long compressedLength, string filename) {
+            if (downloadCurrent < compressedLength) {
+                int width = this.playProgressText.Width;
+                this.playProgressText.Text = string.Format("DOWNLOADING TRACKS FILES ({0}/{1}) - TIME REMAINING : {2}", this.FormatFileSize(downloadCurrent), this.FormatFileSize(compressedLength), this.EstimateFinishTime(downloadCurrent, compressedLength));
+            }
+
+            this.playProgress.Value = (int)((long)100 * downloadCurrent / compressedLength);
+        }
+
+        private void OnDownloadProgressUpdatedTracksHigh(long downloadLength, long downloadCurrent, long compressedLength, string filename) {
+            if (downloadCurrent < compressedLength) {
+                int width = this.playProgressText.Width;
+                this.playProgressText.Text = string.Format("DOWNLOADING TRACKSHIGH FILES ({0}/{1}) - TIME REMAINING : {2}", this.FormatFileSize(downloadCurrent), this.FormatFileSize(compressedLength), this.EstimateFinishTime(downloadCurrent, compressedLength));
+            }
+
+            this.playProgress.Value = (int)((long)100 * downloadCurrent / compressedLength);
+        }
         private void OnDownloadFinished() {
             playenabled = true;
             this.playProgress.Value = 100;
             this.playButton.Image = Properties.Resources.playButton_enable;
             this.playButton.ForeColor = Color.White;
             this.playProgressText.Text = "DOWNLOAD COMPLETED";
+
+            //Relogin here
+            string serverLoginResponse;
+            string encryptedpassword;
+            HashAlgorithm algorithm = SHA1.Create();
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in algorithm.ComputeHash(Encoding.UTF8.GetBytes(password.Text.ToString()))) {
+                sb.Append(b.ToString("X2"));
+            }
+
+            if (useSavedPassword) {
+                encryptedpassword = SettingFile.Read("Password");
+            } else {
+                encryptedpassword = sb.ToString();
+            }
+
+            try {
+                WebClient wc = new WebClientWithTimeout();
+                wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
+
+                string BuildURL = serverIP + "/User/authenticateUser?email=" + email.Text.ToString() + "&password=" + encryptedpassword.ToLower();
+
+                serverLoginResponse = wc.DownloadString(BuildURL);
+            } catch (WebException ex) {
+                if (ex.Status == WebExceptionStatus.ProtocolError) {
+                    HttpWebResponse serverReply = (HttpWebResponse)ex.Response;
+                    if ((int)serverReply.StatusCode == 500) {
+                        using (StreamReader sr = new StreamReader(serverReply.GetResponseStream())) {
+                            serverLoginResponse = sr.ReadToEnd();
+                        }
+                    } else {
+                        serverLoginResponse = ex.Message;
+                    }
+                } else {
+                    serverLoginResponse = ex.Message;
+                }
+            }
+
+            XmlDocument SBRW_XML = new XmlDocument();
+
+            if (builtinserver == false) {
+                SBRW_XML.LoadXml(serverLoginResponse);
+            } else {
+                SBRW_XML.LoadXml("<LoginStatusVO><UserId>1</UserId><LoginToken>aaaaaaaa-aaaa-aaaa-aaaaaaaa</LoginToken><Description/></LoginStatusVO>");
+            }
+
+            XmlNode DescriptionNode;
+            XmlNode LoginTokenNode;
+            XmlNode UserIdNode;
+
+            DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
+            LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
+            UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
+
+            if (String.IsNullOrEmpty(DescriptionNode.InnerText)) {
+                UserId = UserIdNode.InnerText;
+                LoginToken = LoginTokenNode.InnerText;
+            }
         }
 
         private void OnDownloadFailed(Exception ex) {
