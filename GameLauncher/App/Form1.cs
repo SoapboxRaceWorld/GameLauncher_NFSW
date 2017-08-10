@@ -944,6 +944,8 @@ namespace GameLauncher {
                     RegisterFormElements(false);
                     DownloadFormElements(true);
 
+                    this.consoleLog.Hide();
+
                     launchNFSW();
                 } else {
                      ConsoleLog(DescriptionNode.InnerText, "error");
