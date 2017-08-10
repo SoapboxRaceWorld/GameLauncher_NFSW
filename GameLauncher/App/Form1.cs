@@ -1250,6 +1250,8 @@ namespace GameLauncher {
                 };
 
                 downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "TracksHigh", SettingFile.Read("InstallationDirectory"), false, false, 278397707);
+            } else {
+                OnDownloadFinished();
             }
         }
 
