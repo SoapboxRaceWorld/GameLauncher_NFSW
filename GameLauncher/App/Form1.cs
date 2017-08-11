@@ -293,7 +293,10 @@ namespace GameLauncher {
 
                 if(SettingFile.KeyExists("Server")) {
                     skipServerTrigger = true;
-                    serverPick.SelectedValue = SettingFile.Read("Server");
+
+                    if(response.Contains(SettingFile.Read("Server"))) { 
+                        serverPick.SelectedValue = SettingFile.Read("Server");
+                    }
 
                     //I don't know other way to fix this call...
                     if(serverPick.SelectedIndex == 0) {

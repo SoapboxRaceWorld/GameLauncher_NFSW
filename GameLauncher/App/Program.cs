@@ -65,7 +65,7 @@ namespace GameLauncher {
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
                         Application.Run(new mainScreen());
-                    } catch(Exception ex) {
+                    } catch(NullReferenceException ex) {
                         if(linux == true) {
                             extraLinuxInfo = "\n\nAditionally, please report that you're using Wine/Mono Runtime and your Linux Distro";
                         }
