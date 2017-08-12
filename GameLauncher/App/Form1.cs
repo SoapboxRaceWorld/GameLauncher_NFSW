@@ -163,6 +163,16 @@ namespace GameLauncher {
             //Command-line Arguments
             string[] args = Environment.GetCommandLineArgs();
 
+            //Simple check if we have enough permission to write file and remove them
+            try {
+                string file = Directory.GetCurrentDirectory() + "\\test.txt";
+                File.WriteAllText(file, "test");
+                File.Delete(file);
+            } catch {
+                MessageBox.Show(null, "Looks like we don't have enough permission to write config here. Please launch GameLauncher.exe as Administrator", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Environment.Exit(Environment.ExitCode);
+            }
+
             //Somewhere here we will setup the game installation directory
             if (String.IsNullOrEmpty(SettingFile.Read("InstallationDirectory"))) {
                 CommonOpenFileDialog openFolder = new CommonOpenFileDialog();
@@ -664,7 +674,13 @@ namespace GameLauncher {
 
                         if (!String.IsNullOrEmpty(json.bannerUrl)) {
                             Uri uriResult;
-                            bool result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                            bool result;
+
+                            try {
+                                result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                            } catch {
+                                result = false;
+                            }
 
                             if (result) {
                                 verticalImageUrl = json.bannerUrl;
@@ -701,11 +717,15 @@ namespace GameLauncher {
                             } else if (e4.Error != null) {
                                 //What?
                             } else {
-                                Image image;
-                                MemoryStream memoryStream = new MemoryStream(e4.Result);
-                                image = Image.FromStream(memoryStream);
-                                verticalBanner.Image = image;
-                                verticalBanner.BackColor = Color.Black;
+                                try {
+                                    Image image;
+                                    MemoryStream memoryStream = new MemoryStream(e4.Result);
+                                    image = Image.FromStream(memoryStream);
+                                    verticalBanner.Image = image;
+                                    verticalBanner.BackColor = Color.Black;
+                                } catch {
+                                    verticalBanner.Image = null;
+                                }
                             }
                         };
                     }

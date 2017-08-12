@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace GameLauncher {
     class Updater {
         internal static void checkForUpdate(object sender, EventArgs e) {
-            MessageBox.Show("You have updated version installed.");
+            MessageBox.Show("Update check is comming soon.");
         }
     }
 }
