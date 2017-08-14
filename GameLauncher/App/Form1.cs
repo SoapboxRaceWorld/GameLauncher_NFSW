@@ -162,6 +162,9 @@ namespace GameLauncher {
 
             //Command-line Arguments
             string[] args = Environment.GetCommandLineArgs();
+            if(args.Length == 2) {
+                MessageBox.Show("Your launcher has been updated.");
+            }
 
             //Simple check if we have enough permission to write file and remove them
             try {

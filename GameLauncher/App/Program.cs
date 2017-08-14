@@ -29,11 +29,16 @@ namespace GameLauncher {
                 File.WriteAllBytes("LZMA.dll", ExtractResource.AsByte("GameLauncher.LZMA.LZMA.dll"));
             }
 
+            //Add GameLauncherUpdater.exe on the fly
+            if (!File.Exists("GameLauncherUpdater.exe")) {
+                File.WriteAllBytes("GameLauncherUpdater.exe", ExtractResource.AsByte("GameLauncher.Updater.GameLauncherUpdater.exe"));
+            }
+
             Mutex mutex = new Mutex(false, "GameLauncherNFSW-MeTonaTOR"); //Forgot about other launchers...
             try {
                 if (mutex.WaitOne(0, false)) {
                     //First of all, we need to check if files exists
-                    String[] files = { "Microsoft.WindowsAPICodePack.dll", "Microsoft.WindowsAPICodePack.Shell.dll", "Newtonsoft.Json.dll", "LZMA.dll" };
+                    String[] files = { "Microsoft.WindowsAPICodePack.dll", "Microsoft.WindowsAPICodePack.Shell.dll", "Newtonsoft.Json.dll", "LZMA.dll", "ICSharpCode.SharpZipLib.dll" };
                     List<string> missingfiles = new List<string>();
 
                     foreach (string file in files) {
