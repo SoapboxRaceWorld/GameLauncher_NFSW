@@ -16,6 +16,9 @@ namespace GameLauncher {
             bool linux = DetectLinux.LinuxDetected();
             string extraLinuxInfo = "";
 
+            //Remove zip file
+            File.Delete(Directory.GetCurrentDirectory() + "\\tempname.zip");
+
             //Console log with warning
             if (mono == true) {
                 Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));

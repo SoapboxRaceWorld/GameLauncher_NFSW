@@ -160,12 +160,6 @@ namespace GameLauncher {
             playButton.MouseUp += new MouseEventHandler(playButton_MouseUp);
             playButton.MouseDown += new MouseEventHandler(playButton_MouseDown);
 
-            //Command-line Arguments
-            string[] args = Environment.GetCommandLineArgs();
-            if(args.Length == 2) {
-                MessageBox.Show("Your launcher has been updated.");
-            }
-
             //Simple check if we have enough permission to write file and remove them
             try {
                 string file = Directory.GetCurrentDirectory() + "\\test.txt";
@@ -209,6 +203,8 @@ namespace GameLauncher {
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
+            Updater.checkForUpdate(sender, e);
+
             //Console output to textbox
 
             ContextMenu = new ContextMenu();
@@ -400,6 +396,12 @@ namespace GameLauncher {
             RegisterFormElements(false);
             SettingsFormElements(false);
             DownloadFormElements(false);
+
+            //Command-line Arguments
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length == 2) {
+                MessageBox.Show("Your launcher has been updated.");
+            }
         }
 
         private void closebtn_Click(object sender, EventArgs e) {

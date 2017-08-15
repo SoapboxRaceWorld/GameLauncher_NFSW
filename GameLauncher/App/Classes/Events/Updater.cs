@@ -29,7 +29,11 @@ namespace GameLauncher {
                             Process.Start(@"GameLauncherUpdater.exe", Process.GetCurrentProcess().Id.ToString());
                         }
                     } else {
-                        MessageBox.Show("Your launcher is up-to-date");
+                        try {
+                            if (((Form)sender).Name == "mainScreen") {}
+                        } catch {
+                            MessageBox.Show("Your launcher is up-to-date");
+                        }
                     }
                 };
             } catch {
