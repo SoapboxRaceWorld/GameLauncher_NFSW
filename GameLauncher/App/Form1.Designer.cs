@@ -75,6 +75,7 @@
             this.playButton = new System.Windows.Forms.Button();
             this.Notification = new System.Windows.Forms.NotifyIcon(this.components);
             this.forgotPassword = new System.Windows.Forms.LinkLabel();
+            this.dontDownload = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
@@ -602,12 +603,27 @@
             this.forgotPassword.UseCompatibleTextRendering = true;
             this.forgotPassword.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
             // 
+            // dontDownload
+            // 
+            this.dontDownload.AutoSize = true;
+            this.dontDownload.BackColor = System.Drawing.Color.Transparent;
+            this.dontDownload.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.dontDownload.ForeColor = System.Drawing.Color.White;
+            this.dontDownload.Location = new System.Drawing.Point(33, 227);
+            this.dontDownload.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.dontDownload.Name = "dontDownload";
+            this.dontDownload.Size = new System.Drawing.Size(261, 21);
+            this.dontDownload.TabIndex = 41;
+            this.dontDownload.Text = "DON\'T DOWNLOAD GAMEFILES";
+            this.dontDownload.UseVisualStyleBackColor = false;
+            // 
             // mainScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.ClientSize = new System.Drawing.Size(790, 490);
+            this.Controls.Add(this.dontDownload);
             this.Controls.Add(this.playButton);
             this.Controls.Add(this.playProgressText);
             this.Controls.Add(this.playProgress);
@@ -716,6 +732,7 @@
         private System.Windows.Forms.NotifyIcon Notification;
         private System.Windows.Forms.LinkLabel forgotPassword;
         internal System.Windows.Forms.Label playProgressText;
+        private System.Windows.Forms.CheckBox dontDownload;
     }
 }
 

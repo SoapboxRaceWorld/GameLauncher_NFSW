@@ -402,6 +402,14 @@ namespace GameLauncher {
             if (args.Length == 2) {
                 MessageBox.Show("Your launcher has been updated.");
             }
+
+            if(SettingFile.KeyExists("SkipDownload")) {
+                if(SettingFile.Read("SkipDownload") == "1") {
+                    dontDownload.Checked = true;
+                } else {
+                    dontDownload.Checked = false;
+                }
+            }
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
@@ -429,6 +437,12 @@ namespace GameLauncher {
                 consoleLog.SaveFile("Logs/" + timestamp + ".log", RichTextBoxStreamType.PlainText);
             }
             catch { }
+
+            if (dontDownload.Checked) {
+                SettingFile.Write("SkipDownload", "1");
+            } else {
+                SettingFile.Write("SkipDownload", "0");
+            }
 
             //Dirty way to terminate application (sometimes Application.Exit() didn't really quitted, was still running in background)
             Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
@@ -525,8 +539,6 @@ namespace GameLauncher {
                 SettingFile.DeleteKey("AccountEmail");
                 SettingFile.DeleteKey("Password");
             }
-
-
 
             ConsoleLog("Trying to login into " + serverPick.GetItemText(serverPick.SelectedItem) + " (" + serverIP + ")", "info");
 
@@ -760,6 +772,7 @@ namespace GameLauncher {
 
             currentWindowInfo.Font = new Font(fontFamily3, 12.75f, FontStyle.Italic);
             rememberMe.Font = new Font(fontFamily, 9f, FontStyle.Bold);
+            dontDownload.Font = new Font(fontFamily, 9f, FontStyle.Bold);
             loginButton.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
             registerButton.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
             settingsSave.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
@@ -819,6 +832,7 @@ namespace GameLauncher {
             this.selectServerLabel.Visible = hideElements;
             this.settingsButton.Visible = hideElements;
             this.verticalBanner.Visible = hideElements;
+            this.dontDownload.Visible = hideElements;
         }
 
         /*
@@ -1172,7 +1186,7 @@ namespace GameLauncher {
                 speechFile = "en";
             }
 
-            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechhdr_" + speechFile + ".big")) { 
+            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechhdr_" + speechFile + ".big") || dontDownload.Checked == false) { 
                 MessageBox.Show(null, "This downloader is in alpha. Please report every issue you will notice (except slow downloading, we know about it)", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 this.playProgressText.Text = "LOADING FILELIST FOR DOWNLOAD...";
                 DownloadCoreFiles();
