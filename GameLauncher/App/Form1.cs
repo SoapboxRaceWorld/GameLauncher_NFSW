@@ -1186,10 +1186,14 @@ namespace GameLauncher {
                 speechFile = "en";
             }
 
-            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechhdr_" + speechFile + ".big") || dontDownload.Checked == false) { 
-                MessageBox.Show(null, "This downloader is in alpha. Please report every issue you will notice (except slow downloading, we know about it)", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                this.playProgressText.Text = "LOADING FILELIST FOR DOWNLOAD...";
-                DownloadCoreFiles();
+            if(dontDownload.Checked == false) {
+                if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechhdr_" + speechFile + ".big")) { 
+                    MessageBox.Show(null, "This downloader is in alpha. Please report every issue you will notice (except slow downloading, we know about it)", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    this.playProgressText.Text = "LOADING FILELIST FOR DOWNLOAD...";
+                    DownloadCoreFiles();
+                } else {
+                    OnDownloadFinished();
+                }
             } else {
                 OnDownloadFinished();
             }
