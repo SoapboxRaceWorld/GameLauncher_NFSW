@@ -37,6 +37,20 @@ namespace GameLauncher {
                 File.WriteAllBytes("GameLauncherUpdater.exe", ExtractResource.AsByte("GameLauncher.Updater.GameLauncherUpdater.exe"));
             }
 
+            //Detect if NFSW is launched
+            Mutex detectRunningNFSW = new Mutex(false, "Global\\{3E34CEFB-7B34-4e62-8034-33256B8BC2F7}");
+            try {
+                if (!detectRunningNFSW.WaitOne(0, false)) {
+                    MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    Environment.Exit(0);
+                }
+            } finally {
+                if (detectRunningNFSW != null) {
+                    detectRunningNFSW.Close();
+                    detectRunningNFSW = null;
+                }
+            }
+
             Mutex mutex = new Mutex(false, "GameLauncherNFSW-MeTonaTOR"); //Forgot about other launchers...
             try {
                 if (mutex.WaitOne(0, false)) {

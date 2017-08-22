@@ -49,6 +49,7 @@ namespace GameLauncher {
 
         private void moveWindow_MouseUp(object sender, MouseEventArgs e) {
             mouseDownPoint = Point.Empty;
+            this.Refresh();
         }
 
         private void moveWindow_MouseMove(object sender, MouseEventArgs e) {
