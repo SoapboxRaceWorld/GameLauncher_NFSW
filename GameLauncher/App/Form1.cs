@@ -38,7 +38,7 @@ namespace GameLauncher {
         String UserId = "";
         String serverIP = "";
         String serverCacheKey = "18051995"; // Try to guess what this means for me :)
-        String langInfo;
+        String langInfo; 
 
         IniFile SettingFile = new IniFile("Settings.ini");
         string UserSettings = Environment.ExpandEnvironmentVariables("%AppData%\\Need for Speed World\\Settings\\UserSettings.xml");
