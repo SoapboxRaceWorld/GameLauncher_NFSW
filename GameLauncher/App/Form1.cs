@@ -38,7 +38,8 @@ namespace GameLauncher {
         String UserId = "";
         String serverIP = "";
         String serverCacheKey = "18051995"; // Try to guess what this means for me :)
-        String langInfo; 
+        String langInfo;
+        float DPIDefaultScale = 96f;
 
         IniFile SettingFile = new IniFile("Settings.ini");
         string UserSettings = Environment.ExpandEnvironmentVariables("%AppData%\\Need for Speed World\\Settings\\UserSettings.xml");
@@ -95,6 +96,7 @@ namespace GameLauncher {
         }
 
         public mainScreen() {
+            Font = new Font(Font.Name, 8.25f * DPIDefaultScale / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
             InitializeComponent();
 
             if(DetectLinux.LinuxDetected() == false) {
@@ -771,31 +773,31 @@ namespace GameLauncher {
             FontFamily fontFamily5 = FontWrapper.Instance.GetFontFamily("Font_RegisterBold.ttf");
             FontFamily fontFamily6 = FontWrapper.Instance.GetFontFamily("Font_MyriadProSemiCond.ttf");
 
-            currentWindowInfo.Font = new Font(fontFamily3, 12.75f, FontStyle.Italic);
-            rememberMe.Font = new Font(fontFamily, 9f, FontStyle.Bold);
-            dontDownload.Font = new Font(fontFamily, 9f, FontStyle.Bold);
-            loginButton.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
-            registerButton.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
-            settingsSave.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
-            serverStatus.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
-            onlineCount.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
-            registerText.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
-            emailLabel.Font = new Font(fontFamily4, 11f);
-            passwordLabel.Font = new Font(fontFamily4, 11f);
-            troubleLabel.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
-            githubLink.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
-            forgotPassword.Font = new Font(fontFamily, 9f, FontStyle.Bold);
-            selectServerLabel.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
-            settingsLanguageText.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
-            settingsLanguageDesc.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
-            settingsQualityText.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
-            settingsQualityDesc.Font = new Font(fontFamily, 9.749999f, FontStyle.Bold);
-            registerEmailText.Font = new Font(fontFamily4, 11f);
-            registerPasswordText.Font = new Font(fontFamily4, 11f);
-            registerConfirmPasswordText.Font = new Font(fontFamily4, 11f);
-            registerTicketText.Font = new Font(fontFamily4, 11f);
-            registerAgree.Font = new Font(fontFamily2, 9.749999f, FontStyle.Bold | FontStyle.Italic);
-            playButton.Font = new Font(fontFamily2, 15f, FontStyle.Bold | FontStyle.Italic);
+            currentWindowInfo.Font = new Font(fontFamily3, 12.75f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Italic);
+            rememberMe.Font = new Font(fontFamily, 9f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            dontDownload.Font = new Font(fontFamily, 9f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            loginButton.Font = new Font(fontFamily2, 15f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold | FontStyle.Italic);
+            registerButton.Font = new Font(fontFamily2, 15f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold | FontStyle.Italic);
+            settingsSave.Font = new Font(fontFamily2, 15f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold | FontStyle.Italic);
+            serverStatus.Font = new Font(fontFamily, 9.749999f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            onlineCount.Font = new Font(fontFamily, 9.749999f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerText.Font = new Font(fontFamily, 9.749999f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            emailLabel.Font = new Font(fontFamily4, 11f * DPIDefaultScale / CreateGraphics().DpiX);
+            passwordLabel.Font = new Font(fontFamily4, 11f * DPIDefaultScale / CreateGraphics().DpiX);
+            troubleLabel.Font = new Font(fontFamily, 9.749999f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            githubLink.Font = new Font(fontFamily, 9.749999f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            forgotPassword.Font = new Font(fontFamily, 9f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            selectServerLabel.Font = new Font(fontFamily, 9.749999f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsLanguageText.Font = new Font(fontFamily, 9.749999f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsLanguageDesc.Font = new Font(fontFamily, 9.749999f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsQualityText.Font = new Font(fontFamily, 9.749999f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsQualityDesc.Font = new Font(fontFamily, 9.749999f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerEmailText.Font = new Font(fontFamily4, 11f * DPIDefaultScale / CreateGraphics().DpiX);
+            registerPasswordText.Font = new Font(fontFamily4, 11f * DPIDefaultScale / CreateGraphics().DpiX);
+            registerConfirmPasswordText.Font = new Font(fontFamily4, 11f * DPIDefaultScale / CreateGraphics().DpiX);
+            registerTicketText.Font = new Font(fontFamily4, 11f * DPIDefaultScale / CreateGraphics().DpiX);
+            registerAgree.Font = new Font(fontFamily2, 9.749999f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold | FontStyle.Italic);
+            playButton.Font = new Font(fontFamily2, 15f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold | FontStyle.Italic);
         }
 
         private void registerText_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
