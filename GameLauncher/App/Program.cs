@@ -14,7 +14,6 @@ namespace GameLauncher {
             bool mono = DetectLinux.MonoDetected();
             bool wine = DetectLinux.WineDetected();
             bool linux = DetectLinux.LinuxDetected();
-            string extraLinuxInfo = "";
 
             //Remove zip file
             File.Delete(Directory.GetCurrentDirectory() + "\\tempname.zip");
@@ -83,18 +82,18 @@ namespace GameLauncher {
                         User32.SetProcessDPIAware();
                     }
 
-                    try {
+                    //try {
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
                         Application.Run(new mainScreen());
-                    } catch(Exception ex) {
-                        if(linux == true) {
-                            extraLinuxInfo = "\n\nAditionally, please report that you're using Wine/Mono Runtime and your Linux Distro";
-                        }
+                    //} catch(Exception ex) {
+                    //    if(linux == true) {
+                    //        extraLinuxInfo = "\n\nAditionally, please report that you're using Wine/Mono Runtime and your Linux Distro";
+                    //    }
 
-                        MessageBox.Show(null, "Failed to launch GameLauncher. " + ex.Message + "\n\nStack Trace:\n" + ex.StackTrace + extraLinuxInfo, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        Environment.Exit(1);
-                    }
+                    //    MessageBox.Show(null, "Failed to launch GameLauncher. " + ex.Message + "\n\nStack Trace:\n" + ex.StackTrace + extraLinuxInfo, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //    Environment.Exit(1);
+                    //}
                 } else {
                     MessageBox.Show(null, "An instance of the application is already running.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }

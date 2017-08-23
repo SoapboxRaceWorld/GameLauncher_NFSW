@@ -17,22 +17,30 @@ namespace GameLauncher {
                 client.CancelAsync();
                 client.DownloadStringAsync(StringToUri);
                 client.DownloadStringCompleted += (sender2, e2) => {
-                    CheckVersion json = JsonConvert.DeserializeObject<CheckVersion>(e2.Result);
+                    try {
+                        CheckVersion json = JsonConvert.DeserializeObject<CheckVersion>(e2.Result);
 
-                    if(json.update.info == true) {
-                        DialogResult reply = MessageBox.Show("An update is available. Do you wanna download it?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + json.github_build, "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                        if(reply == DialogResult.Yes) {
-                            WebClientWithTimeout myWebClient = new WebClientWithTimeout();
-                            myWebClient.DownloadFile(json.update.download, "tempname.zip");
+                        if(json.update.info == true) {
+                            DialogResult reply = MessageBox.Show("An update is available. Do you wanna download it?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + json.github_build, "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                            if(reply == DialogResult.Yes) {
+                                WebClientWithTimeout myWebClient = new WebClientWithTimeout();
+                                myWebClient.DownloadFile(json.update.download, "tempname.zip");
 
-                            //Time to unzip it
-                            Process.Start(@"GameLauncherUpdater.exe", Process.GetCurrentProcess().Id.ToString());
+                                //Time to unzip it
+                                Process.Start(@"GameLauncherUpdater.exe", Process.GetCurrentProcess().Id.ToString());
+                            }
+                        } else {
+                            try {
+                                if (((Form)sender).Name == "mainScreen") {}
+                            } catch {
+                                MessageBox.Show("Your launcher is up-to-date");
+                            }
                         }
-                    } else {
+                    } catch {
                         try {
-                            if (((Form)sender).Name == "mainScreen") {}
+                            if (((Form)sender).Name == "mainScreen") { }
                         } catch {
-                            MessageBox.Show("Your launcher is up-to-date");
+                            MessageBox.Show("Failed to check for update");
                         }
                     }
                 };

@@ -51,6 +51,7 @@ namespace GameLauncher {
         private void moveWindow_MouseUp(object sender, MouseEventArgs e) {
             mouseDownPoint = Point.Empty;
             this.Refresh();
+            this.Opacity = 1;
         }
 
         private void moveWindow_MouseMove(object sender, MouseEventArgs e) {
@@ -58,6 +59,7 @@ namespace GameLauncher {
             Form f = this as Form;
             f.Location = new Point(f.Location.X + (e.X - mouseDownPoint.X), f.Location.Y + (e.Y - mouseDownPoint.Y));
             windowMoved = true;
+            this.Opacity = 0.7;
         }
 
         public void ConsoleLog(string e, string type) {
@@ -99,7 +101,11 @@ namespace GameLauncher {
             Font = new Font(Font.Name, 8.25f * DPIDefaultScale / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
             InitializeComponent();
 
-            if(DetectLinux.LinuxDetected() == false) {
+            if(Environment.OSVersion.Version.Major <= 5) {
+                MessageBox.Show(null, "Sadly, the red background cannot be fixed on Windows XP and lower, sorry...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            if (DetectLinux.LinuxDetected() == false) {
                 ApplyEmbeddedFonts();
             }
 
@@ -224,7 +230,7 @@ namespace GameLauncher {
 
             ConsoleLog("Log initialized", "info");
             ConsoleLog("GameLauncher initialized", "info");
-            ConsoleLog("Installation directory: " + SettingFile.Read("InstallationDirectory"), "info");
+            ConsoleLog("Installation directory: " + Path.GetFullPath(SettingFile.Read("InstallationDirectory")), "info");
 
             email.Text = SettingFile.Read("AccountEmail");
             if (!String.IsNullOrEmpty(SettingFile.Read("AccountEmail")) && !String.IsNullOrEmpty(SettingFile.Read("Password"))) {
@@ -446,6 +452,9 @@ namespace GameLauncher {
             } else {
                 SettingFile.Write("SkipDownload", "0");
             }
+
+            //Fix InstallationDirectory
+            SettingFile.Write("InstallationDirectory", Path.GetFullPath(SettingFile.Read("InstallationDirectory")));
 
             //Dirty way to terminate application (sometimes Application.Exit() didn't really quitted, was still running in background)
             Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
