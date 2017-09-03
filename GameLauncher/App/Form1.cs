@@ -18,6 +18,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
 using SoapBox.JsonScheme;
 using GameLauncher.App.Classes.Events;
+using GameLauncherReborn;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -114,6 +115,8 @@ namespace GameLauncher {
                 int PosX = Int32.Parse(SettingFile.Read("LauncherPosX"));
                 int PosY = Int32.Parse(SettingFile.Read("LauncherPosY"));
                 Location = new Point(PosX, PosY);
+            } else {
+                Self.centerScreen(this);
             }
 
             MaximizeBox = false;
@@ -175,7 +178,7 @@ namespace GameLauncher {
                 File.WriteAllText(file, "test");
                 File.Delete(file);
             } catch {
-                MessageBox.Show(null, "Looks like we don't have enough permission to write config here. Please launch GameLauncher.exe as Administrator", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Self.runAsAdmin();
                 Environment.Exit(Environment.ExitCode);
             }
 
@@ -592,29 +595,33 @@ namespace GameLauncher {
             XmlNode LoginTokenNode;
             XmlNode UserIdNode;
 
-            DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
-            LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
-            UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
+            try {
+                DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
+                LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
+                UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
 
-            if(String.IsNullOrEmpty(DescriptionNode.InnerText)) {
-                UserId = UserIdNode.InnerText;
-                LoginToken = LoginTokenNode.InnerText;
+                if(String.IsNullOrEmpty(DescriptionNode.InnerText)) {
+                    UserId = UserIdNode.InnerText;
+                    LoginToken = LoginTokenNode.InnerText;
 
-                this.BackgroundImage = Properties.Resources.playbg;
-                this.currentWindowInfo.Visible = false;
+                    this.BackgroundImage = Properties.Resources.playbg;
+                    this.currentWindowInfo.Visible = false;
 
-                if (builtinserver == false) {
-                    playLoggedInAs.Text = "LOGGED IN AS " + email.Text.ToUpper();
+                    if (builtinserver == false) {
+                        playLoggedInAs.Text = "LOGGED IN AS " + email.Text.ToUpper();
+                    } else {
+                        playLoggedInAs.Text = "LOGGED IN AS LOCALHOST";
+                    }
+
+                    LoginFormElements(false);
+                    DownloadFormElements(true);
+
+                    launchNFSW();
                 } else {
-                    playLoggedInAs.Text = "LOGGED IN AS LOCALHOST";
+                     ConsoleLog("Invalid username or password.", "error");
                 }
-
-                LoginFormElements(false);
-                DownloadFormElements(true);
-
-                launchNFSW();
-            } else {
-                 ConsoleLog("Invalid username or password.", "error");
+            } catch {
+                ConsoleLog("Failed to get token from server, probably is offline.", "error");
             }
         }
 
@@ -1131,7 +1138,12 @@ namespace GameLauncher {
             }
 
             this.playButton.Image = Properties.Resources.playButton_enable;
-            LaunchGame(UserId, LoginToken, serverIP);
+
+            try {
+                LaunchGame(UserId, LoginToken, serverIP);
+            } catch {
+                MessageBox.Show("Failed to launch game. Cannot find NFSW.exe");
+            }
 
             if (builtinserver == true) {
                 this.playProgressText.Text = "SOAPBOX SERVER LAUNCHED. WAITING FOR QUERIES";
@@ -1430,13 +1442,17 @@ namespace GameLauncher {
             XmlNode LoginTokenNode;
             XmlNode UserIdNode;
 
-            DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
-            LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
-            UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
+            try {
+                DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
+                LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
+                UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
 
-            if (String.IsNullOrEmpty(DescriptionNode.InnerText)) {
-                UserId = UserIdNode.InnerText;
-                LoginToken = LoginTokenNode.InnerText;
+                if (String.IsNullOrEmpty(DescriptionNode.InnerText)) {
+                    UserId = UserIdNode.InnerText;
+                    LoginToken = LoginTokenNode.InnerText;
+                }
+            } catch {
+                MessageBox.Show("Failed to update token, server is probably offline.");
             }
         }
 

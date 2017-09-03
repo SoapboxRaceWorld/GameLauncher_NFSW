@@ -144,6 +144,7 @@
     <Compile Include="App\Classes\IniFile.cs" />
     <Compile Include="App\Classes\NativeFunctions.cs" />
     <Compile Include="App\Classes\Events\Updater.cs" />
+    <Compile Include="App\Classes\Self.cs" />
     <Compile Include="App\Classes\WebRequest.cs">
       <SubType>Component</SubType>
     </Compile>
