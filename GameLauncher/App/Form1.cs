@@ -584,18 +584,17 @@ namespace GameLauncher {
             }
 
             XmlDocument SBRW_XML = new XmlDocument();
-
-            if(builtinserver == false) {
-                SBRW_XML.LoadXml(serverLoginResponse);
-            } else {
-                SBRW_XML.LoadXml("<LoginStatusVO><UserId>1</UserId><LoginToken>aaaaaaaa-aaaa-aaaa-aaaaaaaa</LoginToken><Description/></LoginStatusVO>");
-            }
-
-            XmlNode DescriptionNode;
-            XmlNode LoginTokenNode;
-            XmlNode UserIdNode;
-
             try {
+                if (builtinserver == false) {
+                    SBRW_XML.LoadXml(serverLoginResponse);
+                } else {
+                    SBRW_XML.LoadXml("<LoginStatusVO><UserId>1</UserId><LoginToken>aaaaaaaa-aaaa-aaaa-aaaaaaaa</LoginToken><Description/></LoginStatusVO>");
+                }
+
+                XmlNode DescriptionNode;
+                XmlNode LoginTokenNode;
+                XmlNode UserIdNode;
+
                 DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
                 LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
                 UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
