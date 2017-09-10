@@ -1203,7 +1203,7 @@ namespace GameLauncher {
             try {
                 WebClient wc = new WebClientWithTimeout();
                 wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
-                string response = wc.DownloadString("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client/" + SettingFile.Read("Language").ToLower() + "/index.xml");
+                string response = wc.DownloadString("http://mirror.nfsw.mtntr.eu/NFSWO/" + SettingFile.Read("Language").ToLower() + "/index.xml");
                 speechFile = SettingFile.Read("Language").ToLower();
             } catch (Exception) {
                 speechFile = "en";
@@ -1235,7 +1235,7 @@ namespace GameLauncher {
                     ShowMessage = new ShowMessage(this.OnShowMessage)
                 };
 
-                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "", SettingFile.Read("InstallationDirectory"), false, false, 1130632198);
+                downloader.StartDownload("http://mirror.nfsw.mtntr.eu/NFSWO", "", SettingFile.Read("InstallationDirectory"), false, false, 1130632198);
             } else {
                 DownloadTracksFiles();
             }
@@ -1254,7 +1254,7 @@ namespace GameLauncher {
                     ShowMessage = new ShowMessage(this.OnShowMessage)
                 };
 
-                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "Tracks", SettingFile.Read("InstallationDirectory"), false, false, 615494528);
+                downloader.StartDownload("http://mirror.nfsw.mtntr.eu/NFSWO", "Tracks", SettingFile.Read("InstallationDirectory"), false, false, 615494528);
             } else {
                 DownloadSpeechFiles();
             }
@@ -1269,7 +1269,7 @@ namespace GameLauncher {
             try {
                 WebClient wc = new WebClientWithTimeout();
                 wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
-                string response = wc.DownloadString("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client/" + SettingFile.Read("Language").ToLower() + "/index.xml");
+                string response = wc.DownloadString("http://mirror.nfsw.mtntr.eu/NFSWO" + SettingFile.Read("Language").ToLower() + "/index.xml");
 
                 response = response.Substring(3, response.Length - 3);
 
@@ -1298,7 +1298,7 @@ namespace GameLauncher {
                     ShowMessage = new ShowMessage(this.OnShowMessage)
                 };
 
-                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", speechFile, SettingFile.Read("InstallationDirectory"), false, false, speechSize);
+                downloader.StartDownload("http://mirror.nfsw.mtntr.eu/NFSWO", speechFile, SettingFile.Read("InstallationDirectory"), false, false, speechSize);
             } else {
                 DownloadTracksHighFiles();
             }
@@ -1317,7 +1317,7 @@ namespace GameLauncher {
                     ShowMessage = new ShowMessage(this.OnShowMessage)
                 };
 
-                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "TracksHigh", SettingFile.Read("InstallationDirectory"), false, false, 278397707);
+                downloader.StartDownload("http://mirror.nfsw.mtntr.eu/NFSWO", "TracksHigh", SettingFile.Read("InstallationDirectory"), false, false, 278397707);
             } else {
                 OnDownloadFinished();
             }
