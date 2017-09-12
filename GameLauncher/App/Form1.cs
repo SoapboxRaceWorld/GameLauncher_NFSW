@@ -99,12 +99,15 @@ namespace GameLauncher {
         }
 
         public mainScreen() {
-            Font = new Font(Font.Name, 8.25f * DPIDefaultScale / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
+            if (Environment.OSVersion.Version.Major <= 5) {
+                MessageBox.Show(null, "Sadly, the red background cannot be fixed on Windows XP and lower, sorry...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            } else {
+                Font = new Font(Font.Name, 8.25f * DPIDefaultScale / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
+            }
+
             InitializeComponent();
 
-            if(Environment.OSVersion.Version.Major <= 5) {
-                MessageBox.Show(null, "Sadly, the red background cannot be fixed on Windows XP and lower, sorry...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 
             if (DetectLinux.LinuxDetected() == false) {
                 ApplyEmbeddedFonts();
@@ -184,16 +187,29 @@ namespace GameLauncher {
 
             //Somewhere here we will setup the game installation directory
             if (String.IsNullOrEmpty(SettingFile.Read("InstallationDirectory"))) {
-                CommonOpenFileDialog openFolder = new CommonOpenFileDialog();
-                openFolder.InitialDirectory = "";
-                openFolder.IsFolderPicker = true;
-                openFolder.Title = "GameLauncher: Please pick up a directory where NFSW is located or has to be installed.";
-                CommonFileDialogResult result = openFolder.ShowDialog();
+                if (Environment.OSVersion.Version.Major <= 5) {
+                    MessageBox.Show(null, "Click OK to select folder with NFSW.exe", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                if (result == CommonFileDialogResult.Ok) {
-                    SettingFile.Write("InstallationDirectory", openFolder.FileName);
+                    var fbd = new FolderBrowserDialog();
+                    DialogResult result = fbd.ShowDialog();
+
+                    if (result == DialogResult.OK) {
+                        SettingFile.Write("InstallationDirectory", fbd.SelectedPath);
+                    } else {
+                        Environment.Exit(Environment.ExitCode);
+                    }
                 } else {
-                    Environment.Exit(Environment.ExitCode);
+                    CommonOpenFileDialog openFolder = new CommonOpenFileDialog();
+                    openFolder.InitialDirectory = "";
+                    openFolder.IsFolderPicker = true;
+                    openFolder.Title = "GameLauncher: Please pick up a directory where NFSW is located or has to be installed.";
+                    CommonFileDialogResult result = openFolder.ShowDialog();
+
+                    if (result == CommonFileDialogResult.Ok) {
+                        SettingFile.Write("InstallationDirectory", openFolder.FileName);
+                    } else {
+                        Environment.Exit(Environment.ExitCode);
+                    }
                 }
             }
 
@@ -705,36 +721,41 @@ namespace GameLauncher {
                     if (serverName == "Offline Built-In Server") {
                         numPlayers = "∞";
                     } else {
-                        GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
+                        if (Environment.OSVersion.Version.Major <= 5) {
+                            ticketRequired = true;
+                            verticalImageUrl = null;
+                            numPlayers = "Unknown";
+                        } else {
+                            GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
+                            if (!String.IsNullOrEmpty(json.bannerUrl)) {
+                                Uri uriResult;
+                                bool result;
 
-                        if (!String.IsNullOrEmpty(json.bannerUrl)) {
-                            Uri uriResult;
-                            bool result;
+                                try {
+                                    result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                                } catch {
+                                    result = false;
+                                }
 
-                            try {
-                                result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-                            } catch {
-                                result = false;
-                            }
-
-                            if (result) {
-                                verticalImageUrl = json.bannerUrl;
+                                if (result) {
+                                    verticalImageUrl = json.bannerUrl;
+                                } else {
+                                    verticalImageUrl = null;
+                                }
                             } else {
                                 verticalImageUrl = null;
                             }
-                        } else {
-                            verticalImageUrl = null;
-                        }
 
-                        if(String.IsNullOrEmpty(json.requireTicket)) {
-                            ticketRequired = true;
-                        } else if(json.requireTicket == "true") {
-                            ticketRequired = true;
-                        } else {
-                            ticketRequired = false;
-                        }
+                            if(String.IsNullOrEmpty(json.requireTicket)) {
+                                ticketRequired = true;
+                            } else if(json.requireTicket == "true") {
+                                ticketRequired = true;
+                            } else {
+                                ticketRequired = false;
+                            }
 
-                        numPlayers = json.onlineNumber + " out of " + json.numberOfRegistered;
+                            numPlayers = json.onlineNumber + " out of " + json.numberOfRegistered;
+                        }
                     }
 
                     onlineCount.Text = "Players on server: " + numPlayers;
