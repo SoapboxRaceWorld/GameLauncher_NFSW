@@ -109,9 +109,9 @@ namespace GameLauncher {
 
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 
-            if (DetectLinux.LinuxDetected() == false) {
+            //if (DetectLinux.LinuxDetected() == false) {
                 ApplyEmbeddedFonts();
-            }
+            //}
 
             if(SettingFile.KeyExists("LauncherPosX") || SettingFile.KeyExists("LauncherPosY")) {
                 StartPosition = FormStartPosition.Manual;
@@ -260,7 +260,6 @@ namespace GameLauncher {
             var response = "";
             try {
                 WebClient wc = new WebClientWithTimeout();
-                wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
 
                 string serverurl = "http://nfsw.metonator.ct8.pl/serverlist.txt";
                 response = wc.DownloadString(serverurl);
@@ -763,7 +762,6 @@ namespace GameLauncher {
 
                     if (!String.IsNullOrEmpty(verticalImageUrl)) {
                         var client2 = new WebClientWithTimeout();
-                        client.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
                         Uri StringToUri3 = new Uri(verticalImageUrl);
                         client2.DownloadDataAsync(StringToUri3);
                         client2.DownloadDataCompleted += (sender4, e4) => {
@@ -979,7 +977,6 @@ namespace GameLauncher {
 
                 try {
                     WebClient wc = new WebClientWithTimeout();
-                    wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
 
                     if(ticketRequired) {
                         BuildURL = serverIP + "/User/createUser?email=" + registerEmail.Text + "&password=" + encryptedpassword.ToLower() + "&inviteTicket=" + registerTicket.Text;
@@ -1048,6 +1045,7 @@ namespace GameLauncher {
             this.currentWindowInfo.Text = "PLEASE SELECT YOUR GAME SETTINGS:";
             SettingsFormElements(true);
             LoginFormElements(false);
+            DownloadFormElements(false);
         }
 
         private void settingsButton_MouseEnter(object sender, EventArgs e) {
@@ -1171,12 +1169,26 @@ namespace GameLauncher {
                 int secondsToCloseLauncher = 5;
 
                 while(secondsToCloseLauncher > 0) {
-                    this.playProgressText.Text = "LOADING GAME. LAUNCHER WILL CLOSE ITSELF IN " + secondsToCloseLauncher + " SECONDS";
+                    this.playProgressText.Text = "LOADING GAME. LAUNCHER WILL MINIMIZE ITSELF IN " + secondsToCloseLauncher + " SECONDS";
                     Delay.WaitSeconds(1);
                     secondsToCloseLauncher--;
                 }
 
-                closebtn_Click(null, null);
+                this.WindowState = FormWindowState.Minimized;
+                this.ShowInTaskbar = false;
+
+                ContextMenu = new ContextMenu();
+                ContextMenu.MenuItems.Add(new MenuItem("&AntiCheat v0 NOTEVENALPHA"));
+                ContextMenu.MenuItems.Add("-");
+                ContextMenu.MenuItems.Add(new MenuItem("&Check for updates", Updater.checkForUpdate));
+                ContextMenu.MenuItems.Add(new MenuItem("&About", About.showAbout));
+                ContextMenu.MenuItems.Add("-");
+                ContextMenu.MenuItems.Add(new MenuItem("&Close", minimizebtn_Click));
+
+                this.Text = "NEED FOR SPEED™ WORLD";
+                this.Update();
+
+                Notification.ContextMenu = ContextMenu;
             }
         }
 
@@ -1223,7 +1235,6 @@ namespace GameLauncher {
 
             try {
                 WebClient wc = new WebClientWithTimeout();
-                wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
                 string response = wc.DownloadString("http://mirror.nfsw.mtntr.eu/NFSWO/" + SettingFile.Read("Language").ToLower() + "/index.xml");
                 speechFile = SettingFile.Read("Language").ToLower();
             } catch (Exception) {
@@ -1289,7 +1300,6 @@ namespace GameLauncher {
 
             try {
                 WebClient wc = new WebClientWithTimeout();
-                wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
                 string response = wc.DownloadString("http://mirror.nfsw.mtntr.eu/NFSWO" + SettingFile.Read("Language").ToLower() + "/index.xml");
 
                 response = response.Substring(3, response.Length - 3);
@@ -1430,7 +1440,6 @@ namespace GameLauncher {
 
             try {
                 WebClient wc = new WebClientWithTimeout();
-                wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
 
                 string BuildURL = serverIP + "/User/authenticateUser?email=" + email.Text.ToString() + "&password=" + encryptedpassword.ToLower();
 

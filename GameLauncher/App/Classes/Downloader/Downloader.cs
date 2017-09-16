@@ -1,6 +1,5 @@
 using GameLauncher.App.Classes;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -8,825 +7,857 @@ using System.Net;
 using System.Net.Cache;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace GameLauncher
 {
-	public class Downloader
-	{
-		private const int LZMAOutPropsSize = 5;
+    public class Downloader
+    {
+        private const int LZMAOutPropsSize = 5;
 
-		private const int LZMALengthSize = 8;
+        private const int LZMALengthSize = 8;
 
-		private const int LZMAHeaderSize = 13;
+        private const int LZMAHeaderSize = 13;
 
-		private const int HashThreads = 3;
+        private const int HashThreads = 3;
 
-		private const int DownloadThreads = 3;
+        private const int DownloadThreads = 3;
 
-		private const int DownloadChunks = 16;
+        private const int DownloadChunks = 16;
 
-		private ISynchronizeInvoke mFE;
+        private ISynchronizeInvoke mFE;
 
-		private Thread mThread;
+        private Thread mThread;
 
-		private GameLauncher.ProgressUpdated mProgressUpdated;
+        private ProgressUpdated mProgressUpdated;
 
-		private GameLauncher.DownloadFinished mDownloadFinished;
+        private DownloadFinished mDownloadFinished;
 
-		private GameLauncher.DownloadFailed mDownloadFailed;
+        private DownloadFailed mDownloadFailed;
 
-		private GameLauncher.ShowMessage mShowMessage;
+        private ShowMessage mShowMessage;
 
-		private static string mCurrentLocalVersion;
+        private static string mCurrentLocalVersion = string.Empty;
 
-		private static string mCurrentServerVersion;
+        private static string mCurrentServerVersion = string.Empty;
 
-		private bool mDownloading;
+        private bool mDownloading;
 
-		private int mHashThreads;
+        private int mHashThreads;
 
-		private DownloadManager mDownloadManager;
+        private DownloadManager mDownloadManager;
 
-		private static XmlDocument mIndexCached;
+        private static XmlDocument mIndexCached = null;
 
-		private static bool mStopFlag;
+        private static bool mStopFlag = false;
 
-		public GameLauncher.DownloadFailed DownloadFailed
-		{
-			get
-			{
-				return this.mDownloadFailed;
-			}
-			set
-			{
-				this.mDownloadFailed = value;
-			}
-		}
+        public bool Downloading {
+            get {
+                return this.mDownloading;
+            }
+        }
 
-		public GameLauncher.DownloadFinished DownloadFinished
-		{
-			get
-			{
-				return this.mDownloadFinished;
-			}
-			set
-			{
-				this.mDownloadFinished = value;
-			}
-		}
+        public ProgressUpdated ProgressUpdated {
+            get {
+                return this.mProgressUpdated;
+            }
+            set {
+                this.mProgressUpdated = value;
+            }
+        }
 
-		public bool Downloading
-		{
-			get
-			{
-				return this.mDownloading;
-			}
-		}
+        public DownloadFinished DownloadFinished {
+            get {
+                return this.mDownloadFinished;
+            }
+            set {
+                this.mDownloadFinished = value;
+            }
+        }
 
-		public GameLauncher.ProgressUpdated ProgressUpdated
-		{
-			get
-			{
-				return this.mProgressUpdated;
-			}
-			set
-			{
-				this.mProgressUpdated = value;
-			}
-		}
+        public DownloadFailed DownloadFailed {
+            get {
+                return this.mDownloadFailed;
+            }
+            set {
+                this.mDownloadFailed = value;
+            }
+        }
 
-		public static string ServerVersion
-		{
-			get
-			{
-				return Downloader.mCurrentServerVersion;
-			}
-		}
+        public ShowMessage ShowMessage {
+            get {
+                return this.mShowMessage;
+            }
+            set {
+                this.mShowMessage = value;
+            }
+        }
 
-		public GameLauncher.ShowMessage ShowMessage
-		{
-			get
-			{
-				return this.mShowMessage;
-			}
-			set
-			{
-				this.mShowMessage = value;
-			}
-		}
+        public static string ServerVersion {
+            get {
+                return Downloader.mCurrentServerVersion;
+            }
+        }
 
-		static Downloader()
-		{
-			Downloader.mCurrentLocalVersion = string.Empty;
-			Downloader.mCurrentServerVersion = string.Empty;
-			Downloader.mIndexCached = null;
-			Downloader.mStopFlag = false;
-		}
+        public Downloader(ISynchronizeInvoke fe) : this(fe, 3, 3, 16)
+        {
+        }
 
-		public Downloader(ISynchronizeInvoke fe) : this(fe, 3, 3, 16)
-		{
-		}
+        public Downloader(ISynchronizeInvoke fe, int hashThreads, int downloadThreads, int downloadChunks)
+        {
+            this.mHashThreads = hashThreads;
+            this.mFE = fe;
+            this.mDownloadManager = new DownloadManager(downloadThreads, downloadChunks);
+        }
 
-		public Downloader(ISynchronizeInvoke fe, int hashThreads, int downloadThreads, int downloadChunks)
-		{
-			this.mHashThreads = hashThreads;
-			this.mFE = fe;
-			this.mDownloadManager = new DownloadManager(downloadThreads, downloadChunks);
-		}
+        public void StartDownload(string indexUrl, string package, string patchPath, bool calculateHashes, bool useIndexCache, ulong downloadSize)
+        {
+            Downloader.mStopFlag = false;
+            this.mThread = new Thread(new ParameterizedThreadStart(this.Download));
+            string[] parameter = new string[]
+            {
+                indexUrl,
+                package,
+                patchPath,
+                calculateHashes.ToString(),
+                useIndexCache.ToString(),
+                downloadSize.ToString()
+            };
+            this.mThread.Start(parameter);
+        }
 
-		public static string DecompressLZMA(byte[] compressedFile)
-		{
-			IntPtr intPtr = new IntPtr((int)compressedFile.Length - 13);
-			byte[] numArray = new byte[intPtr.ToInt64()];
-			IntPtr intPtr1 = new IntPtr(5);
-			byte[] numArray1 = new byte[5];
-			compressedFile.CopyTo(numArray, 13);
-			for (int i = 0; i < 5; i++)
-			{
-				numArray1[i] = compressedFile[i];
-			}
-			int num = 0;
-			for (int j = 0; j < 8; j++)
-			{
-				num = num + (compressedFile[j + 5] << (8 * j & 31));
-			}
-			IntPtr intPtr2 = new IntPtr(num);
-			byte[] numArray2 = new byte[num];
-			int num1 = LZMA.LzmaUncompress(numArray2, ref intPtr2, numArray, ref intPtr, numArray1, intPtr1);
-			if (num1 != 0)
-			{
-				throw new UncompressionException(num1, string.Format("Error uncompressing data, return: {0}", num1));
-			}
-			numArray = null;
-			return new string(Encoding.UTF8.GetString(numArray2).ToCharArray());
-		}
+        public void StartVerification(string indexUrl, string package, string patchPath, bool stopOnFail, bool clearHashes, bool writeHashes)
+        {
+            Downloader.mStopFlag = false;
+            this.mThread = new Thread(new ParameterizedThreadStart(this.Verify));
+            string[] parameter = new string[]
+            {
+                indexUrl,
+                package,
+                patchPath,
+                stopOnFail.ToString(),
+                clearHashes.ToString(),
+                writeHashes.ToString()
+            };
+            this.mThread.Start(parameter);
+        }
 
-		private void Download(object parameters)
-		{
-			object[] exception;
-			long num;
-			this.mDownloading = true;
-			string[] strArrays = (string[])parameters;
-			byte[] numArray = null;
-			byte[] numArray1 = null;
-			byte[] file = null;
-			XmlDocument indexFile = null;
-			XmlNodeList xmlNodeLists = null;
-			string str = strArrays[0];
-			string str1 = strArrays[1];
-			if (!string.IsNullOrEmpty(str1))
-			{
-				str = string.Concat(str, "/", str1);
-			}
-			string str2 = strArrays[2];
-			bool flag = bool.Parse(strArrays[3]);
-			bool flag1 = bool.Parse(strArrays[4]);
-			ulong num1 = ulong.Parse(strArrays[5]);
-			try
-			{
-				try
-				{
-					indexFile = this.GetIndexFile(string.Concat(str, "/index.xml"), flag1);
-					if (indexFile != null)
-					{
-						long num2 = long.Parse(indexFile.SelectSingleNode("/index/header/length").InnerText);
-						long num3 = (long)0;
-						if (num1 != (long)0)
-						{
-							num = (long)num1;
-						}
-						else
-						{
-							num = long.Parse(indexFile.SelectSingleNode("/index/header/compressed").InnerText);
-						}
-						long length = (long)0;
-						WebClient webClient = new WebClient();
-						webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
-						webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
-						webClient.Headers.Add("Accept-Encoding", "gzip,deflate");
-						webClient.Headers.Add("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-						int num4 = 1;
-						int num5 = 0;
-						file = null;
-						xmlNodeLists = indexFile.SelectNodes("/index/fileinfo");
-						this.mDownloadManager.Initialize(indexFile, str);
-						if (flag)
-						{
-							HashManager.Instance.Clear();
-							HashManager.Instance.Start(indexFile, str2, string.Concat(str1, ".hsh"), this.mHashThreads);
-						}
-						int num6 = 0;
-						List<string> strs = new List<string>();
-						int num7 = 0;
-						bool flag2 = false;
-						foreach (XmlNode xmlNodes in xmlNodeLists)
-						{
-							XmlNodeList xmlNodeLists1 = xmlNodes.SelectNodes("compressed");
-							int num8 = 0;
-							num8 = (xmlNodeLists1.Count != 0 ? int.Parse(xmlNodeLists1[0].InnerText) : int.Parse(xmlNodes.SelectNodes("length")[0].InnerText));
-							num6 = (num8 > num6 ? num8 : num6);
-							string innerText = xmlNodes.SelectSingleNode("path").InnerText;
-							if (!string.IsNullOrEmpty(str2))
-							{
-								int num9 = innerText.IndexOf("/");
-								innerText = (num9 < 0 ? str2 : innerText.Replace(innerText.Substring(0, num9), str2));
-							}
-							string innerText1 = xmlNodes.SelectSingleNode("file").InnerText;
-							string str3 = string.Concat(innerText, "/", innerText1);
-							int num10 = int.Parse(xmlNodes.SelectSingleNode("section").InnerText);
-							num5 = int.Parse(xmlNodes.SelectSingleNode("offset").InnerText);
-							if (flag)
-							{
-								if (strs.Count == 0)
-								{
-									num7 = num10;
-								}
-								while (num7 <= num10)
-								{
-									strs.Insert(0, string.Format("{0}/section{1}.dat", str, num7));
-									num7++;
-								}
-							}
-							else if (HashManager.Instance.HashesMatch(str3))
-							{
-								if (flag2)
-								{
-									int num11 = num10;
-									if (num5 == 0)
-									{
-										num11--;
-									}
-									while (num7 <= num11)
-									{
-										strs.Insert(0, string.Format("{0}/section{1}.dat", str, num7));
-										num7++;
-									}
-								}
-								if (num7 < num10)
-								{
-									num7 = num10;
-								}
-								flag2 = false;
-							}
-							else
-							{
-								if (num7 <= num10)
-								{
-									if (strs.Count == 0)
-									{
-										num7 = num10;
-									}
-									while (num7 <= num10)
-									{
-										strs.Insert(0, string.Format("{0}/section{1}.dat", str, num7));
-										num7++;
-									}
-								}
-								flag2 = true;
-							}
-						}
-						foreach (string str4 in strs)
-						{
-							this.mDownloadManager.ScheduleFile(str4);
-						}
-						strs.Clear();
-						strs = null;
-						num5 = 0;
-						this.mDownloadManager.Start();
-						numArray = new byte[num6];
-						numArray1 = new byte[13];
-						int num12 = 0;
-						foreach (XmlNode xmlNodes1 in xmlNodeLists)
-						{
-							if (Downloader.mStopFlag)
-							{
-								break;
-							}
-							string innerText2 = xmlNodes1.SelectSingleNode("path").InnerText;
-							string innerText3 = xmlNodes1.SelectSingleNode("file").InnerText;
-							if (!string.IsNullOrEmpty(str2))
-							{
-								int num13 = innerText2.IndexOf("/");
-								innerText2 = (num13 < 0 ? str2 : innerText2.Replace(innerText2.Substring(0, num13), str2));
-							}
-							string str5 = string.Concat(innerText2, "/", innerText3);
-							int num14 = int.Parse(xmlNodes1.SelectSingleNode("length").InnerText);
-							int num15 = 0;
-							XmlNode xmlNodes2 = xmlNodes1.SelectSingleNode("compressed");
-							if (xmlNodes1.SelectSingleNode("section") != null && num4 < int.Parse(xmlNodes1.SelectSingleNode("section").InnerText))
-							{
-								num4 = int.Parse(xmlNodes1.SelectSingleNode("section").InnerText);
-							}
-							string str6 = null;
-							if (xmlNodes1.SelectSingleNode("hash") == null || !HashManager.Instance.HashesMatch(str5))
-							{
-								Directory.CreateDirectory(innerText2);
-								FileStream fileStream = File.Create(str5);
-								int num16 = num14;
-								if (xmlNodes2 != null)
-								{
-									num16 = int.Parse(xmlNodes2.InnerText);
-								}
-								int num17 = 0;
-								bool flag3 = false;
-								int num18 = 13;
-								while (num17 < num16)
-								{
-									if (file == null || num5 >= (int)file.Length)
-									{
-										num5 = (xmlNodes1.SelectSingleNode("offset") == null || flag3 ? 0 : int.Parse(xmlNodes1.SelectSingleNode("offset").InnerText));
-										str6 = string.Format("{0}/section{1}.dat", str, num4);
-										for (int i = num12 + 1; i < num4; i++)
-										{
-											this.mDownloadManager.CancelDownload(string.Format("{0}/section{1}.dat", str, i));
-										}
-										file = null;
-										GC.Collect();
-										file = this.mDownloadManager.GetFile(str6);
-										if (file != null)
-										{
-											num12 = num4;
-											length += (long)((int)file.Length);
-											num4++;
-											if (!this.mDownloadManager.GetStatus(string.Format("{0}/section{1}.dat", str, num4)).HasValue && length < num)
-											{
-												this.mDownloadManager.ScheduleFile(string.Format("{0}/section{1}.dat", str, num4));
-											}
-										}
-										else
-										{
-											if (this.mDownloadFailed != null)
-											{
-												if (Downloader.mStopFlag)
-												{
-													ISynchronizeInvoke synchronizeInvoke = this.mFE;
-													GameLauncher.DownloadFailed downloadFailed = this.mDownloadFailed;
-													exception = new object[1];
-													synchronizeInvoke.BeginInvoke(downloadFailed, exception);
-												}
-												else
-												{
-													ISynchronizeInvoke synchronizeInvoke1 = this.mFE;
-													GameLauncher.DownloadFailed downloadFailed1 = this.mDownloadFailed;
-													exception = new object[] { new Exception("DownloadManager returned a null buffer") };
-													synchronizeInvoke1.BeginInvoke(downloadFailed1, exception);
-												}
-											}
-											return;
-										}
-									}
-									else
-									{
-										if (num16 - num17 > (int)file.Length - num5)
-										{
-											str6 = string.Format("{0}/section{1}.dat", str, num4);
-											this.mDownloadManager.ScheduleFile(str6);
-											flag3 = true;
-										}
-										int num19 = Math.Min((int)file.Length - num5, num16 - num17);
-										if (num18 == 0)
-										{
-											Buffer.BlockCopy((Array)file, num5, (Array)numArray, num17 - (xmlNodes2 != null ? 13 : 0), num19);
-										}
-										else if (xmlNodes2 == null)
-										{
-											Buffer.BlockCopy(file, num5, numArray, 0, num19);
-											num18 = 0;
-										}
-										else
-										{
-											int num20 = Math.Min(num18, num19);
-											Buffer.BlockCopy(file, num5, numArray1, 13 - num18, num20);
-											Buffer.BlockCopy(file, num5 + num20, numArray, 0, num19 - num20);
-											num18 -= num20;
-										}
-										num5 += num19;
-										num17 += num19;
-										num3 += (long)num19;
-									}
-									if (this.mProgressUpdated == null)
-									{
-										continue;
-									}
-									exception = new object[] { num2, num3, num, str5 };
-									this.mFE.BeginInvoke(this.mProgressUpdated, exception);
-								}
-								if (xmlNodes2 == null)
-								{
-									fileStream.Write(numArray, 0, num14);
-									num15 += num14;
-								}
-								else
-								{
-									if (!Downloader.IsLzma(numArray1))
-									{
-										throw new DownloaderException(string.Format("Compression algorithm used in '{0}' not recognized, it is possible that the data is corrupted", str6));
-									}
-									fileStream.Close();
-									fileStream.Dispose();
-									IntPtr intPtr = (IntPtr)num14;
-									IntPtr intPtr1 = new IntPtr(5);
-									byte[] numArray2 = new byte[5];
-									for (int j = 0; j < 5; j++)
-									{
-										numArray2[j] = numArray1[j];
-									}
-									long num21 = (long)0;
-									for (int k = 0; k < 8; k++)
-									{
-										num21 += (long)(numArray1[k + 5] << (8 * k & 31));
-									}
-									if (num21 != (long)num14)
-									{
-										throw new DownloaderException(string.Format("The length of the file in the metadata ({0}) does not match with the length in the header ({1})", num14, num21));
-									}
-									int num22 = num16;
-									num16 -= 13;
-									IntPtr intPtr2 = new IntPtr(num16);
-									IntPtr intPtr3 = new IntPtr(num21);
-									int num23 = LZMA.LzmaUncompressBuf2File(str5, ref intPtr3, numArray, ref intPtr2, numArray2, intPtr1);
-									if (num23 != 0)
-									{
-										throw new UncompressionException(num23, string.Format("Error uncompressing data, return: {0}", num23));
-									}
-									if (intPtr3.ToInt32() != num14)
-									{
-										throw new DownloaderException("Error uncompressing data, not all the data was written.");
-									}
-									num15 += (int)intPtr3;
-								}
-								if (fileStream == null)
-								{
-									continue;
-								}
-								fileStream.Close();
-								fileStream.Dispose();
-							}
-							else
-							{
-								num15 += num14;
-								if (xmlNodes2 == null)
-								{
-									if (num1 == (long)0)
-									{
-										num3 += (long)num14;
-									}
-									length += (long)num14;
-									num5 += num14;
-								}
-								else
-								{
-									if (num1 == (long)0)
-									{
-										num3 += (long)int.Parse(xmlNodes2.InnerText);
-									}
-									length += (long)int.Parse(xmlNodes2.InnerText);
-									num5 += int.Parse(xmlNodes2.InnerText);
-								}
-								if (this.mProgressUpdated != null)
-								{
-									exception = new object[] { num2, num3, num, str5 };
-									this.mFE.Invoke(this.mProgressUpdated, exception);
-								}
-								int num24 = int.Parse(xmlNodes1.SelectSingleNode("section").InnerText);
-								if (num12 == num24)
-								{
-									continue;
-								}
-								for (int l = num12 + 1; l < num24; l++)
-								{
-									this.mDownloadManager.CancelDownload(string.Format("{0}/section{1}.dat", str, l));
-								}
-								num12 = num24 - 1;
-							}
-						}
-						if (!Downloader.mStopFlag)
-						{
-							HashManager.Instance.WriteHashCache(string.Concat(str1, ".hsh"), false);
-						}
-						if (Downloader.mStopFlag)
-						{
-							if (this.mDownloadFailed != null)
-							{
-								ISynchronizeInvoke synchronizeInvoke2 = this.mFE;
-								GameLauncher.DownloadFailed downloadFailed2 = this.mDownloadFailed;
-								exception = new object[1];
-								synchronizeInvoke2.BeginInvoke(downloadFailed2, exception);
-							}
-						}
-						else if (this.mDownloadFinished != null)
-						{
-							this.mFE.BeginInvoke(this.mDownloadFinished, null);
-						}
-					}
-					else
-					{
-						ISynchronizeInvoke synchronizeInvoke3 = this.mFE;
-						GameLauncher.DownloadFailed downloadFailed3 = this.mDownloadFailed;
-						exception = new object[1];
-						synchronizeInvoke3.BeginInvoke(downloadFailed3, exception);
-						return;
-					}
-				}
-				catch (DownloaderException downloaderException1)
-				{
-					DownloaderException downloaderException = downloaderException1;
-					if (this.mDownloadFailed != null)
-					{
-						try
-						{
-							ISynchronizeInvoke synchronizeInvoke4 = this.mFE;
-							GameLauncher.DownloadFailed downloadFailed4 = this.mDownloadFailed;
-							exception = new object[] { downloaderException };
-							synchronizeInvoke4.BeginInvoke(downloadFailed4, exception);
-						}
-						catch
-						{
-						}
-					}
-				}
-				catch (Exception exception2)
-				{
-					Exception exception1 = exception2;
-					if (this.mDownloadFailed != null)
-					{
-						try
-						{
-							ISynchronizeInvoke synchronizeInvoke5 = this.mFE;
-							GameLauncher.DownloadFailed downloadFailed5 = this.mDownloadFailed;
-							exception = new object[] { exception1 };
-							synchronizeInvoke5.BeginInvoke(downloadFailed5, exception);
-						}
-						catch
-						{
-						}
-					}
-				}
-			}
-			finally
-			{
-				if (flag)
-				{
-					HashManager.Instance.Clear();
-				}
-				this.mDownloadManager.Clear();
-				numArray = null;
-				numArray1 = null;
-				file = null;
-				indexFile = null;
-				xmlNodeLists = null;
-				GC.Collect();
-				this.mDownloading = false;
-			}
-		}
+        public void Stop()
+        {
+            Downloader.mStopFlag = true;
+            if (this.mDownloadManager != null && this.mDownloadManager.ManagerRunning)
+            {
+                this.mDownloadManager.CancelAllDownloads();
+            }
+        }
 
-		private void Downloader_DownloadFileCompleted(object sender, DownloadDataCompletedEventArgs e)
-		{
-			string str = e.UserState.ToString();
-			if (!e.Cancelled && e.Error == null)
-			{
-				return;
-			}
-			if (e.Error != null)
-			{
+        private void Downloader_DownloadFileCompleted(object sender, DownloadDataCompletedEventArgs e)
+        {
+            string arg = e.UserState.ToString();
+            if (!e.Cancelled && e.Error == null)
+            {
+                //Downloader.mLogger.DebugFormat("File '{0}' downloaded", arg);
+                return;
+            }
+            MessageBox.Show("Error downloading file '" + arg + "'");
+            if (e.Error != null)
+            {
+                MessageBox.Show("Downloader_DownloadFileCompleted Exception: " + e.Error.ToString());
+            }
+        }
 
-			}
-		}
+        private XmlDocument GetIndexFile(string url, bool useCache)
+        {
+            XmlDocument result;
+            try
+            {
+                if (useCache && Downloader.mIndexCached != null)
+                {
+                    result = Downloader.mIndexCached;
+                }
+                else
+                {
+                    WebClient webClient = new WebClient();
+                    webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.Downloader_DownloadFileCompleted);
+                    string tempFileName = Path.GetTempFileName();
+                    webClient.DownloadFileAsync(new Uri(url), tempFileName);
+                    while (webClient.IsBusy)
+                    {
+                        if (Downloader.mStopFlag)
+                        {
+                            webClient.CancelAsync();
+                            result = null;
+                            return result;
+                        }
+                        Thread.Sleep(100);
+                    }
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.Load(tempFileName);
+                    Downloader.mIndexCached = xmlDocument;
+                    result = xmlDocument;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("GetIndexFile Exception: " + ex.ToString());
+                result = null;
+            }
+            return result;
+        }
 
-		public static byte[] GetData(string url)
-		{
-			WebClient webClient = new WebClient();
-			webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-			webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
-			webClient.Headers.Add("Accept-Encoding", "gzip");
-			webClient.Headers.Add("Accept-Charset", "utf-8;q=0.7,*;q=0.7");
-			webClient.CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
-			byte[] numArray = webClient.DownloadData(url);
-			webClient.Dispose();
-			return numArray;
-		}
+        private void Download(object parameters)
+        {
+            this.mDownloading = true;
+            string[] array = (string[])parameters;
+            byte[] array2 = null;
+            XmlNodeList xmlNodeList = null;
+            string text = array[0];
+            string text2 = array[1];
+            if (!string.IsNullOrEmpty(text2))
+            {
+                text = text + "/" + text2;
+            }
+            string text3 = array[2];
+            bool flag = bool.Parse(array[3]);
+            bool useCache = bool.Parse(array[4]);
+            ulong num = ulong.Parse(array[5]);
+            try
+            {
+                XmlDocument indexFile = this.GetIndexFile(text + "/index.xml", useCache);
+                if (indexFile == null)
+                {
+                    ISynchronizeInvoke arg_AE_0 = this.mFE;
+                    Delegate arg_AE_1 = this.mDownloadFailed;
+                    object[] args = new object[1];
+                    arg_AE_0.BeginInvoke(arg_AE_1, args);
+                }
+                else
+                {
+                    long num2 = long.Parse(indexFile.SelectSingleNode("/index/header/length").InnerText);
+                    long num3 = 0L;
+                    long num4;
+                    if (num == 0uL)
+                    {
+                        num4 = long.Parse(indexFile.SelectSingleNode("/index/header/compressed").InnerText);
+                    }
+                    else
+                    {
+                        num4 = (long)num;
+                    }
+                    long num5 = 0L;
+                    WebClient webClient = new WebClient();
+                    webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
+                    webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
+                    webClient.Headers.Add("Accept-Encoding", "gzip,deflate");
+                    webClient.Headers.Add("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+                    int num6 = 1;
+                    array2 = null;
+                    xmlNodeList = indexFile.SelectNodes("/index/fileinfo");
+                    this.mDownloadManager.Initialize(indexFile, text);
+                    if (flag)
+                    {
+                        HashManager.Instance.Clear();
+                        HashManager.Instance.Start(indexFile, text3, text2 + ".hsh", this.mHashThreads);
+                    }
+                    int num7 = 0;
+                    List<string> list = new List<string>();
+                    int i = 0;
+                    bool flag2 = false;
+                    int num11;
+                    foreach (XmlNode xmlNode in xmlNodeList)
+                    {
+                        XmlNodeList xmlNodeList2 = xmlNode.SelectNodes("compressed");
+                        int num8;
+                        if (xmlNodeList2.Count == 0)
+                        {
+                            num8 = int.Parse(xmlNode.SelectNodes("length")[0].InnerText);
+                        }
+                        else
+                        {
+                            num8 = int.Parse(xmlNodeList2[0].InnerText);
+                        }
+                        num7 = ((num8 > num7) ? num8 : num7);
+                        string text4 = xmlNode.SelectSingleNode("path").InnerText;
+                        if (!string.IsNullOrEmpty(text3))
+                        {
+                            int num9 = text4.IndexOf("/");
+                            if (num9 >= 0)
+                            {
+                                text4 = text4.Replace(text4.Substring(0, num9), text3);
+                            }
+                            else
+                            {
+                                text4 = text3;
+                            }
+                        }
+                        string innerText = xmlNode.SelectSingleNode("file").InnerText;
+                        string fileName = text4 + "/" + innerText;
+                        int num10 = int.Parse(xmlNode.SelectSingleNode("section").InnerText);
+                        num11 = int.Parse(xmlNode.SelectSingleNode("offset").InnerText);
+                        if (flag)
+                        {
+                            if (list.Count == 0)
+                            {
+                                i = num10;
+                            }
+                            while (i <= num10)
+                            {
+                                list.Insert(0, string.Format("{0}/section{1}.dat", text, i));
+                                i++;
+                            }
+                        }
+                        else if (!HashManager.Instance.HashesMatch(fileName))
+                        {
+                            if (i <= num10)
+                            {
+                                if (list.Count == 0)
+                                {
+                                    i = num10;
+                                }
+                                while (i <= num10)
+                                {
+                                    list.Insert(0, string.Format("{0}/section{1}.dat", text, i));
+                                    i++;
+                                }
+                            }
+                            flag2 = true;
+                        }
+                        else
+                        {
+                            if (flag2)
+                            {
+                                int num12 = num10;
+                                if (num11 == 0)
+                                {
+                                    num12--;
+                                }
+                                while (i <= num12)
+                                {
+                                    list.Insert(0, string.Format("{0}/section{1}.dat", text, i));
+                                    i++;
+                                }
+                            }
+                            if (i < num10)
+                            {
+                                i = num10;
+                            }
+                            flag2 = false;
+                        }
+                    }
+                    foreach (string current in list)
+                    {
+                        this.mDownloadManager.ScheduleFile(current);
+                    }
+                    list.Clear();
+                    list = null;
+                    num11 = 0;
+                    this.mDownloadManager.Start();
+                    byte[] array3 = new byte[num7];
+                    byte[] array4 = new byte[13];
+                    int num13 = 0;
+                    foreach (XmlNode xmlNode2 in xmlNodeList)
+                    {
+                        if (Downloader.mStopFlag)
+                        {
+                            break;
+                        }
+                        string text5 = xmlNode2.SelectSingleNode("path").InnerText;
+                        string innerText2 = xmlNode2.SelectSingleNode("file").InnerText;
+                        if (!string.IsNullOrEmpty(text3))
+                        {
+                            int num14 = text5.IndexOf("/");
+                            if (num14 >= 0)
+                            {
+                                text5 = text5.Replace(text5.Substring(0, num14), text3);
+                            }
+                            else
+                            {
+                                text5 = text3;
+                            }
+                        }
+                        string text6 = text5 + "/" + innerText2;
+                        int num15 = int.Parse(xmlNode2.SelectSingleNode("length").InnerText);
+                        int num16 = 0;
+                        XmlNode xmlNode3 = xmlNode2.SelectSingleNode("compressed");
+                        if (xmlNode2.SelectSingleNode("section") != null && num6 < int.Parse(xmlNode2.SelectSingleNode("section").InnerText))
+                        {
+                            num6 = int.Parse(xmlNode2.SelectSingleNode("section").InnerText);
+                        }
+                        string text7 = null;
+                        if (xmlNode2.SelectSingleNode("hash") != null && HashManager.Instance.HashesMatch(text6))
+                        {
+                            num16 += num15;
+                            if (xmlNode3 != null)
+                            {
+                                if (num == 0uL)
+                                {
+                                    num3 += (long)int.Parse(xmlNode3.InnerText);
+                                }
+                                num5 += (long)int.Parse(xmlNode3.InnerText);
+                                num11 += int.Parse(xmlNode3.InnerText);
+                            }
+                            else
+                            {
+                                if (num == 0uL)
+                                {
+                                    num3 += (long)num15;
+                                }
+                                num5 += (long)num15;
+                                num11 += num15;
+                            }
+                            if (this.mProgressUpdated != null)
+                            {
+                                object[] args2 = new object[]
+                                {
+                                    num2,
+                                    num3,
+                                    num4,
+                                    text6
+                                };
+                                this.mFE.Invoke(this.mProgressUpdated, args2);
+                            }
+                            int num17 = int.Parse(xmlNode2.SelectSingleNode("section").InnerText);
+                            if (num13 != num17)
+                            {
+                                for (int j = num13 + 1; j < num17; j++)
+                                {
+                                    this.mDownloadManager.CancelDownload(string.Format("{0}/section{1}.dat", text, j));
+                                }
+                                num13 = num17 - 1;
+                            }
+                        }
+                        else
+                        {
+                            Directory.CreateDirectory(text5);
+                            FileStream fileStream = File.Create(text6);
+                            int num18 = num15;
+                            if (xmlNode3 != null)
+                            {
+                                num18 = int.Parse(xmlNode3.InnerText);
+                            }
+                            int k = 0;
+                            bool flag3 = false;
+                            int num19 = 13;
+                            while (k < num18)
+                            {
+                                if (array2 == null || num11 >= array2.Length)
+                                {
+                                    if (xmlNode2.SelectSingleNode("offset") != null && !flag3)
+                                    {
+                                        num11 = int.Parse(xmlNode2.SelectSingleNode("offset").InnerText);
+                                    }
+                                    else
+                                    {
+                                        num11 = 0;
+                                    }
+                                    text7 = string.Format("{0}/section{1}.dat", text, num6);
+                                    for (int l = num13 + 1; l < num6; l++)
+                                    {
+                                        this.mDownloadManager.CancelDownload(string.Format("{0}/section{1}.dat", text, l));
+                                    }
+                                    array2 = null;
+                                    GC.Collect();
+                                    array2 = this.mDownloadManager.GetFile(text7);
+                                    if (array2 == null)
+                                    {
+                                        MessageBox.Show("DownloadManager returned a null buffer, aborting");
+                                        if (this.mDownloadFailed != null)
+                                        {
+                                            if (!Downloader.mStopFlag)
+                                            {
+                                                this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
+                                                {
+                                                    new Exception("DownloadManager returned a null buffer")
+                                                });
+                                            }
+                                            else
+                                            {
+                                                ISynchronizeInvoke arg_887_0 = this.mFE;
+                                                Delegate arg_887_1 = this.mDownloadFailed;
+                                                object[] args = new object[1];
+                                                arg_887_0.BeginInvoke(arg_887_1, args);
+                                            }
+                                        }
+                                        return;
+                                    }
+                                    num13 = num6;
+                                    num5 += (long)array2.Length;
+                                    num6++;
+                                    if (!this.mDownloadManager.GetStatus(string.Format("{0}/section{1}.dat", text, num6)).HasValue && num5 < num4)
+                                    {
+                                        this.mDownloadManager.ScheduleFile(string.Format("{0}/section{1}.dat", text, num6));
+                                    }
+                                }
+                                else
+                                {
+                                    if (num18 - k > array2.Length - num11)
+                                    {
+                                        text7 = string.Format("{0}/section{1}.dat", text, num6);
+                                        this.mDownloadManager.ScheduleFile(text7);
+                                        flag3 = true;
+                                    }
+                                    int num20 = Math.Min(array2.Length - num11, num18 - k);
+                                    if (num19 != 0)
+                                    {
+                                        if (xmlNode3 != null)
+                                        {
+                                            int num21 = Math.Min(num19, num20);
+                                            Buffer.BlockCopy(array2, num11, array4, 13 - num19, num21);
+                                            Buffer.BlockCopy(array2, num11 + num21, array3, 0, num20 - num21);
+                                            num19 -= num21;
+                                        }
+                                        else
+                                        {
+                                            Buffer.BlockCopy(array2, num11, array3, 0, num20);
+                                            num19 = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Buffer.BlockCopy(array2, num11, array3, k - ((xmlNode3 != null) ? 13 : 0), num20);
+                                    }
+                                    num11 += num20;
+                                    k += num20;
+                                    num3 += (long)num20;
+                                }
+                                if (this.mProgressUpdated != null)
+                                {
+                                    object[] args3 = new object[]
+                                    {
+                                        num2,
+                                        num3,
+                                        num4,
+                                        text6
+                                    };
+                                    this.mFE.BeginInvoke(this.mProgressUpdated, args3);
+                                }
+                            }
+                            if (xmlNode3 != null)
+                            {
+                                if (!Downloader.IsLzma(array4))
+                                {
+                                    MessageBox.Show("Compression algorithm not recognized" + text7);
+                                    throw new DownloaderException("Compression algorithm not recognized: " + text7);
+                                }
+                                fileStream.Close();
+                                fileStream.Dispose();
+                                //(IntPtr)num15;
+                                IntPtr outPropsSize = new IntPtr(5);
+                                byte[] array5 = new byte[5];
+                                for (int m = 0; m < 5; m++)
+                                {
+                                    array5[m] = array4[m];
+                                }
+                                long num22 = 0L;
+                                for (int n = 0; n < 8; n++)
+                                {
+                                    num22 += (long)((long)array4[n + 5] << 8 * n);
+                                }
+                                if (num22 != (long)num15)
+                                {
+                                    MessageBox.Show("Compression data length in header '" + num22 + "' != than in metadata '" + num15 + "'");
+                                    throw new DownloaderException("Compression data length in header '" + num22 + "' != than in metadata '" + num15 + "'");
+                                }
+                                int num23 = num18;
+                                num18 -= 13;
+                                IntPtr intPtr = new IntPtr(num18);
+                                IntPtr value = new IntPtr(num22);
+                                int num24 = LZMA.LzmaUncompressBuf2File(text6, ref value, array3, ref intPtr, array5, outPropsSize);
+                                if (num24 != 0)
+                                {
+                                    MessageBox.Show("Decompression returned " + num24);
+                                    throw new UncompressionException(num24, "Decompression returned " + num24);
+                                }
+                                if (value.ToInt32() != num15)
+                                {
+                                    MessageBox.Show("Decompression returned different size '" + value.ToInt32() + "' than metadata '" + num15 + "'");
+                                    throw new DownloaderException("Decompression returned different size '" + value.ToInt32() + "' than metadata '" + num15 + "'");
+                                }
+                                num16 += (int)value;
+                            }
+                            else
+                            {
+                                fileStream.Write(array3, 0, num15);
+                                num16 += num15;
+                            }
+                            if (fileStream != null)
+                            {
+                                fileStream.Close();
+                                fileStream.Dispose();
+                            }
+                        }
+                    }
+                    if (!Downloader.mStopFlag)
+                    {
+                        HashManager.Instance.WriteHashCache(text2 + ".hsh", false);
+                    }
+                    if (Downloader.mStopFlag)
+                    {
+                        if (this.mDownloadFailed != null)
+                        {
+                            ISynchronizeInvoke arg_D16_0 = this.mFE;
+                            Delegate arg_D16_1 = this.mDownloadFailed;
+                            object[] args = new object[1];
+                            arg_D16_0.BeginInvoke(arg_D16_1, args);
+                        }
+                    }
+                    else if (this.mDownloadFinished != null)
+                    {
+                        this.mFE.BeginInvoke(this.mDownloadFinished, null);
+                    }
+                }
+            }
+            catch (DownloaderException ex)
+            {
+                MessageBox.Show("Download DownloaderException: " + ex.ToString());
+                if (this.mDownloadFailed != null)
+                {
+                    try
+                    {
+                        this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
+                        {
+                            ex
+                        });
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            catch (Exception ex2)
+            {
+                MessageBox.Show("Download Exception: " + ex2.ToString());
+                if (this.mDownloadFailed != null)
+                {
+                    try
+                    {
+                        this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
+                        {
+                            ex2
+                        });
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            finally
+            {
+                if (flag)
+                {
+                    HashManager.Instance.Clear();
+                }
+                this.mDownloadManager.Clear();
+                array2 = null;
+                xmlNodeList = null;
+                GC.Collect();
+                this.mDownloading = false;
+            }
+        }
 
-		private XmlDocument GetIndexFile(string url, bool useCache)
-		{
-			XmlDocument xmlDocument;
-			try
-			{
-				if (!useCache || Downloader.mIndexCached == null)
-				{
-					WebClient webClient = new WebClient();
-					webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.Downloader_DownloadFileCompleted);
-					string tempFileName = Path.GetTempFileName();
-					webClient.DownloadFileAsync(new Uri(url), tempFileName);
-					while (webClient.IsBusy)
-					{
-						if (!Downloader.mStopFlag)
-						{
-							Thread.Sleep(100);
-						}
-						else
-						{
-							webClient.CancelAsync();
-							xmlDocument = null;
-							return xmlDocument;
-						}
-					}
-					XmlDocument xmlDocument1 = new XmlDocument();
-					xmlDocument1.Load(tempFileName);
-					Downloader.mIndexCached = xmlDocument1;
-					xmlDocument = xmlDocument1;
-				}
-				else
-				{
-					xmlDocument = Downloader.mIndexCached;
-				}
-			}
-			catch (Exception exception1)
-			{
-				Exception exception = exception1;
-				xmlDocument = null;
-			}
-			return xmlDocument;
-		}
+        private void Verify(object parameters)
+        {
+            string[] array = (string[])parameters;
+            string str = array[0].Trim();
+            string text = array[1].Trim();
+            if (!string.IsNullOrEmpty(text))
+            {
+                str = str + "/" + text;
+            }
+            string text2 = array[2].Trim();
+            bool flag = bool.Parse(array[3]);
+            bool flag2 = bool.Parse(array[4]);
+            bool flag3 = bool.Parse(array[5]);
+            bool flag4 = false;
+            try
+            {
+                XmlDocument indexFile = this.GetIndexFile(str + "/index.xml", false);
+                if (indexFile == null)
+                {
+                    ISynchronizeInvoke arg_B9_0 = this.mFE;
+                    Delegate arg_B9_1 = this.mDownloadFailed;
+                    object[] args = new object[1];
+                    arg_B9_0.BeginInvoke(arg_B9_1, args);
+                }
+                else
+                {
+                    long num = long.Parse(indexFile.SelectSingleNode("/index/header/length").InnerText);
+                    WebClient webClient = new WebClient();
+                    webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
+                    webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
+                    webClient.Headers.Add("Accept-Encoding", "gzip,deflate");
+                    webClient.Headers.Add("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+                    XmlNodeList xmlNodeList = indexFile.SelectNodes("/index/fileinfo");
+                    HashManager.Instance.Clear();
+                    HashManager.Instance.Start(indexFile, text2, text + ".hsh", this.mHashThreads);
+                    long num2 = 0L;
+                    ulong num3 = 0uL;
+                    ulong num4 = 0uL;
+                    foreach (XmlNode xmlNode in xmlNodeList)
+                    {
+                        string text3 = xmlNode.SelectSingleNode("path").InnerText;
+                        string innerText = xmlNode.SelectSingleNode("file").InnerText;
+                        if (!string.IsNullOrEmpty(text2))
+                        {
+                            int num5 = text3.IndexOf("/");
+                            if (num5 >= 0)
+                            {
+                                text3 = text3.Replace(text3.Substring(0, num5), text2);
+                            }
+                            else
+                            {
+                                text3 = text2;
+                            }
+                        }
+                        string text4 = text3 + "/" + innerText;
+                        int num6 = int.Parse(xmlNode.SelectSingleNode("length").InnerText);
+                        if (xmlNode.SelectSingleNode("hash") != null)
+                        {
+                            if (!HashManager.Instance.HashesMatch(text4))
+                            {
+                                num3 += ulong.Parse(xmlNode.SelectSingleNode("length").InnerText);
+                                ulong num7;
+                                if (xmlNode.SelectSingleNode("compressed") != null)
+                                {
+                                    num7 = ulong.Parse(xmlNode.SelectSingleNode("compressed").InnerText);
+                                }
+                                else
+                                {
+                                    num7 = ulong.Parse(xmlNode.SelectSingleNode("length").InnerText);
+                                }
+                                num4 += num7;
+                                if (flag)
+                                {
+                                    this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
+                                    {
 
-		public static string GetXml(string url)
-		{
-			byte[] data = Downloader.GetData(url);
-			if (Downloader.IsLzma(data))
-			{
-				return Downloader.DecompressLZMA(data);
-			}
-			return Encoding.UTF8.GetString(data).Trim();
-		}
+                                    });
+                                    return;
+                                }
+                                flag4 = true;
+                            }
+                        }
+                        else
+                        {
+                            if (flag)
+                            {
+                                throw new DownloaderException("Without hash in the metadata I cannot verify the download");
+                            }
+                            flag4 = true;
+                        }
+                        if (Downloader.mStopFlag)
+                        {
+                            ISynchronizeInvoke arg_367_0 = this.mFE;
+                            Delegate arg_367_1 = this.mDownloadFailed;
+                            object[] args2 = new object[1];
+                            arg_367_0.BeginInvoke(arg_367_1, args2);
+                            return;
+                        }
+                        num2 += (long)num6;
+                        object[] args3 = new object[]
+                        {
+                            num,
+                            num2,
+                            0,
+                            innerText
+                        };
+                        this.mFE.BeginInvoke(this.mProgressUpdated, args3);
+                    }
+                    if (flag3)
+                    {
+                        //Downloader.mLogger.Info("Writing hash cache");
+                        HashManager.Instance.WriteHashCache(text + ".hsh", true);
+                    }
+                    if (flag4)
+                    {
+                        this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
+                        {
 
-		public static bool IsLzma(byte[] arr)
-		{
-			if ((int)arr.Length < 2 || arr[0] != 93)
-			{
-				return false;
-			}
-			return arr[1] == 0;
-		}
+                        });
+                    }
+                    else
+                    {
+                        this.mFE.BeginInvoke(this.mDownloadFinished, null);
+                    }
+                }
+            }
+            catch (DownloaderException ex)
+            {
+                this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
+                {
+                    ex
+                });
+            }
+            catch (Exception ex2)
+            {
+                this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
+                {
+                    ex2
+                });
+            }
+            finally
+            {
+                if (flag2)
+                {
+                    HashManager.Instance.Clear();
+                }
+                GC.Collect();
+            }
+        }
 
-		public void StartDownload(string indexUrl, string package, string patchPath, bool calculateHashes, bool useIndexCache, ulong downloadSize)
-		{
-			Downloader.mStopFlag = false;
-			this.mThread = new Thread(new ParameterizedThreadStart(this.Download));
-			string[] strArrays = new string[] { indexUrl, package, patchPath, calculateHashes.ToString(), useIndexCache.ToString(), downloadSize.ToString() };
-			this.mThread.Start(strArrays);
-		}
+        public static string GetXml(string url)
+        {
+            byte[] data = Downloader.GetData(url);
+            if (Downloader.IsLzma(data))
+            {
+                return Downloader.DecompressLZMA(data);
+            }
+            return Encoding.UTF8.GetString(data).Trim();
+        }
 
-		public void StartVerification(string indexUrl, string package, string patchPath, bool stopOnFail, bool clearHashes, bool writeHashes)
-		{
-			Downloader.mStopFlag = false;
-			this.mThread = new Thread(new ParameterizedThreadStart(this.Verify));
-			string[] strArrays = new string[] { indexUrl, package, patchPath, stopOnFail.ToString(), clearHashes.ToString(), writeHashes.ToString() };
-			this.mThread.Start(strArrays);
-		}
+        public static byte[] GetData(string url)
+        {
+            WebClient webClient = new WebClient();
+            webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
+            webClient.Headers.Add("Accept-Encoding", "gzip");
+            webClient.Headers.Add("Accept-Charset", "utf-8;q=0.7,*;q=0.7");
+            webClient.CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
+            byte[] result = webClient.DownloadData(url);
+            webClient.Dispose();
+            return result;
+        }
 
-		public void Stop()
-		{
-			Downloader.mStopFlag = true;
-			if (this.mDownloadManager != null && this.mDownloadManager.ManagerRunning)
-			{
-				this.mDownloadManager.CancelAllDownloads();
-			}
-		}
+        public static bool IsLzma(byte[] arr)
+        {
+            return arr.Length >= 2 && arr[0] == 93 && arr[1] == 0;
+        }
 
-		private void Verify(object parameters)
-		{
-			string[] strArrays = (string[])parameters;
-			string str = strArrays[0].Trim();
-			string str1 = strArrays[1].Trim();
-			if (!string.IsNullOrEmpty(str1))
-			{
-				str = string.Concat(str, "/", str1);
-			}
-			string str2 = strArrays[2].Trim();
-			XmlDocument indexFile = null;
-			XmlNodeList xmlNodeLists = null;
-			bool flag = bool.Parse(strArrays[3]);
-			bool flag1 = bool.Parse(strArrays[4]);
-			bool flag2 = bool.Parse(strArrays[5]);
-			bool flag3 = false;
-			try
-			{
-				try
-				{
-					indexFile = this.GetIndexFile(string.Concat(str, "/index.xml"), false);
-					if (indexFile != null)
-					{
-						long num = long.Parse(indexFile.SelectSingleNode("/index/header/length").InnerText);
-						WebClient webClient = new WebClient();
-						webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
-						webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
-						webClient.Headers.Add("Accept-Encoding", "gzip,deflate");
-						webClient.Headers.Add("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-						xmlNodeLists = indexFile.SelectNodes("/index/fileinfo");
-						HashManager.Instance.Clear();
-						HashManager.Instance.Start(indexFile, str2, string.Concat(str1, ".hsh"), this.mHashThreads);
-						long num1 = (long)0;
-						ulong num2 = (ulong)0;
-						ulong num3 = (ulong)0;
-						foreach (XmlNode xmlNodes in xmlNodeLists)
-						{
-							string innerText = xmlNodes.SelectSingleNode("path").InnerText;
-							string innerText1 = xmlNodes.SelectSingleNode("file").InnerText;
-							if (!string.IsNullOrEmpty(str2))
-							{
-								int num4 = innerText.IndexOf("/");
-								innerText = (num4 < 0 ? str2 : innerText.Replace(innerText.Substring(0, num4), str2));
-							}
-							string str3 = string.Concat(innerText, "/", innerText1);
-							int num5 = int.Parse(xmlNodes.SelectSingleNode("length").InnerText);
-							if (xmlNodes.SelectSingleNode("hash") == null)
-							{
-								if (flag)
-								{
-									throw new DownloaderException("Without hash in the metadata I cannot verify the download");
-								}
-								flag3 = true;
-							}
-							else if (!HashManager.Instance.HashesMatch(str3))
-							{
-								num2 += ulong.Parse(xmlNodes.SelectSingleNode("length").InnerText);
-								ulong num6 = (ulong)0;
-								num6 = (xmlNodes.SelectSingleNode("compressed") == null ? ulong.Parse(xmlNodes.SelectSingleNode("length").InnerText) : ulong.Parse(xmlNodes.SelectSingleNode("compressed").InnerText));
-								num3 += num6;
-								if (!flag)
-								{
-									flag3 = true;
-								}
-								else
-								{
-									ISynchronizeInvoke synchronizeInvoke = this.mFE;
-									GameLauncher.DownloadFailed downloadFailed = this.mDownloadFailed;
-									object[] verificationException = new object[] { new Exception(num2 + num3 + str1) };
-									synchronizeInvoke.BeginInvoke(downloadFailed, verificationException);
-									return;
-								}
-							}
-							if (!Downloader.mStopFlag)
-							{
-								num1 += (long)num5;
-								object[] objArray = new object[] { num, num1, 0, innerText1 };
-								this.mFE.BeginInvoke(this.mProgressUpdated, objArray);
-							}
-							else
-							{
-								this.mFE.BeginInvoke(this.mDownloadFailed, new object[1]);
-								return;
-							}
-						}
-						if (flag2)
-						{
-							HashManager.Instance.WriteHashCache(string.Concat(str1, ".hsh"), true);
-						}
-						if (!flag3)
-						{
-							this.mFE.BeginInvoke(this.mDownloadFinished, null);
-						}
-						else
-						{
-							ISynchronizeInvoke synchronizeInvoke1 = this.mFE;
-							GameLauncher.DownloadFailed downloadFailed1 = this.mDownloadFailed;
-							object[] verificationException1 = new object[] { new Exception(num + "" + num3 + str1) };
-							synchronizeInvoke1.BeginInvoke(downloadFailed1, verificationException1);
-						}
-					}
-					else
-					{
-						this.mFE.BeginInvoke(this.mDownloadFailed, new object[1]);
-						return;
-					}
-				}
-				catch (DownloaderException downloaderException1)
-				{
-					DownloaderException downloaderException = downloaderException1;
-					ISynchronizeInvoke synchronizeInvoke2 = this.mFE;
-					GameLauncher.DownloadFailed downloadFailed2 = this.mDownloadFailed;
-					object[] objArray1 = new object[] { downloaderException };
-					synchronizeInvoke2.BeginInvoke(downloadFailed2, objArray1);
-				}
-				catch (Exception exception1)
-				{
-					Exception exception = exception1;
-					ISynchronizeInvoke synchronizeInvoke3 = this.mFE;
-					GameLauncher.DownloadFailed downloadFailed3 = this.mDownloadFailed;
-					object[] objArray2 = new object[] { exception };
-					synchronizeInvoke3.BeginInvoke(downloadFailed3, objArray2);
-				}
-			}
-			finally
-			{
-				if (flag1)
-				{
-					HashManager.Instance.Clear();
-				}
-				indexFile = null;
-				xmlNodeLists = null;
-				GC.Collect();
-			}
-		}
-	}
+        public static string DecompressLZMA(byte[] compressedFile)
+        {
+            IntPtr intPtr = new IntPtr(compressedFile.Length - 13);
+            byte[] array = new byte[intPtr.ToInt64()];
+            IntPtr outPropsSize = new IntPtr(5);
+            byte[] array2 = new byte[5];
+            compressedFile.CopyTo(array, 13);
+            for (int i = 0; i < 5; i++)
+            {
+                array2[i] = compressedFile[i];
+            }
+            int num = 0;
+            for (int j = 0; j < 8; j++)
+            {
+                num += (int)compressedFile[j + 5] << 8 * j;
+            }
+            IntPtr intPtr2 = new IntPtr(num);
+            byte[] array3 = new byte[num];
+            int num2 = LZMA.LzmaUncompress(array3, ref intPtr2, array, ref intPtr, array2, outPropsSize);
+            if (num2 != 0)
+            {
+                MessageBox.Show("Decompression returned " + num2);
+            }
+            return new string(Encoding.UTF8.GetString(array3).ToCharArray());
+        }
+    }
 }

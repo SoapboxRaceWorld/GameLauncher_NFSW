@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using GameLauncherReborn;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +12,6 @@ namespace GameLauncher {
         internal static void checkForUpdate(object sender, EventArgs e) {
             try {
                 var client = new WebClientWithTimeout();
-                client.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
 
                 Uri StringToUri = new Uri("http://nfsw.metonator.ct8.pl/checkUpdate.php?version=" + Application.ProductVersion);
                 client.CancelAsync();
