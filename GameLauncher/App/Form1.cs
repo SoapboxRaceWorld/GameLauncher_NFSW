@@ -100,7 +100,9 @@ namespace GameLauncher {
 
         public mainScreen() {
             if (Environment.OSVersion.Version.Major <= 5) {
-                MessageBox.Show(null, "Sadly, the red background cannot be fixed on Windows XP and lower, sorry...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if(DetectLinux.WineDetected() == false) { 
+                    MessageBox.Show(null, "Sadly, the red background cannot be fixed on Windows XP and lower, sorry...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             } else {
                 Font = new Font(Font.Name, 8.25f * DPIDefaultScale / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
             }
@@ -784,17 +786,21 @@ namespace GameLauncher {
                         };
                     }
 
-                    Ping pingSender = new Ping();
-                    pingSender.SendAsync(StringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
-                    pingSender.PingCompleted += (sender3, e3) => {
-                        PingReply reply = e3.Reply;
+                    if(DetectLinux.WineDetected() == false) { 
+                        Ping pingSender = new Ping();
+                        pingSender.SendAsync(StringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
+                        pingSender.PingCompleted += (sender3, e3) => {
+                            PingReply reply = e3.Reply;
 
-                        if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
-                            onlineCount.Text += ". Server ping is " + reply.RoundtripTime + "ms";
-                        } else {
-                            onlineCount.Text += ". Server doesn't allow pinging.";
-                        }
-                    };
+                            if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
+                                onlineCount.Text += ". Server ping is " + reply.RoundtripTime + "ms";
+                            } else {
+                                onlineCount.Text += ". Server doesn't allow pinging.";
+                            }
+                        };
+                    } else {
+                        onlineCount.Text += ". Ping is disabled on non-Windows platform. ";
+                    }
                 }
             };
         }
@@ -1187,6 +1193,7 @@ namespace GameLauncher {
 
                 this.Text = "NEED FOR SPEED™ WORLD";
                 this.Update();
+                this.Refresh();
 
                 Notification.ContextMenu = ContextMenu;
             }
@@ -1234,15 +1241,19 @@ namespace GameLauncher {
             string speechFile;
 
             try {
-                WebClient wc = new WebClientWithTimeout();
-                string response = wc.DownloadString("http://mirror.nfsw.mtntr.eu/NFSWO/" + SettingFile.Read("Language").ToLower() + "/index.xml");
-                speechFile = SettingFile.Read("Language").ToLower();
+                if(String.IsNullOrEmpty(SettingFile.Read("Language"))) {
+                    speechFile = "en";
+                } else {
+                    WebClient wc = new WebClientWithTimeout();
+                    string response = wc.DownloadString("http://mirror.nfsw.mtntr.eu/NFSWO/" + SettingFile.Read("Language").ToLower() + "/index.xml");
+                    speechFile = SettingFile.Read("Language").ToLower();
+                }
             } catch (Exception) {
                 speechFile = "en";
             }
 
             if(dontDownload.Checked == false) {
-                if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechhdr_" + speechFile + ".big")) { 
+                if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechhdr_" + speechFile + ".big")) {
                     MessageBox.Show(null, "This downloader is in alpha. Please report every issue you will notice (except slow downloading, we know about it)", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     this.playProgressText.Text = "LOADING FILELIST FOR DOWNLOAD...";
                     DownloadCoreFiles();

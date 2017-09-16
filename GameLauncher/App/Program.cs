@@ -20,10 +20,10 @@ namespace GameLauncher {
 
             //Console log with warning
             if (mono == true) {
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
-                MessageBox.Show(null, "Detected OS: Linux using Mono. Linux support is still under alpha stage. Therefore, launcher could not launch.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                //It will never work under pure mono... so...
+                Application.Exit();
             } else if (wine == true) {
-                MessageBox.Show(null, "Detected OS: Linux using Wine. Linux support is still under alpha stage. Therefore, launcher could not launch.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(null, "Wine support is still under alpha stage. Therefore, launcher could not launch.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             //Add LZMA.dll on the fly (used for decompression of section{int}.dll files)
