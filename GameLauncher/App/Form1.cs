@@ -1143,6 +1143,7 @@ namespace GameLauncher {
             this.playProgress.Visible = hideElements;
             this.playProgressText.Visible = hideElements;
             this.playButton.Visible = hideElements;
+            this.playProgressTime.Visible = hideElements;
         }
 
         private void LaunchGame(string UserId, string LoginToken, string ServerIP) {
@@ -1236,6 +1237,7 @@ namespace GameLauncher {
             this.playButton.ForeColor = Color.Gray;
 
             this.playProgressText.Text = "PLEASE WAIT...";
+            this.playProgressTime.Text = "";
             Delay.WaitSeconds(1);
 
             string speechFile;
@@ -1254,7 +1256,7 @@ namespace GameLauncher {
 
             if(dontDownload.Checked == false) {
                 if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechhdr_" + speechFile + ".big")) {
-                    MessageBox.Show(null, "This downloader is in alpha. Please report every issue you will notice (except slow downloading, we know about it)", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(null, "This downloader is in alpha. Please report every issue you will notice.\nThere's also a known issue about 'ESET Smart Security' cutting downloader from reaching chunks files.\nPlease, disable your antivirus.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     this.playProgressText.Text = "LOADING FILELIST FOR DOWNLOAD...";
                     DownloadCoreFiles();
                 } else {
@@ -1267,12 +1269,13 @@ namespace GameLauncher {
 
         public void DownloadCoreFiles() {
             this.playProgressText.Text = "CHECKING CORE FILES...";
+            this.playProgressTime.Text = "";
 
             if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe")) {
                 DownloadStartTime = DateTime.Now;
 
                 Downloader downloader = new Downloader(this, 3, 2, 16) {
-                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdatedCore),
+                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgress),
                     DownloadFinished = new DownloadFinished(this.DownloadTracksFiles),
                     DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
                     ShowMessage = new ShowMessage(this.OnShowMessage)
@@ -1286,12 +1289,13 @@ namespace GameLauncher {
 
         public void DownloadTracksFiles() {
             this.playProgressText.Text = "CHECKING TRACKS FILES...";
+            this.playProgressTime.Text = "";
 
             if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Tracks\\STREAML5RA_98.BUN")) {
                 DownloadStartTime = DateTime.Now;
 
                 Downloader downloader = new Downloader(this, 3, 2, 16) {
-                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdatedTracks),
+                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgress),
                     DownloadFinished = new DownloadFinished(this.DownloadSpeechFiles),
                     DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
                     ShowMessage = new ShowMessage(this.OnShowMessage)
@@ -1305,23 +1309,30 @@ namespace GameLauncher {
 
         public void DownloadSpeechFiles() {
             this.playProgressText.Text = "LOOKING FOR COMPATIBLE SPEECH FILES...";
+            this.playProgressTime.Text = "";
 
             string speechFile;
             ulong speechSize;
 
             try {
-                WebClient wc = new WebClientWithTimeout();
-                string response = wc.DownloadString("http://mirror.nfsw.mtntr.eu/NFSWO" + SettingFile.Read("Language").ToLower() + "/index.xml");
+                if (String.IsNullOrEmpty(SettingFile.Read("Language"))) {
+                    speechFile = "en";
+                    speechSize = 141805935;
+                    langInfo = "ENGLISH";
+                } else {
+                    WebClient wc = new WebClientWithTimeout();
+                    string response = wc.DownloadString("http://mirror.nfsw.mtntr.eu/NFSWO/" + SettingFile.Read("Language").ToLower() + "/index.xml");
 
-                response = response.Substring(3, response.Length - 3);
+                    response = response.Substring(3, response.Length - 3);
 
-                XmlDocument SpeechFileXML = new XmlDocument();
-                SpeechFileXML.LoadXml(response);
-                XmlNode speechSizeNode = SpeechFileXML.SelectSingleNode("index/header/compressed");
+                    XmlDocument SpeechFileXML = new XmlDocument();
+                    SpeechFileXML.LoadXml(response);
+                    XmlNode speechSizeNode = SpeechFileXML.SelectSingleNode("index/header/compressed");
 
-                speechFile = SettingFile.Read("Language").ToLower();
-                speechSize = Convert.ToUInt64(speechSizeNode.InnerText);
-                langInfo = settingsLanguage.GetItemText(settingsLanguage.SelectedItem).ToUpper();
+                    speechFile = SettingFile.Read("Language").ToLower();
+                    speechSize = Convert.ToUInt64(speechSizeNode.InnerText);
+                    langInfo = settingsLanguage.GetItemText(settingsLanguage.SelectedItem).ToUpper();
+                }
             } catch(Exception) {
                 speechFile = "en";
                 speechSize = 141805935;
@@ -1334,7 +1345,7 @@ namespace GameLauncher {
                 DownloadStartTime = DateTime.Now;
 
                 Downloader downloader = new Downloader(this, 3, 2, 16) {
-                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdatedSpeech),
+                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgress),
                     DownloadFinished = new DownloadFinished(this.DownloadTracksHighFiles),
                     DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
                     ShowMessage = new ShowMessage(this.OnShowMessage)
@@ -1348,12 +1359,13 @@ namespace GameLauncher {
 
         public void DownloadTracksHighFiles() {
             this.playProgressText.Text = "CHECKING TRACKSHIGH FILES...";
+            this.playProgressTime.Text = "";
 
             if (SettingFile.Read("TracksHigh") == "1" && !File.Exists(SettingFile.Read("InstallationDirectory") + "\\TracksHigh\\STREAML5RA_98.BUN")) {
                 DownloadStartTime = DateTime.Now;
 
                 Downloader downloader = new Downloader(this, 3, 2, 16) {
-                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgressUpdatedTracksHigh),
+                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgress),
                     DownloadFinished = new DownloadFinished(this.OnDownloadFinished),
                     DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
                     ShowMessage = new ShowMessage(this.OnShowMessage)
@@ -1382,7 +1394,7 @@ namespace GameLauncher {
             double num = (double)current / (double)total;
             if (num < 0.0500000007450581)
             {
-                return "ESTIMATING...";
+                return "Calculating...";
             }
             TimeSpan now = DateTime.Now - this.DownloadStartTime;
             TimeSpan timeSpan = TimeSpan.FromTicks((long)((double)now.Ticks / num)) - now;
@@ -1392,37 +1404,12 @@ namespace GameLauncher {
             return string.Format("{0}:{1}:{2}", hours, str, seconds.ToString("D02"));
         }
 
-        private void OnDownloadProgressUpdatedCore(long downloadLength, long downloadCurrent, long compressedLength, string filename) {
+        private void OnDownloadProgress(long downloadLength, long downloadCurrent, long compressedLength, string filename) {
             if (downloadCurrent < compressedLength) {
                 int width = this.playProgressText.Width;
-                this.playProgressText.Text = string.Format("DOWNLOADING CORE FILES ({0}/{1}) - TIME REMAINING : {2}", this.FormatFileSize(downloadCurrent), this.FormatFileSize(compressedLength), this.EstimateFinishTime(downloadCurrent, compressedLength));
-            }
-
-            this.playProgress.Value = (int)((long)100 * downloadCurrent / compressedLength);
-        }
-
-        private void OnDownloadProgressUpdatedSpeech(long downloadLength, long downloadCurrent, long compressedLength, string filename) {
-            if (downloadCurrent < compressedLength) {
-                int width = this.playProgressText.Width;
-                this.playProgressText.Text = string.Format("DOWNLOADING " + langInfo + " SPEECH FILES ({0}/{1}) - TIME REMAINING : {2}", this.FormatFileSize(downloadCurrent), this.FormatFileSize(compressedLength), this.EstimateFinishTime(downloadCurrent, compressedLength));
-            }
-
-            this.playProgress.Value = (int)((long)100 * downloadCurrent / compressedLength);
-        }
-
-        private void OnDownloadProgressUpdatedTracks(long downloadLength, long downloadCurrent, long compressedLength, string filename) {
-            if (downloadCurrent < compressedLength) {
-                int width = this.playProgressText.Width;
-                this.playProgressText.Text = string.Format("DOWNLOADING TRACKS FILES ({0}/{1}) - TIME REMAINING : {2}", this.FormatFileSize(downloadCurrent), this.FormatFileSize(compressedLength), this.EstimateFinishTime(downloadCurrent, compressedLength));
-            }
-
-            this.playProgress.Value = (int)((long)100 * downloadCurrent / compressedLength);
-        }
-
-        private void OnDownloadProgressUpdatedTracksHigh(long downloadLength, long downloadCurrent, long compressedLength, string filename) {
-            if (downloadCurrent < compressedLength) {
-                int width = this.playProgressText.Width;
-                this.playProgressText.Text = string.Format("DOWNLOADING TRACKSHIGH FILES ({0}/{1}) - TIME REMAINING : {2}", this.FormatFileSize(downloadCurrent), this.FormatFileSize(compressedLength), this.EstimateFinishTime(downloadCurrent, compressedLength));
+                string file = filename.Replace(SettingFile.Read("InstallationDirectory"), "").ToUpper();
+                this.playProgressText.Text = string.Format("DOWNLOADING {2} ({0}/{1})", this.FormatFileSize(downloadCurrent), this.FormatFileSize(compressedLength), file);
+                this.playProgressTime.Text = this.EstimateFinishTime(downloadCurrent, compressedLength);
             }
 
             this.playProgress.Value = (int)((long)100 * downloadCurrent / compressedLength);
@@ -1433,6 +1420,7 @@ namespace GameLauncher {
             this.playButton.Image = Properties.Resources.playButton_enable;
             this.playButton.ForeColor = Color.White;
             this.playProgressText.Text = "DOWNLOAD COMPLETED";
+            this.playProgressTime.Text = "";
 
             //Relogin here
             string serverLoginResponse;

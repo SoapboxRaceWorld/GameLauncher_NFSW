@@ -76,6 +76,7 @@
             this.Notification = new System.Windows.Forms.NotifyIcon(this.components);
             this.forgotPassword = new System.Windows.Forms.LinkLabel();
             this.dontDownload = new System.Windows.Forms.CheckBox();
+            this.playProgressTime = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverStatusImg)).BeginInit();
@@ -617,12 +618,27 @@
             this.dontDownload.Text = "DON\'T DOWNLOAD GAMEFILES";
             this.dontDownload.UseVisualStyleBackColor = false;
             // 
+            // playProgressTime
+            // 
+            this.playProgressTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.playProgressTime.BackColor = System.Drawing.Color.Transparent;
+            this.playProgressTime.Cursor = System.Windows.Forms.Cursors.Default;
+            this.playProgressTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.playProgressTime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.playProgressTime.Location = new System.Drawing.Point(469, 457);
+            this.playProgressTime.Name = "playProgressTime";
+            this.playProgressTime.Size = new System.Drawing.Size(131, 13);
+            this.playProgressTime.TabIndex = 42;
+            this.playProgressTime.Text = "Unknown";
+            this.playProgressTime.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // mainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(790, 490);
+            this.Controls.Add(this.playProgressTime);
             this.Controls.Add(this.dontDownload);
             this.Controls.Add(this.playButton);
             this.Controls.Add(this.playProgressText);
@@ -733,6 +749,7 @@
         private System.Windows.Forms.LinkLabel forgotPassword;
         internal System.Windows.Forms.Label playProgressText;
         private System.Windows.Forms.CheckBox dontDownload;
+        internal System.Windows.Forms.Label playProgressTime;
     }
 }
 

@@ -461,7 +461,7 @@ namespace GameLauncher
                                     array2 = this.mDownloadManager.GetFile(text7);
                                     if (array2 == null)
                                     {
-                                        MessageBox.Show("DownloadManager returned a null buffer, aborting");
+                                        MessageBox.Show("DownloadManager returned a null buffer for file '" + text7 + "', aborting");
                                         if (this.mDownloadFailed != null)
                                         {
                                             if (!Downloader.mStopFlag)
