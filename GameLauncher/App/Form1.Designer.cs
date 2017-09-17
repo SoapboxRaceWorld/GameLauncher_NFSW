@@ -75,7 +75,6 @@
             this.playButton = new System.Windows.Forms.Button();
             this.Notification = new System.Windows.Forms.NotifyIcon(this.components);
             this.forgotPassword = new System.Windows.Forms.LinkLabel();
-            this.dontDownload = new System.Windows.Forms.CheckBox();
             this.playProgressTime = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
@@ -604,20 +603,6 @@
             this.forgotPassword.UseCompatibleTextRendering = true;
             this.forgotPassword.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
             // 
-            // dontDownload
-            // 
-            this.dontDownload.AutoSize = true;
-            this.dontDownload.BackColor = System.Drawing.Color.Transparent;
-            this.dontDownload.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.dontDownload.ForeColor = System.Drawing.Color.White;
-            this.dontDownload.Location = new System.Drawing.Point(33, 227);
-            this.dontDownload.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
-            this.dontDownload.Name = "dontDownload";
-            this.dontDownload.Size = new System.Drawing.Size(261, 21);
-            this.dontDownload.TabIndex = 41;
-            this.dontDownload.Text = "DON\'T DOWNLOAD GAMEFILES";
-            this.dontDownload.UseVisualStyleBackColor = false;
-            // 
             // playProgressTime
             // 
             this.playProgressTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -625,11 +610,11 @@
             this.playProgressTime.Cursor = System.Windows.Forms.Cursors.Default;
             this.playProgressTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.playProgressTime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
-            this.playProgressTime.Location = new System.Drawing.Point(469, 457);
+            this.playProgressTime.Location = new System.Drawing.Point(506, 457);
             this.playProgressTime.Name = "playProgressTime";
-            this.playProgressTime.Size = new System.Drawing.Size(131, 13);
+            this.playProgressTime.Size = new System.Drawing.Size(94, 13);
             this.playProgressTime.TabIndex = 42;
-            this.playProgressTime.Text = "Unknown";
+            this.playProgressTime.Text = "CALCULATING";
             this.playProgressTime.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // mainScreen
@@ -639,7 +624,6 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(790, 490);
             this.Controls.Add(this.playProgressTime);
-            this.Controls.Add(this.dontDownload);
             this.Controls.Add(this.playButton);
             this.Controls.Add(this.playProgressText);
             this.Controls.Add(this.playProgress);
@@ -748,7 +732,6 @@
         private System.Windows.Forms.NotifyIcon Notification;
         private System.Windows.Forms.LinkLabel forgotPassword;
         internal System.Windows.Forms.Label playProgressText;
-        private System.Windows.Forms.CheckBox dontDownload;
         internal System.Windows.Forms.Label playProgressTime;
     }
 }

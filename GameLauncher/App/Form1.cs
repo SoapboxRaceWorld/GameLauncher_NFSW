@@ -431,14 +431,6 @@ namespace GameLauncher {
             if (args.Length == 2) {
                 MessageBox.Show("Your launcher has been updated.");
             }
-
-            if(SettingFile.KeyExists("SkipDownload")) {
-                if(SettingFile.Read("SkipDownload") == "1") {
-                    dontDownload.Checked = true;
-                } else {
-                    dontDownload.Checked = false;
-                }
-            }
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
@@ -466,12 +458,6 @@ namespace GameLauncher {
                 consoleLog.SaveFile("Logs/" + timestamp + ".log", RichTextBoxStreamType.PlainText);
             }
             catch { }
-
-            if (dontDownload.Checked) {
-                SettingFile.Write("SkipDownload", "1");
-            } else {
-                SettingFile.Write("SkipDownload", "0");
-            }
 
             //Fix InstallationDirectory
             SettingFile.Write("InstallationDirectory", Path.GetFullPath(SettingFile.Read("InstallationDirectory")));
@@ -815,7 +801,6 @@ namespace GameLauncher {
 
             currentWindowInfo.Font = new Font(fontFamily3, 12.75f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Italic);
             rememberMe.Font = new Font(fontFamily, 9f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            dontDownload.Font = new Font(fontFamily, 9f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             loginButton.Font = new Font(fontFamily2, 15f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold | FontStyle.Italic);
             registerButton.Font = new Font(fontFamily2, 15f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold | FontStyle.Italic);
             settingsSave.Font = new Font(fontFamily2, 15f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold | FontStyle.Italic);
@@ -875,7 +860,6 @@ namespace GameLauncher {
             this.selectServerLabel.Visible = hideElements;
             this.settingsButton.Visible = hideElements;
             this.verticalBanner.Visible = hideElements;
-            this.dontDownload.Visible = hideElements;
         }
 
         /*
@@ -1153,6 +1137,8 @@ namespace GameLauncher {
             proc.EnableRaisingEvents = true;
 
             proc.Exited += (sender2, e2) => {
+                this.WindowState = FormWindowState.Normal;
+
                 closebtn_Click(sender2, e2);
             };
         }
@@ -1160,6 +1146,67 @@ namespace GameLauncher {
         private void playButton_Click(object sender, EventArgs e) {
             if(playenabled == false) {
                 return;
+            }
+
+            //Relogin here
+            string serverLoginResponse;
+            string encryptedpassword;
+            HashAlgorithm algorithm = SHA1.Create();
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in algorithm.ComputeHash(Encoding.UTF8.GetBytes(password.Text.ToString()))) {
+                sb.Append(b.ToString("X2"));
+            }
+
+            if (useSavedPassword) {
+                encryptedpassword = SettingFile.Read("Password");
+            } else {
+                encryptedpassword = sb.ToString();
+            }
+
+            try {
+                WebClient wc = new WebClientWithTimeout();
+
+                string BuildURL = serverIP + "/User/authenticateUser?email=" + email.Text.ToString() + "&password=" + encryptedpassword.ToLower();
+
+                serverLoginResponse = wc.DownloadString(BuildURL);
+            } catch (WebException ex) {
+                if (ex.Status == WebExceptionStatus.ProtocolError) {
+                    HttpWebResponse serverReply = (HttpWebResponse)ex.Response;
+                    if ((int)serverReply.StatusCode == 500) {
+                        using (StreamReader sr = new StreamReader(serverReply.GetResponseStream())) {
+                            serverLoginResponse = sr.ReadToEnd();
+                        }
+                    } else {
+                        serverLoginResponse = ex.Message;
+                    }
+                } else {
+                    serverLoginResponse = ex.Message;
+                }
+            }
+
+            XmlDocument SBRW_XML = new XmlDocument();
+
+            if (builtinserver == false) {
+                SBRW_XML.LoadXml(serverLoginResponse);
+            } else {
+                SBRW_XML.LoadXml("<LoginStatusVO><UserId>1</UserId><LoginToken>aaaaaaaa-aaaa-aaaa-aaaaaaaa</LoginToken><Description/></LoginStatusVO>");
+            }
+
+            XmlNode DescriptionNode;
+            XmlNode LoginTokenNode;
+            XmlNode UserIdNode;
+
+            try {
+                DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
+                LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
+                UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
+
+                if (String.IsNullOrEmpty(DescriptionNode.InnerText)) {
+                    UserId = UserIdNode.InnerText;
+                    LoginToken = LoginTokenNode.InnerText;
+                }
+            } catch {
+                MessageBox.Show("Failed to update token, server is probably offline.");
             }
 
             this.playButton.Image = Properties.Resources.playButton_enable;
@@ -1183,6 +1230,7 @@ namespace GameLauncher {
 
                 this.WindowState = FormWindowState.Minimized;
                 this.ShowInTaskbar = false;
+                this.Opacity = 0;
 
                 ContextMenu = new ContextMenu();
                 ContextMenu.MenuItems.Add(new MenuItem("&AntiCheat v0 NOTEVENALPHA"));
@@ -1254,14 +1302,10 @@ namespace GameLauncher {
                 speechFile = "en";
             }
 
-            if(dontDownload.Checked == false) {
-                if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechhdr_" + speechFile + ".big")) {
-                    MessageBox.Show(null, "This downloader is in alpha. Please report every issue you will notice.\nThere's also a known issue about 'ESET Smart Security' cutting downloader from reaching chunks files.\nPlease, disable your antivirus.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    this.playProgressText.Text = "LOADING FILELIST FOR DOWNLOAD...";
-                    DownloadCoreFiles();
-                } else {
-                    OnDownloadFinished();
-                }
+            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechhdr_" + speechFile + ".big")) {
+                MessageBox.Show(null, "This downloader is in alpha. Please report every issue you will notice.\nThere's also a known issue about 'ESET Smart Security' cutting downloader from reaching chunks files.\nPlease, disable your antivirus.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                this.playProgressText.Text = "LOADING FILELIST FOR DOWNLOAD...";
+                DownloadCoreFiles();
             } else {
                 OnDownloadFinished();
             }
@@ -1392,9 +1436,8 @@ namespace GameLauncher {
 
         private string EstimateFinishTime(long current, long total) {
             double num = (double)current / (double)total;
-            if (num < 0.0500000007450581)
-            {
-                return "Calculating...";
+            if (num < 0.0500000007450581) {
+                return "";
             }
             TimeSpan now = DateTime.Now - this.DownloadStartTime;
             TimeSpan timeSpan = TimeSpan.FromTicks((long)((double)now.Ticks / num)) - now;
@@ -1407,7 +1450,7 @@ namespace GameLauncher {
         private void OnDownloadProgress(long downloadLength, long downloadCurrent, long compressedLength, string filename) {
             if (downloadCurrent < compressedLength) {
                 int width = this.playProgressText.Width;
-                string file = filename.Replace(SettingFile.Read("InstallationDirectory"), "").ToUpper();
+                string file = filename.Replace(SettingFile.Read("InstallationDirectory") + "/", "").ToUpper();
                 this.playProgressText.Text = string.Format("DOWNLOADING {2} ({0}/{1})", this.FormatFileSize(downloadCurrent), this.FormatFileSize(compressedLength), file);
                 this.playProgressTime.Text = this.EstimateFinishTime(downloadCurrent, compressedLength);
             }
@@ -1421,67 +1464,6 @@ namespace GameLauncher {
             this.playButton.ForeColor = Color.White;
             this.playProgressText.Text = "DOWNLOAD COMPLETED";
             this.playProgressTime.Text = "";
-
-            //Relogin here
-            string serverLoginResponse;
-            string encryptedpassword;
-            HashAlgorithm algorithm = SHA1.Create();
-            StringBuilder sb = new StringBuilder();
-            foreach (byte b in algorithm.ComputeHash(Encoding.UTF8.GetBytes(password.Text.ToString()))) {
-                sb.Append(b.ToString("X2"));
-            }
-
-            if (useSavedPassword) {
-                encryptedpassword = SettingFile.Read("Password");
-            } else {
-                encryptedpassword = sb.ToString();
-            }
-
-            try {
-                WebClient wc = new WebClientWithTimeout();
-
-                string BuildURL = serverIP + "/User/authenticateUser?email=" + email.Text.ToString() + "&password=" + encryptedpassword.ToLower();
-
-                serverLoginResponse = wc.DownloadString(BuildURL);
-            } catch (WebException ex) {
-                if (ex.Status == WebExceptionStatus.ProtocolError) {
-                    HttpWebResponse serverReply = (HttpWebResponse)ex.Response;
-                    if ((int)serverReply.StatusCode == 500) {
-                        using (StreamReader sr = new StreamReader(serverReply.GetResponseStream())) {
-                            serverLoginResponse = sr.ReadToEnd();
-                        }
-                    } else {
-                        serverLoginResponse = ex.Message;
-                    }
-                } else {
-                    serverLoginResponse = ex.Message;
-                }
-            }
-
-            XmlDocument SBRW_XML = new XmlDocument();
-
-            if (builtinserver == false) {
-                SBRW_XML.LoadXml(serverLoginResponse);
-            } else {
-                SBRW_XML.LoadXml("<LoginStatusVO><UserId>1</UserId><LoginToken>aaaaaaaa-aaaa-aaaa-aaaaaaaa</LoginToken><Description/></LoginStatusVO>");
-            }
-
-            XmlNode DescriptionNode;
-            XmlNode LoginTokenNode;
-            XmlNode UserIdNode;
-
-            try {
-                DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
-                LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
-                UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
-
-                if (String.IsNullOrEmpty(DescriptionNode.InnerText)) {
-                    UserId = UserIdNode.InnerText;
-                    LoginToken = LoginTokenNode.InnerText;
-                }
-            } catch {
-                MessageBox.Show("Failed to update token, server is probably offline.");
-            }
         }
 
         private void OnDownloadFailed(Exception ex) {
