@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using SoapBox.JsonScheme;
 using GameLauncher.App.Classes.Events;
 using GameLauncherReborn;
+using Microsoft.Win32;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -230,6 +231,18 @@ namespace GameLauncher {
             }
 
             registerText.Text = "DON'T HAVE AN ACCOUNT?\nCLICK HERE TO CREATE ONE NOW...";
+
+            //Possible fix for "MAXIMUM" texture (untested, but worth adding that refference)
+            String GameInstallDirValue = Registry.GetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", RegistryValueKind.String).ToString();
+            if(GameInstallDirValue != Path.GetFullPath(SettingFile.Read("InstallationDirectory"))) {
+                try {
+                    Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", Path.GetFullPath(SettingFile.Read("InstallationDirectory")));
+                    Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "LaunchInstallDir", Path.GetFullPath(Application.ExecutablePath));
+                } catch {
+                    Self.runAsAdmin();
+                    Environment.Exit(Environment.ExitCode);
+                }
+            }
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
@@ -1295,7 +1308,7 @@ namespace GameLauncher {
                     speechFile = "en";
                 } else {
                     WebClient wc = new WebClientWithTimeout();
-                    string response = wc.DownloadString("http://mirror.nfsw.mtntr.eu/NFSWO/" + SettingFile.Read("Language").ToLower() + "/index.xml");
+                    string response = wc.DownloadString("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client/" + SettingFile.Read("Language").ToLower() + "/index.xml");
                     speechFile = SettingFile.Read("Language").ToLower();
                 }
             } catch (Exception) {
@@ -1325,7 +1338,7 @@ namespace GameLauncher {
                     ShowMessage = new ShowMessage(this.OnShowMessage)
                 };
 
-                downloader.StartDownload("http://mirror.nfsw.mtntr.eu/NFSWO", "", SettingFile.Read("InstallationDirectory"), false, false, 1130632198);
+                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "", SettingFile.Read("InstallationDirectory"), false, false, 1130632198);
             } else {
                 DownloadTracksFiles();
             }
@@ -1345,7 +1358,7 @@ namespace GameLauncher {
                     ShowMessage = new ShowMessage(this.OnShowMessage)
                 };
 
-                downloader.StartDownload("http://mirror.nfsw.mtntr.eu/NFSWO", "Tracks", SettingFile.Read("InstallationDirectory"), false, false, 615494528);
+                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "Tracks", SettingFile.Read("InstallationDirectory"), false, false, 615494528);
             } else {
                 DownloadSpeechFiles();
             }
@@ -1365,7 +1378,7 @@ namespace GameLauncher {
                     langInfo = "ENGLISH";
                 } else {
                     WebClient wc = new WebClientWithTimeout();
-                    string response = wc.DownloadString("http://mirror.nfsw.mtntr.eu/NFSWO/" + SettingFile.Read("Language").ToLower() + "/index.xml");
+                    string response = wc.DownloadString("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client/" + SettingFile.Read("Language").ToLower() + "/index.xml");
 
                     response = response.Substring(3, response.Length - 3);
 
@@ -1395,7 +1408,7 @@ namespace GameLauncher {
                     ShowMessage = new ShowMessage(this.OnShowMessage)
                 };
 
-                downloader.StartDownload("http://mirror.nfsw.mtntr.eu/NFSWO", speechFile, SettingFile.Read("InstallationDirectory"), false, false, speechSize);
+                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", speechFile, SettingFile.Read("InstallationDirectory"), false, false, speechSize);
             } else {
                 DownloadTracksHighFiles();
             }
@@ -1415,7 +1428,7 @@ namespace GameLauncher {
                     ShowMessage = new ShowMessage(this.OnShowMessage)
                 };
 
-                downloader.StartDownload("http://mirror.nfsw.mtntr.eu/NFSWO", "TracksHigh", SettingFile.Read("InstallationDirectory"), false, false, 278397707);
+                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "TracksHigh", SettingFile.Read("InstallationDirectory"), false, false, 278397707);
             } else {
                 OnDownloadFinished();
             }
