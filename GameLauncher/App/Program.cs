@@ -54,7 +54,7 @@ namespace GameLauncher {
             try {
                 if (mutex.WaitOne(0, false)) {
                     //First of all, we need to check if files exists
-                    String[] files = { "Microsoft.WindowsAPICodePack.dll", "Microsoft.WindowsAPICodePack.Shell.dll", "Newtonsoft.Json.dll", "LZMA.dll", "ICSharpCode.SharpZipLib.dll" };
+                    /*String[] files = { "Microsoft.WindowsAPICodePack.dll", "Microsoft.WindowsAPICodePack.Shell.dll", "Newtonsoft.Json.dll", "LZMA.dll", "ICSharpCode.SharpZipLib.dll" };
                     List<string> missingfiles = new List<string>();
 
                     foreach (string file in files) {
@@ -76,7 +76,7 @@ namespace GameLauncher {
                         MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Process.Start(@"https://github.com/metonator/GameLauncher_NFSW/releases");
                         Environment.Exit(1);
-                    }
+                    }*/
 
                     if (Environment.OSVersion.Version.Major >= 6) {
                         User32.SetProcessDPIAware();

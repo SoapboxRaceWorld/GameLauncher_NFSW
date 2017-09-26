@@ -14,7 +14,6 @@ using System.Reflection;
 using System.Net.NetworkInformation;
 using GameLauncher.Resources;
 using GameLauncher.App.Classes;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
 using SoapBox.JsonScheme;
 using GameLauncher.App.Classes.Events;
@@ -190,7 +189,6 @@ namespace GameLauncher {
 
             //Somewhere here we will setup the game installation directory
             if (String.IsNullOrEmpty(SettingFile.Read("InstallationDirectory"))) {
-                if (Environment.OSVersion.Version.Major <= 5) {
                     MessageBox.Show(null, "Click OK to select folder with NFSW.exe", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     var fbd = new FolderBrowserDialog();
@@ -201,19 +199,6 @@ namespace GameLauncher {
                     } else {
                         Environment.Exit(Environment.ExitCode);
                     }
-                } else {
-                    CommonOpenFileDialog openFolder = new CommonOpenFileDialog();
-                    openFolder.InitialDirectory = "";
-                    openFolder.IsFolderPicker = true;
-                    openFolder.Title = "GameLauncher: Please pick up a directory where NFSW is located or has to be installed.";
-                    CommonFileDialogResult result = openFolder.ShowDialog();
-
-                    if (result == CommonFileDialogResult.Ok) {
-                        SettingFile.Write("InstallationDirectory", openFolder.FileName);
-                    } else {
-                        Environment.Exit(Environment.ExitCode);
-                    }
-                }
             }
 
             //Replace cursor
@@ -233,20 +218,25 @@ namespace GameLauncher {
             registerText.Text = "DON'T HAVE AN ACCOUNT?\nCLICK HERE TO CREATE ONE NOW...";
 
             //Possible fix for "MAXIMUM" texture (untested, but worth adding that refference)
-            String GameInstallDirValue = Registry.GetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", RegistryValueKind.String).ToString();
-            if(GameInstallDirValue != Path.GetFullPath(SettingFile.Read("InstallationDirectory"))) {
-                try {
-                    Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", Path.GetFullPath(SettingFile.Read("InstallationDirectory")));
-                    Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "LaunchInstallDir", Path.GetFullPath(Application.ExecutablePath));
-                } catch {
-                    Self.runAsAdmin();
-                    Environment.Exit(Environment.ExitCode);
+            try {
+                String GameInstallDirValue = Registry.GetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", RegistryValueKind.String).ToString();
+                if(GameInstallDirValue != Path.GetFullPath(SettingFile.Read("InstallationDirectory"))) {
+                    try {
+                        Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", Path.GetFullPath(SettingFile.Read("InstallationDirectory")));
+                        Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "LaunchInstallDir", Path.GetFullPath(Application.ExecutablePath));
+                    } catch(Exception ex) {
+                        ConsoleLog(ex.Message, "warning");
+                    }
                 }
+            } catch (Exception ex1) {
+                ConsoleLog(ex1.Message, "warning");
             }
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
-            Updater.checkForUpdate(sender, e);
+            if(!SettingFile.KeyExists("SkipUpdate")) {
+                Updater.checkForUpdate(sender, e);
+            }
 
             //Console output to textbox
 
