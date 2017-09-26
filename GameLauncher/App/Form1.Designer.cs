@@ -291,10 +291,10 @@
             this.githubLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
             this.githubLink.Location = new System.Drawing.Point(30, 271);
             this.githubLink.Name = "githubLink";
-            this.githubLink.Size = new System.Drawing.Size(186, 16);
+            this.githubLink.Size = new System.Drawing.Size(230, 16);
             this.githubLink.TabIndex = 17;
             this.githubLink.TabStop = true;
-            this.githubLink.Text = "Visit our \"GitHub Issues\" page";
+            this.githubLink.Text = "Visit our Discord #assistance channel";
             this.githubLink.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
             // 
             // registerButton

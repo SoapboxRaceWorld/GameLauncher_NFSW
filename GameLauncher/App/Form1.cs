@@ -216,26 +216,13 @@ namespace GameLauncher {
             }
 
             registerText.Text = "DON'T HAVE AN ACCOUNT?\nCLICK HERE TO CREATE ONE NOW...";
-
-            //Possible fix for "MAXIMUM" texture (untested, but worth adding that refference)
-            try {
-                String GameInstallDirValue = Registry.GetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", RegistryValueKind.String).ToString();
-                if(GameInstallDirValue != Path.GetFullPath(SettingFile.Read("InstallationDirectory"))) {
-                    try {
-                        Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", Path.GetFullPath(SettingFile.Read("InstallationDirectory")));
-                        Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "LaunchInstallDir", Path.GetFullPath(Application.ExecutablePath));
-                    } catch(Exception ex) {
-                        ConsoleLog(ex.Message, "warning");
-                    }
-                }
-            } catch (Exception ex1) {
-                ConsoleLog(ex1.Message, "warning");
-            }
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
             if(!SettingFile.KeyExists("SkipUpdate")) {
                 Updater.checkForUpdate(sender, e);
+            } else {
+                ConsoleLog("Updater has been disabled.", "info");
             }
 
             //Console output to textbox
@@ -433,6 +420,21 @@ namespace GameLauncher {
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length == 2) {
                 MessageBox.Show("Your launcher has been updated.");
+            }
+
+            //Possible fix for "MAXIMUM" texture (untested, but worth adding that refference)
+            try {
+                String GameInstallDirValue = Registry.GetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", RegistryValueKind.String).ToString();
+                if (GameInstallDirValue != Path.GetFullPath(SettingFile.Read("InstallationDirectory"))) {
+                    try {
+                        Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", Path.GetFullPath(SettingFile.Read("InstallationDirectory")));
+                        Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "LaunchInstallDir", Path.GetFullPath(Application.ExecutablePath));
+                    } catch {
+                        ConsoleLog("Failed to set registry options. Please, run GameLauncher.exe as Admin (one time only)", "warning");
+                    }
+                }
+            } catch (Exception ex) {
+                ConsoleLog("Failed to read registry options. " + ex.Message, "warning");
             }
         }
 
@@ -837,7 +839,7 @@ namespace GameLauncher {
 
         private void githubLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             ConsoleLog("Redirecting into GitHub Issue page", "info");
-            Process.Start("https://github.com/metonator/GameLauncher_NFSW/issues");
+            Process.Start("https://discord.gg/JqN2nMY");
         }
 
         private void forgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
