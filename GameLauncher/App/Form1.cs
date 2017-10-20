@@ -591,8 +591,9 @@ namespace GameLauncher {
                 }
             }
 
-            XmlDocument SBRW_XML = new XmlDocument();
             try {
+                XmlDocument SBRW_XML = new XmlDocument();
+
                 if (builtinserver == false) {
                     SBRW_XML.LoadXml(serverLoginResponse);
                 } else {
@@ -768,8 +769,8 @@ namespace GameLauncher {
                                     Image image;
                                     MemoryStream memoryStream = new MemoryStream(e4.Result);
                                     image = Image.FromStream(memoryStream);
-                                    verticalBanner.Image = image;
-                                    verticalBanner.BackColor = Color.Black;
+                                    //verticalBanner.Image = image;
+                                    //verticalBanner.BackColor = Color.Black;
                                 } catch {
                                     verticalBanner.Image = null;
                                 }
@@ -995,33 +996,37 @@ namespace GameLauncher {
                     }
                 }
 
-                XmlDocument SBRW_XML = new XmlDocument();
-                SBRW_XML.LoadXml(serverLoginResponse);
+                try {
+                    XmlDocument SBRW_XML = new XmlDocument();
+                    SBRW_XML.LoadXml(serverLoginResponse);
 
-                XmlNode DescriptionNode;
-                XmlNode LoginTokenNode;
-                XmlNode UserIdNode;
+                    XmlNode DescriptionNode;
+                    XmlNode LoginTokenNode;
+                    XmlNode UserIdNode;
 
-                DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
-                LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
-                UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
+                    DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
+                    LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
+                    UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
 
-                if(String.IsNullOrEmpty(DescriptionNode.InnerText)) {
-                    UserId = UserIdNode.InnerText;
-                    LoginToken = LoginTokenNode.InnerText;
+                    if(String.IsNullOrEmpty(DescriptionNode.InnerText)) {
+                        UserId = UserIdNode.InnerText;
+                        LoginToken = LoginTokenNode.InnerText;
 
-                    this.BackgroundImage = Properties.Resources.playbg;
-                    this.currentWindowInfo.Visible = false;
+                        this.BackgroundImage = Properties.Resources.playbg;
+                        this.currentWindowInfo.Visible = false;
 
-                    playLoggedInAs.Text = "REGISTERED IN AS " + registerEmail.Text.ToUpper();
-                    RegisterFormElements(false);
-                    DownloadFormElements(true);
+                        playLoggedInAs.Text = "REGISTERED IN AS " + registerEmail.Text.ToUpper();
+                        RegisterFormElements(false);
+                        DownloadFormElements(true);
 
-                    this.consoleLog.Hide();
+                        this.consoleLog.Hide();
 
-                    launchNFSW();
-                } else {
-                     ConsoleLog(DescriptionNode.InnerText, "error");
+                        launchNFSW();
+                    } else {
+                         ConsoleLog(DescriptionNode.InnerText, "error");
+                    }
+                } catch {
+                    ConsoleLog("Failed to register, server is probably offline", "error");
                 }
             }
         }
@@ -1189,26 +1194,30 @@ namespace GameLauncher {
                 }
             }
 
-            XmlDocument SBRW_XML = new XmlDocument();
-
-            if (builtinserver == false) {
-                SBRW_XML.LoadXml(serverLoginResponse);
-            } else {
-                SBRW_XML.LoadXml("<LoginStatusVO><UserId>1</UserId><LoginToken>aaaaaaaa-aaaa-aaaa-aaaaaaaa</LoginToken><Description/></LoginStatusVO>");
-            }
-
-            XmlNode DescriptionNode;
-            XmlNode LoginTokenNode;
-            XmlNode UserIdNode;
-
             try {
-                DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
-                LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
-                UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
+                XmlDocument SBRW_XML = new XmlDocument();
 
-                if (String.IsNullOrEmpty(DescriptionNode.InnerText)) {
-                    UserId = UserIdNode.InnerText;
-                    LoginToken = LoginTokenNode.InnerText;
+                if (builtinserver == false) {
+                    SBRW_XML.LoadXml(serverLoginResponse);
+                } else {
+                    SBRW_XML.LoadXml("<LoginStatusVO><UserId>1</UserId><LoginToken>aaaaaaaa-aaaa-aaaa-aaaaaaaa</LoginToken><Description/></LoginStatusVO>");
+                }
+
+                XmlNode DescriptionNode;
+                XmlNode LoginTokenNode;
+                XmlNode UserIdNode;
+
+                try {
+                    DescriptionNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
+                    LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
+                    UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
+
+                    if (String.IsNullOrEmpty(DescriptionNode.InnerText)) {
+                        UserId = UserIdNode.InnerText;
+                        LoginToken = LoginTokenNode.InnerText;
+                    }
+                } catch {
+                    MessageBox.Show("Failed to update token, server is probably offline.");
                 }
             } catch {
                 MessageBox.Show("Failed to update token, server is probably offline.");
@@ -1238,8 +1247,6 @@ namespace GameLauncher {
                 this.Opacity = 0;
 
                 ContextMenu = new ContextMenu();
-                ContextMenu.MenuItems.Add(new MenuItem("&AntiCheat v0 NOTEVENALPHA"));
-                ContextMenu.MenuItems.Add("-");
                 ContextMenu.MenuItems.Add(new MenuItem("&Check for updates", Updater.checkForUpdate));
                 ContextMenu.MenuItems.Add(new MenuItem("&About", About.showAbout));
                 ContextMenu.MenuItems.Add("-");
