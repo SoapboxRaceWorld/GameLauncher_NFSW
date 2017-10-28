@@ -248,7 +248,7 @@ namespace GameLauncher {
             if(!File.Exists("servers.txt")) {
                 File.Create("servers.txt");
             } else {
-                response += File.ReadAllLines("servers.txt");
+                response += File.ReadAllText("servers.txt");
             }
 
             try {
@@ -258,7 +258,6 @@ namespace GameLauncher {
                 response += wc.DownloadString(serverurl);
                 ConsoleLog("Fetching " + serverurl, "info");
 
-                //response = File.ReadAllText("serverlist.txt");
                 serverlistloaded = true;
 
                 try {
@@ -716,11 +715,11 @@ namespace GameLauncher {
                     if (serverName == "Offline Built-In Server") {
                         numPlayers = "∞";
                     } else {
-                        //if (Environment.OSVersion.Version.Major <= 5) {
-                        //    ticketRequired = true;
-                        //    verticalImageUrl = null;
-                        //    numPlayers = "Unknown";
-                        //} else {
+                        if (Environment.OSVersion.Version.Major <= 5) {
+                            ticketRequired = true;
+                            verticalImageUrl = null;
+                            numPlayers = "Unknown";
+                        } else {
                             GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
                             if (!String.IsNullOrEmpty(json.bannerUrl)) {
                                 Uri uriResult;
@@ -751,7 +750,7 @@ namespace GameLauncher {
                             }
 
                             numPlayers = json.onlineNumber + " out of " + json.numberOfRegistered;
-                        //}
+                        }
                     }
 
                     onlineCount.Text = "Players on server: " + numPlayers;
