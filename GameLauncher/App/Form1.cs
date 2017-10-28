@@ -209,12 +209,6 @@ namespace GameLauncher {
                 this.Cursor = mycursor;
             }
 
-            //Skinning ability
-            if(!Directory.Exists("Themes")) {
-                Directory.CreateDirectory("Themes");
-                File.WriteAllText("Themes/ReadMe.txt", "Put your GLS Files in this directory.");
-            }
-
             registerText.Text = "DON'T HAVE AN ACCOUNT?\nCLICK HERE TO CREATE ONE NOW...";
         }
 
@@ -250,13 +244,21 @@ namespace GameLauncher {
 
             //Fetch serverlist, and disable if failed to fetch.
             var response = "";
+
+            if(!File.Exists("servers.txt")) {
+                File.Create("servers.txt");
+            } else {
+                response += File.ReadAllLines("servers.txt");
+            }
+
             try {
                 WebClient wc = new WebClientWithTimeout();
 
                 string serverurl = "http://nfsw.metonator.ct8.pl/serverlist.txt";
-                response = wc.DownloadString(serverurl);
+                response += wc.DownloadString(serverurl);
                 ConsoleLog("Fetching " + serverurl, "info");
 
+                //response = File.ReadAllText("serverlist.txt");
                 serverlistloaded = true;
 
                 try {
@@ -714,15 +716,16 @@ namespace GameLauncher {
                     if (serverName == "Offline Built-In Server") {
                         numPlayers = "∞";
                     } else {
-                        if (Environment.OSVersion.Version.Major <= 5) {
-                            ticketRequired = true;
-                            verticalImageUrl = null;
-                            numPlayers = "Unknown";
-                        } else {
+                        //if (Environment.OSVersion.Version.Major <= 5) {
+                        //    ticketRequired = true;
+                        //    verticalImageUrl = null;
+                        //    numPlayers = "Unknown";
+                        //} else {
                             GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
                             if (!String.IsNullOrEmpty(json.bannerUrl)) {
                                 Uri uriResult;
                                 bool result;
+
 
                                 try {
                                     result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
@@ -748,7 +751,7 @@ namespace GameLauncher {
                             }
 
                             numPlayers = json.onlineNumber + " out of " + json.numberOfRegistered;
-                        }
+                        //}
                     }
 
                     onlineCount.Text = "Players on server: " + numPlayers;
@@ -769,7 +772,7 @@ namespace GameLauncher {
                                     Image image;
                                     MemoryStream memoryStream = new MemoryStream(e4.Result);
                                     image = Image.FromStream(memoryStream);
-                                    //verticalBanner.Image = image;
+                                    verticalBanner.Image = image;
                                     //verticalBanner.BackColor = Color.Black;
                                 } catch {
                                     verticalBanner.Image = null;
