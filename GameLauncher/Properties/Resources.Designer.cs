@@ -63,56 +63,6 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap aboutbg {
-            get {
-                object obj = ResourceManager.GetObject("aboutbg", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap button_click {
-            get {
-                object obj = ResourceManager.GetObject("button_click", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap button_disable {
-            get {
-                object obj = ResourceManager.GetObject("button_disable", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap button_enable {
-            get {
-                object obj = ResourceManager.GetObject("button_enable", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap button_hover {
-            get {
-                object obj = ResourceManager.GetObject("button_hover", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap close {
             get {
                 object obj = ResourceManager.GetObject("close", resourceCulture);
@@ -183,16 +133,6 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap playbg {
-            get {
-                object obj = ResourceManager.GetObject("playbg", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap playButton_click {
             get {
                 object obj = ResourceManager.GetObject("playButton_click", resourceCulture);
@@ -233,9 +173,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap registerbg {
+        internal static System.Drawing.Bitmap playNow_Button {
             get {
-                object obj = ResourceManager.GetObject("registerbg", resourceCulture);
+                object obj = ResourceManager.GetObject("playNow_Button", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -243,9 +183,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap server_offline {
+        internal static System.Drawing.Bitmap registerButton_en {
             get {
-                object obj = ResourceManager.GetObject("server_offline", resourceCulture);
+                object obj = ResourceManager.GetObject("registerButton_en", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -253,19 +193,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap server_online {
+        internal static System.Drawing.Bitmap secondarybackground {
             get {
-                object obj = ResourceManager.GetObject("server_online", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap settingsbg {
-            get {
-                object obj = ResourceManager.GetObject("settingsbg", resourceCulture);
+                object obj = ResourceManager.GetObject("secondarybackground", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -58,7 +58,6 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::GameLauncher.Properties.Resources.aboutbg;
             this.ClientSize = new System.Drawing.Size(517, 438);
             this.Controls.Add(this.aboutInfo);
             this.Controls.Add(this.closeAbout);

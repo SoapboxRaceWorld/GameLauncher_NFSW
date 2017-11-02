@@ -165,12 +165,8 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
-    <EmbeddedResource Include="Fonts\Font_MyriadProSemiCondBold.ttf" />
-    <EmbeddedResource Include="Fonts\Font_Register.ttf" />
-    <EmbeddedResource Include="Fonts\Font_RegisterDemiBold.ttf" />
-    <EmbeddedResource Include="Fonts\Font_RegisterBoldItalic.ttf" />
-    <EmbeddedResource Include="Fonts\Font_MyriadProSemiCond.ttf" />
-    <EmbeddedResource Include="Fonts\Font_RegisterBold.ttf" />
+    <EmbeddedResource Include="Fonts\Montserrat-Bold.ttf" />
+    <EmbeddedResource Include="Fonts\Montserrat-Regular.ttf" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
@@ -193,48 +189,6 @@
     <EmbeddedResource Include="SoapBoxModules\xmppsubject.soapbox.module" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\loginbg.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\playbg.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\server_offline.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\server_online.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\settingsbg.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\close.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\close_click.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\close_hover.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\minimize.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\minimize_click.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\minimize_hover.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\settingsbtn.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\settingsbtn_click.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\settingsbtn_hover.png" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1</ProductName>
@@ -243,19 +197,28 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\BUTTON_PLAYNOW2.png" />
+    <None Include="Resources\buttons_settings111.png" />
+    <None Include="Resources\buttons_settings11.png" />
+    <None Include="Resources\buttons_settings1.png" />
+    <None Include="Resources\BUTTON_PLAYNOW111.png" />
+    <None Include="Resources\BUTTON_PLAYNOW11.png" />
+    <None Include="Resources\BUTTON_PLAYNOW1.png" />
+    <None Include="Resources\BUTTON_PLAYNOW.png" />
+    <None Include="Resources\SETTINGS.png" />
+    <None Include="Resources\registerButton_en.png" />
+    <None Include="Resources\buttons_minimize11.png" />
+    <None Include="Resources\buttons_minimize1.png" />
+    <None Include="Resources\buttons_close11.png" />
+    <None Include="Resources\buttons_close1.png" />
+    <None Include="Resources\buttons_settings.png" />
+    <None Include="Resources\buttons_minimize.png" />
+    <None Include="Resources\buttons_info.png" />
+    <None Include="Resources\buttons_close.png" />
+    <None Include="Resources\luncher.png" />
     <EmbeddedResource Include="Updater\GameLauncherUpdater.exe" />
-    <None Include="Resources\aboutbg.png" />
     <EmbeddedResource Include="LZMA\LZMA.dll" />
-    <None Include="Resources\playButton_click.png" />
-    <None Include="Resources\playButton_hover.png" />
-    <None Include="Resources\playButton_enable.png" />
-    <None Include="Resources\playButton_disable.png" />
     <EmbeddedResource Include="SoapBoxModules\lightfx.dll" />
-    <None Include="Resources\registerbg.png" />
-    <None Include="Resources\button_hover.png" />
-    <None Include="Resources\button_enable.png" />
-    <None Include="Resources\button_disable.png" />
-    <None Include="Resources\button_click.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
