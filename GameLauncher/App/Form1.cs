@@ -19,7 +19,6 @@ using SoapBox.JsonScheme;
 using GameLauncher.App.Classes.Events;
 using GameLauncherReborn;
 using Microsoft.Win32;
-using System.ComponentModel;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -132,6 +131,19 @@ namespace GameLauncher {
             registerButton.MouseDown += new MouseEventHandler(registerButton_MouseDown);
             registerButton.Click += new EventHandler(registerButton_Click);
 
+            registerCancel.Click += new EventHandler(registerCancel_Click);
+            registerCancel.MouseEnter += new EventHandler(registerCancel_MouseEnter);
+            registerCancel.MouseLeave += new EventHandler(registerCancel_MouseLeave);
+            registerCancel.MouseUp += new MouseEventHandler(registerCancel_MouseUp);
+            registerCancel.MouseDown += new MouseEventHandler(registerCancel_MouseDown);
+
+            //logoutButton
+            logoutButton.Click += new EventHandler(logoutButton_Click);
+            logoutButton.MouseEnter += new EventHandler(logoutButton_MouseEnter);
+            logoutButton.MouseLeave += new EventHandler(logoutButton_MouseLeave);
+            logoutButton.MouseUp += new MouseEventHandler(logoutButton_MouseUp);
+            logoutButton.MouseDown += new MouseEventHandler(logoutButton_MouseDown);
+
             settingsSave.MouseEnter += new EventHandler(settingsSave_MouseEnter);
             settingsSave.MouseLeave += new EventHandler(settingsSave_MouseLeave);
             settingsSave.MouseUp += new MouseEventHandler(settingsSave_MouseUp);
@@ -190,6 +202,18 @@ namespace GameLauncher {
                 mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
                 this.Cursor = mycursor;
             }
+
+            var pos = this.PointToScreen(imageServerName.Location);
+            pos = verticalBanner.PointToClient(pos);
+            imageServerName.Parent = verticalBanner;
+            imageServerName.Location = pos;
+            imageServerName.BackColor = Color.Transparent;
+
+            var pos2 = this.PointToScreen(onlineCount.Location);
+            pos2 = verticalBanner.PointToClient(pos2);
+            onlineCount.Parent = verticalBanner;
+            onlineCount.Location = pos2;
+            onlineCount.BackColor = Color.Transparent;
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
@@ -283,7 +307,6 @@ namespace GameLauncher {
             serverPick.ValueMember = "Value";
 
             List<Object> items = new List<Object>();
-            response += "Offline Built-In Server;http://localhost:7331/nfsw/Engine.svc";
 
             String[] substrings = response.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             foreach (var substring in substrings) {
@@ -320,14 +343,14 @@ namespace GameLauncher {
                 loginEnabled = true;
                 serverEnabled = true;
                 useSavedPassword = true;
-                this.loginButton.Image = Properties.Resources.playButton_enable;
+                this.loginButton.Image = Properties.Resources.smallbutton_enabled;
                 this.loginButton.ForeColor = Color.White;
                 ConsoleLog("Password recovered from Settings.ini file.", "success");
             } else {
                 loginEnabled = false;
                 serverEnabled = false;
                 useSavedPassword = false;
-                this.loginButton.Image = Properties.Resources.playButton_disable;
+                this.loginButton.Image = Properties.Resources.smallbutton_disabled;
                 this.loginButton.ForeColor = Color.Gray;
             }
 
@@ -387,14 +410,18 @@ namespace GameLauncher {
             }
 
             //Trigger login button for offline
-            if(builtinserver == true) {
-                this.loginButton.ForeColor = Color.White;
-                this.loginButton.Image = Properties.Resources.playButton_enable;
-            }
+            //if(builtinserver == true) {
+            //    this.loginButton.ForeColor = Color.White;
+            //    this.loginButton.Image = Properties.Resources.playButton_enable;
+            //}
 
             //Hide other windows
             RegisterFormElements(false);
             SettingsFormElements(false);
+            LoggedInFormElements(false);
+
+            //Reshow missing elements
+            LoginFormElements(true);
 
             //Command-line Arguments
             string[] args = Environment.GetCommandLineArgs();
@@ -482,12 +509,12 @@ namespace GameLauncher {
         private void loginbuttonenabler(object sender, EventArgs e) {
             if (String.IsNullOrEmpty(email.Text) || String.IsNullOrEmpty(password.Text)) {
                 loginEnabled = false;
-                this.loginButton.Image = Properties.Resources.playButton_disable;
+                this.loginButton.Image = Properties.Resources.smallbutton_disabled;
                 this.loginButton.ForeColor = Color.Gray;
             }
             else {
                 loginEnabled = true;
-                this.loginButton.Image = Properties.Resources.playButton_enable;
+                this.loginButton.Image = Properties.Resources.smallbutton_enabled;
                 this.loginButton.ForeColor = Color.White;
             }
 
@@ -496,17 +523,17 @@ namespace GameLauncher {
 
         private void loginButton_MouseUp(object sender, EventArgs e) {
             if (loginEnabled == true || builtinserver == true) {
-                this.loginButton.Image = Properties.Resources.playButton_hover;
+                this.loginButton.Image = Properties.Resources.smallbutton_hover;
             } else {
-                this.loginButton.Image = Properties.Resources.playButton_disable;
+                this.loginButton.Image = Properties.Resources.smallbutton_disabled;
             }
         }
 
         private void loginButton_MouseDown(object sender, EventArgs e) {
             if (loginEnabled == true || builtinserver == true) {
-                this.loginButton.Image = Properties.Resources.playButton_click;
+                this.loginButton.Image = Properties.Resources.smallbutton_click;
             } else {
-                this.loginButton.Image = Properties.Resources.playButton_disable;
+                this.loginButton.Image = Properties.Resources.smallbutton_disabled;
             }
         }
 
@@ -591,6 +618,12 @@ namespace GameLauncher {
                     LoginToken = LoginTokenNode.InnerText;
 
                     loggedIn = true;
+
+                    this.BackgroundImage = Properties.Resources.loggedbg;
+                    LoginFormElements(false);
+                    LoggedInFormElements(true);
+
+                    this.welcomeBack.Text = "WELCOME BACK, " + username.ToUpper() + "!";
                 } else {
                      ConsoleLog("Invalid username or password.", "error");
                 }
@@ -601,20 +634,20 @@ namespace GameLauncher {
 
         private void loginButton_MouseEnter(object sender, EventArgs e) {
             if (loginEnabled == true || builtinserver == true) {
-                this.loginButton.Image = Properties.Resources.playButton_hover;
+                this.loginButton.Image = Properties.Resources.smallbutton_hover;
                 this.loginButton.ForeColor = Color.White;
             } else {
-                this.loginButton.Image = Properties.Resources.playButton_disable;
+                this.loginButton.Image = Properties.Resources.smallbutton_disabled;
                 this.loginButton.ForeColor = Color.Gray;
             }
         }
 
         private void loginButton_MouseLeave(object sender, EventArgs e) {
             if (loginEnabled == true || builtinserver == true) {
-                this.loginButton.Image = Properties.Resources.playButton_enable;
+                this.loginButton.Image = Properties.Resources.smallbutton_enabled;
                 this.loginButton.ForeColor = Color.White;
             } else {
-                this.loginButton.Image = Properties.Resources.playButton_disable;
+                this.loginButton.Image = Properties.Resources.smallbutton_disabled;
                 this.loginButton.ForeColor = Color.Gray;
             }
         }
@@ -638,17 +671,17 @@ namespace GameLauncher {
 
             onlineCount.Text = "";
 
-            if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server") {
-                builtinserver = true;
-                this.loginButton.Image = Properties.Resources.playButton_enable;
-                this.loginButton.Text = "LAUNCH";
-                this.loginButton.ForeColor = Color.White;
-            } else {
+            //if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server") {
+            //    builtinserver = true;
+            //    this.loginButton.Image = Properties.Resources.playButton_enable;
+            //    this.loginButton.Text = "LAUNCH";
+            //    this.loginButton.ForeColor = Color.White;
+            //} else {
                 builtinserver = false;
-                this.loginButton.Image = Properties.Resources.playButton_disable;
+                this.loginButton.Image = Properties.Resources.smallbutton_disabled;
                 this.loginButton.Text = "LOG IN";
                 this.loginButton.ForeColor = Color.Gray;
-            }
+            //}
 
             var client = new WebClientWithTimeout();
             client.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
@@ -665,9 +698,9 @@ namespace GameLauncher {
                     serverEnabled = false;
                 } else {
 
-                    if (serverName == "Offline Built-In Server") {
-                        numPlayers = "∞";
-                    } else {
+                    //if (serverName == "Offline Built-In Server") {
+                    //    numPlayers = "∞";
+                    ///} else {
                         if (Environment.OSVersion.Version.Major <= 5) {
                             ticketRequired = true;
                             verticalImageUrl = null;
@@ -704,7 +737,7 @@ namespace GameLauncher {
 
                             numPlayers = json.onlineNumber + " out of " + json.numberOfRegistered;
                         }
-                    }
+                    //}
 
                     onlineCount.Text = "Players on server: " + numPlayers;
                     serverEnabled = true;
@@ -739,8 +772,8 @@ namespace GameLauncher {
                         pingSender.PingCompleted += (sender3, e3) => {
                             PingReply reply = e3.Reply;
 
-                            if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
-                                onlineCount.Text += ". Server ping is " + reply.RoundtripTime + "ms";
+                            if (reply.Status == IPStatus.Success /*&& serverName != "Offline Built-In Server"*/) {
+                                onlineCount.Text += ". Server ping is " + reply.RoundtripTime + "ms.";
                             } else {
                                 onlineCount.Text += ". Server doesn't allow pinging.";
                             }
@@ -766,19 +799,37 @@ namespace GameLauncher {
             launcherVersion.Font = new Font(fontFamily1, 8f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             forgotPassword.Font = new Font(fontFamily2, 9f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             onlineCount.Font = new Font(fontFamily1, 8f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            //progressText.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            playProgressText.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            playProgressTime.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             playButton.Font = new Font(fontFamily2, 15f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             currentWindowInfo.Font = new Font(fontFamily2, 11.35f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             imageServerName.Font = new Font(fontFamily2, 25f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+
+            registerEmailText.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerPasswordText.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerConfirmPasswordText.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerTicketText.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerAgree.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerButton.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerCancel.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+
+            settingsLanguageText.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsQualityText.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsSave.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsLanguageDesc.Font = new Font(fontFamily1, 8f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsQualityDesc.Font = new Font(fontFamily1, 8f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+
+            logoutButton.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+
         }
 
         private void registerText_LinkClicked(object sender, EventArgs e) {
-            MessageBox.Show("Temporarely disabled!");
+            //MessageBox.Show("Temporarely disabled!");
 
-            /*this.BackgroundImage = Properties.Resources.secondarybackground;
+            this.BackgroundImage = Properties.Resources.secondarybackground;
             this.currentWindowInfo.Text = "REGISTER ON " + serverPick.GetItemText(serverPick.SelectedItem).ToUpper() + ":";
             LoginFormElements(false);
-            RegisterFormElements(true);*/
+            RegisterFormElements(true);
         }
 
         private void githubLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
@@ -790,7 +841,29 @@ namespace GameLauncher {
             Process.Start(serverPick.SelectedValue.ToString().Replace("Engine.svc", "") + "forgotPasswd.jsp");
         }
 
+        private void LoggedInFormElements(bool hideElements) {
+            if (hideElements == true) {
+                this.currentWindowInfo.Location = new Point(479, 140);
+                this.currentWindowInfo.Size = new Size(222, 46);
+            }
+
+            this.logoutButton.Visible = hideElements;
+            this.playProgress.Visible = hideElements;
+            this.playProgressText.Visible = hideElements;
+            this.playProgressTime.Visible = hideElements;
+            this.playButton.Visible = hideElements;
+            this.settingsButton.Visible = hideElements;
+            this.verticalBanner.Visible = hideElements;
+            this.onlineCount.Visible = hideElements;
+            this.welcomeBack.Visible = hideElements;
+        }
+
         private void LoginFormElements(bool hideElements = false) {
+            if(hideElements == true) {
+                this.currentWindowInfo.Location = new Point(479, 140);
+                this.currentWindowInfo.Size = new Size(222, 46);
+            }
+
             this.rememberMe.Visible = hideElements;
             this.loginButton.Visible = hideElements;
             this.onlineCount.Visible = hideElements;
@@ -803,6 +876,10 @@ namespace GameLauncher {
             this.forgotPassword.Visible = hideElements;
             this.settingsButton.Visible = hideElements;
             this.verticalBanner.Visible = hideElements;
+            this.playProgressTime.Visible = hideElements;
+            this.playProgressText.Visible = hideElements;
+            this.playProgress.Visible = hideElements;
+            this.playButton.Visible = hideElements;
         }
 
         /*
@@ -819,6 +896,11 @@ namespace GameLauncher {
         }
 
         private void RegisterFormElements(bool hideElements = true) {
+            if(hideElements == true) {
+                this.currentWindowInfo.Location = new Point(53, 150);
+                this.currentWindowInfo.Size = new Size(700, 46);
+            }
+
             this.registerButton.Visible = hideElements;
             this.registerEmail.Visible = hideElements;
             this.registerEmailText.Visible = hideElements;
@@ -827,9 +909,7 @@ namespace GameLauncher {
             this.registerConfirmPassword.Visible = hideElements;
             this.registerConfirmPasswordText.Visible = hideElements;
             this.registerAgree.Visible = hideElements;
-
-            //Restore some loginform elements
-            this.verticalBanner.Visible = true;
+            this.registerCancel.Visible = hideElements;
 
             if(ticketRequired) {
                 this.registerTicket.Visible = hideElements;
@@ -840,20 +920,64 @@ namespace GameLauncher {
             }
         }
 
+        private void logoutButton_Click(object sender, EventArgs e) {
+            this.BackgroundImage = Properties.Resources.loginbg;
+            LoggedInFormElements(false);
+            LoginFormElements(true);
+        }
+
+        private void logoutButton_MouseDown(object sender, EventArgs e) {
+            this.logoutButton.Image = Properties.Resources.smallbutton_click;
+        }
+
+        private void logoutButton_MouseEnter(object sender, EventArgs e) {
+            this.logoutButton.Image = Properties.Resources.smallbutton_hover;
+        }
+
+        private void logoutButton_MouseLeave(object sender, EventArgs e) {
+            this.logoutButton.Image = Properties.Resources.smallbutton_enabled;
+        }
+
+        private void logoutButton_MouseUp(object sender, EventArgs e) {
+            this.logoutButton.Image = Properties.Resources.smallbutton_hover;
+        }
+
         private void registerButton_MouseEnter(object sender, EventArgs e) {
-            this.registerButton.Image = Properties.Resources.playButton_hover;
+            this.registerButton.Image = Properties.Resources.smallbutton_hover;
         }
 
         private void registerButton_MouseLeave(object sender, EventArgs e) {
-            this.registerButton.Image = Properties.Resources.playButton_enable;
+            this.registerButton.Image = Properties.Resources.smallbutton_enabled;
         }
 
         private void registerButton_MouseUp(object sender, EventArgs e) {
-            this.registerButton.Image = Properties.Resources.playButton_hover;
+            this.registerButton.Image = Properties.Resources.smallbutton_hover;
         }
 
         private void registerButton_MouseDown(object sender, EventArgs e) {
-            this.registerButton.Image = Properties.Resources.playButton_click;
+            this.registerButton.Image = Properties.Resources.smallbutton_click;
+        }
+
+        private void registerCancel_Click(object sender, EventArgs e) {
+            this.BackgroundImage = Properties.Resources.loginbg;
+            RegisterFormElements(false);
+            LoginFormElements(true);
+        }
+
+        private void registerCancel_MouseDown(object sender, EventArgs e) {
+            this.registerCancel.Image = Properties.Resources.cancelbutton_click;
+        }
+
+        private void registerCancel_MouseEnter(object sender, EventArgs e) {
+            this.registerCancel.Image = Properties.Resources.cancelbutton_hover;
+        }
+
+        private void registerCancel_MouseLeave(object sender, EventArgs e) {
+            this.registerCancel.Image = Properties.Resources.cancelbutton_enabled;
+        }
+
+        private void registerCancel_MouseUp(object sender, EventArgs e) {
+            this.registerCancel.Image = Properties.Resources.cancelbutton_hover;
         }
 
         private void registerButton_Click(object sender, EventArgs e) {
@@ -951,8 +1075,8 @@ namespace GameLauncher {
                         this.BackgroundImage = Properties.Resources.secondarybackground;
                         this.currentWindowInfo.Visible = false;
 
-                        //RegisterFormElements(false);
-                        //DownloadFormElements(true);
+                        RegisterFormElements(false);
+                        LoginFormElements(true);
 
                         loggedIn = true;
                     } else {
@@ -969,9 +1093,9 @@ namespace GameLauncher {
          */
 
         private void settingsButton_Click(object sender, EventArgs e) {
-            MessageBox.Show("Temporarely disabled");
+            //MessageBox.Show("Temporarely disabled");
 
-            /*if(WindowState == FormWindowState.Minimized) { 
+            if(WindowState == FormWindowState.Minimized) { 
                 WindowState = FormWindowState.Normal; 
             }
 
@@ -979,7 +1103,8 @@ namespace GameLauncher {
             this.BackgroundImage = Properties.Resources.secondarybackground;
             this.currentWindowInfo.Text = "PLEASE SELECT YOUR GAME SETTINGS:";
             SettingsFormElements(true);
-            LoginFormElements(false);*/
+
+            LoginFormElements(false);
         }
 
         private void settingsButton_MouseEnter(object sender, EventArgs e) {
@@ -991,19 +1116,19 @@ namespace GameLauncher {
         }
 
         private void settingsSave_MouseEnter(object sender, EventArgs e) {
-            this.settingsSave.Image = Properties.Resources.playButton_hover;
+            this.settingsSave.Image = Properties.Resources.smallbutton_hover;
         }
 
         private void settingsSave_MouseLeave(object sender, EventArgs e) {
-            this.settingsSave.Image = Properties.Resources.playButton_enable;
+            this.settingsSave.Image = Properties.Resources.smallbutton_enabled;
         }
 
         private void settingsSave_MouseUp(object sender, EventArgs e) {
-            this.settingsSave.Image = Properties.Resources.playButton_hover;
+            this.settingsSave.Image = Properties.Resources.smallbutton_hover;
         }
 
         private void settingsSave_MouseDown(object sender, EventArgs e) {
-            this.settingsSave.Image = Properties.Resources.playButton_click;
+            this.settingsSave.Image = Properties.Resources.smallbutton_click;
         }
 
         private void settingsSave_Click(object sender, EventArgs e) {
@@ -1049,10 +1174,22 @@ namespace GameLauncher {
             this.BackgroundImage = Properties.Resources.loginbg;
             this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN:";
             SettingsFormElements(false);
-            LoginFormElements(true);
+
+            if(loggedIn) {
+                LoginFormElements(false);
+                LoggedInFormElements(true);
+            } else { 
+                LoggedInFormElements(false);
+                LoginFormElements(true);
+            }
         }
 
         private void SettingsFormElements(bool hideElements = true) {
+            if (hideElements == true) {
+                this.currentWindowInfo.Location = new Point(53, 150);
+                this.currentWindowInfo.Size = new Size(700, 46);
+            }
+
             this.settingsSave.Visible = hideElements;
             this.settingsLanguage.Visible = hideElements;
             this.settingsLanguageText.Visible = hideElements;
@@ -1149,7 +1286,7 @@ namespace GameLauncher {
                     MessageBox.Show("Failed to update token, server is probably offline.");
                 }
 
-                this.playButton.Image = Properties.Resources.playButton_enable;
+                this.playButton.Image = Properties.Resources.smallbutton_enabled;
 
                 try {
                     LaunchGame(UserId, LoginToken, serverIP);
@@ -1157,9 +1294,9 @@ namespace GameLauncher {
                     MessageBox.Show("Failed to launch game. Cannot find NFSW.exe");
                 }
 
-                if (builtinserver == true) {
-                    this.playProgressText.Text = "SOAPBOX SERVER LAUNCHED. WAITING FOR QUERIES";
-                } else {
+                //if (builtinserver == true) {
+                //    this.playProgressText.Text = "SOAPBOX SERVER LAUNCHED. WAITING FOR QUERIES";
+                //} else {
                     int secondsToCloseLauncher = 5;
 
                     while(secondsToCloseLauncher > 0) {
@@ -1183,7 +1320,7 @@ namespace GameLauncher {
                     this.Refresh();
 
                     Notification.ContextMenu = ContextMenu;
-                }
+                //}
             }
         }
 
@@ -1192,7 +1329,7 @@ namespace GameLauncher {
                 return;
             }
 
-            this.playButton.Image = Properties.Resources.playButton_hover;
+            this.playButton.BackgroundImage = Properties.Resources.largebutton_hover;
         }
 
         private void playButton_MouseDown(object sender, EventArgs e) {
@@ -1200,7 +1337,7 @@ namespace GameLauncher {
                 return;
             }
 
-            this.playButton.Image = Properties.Resources.playButton_click;
+            this.playButton.BackgroundImage = Properties.Resources.largebutton_click;
         }
 
         private void playButton_MouseEnter(object sender, EventArgs e) {
@@ -1208,7 +1345,7 @@ namespace GameLauncher {
                 return;
             }
 
-            this.playButton.Image = Properties.Resources.playButton_hover;
+            this.playButton.BackgroundImage = Properties.Resources.largebutton_hover;
         }
 
         private void playButton_MouseLeave(object sender, EventArgs e) {
@@ -1216,14 +1353,14 @@ namespace GameLauncher {
                 return;
             }
 
-            this.playButton.Image = Properties.Resources.playButton_enable;
+            this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
         }
 
         private void launchNFSW() {
-            this.playButton.Image = Properties.Resources.playButton_disable;
+            this.playButton.BackgroundImage = Properties.Resources.largebutton_disabled;
             this.playButton.ForeColor = Color.Gray;
 
-            this.playProgressText.Text = "Checking up all files";
+            this.playProgressText.Text = "CHECKING UP ALL FILES";
             this.playProgressTime.Text = "";
             Delay.WaitSeconds(2);
 
@@ -1398,15 +1535,17 @@ namespace GameLauncher {
         private void OnDownloadFinished() {
             playenabled = true;
             this.playProgress.Value = 100;
-            this.playButton.Image = Properties.Resources.playButton_enable;
+            this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
             this.playButton.ForeColor = Color.White;
             this.playProgressText.Text = "DOWNLOAD COMPLETED";
             this.playProgressTime.Text = "";
         }
 
         private void OnDownloadFailed(Exception ex) {
-            this.playProgress.Value = 0;
+            this.playProgress.Value = 100;
             this.playProgressText.Text = "DOWNLOAD FAILED!";
+            this.playProgressTime.Text = "";
+            this.playProgress.ProgressColor = Color.Red;
         }
 
         private void OnShowMessage(string message, string header) {

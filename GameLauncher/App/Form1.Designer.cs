@@ -46,6 +46,7 @@
             this.registerButton = new System.Windows.Forms.Button();
             this.settingsButton = new System.Windows.Forms.PictureBox();
             this.moveWindow = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.verticalBanner = new System.Windows.Forms.PictureBox();
             this.settingsSave = new System.Windows.Forms.Button();
             this.settingsLanguage = new System.Windows.Forms.ComboBox();
@@ -63,7 +64,6 @@
             this.registerTicketText = new System.Windows.Forms.Label();
             this.registerConfirmPasswordText = new System.Windows.Forms.Label();
             this.registerAgree = new System.Windows.Forms.CheckBox();
-            this.playProgress = new System.Windows.Forms.ProgressBar();
             this.playProgressText = new System.Windows.Forms.Label();
             this.playButton = new System.Windows.Forms.Button();
             this.Notification = new System.Windows.Forms.NotifyIcon(this.components);
@@ -71,10 +71,16 @@
             this.playProgressTime = new System.Windows.Forms.Label();
             this.launcherVersion = new System.Windows.Forms.Label();
             this.imageServerName = new System.Windows.Forms.Label();
+            this.registerCancel = new System.Windows.Forms.Button();
+            this.logoutButton = new System.Windows.Forms.Button();
+            this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.welcomeBack = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
+            this.moveWindow.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -169,7 +175,7 @@
             this.onlineCount.AutoSize = true;
             this.onlineCount.BackColor = System.Drawing.Color.Transparent;
             this.onlineCount.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.onlineCount.Location = new System.Drawing.Point(165, 537);
+            this.onlineCount.Location = new System.Drawing.Point(34, 373);
             this.onlineCount.Name = "onlineCount";
             this.onlineCount.Size = new System.Drawing.Size(127, 13);
             this.onlineCount.TabIndex = 11;
@@ -184,10 +190,10 @@
             this.loginButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.loginButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.loginButton.ForeColor = System.Drawing.Color.White;
-            this.loginButton.Image = ((System.Drawing.Image)(resources.GetObject("loginButton.Image")));
-            this.loginButton.Location = new System.Drawing.Point(803, 336);
+            this.loginButton.Image = global::GameLauncher.Properties.Resources.smallbutton_enabled;
+            this.loginButton.Location = new System.Drawing.Point(822, 336);
             this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(149, 37);
+            this.loginButton.Size = new System.Drawing.Size(130, 50);
             this.loginButton.TabIndex = 12;
             this.loginButton.Text = "LOG IN";
             this.loginButton.UseVisualStyleBackColor = false;
@@ -235,10 +241,10 @@
             this.registerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.registerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.registerButton.ForeColor = System.Drawing.Color.White;
-            this.registerButton.Image = ((System.Drawing.Image)(resources.GetObject("registerButton.Image")));
-            this.registerButton.Location = new System.Drawing.Point(623, 319);
+            this.registerButton.Image = global::GameLauncher.Properties.Resources.smallbutton_enabled;
+            this.registerButton.Location = new System.Drawing.Point(822, 453);
             this.registerButton.Name = "registerButton";
-            this.registerButton.Size = new System.Drawing.Size(149, 37);
+            this.registerButton.Size = new System.Drawing.Size(130, 50);
             this.registerButton.TabIndex = 19;
             this.registerButton.Text = "REGISTER";
             this.registerButton.UseVisualStyleBackColor = false;
@@ -256,10 +262,21 @@
             // moveWindow
             // 
             this.moveWindow.BackColor = System.Drawing.Color.Transparent;
+            this.moveWindow.Controls.Add(this.pictureBox1);
             this.moveWindow.Location = new System.Drawing.Point(0, 0);
             this.moveWindow.Name = "moveWindow";
             this.moveWindow.Size = new System.Drawing.Size(1000, 87);
             this.moveWindow.TabIndex = 1;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::GameLauncher.Properties.Resources.SBRW512;
+            this.pictureBox1.Location = new System.Drawing.Point(31, 6);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(231, 72);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // verticalBanner
             // 
@@ -279,10 +296,10 @@
             this.settingsSave.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.settingsSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.settingsSave.ForeColor = System.Drawing.Color.White;
-            this.settingsSave.Image = ((System.Drawing.Image)(resources.GetObject("settingsSave.Image")));
-            this.settingsSave.Location = new System.Drawing.Point(613, 420);
+            this.settingsSave.Image = global::GameLauncher.Properties.Resources.smallbutton_enabled;
+            this.settingsSave.Location = new System.Drawing.Point(822, 453);
             this.settingsSave.Name = "settingsSave";
-            this.settingsSave.Size = new System.Drawing.Size(149, 37);
+            this.settingsSave.Size = new System.Drawing.Size(130, 50);
             this.settingsSave.TabIndex = 23;
             this.settingsSave.Text = "SAVE";
             this.settingsSave.UseVisualStyleBackColor = false;
@@ -294,19 +311,20 @@
             this.settingsLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.settingsLanguage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.settingsLanguage.FormattingEnabled = true;
-            this.settingsLanguage.Location = new System.Drawing.Point(77, 198);
+            this.settingsLanguage.Location = new System.Drawing.Point(59, 223);
             this.settingsLanguage.Name = "settingsLanguage";
-            this.settingsLanguage.Size = new System.Drawing.Size(185, 21);
+            this.settingsLanguage.Size = new System.Drawing.Size(210, 21);
             this.settingsLanguage.TabIndex = 24;
             // 
             // settingsLanguageText
             // 
             this.settingsLanguageText.AutoSize = true;
             this.settingsLanguageText.BackColor = System.Drawing.Color.Transparent;
+            this.settingsLanguageText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
             this.settingsLanguageText.ForeColor = System.Drawing.Color.White;
-            this.settingsLanguageText.Location = new System.Drawing.Point(74, 180);
+            this.settingsLanguageText.Location = new System.Drawing.Point(56, 200);
             this.settingsLanguageText.Name = "settingsLanguageText";
-            this.settingsLanguageText.Size = new System.Drawing.Size(113, 13);
+            this.settingsLanguageText.Size = new System.Drawing.Size(156, 18);
             this.settingsLanguageText.TabIndex = 25;
             this.settingsLanguageText.Text = "SELECT LANGUAGE:";
             // 
@@ -317,19 +335,20 @@
             this.settingsQuality.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.settingsQuality.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.settingsQuality.FormattingEnabled = true;
-            this.settingsQuality.Location = new System.Drawing.Point(77, 269);
+            this.settingsQuality.Location = new System.Drawing.Point(59, 287);
             this.settingsQuality.Name = "settingsQuality";
-            this.settingsQuality.Size = new System.Drawing.Size(185, 21);
+            this.settingsQuality.Size = new System.Drawing.Size(210, 21);
             this.settingsQuality.TabIndex = 26;
             // 
             // settingsQualityText
             // 
             this.settingsQualityText.AutoSize = true;
             this.settingsQualityText.BackColor = System.Drawing.Color.Transparent;
+            this.settingsQualityText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
             this.settingsQualityText.ForeColor = System.Drawing.Color.White;
-            this.settingsQualityText.Location = new System.Drawing.Point(74, 251);
+            this.settingsQualityText.Location = new System.Drawing.Point(56, 264);
             this.settingsQualityText.Name = "settingsQualityText";
-            this.settingsQualityText.Size = new System.Drawing.Size(145, 13);
+            this.settingsQualityText.Size = new System.Drawing.Size(199, 18);
             this.settingsQualityText.TabIndex = 27;
             this.settingsQualityText.Text = "SELECT DOWNLOAD SIZE:";
             // 
@@ -337,7 +356,7 @@
             // 
             this.settingsLanguageDesc.BackColor = System.Drawing.Color.Transparent;
             this.settingsLanguageDesc.ForeColor = System.Drawing.Color.White;
-            this.settingsLanguageDesc.Location = new System.Drawing.Point(314, 179);
+            this.settingsLanguageDesc.Location = new System.Drawing.Point(296, 222);
             this.settingsLanguageDesc.Name = "settingsLanguageDesc";
             this.settingsLanguageDesc.Size = new System.Drawing.Size(427, 56);
             this.settingsLanguageDesc.TabIndex = 28;
@@ -348,29 +367,29 @@
             // 
             this.settingsQualityDesc.BackColor = System.Drawing.Color.Transparent;
             this.settingsQualityDesc.ForeColor = System.Drawing.Color.White;
-            this.settingsQualityDesc.Location = new System.Drawing.Point(313, 242);
+            this.settingsQualityDesc.Location = new System.Drawing.Point(296, 285);
             this.settingsQualityDesc.Name = "settingsQualityDesc";
-            this.settingsQualityDesc.Size = new System.Drawing.Size(405, 85);
+            this.settingsQualityDesc.Size = new System.Drawing.Size(427, 85);
             this.settingsQualityDesc.TabIndex = 29;
             this.settingsQualityDesc.Text = resources.GetString("settingsQualityDesc.Text");
             // 
             // registerEmail
             // 
-            this.registerEmail.Location = new System.Drawing.Point(33, 183);
+            this.registerEmail.Location = new System.Drawing.Point(59, 223);
             this.registerEmail.Name = "registerEmail";
             this.registerEmail.Size = new System.Drawing.Size(210, 20);
             this.registerEmail.TabIndex = 30;
             // 
             // registerTicket
             // 
-            this.registerTicket.Location = new System.Drawing.Point(33, 245);
+            this.registerTicket.Location = new System.Drawing.Point(59, 415);
             this.registerTicket.Name = "registerTicket";
             this.registerTicket.Size = new System.Drawing.Size(210, 20);
             this.registerTicket.TabIndex = 31;
             // 
             // registerPassword
             // 
-            this.registerPassword.Location = new System.Drawing.Point(276, 183);
+            this.registerPassword.Location = new System.Drawing.Point(59, 287);
             this.registerPassword.Name = "registerPassword";
             this.registerPassword.PasswordChar = '•';
             this.registerPassword.Size = new System.Drawing.Size(210, 20);
@@ -378,7 +397,7 @@
             // 
             // registerConfirmPassword
             // 
-            this.registerConfirmPassword.Location = new System.Drawing.Point(276, 245);
+            this.registerConfirmPassword.Location = new System.Drawing.Point(59, 351);
             this.registerConfirmPassword.Name = "registerConfirmPassword";
             this.registerConfirmPassword.PasswordChar = '•';
             this.registerConfirmPassword.Size = new System.Drawing.Size(210, 20);
@@ -389,8 +408,8 @@
             this.registerEmailText.AutoSize = true;
             this.registerEmailText.BackColor = System.Drawing.Color.Transparent;
             this.registerEmailText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.registerEmailText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
-            this.registerEmailText.Location = new System.Drawing.Point(30, 161);
+            this.registerEmailText.ForeColor = System.Drawing.Color.White;
+            this.registerEmailText.Location = new System.Drawing.Point(56, 200);
             this.registerEmailText.Name = "registerEmailText";
             this.registerEmailText.Size = new System.Drawing.Size(131, 18);
             this.registerEmailText.TabIndex = 34;
@@ -402,8 +421,8 @@
             this.registerPasswordText.AutoSize = true;
             this.registerPasswordText.BackColor = System.Drawing.Color.Transparent;
             this.registerPasswordText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.registerPasswordText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
-            this.registerPasswordText.Location = new System.Drawing.Point(276, 161);
+            this.registerPasswordText.ForeColor = System.Drawing.Color.White;
+            this.registerPasswordText.Location = new System.Drawing.Point(56, 264);
             this.registerPasswordText.Name = "registerPasswordText";
             this.registerPasswordText.Size = new System.Drawing.Size(100, 18);
             this.registerPasswordText.TabIndex = 35;
@@ -415,8 +434,8 @@
             this.registerTicketText.AutoSize = true;
             this.registerTicketText.BackColor = System.Drawing.Color.Transparent;
             this.registerTicketText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.registerTicketText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
-            this.registerTicketText.Location = new System.Drawing.Point(30, 224);
+            this.registerTicketText.ForeColor = System.Drawing.Color.White;
+            this.registerTicketText.Location = new System.Drawing.Point(56, 392);
             this.registerTicketText.Name = "registerTicketText";
             this.registerTicketText.Size = new System.Drawing.Size(64, 18);
             this.registerTicketText.TabIndex = 36;
@@ -428,8 +447,8 @@
             this.registerConfirmPasswordText.AutoSize = true;
             this.registerConfirmPasswordText.BackColor = System.Drawing.Color.Transparent;
             this.registerConfirmPasswordText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.registerConfirmPasswordText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
-            this.registerConfirmPasswordText.Location = new System.Drawing.Point(276, 224);
+            this.registerConfirmPasswordText.ForeColor = System.Drawing.Color.White;
+            this.registerConfirmPasswordText.Location = new System.Drawing.Point(56, 328);
             this.registerConfirmPasswordText.Name = "registerConfirmPasswordText";
             this.registerConfirmPasswordText.Size = new System.Drawing.Size(174, 18);
             this.registerConfirmPasswordText.TabIndex = 37;
@@ -440,37 +459,30 @@
             // 
             this.registerAgree.AutoSize = true;
             this.registerAgree.BackColor = System.Drawing.Color.Transparent;
-            this.registerAgree.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
-            this.registerAgree.Location = new System.Drawing.Point(358, 506);
+            this.registerAgree.ForeColor = System.Drawing.Color.White;
+            this.registerAgree.Location = new System.Drawing.Point(59, 464);
             this.registerAgree.Name = "registerAgree";
             this.registerAgree.Size = new System.Drawing.Size(333, 17);
             this.registerAgree.TabIndex = 38;
             this.registerAgree.Text = "BY REGISTERING YOU AGREE TO THE TERMS OF SERVICE";
             this.registerAgree.UseVisualStyleBackColor = false;
             // 
-            // playProgress
-            // 
-            this.playProgress.Location = new System.Drawing.Point(37, 494);
-            this.playProgress.Name = "playProgress";
-            this.playProgress.Size = new System.Drawing.Size(700, 5);
-            this.playProgress.TabIndex = 39;
-            // 
             // playProgressText
             // 
             this.playProgressText.AutoSize = true;
             this.playProgressText.BackColor = System.Drawing.Color.Transparent;
-            this.playProgressText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.playProgressText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
-            this.playProgressText.Location = new System.Drawing.Point(34, 478);
+            this.playProgressText.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
+            this.playProgressText.ForeColor = System.Drawing.Color.White;
+            this.playProgressText.Location = new System.Drawing.Point(33, 471);
             this.playProgressText.Name = "playProgressText";
-            this.playProgressText.Size = new System.Drawing.Size(90, 13);
-            this.playProgressText.TabIndex = 21;
+            this.playProgressText.Size = new System.Drawing.Size(120, 19);
+            this.playProgressText.TabIndex = 10;
             this.playProgressText.Text = "PLEASE WAIT";
             // 
             // playButton
             // 
             this.playButton.BackColor = System.Drawing.Color.Transparent;
-            this.playButton.BackgroundImage = global::GameLauncher.Properties.Resources.playNow_Button;
+            this.playButton.BackgroundImage = global::GameLauncher.Properties.Resources.largebutton_enabled;
             this.playButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.playButton.FlatAppearance.BorderSize = 0;
             this.playButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
@@ -509,11 +521,11 @@
             this.playProgressTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.playProgressTime.BackColor = System.Drawing.Color.Transparent;
             this.playProgressTime.Cursor = System.Windows.Forms.Cursors.Default;
-            this.playProgressTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.playProgressTime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
-            this.playProgressTime.Location = new System.Drawing.Point(643, 478);
+            this.playProgressTime.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
+            this.playProgressTime.ForeColor = System.Drawing.Color.White;
+            this.playProgressTime.Location = new System.Drawing.Point(614, 471);
             this.playProgressTime.Name = "playProgressTime";
-            this.playProgressTime.Size = new System.Drawing.Size(94, 13);
+            this.playProgressTime.Size = new System.Drawing.Size(125, 19);
             this.playProgressTime.TabIndex = 42;
             this.playProgressTime.Text = "CALCULATING";
             this.playProgressTime.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -525,22 +537,77 @@
             this.launcherVersion.ForeColor = System.Drawing.Color.DarkGray;
             this.launcherVersion.Location = new System.Drawing.Point(13, 537);
             this.launcherVersion.Name = "launcherVersion";
-            this.launcherVersion.Size = new System.Drawing.Size(146, 13);
+            this.launcherVersion.Size = new System.Drawing.Size(46, 13);
             this.launcherVersion.TabIndex = 2;
-            this.launcherVersion.Text = "VERSION_IDENTIFICATION";
+            this.launcherVersion.Text = "v0.0.0.0";
             // 
             // imageServerName
             // 
             this.imageServerName.BackColor = System.Drawing.Color.Transparent;
             this.imageServerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.imageServerName.ForeColor = System.Drawing.Color.White;
-            this.imageServerName.Location = new System.Drawing.Point(31, 305);
+            this.imageServerName.Location = new System.Drawing.Point(31, 279);
             this.imageServerName.Name = "imageServerName";
             this.imageServerName.Size = new System.Drawing.Size(370, 94);
             this.imageServerName.TabIndex = 19;
-            this.imageServerName.Text = "";
             this.imageServerName.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.imageServerName.UseCompatibleTextRendering = true;
+            // 
+            // registerCancel
+            // 
+            this.registerCancel.BackColor = System.Drawing.Color.Transparent;
+            this.registerCancel.FlatAppearance.BorderSize = 0;
+            this.registerCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.registerCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.registerCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.registerCancel.ForeColor = System.Drawing.Color.White;
+            this.registerCancel.Image = global::GameLauncher.Properties.Resources.cancelbutton_enabled;
+            this.registerCancel.Location = new System.Drawing.Point(667, 453);
+            this.registerCancel.Name = "registerCancel";
+            this.registerCancel.Size = new System.Drawing.Size(130, 50);
+            this.registerCancel.TabIndex = 43;
+            this.registerCancel.Text = "CANCEL";
+            this.registerCancel.UseVisualStyleBackColor = false;
+            // 
+            // logoutButton
+            // 
+            this.logoutButton.BackColor = System.Drawing.Color.Transparent;
+            this.logoutButton.FlatAppearance.BorderSize = 0;
+            this.logoutButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.logoutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.logoutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.logoutButton.ForeColor = System.Drawing.Color.White;
+            this.logoutButton.Image = global::GameLauncher.Properties.Resources.smallbutton_enabled;
+            this.logoutButton.Location = new System.Drawing.Point(822, 336);
+            this.logoutButton.Name = "logoutButton";
+            this.logoutButton.Size = new System.Drawing.Size(130, 50);
+            this.logoutButton.TabIndex = 44;
+            this.logoutButton.Text = "LOG OUT";
+            this.logoutButton.UseVisualStyleBackColor = false;
+            // 
+            // playProgress
+            // 
+            this.playProgress.BackColor = System.Drawing.Color.Transparent;
+            this.playProgress.BackgroundColor = System.Drawing.Color.Black;
+            this.playProgress.Border = false;
+            this.playProgress.GradiantPosition = GameLauncherReborn.ProgressBarEx.GradiantArea.None;
+            this.playProgress.Image = null;
+            this.playProgress.Location = new System.Drawing.Point(37, 494);
+            this.playProgress.Name = "playProgress";
+            this.playProgress.Size = new System.Drawing.Size(700, 5);
+            this.playProgress.Text = "downloadProgress";
+            // 
+            // welcomeBack
+            // 
+            this.welcomeBack.AutoSize = true;
+            this.welcomeBack.BackColor = System.Drawing.Color.Transparent;
+            this.welcomeBack.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
+            this.welcomeBack.ForeColor = System.Drawing.Color.White;
+            this.welcomeBack.Location = new System.Drawing.Point(460, 238);
+            this.welcomeBack.Name = "welcomeBack";
+            this.welcomeBack.Size = new System.Drawing.Size(158, 19);
+            this.welcomeBack.TabIndex = 46;
+            this.welcomeBack.Text = "WELCOME BACK, ";
             // 
             // mainScreen
             // 
@@ -548,26 +615,22 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1000, 562);
-            this.Controls.Add(this.imageServerName);
+            this.Controls.Add(this.welcomeBack);
+            this.Controls.Add(this.logoutButton);
+            this.Controls.Add(this.playProgress);
+            this.Controls.Add(this.registerButton);
             this.Controls.Add(this.launcherVersion);
             this.Controls.Add(this.playProgressTime);
-            this.Controls.Add(this.playButton);
             this.Controls.Add(this.playProgressText);
-            this.Controls.Add(this.playProgress);
             this.Controls.Add(this.registerAgree);
             this.Controls.Add(this.registerConfirmPasswordText);
             this.Controls.Add(this.registerTicketText);
             this.Controls.Add(this.registerPasswordText);
-            this.Controls.Add(this.registerEmailText);
             this.Controls.Add(this.registerConfirmPassword);
-            this.Controls.Add(this.registerPassword);
             this.Controls.Add(this.registerTicket);
             this.Controls.Add(this.settingsQualityText);
-            this.Controls.Add(this.settingsQuality);
-            this.Controls.Add(this.settingsLanguageText);
             this.Controls.Add(this.settingsLanguage);
             this.Controls.Add(this.settingsButton);
-            this.Controls.Add(this.registerButton);
             this.Controls.Add(this.forgotPassword);
             this.Controls.Add(this.passwordLabel);
             this.Controls.Add(this.emailLabel);
@@ -584,9 +647,16 @@
             this.Controls.Add(this.moveWindow);
             this.Controls.Add(this.settingsSave);
             this.Controls.Add(this.settingsLanguageDesc);
-            this.Controls.Add(this.verticalBanner);
             this.Controls.Add(this.registerEmail);
             this.Controls.Add(this.settingsQualityDesc);
+            this.Controls.Add(this.registerCancel);
+            this.Controls.Add(this.registerPassword);
+            this.Controls.Add(this.settingsLanguageText);
+            this.Controls.Add(this.registerEmailText);
+            this.Controls.Add(this.verticalBanner);
+            this.Controls.Add(this.settingsQuality);
+            this.Controls.Add(this.imageServerName);
+            this.Controls.Add(this.playButton);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -600,6 +670,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).EndInit();
+            this.moveWindow.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -641,7 +713,6 @@
         private System.Windows.Forms.Label registerTicketText;
         private System.Windows.Forms.Label registerConfirmPasswordText;
         private System.Windows.Forms.CheckBox registerAgree;
-        private System.Windows.Forms.ProgressBar playProgress;
         private System.Windows.Forms.Button playButton;
         private System.Windows.Forms.NotifyIcon Notification;
         private System.Windows.Forms.LinkLabel forgotPassword;
@@ -649,6 +720,11 @@
         internal System.Windows.Forms.Label playProgressTime;
         private System.Windows.Forms.Label launcherVersion;
         private System.Windows.Forms.Label imageServerName;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button registerCancel;
+        private GameLauncherReborn.ProgressBarEx playProgress;
+        private System.Windows.Forms.Button logoutButton;
+        private System.Windows.Forms.Label welcomeBack;
     }
 }
 

@@ -139,6 +139,9 @@
     <Compile Include="App\Classes\IniFile.cs" />
     <Compile Include="App\Classes\NativeFunctions.cs" />
     <Compile Include="App\Classes\Events\Updater.cs" />
+    <Compile Include="App\Classes\ProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="App\Classes\Self.cs" />
     <Compile Include="App\Classes\WebRequest.cs">
       <SubType>Component</SubType>
@@ -197,15 +200,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
-    <None Include="Resources\BUTTON_PLAYNOW2.png" />
+    <None Include="Resources\loggedbg.png" />
+    <None Include="Resources\secondarybackground.png" />
+    <None Include="Resources\smallbutton_hover.png" />
+    <None Include="Resources\smallbutton_enabled.png" />
+    <None Include="Resources\smallbutton_disabled.png" />
+    <None Include="Resources\smallbutton_click.png" />
+    <None Include="Resources\largebutton_hover.png" />
+    <None Include="Resources\largebutton_enabled.png" />
+    <None Include="Resources\largebutton_disabled.png" />
+    <None Include="Resources\largebutton_click.png" />
+    <None Include="Resources\cancelbutton_hover.png" />
+    <None Include="Resources\cancelbutton_enabled.png" />
+    <None Include="Resources\cancelbutton_disabled.png" />
+    <None Include="Resources\cancelbutton_click.png" />
+    <None Include="Resources\SBRW512.png" />
     <None Include="Resources\buttons_settings111.png" />
     <None Include="Resources\buttons_settings11.png" />
     <None Include="Resources\buttons_settings1.png" />
-    <None Include="Resources\BUTTON_PLAYNOW111.png" />
-    <None Include="Resources\BUTTON_PLAYNOW11.png" />
-    <None Include="Resources\BUTTON_PLAYNOW1.png" />
-    <None Include="Resources\BUTTON_PLAYNOW.png" />
-    <None Include="Resources\SETTINGS.png" />
     <None Include="Resources\registerButton_en.png" />
     <None Include="Resources\buttons_minimize11.png" />
     <None Include="Resources\buttons_minimize1.png" />

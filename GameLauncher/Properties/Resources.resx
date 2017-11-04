@@ -139,26 +139,11 @@
   <data name="minimize_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\buttons_minimize11.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="playButton_click" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\BUTTON_PLAYNOW111.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="playButton_disable" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\BUTTON_PLAYNOW1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="playButton_enable" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\BUTTON_PLAYNOW.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="playButton_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\BUTTON_PLAYNOW11.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="playNow_Button" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\BUTTON_PLAYNOW2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="registerButton_en" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\registerButton_en.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="secondarybackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SETTINGS.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SBRW512" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SBRW512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="settingsbtn" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\buttons_settings1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -168,5 +153,47 @@
   </data>
   <data name="settingsbtn_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\buttons_settings11.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cancelbutton_click" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cancelbutton_click.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cancelbutton_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cancelbutton_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cancelbutton_enabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cancelbutton_enabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cancelbutton_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cancelbutton_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="largebutton_click" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\largebutton_click.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="largebutton_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\largebutton_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="largebutton_enabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\largebutton_enabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="largebutton_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\largebutton_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="loggedbg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\loggedbg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="secondarybackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\secondarybackground.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="smallbutton_click" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\smallbutton_click.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="smallbutton_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\smallbutton_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="smallbutton_enabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\smallbutton_enabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="smallbutton_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\smallbutton_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
