@@ -843,6 +843,7 @@ namespace GameLauncher {
 
         private void LoggedInFormElements(bool hideElements) {
             if (hideElements == true) {
+                this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN:";
                 this.currentWindowInfo.Location = new Point(479, 140);
                 this.currentWindowInfo.Size = new Size(222, 46);
             }
@@ -860,6 +861,7 @@ namespace GameLauncher {
 
         private void LoginFormElements(bool hideElements = false) {
             if(hideElements == true) {
+                this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN:";
                 this.currentWindowInfo.Location = new Point(479, 140);
                 this.currentWindowInfo.Size = new Size(222, 46);
             }
@@ -960,6 +962,7 @@ namespace GameLauncher {
 
         private void registerCancel_Click(object sender, EventArgs e) {
             this.BackgroundImage = Properties.Resources.loginbg;
+            this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN";
             RegisterFormElements(false);
             LoginFormElements(true);
         }
@@ -1069,14 +1072,18 @@ namespace GameLauncher {
                     UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
 
                     if(String.IsNullOrEmpty(DescriptionNode.InnerText)) {
+                        MessageBox.Show(null, "Account created sucessfully! Now you can login to " + serverName + "!", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                         UserId = UserIdNode.InnerText;
                         LoginToken = LoginTokenNode.InnerText;
 
-                        this.BackgroundImage = Properties.Resources.secondarybackground;
-                        this.currentWindowInfo.Visible = false;
+                        this.BackgroundImage = Properties.Resources.loginbg;
 
                         RegisterFormElements(false);
                         LoginFormElements(true);
+
+                        this.currentWindowInfo.Location = new Point(479, 140);
+                        this.currentWindowInfo.Size = new Size(222, 46);
 
                         loggedIn = true;
                     } else {
@@ -1093,17 +1100,14 @@ namespace GameLauncher {
          */
 
         private void settingsButton_Click(object sender, EventArgs e) {
-            //MessageBox.Show("Temporarely disabled");
-
             if(WindowState == FormWindowState.Minimized) { 
                 WindowState = FormWindowState.Normal; 
             }
 
             this.settingsButton.BackgroundImage = Properties.Resources.settingsbtn_click;
             this.BackgroundImage = Properties.Resources.secondarybackground;
-            this.currentWindowInfo.Text = "PLEASE SELECT YOUR GAME SETTINGS:";
             SettingsFormElements(true);
-
+            RegisterFormElements(false);
             LoginFormElements(false);
         }
 
@@ -1172,7 +1176,6 @@ namespace GameLauncher {
             UserSettingsXML.Save(UserSettings);
 
             this.BackgroundImage = Properties.Resources.loginbg;
-            this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN:";
             SettingsFormElements(false);
 
             if(loggedIn) {
@@ -1186,6 +1189,7 @@ namespace GameLauncher {
 
         private void SettingsFormElements(bool hideElements = true) {
             if (hideElements == true) {
+                this.currentWindowInfo.Text = "PLEASE SELECT YOUR GAME SETTINGS:";
                 this.currentWindowInfo.Location = new Point(53, 150);
                 this.currentWindowInfo.Size = new Size(700, 46);
             }
@@ -1286,7 +1290,7 @@ namespace GameLauncher {
                     MessageBox.Show("Failed to update token, server is probably offline.");
                 }
 
-                this.playButton.Image = Properties.Resources.smallbutton_enabled;
+                this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
 
                 try {
                     LaunchGame(UserId, LoginToken, serverIP);
@@ -1543,7 +1547,7 @@ namespace GameLauncher {
 
         private void OnDownloadFailed(Exception ex) {
             this.playProgress.Value = 100;
-            this.playProgressText.Text = "DOWNLOAD FAILED!";
+            this.playProgressText.Text = "DOWNLOAD FAILED! " + ex.Message.ToUpper();
             this.playProgressTime.Text = "";
             this.playProgress.ProgressColor = Color.Red;
         }

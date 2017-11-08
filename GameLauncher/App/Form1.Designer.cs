@@ -73,8 +73,8 @@
             this.imageServerName = new System.Windows.Forms.Label();
             this.registerCancel = new System.Windows.Forms.Button();
             this.logoutButton = new System.Windows.Forms.Button();
-            this.playProgress = new GameLauncherReborn.ProgressBarEx();
             this.welcomeBack = new System.Windows.Forms.Label();
+            this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).BeginInit();
@@ -113,10 +113,9 @@
             this.email.Font = new System.Drawing.Font("Arial", 14F);
             this.email.ForeColor = System.Drawing.Color.White;
             this.email.Location = new System.Drawing.Point(473, 285);
-            this.email.Multiline = true;
             this.email.Name = "email";
-            this.email.Size = new System.Drawing.Size(244, 30);
-            this.email.TabIndex = 1;
+            this.email.Size = new System.Drawing.Size(244, 22);
+            this.email.TabIndex = 2;
             // 
             // password
             // 
@@ -585,18 +584,6 @@
             this.logoutButton.Text = "LOG OUT";
             this.logoutButton.UseVisualStyleBackColor = false;
             // 
-            // playProgress
-            // 
-            this.playProgress.BackColor = System.Drawing.Color.Transparent;
-            this.playProgress.BackgroundColor = System.Drawing.Color.Black;
-            this.playProgress.Border = false;
-            this.playProgress.GradiantPosition = GameLauncherReborn.ProgressBarEx.GradiantArea.None;
-            this.playProgress.Image = null;
-            this.playProgress.Location = new System.Drawing.Point(37, 494);
-            this.playProgress.Name = "playProgress";
-            this.playProgress.Size = new System.Drawing.Size(700, 5);
-            this.playProgress.Text = "downloadProgress";
-            // 
             // welcomeBack
             // 
             this.welcomeBack.AutoSize = true;
@@ -608,6 +595,18 @@
             this.welcomeBack.Size = new System.Drawing.Size(158, 19);
             this.welcomeBack.TabIndex = 46;
             this.welcomeBack.Text = "WELCOME BACK, ";
+            // 
+            // playProgress
+            // 
+            this.playProgress.BackColor = System.Drawing.Color.Transparent;
+            this.playProgress.BackgroundColor = System.Drawing.Color.Black;
+            this.playProgress.Border = false;
+            this.playProgress.GradiantPosition = GameLauncherReborn.ProgressBarEx.GradiantArea.None;
+            this.playProgress.Image = null;
+            this.playProgress.Location = new System.Drawing.Point(37, 494);
+            this.playProgress.Name = "playProgress";
+            this.playProgress.Size = new System.Drawing.Size(700, 5);
+            this.playProgress.Text = "downloadProgress";
             // 
             // mainScreen
             // 

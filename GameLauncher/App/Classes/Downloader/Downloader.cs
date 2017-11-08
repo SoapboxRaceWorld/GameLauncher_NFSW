@@ -160,10 +160,11 @@ namespace GameLauncher
                 //Downloader.mLogger.DebugFormat("File '{0}' downloaded", arg);
                 return;
             }
-            MessageBox.Show("Error downloading file '" + arg + "'");
+            //MessageBox.Show("Error downloading file '" + arg + "'");
             if (e.Error != null)
             {
-                MessageBox.Show("Downloader_DownloadFileCompleted Exception: " + e.Error.ToString());
+                //MessageBox.Show("Downloader_DownloadFileCompleted Exception: " + e.Error.ToString());
+                
             }
         }
 
@@ -461,7 +462,7 @@ namespace GameLauncher
                                     array2 = this.mDownloadManager.GetFile(text7);
                                     if (array2 == null)
                                     {
-                                        MessageBox.Show("DownloadManager returned a null buffer for file '" + text7 + "', aborting");
+                                        //MessageBox.Show("DownloadManager returned a null buffer for file '" + text7 + "', aborting");
                                         if (this.mDownloadFailed != null)
                                         {
                                             if (!Downloader.mStopFlag)
