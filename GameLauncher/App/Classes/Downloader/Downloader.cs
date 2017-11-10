@@ -565,6 +565,7 @@ namespace GameLauncher
                                 IntPtr intPtr = new IntPtr(num18);
                                 IntPtr value = new IntPtr(num22);
                                 int num24 = LZMA.LzmaUncompressBuf2File(text6, ref value, array3, ref intPtr, array5, outPropsSize);
+
                                 if (num24 != 0)
                                 {
                                     MessageBox.Show("Decompression returned " + num24);

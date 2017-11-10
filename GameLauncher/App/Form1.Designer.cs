@@ -53,7 +53,6 @@
             this.settingsLanguageText = new System.Windows.Forms.Label();
             this.settingsQuality = new System.Windows.Forms.ComboBox();
             this.settingsQualityText = new System.Windows.Forms.Label();
-            this.settingsLanguageDesc = new System.Windows.Forms.Label();
             this.settingsQualityDesc = new System.Windows.Forms.Label();
             this.registerEmail = new System.Windows.Forms.TextBox();
             this.registerTicket = new System.Windows.Forms.TextBox();
@@ -74,6 +73,7 @@
             this.registerCancel = new System.Windows.Forms.Button();
             this.logoutButton = new System.Windows.Forms.Button();
             this.welcomeBack = new System.Windows.Forms.Label();
+            this.settingsLanguageDesc = new System.Windows.Forms.Label();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
@@ -151,6 +151,7 @@
             this.currentWindowInfo.TabIndex = 16;
             this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN";
             this.currentWindowInfo.UseCompatibleTextRendering = true;
+            this.currentWindowInfo.UseWaitCursor = true;
             // 
             // rememberMe
             // 
@@ -351,17 +352,6 @@
             this.settingsQualityText.TabIndex = 27;
             this.settingsQualityText.Text = "SELECT DOWNLOAD SIZE:";
             // 
-            // settingsLanguageDesc
-            // 
-            this.settingsLanguageDesc.BackColor = System.Drawing.Color.Transparent;
-            this.settingsLanguageDesc.ForeColor = System.Drawing.Color.White;
-            this.settingsLanguageDesc.Location = new System.Drawing.Point(296, 222);
-            this.settingsLanguageDesc.Name = "settingsLanguageDesc";
-            this.settingsLanguageDesc.Size = new System.Drawing.Size(427, 56);
-            this.settingsLanguageDesc.TabIndex = 28;
-            this.settingsLanguageDesc.Text = "Select the language that the game text and audio should be displayed in. This wil" +
-    "l not affect your chat or server options.";
-            // 
             // settingsQualityDesc
             // 
             this.settingsQualityDesc.BackColor = System.Drawing.Color.Transparent;
@@ -534,7 +524,7 @@
             this.launcherVersion.AutoSize = true;
             this.launcherVersion.BackColor = System.Drawing.Color.Transparent;
             this.launcherVersion.ForeColor = System.Drawing.Color.DarkGray;
-            this.launcherVersion.Location = new System.Drawing.Point(13, 537);
+            this.launcherVersion.Location = new System.Drawing.Point(12, 540);
             this.launcherVersion.Name = "launcherVersion";
             this.launcherVersion.Size = new System.Drawing.Size(46, 13);
             this.launcherVersion.TabIndex = 2;
@@ -545,12 +535,13 @@
             this.imageServerName.BackColor = System.Drawing.Color.Transparent;
             this.imageServerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.imageServerName.ForeColor = System.Drawing.Color.White;
-            this.imageServerName.Location = new System.Drawing.Point(31, 279);
+            this.imageServerName.Location = new System.Drawing.Point(31, 185);
             this.imageServerName.Name = "imageServerName";
-            this.imageServerName.Size = new System.Drawing.Size(370, 94);
+            this.imageServerName.Size = new System.Drawing.Size(370, 188);
             this.imageServerName.TabIndex = 19;
             this.imageServerName.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.imageServerName.UseCompatibleTextRendering = true;
+            this.imageServerName.UseMnemonic = false;
             // 
             // registerCancel
             // 
@@ -596,6 +587,17 @@
             this.welcomeBack.TabIndex = 46;
             this.welcomeBack.Text = "WELCOME BACK, ";
             // 
+            // settingsLanguageDesc
+            // 
+            this.settingsLanguageDesc.BackColor = System.Drawing.Color.Transparent;
+            this.settingsLanguageDesc.ForeColor = System.Drawing.Color.White;
+            this.settingsLanguageDesc.Location = new System.Drawing.Point(296, 222);
+            this.settingsLanguageDesc.Name = "settingsLanguageDesc";
+            this.settingsLanguageDesc.Size = new System.Drawing.Size(427, 56);
+            this.settingsLanguageDesc.TabIndex = 28;
+            this.settingsLanguageDesc.Text = "Select the language that the game text and audio should be displayed in. This wil" +
+    "l not affect your chat or server options.";
+            // 
             // playProgress
             // 
             this.playProgress.BackColor = System.Drawing.Color.Transparent;
@@ -615,7 +617,6 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1000, 562);
             this.Controls.Add(this.welcomeBack);
-            this.Controls.Add(this.logoutButton);
             this.Controls.Add(this.playProgress);
             this.Controls.Add(this.registerButton);
             this.Controls.Add(this.launcherVersion);
@@ -652,10 +653,11 @@
             this.Controls.Add(this.registerPassword);
             this.Controls.Add(this.settingsLanguageText);
             this.Controls.Add(this.registerEmailText);
-            this.Controls.Add(this.verticalBanner);
             this.Controls.Add(this.settingsQuality);
             this.Controls.Add(this.imageServerName);
             this.Controls.Add(this.playButton);
+            this.Controls.Add(this.verticalBanner);
+            this.Controls.Add(this.logoutButton);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

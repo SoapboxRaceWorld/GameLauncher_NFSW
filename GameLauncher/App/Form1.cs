@@ -43,6 +43,8 @@ namespace GameLauncher {
         String langInfo;
         float DPIDefaultScale = 96f;
 
+        DiscordRpc.RichPresence presence = new DiscordRpc.RichPresence();
+
         IniFile SettingFile = new IniFile("Settings.ini");
         string UserSettings = Environment.ExpandEnvironmentVariables("%AppData%\\Need for Speed World\\Settings\\UserSettings.xml");
 
@@ -317,7 +319,9 @@ namespace GameLauncher {
             }
 
             serverPick.DataSource = items;
-            serverPick.SelectedIndex = 0;
+            try { 
+                serverPick.SelectedIndex = 0;
+            } catch { }
 
             //Silliest way to prevent doublecall of TextChanged event...
             if(serverlistloaded == true) {
@@ -409,6 +413,10 @@ namespace GameLauncher {
                 File.WriteAllText(SettingFile.Read("InstallationDirectory") + "/modules/xmppsubject.soapbox.module",  ExtractResource.AsString("GameLauncher.SoapBoxModules.xmppsubject.soapbox.module"));
             }
 
+            if(!File.Exists("discord-rpc.dll")) {
+                File.WriteAllBytes("discord-rpc.dll", ExtractResource.AsByte("GameLauncher.Discord.discord-rpc.dll"));
+            }
+
             //Trigger login button for offline
             //if(builtinserver == true) {
             //    this.loginButton.ForeColor = Color.White;
@@ -447,8 +455,6 @@ namespace GameLauncher {
             this.BeginInvoke((MethodInvoker)delegate {
                 launchNFSW();
             });
-
-           
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
@@ -669,6 +675,11 @@ namespace GameLauncher {
             string numPlayers;
             string serverName = serverPick.GetItemText(serverPick.SelectedItem);
 
+            //Let's get only first 2 words
+            var WordsArray = serverName.Split();
+            string richPresenceIconID = WordsArray[0] + WordsArray[1];
+            richPresenceIconID = richPresenceIconID.ToLower();
+
             onlineCount.Text = "";
 
             //if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server") {
@@ -694,6 +705,20 @@ namespace GameLauncher {
                     client.CancelAsync();
                     return;
                 } else if (e2.Error != null) {
+                    if (File.Exists("discord-rpc.dll")) {
+                        DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
+                        DiscordRpc.Initialize("378322260655603713", ref handlers, true, "");
+
+                        presence.details = serverPick.GetItemText(serverPick.SelectedItem);
+                        presence.state = "OFFLINE";
+                        presence.largeImageText = "SBRW";
+                        presence.largeImageKey = "icon2";
+                        presence.partySize = 0;
+                        presence.partyMax = 0;
+                        presence.instance = true;
+                        DiscordRpc.UpdatePresence(ref presence);
+                    }
+
                     onlineCount.Text = "";
                     serverEnabled = false;
                 } else {
@@ -736,7 +761,25 @@ namespace GameLauncher {
                             }
 
                             numPlayers = json.onlineNumber + " out of " + json.numberOfRegistered;
-                        }
+
+                            if (File.Exists("discord-rpc.dll")) {
+                                DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
+                                DiscordRpc.Initialize("378322260655603713", ref handlers, true, "");
+
+                                presence.details = serverName;
+                                presence.state = "ONLINE";
+                                presence.largeImageText = serverName;
+                                presence.largeImageKey = richPresenceIconID;
+                                presence.partySize = json.onlineNumber;
+                                presence.partyMax = json.numberOfRegistered;
+                                presence.partyId = "SBRW";
+                                presence.matchSecret = "SBRW2";
+                                presence.joinSecret = "SBRW3";
+                                presence.spectateSecret = "SBRW4";
+                                presence.instance = true;
+                                DiscordRpc.UpdatePresence(ref presence);
+                            }
+                    }
                     //}
 
                     onlineCount.Text = "Players on server: " + numPlayers;
@@ -767,7 +810,7 @@ namespace GameLauncher {
                     }
 
                     //if(DetectLinux.WineDetected() == false) { 
-                        Ping pingSender = new Ping();
+                    Ping pingSender = new Ping();
                         pingSender.SendAsync(StringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
                         pingSender.PingCompleted += (sender3, e3) => {
                             PingReply reply = e3.Reply;
@@ -923,9 +966,13 @@ namespace GameLauncher {
         }
 
         private void logoutButton_Click(object sender, EventArgs e) {
-            this.BackgroundImage = Properties.Resources.loginbg;
-            LoggedInFormElements(false);
-            LoginFormElements(true);
+            DialogResult reply = MessageBox.Show(null, "Are you sure you wanna logout from " + serverPick.GetItemText(serverPick.SelectedItem) + "?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (reply == DialogResult.Yes) {
+                this.BackgroundImage = Properties.Resources.loginbg;
+                loggedIn = false;
+                LoggedInFormElements(false);
+                LoginFormElements(true);
+            }
         }
 
         private void logoutButton_MouseDown(object sender, EventArgs e) {
@@ -1108,6 +1155,7 @@ namespace GameLauncher {
             this.BackgroundImage = Properties.Resources.secondarybackground;
             SettingsFormElements(true);
             RegisterFormElements(false);
+            LoggedInFormElements(false);
             LoginFormElements(false);
         }
 
@@ -1175,13 +1223,14 @@ namespace GameLauncher {
 
             UserSettingsXML.Save(UserSettings);
 
-            this.BackgroundImage = Properties.Resources.loginbg;
             SettingsFormElements(false);
 
             if(loggedIn) {
+                this.BackgroundImage = Properties.Resources.loggedbg;
                 LoginFormElements(false);
                 LoggedInFormElements(true);
-            } else { 
+            } else {
+                this.BackgroundImage = Properties.Resources.loginbg;
                 LoggedInFormElements(false);
                 LoginFormElements(true);
             }
@@ -1217,8 +1266,10 @@ namespace GameLauncher {
         }
 
         private void playButton_Click(object sender, EventArgs e) {
+            loginButton_Click(sender, e);
+
             if (loggedIn == false) {
-                MessageBox.Show("Please log in first!");
+                //MessageBox.Show("Please log in first!");
             } else {
 
                 if (playenabled == false) {
@@ -1303,7 +1354,7 @@ namespace GameLauncher {
                 //} else {
                     int secondsToCloseLauncher = 5;
 
-                    while(secondsToCloseLauncher > 0) {
+                while (secondsToCloseLauncher > 0) {
                         this.playProgressText.Text = "LOADING GAME. LAUNCHER WILL MINIMIZE ITSELF IN " + secondsToCloseLauncher + " SECONDS";
                         Delay.WaitSeconds(1);
                         secondsToCloseLauncher--;
