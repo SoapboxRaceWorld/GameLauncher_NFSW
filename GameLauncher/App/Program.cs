@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes;
+using GameLauncherReborn;
 
 namespace GameLauncher {
     static class Program {
@@ -15,15 +16,22 @@ namespace GameLauncher {
             bool wine = DetectLinux.WineDetected();
             bool linux = DetectLinux.LinuxDetected();
 
+            //Languages
+            if (!File.Exists("Languages")) {
+                Directory.CreateDirectory("Languages");
+            }
+
+            //Discord fix
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+
             //Remove zip file
-            File.Delete(Directory.GetCurrentDirectory() + "\\tempname.zip");
+            try {
+                File.Delete(Directory.GetCurrentDirectory() + "\\tempname.zip");
+            } catch { }
 
             //Console log with warning
             if (mono == true) {
                 MessageBox.Show(null, "Mono support is still under alpha stage. Therefore, launcher could not launch.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            } else if (wine == true) {
-                //It's completed, fully compatible since now :)
-                //MessageBox.Show(null, "Wine support is still under alpha stage. Therefore, launcher could not launch.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             //Add LZMA.dll on the fly (used for decompression of section{int}.dll files)
@@ -37,17 +45,9 @@ namespace GameLauncher {
             }
 
             //Detect if NFSW is launched
-            Mutex detectRunningNFSW = new Mutex(false, "Global\\{3E34CEFB-7B34-4e62-8034-33256B8BC2F7}");
-            try {
-                if (!detectRunningNFSW.WaitOne(0, false)) {
-                    MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    Environment.Exit(0);
-                }
-            } finally {
-                if (detectRunningNFSW != null) {
-                    detectRunningNFSW.Close();
-                    detectRunningNFSW = null;
-                }
+            if(NFSW.isNFSWRunning()) {
+                MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
             }
 
             Mutex mutex = new Mutex(false, "GameLauncherNFSW-MeTonaTOR"); //Forgot about other launchers...
@@ -74,7 +74,7 @@ namespace GameLauncher {
                         message += "\nYou will be moved to the project page for re-download.";
 
                         MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        Process.Start(@"https://github.com/metonator/GameLauncher_NFSW/releases");
+                        Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases");
                         Environment.Exit(1);
                     }
 
@@ -86,13 +86,9 @@ namespace GameLauncher {
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
                         Application.Run(new mainScreen());
-                    //} catch(Exception ex) {
-                    //    if(linux == true) {
-                    //        extraLinuxInfo = "\n\nAditionally, please report that you're using Wine/Mono Runtime and your Linux Distro";
-                    //    }
-
-                    //    MessageBox.Show(null, "Failed to launch GameLauncher. " + ex.Message + "\n\nStack Trace:\n" + ex.StackTrace + extraLinuxInfo, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    //    Environment.Exit(1);
+                    //} catch(Exception) {
+                        //Temporarely we gonna kill it.
+                    //  Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                     //}
                 } else {
                     MessageBox.Show(null, "An instance of the application is already running.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);

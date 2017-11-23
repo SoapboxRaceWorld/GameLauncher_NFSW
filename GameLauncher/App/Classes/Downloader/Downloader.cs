@@ -179,24 +179,29 @@ namespace GameLauncher
                 }
                 else
                 {
-                    WebClient webClient = new WebClient();
-                    webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.Downloader_DownloadFileCompleted);
-                    string tempFileName = Path.GetTempFileName();
-                    webClient.DownloadFileAsync(new Uri(url), tempFileName);
-                    while (webClient.IsBusy)
-                    {
-                        if (Downloader.mStopFlag)
+
+                    try {
+                        WebClient webClient = new WebClient();
+                        webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.Downloader_DownloadFileCompleted);
+                        string tempFileName = Path.GetTempFileName();
+                        webClient.DownloadFileAsync(new Uri(url), tempFileName);
+                        while (webClient.IsBusy)
                         {
-                            webClient.CancelAsync();
-                            result = null;
-                            return result;
+                            if (Downloader.mStopFlag)
+                            {
+                                webClient.CancelAsync();
+                                result = null;
+                                return result;
+                            }
+                            Thread.Sleep(100);
                         }
-                        Thread.Sleep(100);
+                        XmlDocument xmlDocument = new XmlDocument();
+                        xmlDocument.Load(tempFileName);
+                        Downloader.mIndexCached = xmlDocument;
+                        result = xmlDocument;
+                    } catch {
+                        result = null;
                     }
-                    XmlDocument xmlDocument = new XmlDocument();
-                    xmlDocument.Load(tempFileName);
-                    Downloader.mIndexCached = xmlDocument;
-                    result = xmlDocument;
                 }
             }
             catch (Exception ex)

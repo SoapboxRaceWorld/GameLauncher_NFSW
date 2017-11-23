@@ -41,12 +41,24 @@ namespace GameLauncher {
         String serverIP = "";
         String serverCacheKey = "18051995"; // Try to guess what this means for me :)
         String langInfo;
+        String UILanguage;
         float DPIDefaultScale = 96f;
 
-        DiscordRpc.RichPresence presence = new DiscordRpc.RichPresence();
+        Graphics formGraphics;
+        Pen ColorOffline = new Pen(Color.FromArgb(128, 0, 0));
+        Pen ColorOnline = new Pen(Color.FromArgb(0, 128, 0));
+        Pen ColorLoading = new Pen(Color.FromArgb(0, 0, 0));
 
+        DiscordRpc.RichPresence presence = new DiscordRpc.RichPresence();
+        
         IniFile SettingFile = new IniFile("Settings.ini");
         string UserSettings = Environment.ExpandEnvironmentVariables("%AppData%\\Need for Speed World\\Settings\\UserSettings.xml");
+
+        protected override void OnPaint(PaintEventArgs e) {
+            Pen p = new Pen(Color.FromArgb(4, 9, 16));
+            e.Graphics.DrawRectangle(p, new Rectangle(new Point(0, 0), new Size(this.Size.Width - 1, this.Size.Height - 1)));
+            e.Graphics.DrawRectangle(p, new Rectangle(new Point(2, 2), new Size(this.Size.Width - 5, this.Size.Height - 5)));
+        }
 
         private void moveWindow_MouseDown(object sender, MouseEventArgs e) {
             mouseDownPoint = new Point(e.X, e.Y);
@@ -54,7 +66,7 @@ namespace GameLauncher {
 
         private void moveWindow_MouseUp(object sender, MouseEventArgs e) {
             mouseDownPoint = Point.Empty;
-            this.Refresh();
+            //this.Refresh();
             this.Opacity = 1;
         }
 
@@ -63,7 +75,7 @@ namespace GameLauncher {
             Form f = this as Form;
             f.Location = new Point(f.Location.X + (e.X - mouseDownPoint.X), f.Location.Y + (e.Y - mouseDownPoint.Y));
             windowMoved = true;
-            this.Opacity = 0.7;
+            this.Opacity = 0.9;
         }
 
         public void ConsoleLog(string e, string type) {
@@ -83,13 +95,19 @@ namespace GameLauncher {
         public mainScreen() {
             if (Environment.OSVersion.Version.Major <= 5) {
                 if(DetectLinux.WineDetected() == false) { 
-                    MessageBox.Show(null, "Sadly, the red background cannot be fixed on Windows XP and lower, sorry...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //MessageBox.Show(null, "Sadly, the red background cannot be fixed on Windows XP and lower, sorry...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             } else {
                 Font = new Font(Font.Name, 8.25f * DPIDefaultScale / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
             }
 
             InitializeComponent();
+
+            if (SettingFile.KeyExists("UIlanguage")) {
+                UILanguage = SettingFile.Read("UIlanguage");
+            } else {
+                UILanguage = "English";
+            }
 
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 
@@ -139,7 +157,6 @@ namespace GameLauncher {
             registerCancel.MouseUp += new MouseEventHandler(registerCancel_MouseUp);
             registerCancel.MouseDown += new MouseEventHandler(registerCancel_MouseDown);
 
-            //logoutButton
             logoutButton.Click += new EventHandler(logoutButton_Click);
             logoutButton.MouseEnter += new EventHandler(logoutButton_MouseEnter);
             logoutButton.MouseLeave += new EventHandler(logoutButton_MouseLeave);
@@ -179,13 +196,12 @@ namespace GameLauncher {
                 File.WriteAllText(file, "test");
                 File.Delete(file);
             } catch {
-                Self.runAsAdmin();
-                Environment.Exit(Environment.ExitCode);
+                MessageBox.Show(null, Language.getLangString("ERROR_NOPERMISSION", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             //Somewhere here we will setup the game installation directory
             if (String.IsNullOrEmpty(SettingFile.Read("InstallationDirectory"))) {
-                    MessageBox.Show(null, "Click OK to select folder with NFSW.exe", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(null, Language.getLangString("INSTALL_INFO", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     var fbd = new FolderBrowserDialog();
                     DialogResult result = fbd.ShowDialog();
@@ -216,6 +232,11 @@ namespace GameLauncher {
             onlineCount.Parent = verticalBanner;
             onlineCount.Location = pos2;
             onlineCount.BackColor = Color.Transparent;
+
+            formGraphics = this.CreateGraphics();
+            formGraphics.DrawRectangle(ColorLoading, new Rectangle(new Point(30, 125), new Size(372, 274)));
+            formGraphics.DrawRectangle(ColorLoading, new Rectangle(new Point(29, 124), new Size(374, 276)));
+            formGraphics.Dispose();
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
@@ -223,27 +244,34 @@ namespace GameLauncher {
 
             if (!SettingFile.KeyExists("SkipUpdate")) {
                 Updater.checkForUpdate(sender, e);
-            } else {
-                ConsoleLog("Updater has been disabled.", "info");
             }
 
-            //Console output to textbox
+            var UIlanguages = Language.getLanguages();
+            settingsUILang.DisplayMember = "Text";
+            settingsUILang.ValueMember = "Value";
+            settingsUILang.DataSource = UIlanguages;
+
+            if (SettingFile.KeyExists("UILanguage")) {
+                settingsUILang.SelectedValue = SettingFile.Read("UILanguage");
+                UILanguage = SettingFile.Read("UILanguage");
+            } else {
+                settingsUILang.SelectedValue = "English";
+                UILanguage = "English";
+            }
 
             ContextMenu = new ContextMenu();
-            ContextMenu.MenuItems.Add(new MenuItem("&Check for updates", Updater.checkForUpdate));
-            ContextMenu.MenuItems.Add(new MenuItem("&About", About.showAbout));
-            ContextMenu.MenuItems.Add(new MenuItem("&Settings", settingsButton_Click));
+            ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CHECKUPDATE", UILanguage), Updater.checkForUpdate));
+            ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_ABOUT", UILanguage), About.showAbout));
+            ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_SETTINGS", UILanguage), settingsButton_Click));
             ContextMenu.MenuItems.Add("-");
-            ContextMenu.MenuItems.Add(new MenuItem("&Close", closebtn_Click));
+            ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CLOSE", UILanguage), closebtn_Click));
 
             Notification.ContextMenu = ContextMenu;
             Notification.Icon = new Icon(Icon, Icon.Width, Icon.Height);
             Notification.Text = "GameLauncher";
             Notification.Visible = true;
 
-            ConsoleLog("Log initialized", "info");
-            ConsoleLog("GameLauncher initialized", "info");
-            ConsoleLog("Installation directory: " + Path.GetFullPath(SettingFile.Read("InstallationDirectory")), "info");
+            this.ContextMenu = null;
 
             email.Text = SettingFile.Read("AccountEmail");
             if (!String.IsNullOrEmpty(SettingFile.Read("AccountEmail")) && !String.IsNullOrEmpty(SettingFile.Read("Password"))) {
@@ -253,18 +281,11 @@ namespace GameLauncher {
             //Fetch serverlist, and disable if failed to fetch.
             var response = "";
 
-            if(!File.Exists("servers.txt")) {
-                File.Create("servers.txt");
-            } else {
-                response += File.ReadAllText("servers.txt");
-            }
-
             try {
                 WebClient wc = new WebClientWithTimeout();
 
                 string serverurl = "http://nfsw.metonator.ct8.pl/serverlist.txt";
                 response += wc.DownloadString(serverurl);
-                ConsoleLog("Fetching " + serverurl, "info");
 
                 serverlistloaded = true;
 
@@ -280,11 +301,8 @@ namespace GameLauncher {
                     StreamWriter streamWriter = new StreamWriter(cryptoStream);
                     streamWriter.Write(response);
                     streamWriter.Close();
-                    ConsoleLog("Successfully created ServerCache", "success");
-                } catch (Exception ex) {
-                    ConsoleLog("Failed to create cached serverlist. " + ex.Message, "error");
-                }
-            } catch (Exception ex) {
+                } catch { }
+            } catch {
                 if(File.Exists("ServerCache")) {
                     FileStream fileStream = new FileStream("ServerCache", FileMode.Open);
 
@@ -298,10 +316,13 @@ namespace GameLauncher {
                     response = streamReader.ReadToEnd();
 
                     serverlistloaded = true;
-                    ConsoleLog("Fetched Serverlist from Cache", "warning");
-                } else {
-                    ConsoleLog("Failed to fetch serverlist. " + ex.Message, "error");
-                }
+                } else { }
+            }
+
+            if (!File.Exists("servers.txt")) {
+                File.Create("servers.txt");
+            } else {
+                response += File.ReadAllText("servers.txt");
             }
 
             //Time to add servers
@@ -319,13 +340,14 @@ namespace GameLauncher {
             }
 
             serverPick.DataSource = items;
-            try { 
-                serverPick.SelectedIndex = 0;
-            } catch { }
 
             //Silliest way to prevent doublecall of TextChanged event...
             if(serverlistloaded == true) {
-                if(!SettingFile.KeyExists("Server")) {
+                try {
+                    serverPick.SelectedIndex = 0;
+                } catch { }
+
+                if (!SettingFile.KeyExists("Server")) {
                     SettingFile.Write("Server", serverPick.SelectedValue.ToString());
                 }
 
@@ -349,7 +371,6 @@ namespace GameLauncher {
                 useSavedPassword = true;
                 this.loginButton.Image = Properties.Resources.smallbutton_enabled;
                 this.loginButton.ForeColor = Color.White;
-                ConsoleLog("Password recovered from Settings.ini file.", "success");
             } else {
                 loginEnabled = false;
                 serverEnabled = false;
@@ -397,31 +418,32 @@ namespace GameLauncher {
                 settingsQuality.SelectedValue = SettingFile.Read("TracksHigh");
             }
 
-            //Detect UserSettings
-            if(File.Exists(UserSettings)) {
-                ConsoleLog("Found Game Config under " + UserSettings + " file.", "success");
+            string drive = Path.GetPathRoot(SettingFile.Read("InstallationDirectory"));
+            if (!Directory.Exists(drive)) {
+                string newdir = Directory.GetCurrentDirectory() + "\\GameFiles";
+                SettingFile.Write("InstallationDirectory", newdir);
+                MessageBox.Show(null, String.Format(Language.getLangString("ERROR_404DRIVE", UILanguage), drive, newdir), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             //Soapbox Modules (without them Freeroam might fail)
-            Directory.CreateDirectory(SettingFile.Read("InstallationDirectory"));
-            if(!File.Exists(SettingFile.Read("InstallationDirectory") + "/lightfx.dll")) {
-                File.WriteAllBytes(SettingFile.Read("InstallationDirectory") + "/lightfx.dll", ExtractResource.AsByte("GameLauncher.SoapBoxModules.lightfx.dll"));
-                Directory.CreateDirectory(SettingFile.Read("InstallationDirectory") + "/modules");
-                File.WriteAllText(SettingFile.Read("InstallationDirectory") + "/modules/udpcrc.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrc.soapbox.module"));
-                File.WriteAllText(SettingFile.Read("InstallationDirectory") + "/modules/udpcrypt1.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrypt1.soapbox.module"));
-                File.WriteAllText(SettingFile.Read("InstallationDirectory") + "/modules/udpcrypt2.soapbox.module",  ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrypt2.soapbox.module"));
-                File.WriteAllText(SettingFile.Read("InstallationDirectory") + "/modules/xmppsubject.soapbox.module",  ExtractResource.AsString("GameLauncher.SoapBoxModules.xmppsubject.soapbox.module"));
+            try {
+                Directory.CreateDirectory(SettingFile.Read("InstallationDirectory"));
+                if(!File.Exists(SettingFile.Read("InstallationDirectory") + "/lightfx.dll")) {
+                    File.WriteAllBytes(SettingFile.Read("InstallationDirectory") + "/lightfx.dll", ExtractResource.AsByte("GameLauncher.SoapBoxModules.lightfx.dll"));
+                    Directory.CreateDirectory(SettingFile.Read("InstallationDirectory") + "/modules");
+                    File.WriteAllText(SettingFile.Read("InstallationDirectory") + "/modules/udpcrc.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrc.soapbox.module"));
+                    File.WriteAllText(SettingFile.Read("InstallationDirectory") + "/modules/udpcrypt1.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrypt1.soapbox.module"));
+                    File.WriteAllText(SettingFile.Read("InstallationDirectory") + "/modules/udpcrypt2.soapbox.module",  ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrypt2.soapbox.module"));
+                    File.WriteAllText(SettingFile.Read("InstallationDirectory") + "/modules/xmppsubject.soapbox.module",  ExtractResource.AsString("GameLauncher.SoapBoxModules.xmppsubject.soapbox.module"));
+                }
+            } catch(Exception ex) {
+                MessageBox.Show(null, ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                closebtn_Click(null, null);
             }
 
             if(!File.Exists("discord-rpc.dll")) {
                 File.WriteAllBytes("discord-rpc.dll", ExtractResource.AsByte("GameLauncher.Discord.discord-rpc.dll"));
             }
-
-            //Trigger login button for offline
-            //if(builtinserver == true) {
-            //    this.loginButton.ForeColor = Color.White;
-            //    this.loginButton.Image = Properties.Resources.playButton_enable;
-            //}
 
             //Hide other windows
             RegisterFormElements(false);
@@ -434,7 +456,7 @@ namespace GameLauncher {
             //Command-line Arguments
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length == 2) {
-                MessageBox.Show("Your launcher has been updated.");
+                MessageBox.Show(Language.getLangString("MAIN_UPDATED", UILanguage));
             }
 
             //Possible fix for "MAXIMUM" texture (untested, but worth adding that refference)
@@ -444,13 +466,18 @@ namespace GameLauncher {
                     try {
                         Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", Path.GetFullPath(SettingFile.Read("InstallationDirectory")));
                         Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "LaunchInstallDir", Path.GetFullPath(Application.ExecutablePath));
-                    } catch {
-                        ConsoleLog("Failed to set registry options. Please, run GameLauncher.exe as Admin (one time only)", "warning");
-                    }
+                    } catch { }
                 }
-            } catch (Exception ex) {
-                ConsoleLog("Failed to read registry options. " + ex.Message, "warning");
+            } catch { }
+
+            //Somewhere here translations?
+            if(String.IsNullOrEmpty(SettingFile.Read("UILanguage"))) {
+                UILanguage = "English";
+            } else {
+                UILanguage = SettingFile.Read("UILanguage");
             }
+
+            setTranslations(UILanguage);
 
             this.BeginInvoke((MethodInvoker)delegate {
                 launchNFSW();
@@ -477,6 +504,9 @@ namespace GameLauncher {
 
             //Fix InstallationDirectory
             SettingFile.Write("InstallationDirectory", Path.GetFullPath(SettingFile.Read("InstallationDirectory")));
+
+            //Discord unload?
+            DiscordRpc.Shutdown();
 
             //Dirty way to terminate application (sometimes Application.Exit() didn't really quitted, was still running in background)
             Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
@@ -574,12 +604,6 @@ namespace GameLauncher {
                 SettingFile.DeleteKey("Password");
             }
 
-            ConsoleLog("Trying to login into " + serverPick.GetItemText(serverPick.SelectedItem) + " (" + serverIP + ")", "info");
-
-            if(builtinserver == true) {
-                MessageBox.Show(null, "Careful: This built-in server is in alpha! Use it at your own risk.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
             try {
                 WebClient wc = new WebClientWithTimeout();
                 wc.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
@@ -629,12 +653,12 @@ namespace GameLauncher {
                     LoginFormElements(false);
                     LoggedInFormElements(true);
 
-                    this.welcomeBack.Text = "WELCOME BACK, " + username.ToUpper() + "!";
+                    this.welcomeBack.Text = String.Format(Language.getLangString("MAIN_WELCOMEBACK", UILanguage), username).ToUpper();
                 } else {
-                     ConsoleLog("Invalid username or password.", "error");
+                     ConsoleLog(Language.getLangString("ERROR_INVALIDCREDS", UILanguage), "error");
                 }
             } catch {
-                ConsoleLog("Failed to get token from server, probably is offline.", "error");
+                ConsoleLog(Language.getLangString("ERROR_SERVEROFFLINE", UILanguage), "error");
             }
         }
 
@@ -661,6 +685,11 @@ namespace GameLauncher {
         private void serverPick_TextChanged(object sender, EventArgs e) {
             if (!skipServerTrigger) { return; }
 
+            formGraphics = this.CreateGraphics();
+            formGraphics.DrawRectangle(ColorLoading, new Rectangle(new Point(30, 125), new Size(372, 274)));
+            formGraphics.DrawRectangle(ColorLoading, new Rectangle(new Point(29, 124), new Size(374, 276)));
+            formGraphics.Dispose();
+
             imageServerName.Text = serverPick.GetItemText(serverPick.SelectedItem);
 
             loginEnabled = false;
@@ -675,24 +704,23 @@ namespace GameLauncher {
             string numPlayers;
             string serverName = serverPick.GetItemText(serverPick.SelectedItem);
 
-            //Let's get only first 2 words
             var WordsArray = serverName.Split();
             string richPresenceIconID = WordsArray[0] + WordsArray[1];
             richPresenceIconID = richPresenceIconID.ToLower();
 
             onlineCount.Text = "";
 
-            //if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server") {
-            //    builtinserver = true;
-            //    this.loginButton.Image = Properties.Resources.playButton_enable;
-            //    this.loginButton.Text = "LAUNCH";
-            //    this.loginButton.ForeColor = Color.White;
-            //} else {
+            if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server") {
+                builtinserver = true;
+                this.loginButton.Image = Properties.Resources.smallbutton_enabled;
+                this.loginButton.Text = Language.getLangString("MAIN_LAUNCH", UILanguage).ToUpper();
+                this.loginButton.ForeColor = Color.White;
+            } else {
                 builtinserver = false;
                 this.loginButton.Image = Properties.Resources.smallbutton_disabled;
-                this.loginButton.Text = "LOG IN";
+                this.loginButton.Text = Language.getLangString("MAIN_LOGIN", UILanguage).ToUpper();
                 this.loginButton.ForeColor = Color.Gray;
-            //}
+            }
 
             var client = new WebClientWithTimeout();
             client.Headers.Add("user-agent", "GameLauncher (+https://github.com/metonator/GameLauncher_NFSW)");
@@ -719,17 +747,22 @@ namespace GameLauncher {
                         DiscordRpc.UpdatePresence(ref presence);
                     }
 
+                    formGraphics = this.CreateGraphics();
+                    formGraphics.DrawRectangle(ColorOffline, new Rectangle(new Point(30, 125), new Size(372, 274)));
+                    formGraphics.DrawRectangle(ColorOffline, new Rectangle(new Point(29, 124), new Size(374, 276)));
+                    formGraphics.Dispose();
+
                     onlineCount.Text = "";
                     serverEnabled = false;
                 } else {
 
-                    //if (serverName == "Offline Built-In Server") {
-                    //    numPlayers = "∞";
-                    ///} else {
+                    if (serverName == "Offline Built-In Server") {
+                        numPlayers = "∞";
+                    } else {
                         if (Environment.OSVersion.Version.Major <= 5) {
                             ticketRequired = true;
                             verticalImageUrl = null;
-                            numPlayers = "Unknown";
+                            numPlayers = Language.getLangString("MAIN_UNKNOWN", UILanguage);
                         } else {
                             GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
                             if (!String.IsNullOrEmpty(json.bannerUrl)) {
@@ -760,7 +793,7 @@ namespace GameLauncher {
                                 ticketRequired = false;
                             }
 
-                            numPlayers = json.onlineNumber + " out of " + json.numberOfRegistered;
+                            numPlayers = String.Format(Language.getLangString("MAIN_PLAYERSOUTOF", UILanguage), json.onlineNumber, json.numberOfRegistered);
 
                             if (File.Exists("discord-rpc.dll")) {
                                 DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
@@ -779,10 +812,15 @@ namespace GameLauncher {
                                 presence.instance = true;
                                 DiscordRpc.UpdatePresence(ref presence);
                             }
-                    }
-                    //}
 
-                    onlineCount.Text = "Players on server: " + numPlayers;
+                            formGraphics = this.CreateGraphics();
+                            formGraphics.DrawRectangle(ColorOnline, new Rectangle(new Point(30, 125), new Size(372, 274)));
+                            formGraphics.DrawRectangle(ColorOnline, new Rectangle(new Point(29, 124), new Size(374, 276)));
+                            formGraphics.Dispose();
+                        }
+                    }
+
+                    onlineCount.Text = String.Format(Language.getLangString("MAIN_PLAYERSONSERVER", UILanguage), numPlayers); // "Players on server: " + numPlayers;
                     serverEnabled = true;
 
                     if (!String.IsNullOrEmpty(verticalImageUrl)) {
@@ -801,7 +839,6 @@ namespace GameLauncher {
                                     MemoryStream memoryStream = new MemoryStream(e4.Result);
                                     image = Image.FromStream(memoryStream);
                                     verticalBanner.Image = image;
-                                    //verticalBanner.BackColor = Color.Black;
                                 } catch {
                                     verticalBanner.Image = null;
                                 }
@@ -809,21 +846,23 @@ namespace GameLauncher {
                         };
                     }
 
-                    //if(DetectLinux.WineDetected() == false) { 
+                    onlineCount.Text += ". ";
+
+                    if(DetectLinux.WineDetected() == false) { 
                     Ping pingSender = new Ping();
                         pingSender.SendAsync(StringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
                         pingSender.PingCompleted += (sender3, e3) => {
                             PingReply reply = e3.Reply;
 
-                            if (reply.Status == IPStatus.Success /*&& serverName != "Offline Built-In Server"*/) {
-                                onlineCount.Text += ". Server ping is " + reply.RoundtripTime + "ms.";
+                            if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
+                                onlineCount.Text += String.Format(Language.getLangString("MAIN_PINGSUCCESS", UILanguage), reply.RoundtripTime);
                             } else {
-                                onlineCount.Text += ". Server doesn't allow pinging.";
+                                onlineCount.Text += Language.getLangString("MAIN_PINGFAILED", UILanguage);
                             }
                         };
-                    //} else {
-                    //    onlineCount.Text += ". Ping is disabled on non-Windows platform. ";
-                    //}
+                    } else {
+                        onlineCount.Text += Language.getLangString("MAIN_PINGDISABLED", UILanguage);
+                    }
                 }
             };
         }
@@ -861,16 +900,16 @@ namespace GameLauncher {
             settingsSave.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsLanguageDesc.Font = new Font(fontFamily1, 8f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             settingsQualityDesc.Font = new Font(fontFamily1, 8f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsUILangDesc.Font = new Font(fontFamily1, 8f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsUILangText.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             logoutButton.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
         }
 
         private void registerText_LinkClicked(object sender, EventArgs e) {
-            //MessageBox.Show("Temporarely disabled!");
-
             this.BackgroundImage = Properties.Resources.secondarybackground;
-            this.currentWindowInfo.Text = "REGISTER ON " + serverPick.GetItemText(serverPick.SelectedItem).ToUpper() + ":";
+            this.currentWindowInfo.Text = String.Format(Language.getLangString("MAIN_INFORMATIONREG", UILanguage), serverPick.GetItemText(serverPick.SelectedItem)).ToUpper();
             LoginFormElements(false);
             RegisterFormElements(true);
         }
@@ -886,7 +925,7 @@ namespace GameLauncher {
 
         private void LoggedInFormElements(bool hideElements) {
             if (hideElements == true) {
-                this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN:";
+                this.currentWindowInfo.Text = Language.getLangString("MAIN_INFORMATION", UILanguage).ToUpper();
                 this.currentWindowInfo.Location = new Point(479, 140);
                 this.currentWindowInfo.Size = new Size(222, 46);
             }
@@ -904,7 +943,7 @@ namespace GameLauncher {
 
         private void LoginFormElements(bool hideElements = false) {
             if(hideElements == true) {
-                this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN:";
+                this.currentWindowInfo.Text = Language.getLangString("MAIN_INFORMATION", UILanguage).ToUpper();
                 this.currentWindowInfo.Location = new Point(479, 140);
                 this.currentWindowInfo.Size = new Size(222, 46);
             }
@@ -966,7 +1005,7 @@ namespace GameLauncher {
         }
 
         private void logoutButton_Click(object sender, EventArgs e) {
-            DialogResult reply = MessageBox.Show(null, "Are you sure you wanna logout from " + serverPick.GetItemText(serverPick.SelectedItem) + "?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            DialogResult reply = MessageBox.Show(null, String.Format(Language.getLangString("MAIN_LOGOUTCONFIRM", UILanguage), serverPick.GetItemText(serverPick.SelectedItem)), "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (reply == DialogResult.Yes) {
                 this.BackgroundImage = Properties.Resources.loginbg;
                 loggedIn = false;
@@ -1009,7 +1048,7 @@ namespace GameLauncher {
 
         private void registerCancel_Click(object sender, EventArgs e) {
             this.BackgroundImage = Properties.Resources.loginbg;
-            this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN";
+            this.currentWindowInfo.Text = Language.getLangString("MAIN_INFORMATION", UILanguage).ToUpper();
             RegisterFormElements(false);
             LoginFormElements(true);
         }
@@ -1032,37 +1071,36 @@ namespace GameLauncher {
 
         private void registerButton_Click(object sender, EventArgs e) {
             bool registerSuccess = true;
-            ConsoleLog("Registering... Please wait", "info");
 
             if(String.IsNullOrEmpty(registerEmail.Text)) {
-                ConsoleLog("Please enter your email", "error");
+                ConsoleLog(Language.getLangString("ERROR_REGISTER_MAILEMPTY", UILanguage), "error");
                 registerSuccess = false;
             } else if(validateEmail(registerEmail.Text) == false) {
-                ConsoleLog("Please enter your correct email", "error");
+                ConsoleLog(Language.getLangString("ERROR_REGISTER_MAILCORRECT", UILanguage), "error");
                 registerSuccess = false;
             }
 
             if(String.IsNullOrEmpty(registerTicket.Text) && ticketRequired == true) {
-                ConsoleLog("Please enter your ticket", "error");
+                ConsoleLog(Language.getLangString("ERROR_REGISTER_TICKET", UILanguage), "error");
                 registerSuccess = false;
             }
 
             if(String.IsNullOrEmpty(registerPassword.Text)) {
-                ConsoleLog("Please enter your password", "error");
+                ConsoleLog(Language.getLangString("ERROR_REGISTER_PASSWORDEMPTY", UILanguage), "error");
                 registerSuccess = false;
             }
 
             if(String.IsNullOrEmpty(registerConfirmPassword.Text)) {
-                ConsoleLog("Please confirm your password", "error");
+                ConsoleLog(Language.getLangString("ERROR_REGISTER_PASSWORDVERIFY", UILanguage), "error");
                 registerSuccess = false;
             }
 
             if(registerConfirmPassword.Text != registerPassword.Text) {
-                ConsoleLog("Passwords doesn't match", "error");
+                ConsoleLog(Language.getLangString("ERROR_REGISTER_PASSWORDMISMATCH", UILanguage), "error");
             }
 
             if(!registerAgree.Checked) {
-                ConsoleLog("You have not agreed to the Terms of Service", "error");
+                ConsoleLog(Language.getLangString("ERROR_REGISTER_TOS", UILanguage), "error");
                 registerSuccess = false;
             }
 
@@ -1119,7 +1157,7 @@ namespace GameLauncher {
                     UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
 
                     if(String.IsNullOrEmpty(DescriptionNode.InnerText)) {
-                        MessageBox.Show(null, "Account created sucessfully! Now you can login to " + serverName + "!", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(null, String.Format(Language.getLangString("MAIN_REGISTERSUCCESS", UILanguage), serverName), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         UserId = UserIdNode.InnerText;
                         LoginToken = LoginTokenNode.InnerText;
@@ -1137,7 +1175,7 @@ namespace GameLauncher {
                          ConsoleLog(DescriptionNode.InnerText, "error");
                     }
                 } catch {
-                    ConsoleLog("Failed to register, server is probably offline", "error");
+                    MessageBox.Show(Language.getLangString("ERROR_SERVEROFFLINE", UILanguage));
                 }
             }
         }
@@ -1185,6 +1223,7 @@ namespace GameLauncher {
 
         private void settingsSave_Click(object sender, EventArgs e) {
             SettingFile.Write("Language", settingsLanguage.SelectedValue.ToString());
+            SettingFile.Write("UILanguage", settingsUILang.SelectedValue.ToString());
             SettingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString());
 
             XmlDocument UserSettingsXML = new XmlDocument();
@@ -1225,6 +1264,9 @@ namespace GameLauncher {
 
             SettingsFormElements(false);
 
+            this.Update();
+            this.Refresh();
+
             if(loggedIn) {
                 this.BackgroundImage = Properties.Resources.loggedbg;
                 LoginFormElements(false);
@@ -1238,7 +1280,7 @@ namespace GameLauncher {
 
         private void SettingsFormElements(bool hideElements = true) {
             if (hideElements == true) {
-                this.currentWindowInfo.Text = "PLEASE SELECT YOUR GAME SETTINGS:";
+                this.currentWindowInfo.Text = Language.getLangString("MAIN_INFORMATIONSETTINGS", UILanguage).ToUpper();
                 this.currentWindowInfo.Location = new Point(53, 150);
                 this.currentWindowInfo.Size = new Size(700, 46);
             }
@@ -1250,6 +1292,9 @@ namespace GameLauncher {
             this.settingsQuality.Visible = hideElements;
             this.settingsQualityText.Visible = hideElements;
             this.settingsQualityDesc.Visible = hideElements;
+            this.settingsUILang.Visible = hideElements;
+            this.settingsUILangText.Visible = hideElements;
+            this.settingsUILangDesc.Visible = hideElements;
         }
 
         private void LaunchGame(string UserId, string LoginToken, string ServerIP) {
@@ -1335,10 +1380,10 @@ namespace GameLauncher {
                             LoginToken = LoginTokenNode.InnerText;
                         }
                     } catch {
-                        MessageBox.Show("Failed to update token, server is probably offline.");
+                        MessageBox.Show(Language.getLangString("ERROR_SERVERDOWN", UILanguage));
                     }
                 } catch {
-                    MessageBox.Show("Failed to update token, server is probably offline.");
+                    MessageBox.Show(Language.getLangString("ERROR_SERVERDOWN", UILanguage));
                 }
 
                 this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
@@ -1346,16 +1391,16 @@ namespace GameLauncher {
                 try {
                     LaunchGame(UserId, LoginToken, serverIP);
                 } catch {
-                    MessageBox.Show("Failed to launch game. Cannot find NFSW.exe");
+                    MessageBox.Show(Language.getLangString("ERROR_404NFSW", UILanguage));
                 }
 
-                //if (builtinserver == true) {
-                //    this.playProgressText.Text = "SOAPBOX SERVER LAUNCHED. WAITING FOR QUERIES";
-                //} else {
+                if (builtinserver == true) {
+                    this.playProgressText.Text = Language.getLangString("MAIN_BUILTINSERVERINIT", UILanguage).ToUpper();
+                } else {
                     int secondsToCloseLauncher = 5;
 
-                while (secondsToCloseLauncher > 0) {
-                        this.playProgressText.Text = "LOADING GAME. LAUNCHER WILL MINIMIZE ITSELF IN " + secondsToCloseLauncher + " SECONDS";
+                    while (secondsToCloseLauncher > 0) {
+                        this.playProgressText.Text = String.Format(Language.getLangString("MAIN_LOADINGGAME", UILanguage), secondsToCloseLauncher).ToUpper(); //"LOADING GAME. LAUNCHER WILL MINIMIZE ITSELF IN " + secondsToCloseLauncher + " SECONDS";
                         Delay.WaitSeconds(1);
                         secondsToCloseLauncher--;
                     }
@@ -1365,17 +1410,17 @@ namespace GameLauncher {
                     this.Opacity = 0;
 
                     ContextMenu = new ContextMenu();
-                    ContextMenu.MenuItems.Add(new MenuItem("&Check for updates", Updater.checkForUpdate));
-                    ContextMenu.MenuItems.Add(new MenuItem("&About", About.showAbout));
+                    ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CHECKUPDATE", UILanguage), Updater.checkForUpdate));
+                    ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_ABOUT", UILanguage), About.showAbout));
                     ContextMenu.MenuItems.Add("-");
-                    ContextMenu.MenuItems.Add(new MenuItem("&Close", minimizebtn_Click));
+                    ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CLOSE", UILanguage), minimizebtn_Click));
 
                     this.Text = "NEED FOR SPEED™ WORLD";
                     this.Update();
                     this.Refresh();
 
                     Notification.ContextMenu = ContextMenu;
-                //}
+                }
             }
         }
 
@@ -1415,7 +1460,7 @@ namespace GameLauncher {
             this.playButton.BackgroundImage = Properties.Resources.largebutton_disabled;
             this.playButton.ForeColor = Color.Gray;
 
-            this.playProgressText.Text = "CHECKING UP ALL FILES";
+            this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_CHECKINGFILES", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
             Delay.WaitSeconds(2);
 
@@ -1433,8 +1478,10 @@ namespace GameLauncher {
                 speechFile = "en";
             }
 
+            
+
             if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechhdr_" + speechFile + ".big")) {
-                this.playProgressText.Text = "LOADING FILELIST FOR DOWNLOAD...";
+                this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_LOADINGFILELIST", UILanguage).ToUpper();
                 DownloadCoreFiles();
             } else {
                 OnDownloadFinished();
@@ -1442,7 +1489,7 @@ namespace GameLauncher {
         }
 
         public void DownloadCoreFiles() {
-            this.playProgressText.Text = "CHECKING CORE FILES...";
+            this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_CHECKINGCORE", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
 
             if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe")) {
@@ -1462,7 +1509,7 @@ namespace GameLauncher {
         }
 
         public void DownloadTracksFiles() {
-            this.playProgressText.Text = "CHECKING TRACKS FILES...";
+            this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_CHECKINGTRACKS", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
 
             if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Tracks\\STREAML5RA_98.BUN")) {
@@ -1482,7 +1529,7 @@ namespace GameLauncher {
         }
 
         public void DownloadSpeechFiles() {
-            this.playProgressText.Text = "LOOKING FOR COMPATIBLE SPEECH FILES...";
+            this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_LOOKINGSPEECH", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
 
             string speechFile;
@@ -1513,7 +1560,7 @@ namespace GameLauncher {
                 langInfo = "ENGLISH";
             }
             
-            this.playProgressText.Text = "CHECKING " + langInfo + " SPEECH FILES...";
+            this.playProgressText.Text = String.Format(Language.getLangString("MAIN_DOWNLOADER_CHECKINGSPEECH", UILanguage), langInfo).ToUpper();
 
             if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big")) {
                 DownloadStartTime = DateTime.Now;
@@ -1532,7 +1579,7 @@ namespace GameLauncher {
         }
 
         public void DownloadTracksHighFiles() {
-            this.playProgressText.Text = "CHECKING TRACKSHIGH FILES...";
+            this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_CHECKINGTRACKSHIGH", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
 
             if (SettingFile.Read("TracksHigh") == "1" && !File.Exists(SettingFile.Read("InstallationDirectory") + "\\TracksHigh\\STREAML5RA_98.BUN")) {
@@ -1581,7 +1628,7 @@ namespace GameLauncher {
             if (downloadCurrent < compressedLength) {
                 int width = this.playProgressText.Width;
                 string file = filename.Replace(SettingFile.Read("InstallationDirectory") + "/", "").ToUpper();
-                this.playProgressText.Text = string.Format("DOWNLOADING {2} ({0}/{1})", this.FormatFileSize(downloadCurrent), this.FormatFileSize(compressedLength), file);
+                this.playProgressText.Text = string.Format(Language.getLangString("MAIN_DOWNLOADING", UILanguage).ToUpper(), this.FormatFileSize(downloadCurrent), this.FormatFileSize(compressedLength), file);
                 this.playProgressTime.Text = this.EstimateFinishTime(downloadCurrent, compressedLength);
             }
 
@@ -1592,19 +1639,45 @@ namespace GameLauncher {
             this.playProgress.Value = 100;
             this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
             this.playButton.ForeColor = Color.White;
-            this.playProgressText.Text = "DOWNLOAD COMPLETED";
+            this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADCOMPLETED", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
         }
 
         private void OnDownloadFailed(Exception ex) {
             this.playProgress.Value = 100;
-            this.playProgressText.Text = "DOWNLOAD FAILED! " + ex.Message.ToUpper();
+            this.playProgressText.Text = String.Format(Language.getLangString("MAIN_DOWNLOADFAILED", UILanguage), ex.Message).ToUpper();
             this.playProgressTime.Text = "";
             this.playProgress.ProgressColor = Color.Red;
         }
 
         private void OnShowMessage(string message, string header) {
             MessageBox.Show(message, header);
+        }
+
+        public void setTranslations(string LangID) {
+            emailLabel.Text                         = Language.getLangString("MAIN_EMAIL", LangID).ToUpper();
+            passwordLabel.Text                      = Language.getLangString("MAIN_PASSWORD", LangID).ToUpper();
+            rememberMe.Text                         = Language.getLangString("MAIN_REMEMBERME", LangID).ToUpper();
+            forgotPassword.Text                     = Language.getLangString("MAIN_FORGOTPASS", LangID).ToUpper();
+            playButton.Text                         = Language.getLangString("MAIN_PLAY", LangID).ToUpper();
+
+            registerEmailText.Text                  = Language.getLangString("MAIN_REGISTEREMAIL", LangID).ToUpper();
+            registerPasswordText.Text               = Language.getLangString("MAIN_REGISTERPASS", LangID).ToUpper();
+            registerConfirmPasswordText.Text        = Language.getLangString("MAIN_REGISTERCONFIRMPASS", LangID).ToUpper();
+            registerTicketText.Text                 = Language.getLangString("MAIN_REGISTERTICKET", LangID).ToUpper();
+            registerAgree.Text                      = Language.getLangString("MAIN_REGISTERTOS", LangID).ToUpper();
+            registerButton.Text                     = Language.getLangString("MAIN_REGISTER", LangID).ToUpper();
+            registerCancel.Text                     = Language.getLangString("MAIN_CANCEL", LangID).ToUpper();
+
+            settingsLanguageText.Text               = Language.getLangString("MAIN_SETTINGSLANG", LangID).ToUpper();
+            settingsQualityText.Text                = Language.getLangString("MAIN_SETTINGSQUALITY", LangID).ToUpper();
+            settingsSave.Text                       = Language.getLangString("MAIN_SAVE", LangID).ToUpper();
+            settingsLanguageDesc.Text               = Language.getLangString("MAIN_SETTINGSDESCLANG", LangID);
+            settingsQualityDesc.Text                = Language.getLangString("MAIN_SETTINGSDESCQUALITY", LangID);
+            settingsUILangText.Text                 = Language.getLangString("MAIN_SETTINGSUILANG", LangID).ToUpper();
+            settingsUILangDesc.Text                 = Language.getLangString("MAIN_SETTINGSUIDESC", LangID);
+
+            logoutButton.Text                       = Language.getLangString("MAIN_LOGOUT", LangID).ToUpper();
         }
     }
 }
