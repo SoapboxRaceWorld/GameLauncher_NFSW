@@ -155,6 +155,15 @@
     <None Include="app.config" />
     <EmbeddedResource Include="Fonts\Montserrat-Bold.ttf" />
     <EmbeddedResource Include="Fonts\Montserrat-Regular.ttf" />
+    <EmbeddedResource Include="Languages\Dutch.lng" />
+    <EmbeddedResource Include="Languages\English.lng" />
+    <EmbeddedResource Include="Languages\French.lng" />
+    <EmbeddedResource Include="Languages\German_Formal.lng" />
+    <EmbeddedResource Include="Languages\German_Informal.lng" />
+    <EmbeddedResource Include="Languages\Polish.lng" />
+    <EmbeddedResource Include="Languages\Portuguese.lng" />
+    <EmbeddedResource Include="Languages\Spanish.lng" />
+    <EmbeddedResource Include="Languages\Swedish.lng" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">

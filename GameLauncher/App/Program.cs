@@ -16,13 +16,22 @@ namespace GameLauncher {
             bool wine = DetectLinux.WineDetected();
             bool linux = DetectLinux.LinuxDetected();
 
-            //Languages
-            if (!File.Exists("Languages")) {
-                Directory.CreateDirectory("Languages");
-            }
-
             //Discord fix
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+
+            //Languages
+            if(!File.Exists("Languages")) {
+                Directory.CreateDirectory("Languages");
+                File.WriteAllText("Languages/Dutch.lng", ExtractResource.AsString("GameLauncher.Languages.Dutch.lng"));
+                File.WriteAllText("Languages/English.lng", ExtractResource.AsString("GameLauncher.Languages.English.lng"));
+                File.WriteAllText("Languages/French.lng", ExtractResource.AsString("GameLauncher.Languages.French.lng"));
+                File.WriteAllText("Languages/German_Formal.lng", ExtractResource.AsString("GameLauncher.Languages.German_Formal.lng"));
+                File.WriteAllText("Languages/German_Informal.lng", ExtractResource.AsString("GameLauncher.Languages.German_Informal.lng"));
+                File.WriteAllText("Languages/Polish.lng", ExtractResource.AsString("GameLauncher.Languages.Polish.lng"));
+                File.WriteAllText("Languages/Portuguese.lng", ExtractResource.AsString("GameLauncher.Languages.Portuguese.lng"));
+                File.WriteAllText("Languages/Spanish.lng", ExtractResource.AsString("GameLauncher.Languages.Spanish.lng"));
+                File.WriteAllText("Languages/Swedish.lng", ExtractResource.AsString("GameLauncher.Languages.Swedish.lng"));
+            }
 
             //Remove zip file
             try {
