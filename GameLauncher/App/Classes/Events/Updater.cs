@@ -23,6 +23,9 @@ namespace GameLauncher {
                         if(json.update.info == true) {
                             DialogResult reply = MessageBox.Show("An update is available. Do you wanna download it?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + json.github_build, "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                             if(reply == DialogResult.Yes) {
+
+                                //NEW UPDATER//
+
                                 WebClientWithTimeout myWebClient = new WebClientWithTimeout();
                                 myWebClient.DownloadFile(json.update.download, "tempname.zip");
 

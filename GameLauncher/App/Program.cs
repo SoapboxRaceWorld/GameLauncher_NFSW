@@ -6,54 +6,56 @@ using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes;
 using GameLauncherReborn;
+using System.Management;
 
 namespace GameLauncher {
     static class Program {
         [STAThread]
+
+        /*private static void EasterEgg(object sender, UnhandledExceptionEventArgs args) {
+            if (args.IsTerminating) {
+                AppDomain.CurrentDomain.UnhandledException -= EasterEgg;
+                Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+            }
+        }*/
+
         static void Main() {
             int SysVersion = (int)Environment.OSVersion.Platform;
             bool mono = DetectLinux.MonoDetected();
             bool wine = DetectLinux.WineDetected();
             bool linux = DetectLinux.LinuxDetected();
 
-            //Discord fix
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 
-            //Languages
-            if(!File.Exists("Languages")) {
+            if(!Directory.Exists("Languages")) {
                 Directory.CreateDirectory("Languages");
-                File.WriteAllText("Languages/Dutch.lng", ExtractResource.AsString("GameLauncher.Languages.Dutch.lng"));
-                File.WriteAllText("Languages/English.lng", ExtractResource.AsString("GameLauncher.Languages.English.lng"));
-                File.WriteAllText("Languages/French.lng", ExtractResource.AsString("GameLauncher.Languages.French.lng"));
-                File.WriteAllText("Languages/German_Formal.lng", ExtractResource.AsString("GameLauncher.Languages.German_Formal.lng"));
-                File.WriteAllText("Languages/German_Informal.lng", ExtractResource.AsString("GameLauncher.Languages.German_Informal.lng"));
-                File.WriteAllText("Languages/Polish.lng", ExtractResource.AsString("GameLauncher.Languages.Polish.lng"));
-                File.WriteAllText("Languages/Portuguese.lng", ExtractResource.AsString("GameLauncher.Languages.Portuguese.lng"));
-                File.WriteAllText("Languages/Spanish.lng", ExtractResource.AsString("GameLauncher.Languages.Spanish.lng"));
-                File.WriteAllText("Languages/Swedish.lng", ExtractResource.AsString("GameLauncher.Languages.Swedish.lng"));
             }
 
-            //Remove zip file
+            try {
+                WebClientWithTimeout client = new WebClientWithTimeout();
+                client.DownloadFile("https://raw.githubusercontent.com/metonator/GameLauncher_NFSW-translations/master/Languages/English.lng", "Languages\\Default.lng");
+            } catch { }
+
             try {
                 File.Delete(Directory.GetCurrentDirectory() + "\\tempname.zip");
             } catch { }
 
-            //Console log with warning
             if (mono == true) {
                 MessageBox.Show(null, "Mono support is still under alpha stage. Therefore, launcher could not launch.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-            //Add LZMA.dll on the fly (used for decompression of section{int}.dll files)
             if (!File.Exists("LZMA.dll")) {
                 File.WriteAllBytes("LZMA.dll", ExtractResource.AsByte("GameLauncher.LZMA.LZMA.dll"));
             }
 
-            //Add GameLauncherUpdater.exe on the fly
+            if (!File.Exists("discord-rpc.dll")) {
+                File.WriteAllBytes("discord-rpc.dll", ExtractResource.AsByte("GameLauncher.Discord.discord-rpc.dll"));
+            }
+
             if (!File.Exists("GameLauncherUpdater.exe")) {
                 File.WriteAllBytes("GameLauncherUpdater.exe", ExtractResource.AsByte("GameLauncher.Updater.GameLauncherUpdater.exe"));
             }
 
-            //Detect if NFSW is launched
             if(NFSW.isNFSWRunning()) {
                 MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
@@ -90,6 +92,8 @@ namespace GameLauncher {
                     if (Environment.OSVersion.Version.Major >= 6) {
                         User32.SetProcessDPIAware();
                     }
+
+                    //AppDomain.CurrentDomain.UnhandledException += EasterEgg;
 
                     //try {
                         Application.EnableVisualStyles();

@@ -45,8 +45,6 @@
             this.passwordLabel = new System.Windows.Forms.Label();
             this.registerButton = new System.Windows.Forms.Button();
             this.settingsButton = new System.Windows.Forms.PictureBox();
-            this.moveWindow = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.verticalBanner = new System.Windows.Forms.PictureBox();
             this.settingsSave = new System.Windows.Forms.Button();
             this.settingsLanguage = new System.Windows.Forms.ComboBox();
@@ -76,22 +74,27 @@
             this.settingsLanguageDesc = new System.Windows.Forms.Label();
             this.settingsUILang = new System.Windows.Forms.ComboBox();
             this.settingsUILangText = new System.Windows.Forms.Label();
-            this.playProgress = new GameLauncherReborn.ProgressBarEx();
             this.settingsUILangDesc = new System.Windows.Forms.Label();
+            this.moreLanguages = new System.Windows.Forms.LinkLabel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.translatedBy = new System.Windows.Forms.Label();
+            this.settingsGameFiles = new System.Windows.Forms.Button();
+            this.settingsGameFilesCurrent = new System.Windows.Forms.LinkLabel();
+            this.settingsGamePathText = new System.Windows.Forms.Label();
+            this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
-            this.moveWindow.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // closebtn
             // 
             this.closebtn.BackColor = System.Drawing.Color.Transparent;
             this.closebtn.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("closebtn.BackgroundImage")));
-            this.closebtn.Location = new System.Drawing.Point(918, -2);
+            this.closebtn.Location = new System.Drawing.Point(918, 2);
             this.closebtn.Name = "closebtn";
             this.closebtn.Size = new System.Drawing.Size(52, 26);
             this.closebtn.TabIndex = 0;
@@ -102,7 +105,7 @@
             // 
             this.minimizebtn.BackColor = System.Drawing.Color.Transparent;
             this.minimizebtn.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("minimizebtn.BackgroundImage")));
-            this.minimizebtn.Location = new System.Drawing.Point(886, -2);
+            this.minimizebtn.Location = new System.Drawing.Point(886, 2);
             this.minimizebtn.Name = "minimizebtn";
             this.minimizebtn.Size = new System.Drawing.Size(26, 26);
             this.minimizebtn.TabIndex = 0;
@@ -152,7 +155,7 @@
             this.currentWindowInfo.ForeColor = System.Drawing.Color.White;
             this.currentWindowInfo.Location = new System.Drawing.Point(479, 140);
             this.currentWindowInfo.Name = "currentWindowInfo";
-            this.currentWindowInfo.Size = new System.Drawing.Size(222, 46);
+            this.currentWindowInfo.Size = new System.Drawing.Size(222, 117);
             this.currentWindowInfo.TabIndex = 16;
             this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN";
             this.currentWindowInfo.UseCompatibleTextRendering = true;
@@ -258,30 +261,11 @@
             // 
             this.settingsButton.BackColor = System.Drawing.Color.Transparent;
             this.settingsButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("settingsButton.BackgroundImage")));
-            this.settingsButton.Location = new System.Drawing.Point(856, -2);
+            this.settingsButton.Location = new System.Drawing.Point(856, 2);
             this.settingsButton.Name = "settingsButton";
             this.settingsButton.Size = new System.Drawing.Size(26, 26);
             this.settingsButton.TabIndex = 21;
             this.settingsButton.TabStop = false;
-            // 
-            // moveWindow
-            // 
-            this.moveWindow.BackColor = System.Drawing.Color.Transparent;
-            this.moveWindow.Controls.Add(this.pictureBox1);
-            this.moveWindow.Location = new System.Drawing.Point(0, 0);
-            this.moveWindow.Name = "moveWindow";
-            this.moveWindow.Size = new System.Drawing.Size(1000, 87);
-            this.moveWindow.TabIndex = 1;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::GameLauncher.Properties.Resources.SBRW512;
-            this.pictureBox1.Location = new System.Drawing.Point(31, 6);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(231, 72);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
             // 
             // verticalBanner
             // 
@@ -517,23 +501,23 @@
             this.playProgressTime.Cursor = System.Windows.Forms.Cursors.Default;
             this.playProgressTime.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.playProgressTime.ForeColor = System.Drawing.Color.White;
-            this.playProgressTime.Location = new System.Drawing.Point(614, 471);
+            this.playProgressTime.Location = new System.Drawing.Point(667, 471);
             this.playProgressTime.Name = "playProgressTime";
-            this.playProgressTime.Size = new System.Drawing.Size(125, 19);
+            this.playProgressTime.Size = new System.Drawing.Size(72, 19);
             this.playProgressTime.TabIndex = 42;
-            this.playProgressTime.Text = "CALCULATING";
+            this.playProgressTime.Text = "0:00:00";
             this.playProgressTime.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // launcherVersion
             // 
-            this.launcherVersion.AutoSize = true;
             this.launcherVersion.BackColor = System.Drawing.Color.Transparent;
             this.launcherVersion.ForeColor = System.Drawing.Color.DarkGray;
-            this.launcherVersion.Location = new System.Drawing.Point(12, 540);
+            this.launcherVersion.Location = new System.Drawing.Point(847, 538);
             this.launcherVersion.Name = "launcherVersion";
-            this.launcherVersion.Size = new System.Drawing.Size(46, 13);
+            this.launcherVersion.Size = new System.Drawing.Size(141, 15);
             this.launcherVersion.TabIndex = 2;
             this.launcherVersion.Text = "v0.0.0.0";
+            this.launcherVersion.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // imageServerName
             // 
@@ -627,6 +611,95 @@
             this.settingsUILangText.TabIndex = 49;
             this.settingsUILangText.Text = "LAUNCHER LANGUAGE:";
             // 
+            // settingsUILangDesc
+            // 
+            this.settingsUILangDesc.BackColor = System.Drawing.Color.Transparent;
+            this.settingsUILangDesc.ForeColor = System.Drawing.Color.White;
+            this.settingsUILangDesc.Location = new System.Drawing.Point(296, 332);
+            this.settingsUILangDesc.Name = "settingsUILangDesc";
+            this.settingsUILangDesc.Size = new System.Drawing.Size(427, 56);
+            this.settingsUILangDesc.TabIndex = 51;
+            this.settingsUILangDesc.Text = "Select the launcher language that the game text and audio should be displayed in." +
+    " Remember to restart your launcher.";
+            // 
+            // moreLanguages
+            // 
+            this.moreLanguages.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.moreLanguages.AutoSize = true;
+            this.moreLanguages.BackColor = System.Drawing.Color.Transparent;
+            this.moreLanguages.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.moreLanguages.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.moreLanguages.LinkColor = System.Drawing.Color.White;
+            this.moreLanguages.Location = new System.Drawing.Point(56, 376);
+            this.moreLanguages.Name = "moreLanguages";
+            this.moreLanguages.Size = new System.Drawing.Size(101, 13);
+            this.moreLanguages.TabIndex = 53;
+            this.moreLanguages.TabStop = true;
+            this.moreLanguages.Text = "More languages!";
+            this.moreLanguages.VisitedLinkColor = System.Drawing.Color.White;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.Image = global::GameLauncher.Properties.Resources.SBRW512;
+            this.pictureBox1.Location = new System.Drawing.Point(31, 7);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(231, 72);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
+            // translatedBy
+            // 
+            this.translatedBy.AutoSize = true;
+            this.translatedBy.BackColor = System.Drawing.Color.Transparent;
+            this.translatedBy.ForeColor = System.Drawing.Color.DarkGray;
+            this.translatedBy.Location = new System.Drawing.Point(12, 538);
+            this.translatedBy.Name = "translatedBy";
+            this.translatedBy.Size = new System.Drawing.Size(105, 13);
+            this.translatedBy.TabIndex = 55;
+            this.translatedBy.Text = "Translated by: meme";
+            // 
+            // settingsGameFiles
+            // 
+            this.settingsGameFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.settingsGameFiles.Location = new System.Drawing.Point(59, 425);
+            this.settingsGameFiles.Name = "settingsGameFiles";
+            this.settingsGameFiles.Size = new System.Drawing.Size(210, 23);
+            this.settingsGameFiles.TabIndex = 57;
+            this.settingsGameFiles.Text = "Change GameFiles Path";
+            this.settingsGameFiles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.settingsGameFiles.UseVisualStyleBackColor = true;
+            // 
+            // settingsGameFilesCurrent
+            // 
+            this.settingsGameFilesCurrent.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.settingsGameFilesCurrent.AutoSize = true;
+            this.settingsGameFilesCurrent.BackColor = System.Drawing.Color.Transparent;
+            this.settingsGameFilesCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.settingsGameFilesCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.settingsGameFilesCurrent.LinkColor = System.Drawing.Color.White;
+            this.settingsGameFilesCurrent.Location = new System.Drawing.Point(296, 428);
+            this.settingsGameFilesCurrent.Name = "settingsGameFilesCurrent";
+            this.settingsGameFilesCurrent.Size = new System.Drawing.Size(86, 13);
+            this.settingsGameFilesCurrent.TabIndex = 58;
+            this.settingsGameFilesCurrent.TabStop = true;
+            this.settingsGameFilesCurrent.Text = "Current Path: ";
+            this.settingsGameFilesCurrent.VisitedLinkColor = System.Drawing.Color.White;
+            // 
+            // settingsGamePathText
+            // 
+            this.settingsGamePathText.AutoSize = true;
+            this.settingsGamePathText.BackColor = System.Drawing.Color.Transparent;
+            this.settingsGamePathText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.settingsGamePathText.ForeColor = System.Drawing.Color.White;
+            this.settingsGamePathText.Location = new System.Drawing.Point(56, 402);
+            this.settingsGamePathText.Name = "settingsGamePathText";
+            this.settingsGamePathText.Size = new System.Drawing.Size(139, 18);
+            this.settingsGamePathText.TabIndex = 60;
+            this.settingsGamePathText.Text = "GAMEFILES PATH:";
+            this.settingsGamePathText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
             // playProgress
             // 
             this.playProgress.BackColor = System.Drawing.Color.Transparent;
@@ -639,23 +712,18 @@
             this.playProgress.Size = new System.Drawing.Size(700, 5);
             this.playProgress.Text = "downloadProgress";
             // 
-            // settingsUILangDesc
-            // 
-            this.settingsUILangDesc.BackColor = System.Drawing.Color.Transparent;
-            this.settingsUILangDesc.ForeColor = System.Drawing.Color.White;
-            this.settingsUILangDesc.Location = new System.Drawing.Point(296, 332);
-            this.settingsUILangDesc.Name = "settingsUILangDesc";
-            this.settingsUILangDesc.Size = new System.Drawing.Size(427, 56);
-            this.settingsUILangDesc.TabIndex = 51;
-            this.settingsUILangDesc.Text = "Select the launcher language that the game text and audio should be displayed in." +
-    " Remember to restart your launcher.";
-            // 
             // mainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1000, 562);
+            this.Controls.Add(this.settingsGamePathText);
+            this.Controls.Add(this.settingsGameFilesCurrent);
+            this.Controls.Add(this.settingsGameFiles);
+            this.Controls.Add(this.translatedBy);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.moreLanguages);
             this.Controls.Add(this.settingsUILangDesc);
             this.Controls.Add(this.settingsUILangText);
             this.Controls.Add(this.settingsUILang);
@@ -685,7 +753,6 @@
             this.Controls.Add(this.email);
             this.Controls.Add(this.minimizebtn);
             this.Controls.Add(this.closebtn);
-            this.Controls.Add(this.moveWindow);
             this.Controls.Add(this.settingsSave);
             this.Controls.Add(this.settingsLanguageDesc);
             this.Controls.Add(this.registerEmail);
@@ -714,9 +781,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).EndInit();
-            this.moveWindow.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -739,7 +805,6 @@
         private System.Windows.Forms.Label passwordLabel;
         private System.Windows.Forms.Button registerButton;
         private System.Windows.Forms.PictureBox settingsButton;
-        private System.Windows.Forms.Panel moveWindow;
         private System.Windows.Forms.PictureBox verticalBanner;
         private System.Windows.Forms.Button settingsSave;
         private System.Windows.Forms.ComboBox settingsLanguage;
@@ -764,7 +829,6 @@
         internal System.Windows.Forms.Label playProgressTime;
         private System.Windows.Forms.Label launcherVersion;
         private System.Windows.Forms.Label imageServerName;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button registerCancel;
         private GameLauncherReborn.ProgressBarEx playProgress;
         private System.Windows.Forms.Button logoutButton;
@@ -772,6 +836,12 @@
         private System.Windows.Forms.ComboBox settingsUILang;
         private System.Windows.Forms.Label settingsUILangText;
         private System.Windows.Forms.Label settingsUILangDesc;
+        private System.Windows.Forms.LinkLabel moreLanguages;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label translatedBy;
+        private System.Windows.Forms.Button settingsGameFiles;
+        private System.Windows.Forms.LinkLabel settingsGameFilesCurrent;
+        private System.Windows.Forms.Label settingsGamePathText;
     }
 }
 
