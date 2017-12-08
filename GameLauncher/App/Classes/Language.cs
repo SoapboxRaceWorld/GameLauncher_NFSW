@@ -21,12 +21,14 @@ namespace GameLauncherReborn {
         }
 
         public static string getLangString(string ID, string LangIdentification) {
-            string languageText = "";
+            string languageText = null;
             String[] languageContent;
 
             try {
                 languageContent = File.ReadAllLines("Languages\\" + LangIdentification + ".lng");
             } catch {
+                languageContent = null;
+
                 if(File.Exists("Languages\\Default.lng")) {
                     languageContent = File.ReadAllLines("Languages\\Default.lng");
                 } else {
@@ -34,19 +36,27 @@ namespace GameLauncherReborn {
                     try { newlang = Directory.GetFiles("Languages", "*.lng")[0]; } catch { newlang = null; }
 
                     if(String.IsNullOrEmpty(newlang)) {
-                        WebClientWithTimeout client = new WebClientWithTimeout();
-                        client.DownloadFile("https://raw.githubusercontent.com/metonator/GameLauncher_NFSW-translations/master/Languages/English.lng", "Languages\\Default.lng");
+                        try {
+                            WebClientWithTimeout client = new WebClientWithTimeout();
+                            client.DownloadFile("https://raw.githubusercontent.com/metonator/GameLauncher_NFSW-translations/master/Languages/English.lng", "Languages\\Default.lng");
+                        } catch { }
                     }
-                    
-                    languageContent = File.ReadAllLines(Directory.GetFiles("Languages", "*.lng")[0]);
+
+                    if(Directory.GetFiles("Languages", "*.lng").Length != 0) {
+                        languageContent = File.ReadAllLines(Directory.GetFiles("Languages", "*.lng")[0]);
+                    } else {
+                        languageContent = null;
+                    }
                 }
             }
 
-            foreach (var substring in languageContent) {
-                if (!String.IsNullOrEmpty(substring)) {
-                    String[] substrings2 = substring.Split(new string[] { "=" }, StringSplitOptions.None);
-                    if (substrings2[0] == ID) {
-                        languageText = substrings2[1];
+            if(languageContent != null) {
+                foreach (var substring in languageContent) {
+                    if (!String.IsNullOrEmpty(substring)) {
+                        String[] substrings2 = substring.Split(new string[] { "=" }, StringSplitOptions.None);
+                        if (substrings2[0] == ID) {
+                            languageText = substrings2[1];
+                        }
                     }
                 }
             }

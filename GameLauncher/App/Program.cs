@@ -12,13 +12,6 @@ namespace GameLauncher {
     static class Program {
         [STAThread]
 
-        /*private static void EasterEgg(object sender, UnhandledExceptionEventArgs args) {
-            if (args.IsTerminating) {
-                AppDomain.CurrentDomain.UnhandledException -= EasterEgg;
-                Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-            }
-        }*/
-
         static void Main() {
             int SysVersion = (int)Environment.OSVersion.Platform;
             bool mono = DetectLinux.MonoDetected();
@@ -89,11 +82,9 @@ namespace GameLauncher {
                         Environment.Exit(1);
                     }
 
-                    if (Environment.OSVersion.Version.Major >= 6) {
+                    /*if (Environment.OSVersion.Version.Major > 6) {
                         User32.SetProcessDPIAware();
-                    }
-
-                    //AppDomain.CurrentDomain.UnhandledException += EasterEgg;
+                    }*/
 
                     //try {
                         Application.EnableVisualStyles();

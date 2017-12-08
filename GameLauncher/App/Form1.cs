@@ -39,6 +39,7 @@ namespace GameLauncher {
         int errorcode;
 
         DateTime DownloadStartTime;
+        Downloader downloader;
 
         String LoginToken = "";
         String UserId = "";
@@ -83,12 +84,22 @@ namespace GameLauncher {
             this.Opacity = 0.9;
         }
 
+        public void Shake() {
+            for (int i = 0; i < 5; i++) {
+                this.Left += 10;
+                System.Threading.Thread.Sleep(40);
+                this.Left -= 10;
+                System.Threading.Thread.Sleep(40);
+            }
+        }
+
         public void ConsoleLog(string e, string type) {
             if (type == "warning") {
 
             } else if (type == "info") {
 
             } else if (type == "error") {
+                Shake();
                 MessageBox.Show(null, e, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             } else if (type == "success") {
 
@@ -98,11 +109,15 @@ namespace GameLauncher {
         }
 
         public mainScreen() {
-            if (Environment.OSVersion.Version.Major <= 5) {
-                if(DetectLinux.WineDetected() == false) { 
-                    //MessageBox.Show(null, "Sadly, the red background cannot be fixed on Windows XP and lower, sorry...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            } else {
+            downloader = new Downloader(this, 3, 2, 16) {
+                //DOWNLOADFUNCTIONS
+                ProgressUpdated = new ProgressUpdated(this.OnDownloadProgress),
+                DownloadFinished = new DownloadFinished(this.DownloadTracksFiles),
+                DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
+                ShowMessage = new ShowMessage(this.OnShowMessage)
+            };
+
+            if (Environment.OSVersion.Version.Major > 5) {
                 Font = new Font(Font.Name, 8.25f * DPIDefaultScale / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
             }
 
@@ -318,7 +333,9 @@ namespace GameLauncher {
                     response = streamReader.ReadToEnd();
 
                     serverlistloaded = true;
-                } else { }
+                } else { 
+                    response = "Offline Built-In Server;http://localhost:4416/sbrw/Engine.svc";    
+                }
             }
 
             if (!File.Exists("servers.txt")) {
@@ -1030,6 +1047,12 @@ namespace GameLauncher {
                 this.registerTicket.Visible = false;
                 this.registerTicketText.Visible = false;
             }
+
+            this.errorConfirm.Visible = hideElements;
+            this.errorEmail.Visible = hideElements;
+            this.errorPassword.Visible = hideElements;
+            this.errorTicket.Visible = hideElements;
+            this.errorTOS.Visible = hideElements;
         }
 
         private void logoutButton_Click(object sender, EventArgs e) {
@@ -1075,6 +1098,7 @@ namespace GameLauncher {
         }
 
         private void registerCancel_Click(object sender, EventArgs e) {
+            errorEmail.Text = ""; errorPassword.Text = ""; errorConfirm.Text = ""; errorTicket.Text = ""; errorTOS.Text = ""; registerAgree.ForeColor = Color.White;
             this.BackgroundImage = Properties.Resources.loginbg;
             this.currentWindowInfo.Text = Language.getLangString("MAIN_INFORMATION", UILanguage).ToUpper();
             RegisterFormElements(false);
@@ -1097,39 +1121,74 @@ namespace GameLauncher {
             this.registerCancel.Image = Properties.Resources.cancelbutton_hover;
         }
 
+        public void drawErrorAroundTextBox(TextBox x) {
+            x.BorderStyle = BorderStyle.FixedSingle;
+            Pen p = new Pen(Color.Red);
+            Graphics g = this.CreateGraphics();
+            int variance = 1;
+            g.DrawRectangle(p, new Rectangle(x.Location.X - variance, x.Location.Y - variance, x.Width + variance, x.Height + variance));
+        }
+
         private void registerButton_Click(object sender, EventArgs e) {
             bool registerSuccess = true;
+            bool passwordfield = false;
+            this.Refresh();
 
             if(String.IsNullOrEmpty(registerEmail.Text)) {
-                ConsoleLog(Language.getLangString("ERROR_REGISTER_MAILEMPTY", UILanguage), "error");
+                drawErrorAroundTextBox(registerEmail);
+                errorEmail.Text = Language.getLangString("ERROR_REGISTER_MAILEMPTY", UILanguage).ToUpper();
                 registerSuccess = false;
             } else if(validateEmail(registerEmail.Text) == false) {
-                ConsoleLog(Language.getLangString("ERROR_REGISTER_MAILCORRECT", UILanguage), "error");
+                drawErrorAroundTextBox(registerEmail);
+                errorEmail.Text = Language.getLangString("ERROR_REGISTER_MAILCORRECT", UILanguage).ToUpper();
                 registerSuccess = false;
+            } else {
+                errorEmail.Text = "";
             }
 
             if(String.IsNullOrEmpty(registerTicket.Text) && ticketRequired == true) {
-                ConsoleLog(Language.getLangString("ERROR_REGISTER_TICKET", UILanguage), "error");
+                drawErrorAroundTextBox(registerTicket);
+                errorTicket.Text = Language.getLangString("ERROR_REGISTER_TICKET", UILanguage).ToUpper();
                 registerSuccess = false;
+            } else {
+                errorTicket.Text = "";
             }
 
             if(String.IsNullOrEmpty(registerPassword.Text)) {
-                ConsoleLog(Language.getLangString("ERROR_REGISTER_PASSWORDEMPTY", UILanguage), "error");
+                drawErrorAroundTextBox(registerPassword);
+                errorPassword.Text = Language.getLangString("ERROR_REGISTER_PASSWORDEMPTY", UILanguage).ToUpper();
                 registerSuccess = false;
+                passwordfield = true;
+            } else {
+                errorPassword.Text = "";
             }
 
             if(String.IsNullOrEmpty(registerConfirmPassword.Text)) {
-                ConsoleLog(Language.getLangString("ERROR_REGISTER_PASSWORDVERIFY", UILanguage), "error");
+                drawErrorAroundTextBox(registerConfirmPassword);
+                errorConfirm.Text = Language.getLangString("ERROR_REGISTER_PASSWORDVERIFY", UILanguage).ToUpper();
                 registerSuccess = false;
+            } else {
+                errorConfirm.Text = "";
             }
 
-            if(registerConfirmPassword.Text != registerPassword.Text) {
-                ConsoleLog(Language.getLangString("ERROR_REGISTER_PASSWORDMISMATCH", UILanguage), "error");
+            if (registerConfirmPassword.Text != registerPassword.Text) {
+                drawErrorAroundTextBox(registerConfirmPassword);
+                drawErrorAroundTextBox(registerPassword);
+                errorPassword.Text = Language.getLangString("ERROR_REGISTER_PASSWORDMISMATCH", UILanguage).ToUpper();
+                registerSuccess = false;
+            } else {
+                if(passwordfield == false) { 
+                    errorPassword.Text = "";
+                }
             }
 
-            if(!registerAgree.Checked) {
-                ConsoleLog(Language.getLangString("ERROR_REGISTER_TOS", UILanguage), "error");
+            if (!registerAgree.Checked) {
+                registerAgree.ForeColor = Color.Red;
+                errorTOS.Text = Language.getLangString("ERROR_REGISTER_TOS", UILanguage).ToUpper();
                 registerSuccess = false;
+            } else {
+                registerAgree.ForeColor = Color.White;
+                errorTOS.Text = "";
             }
 
             if(registerSuccess == true) {
@@ -1233,6 +1292,8 @@ namespace GameLauncher {
                 } catch {
                     MessageBox.Show(Language.getLangString("ERROR_SERVEROFFLINE", UILanguage));
                 }
+            } else {
+                Shake();
             }
         }
 
@@ -1587,7 +1648,6 @@ namespace GameLauncher {
 
             this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_CHECKINGFILES", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
-            Delay.WaitSeconds(2);
 
             string speechFile;
 
@@ -1617,14 +1677,6 @@ namespace GameLauncher {
 
             if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe")) {
                 DownloadStartTime = DateTime.Now;
-
-                Downloader downloader = new Downloader(this, 3, 2, 16) {
-                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgress),
-                    DownloadFinished = new DownloadFinished(this.DownloadTracksFiles),
-                    DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
-                    ShowMessage = new ShowMessage(this.OnShowMessage)
-                };
-
                 downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "", SettingFile.Read("InstallationDirectory"), false, false, 1130632198);
             } else {
                 DownloadTracksFiles();
@@ -1637,14 +1689,6 @@ namespace GameLauncher {
 
             if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Tracks\\STREAML5RA_98.BUN")) {
                 DownloadStartTime = DateTime.Now;
-
-                Downloader downloader = new Downloader(this, 3, 2, 16) {
-                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgress),
-                    DownloadFinished = new DownloadFinished(this.DownloadSpeechFiles),
-                    DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
-                    ShowMessage = new ShowMessage(this.OnShowMessage)
-                };
-
                 downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "Tracks", SettingFile.Read("InstallationDirectory"), false, false, 615494528);
             } else {
                 DownloadSpeechFiles();
@@ -1687,14 +1731,6 @@ namespace GameLauncher {
 
             if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big")) {
                 DownloadStartTime = DateTime.Now;
-
-                Downloader downloader = new Downloader(this, 3, 2, 16) {
-                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgress),
-                    DownloadFinished = new DownloadFinished(this.DownloadTracksHighFiles),
-                    DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
-                    ShowMessage = new ShowMessage(this.OnShowMessage)
-                };
-
                 downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", speechFile, SettingFile.Read("InstallationDirectory"), false, false, speechSize);
             } else {
                 DownloadTracksHighFiles();
@@ -1707,14 +1743,6 @@ namespace GameLauncher {
 
             if (SettingFile.Read("TracksHigh") == "1" && !File.Exists(SettingFile.Read("InstallationDirectory") + "\\TracksHigh\\STREAML5RA_98.BUN")) {
                 DownloadStartTime = DateTime.Now;
-
-                Downloader downloader = new Downloader(this, 3, 2, 16) {
-                    ProgressUpdated = new ProgressUpdated(this.OnDownloadProgress),
-                    DownloadFinished = new DownloadFinished(this.OnDownloadFinished),
-                    DownloadFailed = new DownloadFailed(this.OnDownloadFailed),
-                    ShowMessage = new ShowMessage(this.OnShowMessage)
-                };
-
                 downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "TracksHigh", SettingFile.Read("InstallationDirectory"), false, false, 278397707);
             } else {
                 OnDownloadFinished();
@@ -1755,8 +1783,13 @@ namespace GameLauncher {
                 this.playProgressTime.Text = this.EstimateFinishTime(downloadCurrent, compressedLength);
             }
 
-            this.playProgress.Value = (int)((long)100 * downloadCurrent / compressedLength);
+            try { 
+                this.playProgress.Value = (int)((long)100 * downloadCurrent / compressedLength);
+            } catch {
+                this.playProgress.Value = 0;
+            }
         }
+
         private void OnDownloadFinished() {
             playenabled = true;
             this.playProgress.Value = 100;
@@ -1767,14 +1800,28 @@ namespace GameLauncher {
         }
 
         private void OnDownloadFailed(Exception ex) {
+            String failureMessage;
+            
+            try {
+                failureMessage = ex.Message;
+            } catch {
+                failureMessage = "No internet access";
+            }
+
             this.playProgress.Value = 100;
-            this.playProgressText.Text = String.Format(Language.getLangString("MAIN_DOWNLOADFAILED", UILanguage), ex.Message).ToUpper();
+            this.playProgressText.Text = String.Format(Language.getLangString("MAIN_DOWNLOADFAILED", UILanguage), failureMessage).ToUpper();
             this.playProgressTime.Text = "";
             this.playProgress.ProgressColor = Color.Red;
         }
 
         private void OnShowMessage(string message, string header) {
             MessageBox.Show(message, header);
+        }
+
+        private void OnVerifyFinished() {
+            this.playProgressText.Text = "Verify completed";
+            this.playProgressTime.Text = "";
+            this.playProgress.Value = 100;
         }
 
         public void setTranslations(string LangID) {
