@@ -273,11 +273,19 @@ namespace GameLauncher {
             translatedBy.Text = Language.getLangString("MAIN_TRANSLATED", UILanguage);
 
             if (!SettingFile.KeyExists("SkipUpdate")) {
-                Updater.checkForUpdate(sender, e);
+                if(Environment.OSVersion.Version.Major >= 6) {
+                    Updater.checkForUpdate(sender, e);
+                } else {
+                    SettingFile.Write("SkipUpdate", "1");
+                }
             }
 
             ContextMenu = new ContextMenu();
-            ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CHECKUPDATE", UILanguage), Updater.checkForUpdate));
+
+            if (Environment.OSVersion.Version.Major >= 6) {
+                ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CHECKUPDATE", UILanguage), Updater.checkForUpdate));
+            }
+
             ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_ABOUT", UILanguage), About.showAbout));
             ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_SETTINGS", UILanguage), settingsButton_Click));
             ContextMenu.MenuItems.Add("-");
@@ -1518,7 +1526,7 @@ namespace GameLauncher {
                     XmlNode ExtraNode;
                     XmlNode LoginTokenNode;
                     XmlNode UserIdNode;
-                    String msgBoxInfo = "";
+                    String msgBoxInfo = "x";
 
                     try {
                         LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
@@ -1590,7 +1598,11 @@ namespace GameLauncher {
                             this.Opacity = 0;
 
                             ContextMenu = new ContextMenu();
-                            ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CHECKUPDATE", UILanguage), Updater.checkForUpdate));
+
+                            if (Environment.OSVersion.Version.Major >= 6) {
+                                ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CHECKUPDATE", UILanguage), Updater.checkForUpdate));
+                            }
+
                             ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_ABOUT", UILanguage), About.showAbout));
                             ContextMenu.MenuItems.Add("-");
                             ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CLOSE", UILanguage), minimizebtn_Click));
