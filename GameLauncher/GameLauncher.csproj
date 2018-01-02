@@ -98,6 +98,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\Classes\Auth.cs" />
     <Compile Include="App\Classes\Delay.cs" />
     <Compile Include="App\Classes\DetectLinux.cs" />
     <Compile Include="App\Classes\Downloader\Downloader.cs" />

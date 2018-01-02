@@ -87,6 +87,7 @@
             this.errorEmail = new System.Windows.Forms.Label();
             this.errorTOS = new System.Windows.Forms.Label();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.addServer = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).BeginInit();
@@ -146,7 +147,7 @@
             this.serverPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.serverPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.serverPick.FormattingEnabled = true;
-            this.serverPick.Location = new System.Drawing.Point(782, 30);
+            this.serverPick.Location = new System.Drawing.Point(755, 33);
             this.serverPick.Name = "serverPick";
             this.serverPick.Size = new System.Drawing.Size(188, 21);
             this.serverPick.TabIndex = 5;
@@ -772,12 +773,22 @@
             this.playProgress.Size = new System.Drawing.Size(700, 5);
             this.playProgress.Text = "downloadProgress";
             // 
+            // addServer
+            // 
+            this.addServer.Location = new System.Drawing.Point(947, 32);
+            this.addServer.Name = "addServer";
+            this.addServer.Size = new System.Drawing.Size(23, 23);
+            this.addServer.TabIndex = 68;
+            this.addServer.Text = "+";
+            this.addServer.UseVisualStyleBackColor = true;
+            // 
             // mainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1000, 562);
+            this.Controls.Add(this.addServer);
             this.Controls.Add(this.errorTOS);
             this.Controls.Add(this.errorEmail);
             this.Controls.Add(this.errorPassword);
@@ -912,6 +923,7 @@
         private System.Windows.Forms.Label errorPassword;
         private System.Windows.Forms.Label errorEmail;
         private System.Windows.Forms.Label errorTOS;
+        private System.Windows.Forms.Button addServer;
     }
 }
 

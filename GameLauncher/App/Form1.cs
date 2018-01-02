@@ -35,6 +35,9 @@ namespace GameLauncher {
         bool playenabled = false;
         bool loggedIn = false;
         bool restartRequired = false;
+        bool allowRegistration = false;
+
+        String discordrpccode = "378322260655603713";
 
         int errorcode;
 
@@ -197,6 +200,8 @@ namespace GameLauncher {
             settingsGameFiles.Click += new EventHandler(settingsGameFiles_Click);
             settingsGameFilesCurrent.Click += new EventHandler(settingsGameFilesCurrent_Click);
 
+            addServer.Click += new EventHandler(addServer_Click);
+
             email.KeyUp += new KeyEventHandler(loginbuttonenabler);
             email.KeyDown += new KeyEventHandler(loginEnter);
             password.KeyUp += new KeyEventHandler(loginbuttonenabler);
@@ -351,6 +356,8 @@ namespace GameLauncher {
                 response += "";
             } else {
                 response += File.ReadAllText("servers.txt");
+                
+                
             }
 
             //Time to add servers
@@ -534,6 +541,10 @@ namespace GameLauncher {
             Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
         }
 
+        private void addServer_Click(object sender, EventArgs e) {
+            //Nowy server
+        }
+
         private void closebtn_MouseEnter(object sender, EventArgs e) {
             this.closebtn.BackgroundImage = Properties.Resources.close_hover;
         }
@@ -638,70 +649,74 @@ namespace GameLauncher {
                 }
             }
 
-            try {
-                XmlDocument SBRW_XML = new XmlDocument();
+            if(String.IsNullOrEmpty(serverLoginResponse)) {
+                ConsoleLog(Language.getLangString("ERROR_SERVEROFFLINE", UILanguage), "error");
+            } else {
+                try {
+                    XmlDocument SBRW_XML = new XmlDocument();
 
-                if (builtinserver == false) {
-                    SBRW_XML.LoadXml(serverLoginResponse);
-                } else {
-                    SBRW_XML.LoadXml("<LoginStatusVO><UserId>1</UserId><LoginToken>aaaaaaaa-aaaa-aaaa-aaaaaaaa</LoginToken><Description/></LoginStatusVO>");
-                }
-
-                XmlNode ExtraNode;
-                XmlNode LoginTokenNode;
-                XmlNode UserIdNode;
-                String msgBoxInfo = "";
-
-                LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
-                UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
-
-                if(SBRW_XML.SelectSingleNode("LoginStatusVO/Ban") == null) {
-                    if (SBRW_XML.SelectSingleNode("LoginStatusVO/Description") == null) {
-                        ExtraNode = SBRW_XML.SelectSingleNode("html/body");
+                    if (builtinserver == false) {
+                        SBRW_XML.LoadXml(serverLoginResponse);
                     } else {
-                        ExtraNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
+                        SBRW_XML.LoadXml("<LoginStatusVO><UserId>1</UserId><LoginToken>aaaaaaaa-aaaa-aaaa-aaaaaaaa</LoginToken><Description/></LoginStatusVO>");
                     }
-                } else {
-                    ExtraNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Ban");
-                }
 
-                if (!String.IsNullOrEmpty(ExtraNode.InnerText)) {
-                    if(ExtraNode.SelectSingleNode("Reason") != null) {
-                        msgBoxInfo = String.Format(Language.getLangString("BANNED_INFO", UILanguage), serverName) + "\n";
-                        msgBoxInfo += String.Format(Language.getLangString("BANNED_REASON", UILanguage), ExtraNode.SelectSingleNode("Reason").InnerText);
+                    XmlNode ExtraNode;
+                    XmlNode LoginTokenNode;
+                    XmlNode UserIdNode;
+                    String msgBoxInfo = "";
 
-                        if (ExtraNode.SelectSingleNode("Expires") != null) {
-                            msgBoxInfo += "\n" + String.Format(Language.getLangString("BANNED_EXPIRETIME", UILanguage), ExtraNode.SelectSingleNode("Expires").InnerText);
+                    LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
+                    UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
+
+                    if(SBRW_XML.SelectSingleNode("LoginStatusVO/Ban") == null) {
+                        if (SBRW_XML.SelectSingleNode("LoginStatusVO/Description") == null) {
+                            ExtraNode = SBRW_XML.SelectSingleNode("html/body");
                         } else {
-                            msgBoxInfo += "\n" + Language.getLangString("BANNED_EXPIRENEVER", UILanguage);
+                            ExtraNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
                         }
                     } else {
-                        if(ExtraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?") {
-                            msgBoxInfo = Language.getLangString("ERROR_TAMPERING", UILanguage);
-                        } else {
-                            if(SBRW_XML.SelectSingleNode("html/body") == null) {
-                                msgBoxInfo = Language.getLangString("ERROR_INVALIDCREDS", UILanguage);
+                        ExtraNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Ban");
+                    }
+
+                    if (!String.IsNullOrEmpty(ExtraNode.InnerText)) {
+                        if(ExtraNode.SelectSingleNode("Reason") != null) {
+                            msgBoxInfo = String.Format(Language.getLangString("BANNED_INFO", UILanguage), serverName) + "\n";
+                            msgBoxInfo += String.Format(Language.getLangString("BANNED_REASON", UILanguage), ExtraNode.SelectSingleNode("Reason").InnerText);
+
+                            if (ExtraNode.SelectSingleNode("Expires") != null) {
+                                msgBoxInfo += "\n" + String.Format(Language.getLangString("BANNED_EXPIRETIME", UILanguage), ExtraNode.SelectSingleNode("Expires").InnerText);
                             } else {
-                                msgBoxInfo = "ERROR " + errorcode + ": " + ExtraNode.InnerText;
+                                msgBoxInfo += "\n" + Language.getLangString("BANNED_EXPIRENEVER", UILanguage);
+                            }
+                        } else {
+                            if(ExtraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?") {
+                                msgBoxInfo = Language.getLangString("ERROR_TAMPERING", UILanguage);
+                            } else {
+                                if(SBRW_XML.SelectSingleNode("html/body") == null) {
+                                    msgBoxInfo = Language.getLangString("ERROR_INVALIDCREDS", UILanguage);
+                                } else {
+                                    msgBoxInfo = "ERROR " + errorcode + ": " + ExtraNode.InnerText;
+                                }
                             }
                         }
+
+                        ConsoleLog(msgBoxInfo, "error");
+                    } else {
+                        UserId = UserIdNode.InnerText;
+                        LoginToken = LoginTokenNode.InnerText;
+
+                        loggedIn = true;
+
+                        this.BackgroundImage = Properties.Resources.loggedbg;
+                        LoginFormElements(false);
+                        LoggedInFormElements(true);
+
+                        this.welcomeBack.Text = String.Format(Language.getLangString("MAIN_WELCOMEBACK", UILanguage), username).ToUpper();
                     }
-
-                    ConsoleLog(msgBoxInfo, "error");
-                } else {
-                    UserId = UserIdNode.InnerText;
-                    LoginToken = LoginTokenNode.InnerText;
-
-                    loggedIn = true;
-
-                    this.BackgroundImage = Properties.Resources.loggedbg;
-                    LoginFormElements(false);
-                    LoggedInFormElements(true);
-
-                    this.welcomeBack.Text = String.Format(Language.getLangString("MAIN_WELCOMEBACK", UILanguage), username).ToUpper();
+                } catch {
+                    ConsoleLog(Language.getLangString("ERROR_SERVEROFFLINE", UILanguage), "error");
                 }
-            } catch {
-                ConsoleLog(Language.getLangString("ERROR_SERVEROFFLINE", UILanguage), "error");
             }
         }
 
@@ -727,6 +742,8 @@ namespace GameLauncher {
 
         private void serverPick_TextChanged(object sender, EventArgs e) {
             if (!skipServerTrigger) { return; }
+
+            allowRegistration = false;
 
             formGraphics = this.CreateGraphics();
             formGraphics.DrawRectangle(ColorLoading, new Rectangle(new Point(30, 125), new Size(372, 274)));
@@ -783,7 +800,7 @@ namespace GameLauncher {
                     return;
                 } else if (e2.Error != null) {
                         DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
-                        DiscordRpc.Initialize("378322260655603713", ref handlers, true, "");
+                        DiscordRpc.Initialize(discordrpccode, ref handlers, true, "");
 
                         presence.details = serverPick.GetItemText(serverPick.SelectedItem);
                         presence.state = "OFFLINE";
@@ -799,8 +816,9 @@ namespace GameLauncher {
                     formGraphics.DrawRectangle(ColorOffline, new Rectangle(new Point(29, 124), new Size(374, 276)));
                     formGraphics.Dispose();
 
-                    onlineCount.Text = "";
+                    onlineCount.Text = Language.getLangString("ERROR_SERVEROFFLINE", UILanguage);
                     serverEnabled = false;
+                    allowRegistration = false;
                 } else {
 
                     if (serverName == "Offline Built-In Server") {
@@ -843,8 +861,7 @@ namespace GameLauncher {
                             numPlayers = String.Format(Language.getLangString("MAIN_PLAYERSOUTOF", UILanguage), json.onlineNumber, json.numberOfRegistered);
 
                                 DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
-                                DiscordRpc.Initialize("378322260655603713", ref handlers, true, "");
-
+                                DiscordRpc.Initialize(discordrpccode, ref handlers, true, "");
                                 presence.details = serverName;
                                 presence.state = "ONLINE";
                                 presence.largeImageText = serverName;
@@ -857,7 +874,8 @@ namespace GameLauncher {
                                 presence.spectateSecret = "SBRW4";
                                 presence.instance = true;
                                 DiscordRpc.UpdatePresence(ref presence);
-                            
+
+                            allowRegistration = true;
 
                             formGraphics = this.CreateGraphics();
                             formGraphics.DrawRectangle(ColorOnline, new Rectangle(new Point(30, 125), new Size(372, 274)));
@@ -953,14 +971,17 @@ namespace GameLauncher {
             settingsGameFilesCurrent.Font = new Font(fontFamily2, 8f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             logoutButton.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-
         }
 
         private void registerText_LinkClicked(object sender, EventArgs e) {
-            this.BackgroundImage = Properties.Resources.secondarybackground;
-            this.currentWindowInfo.Text = String.Format(Language.getLangString("MAIN_INFORMATIONREG", UILanguage), serverPick.GetItemText(serverPick.SelectedItem)).ToUpper();
-            LoginFormElements(false);
-            RegisterFormElements(true);
+            if(allowRegistration == true) {
+                this.BackgroundImage = Properties.Resources.secondarybackground;
+                this.currentWindowInfo.Text = String.Format(Language.getLangString("MAIN_INFORMATIONREG", UILanguage), serverPick.GetItemText(serverPick.SelectedItem)).ToUpper();
+                LoginFormElements(false);
+                RegisterFormElements(true);
+            } else {
+                MessageBox.Show(Language.getLangString("ERROR_SERVEROFFLINE", UILanguage));
+            }
         }
 
         private void githubLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
@@ -992,6 +1013,7 @@ namespace GameLauncher {
             this.verticalBanner.Visible = hideElements;
             this.onlineCount.Visible = hideElements;
             this.welcomeBack.Visible = hideElements;
+            this.addServer.Visible = hideElements;
         }
 
         private void LoginFormElements(bool hideElements = false) {
@@ -1017,6 +1039,7 @@ namespace GameLauncher {
             this.playProgressText.Visible = hideElements;
             this.playProgress.Visible = hideElements;
             this.playButton.Visible = hideElements;
+            this.addServer.Visible = hideElements;
         }
 
         /*
