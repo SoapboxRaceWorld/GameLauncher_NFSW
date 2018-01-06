@@ -22,12 +22,13 @@ namespace GameLauncherReborn {
         }
 
         protected override WebRequest GetWebRequest(Uri address) {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
-                request.UserAgent = "GameLauncher (+https://github.com/SoapboxRaceWorld/GameLauncher_NFSW)";
-                request.Headers["X-HWID"] = Security.FingerPrint.Value();
-                request.Headers["X-GameLauncherHash"] = createHash(AppDomain.CurrentDomain.FriendlyName);
-                request.Timeout = 10000;
-                return request;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
+            request.UserAgent = "GameLauncher (+https://github.com/SoapboxRaceWorld/GameLauncher_NFSW)";
+            request.Headers["X-HWID"] = Security.FingerPrint.Value();
+            request.Headers["X-GameLauncherHash"] = createHash(AppDomain.CurrentDomain.FriendlyName);
+            request.Timeout = 10000;
+
+            return request;
         }
     }
 }

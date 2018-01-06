@@ -20,6 +20,7 @@ using GameLauncher.App.Classes.Events;
 using GameLauncherReborn;
 using Microsoft.Win32;
 using System.Net.Sockets;
+using GameLauncher.App;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -542,7 +543,8 @@ namespace GameLauncher {
         }
 
         private void addServer_Click(object sender, EventArgs e) {
-            //Nowy server
+            Form x = new AddServer();
+            x.Show();
         }
 
         private void closebtn_MouseEnter(object sender, EventArgs e) {
@@ -643,9 +645,15 @@ namespace GameLauncher {
                 serverLoginResponse = wc.DownloadString(BuildURL);
             } catch (WebException ex) {
                 HttpWebResponse serverReply = (HttpWebResponse)ex.Response;
-                using (StreamReader sr = new StreamReader(serverReply.GetResponseStream())) {
-                    errorcode = (int)serverReply.StatusCode;
-                    serverLoginResponse = sr.ReadToEnd();
+
+                if(String.IsNullOrEmpty(serverReply.GetResponseStream().ToString())) {
+                    errorcode = 500;
+                    serverLoginResponse = "<LoginStatusVO><UserId/><LoginToken/><Description>ERROR</Description></LoginStatusVO>";
+                } else {
+                    using (StreamReader sr = new StreamReader(serverReply.GetResponseStream())) {
+                        errorcode = (int)serverReply.StatusCode;
+                        serverLoginResponse = sr.ReadToEnd();
+                    }
                 }
             }
 
@@ -799,17 +807,17 @@ namespace GameLauncher {
                     client.CancelAsync();
                     return;
                 } else if (e2.Error != null) {
-                        DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
-                        DiscordRpc.Initialize(discordrpccode, ref handlers, true, "");
+                    DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
+                    DiscordRpc.Initialize(discordrpccode, ref handlers, true, "");
 
-                        presence.details = serverPick.GetItemText(serverPick.SelectedItem);
-                        presence.state = "OFFLINE";
-                        presence.largeImageText = "SBRW";
-                        presence.largeImageKey = "icon2";
-                        presence.partySize = 0;
-                        presence.partyMax = 0;
-                        presence.instance = true;
-                        DiscordRpc.UpdatePresence(ref presence);
+                    presence.details = serverPick.GetItemText(serverPick.SelectedItem);
+                    presence.state = "OFFLINE";
+                    presence.largeImageText = "SBRW";
+                    presence.largeImageKey = "icon2";
+                    presence.partySize = 0;
+                    presence.partyMax = 0;
+                    presence.instance = true;
+                    DiscordRpc.UpdatePresence(ref presence);
 
                     formGraphics = this.CreateGraphics();
                     formGraphics.DrawRectangle(ColorOffline, new Rectangle(new Point(30, 125), new Size(372, 274)));
@@ -913,7 +921,7 @@ namespace GameLauncher {
                     onlineCount.Text += ". ";
 
                     if(DetectLinux.WineDetected() == false) { 
-                    Ping pingSender = new Ping();
+                        Ping pingSender = new Ping();
                         pingSender.SendAsync(StringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
                         pingSender.PingCompleted += (sender3, e3) => {
                             PingReply reply = e3.Reply;
@@ -921,7 +929,27 @@ namespace GameLauncher {
                             if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
                                 onlineCount.Text += String.Format(Language.getLangString("MAIN_PINGSUCCESS", UILanguage), reply.RoundtripTime);
                             } else {
-                                onlineCount.Text += Language.getLangString("MAIN_PINGFAILED", UILanguage);
+                                IPHostEntry hostEntry = Dns.GetHostEntry(StringToUri.Host);
+
+                                if (hostEntry.AddressList.Length > 0) {
+                                    var ip = hostEntry.AddressList[0];
+
+                                    Ping pingSender2 = new Ping();
+                                    pingSender2.SendAsync(ip.ToString(), 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
+
+                                    pingSender2.PingCompleted += (sender4, e4) => {
+                                        PingReply reply2 = e4.Reply;
+
+                                        if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
+                                            onlineCount.Text += String.Format(Language.getLangString("MAIN_PINGSUCCESS", UILanguage), reply.RoundtripTime);
+                                        } else {
+                                            onlineCount.Text += Language.getLangString("MAIN_PINGFAILED", UILanguage);
+                                        }
+                                    };
+                                }
+                                else {
+                                    onlineCount.Text += Language.getLangString("MAIN_PINGFAILED", UILanguage);
+                                }
                             }
                         };
                     } else {
@@ -1303,19 +1331,23 @@ namespace GameLauncher {
                                 } else {
                                     msgBoxInfo += "\n" + Language.getLangString("BANNED_EXPIRENEVER", UILanguage);
                                 }
+
+                                ConsoleLog(msgBoxInfo, "error");
                             } else {
                                 if (ExtraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?") {
                                     msgBoxInfo = Language.getLangString("ERROR_TAMPERING", UILanguage);
+                                    ConsoleLog(msgBoxInfo, "error");
                                 } else {
                                     if (SBRW_XML.SelectSingleNode("html/body") == null) {
-                                        msgBoxInfo = Language.getLangString("ERROR_INVALIDCREDS", UILanguage);
+                                        drawErrorAroundTextBox(registerEmail);
+                                        errorEmail.Text = ExtraNode.InnerText.ToUpper();
+                                        Shake();
                                     } else {
                                         msgBoxInfo = "ERROR " + errorcode + ": " + ExtraNode.InnerText;
+                                        ConsoleLog(msgBoxInfo, "error");
                                     }
                                 }
                             }
-
-                            ConsoleLog(msgBoxInfo, "error");
                         }
                     } catch {
                         MessageBox.Show(Language.getLangString("ERROR_SERVEROFFLINE", UILanguage));

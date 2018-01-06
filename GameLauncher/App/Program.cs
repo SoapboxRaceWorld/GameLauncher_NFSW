@@ -12,11 +12,16 @@ namespace GameLauncher {
     static class Program {
         [STAThread]
 
-        static void Main() {
+        static void Main() {       
             int SysVersion = (int)Environment.OSVersion.Platform;
             bool mono = DetectLinux.MonoDetected();
             bool wine = DetectLinux.WineDetected();
             bool linux = DetectLinux.LinuxDetected();
+
+            if(Environment.OSVersion.Version.Major <= 5 && !linux) {
+                MessageBox.Show(null, "Windows XP Support has been terminated. Please upgrade your Operating System to 'Vista' or newer.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Environment.Exit(Environment.ExitCode);
+            }
 
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 
@@ -45,19 +50,23 @@ namespace GameLauncher {
                 File.WriteAllBytes("discord-rpc.dll", ExtractResource.AsByte("GameLauncher.Discord.discord-rpc.dll"));
             }
 
-            if (!File.Exists("GameLauncherUpdater.exe")) {
-                File.WriteAllBytes("GameLauncherUpdater.exe", ExtractResource.AsByte("GameLauncher.Updater.GameLauncherUpdater.exe"));
+            if (File.Exists("GameLauncherUpdater.exe")) {
+                File.Delete("GameLauncherUpdater.exe");
             }
 
-            if(NFSW.isNFSWRunning()) {
+            try {
+                File.Delete("GL_Update.exe");
+                File.WriteAllBytes("GL_Update.exe", ExtractResource.AsByte("GameLauncher.Updater.GL_Update.exe"));
+            } catch { }
+
+            if (NFSW.isNFSWRunning()) {
                 MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
             }
 
-            Mutex mutex = new Mutex(false, "GameLauncherNFSW-MeTonaTOR"); //Forgot about other launchers...
+            Mutex mutex = new Mutex(false, "GameLauncherNFSW-MeTonaTOR");
             try {
                 if (mutex.WaitOne(0, false)) {
-                    //First of all, we need to check if files exists
                     String[] files = { "Newtonsoft.Json.dll", "LZMA.dll", "ICSharpCode.SharpZipLib.dll" };
                     List<string> missingfiles = new List<string>();
 
@@ -82,18 +91,9 @@ namespace GameLauncher {
                         Environment.Exit(1);
                     }
 
-                    /*if (Environment.OSVersion.Version.Major > 6) {
-                        User32.SetProcessDPIAware();
-                    }*/
-
-                    //try {
-                        Application.EnableVisualStyles();
-                        Application.SetCompatibleTextRenderingDefault(false);
-                        Application.Run(new mainScreen());
-                    //} catch(Exception) {
-                        //Temporarely we gonna kill it.
-                    //  Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                    //}
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    Application.Run(new mainScreen());
                 } else {
                     MessageBox.Show(null, "An instance of the application is already running.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
