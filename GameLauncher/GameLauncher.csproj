@@ -32,7 +32,7 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>newicon.ico</ApplicationIcon>
+    <ApplicationIcon>original_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>GameLauncher.Program</StartupObject>
@@ -233,7 +233,7 @@
     <EmbeddedResource Include="SoapBoxModules\lightfx.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="newicon.ico" />
+    <Content Include="original_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

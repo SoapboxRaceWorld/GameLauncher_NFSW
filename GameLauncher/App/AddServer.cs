@@ -54,7 +54,7 @@ namespace GameLauncher.App {
                 string[] splitted = parsedServerAddress.AbsolutePath.Split('/');
                 if(splitted.Length == 3 || splitted.Length == 4) {
                     if (String.IsNullOrEmpty(splitted[1])) {
-                        splitted[1] = "nfsw";
+                        splitted[1] = "soapbox-race-core";
                     }
 
                     if (String.IsNullOrEmpty(splitted[2])) {
@@ -67,8 +67,11 @@ namespace GameLauncher.App {
                         wellFormattedURL = parsedServerAddress.Scheme + "://" + parsedServerAddress.Host + ":" + parsedServerAddress.Port + "/" + splitted[1] + "/" + splitted[2];
                     }
                 } else {
-                    drawErrorAroundTextBox(serverAddress);
-                    success = false;
+                    if (parsedServerAddress.Port == 80) {
+                        wellFormattedURL = parsedServerAddress.Scheme + "://" + parsedServerAddress.Host + "/soapbox-race-core/Engine.svc";
+                    } else {
+                        wellFormattedURL = parsedServerAddress.Scheme + "://" + parsedServerAddress.Host + ":" + parsedServerAddress.Port + "/soapbox-race-core/Engine.svc";
+                    }
                 }
             }
 
