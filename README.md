@@ -8,6 +8,6 @@ A Rewrite of GameLauncher taken from Need For Speed: World
 - [X] Original fonts
 
 ### Screenshot
-![](https://raw.githubusercontent.com/SoapboxRaceWorld/GameLauncher_NFSW/master/screenshot.png)
+![](screenshot.png)
 
 (Status as of `09.06.2017 01:45 GMT+2`)
