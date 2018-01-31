@@ -32,7 +32,7 @@ namespace GameLauncher {
             try {
                 WebClientWithTimeout client = new WebClientWithTimeout();
                 File.Delete("Languages\\Default.lng");
-                client.DownloadFile("https://raw.githubusercontent.com/SoapboxRaceWorld/GameLauncher_NFSW-translations/master/Languages/English.lng", "Languages\\Default.lng");
+                client.DownloadFile("https://raw.githubusercontent.com/metonator/GameLauncher_NFSW-translations/master/Languages/English.lng", "Languages\\Default.lng");
             } catch { }
 
             try {
