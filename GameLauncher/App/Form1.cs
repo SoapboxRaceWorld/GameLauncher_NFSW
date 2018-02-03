@@ -359,7 +359,6 @@ namespace GameLauncher {
                 response += "";
             } else {
                 response += File.ReadAllText("servers.txt");
-                MessageBox.Show(response);               
             }
 
             //Time to add servers
@@ -1046,7 +1045,7 @@ namespace GameLauncher {
         }
 
         private void moreLanguages_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            Process.Start("https://github.com/SoapboxRaceWorld/GameLauncher_NFSW-translations/tree/master/Languages");
+            Process.Start("https://github.com/metonator/GameLauncher_NFSW-translations/tree/master/Languages");
         }
 
         private void LoggedInFormElements(bool hideElements) {
