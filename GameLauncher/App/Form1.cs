@@ -60,6 +60,7 @@ namespace GameLauncher {
         Pen ColorOffline = new Pen(Color.FromArgb(128, 0, 0));
         Pen ColorOnline = new Pen(Color.FromArgb(0, 128, 0));
         Pen ColorLoading = new Pen(Color.FromArgb(0, 0, 0));
+        Pen ColorIssues = new Pen(Color.FromArgb(255, 145, 0));
 
         IniFile SettingFile = new IniFile("Settings.ini");
         string UserSettings = Environment.ExpandEnvironmentVariables("%AppData%\\Need for Speed World\\Settings\\UserSettings.xml");
@@ -358,8 +359,7 @@ namespace GameLauncher {
                 response += "";
             } else {
                 response += File.ReadAllText("servers.txt");
-                
-                
+                MessageBox.Show(response);               
             }
 
             //Time to add servers
@@ -379,7 +379,7 @@ namespace GameLauncher {
             serverPick.DataSource = items;
 
             //Silliest way to prevent doublecall of TextChanged event...
-            if(serverlistloaded == true) {
+            if (serverlistloaded == true) {
                 try {
                     serverPick.SelectedIndex = 0;
                 } catch { }
@@ -839,50 +839,58 @@ namespace GameLauncher {
                             numPlayers = Language.getLangString("MAIN_UNKNOWN", UILanguage);
                         } else {
                             GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
-                            if (!String.IsNullOrEmpty(json.bannerUrl)) {
-                                Uri uriResult;
-                                bool result;
+                            try { 
+                                if (!String.IsNullOrEmpty(json.bannerUrl)) {
+                                    Uri uriResult;
+                                    bool result;
 
 
-                                try {
-                                    result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-                                } catch {
-                                    result = false;
-                                }
+                                    try {
+                                        result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                                    } catch {
+                                        result = false;
+                                    }
 
-                                if (result) {
-                                    verticalImageUrl = json.bannerUrl;
+                                    if (result) {
+                                        verticalImageUrl = json.bannerUrl;
+                                    } else {
+                                        verticalImageUrl = null;
+                                    }
                                 } else {
                                     verticalImageUrl = null;
                                 }
-                            } else {
+                            } catch {
                                 verticalImageUrl = null;
                             }
 
-                            if(String.IsNullOrEmpty(json.requireTicket)) {
-                                ticketRequired = true;
-                            } else if(json.requireTicket == "true") {
-                                ticketRequired = true;
-                            } else {
+                            try {
+                                if(String.IsNullOrEmpty(json.requireTicket)) {
+                                    ticketRequired = true;
+                                } else if(json.requireTicket == "true") {
+                                    ticketRequired = true;
+                                } else {
+                                    ticketRequired = false;
+                                }
+                            } catch {
                                 ticketRequired = false;
                             }
 
                             numPlayers = String.Format(Language.getLangString("MAIN_PLAYERSOUTOF", UILanguage), json.onlineNumber, json.numberOfRegistered);
 
-                                DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
-                                DiscordRpc.Initialize(discordrpccode, ref handlers, true, "");
-                                presence.details = serverName;
-                                presence.state = "ONLINE";
-                                presence.largeImageText = serverName;
-                                presence.largeImageKey = richPresenceIconID;
-                                presence.partySize = json.onlineNumber;
-                                presence.partyMax = json.numberOfRegistered;
-                                presence.partyId = "SBRW";
-                                presence.matchSecret = "SBRW2";
-                                presence.joinSecret = "SBRW3";
-                                presence.spectateSecret = "SBRW4";
-                                presence.instance = true;
-                                DiscordRpc.UpdatePresence(ref presence);
+                            DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
+                            DiscordRpc.Initialize(discordrpccode, ref handlers, true, "");
+                            presence.details = serverName;
+                            presence.state = "ONLINE";
+                            presence.largeImageText = serverName;
+                            presence.largeImageKey = richPresenceIconID;
+                            presence.partySize = json.onlineNumber;
+                            presence.partyMax = json.numberOfRegistered;
+                            presence.partyId = "SBRW";
+                            presence.matchSecret = "SBRW2";
+                            presence.joinSecret = "SBRW3";
+                            presence.spectateSecret = "SBRW4";
+                            presence.instance = true;
+                            DiscordRpc.UpdatePresence(ref presence);
 
                             allowRegistration = true;
 
@@ -944,16 +952,31 @@ namespace GameLauncher {
                                         if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
                                             onlineCount.Text += String.Format(Language.getLangString("MAIN_PINGSUCCESS", UILanguage), reply.RoundtripTime);
                                         } else {
+                                            formGraphics = this.CreateGraphics();
+                                            formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
+                                            formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(29, 124), new Size(374, 276)));
+                                            formGraphics.Dispose();
+
                                             onlineCount.Text += Language.getLangString("MAIN_PINGFAILED", UILanguage);
                                         }
                                     };
                                 }
                                 else {
+                                    formGraphics = this.CreateGraphics();
+                                    formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
+                                    formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(29, 124), new Size(374, 276)));
+                                    formGraphics.Dispose();
+
                                     onlineCount.Text += Language.getLangString("MAIN_PINGFAILED", UILanguage);
                                 }
                             }
                         };
                     } else {
+                        formGraphics = this.CreateGraphics();
+                        formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
+                        formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(29, 124), new Size(374, 276)));
+                        formGraphics.Dispose();
+
                         onlineCount.Text += Language.getLangString("MAIN_PINGDISABLED", UILanguage);
                     }
                 }
@@ -1657,12 +1680,10 @@ namespace GameLauncher {
 
                             this.playProgressText.Text = String.Format(Language.getLangString("MAIN_LOADINGGAME", UILanguage), 0).ToUpper();
 
-                            double op = this.Opacity;
-
-                            while (op > 0) {
+                            while (this.Opacity > 0) {
                                 this.Opacity -= 0.01;
                                 Application.DoEvents();
-                                System.Threading.Thread.Sleep(10);
+                                Thread.Sleep(10);
                             }
                               
                             this.WindowState = FormWindowState.Minimized;
