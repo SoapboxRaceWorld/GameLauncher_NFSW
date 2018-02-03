@@ -24,7 +24,7 @@ deploy:
 - provider: GitHub
   tag: AppveyorBuild-$(appveyor_build_version)
   release: GameLauncher-AppveyorBuild$(appveyor_build_version)
-  description: 'Remember that you can get latest stable version from here: https://github.com/metonator/GameLauncher_NFSW/releases/latest'
+  description: 'Remember that you can get latest stable version from here: https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest'
   auth_token:
     secure: YQ0yLUpQzV+Umtp1eD0mxhZeR+1OE4c6jgI8Lr0HMHALzeSPRdLYYAa5SewLjPg6
   artifact: zipfile
