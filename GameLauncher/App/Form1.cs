@@ -276,6 +276,11 @@ namespace GameLauncher {
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
+            if (this.Location.X >= Screen.PrimaryScreen.Bounds.Width || this.Location.Y >= Screen.PrimaryScreen.Bounds.Height || this.Location.X <= 0 || this.Location.Y <= 0) {
+                Self.centerScreen(this);
+                windowMoved = true;
+            }
+
             launcherVersion.Text = "v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 6);
             translatedBy.Text = Language.getLangString("MAIN_TRANSLATED", UILanguage);
 
@@ -702,7 +707,11 @@ namespace GameLauncher {
                                 msgBoxInfo = Language.getLangString("ERROR_TAMPERING", UILanguage);
                             } else {
                                 if(SBRW_XML.SelectSingleNode("html/body") == null) {
-                                    msgBoxInfo = ExtraNode.InnerText;
+                                    if(ExtraNode.InnerText == "LOGIN ERROR") {
+                                        msgBoxInfo = Language.getLangString("ERROR_INVALIDCREDS", UILanguage);
+                                    } else { 
+                                        msgBoxInfo = ExtraNode.InnerText;
+                                    }
                                 } else {
                                     msgBoxInfo = "ERROR " + errorcode + ": " + ExtraNode.InnerText;
                                 }

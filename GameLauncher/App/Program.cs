@@ -29,11 +29,11 @@ namespace GameLauncher {
                 Directory.CreateDirectory("Languages");
             }
 
-            try {
+            /*try {
                 WebClientWithTimeout client = new WebClientWithTimeout();
                 File.Delete("Languages\\Default.lng");
                 client.DownloadFile("https://raw.githubusercontent.com/metonator/GameLauncher_NFSW-translations/master/Languages/English.lng", "Languages\\Default.lng");
-            } catch { }
+            } catch { }*/
 
             try {
                 File.Delete(Directory.GetCurrentDirectory() + "\\tempname.zip");
