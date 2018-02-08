@@ -37,6 +37,7 @@ namespace GameLauncher {
         bool restartRequired = false;
         bool allowRegistration = false;
         bool requiresRelogin = false;
+        bool isIndex = false;
 
         String discordrpccode = "378322260655603713";
 
@@ -203,6 +204,7 @@ namespace GameLauncher {
             settingsGameFilesCurrent.Click += new EventHandler(settingsGameFilesCurrent_Click);
 
             addServer.Click += new EventHandler(addServer_Click);
+            launcherVersion.Click += new EventHandler(OpenDebugWindow);
 
             email.KeyUp += new KeyEventHandler(loginbuttonenabler);
             email.KeyDown += new KeyEventHandler(loginEnter);
@@ -269,10 +271,12 @@ namespace GameLauncher {
             onlineCount.Location = pos2;
             onlineCount.BackColor = Color.Transparent;
 
-            formGraphics = this.CreateGraphics();
-            formGraphics.DrawRectangle(ColorLoading, new Rectangle(new Point(30, 125), new Size(372, 274)));
-            formGraphics.DrawRectangle(ColorLoading, new Rectangle(new Point(29, 124), new Size(374, 276)));
-            formGraphics.Dispose();
+            if (isIndex) {
+                formGraphics = this.CreateGraphics();
+                formGraphics.DrawRectangle(ColorLoading, new Rectangle(new Point(30, 125), new Size(372, 274)));
+                formGraphics.DrawRectangle(ColorLoading, new Rectangle(new Point(29, 124), new Size(374, 276)));
+                formGraphics.Dispose();
+            }
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
@@ -552,6 +556,11 @@ namespace GameLauncher {
             x.Show();
         }
 
+        private void OpenDebugWindow(object sender, EventArgs e) {
+            Form y = new DebugWindow();
+            y.Show();
+        }
+
         private void closebtn_MouseEnter(object sender, EventArgs e) {
             this.closebtn.BackgroundImage = Properties.Resources.close_hover;
         }
@@ -828,10 +837,12 @@ namespace GameLauncher {
                     presence.instance = true;
                     DiscordRpc.UpdatePresence(ref presence);
 
-                    formGraphics = this.CreateGraphics();
-                    formGraphics.DrawRectangle(ColorOffline, new Rectangle(new Point(30, 125), new Size(372, 274)));
-                    formGraphics.DrawRectangle(ColorOffline, new Rectangle(new Point(29, 124), new Size(374, 276)));
-                    formGraphics.Dispose();
+                    if(isIndex) { 
+                        formGraphics = this.CreateGraphics();
+                        formGraphics.DrawRectangle(ColorOffline, new Rectangle(new Point(30, 125), new Size(372, 274)));
+                        formGraphics.DrawRectangle(ColorOffline, new Rectangle(new Point(29, 124), new Size(374, 276)));
+                        formGraphics.Dispose();
+                    }
 
                     onlineCount.Text = Language.getLangString("ERROR_SERVEROFFLINE", UILanguage);
                     serverEnabled = false;
@@ -902,10 +913,12 @@ namespace GameLauncher {
 
                             allowRegistration = true;
 
-                            formGraphics = this.CreateGraphics();
-                            formGraphics.DrawRectangle(ColorOnline, new Rectangle(new Point(30, 125), new Size(372, 274)));
-                            formGraphics.DrawRectangle(ColorOnline, new Rectangle(new Point(29, 124), new Size(374, 276)));
-                            formGraphics.Dispose();
+                            if (isIndex) {
+                                formGraphics = this.CreateGraphics();
+                                formGraphics.DrawRectangle(ColorOnline, new Rectangle(new Point(30, 125), new Size(372, 274)));
+                                formGraphics.DrawRectangle(ColorOnline, new Rectangle(new Point(29, 124), new Size(374, 276)));
+                                formGraphics.Dispose();
+                            }
                         }
                     }
 
@@ -960,30 +973,36 @@ namespace GameLauncher {
                                         if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
                                             onlineCount.Text += String.Format(Language.getLangString("MAIN_PINGSUCCESS", UILanguage), reply.RoundtripTime);
                                         } else {
-                                            formGraphics = this.CreateGraphics();
-                                            formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
-                                            formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(29, 124), new Size(374, 276)));
-                                            formGraphics.Dispose();
+                                            if (isIndex) {
+                                                formGraphics = this.CreateGraphics();
+                                                formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
+                                                formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(29, 124), new Size(374, 276)));
+                                                formGraphics.Dispose();
+                                            }
 
                                             onlineCount.Text += Language.getLangString("MAIN_PINGFAILED", UILanguage);
                                         }
                                     };
                                 }
                                 else {
-                                    formGraphics = this.CreateGraphics();
-                                    formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
-                                    formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(29, 124), new Size(374, 276)));
-                                    formGraphics.Dispose();
+                                    if (isIndex) {
+                                        formGraphics = this.CreateGraphics();
+                                        formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
+                                        formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(29, 124), new Size(374, 276)));
+                                        formGraphics.Dispose();
+                                    }
 
                                     onlineCount.Text += Language.getLangString("MAIN_PINGFAILED", UILanguage);
                                 }
                             }
                         };
                     } else {
-                        formGraphics = this.CreateGraphics();
-                        formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
-                        formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(29, 124), new Size(374, 276)));
-                        formGraphics.Dispose();
+                        if (isIndex) {
+                            formGraphics = this.CreateGraphics();
+                            formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
+                            formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(29, 124), new Size(374, 276)));
+                            formGraphics.Dispose();
+                        }
 
                         onlineCount.Text += Language.getLangString("MAIN_PINGDISABLED", UILanguage);
                     }
@@ -1058,6 +1077,8 @@ namespace GameLauncher {
         }
 
         private void LoggedInFormElements(bool hideElements) {
+            isIndex = true;
+
             if (hideElements == true) {
                 this.currentWindowInfo.Text = Language.getLangString("MAIN_INFORMATION", UILanguage).ToUpper();
                 this.currentWindowInfo.Location = new Point(479, 140);
@@ -1076,7 +1097,9 @@ namespace GameLauncher {
         }
 
         private void LoginFormElements(bool hideElements = false) {
-            if(hideElements == true) {
+            isIndex = true;
+
+            if (hideElements == true) {
                 this.currentWindowInfo.Text = Language.getLangString("MAIN_INFORMATION", UILanguage).ToUpper();
                 this.currentWindowInfo.Location = new Point(479, 140);
                 this.currentWindowInfo.Size = new Size(222, 46);
@@ -1115,7 +1138,9 @@ namespace GameLauncher {
         }
 
         private void RegisterFormElements(bool hideElements = true) {
-            if(hideElements == true) {
+            isIndex = false;
+
+            if (hideElements == true) {
                 this.currentWindowInfo.Location = new Point(53, 150);
                 this.currentWindowInfo.Size = new Size(700, 46);
             }
@@ -1522,6 +1547,8 @@ namespace GameLauncher {
         }
 
         private void SettingsFormElements(bool hideElements = true) {
+            isIndex = false;
+
             if (hideElements == true) {
                 this.currentWindowInfo.Text = Language.getLangString("MAIN_INFORMATIONSETTINGS", UILanguage).ToUpper();
                 this.currentWindowInfo.Location = new Point(53, 150);
@@ -1801,9 +1828,9 @@ namespace GameLauncher {
             this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_CHECKINGTRACKS", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
 
-            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Tracks\\STREAML5RA_98.BUN")) {
+            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\TracksHigh\\STREAML5RA_98.BUN")) {
                 DownloadStartTime = DateTime.Now;
-                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "Tracks", SettingFile.Read("InstallationDirectory"), false, false, 615494528);
+                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "TracksHigh", SettingFile.Read("InstallationDirectory"), false, false, 615494528);
             } else {
                 DownloadSpeechFiles();
             }
@@ -1855,9 +1882,9 @@ namespace GameLauncher {
             this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_CHECKINGTRACKSHIGH", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
 
-            if (SettingFile.Read("TracksHigh") == "1" && !File.Exists(SettingFile.Read("InstallationDirectory") + "\\TracksHigh\\STREAML5RA_98.BUN")) {
+            if (SettingFile.Read("TracksHigh") == "1" && !File.Exists(SettingFile.Read("InstallationDirectory") + "\\Tracks\\STREAML5RA_98.BUN")) {
                 DownloadStartTime = DateTime.Now;
-                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "TracksHigh", SettingFile.Read("InstallationDirectory"), false, false, 278397707);
+                downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "Tracks", SettingFile.Read("InstallationDirectory"), false, false, 278397707);
             } else {
                 OnDownloadFinished();
             }

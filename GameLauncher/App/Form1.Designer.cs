@@ -86,8 +86,8 @@
             this.errorPassword = new System.Windows.Forms.Label();
             this.errorEmail = new System.Windows.Forms.Label();
             this.errorTOS = new System.Windows.Forms.Label();
-            this.playProgress = new GameLauncherReborn.ProgressBarEx();
             this.addServer = new System.Windows.Forms.Button();
+            this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).BeginInit();
@@ -355,7 +355,6 @@
             this.settingsQualityDesc.Name = "settingsQualityDesc";
             this.settingsQualityDesc.Size = new System.Drawing.Size(427, 85);
             this.settingsQualityDesc.TabIndex = 29;
-            this.settingsQualityDesc.Text = resources.GetString("settingsQualityDesc.Text");
             // 
             // registerEmail
             // 
@@ -761,6 +760,15 @@
             this.errorTOS.Size = new System.Drawing.Size(0, 13);
             this.errorTOS.TabIndex = 66;
             // 
+            // addServer
+            // 
+            this.addServer.Location = new System.Drawing.Point(947, 32);
+            this.addServer.Name = "addServer";
+            this.addServer.Size = new System.Drawing.Size(23, 23);
+            this.addServer.TabIndex = 68;
+            this.addServer.Text = "+";
+            this.addServer.UseVisualStyleBackColor = true;
+            // 
             // playProgress
             // 
             this.playProgress.BackColor = System.Drawing.Color.Transparent;
@@ -772,15 +780,6 @@
             this.playProgress.Name = "playProgress";
             this.playProgress.Size = new System.Drawing.Size(700, 5);
             this.playProgress.Text = "downloadProgress";
-            // 
-            // addServer
-            // 
-            this.addServer.Location = new System.Drawing.Point(947, 32);
-            this.addServer.Name = "addServer";
-            this.addServer.Size = new System.Drawing.Size(23, 23);
-            this.addServer.TabIndex = 68;
-            this.addServer.Text = "+";
-            this.addServer.UseVisualStyleBackColor = true;
             // 
             // mainScreen
             // 

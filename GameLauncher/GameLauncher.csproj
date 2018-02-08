@@ -153,6 +153,12 @@
     <Compile Include="App\Classes\WebRequest.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="App\Debug.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\Debug.Designer.cs">
+      <DependentUpon>Debug.cs</DependentUpon>
+    </Compile>
     <Compile Include="App\Discord\Discord.cs" />
     <Compile Include="App\Form1.cs">
       <SubType>Form</SubType>
@@ -172,6 +178,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="App\Classes\WebRequest.resx">
       <DependentUpon>WebRequest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\Debug.resx">
+      <DependentUpon>Debug.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
