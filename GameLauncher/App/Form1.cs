@@ -143,7 +143,6 @@ namespace GameLauncher {
             }
 
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-
             ApplyEmbeddedFonts();
 
             if(SettingFile.KeyExists("LauncherPosX") || SettingFile.KeyExists("LauncherPosY")) {
@@ -239,7 +238,7 @@ namespace GameLauncher {
 
             //Somewhere here we will setup the game installation directory
             if (String.IsNullOrEmpty(SettingFile.Read("InstallationDirectory"))) {
-                    MessageBox.Show(null, Language.getLangString("INSTALL_INFO", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(null, Language.getLangString("INSTALL_INFO", "Default"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     var fbd = new FolderBrowserDialog();
                     DialogResult result = fbd.ShowDialog();
@@ -816,13 +815,15 @@ namespace GameLauncher {
             }
 
             var client = new WebClientWithTimeout();
-
             Uri StringToUri = new Uri(serverIP + "/GetServerInformation");
             client.CancelAsync();
+            client.Dispose();
             client.DownloadStringAsync(StringToUri);
             client.DownloadStringCompleted += (sender2, e2) => {
+                MessageBox.Show(e2.Cancelled.ToString());
                 if (e2.Cancelled) {
                     client.CancelAsync();
+                    client.Dispose();
                     return;
                 } else if (e2.Error != null) {
                     DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
