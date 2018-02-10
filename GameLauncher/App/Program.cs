@@ -18,10 +18,10 @@ namespace GameLauncher {
             bool wine = DetectLinux.WineDetected();
             bool linux = DetectLinux.LinuxDetected();
 
-            if(Environment.OSVersion.Version.Major <= 5 && !linux) {
+            /*if(Environment.OSVersion.Version.Major <= 5 && !linux) {
                 MessageBox.Show(null, "Windows XP Support has been terminated. Please upgrade your Operating System to 'Vista' or newer.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Environment.Exit(Environment.ExitCode);
-            }
+            }*/
 
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 

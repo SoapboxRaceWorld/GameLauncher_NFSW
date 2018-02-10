@@ -816,12 +816,12 @@ namespace GameLauncher {
 
             var client = new WebClientWithTimeout();
 
-            serverPick.Enabled = false;
+            //serverPick.Enabled = false;
 
             Uri StringToUri = new Uri(serverIP + "/GetServerInformation");
             client.DownloadStringAsync(StringToUri);
             client.DownloadStringCompleted += (sender2, e2) => {
-                serverPick.Enabled = true;
+                //serverPick.Enabled = true;
 
                 if (e2.Error != null) {
                     DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
