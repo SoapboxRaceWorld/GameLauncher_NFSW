@@ -49,6 +49,7 @@ namespace GameLauncher.App {
             string SkipUpdate = (SettingFile.Read("SkipUpdate") == "1") ? "True" : "False";
             string Antivirus = (String.IsNullOrEmpty(AntivirusInstalled())) ? "---" : AntivirusInstalled();
             string Firewall = (String.IsNullOrEmpty(AntivirusInstalled("FirewallProduct"))) ? "---" : AntivirusInstalled("FirewallProduct");
+            string LauncherPosition = "";
 
             var Win32_OperatingSystem = (from x in new ManagementObjectSearcher("SELECT Caption FROM Win32_OperatingSystem").Get().Cast<ManagementObject>()
                 select x.GetPropertyValue("Caption")).FirstOrDefault();
@@ -64,6 +65,12 @@ namespace GameLauncher.App {
             long memKb;
             GetPhysicallyInstalledSystemMemory(out memKb);
 
+            if(SettingFile.Read("LauncherPosX") + "x" + SettingFile.Read("LauncherPosY") == "x") {
+                LauncherPosition = "Windows Default Position";
+            } else {
+                LauncherPosition = SettingFile.Read("LauncherPosX") + "x" + SettingFile.Read("LauncherPosY");
+        }
+
             var settings = new[] {
                 new { Text = "InstallationDirectory", Value = SettingFile.Read("InstallationDirectory")},
                 new { Text = "Server", Value =  SettingFile.Read("Server")},
@@ -71,7 +78,7 @@ namespace GameLauncher.App {
                 new { Text = "TracksHigh", Value = TracksHigh},
                 new { Text = "UILanguage", Value =  SettingFile.Read("UILanguage")},
                 new { Text = "SkipUpdate", Value = SkipUpdate},
-                new { Text = "LauncherPos", Value = SettingFile.Read("LauncherPosX") + "x" + SettingFile.Read("LauncherPosY")},
+                new { Text = "LauncherPos", Value = LauncherPosition},
 
                 new { Text = "", Value = "" },
                 

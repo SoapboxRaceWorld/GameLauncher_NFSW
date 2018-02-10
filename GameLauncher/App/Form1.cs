@@ -815,17 +815,15 @@ namespace GameLauncher {
             }
 
             var client = new WebClientWithTimeout();
+
+            serverPick.Enabled = false;
+
             Uri StringToUri = new Uri(serverIP + "/GetServerInformation");
-            client.CancelAsync();
-            client.Dispose();
             client.DownloadStringAsync(StringToUri);
             client.DownloadStringCompleted += (sender2, e2) => {
-                MessageBox.Show(e2.Cancelled.ToString());
-                if (e2.Cancelled) {
-                    client.CancelAsync();
-                    client.Dispose();
-                    return;
-                } else if (e2.Error != null) {
+                serverPick.Enabled = true;
+
+                if (e2.Error != null) {
                     DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
                     DiscordRpc.Initialize(discordrpccode, ref handlers, true, "");
 
@@ -849,7 +847,6 @@ namespace GameLauncher {
                     serverEnabled = false;
                     allowRegistration = false;
                 } else {
-
                     if (serverName == "Offline Built-In Server") {
                         numPlayers = "∞";
                     } else {
