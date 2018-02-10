@@ -1804,7 +1804,17 @@ namespace GameLauncher {
             if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechhdr_" + speechFile + ".big")) {
                 this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_LOADINGFILELIST", UILanguage).ToUpper();
                 requiresRelogin = true;
-                DownloadCoreFiles();
+
+                Kernel32.GetDiskFreeSpaceEx(SettingFile.Read("InstallationDirectory"), out ulong lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
+                if (lpFreeBytesAvailable <= 4000000000) {
+                    this.playProgress.Value = 100;
+                    this.playProgressText.Text = "Failed to download game files. Please make sure you have 4GB free on hard drive.".ToUpper();
+                    this.playProgressTime.Hide();
+                    this.playProgressTime.Text = "";
+                    this.playProgress.ProgressColor = Color.Orange;
+                } else {
+                    DownloadCoreFiles();
+                }
             } else {
                 OnDownloadFinished();
             }
