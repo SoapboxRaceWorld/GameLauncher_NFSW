@@ -50,14 +50,14 @@
             this.data.Name = "data";
             this.data.ReadOnly = true;
             this.data.RowHeadersVisible = false;
-            this.data.Size = new System.Drawing.Size(566, 533);
+            this.data.Size = new System.Drawing.Size(566, 596);
             this.data.TabIndex = 0;
             // 
             // DebugWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(566, 533);
+            this.ClientSize = new System.Drawing.Size(566, 596);
             this.Controls.Add(this.data);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
