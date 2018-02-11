@@ -1586,9 +1586,6 @@ namespace GameLauncher {
         }
 
         private void playButton_Click(object sender, EventArgs e) {
-
-            MessageBox.Show(requiresRelogin.ToString());
-
             if (loggedIn == false) {
                 loginButton_Click(sender, e);
             }
