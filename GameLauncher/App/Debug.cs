@@ -47,7 +47,7 @@ namespace GameLauncher.App {
             string UserSettings = Environment.ExpandEnvironmentVariables("%AppData%\\Need for Speed World\\Settings\\UserSettings.xml");
 
             string TracksHigh = (SettingFile.Read("TracksHigh") == "1") ? "True" : "False";
-            string Password = (SettingFile.Read("Password") == "1") ? "True" : "False";
+            string Password = (!String.IsNullOrEmpty(SettingFile.Read("Password"))) ? "True" : "False";
             string SkipUpdate = (SettingFile.Read("SkipUpdate") == "1") ? "True" : "False";
             string Antivirus = (String.IsNullOrEmpty(AntivirusInstalled())) ? "---" : AntivirusInstalled();
             string Firewall = (String.IsNullOrEmpty(AntivirusInstalled("FirewallProduct"))) ? "---" : AntivirusInstalled("FirewallProduct");

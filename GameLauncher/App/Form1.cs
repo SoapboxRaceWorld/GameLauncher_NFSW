@@ -39,7 +39,7 @@ namespace GameLauncher {
         bool requiresRelogin = false;
         bool isIndex = false;
 
-        String discordrpccode = "378322260655603713";
+        String discordrpccode = (Debugger.IsAttached) ? "397461418640932864" : "378322260655603713";
 
         int errorcode;
 
@@ -818,10 +818,14 @@ namespace GameLauncher {
 
             //serverPick.Enabled = false;
 
+            long artificialPingStart = Self.getTimestamp();
+
             Uri StringToUri = new Uri(serverIP + "/GetServerInformation");
             client.DownloadStringAsync(StringToUri);
             client.DownloadStringCompleted += (sender2, e2) => {
                 //serverPick.Enabled = true;
+
+                long artificialPingEnd = Self.getTimestamp();
 
                 if (e2.Error != null) {
                     DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
@@ -978,11 +982,11 @@ namespace GameLauncher {
                                                 formGraphics.Dispose();
                                             }
 
-                                            onlineCount.Text += Language.getLangString("MAIN_PINGFAILED", UILanguage);
+                                            onlineCount.Text += String.Format(Language.getLangString("MAIN_PINGSUCCESS", UILanguage), (artificialPingEnd - artificialPingStart).ToString());
+                                            onlineCount.Text += " (HTTP)";
                                         }
                                     };
-                                }
-                                else {
+                                } else {
                                     if (isIndex) {
                                         formGraphics = this.CreateGraphics();
                                         formGraphics.DrawRectangle(ColorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
@@ -1582,169 +1586,169 @@ namespace GameLauncher {
         }
 
         private void playButton_Click(object sender, EventArgs e) {
-            loginButton_Click(sender, e);
+
+            MessageBox.Show(requiresRelogin.ToString());
 
             if (loggedIn == false) {
-                //MessageBox.Show("Please log in first!");
-            } else {
+                loginButton_Click(sender, e);
+            }
 
-                if (playenabled == false) {
-                    return;
+            if (playenabled == false) {
+                return;
+            }
+
+            //Relogin here
+            if(requiresRelogin == true) {
+                string serverLoginResponse;
+                string encryptedpassword;
+                HashAlgorithm algorithm = SHA1.Create();
+                StringBuilder sb = new StringBuilder();
+                foreach (byte b in algorithm.ComputeHash(Encoding.UTF8.GetBytes(password.Text.ToString()))) {
+                    sb.Append(b.ToString("X2"));
                 }
 
-                //Relogin here
-                if(requiresRelogin == true) {
-                    string serverLoginResponse;
-                    string encryptedpassword;
-                    HashAlgorithm algorithm = SHA1.Create();
-                    StringBuilder sb = new StringBuilder();
-                    foreach (byte b in algorithm.ComputeHash(Encoding.UTF8.GetBytes(password.Text.ToString()))) {
-                        sb.Append(b.ToString("X2"));
-                    }
+                if (useSavedPassword) {
+                    encryptedpassword = SettingFile.Read("Password");
+                } else {
+                    encryptedpassword = sb.ToString();
+                }
 
-                    if (useSavedPassword) {
-                        encryptedpassword = SettingFile.Read("Password");
+                try {
+                    WebClient wc = new WebClientWithTimeout();
+
+                    string BuildURL = serverIP + "/User/authenticateUser?email=" + email.Text.ToString() + "&password=" + encryptedpassword.ToLower();
+
+                    serverLoginResponse = wc.DownloadString(BuildURL);
+                } catch (WebException ex) {
+                    if (ex.Status == WebExceptionStatus.ProtocolError) {
+                        HttpWebResponse serverReply = (HttpWebResponse)ex.Response;
+                        if (serverReply == null) {
+                            errorcode = 500;
+                            serverLoginResponse = "<LoginStatusVO><UserId/><LoginToken/><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
+                        } else {
+                            using (StreamReader sr = new StreamReader(serverReply.GetResponseStream())) {
+                                errorcode = (int)serverReply.StatusCode;
+                                serverLoginResponse = sr.ReadToEnd();
+                            }
+                        }
                     } else {
-                        encryptedpassword = sb.ToString();
+                        serverLoginResponse = ex.Message;
+                    }
+                }
+
+                try {
+                    XmlDocument SBRW_XML = new XmlDocument();
+
+                    if (builtinserver == false) {
+                        SBRW_XML.LoadXml(serverLoginResponse);
+                    } else {
+                        SBRW_XML.LoadXml("<LoginStatusVO><UserId>1</UserId><LoginToken>aaaaaaaa-aaaa-aaaa-aaaaaaaa</LoginToken><Description/></LoginStatusVO>");
                     }
 
-                    try {
-                        WebClient wc = new WebClientWithTimeout();
-
-                        string BuildURL = serverIP + "/User/authenticateUser?email=" + email.Text.ToString() + "&password=" + encryptedpassword.ToLower();
-
-                        serverLoginResponse = wc.DownloadString(BuildURL);
-                    } catch (WebException ex) {
-                        if (ex.Status == WebExceptionStatus.ProtocolError) {
-                            HttpWebResponse serverReply = (HttpWebResponse)ex.Response;
-                            if (serverReply == null) {
-                                errorcode = 500;
-                                serverLoginResponse = "<LoginStatusVO><UserId/><LoginToken/><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
-                            } else {
-                                using (StreamReader sr = new StreamReader(serverReply.GetResponseStream())) {
-                                    errorcode = (int)serverReply.StatusCode;
-                                    serverLoginResponse = sr.ReadToEnd();
-                                }
-                            }
-                        } else {
-                            serverLoginResponse = ex.Message;
-                        }
-                    }
+                    XmlNode ExtraNode;
+                    XmlNode LoginTokenNode;
+                    XmlNode UserIdNode;
+                    String msgBoxInfo = "";
 
                     try {
-                        XmlDocument SBRW_XML = new XmlDocument();
+                        LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
+                        UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
 
-                        if (builtinserver == false) {
-                            SBRW_XML.LoadXml(serverLoginResponse);
+                        if (SBRW_XML.SelectSingleNode("LoginStatusVO/Ban") == null) {
+                            if (SBRW_XML.SelectSingleNode("LoginStatusVO/Description") == null) {
+                                ExtraNode = SBRW_XML.SelectSingleNode("html/body");
+                            } else {
+                                ExtraNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
+                            }
                         } else {
-                            SBRW_XML.LoadXml("<LoginStatusVO><UserId>1</UserId><LoginToken>aaaaaaaa-aaaa-aaaa-aaaaaaaa</LoginToken><Description/></LoginStatusVO>");
+                            ExtraNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Ban");
                         }
 
-                        XmlNode ExtraNode;
-                        XmlNode LoginTokenNode;
-                        XmlNode UserIdNode;
-                        String msgBoxInfo = "x";
+                        if (!String.IsNullOrEmpty(ExtraNode.InnerText)) {
+                            if (ExtraNode.SelectSingleNode("Reason") != null) {
+                                msgBoxInfo = String.Format(Language.getLangString("BANNED_INFO", UILanguage), serverPick.GetItemText(serverPick.SelectedItem)) + "\n";
+                                msgBoxInfo += String.Format(Language.getLangString("BANNED_REASON", UILanguage), ExtraNode.SelectSingleNode("Reason").InnerText);
 
-                        try {
-                            LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
-                            UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
-
-                            if (SBRW_XML.SelectSingleNode("LoginStatusVO/Ban") == null) {
-                                if (SBRW_XML.SelectSingleNode("LoginStatusVO/Description") == null) {
-                                    ExtraNode = SBRW_XML.SelectSingleNode("html/body");
+                                if (ExtraNode.SelectSingleNode("Expires") != null) {
+                                    msgBoxInfo += "\n" + String.Format(Language.getLangString("BANNED_EXPIRETIME", UILanguage), ExtraNode.SelectSingleNode("Expires").InnerText);
                                 } else {
-                                    ExtraNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
+                                    msgBoxInfo += "\n" + Language.getLangString("BANNED_EXPIRENEVER", UILanguage);
                                 }
                             } else {
-                                ExtraNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Ban");
-                            }
-
-                            if (!String.IsNullOrEmpty(ExtraNode.InnerText)) {
-                                if (ExtraNode.SelectSingleNode("Reason") != null) {
-                                    msgBoxInfo = String.Format(Language.getLangString("BANNED_INFO", UILanguage), serverPick.GetItemText(serverPick.SelectedItem)) + "\n";
-                                    msgBoxInfo += String.Format(Language.getLangString("BANNED_REASON", UILanguage), ExtraNode.SelectSingleNode("Reason").InnerText);
-
-                                    if (ExtraNode.SelectSingleNode("Expires") != null) {
-                                        msgBoxInfo += "\n" + String.Format(Language.getLangString("BANNED_EXPIRETIME", UILanguage), ExtraNode.SelectSingleNode("Expires").InnerText);
-                                    } else {
-                                        msgBoxInfo += "\n" + Language.getLangString("BANNED_EXPIRENEVER", UILanguage);
-                                    }
+                                if (ExtraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?") {
+                                    msgBoxInfo = Language.getLangString("ERROR_TAMPERING", UILanguage);
                                 } else {
-                                    if (ExtraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?") {
-                                        msgBoxInfo = Language.getLangString("ERROR_TAMPERING", UILanguage);
+                                    if (SBRW_XML.SelectSingleNode("html/body") == null) {
+                                        msgBoxInfo = ExtraNode.InnerText;
                                     } else {
-                                        if (SBRW_XML.SelectSingleNode("html/body") == null) {
-                                            msgBoxInfo = ExtraNode.InnerText;
-                                        } else {
-                                            msgBoxInfo = "ERROR " + errorcode + ": " + ExtraNode.InnerText;
-                                        }
+                                        msgBoxInfo = "ERROR " + errorcode + ": " + ExtraNode.InnerText;
                                     }
                                 }
-
-                                ConsoleLog(msgBoxInfo, "error");
-                            } else {
-                                UserId = UserIdNode.InnerText;
-                                LoginToken = LoginTokenNode.InnerText;
                             }
-                        } catch {
-                            MessageBox.Show(Language.getLangString("ERROR_SERVERDOWN", UILanguage));
+
+                            ConsoleLog(msgBoxInfo, "error");
+                        } else {
+                            UserId = UserIdNode.InnerText;
+                            LoginToken = LoginTokenNode.InnerText;
                         }
                     } catch {
                         MessageBox.Show(Language.getLangString("ERROR_SERVERDOWN", UILanguage));
                     }
+                } catch {
+                    MessageBox.Show(Language.getLangString("ERROR_SERVERDOWN", UILanguage));
                 }
+            }
+                
+            this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
 
-                this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
+            try {
+                if (WebClientWithTimeout.createHash(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC") {
+                    LaunchGame(UserId, LoginToken, serverIP);
 
-                try {
-                    if (WebClientWithTimeout.createHash(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC") {
-                        LaunchGame(UserId, LoginToken, serverIP);
-
-                        if (builtinserver == true) {
-                            this.playProgressText.Text = Language.getLangString("MAIN_BUILTINSERVERINIT", UILanguage).ToUpper();
-                        } else {
-                            int secondsToCloseLauncher = 5;
-
-                            while (secondsToCloseLauncher > 0) {
-                                this.playProgressText.Text = String.Format(Language.getLangString("MAIN_LOADINGGAME", UILanguage), secondsToCloseLauncher).ToUpper(); //"LOADING GAME. LAUNCHER WILL MINIMIZE ITSELF IN " + secondsToCloseLauncher + " SECONDS";
-                                Delay.WaitSeconds(1);
-                                secondsToCloseLauncher--;
-                            }
-
-                            this.playProgressText.Text = String.Format(Language.getLangString("MAIN_LOADINGGAME", UILanguage), 0).ToUpper();
-
-                            while (this.Opacity > 0) {
-                                this.Opacity -= 0.01;
-                                Application.DoEvents();
-                                Thread.Sleep(10);
-                            }
-                              
-                            this.WindowState = FormWindowState.Minimized;
-                            this.ShowInTaskbar = false;
-
-                            ContextMenu = new ContextMenu();
-
-                            if (Environment.OSVersion.Version.Major >= 6) {
-                                ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CHECKUPDATE", UILanguage), Updater.checkForUpdate));
-                            }
-
-                            ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_ABOUT", UILanguage), About.showAbout));
-                            ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_ADDSERVER", UILanguage), addServer_Click));
-                            ContextMenu.MenuItems.Add("-");
-                            ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CLOSE", UILanguage), minimizebtn_Click));
-
-                            this.Text = "NEED FOR SPEED™ WORLD";
-                            this.Update();
-                            this.Refresh();
-
-                            Notification.ContextMenu = ContextMenu;
-                        }
+                    if (builtinserver == true) {
+                        this.playProgressText.Text = Language.getLangString("MAIN_BUILTINSERVERINIT", UILanguage).ToUpper();
                     } else {
-                        MessageBox.Show(null, Language.getLangString("ERROR_HASHMISMATCHNFSW", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        int secondsToCloseLauncher = 5;
+
+                        while (secondsToCloseLauncher > 0) {
+                            this.playProgressText.Text = String.Format(Language.getLangString("MAIN_LOADINGGAME", UILanguage), secondsToCloseLauncher).ToUpper(); //"LOADING GAME. LAUNCHER WILL MINIMIZE ITSELF IN " + secondsToCloseLauncher + " SECONDS";
+                            Delay.WaitSeconds(1);
+                            secondsToCloseLauncher--;
+                        }
+
+                        this.playProgressText.Text = String.Format(Language.getLangString("MAIN_LOADINGGAME", UILanguage), 0).ToUpper();
+
+                        while (this.Opacity > 0) {
+                            this.Opacity -= 0.01;
+                            Application.DoEvents();
+                            Thread.Sleep(10);
+                        }
+                              
+                        this.WindowState = FormWindowState.Minimized;
+                        this.ShowInTaskbar = false;
+
+                        ContextMenu = new ContextMenu();
+
+                        if (Environment.OSVersion.Version.Major >= 6) {
+                            ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CHECKUPDATE", UILanguage), Updater.checkForUpdate));
+                        }
+
+                        ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_ABOUT", UILanguage), About.showAbout));
+                        ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_ADDSERVER", UILanguage), addServer_Click));
+                        ContextMenu.MenuItems.Add("-");
+                        ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CLOSE", UILanguage), minimizebtn_Click));
+
+                        this.Text = "NEED FOR SPEED™ WORLD";
+                        this.Update();
+                        this.Refresh();
+
+                        Notification.ContextMenu = ContextMenu;
                     }
-                } catch(Exception ex) {
-                    MessageBox.Show(null, Language.getLangString("ERROR_404NFSW", UILanguage) + "\n\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                } else {
+                    MessageBox.Show(null, Language.getLangString("ERROR_HASHMISMATCHNFSW", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            } catch(Exception ex) {
+                MessageBox.Show(null, Language.getLangString("ERROR_404NFSW", UILanguage) + "\n\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

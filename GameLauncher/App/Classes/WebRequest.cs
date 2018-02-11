@@ -9,6 +9,15 @@ using System.Security.Cryptography;
 
 namespace GameLauncherReborn {
     public class WebClientWithTimeout : WebClient {
+        private static string GameLauncherHash = string.Empty;
+        public static string Value() {
+            if (string.IsNullOrEmpty(GameLauncherHash)) {
+                GameLauncherHash = createHash(AppDomain.CurrentDomain.FriendlyName);
+            }
+
+            return GameLauncherHash;
+        }
+
         public static string createHash(string filename) {
             SHA1 sha1 = new SHA1CryptoServiceProvider();
             byte[] retVal = sha1.ComputeHash(File.OpenRead(filename));
@@ -25,8 +34,8 @@ namespace GameLauncherReborn {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
             request.UserAgent = "GameLauncher (+https://github.com/SoapboxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-HWID"] = Security.FingerPrint.Value();
-            request.Headers["X-GameLauncherHash"] = createHash(AppDomain.CurrentDomain.FriendlyName);
-            request.Timeout = 20000;
+            request.Headers["X-GameLauncherHash"] = Value();
+            request.Timeout = 30000;
 
             return request;
         }

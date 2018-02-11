@@ -25,6 +25,12 @@ namespace GameLauncherReborn {
             }
         }
 
+        public static long getTimestamp() {
+            long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
+            ticks /= 10000;
+            return ticks;
+        }
+
         public static void centerScreen(Form form) {
             form.StartPosition = FormStartPosition.Manual;
             form.Top = (Screen.PrimaryScreen.Bounds.Height - form.Height) / 2;
