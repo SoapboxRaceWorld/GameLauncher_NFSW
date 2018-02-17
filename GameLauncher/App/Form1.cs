@@ -1170,6 +1170,12 @@ namespace GameLauncher {
             this.errorPassword.Visible = hideElements;
             this.errorTicket.Visible = hideElements;
             this.errorTOS.Visible = hideElements;
+
+            // Reset fields
+            this.registerEmail.Text = "";
+            this.registerPassword.Text = "";
+            this.registerConfirmPassword.Text = "";
+            this.registerAgree.Checked = false;
         }
 
         private void logoutButton_Click(object sender, EventArgs e) {
