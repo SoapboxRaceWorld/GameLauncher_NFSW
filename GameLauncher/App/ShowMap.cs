@@ -28,12 +28,15 @@ namespace GameLauncher.App {
             PictureBox p = sender as PictureBox;
             Graphics gr = e.Graphics;
             gr.ResetTransform();
-            int max = Convert.ToInt32(99999);
             gr.FillRectangle(Brushes.Red, 0, 0, SquareSize*2, SquareSize*2);
         }
 
         private void ShowMap_Load(object sender, EventArgs e) {
-            WebClient wc = new WebClientWithTimeout();
+
+            this.Close();
+            MessageBox.Show(null, "This function is not yet ready.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+            /*WebClient wc = new WebClientWithTimeout();
             string BuildURL = ServerIP + "/GetFreeroamJson";
             ServerReply = wc.DownloadString(BuildURL);
 
@@ -47,34 +50,11 @@ namespace GameLauncher.App {
                 FreeroamObject json = JsonConvert.DeserializeObject<FreeroamObject>(ServerReply);
 
                 foreach(var player in json.objList) {
-                    /* 
-                     * MAX X VALUE JSON: 15600 (-3600 / 12000)
-                     * MAX X VALUE MAP: 1024
-                     * DIV X: 15,24
-                     * 
-                     * MAX Y VALUE JSON: 7750 (-1900 / 5850)
-                     * MAX Y VALUE MAP: 562
-                     * DIV Y: 13,79
-                     * 
-                     */
-
-                    int new_x = Convert.ToInt32( (player.x + 3600) / (15600 / this.Width) );
-                    int new_y = Convert.ToInt32( (player.y + 1900) / (7750 / this.Height) );
-
-                    string x = "";
-                    x += "PLAYER: " + player.id + "\n";
-                    x += "Original place: " + new Size(player.x, player.y).ToString() + "\n";
-                    x += "Recalculated place: " + new Size(new_x, new_y).ToString() + "\n";
-                    x += "Window Size: " + this.Size.ToString() + "\n";
-
-                    MessageBox.Show(x);
-
                     PictureBox picturebox = new PictureBox();
                     picturebox.Name = "Square_" + player.id;
                     picturebox.Tag = 1;
                     picturebox.Size = new Size(SquareSize, SquareSize);
                     picturebox.Location = new Point(170, 385);
-                    //picturebox.Location = new Point(new_x, new_y);
                     this.Controls.Add(picturebox);
                     picturebox.BringToFront();
                     picturebox.Paint += new PaintEventHandler(picturebox_Paint);
@@ -94,7 +74,7 @@ namespace GameLauncher.App {
 
                 this.Text = "Freeroam: " + ServerName;
                 this.srvInfo.Text = "ServerName: " + ServerName + "\nPlayers on freeroam: " + json.objList.Count();
-            }
+            }*/
         }
     }
 }

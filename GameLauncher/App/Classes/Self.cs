@@ -25,6 +25,19 @@ namespace GameLauncherReborn {
             }
         }
 
+        public static void Restart(string param = "") {
+            ProcessStartInfo startInfo = Process.GetCurrentProcess().StartInfo;
+            startInfo.FileName = Application.ExecutablePath;
+
+            if(!String.IsNullOrEmpty(param)) {
+                startInfo.Arguments = param;
+            }
+
+            var exit = typeof(Application).GetMethod("ExitInternal", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            exit.Invoke(null, null);
+            Process.Start(startInfo);
+        }
+
         public static long getTimestamp() {
             long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
             ticks /= 10000;

@@ -792,6 +792,7 @@
             this.showmap.TabIndex = 70;
             this.showmap.Text = "[ SHOW MAP ]";
             this.showmap.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.showmap.Visible = false;
             // 
             // mainScreen
             // 

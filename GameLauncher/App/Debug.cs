@@ -15,7 +15,13 @@ using GameLauncherReborn;
 
 namespace GameLauncher.App {
     public partial class DebugWindow : Form {
-        public DebugWindow() {
+        string ServerIP = String.Empty;
+        string ServerName = String.Empty;
+
+        public DebugWindow(string serverIP, string serverName) {
+            ServerIP = serverIP;
+            ServerName = serverName;
+
             InitializeComponent();
         }
 
@@ -40,7 +46,6 @@ namespace GameLauncher.App {
         static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
 
         private void DebugWindow_Load(object sender, EventArgs e) {
-
             data.AutoGenerateColumns = true;
 
             IniFile SettingFile = new IniFile("Settings.ini");
@@ -49,9 +54,21 @@ namespace GameLauncher.App {
             string TracksHigh = (SettingFile.Read("TracksHigh") == "1") ? "True" : "False";
             string Password = (!String.IsNullOrEmpty(SettingFile.Read("Password"))) ? "True" : "False";
             string SkipUpdate = (SettingFile.Read("SkipUpdate") == "1") ? "True" : "False";
-            string Antivirus = (String.IsNullOrEmpty(AntivirusInstalled())) ? "---" : AntivirusInstalled();
-            string Firewall = (String.IsNullOrEmpty(AntivirusInstalled("FirewallProduct"))) ? "---" : AntivirusInstalled("FirewallProduct");
-            string AntiSpyware = (String.IsNullOrEmpty(AntivirusInstalled("AntiSpywareProduct"))) ? "---" : AntivirusInstalled("AntiSpywareProduct");
+
+            string Antivirus = String.Empty;
+            string Firewall = String.Empty;
+            string AntiSpyware = String.Empty;
+
+            try {
+                Antivirus = (String.IsNullOrEmpty(AntivirusInstalled())) ? "---" : AntivirusInstalled();
+                Firewall = (String.IsNullOrEmpty(AntivirusInstalled("FirewallProduct"))) ? "---" : AntivirusInstalled("FirewallProduct");
+                AntiSpyware = (String.IsNullOrEmpty(AntivirusInstalled("AntiSpywareProduct"))) ? "---" : AntivirusInstalled("AntiSpywareProduct");
+            } catch {
+                Antivirus = "Unknown";
+                Firewall = "Unknown";
+                AntiSpyware = "Unknown";
+            }
+
             string LauncherPosition = "";
 
             var Win32_OperatingSystem = (from x in new ManagementObjectSearcher("SELECT Caption FROM Win32_OperatingSystem").Get().Cast<ManagementObject>()
@@ -86,7 +103,8 @@ namespace GameLauncher.App {
 
             var settings = new[] {
                 new { Text = "InstallationDirectory", Value = SettingFile.Read("InstallationDirectory")},
-                new { Text = "Server", Value =  SettingFile.Read("Server")},
+                new { Text = "Server Address", Value = ServerIP},
+                new { Text = "Server Name", Value = ServerName},
                 new { Text = "Credentials Saved", Value = Password},
                 new { Text = "Language", Value =  SettingFile.Read("Language")},
                 new { Text = "TracksHigh", Value = TracksHigh},

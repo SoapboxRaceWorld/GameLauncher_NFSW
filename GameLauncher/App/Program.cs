@@ -63,10 +63,9 @@ namespace GameLauncher {
 
 
             if(Debugger.IsAttached) {
-                Console.WriteLine("DEBUG INITIALIZED");
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new ShowMap("http://54.37.234.148:8680/soapbox-race-core/Engine.svc", "X"));
+                Application.Run(new mainScreen());
             } else {
                 if (NFSW.isNFSWRunning()) {
                     MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
