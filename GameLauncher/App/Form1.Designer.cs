@@ -88,6 +88,7 @@
             this.errorTOS = new System.Windows.Forms.Label();
             this.addServer = new System.Windows.Forms.Button();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.showmap = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).BeginInit();
@@ -781,12 +782,24 @@
             this.playProgress.Size = new System.Drawing.Size(700, 5);
             this.playProgress.Text = "downloadProgress";
             // 
+            // showmap
+            // 
+            this.showmap.BackColor = System.Drawing.Color.Transparent;
+            this.showmap.ForeColor = System.Drawing.Color.DarkGray;
+            this.showmap.Location = new System.Drawing.Point(829, 58);
+            this.showmap.Name = "showmap";
+            this.showmap.Size = new System.Drawing.Size(141, 15);
+            this.showmap.TabIndex = 70;
+            this.showmap.Text = "[ SHOW MAP ]";
+            this.showmap.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
             // mainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1000, 562);
+            this.Controls.Add(this.showmap);
             this.Controls.Add(this.addServer);
             this.Controls.Add(this.errorTOS);
             this.Controls.Add(this.errorEmail);
@@ -923,5 +936,6 @@
         private System.Windows.Forms.Label errorEmail;
         private System.Windows.Forms.Label errorTOS;
         private System.Windows.Forms.Button addServer;
+        private System.Windows.Forms.Label showmap;
     }
 }

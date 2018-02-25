@@ -204,6 +204,7 @@ namespace GameLauncher {
 
             addServer.Click += new EventHandler(addServer_Click);
             launcherVersion.Click += new EventHandler(OpenDebugWindow);
+            showmap.Click += new EventHandler(OpenMapHandler);
 
             email.KeyUp += new KeyEventHandler(loginbuttonenabler);
             email.KeyDown += new KeyEventHandler(loginEnter);
@@ -558,6 +559,11 @@ namespace GameLauncher {
         private void OpenDebugWindow(object sender, EventArgs e) {
             Form y = new DebugWindow();
             y.Show();
+        }
+
+        private void OpenMapHandler(object sender, EventArgs e) {
+            Form z = new ShowMap(serverPick.SelectedValue.ToString(), serverPick.GetItemText(serverPick.SelectedItem));
+            z.Show();
         }
 
         private void closebtn_MouseEnter(object sender, EventArgs e) {
