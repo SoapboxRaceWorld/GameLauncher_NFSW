@@ -1585,12 +1585,12 @@ namespace GameLauncher {
             this.settingsGamePathText.Visible = hideElements;
         }
 
-        private void StartThreadedNFSW(string UserId, string LoginToken, string ServerIP) {
-            Thread nfswstarted = new Thread(() => LaunchGame(UserId, LoginToken, ServerIP));
+        private void StartThreadedNFSW(string UserId, string LoginToken, string ServerIP, Form x) {
+            Thread nfswstarted = new Thread(() => LaunchGame(UserId, LoginToken, ServerIP, this));
             nfswstarted.Start();
         }
 
-        private void LaunchGame(string UserId, string LoginToken, string ServerIP) {
+        private void LaunchGame(string UserId, string LoginToken, string ServerIP, Form x) {
             ProcessStartInfo psi = new ProcessStartInfo();
             psi.UseShellExecute = false;
             psi.RedirectStandardOutput = true;
@@ -1604,26 +1604,25 @@ namespace GameLauncher {
             nfsw_process.WaitForExit();
 
             var exitCode = nfsw_process.ExitCode;
-            var output = nfsw_process.StandardOutput.ReadToEnd();
-            var error = nfsw_process.StandardError.ReadToEnd();
-
-            if (output.Length > 0) {
-                MessageBox.Show(output);
-            }
-
-            if (error.Length > 0) {
-                MessageBox.Show(error);
-            }
 
             if (exitCode == 0) {
                 closebtn_Click(null, null);
             } else {
-                DialogResult ErrorReply = MessageBox.Show(null, "Looks like the game crashed with an error. Would you like to restart the game?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if(ErrorReply == DialogResult.No) {
-                    closebtn_Click(null, null);
-                } else {
-                    Application.Restart();
-                }
+                x.BeginInvoke(new Action(() => {
+                    x.WindowState = FormWindowState.Normal;
+                    x.Opacity = 1;
+                    x.ShowInTaskbar = true;
+                    playProgressText.Text = ("Game crashed with exitCode: " + exitCode.ToString()).ToUpper();
+                    playProgress.Value = 100;
+                    playProgress.ForeColor = Color.Red;
+
+                    DialogResult ErrorReply = MessageBox.Show(null, "Looks like the game crashed with an error. Would you like to restart the game?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (ErrorReply == DialogResult.No) {
+                        closebtn_Click(null, null);
+                    } else {
+                        Application.Restart();
+                    }
+                }));
             }
         }
 
@@ -1742,7 +1741,7 @@ namespace GameLauncher {
 
             try {
                 if (WebClientWithTimeout.createHash(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC") {
-                    StartThreadedNFSW(UserId, LoginToken, serverIP);
+                    StartThreadedNFSW(UserId, LoginToken, serverIP, this);
 
                     if (builtinserver == true) {
                         this.playProgressText.Text = Language.getLangString("MAIN_BUILTINSERVERINIT", UILanguage).ToUpper();
