@@ -326,7 +326,8 @@ namespace GameLauncher {
             try {
                 WebClient wc = new WebClientWithTimeout();
 
-                string serverurl = "http://nfsw.metonator.ct8.pl/serverlist.txt";
+                //string serverurl = "http://nfsw.metonator.ct8.pl/serverlist.txt";
+                string serverurl = "http://launcher.soapboxrace.world/serverlist.txt";
                 response += wc.DownloadString(serverurl);
 
                 serverlistloaded = true;
