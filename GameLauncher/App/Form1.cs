@@ -239,13 +239,19 @@ namespace GameLauncher {
 
             //Somewhere here we will setup the game installation directory
             if (String.IsNullOrEmpty(SettingFile.Read("InstallationDirectory"))) {
-                    MessageBox.Show(null, Language.getLangString("INSTALL_INFO", "Default"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(null, Language.getLangString("INSTALL_INFO", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     var fbd = new FolderBrowserDialog();
                     DialogResult result = fbd.ShowDialog();
 
-                    if (result == DialogResult.OK) {
-                        SettingFile.Write("InstallationDirectory", fbd.SelectedPath);
+                    if (result == DialogResult.OK) {                        
+                        if(fbd.SelectedPath == Environment.CurrentDirectory) {
+                            Directory.CreateDirectory("GameFiles");
+                            MessageBox.Show(null, String.Format(Language.getLangString("INSTALL_WARNING", UILanguage), Environment.CurrentDirectory + "\\GameFiles"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            SettingFile.Write("InstallationDirectory", Environment.CurrentDirectory + "\\GameFiles");
+                        } else {
+                            SettingFile.Write("InstallationDirectory", fbd.SelectedPath);
+                        }
                     } else {
                         Environment.Exit(Environment.ExitCode);
                     }
@@ -276,6 +282,10 @@ namespace GameLauncher {
                 formGraphics.DrawRectangle(ColorLoading, new Rectangle(new Point(30, 125), new Size(372, 274)));
                 formGraphics.DrawRectangle(ColorLoading, new Rectangle(new Point(29, 124), new Size(374, 276)));
                 formGraphics.Dispose();
+            }
+
+            if (Self.CheckForInternetConnection() == false) {
+                MessageBox.Show(null, Language.getLangString("ERROR_NOINTERNETCONNECTION", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -549,7 +559,15 @@ namespace GameLauncher {
             SettingFile.Write("InstallationDirectory", Path.GetFullPath(SettingFile.Read("InstallationDirectory")));
 
             //Dirty way to terminate application (sometimes Application.Exit() didn't really quitted, was still running in background)
-            Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+            if(DetectLinux.LinuxDetected() == true) {
+                this.Close();
+                downloader.Stop();
+                Application.Exit();
+                Application.ExitThread();
+                Environment.Exit(Environment.ExitCode);
+            } else {
+                Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+            }
         }
 
         private void addServer_Click(object sender, EventArgs e) {
@@ -864,6 +882,7 @@ namespace GameLauncher {
                         if (Environment.OSVersion.Version.Major <= 5) {
                             ticketRequired = true;
                             verticalImageUrl = null;
+                            allowRegistration = true;
                             numPlayers = Language.getLangString("MAIN_UNKNOWN", UILanguage);
                         } else {
                             GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
@@ -871,7 +890,6 @@ namespace GameLauncher {
                                 if (!String.IsNullOrEmpty(json.bannerUrl)) {
                                     Uri uriResult;
                                     bool result;
-
 
                                     try {
                                         result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);

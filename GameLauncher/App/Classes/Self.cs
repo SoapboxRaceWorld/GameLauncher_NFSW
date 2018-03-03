@@ -44,6 +44,18 @@ namespace GameLauncherReborn {
             return ticks;
         }
 
+        public static bool CheckForInternetConnection() {
+            try {
+                using (var client = new WebClientWithTimeout()) {
+                    using (client.OpenRead("http://clients3.google.com/generate_204")) {
+                        return true;
+                    }
+                }
+            } catch {
+                return false;
+            }
+        }
+
         public static void centerScreen(Form form) {
             form.StartPosition = FormStartPosition.Manual;
             form.Top = (Screen.PrimaryScreen.Bounds.Height - form.Height) / 2;
