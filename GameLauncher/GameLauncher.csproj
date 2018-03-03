@@ -209,7 +209,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Updater\GL_Update.exe" />
     <None Include="Resources\loggedbg.png" />
     <None Include="Resources\secondarybackground.png" />
     <None Include="Resources\smallbutton_hover.png" />
@@ -242,6 +241,7 @@
     <EmbeddedResource Include="SoapBoxModules\lightfx.dll" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Updater\GL_Update.exe" />
     <None Include="Resources\tick.png" />
     <None Include="Resources\map.png" />
     <EmbeddedResource Include="Discord\discord-rpc.dll" />

@@ -12,7 +12,7 @@ namespace GameLauncher {
             try {
                 var client = new WebClientWithTimeout();
 
-                Uri StringToUri = new Uri("http://nfsw.metonator.ct8.pl/checkUpdate.php?version=" + Application.ProductVersion);
+                Uri StringToUri = new Uri("http://launcher.soapboxrace.world/checkUpdate.php?version=" + Application.ProductVersion);
                 client.CancelAsync();
                 client.DownloadStringAsync(StringToUri);
                 client.DownloadStringCompleted += (sender2, e2) => {

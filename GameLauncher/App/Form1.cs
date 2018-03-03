@@ -412,6 +412,8 @@ namespace GameLauncher {
 
                     if(response.Contains(SettingFile.Read("Server"))) { 
                         serverPick.SelectedValue = SettingFile.Read("Server");
+                    } else {
+                        serverPick.SelectedValue = 0;
                     }
 
                     //I don't know other way to fix this call...
