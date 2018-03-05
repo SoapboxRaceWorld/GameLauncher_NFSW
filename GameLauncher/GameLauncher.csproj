@@ -45,6 +45,7 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -88,6 +89,7 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -104,6 +106,7 @@
       <DependentUpon>AddServer.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\Auth.cs" />
+    <Compile Include="App\Classes\Decryptor.cs" />
     <Compile Include="App\Classes\Delay.cs" />
     <Compile Include="App\Classes\DetectLinux.cs" />
     <Compile Include="App\Classes\Downloader\Downloader.cs" />
@@ -135,6 +138,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="App\Classes\Self.cs" />
+    <Compile Include="App\Classes\TaskBar.cs" />
     <Compile Include="App\Classes\WebRequest.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -152,6 +156,12 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\JsonScheme.cs" />
+    <Compile Include="App\InputEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\InputEditor.Designer.cs">
+      <DependentUpon>InputEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="App\Program.cs" />
     <Compile Include="App\ShowMap.cs">
       <SubType>Form</SubType>
@@ -175,6 +185,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="App\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\InputEditor.resx">
+      <DependentUpon>InputEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\ShowMap.resx">
       <DependentUpon>ShowMap.cs</DependentUpon>

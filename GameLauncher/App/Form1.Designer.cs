@@ -87,8 +87,9 @@
             this.errorEmail = new System.Windows.Forms.Label();
             this.errorTOS = new System.Windows.Forms.Label();
             this.addServer = new System.Windows.Forms.Button();
-            this.playProgress = new GameLauncherReborn.ProgressBarEx();
             this.showmap = new System.Windows.Forms.Label();
+            this.inputeditor = new System.Windows.Forms.Button();
+            this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).BeginInit();
@@ -770,18 +771,6 @@
             this.addServer.Text = "+";
             this.addServer.UseVisualStyleBackColor = true;
             // 
-            // playProgress
-            // 
-            this.playProgress.BackColor = System.Drawing.Color.Transparent;
-            this.playProgress.BackgroundColor = System.Drawing.Color.Black;
-            this.playProgress.Border = false;
-            this.playProgress.GradiantPosition = GameLauncherReborn.ProgressBarEx.GradiantArea.None;
-            this.playProgress.Image = null;
-            this.playProgress.Location = new System.Drawing.Point(37, 494);
-            this.playProgress.Name = "playProgress";
-            this.playProgress.Size = new System.Drawing.Size(700, 5);
-            this.playProgress.Text = "downloadProgress";
-            // 
             // showmap
             // 
             this.showmap.BackColor = System.Drawing.Color.Transparent;
@@ -794,12 +783,36 @@
             this.showmap.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             this.showmap.Visible = false;
             // 
+            // inputeditor
+            // 
+            this.inputeditor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.inputeditor.Location = new System.Drawing.Point(-10, -30);
+            this.inputeditor.Name = "inputeditor";
+            this.inputeditor.Size = new System.Drawing.Size(210, 23);
+            this.inputeditor.TabIndex = 72;
+            this.inputeditor.Text = "Edit Game Controls";
+            this.inputeditor.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.inputeditor.UseVisualStyleBackColor = true;
+            // 
+            // playProgress
+            // 
+            this.playProgress.BackColor = System.Drawing.Color.Transparent;
+            this.playProgress.BackgroundColor = System.Drawing.Color.Black;
+            this.playProgress.Border = false;
+            this.playProgress.GradiantPosition = GameLauncherReborn.ProgressBarEx.GradiantArea.None;
+            this.playProgress.Image = null;
+            this.playProgress.Location = new System.Drawing.Point(37, 494);
+            this.playProgress.Name = "playProgress";
+            this.playProgress.Size = new System.Drawing.Size(700, 5);
+            this.playProgress.Text = "downloadProgress";
+            // 
             // mainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1000, 562);
+            this.Controls.Add(this.inputeditor);
             this.Controls.Add(this.showmap);
             this.Controls.Add(this.addServer);
             this.Controls.Add(this.errorTOS);
@@ -938,5 +951,6 @@
         private System.Windows.Forms.Label errorTOS;
         private System.Windows.Forms.Button addServer;
         private System.Windows.Forms.Label showmap;
+        private System.Windows.Forms.Button inputeditor;
     }
 }

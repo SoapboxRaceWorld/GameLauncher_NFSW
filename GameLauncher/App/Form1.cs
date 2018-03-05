@@ -205,6 +205,7 @@ namespace GameLauncher {
             addServer.Click += new EventHandler(addServer_Click);
             launcherVersion.Click += new EventHandler(OpenDebugWindow);
             showmap.Click += new EventHandler(OpenMapHandler);
+            inputeditor.Click += new EventHandler(OpenInputEditorHandler);
 
             email.KeyUp += new KeyEventHandler(loginbuttonenabler);
             email.KeyDown += new KeyEventHandler(loginEnter);
@@ -585,6 +586,11 @@ namespace GameLauncher {
         private void OpenMapHandler(object sender, EventArgs e) {
             Form z = new ShowMap(serverPick.SelectedValue.ToString(), serverPick.GetItemText(serverPick.SelectedItem));
             z.Show();
+        }
+
+        private void OpenInputEditorHandler(object sender, EventArgs e) {
+            Form a = new InputEditor(SettingFile.Read("InstallationDirectory"));
+            a.Show();
         }
 
         private void closebtn_MouseEnter(object sender, EventArgs e) {
@@ -1604,6 +1610,7 @@ namespace GameLauncher {
             this.settingsGameFiles.Visible = hideElements;
             this.settingsGameFilesCurrent.Visible = hideElements;
             this.settingsGamePathText.Visible = hideElements;
+            this.inputeditor.Visible = hideElements;
         }
 
         private void StartThreadedNFSW(string UserId, string LoginToken, string ServerIP, Form x) {
@@ -1871,10 +1878,13 @@ namespace GameLauncher {
                 Kernel32.GetDiskFreeSpaceEx(SettingFile.Read("InstallationDirectory"), out ulong lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
                 if (lpFreeBytesAvailable <= 4000000000) {
                     this.playProgress.Value = 100;
-                    this.playProgressText.Text = "Failed to download game files. Please make sure you have 4GB free on hard drive.".ToUpper();
+                    this.playProgressText.Text = Language.getLangString("ERROR_NOTENOUGHSPACE", UILanguage).ToUpper();
                     this.playProgressTime.Hide();
                     this.playProgressTime.Text = "";
                     this.playProgress.ProgressColor = Color.Orange;
+
+                    TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Paused);
+                    TaskbarProgress.SetValue(this.Handle, 100, 100);
                 } else {
                     DownloadCoreFiles();
                 }
@@ -1886,6 +1896,8 @@ namespace GameLauncher {
         public void DownloadCoreFiles() {
             this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_CHECKINGCORE", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
+
+            TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
             if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe")) {
                 DownloadStartTime = DateTime.Now;
@@ -1899,6 +1911,8 @@ namespace GameLauncher {
             this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_CHECKINGTRACKS", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
 
+            TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Indeterminate);
+
             if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\TracksHigh\\STREAML5RA_98.BUN")) {
                 DownloadStartTime = DateTime.Now;
                 downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "TracksHigh", SettingFile.Read("InstallationDirectory"), false, false, 615494528);
@@ -1910,6 +1924,8 @@ namespace GameLauncher {
         public void DownloadSpeechFiles() {
             this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_LOOKINGSPEECH", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
+
+            TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
             string speechFile;
             ulong speechSize;
@@ -1952,6 +1968,8 @@ namespace GameLauncher {
         public void DownloadTracksHighFiles() {
             this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_CHECKINGTRACKSHIGH", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
+
+            TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
             if (SettingFile.Read("TracksHigh") == "1" && !File.Exists(SettingFile.Read("InstallationDirectory") + "\\Tracks\\STREAML5RA_98.BUN")) {
                 DownloadStartTime = DateTime.Now;
@@ -1997,9 +2015,13 @@ namespace GameLauncher {
 
             try { 
                 this.playProgress.Value = (int)((long)100 * downloadCurrent / compressedLength);
+                TaskbarProgress.SetValue(this.Handle, (int)((long)100 * downloadCurrent / compressedLength), 100);
             } catch {
+                TaskbarProgress.SetValue(this.Handle, 0, 100);
                 this.playProgress.Value = 0;
             }
+
+            TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Normal);
         }
 
         private void OnDownloadFinished() {
@@ -2009,6 +2031,9 @@ namespace GameLauncher {
             this.playButton.ForeColor = Color.White;
             this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADCOMPLETED", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
+
+            TaskbarProgress.SetValue(this.Handle, 100, 100);
+            TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Normal);
         }
 
         private void OnDownloadFailed(Exception ex) {
@@ -2024,6 +2049,9 @@ namespace GameLauncher {
             this.playProgressText.Text = String.Format(Language.getLangString("MAIN_DOWNLOADFAILED", UILanguage), failureMessage).ToUpper();
             this.playProgressTime.Text = "";
             this.playProgress.ProgressColor = Color.Red;
+
+            TaskbarProgress.SetValue(this.Handle, 100, 100);
+            TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Error);
         }
 
         private void OnShowMessage(string message, string header) {
