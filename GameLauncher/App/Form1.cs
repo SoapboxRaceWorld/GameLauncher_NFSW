@@ -38,6 +38,7 @@ namespace GameLauncher {
         bool allowRegistration = false;
         bool requiresRelogin = false;
         bool isIndex = false;
+        bool useLegacy = true;
 
         String discordrpccode = (Debugger.IsAttached) ? "397461418640932864" : "378322260655603713";
 
@@ -538,6 +539,19 @@ namespace GameLauncher {
             this.settingsGameFilesCurrent.Text = "CURRENT DIRECTORY: " + newGameFilesPath;
 
             setTranslations(UILanguage);
+
+            if(SettingFile.KeyExists("UseLegacyLaunchMethod")) {
+                if(SettingFile.Read("UseLegacyLaunchMethod") == "1") {
+                    legacyLaunch.Checked = true;
+                    useLegacy = true;
+                } else {
+                    legacyLaunch.Checked = false;
+                    useLegacy = false;
+                }
+            } else {
+                legacyLaunch.Checked = true;
+                useLegacy = false;
+            }
 
             this.BeginInvoke((MethodInvoker)delegate {
                 launchNFSW();
@@ -1085,6 +1099,8 @@ namespace GameLauncher {
             settingsGameFilesCurrent.Font = new Font(fontFamily2, 8f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             logoutButton.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+
+            legacyLaunch.Font = new Font(fontFamily1, 8f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
         }
 
         private void registerText_LinkClicked(object sender, EventArgs e) {
@@ -1553,6 +1569,14 @@ namespace GameLauncher {
                 restartRequired = true;
             }
 
+            if(legacyLaunch.Checked) {
+                useLegacy = true;
+                SettingFile.Write("UseLegacyLaunchMethod", "1");
+            } else {
+                useLegacy = false;
+                SettingFile.Write("UseLegacyLaunchMethod", "0");
+            }
+
             if (restartRequired == true) {
                 MessageBox.Show(null, Language.getLangString("MAIN_LAUNCHERRESTART", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -1611,14 +1635,27 @@ namespace GameLauncher {
             this.settingsGameFilesCurrent.Visible = hideElements;
             this.settingsGamePathText.Visible = hideElements;
             this.inputeditor.Visible = hideElements;
-        }
-
-        private void StartThreadedNFSW(string UserId, string LoginToken, string ServerIP, Form x) {
-            Thread nfswstarted = new Thread(() => LaunchGame(UserId, LoginToken, ServerIP, this));
-            nfswstarted.Start();
+            this.legacyLaunch.Visible = hideElements;
         }
 
         private void LaunchGame(string UserId, string LoginToken, string ServerIP, Form x) {
+            Thread nfswstarted = new Thread(() => StartThreadedNFSW(UserId, LoginToken, ServerIP, this));
+            nfswstarted.Start();
+        }
+
+        private void LaunchGameLegacy(string UserId, string LoginToken, string ServerIP, Form x) {
+            string filename = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
+
+            String cParams = "US " + ServerIP + " " + LoginToken + " " + UserId;
+            var proc = Process.Start(filename, cParams);
+            proc.EnableRaisingEvents = true;
+
+            proc.Exited += (sender2, e2) => {
+                closebtn_Click(sender2, e2);
+            };
+        }
+
+        private void StartThreadedNFSW(string UserId, string LoginToken, string ServerIP, Form x) {
             ProcessStartInfo psi = new ProcessStartInfo();
             psi.UseShellExecute = false;
             psi.RedirectStandardOutput = true;
@@ -1769,7 +1806,12 @@ namespace GameLauncher {
 
             try {
                 if (WebClientWithTimeout.createHash(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC") {
-                    StartThreadedNFSW(UserId, LoginToken, serverIP, this);
+
+                    if(useLegacy) {
+                        LaunchGameLegacy(UserId, LoginToken, serverIP, this);
+                    } else {
+                        LaunchGame(UserId, LoginToken, serverIP, this);
+                    }
 
                     if (builtinserver == true) {
                         this.playProgressText.Text = Language.getLangString("MAIN_BUILTINSERVERINIT", UILanguage).ToUpper();
