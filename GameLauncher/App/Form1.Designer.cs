@@ -91,6 +91,7 @@
             this.inputeditor = new System.Windows.Forms.Button();
             this.legacyLaunch = new System.Windows.Forms.CheckBox();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).BeginInit();
@@ -147,12 +148,14 @@
             // 
             // serverPick
             // 
+            this.serverPick.BackColor = System.Drawing.Color.White;
+            this.serverPick.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.serverPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.serverPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.serverPick.FormattingEnabled = true;
-            this.serverPick.Location = new System.Drawing.Point(755, 33);
+            this.serverPick.Location = new System.Drawing.Point(720, 33);
             this.serverPick.Name = "serverPick";
-            this.serverPick.Size = new System.Drawing.Size(188, 21);
+            this.serverPick.Size = new System.Drawing.Size(223, 21);
             this.serverPick.TabIndex = 5;
             // 
             // currentWindowInfo
@@ -819,12 +822,22 @@
             this.playProgress.Size = new System.Drawing.Size(700, 5);
             this.playProgress.Text = "downloadProgress";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(310, 33);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 76;
+            this.label1.Text = "label1";
+            // 
             // mainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1000, 562);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.legacyLaunch);
             this.Controls.Add(this.inputeditor);
             this.Controls.Add(this.showmap);
@@ -879,11 +892,11 @@
             this.Controls.Add(this.registerConfirmPassword);
             this.Controls.Add(this.registerPasswordText);
             this.Controls.Add(this.imageServerName);
-            this.Controls.Add(this.verticalBanner);
             this.Controls.Add(this.settingsGameFiles);
             this.Controls.Add(this.settingsUILang);
             this.Controls.Add(this.settingsQuality);
             this.Controls.Add(this.settingsLanguage);
+            this.Controls.Add(this.verticalBanner);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -967,5 +980,6 @@
         private System.Windows.Forms.Label showmap;
         private System.Windows.Forms.Button inputeditor;
         private System.Windows.Forms.CheckBox legacyLaunch;
+        private System.Windows.Forms.Label label1;
     }
 }

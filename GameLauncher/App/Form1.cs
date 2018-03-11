@@ -39,6 +39,7 @@ namespace GameLauncher {
         bool requiresRelogin = false;
         bool isIndex = false;
         bool useLegacy = true;
+        int lastSelectedServerId = 0;
 
         String discordrpccode = (Debugger.IsAttached) ? "397461418640932864" : "378322260655603713";
 
@@ -214,6 +215,7 @@ namespace GameLauncher {
             password.KeyDown += new KeyEventHandler(loginEnter);
 
             serverPick.TextChanged += new EventHandler(serverPick_TextChanged);
+            serverPick.DrawItem += new DrawItemEventHandler(comboBox1_DrawItem);
 
             forgotPassword.LinkClicked += new LinkLabelLinkClickedEventHandler(forgotPassword_LinkClicked);
             moreLanguages.LinkClicked += new LinkLabelLinkClickedEventHandler(moreLanguages_LinkClicked);
@@ -291,6 +293,27 @@ namespace GameLauncher {
             }
         }
 
+        private void comboBox1_DrawItem(object sender, DrawItemEventArgs e) {
+            Font font = (sender as ComboBox).Font;
+            Brush backgroundColor = Brushes.White;
+            Brush textColor = Brushes.Black;
+
+            String ServerListText = (sender as ComboBox).Items[e.Index].ToString();
+            ServerListText = ServerListText.Replace("{ Text = ", "");
+            int lastLocation = ServerListText.IndexOf(", Value = ");
+            ServerListText = ServerListText.Substring(0, lastLocation);
+
+            e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+
+            if (ServerListText.StartsWith("<GROUP>")) {
+                font = new Font(font, FontStyle.Bold);
+                e.Graphics.DrawString(ServerListText.Replace("<GROUP>", String.Empty), font, textColor, e.Bounds);
+            } else {
+                font = new Font(font, FontStyle.Regular);
+                e.Graphics.DrawString("    " + ServerListText, font, textColor, e.Bounds);
+            }
+        }
+
         private void mainScreen_Load(object sender, EventArgs e) {
             if (this.Location.X >= Screen.PrimaryScreen.Bounds.Width || this.Location.Y >= Screen.PrimaryScreen.Bounds.Height || this.Location.X <= 0 || this.Location.Y <= 0) {
                 Self.centerScreen(this);
@@ -334,6 +357,7 @@ namespace GameLauncher {
 
             //Fetch serverlist, and disable if failed to fetch.
             var response = "";
+            var response2 = "";
 
             try {
                 WebClient wc = new WebClientWithTimeout();
@@ -376,18 +400,13 @@ namespace GameLauncher {
                 }
             }
 
-            if (!File.Exists("servers.txt")) {
-                File.Create("servers.txt");
-                response += "";
-            } else {
-                response += File.ReadAllText("servers.txt");
-            }
-
             //Time to add servers
             serverPick.DisplayMember = "Text";
             serverPick.ValueMember = "Value";
 
             List<Object> items = new List<Object>();
+
+            items.Add(new { Text = "<GROUP>Official Servers", Value = "" });
 
             String[] substrings = response.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             foreach (var substring in substrings) {
@@ -397,7 +416,21 @@ namespace GameLauncher {
                 }
             }
 
+            if (File.Exists("servers.txt")) {
+                items.Add(new { Text = "<GROUP>Custom Servers", Value = "" });
+                response2 += File.ReadAllText("servers.txt");
+
+                String[] substrings_custom = response2.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+                foreach (var substring in substrings_custom) {
+                    if (!String.IsNullOrEmpty(substring)) {
+                        String[] substrings2 = substring.Split(new string[] { ";" }, StringSplitOptions.None);
+                        items.Add(new { Text = substrings2[0], Value = substrings2[1] });
+                    }
+                }
+            }
+
             serverPick.DataSource = items;
+
 
             //Silliest way to prevent doublecall of TextChanged event...
             if (serverlistloaded == true) {
@@ -813,7 +846,10 @@ namespace GameLauncher {
         }
 
         private void serverPick_TextChanged(object sender, EventArgs e) {
+            if (serverPick.GetItemText(serverPick.SelectedItem).IndexOf("<GROUP>") == 0) { serverPick.SelectedIndex = lastSelectedServerId; return; }
             if (!skipServerTrigger) { return; }
+
+            lastSelectedServerId = serverPick.SelectedIndex;
 
             allowRegistration = false;
 
