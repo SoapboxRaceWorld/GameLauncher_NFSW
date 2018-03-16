@@ -435,7 +435,7 @@ namespace GameLauncher {
             //Silliest way to prevent doublecall of TextChanged event...
             if (serverlistloaded == true) {
                 try {
-                    serverPick.SelectedIndex = 0;
+                    serverPick.SelectedIndex = 1;
                 } catch { }
 
                 if (!SettingFile.KeyExists("Server")) {
@@ -448,11 +448,11 @@ namespace GameLauncher {
                     if(response.Contains(SettingFile.Read("Server"))) { 
                         serverPick.SelectedValue = SettingFile.Read("Server");
                     } else {
-                        serverPick.SelectedIndex = 0;
+                        serverPick.SelectedIndex = 1;
                     }
 
                     //I don't know other way to fix this call...
-                    if(serverPick.SelectedIndex == 0) {
+                    if(serverPick.SelectedIndex == 1) {
                         serverPick_TextChanged(sender, e);
                     }
                 }
@@ -1682,7 +1682,7 @@ namespace GameLauncher {
         private void LaunchGameLegacy(string UserId, string LoginToken, string ServerIP, Form x) {
             string filename = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
 
-            String cParams = "US " + ServerIP + " " + LoginToken + " " + UserId;
+            String cParams = "SBRW " + ServerIP + " " + LoginToken + " " + UserId + " -legacyLaunch";
             var proc = Process.Start(filename, cParams);
             proc.EnableRaisingEvents = true;
 
@@ -1697,7 +1697,7 @@ namespace GameLauncher {
             psi.RedirectStandardOutput = true;
             psi.RedirectStandardError = true;
             psi.FileName = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
-            psi.Arguments = "US " + ServerIP + " " + LoginToken + " " + UserId;
+            psi.Arguments = "SBRW " + ServerIP + " " + LoginToken + " " + UserId + " -advancedLaunch";
 
             Process nfsw_process = Process.Start(psi);
             nfsw_process.EnableRaisingEvents = true;

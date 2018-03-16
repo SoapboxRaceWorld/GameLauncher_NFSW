@@ -121,6 +121,7 @@ namespace GameLauncher.App {
                 new { Text = "", Value = "" },
 
                 new { Text = "Operating System", Value = OS },
+                new { Text = "Environment Version", Value = Environment.OSVersion.Version.ToString() },
                 new { Text = "CPU", Value = Win32_Processor.ToString() },
                 new { Text = "GPU", Value = Win32_VideoController.ToString() },
                 new { Text = "RAM", Value = (memKb / 1024).ToString() + "MB" },
