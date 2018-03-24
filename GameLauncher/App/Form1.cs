@@ -40,6 +40,7 @@ namespace GameLauncher {
         bool isIndex = false;
         bool useLegacy = true;
         int lastSelectedServerId = 0;
+        int NFSW_PID = 0;
 
         String discordrpccode = (Debugger.IsAttached) ? "397461418640932864" : "378322260655603713";
 
@@ -608,8 +609,22 @@ namespace GameLauncher {
             //Fix InstallationDirectory
             SettingFile.Write("InstallationDirectory", Path.GetFullPath(SettingFile.Read("InstallationDirectory")));
 
+            //Kill NFSW.exe aswell
+            //Process[] allOfThem = Process.GetProcessesByName("nfsw");
+            //foreach (var oneProcess in allOfThem) {
+            //    Process.GetProcessById(oneProcess.Id).Kill();
+            //}
+
+            /*if(NFSW_PID != 0) {
+                try { 
+                    Process.GetProcessById(NFSW_PID).Kill();
+                } catch(Exception ex) {
+                    MessageBox.Show(ex.Message);
+                }
+            }*/
+            
             //Dirty way to terminate application (sometimes Application.Exit() didn't really quitted, was still running in background)
-            if(DetectLinux.LinuxDetected() == true) {
+            if (DetectLinux.LinuxDetected() == true) {
                 this.Close();
                 downloader.Stop();
                 Application.Exit();
@@ -1674,11 +1689,6 @@ namespace GameLauncher {
             this.legacyLaunch.Visible = hideElements;
         }
 
-        private void LaunchGame(string UserId, string LoginToken, string ServerIP, Form x) {
-            Thread nfswstarted = new Thread(() => StartThreadedNFSW(UserId, LoginToken, ServerIP, this));
-            nfswstarted.Start();
-        }
-
         private void LaunchGameLegacy(string UserId, string LoginToken, string ServerIP, Form x) {
             string filename = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
 
@@ -1686,45 +1696,48 @@ namespace GameLauncher {
             var proc = Process.Start(filename, cParams);
             proc.EnableRaisingEvents = true;
 
+            NFSW_PID = proc.Id;
+
             proc.Exited += (sender2, e2) => {
+                NFSW_PID = 0;
                 closebtn_Click(sender2, e2);
             };
         }
 
-        private void StartThreadedNFSW(string UserId, string LoginToken, string ServerIP, Form x) {
+        private void LaunchGame(string UserId, string LoginToken, string ServerIP, Form x) {
             ProcessStartInfo psi = new ProcessStartInfo();
             psi.UseShellExecute = false;
-            psi.RedirectStandardOutput = true;
-            psi.RedirectStandardError = true;
             psi.FileName = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
             psi.Arguments = "SBRW " + ServerIP + " " + LoginToken + " " + UserId + " -advancedLaunch";
 
             Process nfsw_process = Process.Start(psi);
             nfsw_process.EnableRaisingEvents = true;
+            NFSW_PID = nfsw_process.Id;
 
-            nfsw_process.WaitForExit();
+            nfsw_process.Exited += (sender2, e2) => {
+                NFSW_PID = 0;
+                var exitCode = nfsw_process.ExitCode;
+                
+                if (exitCode == 0) {
+                    closebtn_Click(null, null);
+                } else {
+                    x.BeginInvoke(new Action(() => {
+                        x.WindowState = FormWindowState.Normal;
+                        x.Opacity = 1;
+                        x.ShowInTaskbar = true;
+                        playProgressText.Text = ("Game crashed with exitCode: " + exitCode.ToString()).ToUpper();
+                        playProgress.Value = 100;
+                        playProgress.ForeColor = Color.Red;
 
-            var exitCode = nfsw_process.ExitCode;
-
-            if (exitCode == 0) {
-                closebtn_Click(null, null);
-            } else {
-                x.BeginInvoke(new Action(() => {
-                    x.WindowState = FormWindowState.Normal;
-                    x.Opacity = 1;
-                    x.ShowInTaskbar = true;
-                    playProgressText.Text = ("Game crashed with exitCode: " + exitCode.ToString()).ToUpper();
-                    playProgress.Value = 100;
-                    playProgress.ForeColor = Color.Red;
-
-                    DialogResult ErrorReply = MessageBox.Show(null, "Looks like the game crashed with an error. Would you like to restart the game?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                    if (ErrorReply == DialogResult.No) {
-                        closebtn_Click(null, null);
-                    } else {
-                        Application.Restart();
-                    }
-                }));
-            }
+                        DialogResult ErrorReply = MessageBox.Show(null, "Looks like the game crashed with an error. Would you like to restart the game?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        if (ErrorReply == DialogResult.No) {
+                            closebtn_Click(null, null);
+                        } else {
+                            Application.Restart();
+                        }
+                    }));
+                }
+            };
         }
 
         private void playButton_Click(object sender, EventArgs e) {

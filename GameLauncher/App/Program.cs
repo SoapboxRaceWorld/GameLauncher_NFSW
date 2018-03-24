@@ -12,7 +12,6 @@ using GameLauncher.App;
 namespace GameLauncher {
     static class Program {
         [STAThread]
-
         static void Main() {       
             int SysVersion = (int)Environment.OSVersion.Platform;
             bool mono = DetectLinux.MonoDetected();
