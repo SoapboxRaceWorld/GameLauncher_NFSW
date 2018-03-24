@@ -615,14 +615,12 @@ namespace GameLauncher {
             //    Process.GetProcessById(oneProcess.Id).Kill();
             //}
 
-            /*if(NFSW_PID != 0) {
+            if(NFSW_PID != 0) {
                 try { 
                     Process.GetProcessById(NFSW_PID).Kill();
-                } catch(Exception ex) {
-                    MessageBox.Show(ex.Message);
-                }
-            }*/
-            
+                } catch(Exception ex) {  }
+            }
+
             //Dirty way to terminate application (sometimes Application.Exit() didn't really quitted, was still running in background)
             if (DetectLinux.LinuxDetected() == true) {
                 this.Close();
@@ -1689,6 +1687,19 @@ namespace GameLauncher {
             this.legacyLaunch.Visible = hideElements;
         }
 
+        private void StartGame(string UserId, string LoginToken, string ServerIP, Form x) {
+            Thread nfswstarted = null;
+
+            if (useLegacy) {
+                nfswstarted = new Thread(() => LaunchGameLegacy(UserId, LoginToken, ServerIP, this));
+            } else {
+                nfswstarted = new Thread(() => LaunchGame(UserId, LoginToken, ServerIP, this));
+            }
+
+            nfswstarted.IsBackground = true;
+            nfswstarted.Start();
+        }
+
         private void LaunchGameLegacy(string UserId, string LoginToken, string ServerIP, Form x) {
             string filename = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
 
@@ -1856,11 +1867,7 @@ namespace GameLauncher {
             try {
                 if (WebClientWithTimeout.createHash(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC") {
 
-                    if(useLegacy) {
-                        LaunchGameLegacy(UserId, LoginToken, serverIP, this);
-                    } else {
-                        LaunchGame(UserId, LoginToken, serverIP, this);
-                    }
+                    StartGame(UserId, LoginToken, serverIP, this);
 
                     if (builtinserver == true) {
                         this.playProgressText.Text = Language.getLangString("MAIN_BUILTINSERVERINIT", UILanguage).ToUpper();
@@ -1874,12 +1881,6 @@ namespace GameLauncher {
                         }
 
                         this.playProgressText.Text = String.Format(Language.getLangString("MAIN_LOADINGGAME", UILanguage), 0).ToUpper();
-
-                        while (this.Opacity > 0) {
-                            this.Opacity -= 0.01;
-                            Application.DoEvents();
-                            Thread.Sleep(10);
-                        }
                               
                         this.WindowState = FormWindowState.Minimized;
                         this.ShowInTaskbar = false;
@@ -1895,11 +1896,20 @@ namespace GameLauncher {
                         ContextMenu.MenuItems.Add("-");
                         ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CLOSE", UILanguage), minimizebtn_Click));
 
+                        /*ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CLOSE", UILanguage), (sender2, e2) => {
+                            MessageBox.Show(null, "Please close the game before closing launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }));*/
+
                         this.Text = "NEED FOR SPEED™ WORLD";
                         this.Update();
                         this.Refresh();
 
                         Notification.ContextMenu = ContextMenu;
+
+                        while(true) {
+                            Application.DoEvents();
+                            Thread.Sleep(1000);
+                        }
                     }
                 } else {
                     MessageBox.Show(null, Language.getLangString("ERROR_HASHMISMATCHNFSW", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
