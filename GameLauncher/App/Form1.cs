@@ -1894,11 +1894,9 @@ namespace GameLauncher {
                         ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_ABOUT", UILanguage), About.showAbout));
                         ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_ADDSERVER", UILanguage), addServer_Click));
                         ContextMenu.MenuItems.Add("-");
-                        ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CLOSE", UILanguage), minimizebtn_Click));
-
-                        /*ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CLOSE", UILanguage), (sender2, e2) => {
+                        ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CLOSE", UILanguage), (sender2, e2) => {
                             MessageBox.Show(null, "Please close the game before closing launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }));*/
+                        }));
 
                         this.Text = "NEED FOR SPEED™ WORLD";
                         this.Update();
