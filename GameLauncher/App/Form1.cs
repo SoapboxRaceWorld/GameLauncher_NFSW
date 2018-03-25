@@ -618,7 +618,7 @@ namespace GameLauncher {
             if(NFSW_PID != 0) {
                 try { 
                     Process.GetProcessById(NFSW_PID).Kill();
-                } catch(Exception ex) {  }
+                } catch {  }
             }
 
             //Dirty way to terminate application (sometimes Application.Exit() didn't really quitted, was still running in background)
@@ -934,7 +934,7 @@ namespace GameLauncher {
                     presence.partySize = 0;
                     presence.partyMax = 0;
                     presence.instance = true;
-                    DiscordRpc.UpdatePresence(ref presence);
+                    DiscordRpc.UpdatePresence(presence);
 
                     if(isIndex) { 
                         formGraphics = this.CreateGraphics();
@@ -1007,7 +1007,7 @@ namespace GameLauncher {
                             presence.joinSecret = "SBRW3";
                             presence.spectateSecret = "SBRW4";
                             presence.instance = true;
-                            DiscordRpc.UpdatePresence(ref presence);
+                            DiscordRpc.UpdatePresence(presence);
 
                             allowRegistration = true;
 
