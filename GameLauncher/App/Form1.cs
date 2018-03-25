@@ -897,8 +897,6 @@ namespace GameLauncher {
             var WordsArray = serverName.Split();
             string richPresenceIconID = ((WordsArray.Length == 1) ? WordsArray[0] : WordsArray[0] + WordsArray[1]).ToLower();
 
-            MessageBox.Show(serverName + ": " + richPresenceIconID);
-
             onlineCount.Text = "";
 
             if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server") {
