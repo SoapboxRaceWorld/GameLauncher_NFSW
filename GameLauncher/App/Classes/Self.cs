@@ -38,9 +38,15 @@ namespace GameLauncherReborn {
             Process.Start(startInfo);
         }
 
-        public static long getTimestamp() {
+        public static long getTimestamp(bool valid = false) {
             long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
-            ticks /= 10000;
+
+            if(valid == true) {
+                ticks /= 10000000;
+            } else {
+                ticks /= 10000;
+            }
+
             return ticks;
         }
 

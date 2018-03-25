@@ -42,7 +42,8 @@ namespace GameLauncher {
         int lastSelectedServerId = 0;
         int NFSW_PID = 0;
 
-        String discordrpccode = (Debugger.IsAttached) ? "397461418640932864" : "378322260655603713";
+        //String discordrpccode = (Debugger.IsAttached) ? "397461418640932864" : "378322260655603713";
+        String discordrpccode = "427355155537723393";
 
         int errorcode;
 
@@ -587,6 +588,14 @@ namespace GameLauncher {
                 useLegacy = false;
             }
 
+            DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
+            DiscordRpc.Initialize(discordrpccode, ref handlers, true, "");
+            presence.state = "In-Launcher";
+            presence.largeImageText = "SBRW";
+            presence.largeImageKey = "nfsw";
+            presence.instance = true;
+            DiscordRpc.UpdatePresence(presence);
+
             this.BeginInvoke((MethodInvoker)delegate {
                 launchNFSW();
             });
@@ -886,15 +895,9 @@ namespace GameLauncher {
             string serverName = serverPick.GetItemText(serverPick.SelectedItem);
 
             var WordsArray = serverName.Split();
-            string richPresenceIconID;
+            string richPresenceIconID = ((WordsArray.Length == 1) ? WordsArray[0] : WordsArray[0] + WordsArray[1]).ToLower();
 
-            if(WordsArray.Length == 1) {
-                richPresenceIconID = WordsArray[0];
-            } else {
-                richPresenceIconID = WordsArray[0] + WordsArray[1];
-            }
-
-            richPresenceIconID = richPresenceIconID.ToLower();
+            MessageBox.Show(serverName + ": " + richPresenceIconID);
 
             onlineCount.Text = "";
 
@@ -924,18 +927,6 @@ namespace GameLauncher {
                 long artificialPingEnd = Self.getTimestamp();
 
                 if (e2.Error != null) {
-                    DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
-                    DiscordRpc.Initialize(discordrpccode, ref handlers, true, "");
-
-                    presence.details = serverPick.GetItemText(serverPick.SelectedItem);
-                    presence.state = "OFFLINE";
-                    presence.largeImageText = "SBRW";
-                    presence.largeImageKey = "icon2";
-                    presence.partySize = 0;
-                    presence.partyMax = 0;
-                    presence.instance = true;
-                    DiscordRpc.UpdatePresence(presence);
-
                     if(isIndex) { 
                         formGraphics = this.CreateGraphics();
                         formGraphics.DrawRectangle(ColorOffline, new Rectangle(new Point(30, 125), new Size(372, 274)));
@@ -993,21 +984,6 @@ namespace GameLauncher {
                             }
 
                             numPlayers = String.Format(Language.getLangString("MAIN_PLAYERSOUTOF", UILanguage), json.onlineNumber, json.numberOfRegistered);
-
-                            DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
-                            DiscordRpc.Initialize(discordrpccode, ref handlers, true, "");
-                            presence.details = serverName;
-                            presence.state = "ONLINE";
-                            presence.largeImageText = serverName;
-                            presence.largeImageKey = richPresenceIconID;
-                            presence.partySize = json.onlineNumber;
-                            presence.partyMax = json.numberOfRegistered;
-                            presence.partyId = "SBRW";
-                            presence.matchSecret = "SBRW2";
-                            presence.joinSecret = "SBRW3";
-                            presence.spectateSecret = "SBRW4";
-                            presence.instance = true;
-                            DiscordRpc.UpdatePresence(presence);
 
                             allowRegistration = true;
 
@@ -1698,6 +1674,44 @@ namespace GameLauncher {
 
             nfswstarted.IsBackground = true;
             nfswstarted.Start();
+
+            string serverName = serverPick.GetItemText(serverPick.SelectedItem);
+
+            string[] WordsArray = serverName.Split();
+            string richPresenceIconID = ((WordsArray.Length == 1) ? WordsArray[0] : WordsArray[0] + WordsArray[1]).ToLower();
+
+            Random rnd = new Random();
+            int random_avatar = rnd.Next(0, 26);
+
+            String validpresence = "apexopen,worldonline,sbrwofficial,chicane-roclosed";
+            string[] each_presence = validpresence.Split(',');
+
+            bool forwardtologo = true;
+
+            foreach (var presenceId in each_presence) {
+                if(presenceId == richPresenceIconID) {
+                    forwardtologo = false;
+                }
+            }
+
+            DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
+            DiscordRpc.Initialize(discordrpccode, ref handlers, true, "");
+            presence.state = "In-Game: " + serverName;
+            presence.largeImageText = serverName;
+            if(forwardtologo == false) {
+                presence.largeImageKey = richPresenceIconID;
+            } else {
+                presence.largeImageKey = "nfsw";
+            }
+            presence.smallImageText = "";
+            presence.smallImageKey = "avatar_" + random_avatar;
+            presence.startTimestamp = Self.getTimestamp(true);
+            presence.partyId = "SBRW";
+            presence.matchSecret = "SBRW2";
+            presence.joinSecret = "SBRW3";
+            presence.spectateSecret = "SBRW4";
+            presence.instance = true;
+            DiscordRpc.UpdatePresence(presence);
         }
 
         private void LaunchGameLegacy(string UserId, string LoginToken, string ServerIP, Form x) {
