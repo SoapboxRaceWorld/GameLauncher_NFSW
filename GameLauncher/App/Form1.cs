@@ -694,9 +694,9 @@ namespace GameLauncher {
             if (e.KeyCode == Keys.Return && loginEnabled == true) {
                 loginButton_Click(null, null);
                 e.SuppressKeyPress = true;
-            } else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.V) {
+            }/* else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.V) {
                 e.SuppressKeyPress = true;
-            }
+            }*/
         }
 
         private void loginbuttonenabler(object sender, EventArgs e) {
