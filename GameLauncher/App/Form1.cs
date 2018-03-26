@@ -21,6 +21,7 @@ using GameLauncherReborn;
 using Microsoft.Win32;
 using GameLauncher.App;
 using GameLauncher.HashPassword;
+using System.Linq;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -1711,7 +1712,7 @@ namespace GameLauncher {
             } else {
                 presence.largeImageKey = "nfsw";
             }
-            presence.smallImageText = "";
+            presence.smallImageText = email.Text.Split('@').ElementAtOrDefault(0);
             presence.smallImageKey = "avatar_" + random_avatar;
             presence.startTimestamp = Self.getTimestamp(true);
             presence.partyId = "SBRW";

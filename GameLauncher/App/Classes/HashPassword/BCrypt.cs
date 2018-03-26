@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows;
 
 // namespace: BCrypt.Net
 namespace GameLauncher.HashPassword {
@@ -409,9 +410,8 @@ namespace GameLauncher.HashPassword {
         /// </summary>
         /// <param name="input">The password to hash.</param>
         /// <returns>The hashed password.</returns>
-        public static string HashPassword(string input)
-        {
-            return HashPassword(input, GenerateSalt());
+        public static string HashPassword(string input) {
+            return HashPassword(input, "$2a$12$XsQVCQBvBCUI9t6/ZAY6qO");
         }
 
         /// <summary>
