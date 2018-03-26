@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace GameLauncher.HashPassword {
-    class SHA1 {
+    class SHA {
         public static string HashPassword(string input) {
             HashAlgorithm algorithm = SHA1.Create();
             StringBuilder sb = new StringBuilder();

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Net;
+using System.Security.Cryptography;
 using System.IO;
 using System.Xml;
 using System.Diagnostics;
