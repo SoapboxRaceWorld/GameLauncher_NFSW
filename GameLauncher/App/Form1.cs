@@ -20,6 +20,7 @@ using GameLauncher.App.Classes.Events;
 using GameLauncherReborn;
 using Microsoft.Win32;
 using GameLauncher.App;
+using GameLauncher.HashPassword;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -42,6 +43,7 @@ namespace GameLauncher {
         int lastSelectedServerId = 0;
         int NFSW_PID = 0;
         Thread nfswstarted = null;
+        String PasswordHash = null;
 
         //String discordrpccode = (Debugger.IsAttached) ? "397461418640932864" : "378322260655603713";
         String discordrpccode = "427355155537723393";
@@ -738,16 +740,14 @@ namespace GameLauncher {
             string encryptedpassword = "";
             string serverLoginResponse = "";
 
-            HashAlgorithm algorithm = SHA1.Create();
-            StringBuilder sb = new StringBuilder();
-            foreach (byte b in algorithm.ComputeHash(Encoding.UTF8.GetBytes(password.Text.ToString()))) {
-                sb.Append(b.ToString("X2"));
-            }
-
             if (useSavedPassword) {
                 encryptedpassword = SettingFile.Read("Password");
             } else {
-                encryptedpassword = sb.ToString();
+                if (PasswordHash == "BCRYPT") {
+                    encryptedpassword = BCrypt.HashPassword(password.Text.ToString());
+                } else {
+                    encryptedpassword = SHA.HashPassword(password.Text.ToString());
+                }
             }
 
             if (rememberMe.Checked) {
@@ -988,6 +988,16 @@ namespace GameLauncher {
                             numPlayers = String.Format(Language.getLangString("MAIN_PLAYERSOUTOF", UILanguage), json.onlineNumber, json.numberOfRegistered);
 
                             allowRegistration = true;
+
+                            try {
+                                if(json.passwordHashing == "BCRYPT") {
+                                    PasswordHash = "BCRYPT";
+                                } else {
+                                    PasswordHash = "SHA1";
+                                }
+                            } catch {
+                                PasswordHash = "SHA1";
+                            }
 
                             if (isIndex) {
                                 formGraphics = this.CreateGraphics();
@@ -1397,13 +1407,11 @@ namespace GameLauncher {
                 string serverLoginResponse = "";
                 string BuildURL;
 
-                HashAlgorithm algorithm = SHA1.Create();
-                StringBuilder sb = new StringBuilder();
-                foreach (byte b in algorithm.ComputeHash(Encoding.UTF8.GetBytes(registerPassword.Text.ToString()))) {
-                    sb.Append(b.ToString("X2"));
+                if (PasswordHash == "BCRYPT") {
+                    encryptedpassword = BCrypt.HashPassword(registerPassword.Text.ToString());
+                } else {
+                    encryptedpassword = SHA.HashPassword(registerPassword.Text.ToString());
                 }
-
-                encryptedpassword = sb.ToString();
 
                 try {
                     WebClient wc = new WebClientWithTimeout();
@@ -1786,16 +1794,15 @@ namespace GameLauncher {
             if(requiresRelogin == true) {
                 string serverLoginResponse;
                 string encryptedpassword;
-                HashAlgorithm algorithm = SHA1.Create();
-                StringBuilder sb = new StringBuilder();
-                foreach (byte b in algorithm.ComputeHash(Encoding.UTF8.GetBytes(password.Text.ToString()))) {
-                    sb.Append(b.ToString("X2"));
-                }
 
                 if (useSavedPassword) {
                     encryptedpassword = SettingFile.Read("Password");
                 } else {
-                    encryptedpassword = sb.ToString();
+                    if (PasswordHash == "BCRYPT") {
+                        encryptedpassword = BCrypt.HashPassword(registerPassword.Text.ToString());
+                    } else {
+                        encryptedpassword = SHA.HashPassword(registerPassword.Text.ToString());
+                    }
                 }
 
                 try {

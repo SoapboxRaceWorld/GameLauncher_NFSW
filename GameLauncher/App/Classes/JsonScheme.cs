@@ -18,6 +18,8 @@ namespace SoapBox.JsonScheme {
         public int onlineNumber { get; set; }
         public string requireTicket { get; set; }
         public string serverVersion { get; set; }
+        public string passwordHashing { get; set; }
+        public int setMaxUsersAllowed { get; set; }
     }
 
     public class ObjList {
