@@ -41,6 +41,7 @@ namespace GameLauncher {
         bool useLegacy = true;
         int lastSelectedServerId = 0;
         int NFSW_PID = 0;
+        Thread nfswstarted = null;
 
         //String discordrpccode = (Debugger.IsAttached) ? "397461418640932864" : "378322260655603713";
         String discordrpccode = "427355155537723393";
@@ -629,6 +630,9 @@ namespace GameLauncher {
                     Process.GetProcessById(NFSW_PID).Kill();
                 } catch {  }
             }
+
+            //Kill DiscordRPC
+            DiscordRpc.Shutdown();
 
             //Dirty way to terminate application (sometimes Application.Exit() didn't really quitted, was still running in background)
             if (DetectLinux.LinuxDetected() == true) {
@@ -1662,8 +1666,6 @@ namespace GameLauncher {
         }
 
         private void StartGame(string UserId, string LoginToken, string ServerIP, Form x) {
-            Thread nfswstarted = null;
-
             if (useLegacy) {
                 nfswstarted = new Thread(() => LaunchGameLegacy(UserId, LoginToken, ServerIP, this));
             } else {
@@ -1751,6 +1753,14 @@ namespace GameLauncher {
                         playProgressText.Text = ("Game crashed with exitCode: " + exitCode.ToString()).ToUpper();
                         playProgress.Value = 100;
                         playProgress.ForeColor = Color.Red;
+
+                        if (NFSW_PID != 0) {
+                            try {
+                                Process.GetProcessById(NFSW_PID).Kill();
+                            } catch { }
+                        }
+
+                        nfswstarted.Abort();
 
                         DialogResult ErrorReply = MessageBox.Show(null, "Looks like the game crashed with an error. Would you like to restart the game?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         if (ErrorReply == DialogResult.No) {

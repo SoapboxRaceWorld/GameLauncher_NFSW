@@ -82,7 +82,7 @@ namespace GameLauncher {
                 Mutex mutex = new Mutex(false, "GameLauncherNFSW-MeTonaTOR");
                 try {
                     if (mutex.WaitOne(0, false)) {
-                        String[] files = { "Newtonsoft.Json.dll", "LZMA.dll", "ICSharpCode.SharpZipLib.dll" };
+                        String[] files = { "Newtonsoft.Json.dll", "LZMA.dll" };
                         List<string> missingfiles = new List<string>();
 
                         foreach (string file in files) {
