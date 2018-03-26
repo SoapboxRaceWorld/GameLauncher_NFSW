@@ -116,6 +116,8 @@
     </Compile>
     <Compile Include="App\Classes\Events\UpdaterSchema.cs" />
     <Compile Include="App\Classes\ExtractResource.cs" />
+    <Compile Include="App\Classes\HashPassword\BCrypt.cs" />
+    <Compile Include="App\Classes\HashPassword\SHA.cs" />
     <Compile Include="App\Classes\HWID.cs" />
     <Compile Include="App\Classes\IniFile.cs" />
     <Compile Include="App\Classes\Language.cs" />
