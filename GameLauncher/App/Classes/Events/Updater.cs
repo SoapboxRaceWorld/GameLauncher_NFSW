@@ -5,8 +5,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
+using GameLauncher.App.Classes;
+using GameLauncher.App;
 
 namespace GameLauncher {
+
+
     class Updater {
         internal static void checkForUpdate(object sender, EventArgs e) {
             try {
@@ -20,6 +24,13 @@ namespace GameLauncher {
                         CheckVersion json = JsonConvert.DeserializeObject<CheckVersion>(e2.Result);
 
                         if(json.update.info == true) {
+
+                            IniFile SettingFile = new IniFile("Settings.ini");
+                            if (SettingFile.Read("IgnoreUpdateVersion") != json.github_build) {
+
+                            }
+
+
                             DialogResult reply = MessageBox.Show("An update is available. Do you wanna download it?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + json.github_build, "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                             if(reply == DialogResult.Yes) {
                                 Process.Start(@"GL_Update.exe", Process.GetCurrentProcess().Id.ToString());
@@ -28,7 +39,9 @@ namespace GameLauncher {
                             try {
                                 if (((Form)sender).Name == "mainScreen") {}
                             } catch {
-                                MessageBox.Show("Your launcher is up-to-date");
+                                //MessageBox.Show("Your launcher is up-to-date");
+
+                                new UpdatePopup().Show();
                             }
                         }
                     } catch {

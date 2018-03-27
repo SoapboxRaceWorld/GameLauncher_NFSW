@@ -25,8 +25,6 @@ namespace GameLauncher {
 
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 
-
-
             if (!Directory.Exists("Languages")) {
                 Directory.CreateDirectory("Languages");
             }
