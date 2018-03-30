@@ -40,22 +40,22 @@
             this.changeLogURL.Location = new System.Drawing.Point(15, 96);
             this.changeLogURL.MinimumSize = new System.Drawing.Size(20, 20);
             this.changeLogURL.Name = "changeLogURL";
-            this.changeLogURL.Size = new System.Drawing.Size(445, 217);
+            this.changeLogURL.Size = new System.Drawing.Size(546, 217);
             this.changeLogURL.TabIndex = 0;
-            this.changeLogURL.Url = new System.Uri("http://changeLogURL", System.UriKind.Absolute);
+            this.changeLogURL.Url = new System.Uri("", System.UriKind.Relative);
             // 
             // label1
             // 
             this.label1.Location = new System.Drawing.Point(12, 25);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(448, 39);
+            this.label1.Size = new System.Drawing.Size(549, 39);
             this.label1.TabIndex = 1;
             this.label1.Text = "An Update is available, do you wanna download it now?";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // UpdateButton
             // 
-            this.UpdateButton.Location = new System.Drawing.Point(385, 67);
+            this.UpdateButton.Location = new System.Drawing.Point(486, 67);
             this.UpdateButton.Name = "UpdateButton";
             this.UpdateButton.Size = new System.Drawing.Size(75, 23);
             this.UpdateButton.TabIndex = 2;
@@ -64,7 +64,7 @@
             // 
             // CancelButton
             // 
-            this.CancelButton.Location = new System.Drawing.Point(304, 67);
+            this.CancelButton.Location = new System.Drawing.Point(405, 67);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(75, 23);
             this.CancelButton.TabIndex = 3;
@@ -85,7 +85,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(472, 325);
+            this.ClientSize = new System.Drawing.Size(573, 325);
             this.Controls.Add(this.SkipCheckBox);
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.UpdateButton);

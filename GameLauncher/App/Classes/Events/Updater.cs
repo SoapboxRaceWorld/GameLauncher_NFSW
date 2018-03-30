@@ -24,24 +24,20 @@ namespace GameLauncher {
                         CheckVersion json = JsonConvert.DeserializeObject<CheckVersion>(e2.Result);
 
                         if(json.update.info == true) {
-
                             IniFile SettingFile = new IniFile("Settings.ini");
                             if (SettingFile.Read("IgnoreUpdateVersion") != json.github_build) {
-
+                                new UpdatePopup(json.github_build).Show();
                             }
 
-
-                            DialogResult reply = MessageBox.Show("An update is available. Do you wanna download it?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + json.github_build, "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                            /*DialogResult reply = MessageBox.Show("An update is available. Do you wanna download it?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + json.github_build, "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                             if(reply == DialogResult.Yes) {
                                 Process.Start(@"GL_Update.exe", Process.GetCurrentProcess().Id.ToString());
-                            }
+                            }*/
                         } else {
                             try {
                                 if (((Form)sender).Name == "mainScreen") {}
                             } catch {
-                                //MessageBox.Show("Your launcher is up-to-date");
-
-                                new UpdatePopup().Show();
+                                MessageBox.Show("Your launcher is up-to-date");
                             }
                         }
                     } catch {
