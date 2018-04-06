@@ -30,9 +30,11 @@
         {
             this.changeLogURL = new System.Windows.Forms.WebBrowser();
             this.label1 = new System.Windows.Forms.Label();
-            this.UpdateButton = new System.Windows.Forms.Button();
+            this.updateButton = new System.Windows.Forms.Button();
             this.CancelButton = new System.Windows.Forms.Button();
-            this.SkipCheckBox = new System.Windows.Forms.CheckBox();
+            this.skipButton = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // changeLogURL
@@ -40,27 +42,27 @@
             this.changeLogURL.Location = new System.Drawing.Point(15, 96);
             this.changeLogURL.MinimumSize = new System.Drawing.Size(20, 20);
             this.changeLogURL.Name = "changeLogURL";
-            this.changeLogURL.Size = new System.Drawing.Size(546, 217);
+            this.changeLogURL.Size = new System.Drawing.Size(546, 374);
             this.changeLogURL.TabIndex = 0;
             this.changeLogURL.Url = new System.Uri("", System.UriKind.Relative);
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(12, 25);
+            this.label1.Location = new System.Drawing.Point(88, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(549, 39);
+            this.label1.Size = new System.Drawing.Size(473, 39);
             this.label1.TabIndex = 1;
             this.label1.Text = "An Update is available, do you wanna download it now?";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // UpdateButton
+            // updateButton
             // 
-            this.UpdateButton.Location = new System.Drawing.Point(486, 67);
-            this.UpdateButton.Name = "UpdateButton";
-            this.UpdateButton.Size = new System.Drawing.Size(75, 23);
-            this.UpdateButton.TabIndex = 2;
-            this.UpdateButton.Text = "Update";
-            this.UpdateButton.UseVisualStyleBackColor = true;
+            this.updateButton.Location = new System.Drawing.Point(486, 67);
+            this.updateButton.Name = "updateButton";
+            this.updateButton.Size = new System.Drawing.Size(75, 23);
+            this.updateButton.TabIndex = 2;
+            this.updateButton.Text = "Update";
+            this.updateButton.UseVisualStyleBackColor = true;
             // 
             // CancelButton
             // 
@@ -71,26 +73,35 @@
             this.CancelButton.Text = "Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
             // 
-            // SkipCheckBox
+            // skipButton
             // 
-            this.SkipCheckBox.AutoSize = true;
-            this.SkipCheckBox.Location = new System.Drawing.Point(15, 73);
-            this.SkipCheckBox.Name = "SkipCheckBox";
-            this.SkipCheckBox.Size = new System.Drawing.Size(103, 17);
-            this.SkipCheckBox.TabIndex = 4;
-            this.SkipCheckBox.Text = "Skip this version";
-            this.SkipCheckBox.UseVisualStyleBackColor = true;
+            this.skipButton.Location = new System.Drawing.Point(15, 67);
+            this.skipButton.Name = "skipButton";
+            this.skipButton.Size = new System.Drawing.Size(115, 23);
+            this.skipButton.TabIndex = 4;
+            this.skipButton.Text = "Skip this version";
+            this.skipButton.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(15, 13);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(48, 48);
+            this.pictureBox1.TabIndex = 5;
+            this.pictureBox1.TabStop = false;
             // 
             // UpdatePopup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(573, 325);
-            this.Controls.Add(this.SkipCheckBox);
+            this.ClientSize = new System.Drawing.Size(573, 482);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.skipButton);
             this.Controls.Add(this.CancelButton);
-            this.Controls.Add(this.UpdateButton);
+            this.Controls.Add(this.updateButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.changeLogURL);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "UpdatePopup";
@@ -100,8 +111,8 @@
             this.Text = "UpdatePopup";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.UpdatePopup_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -109,8 +120,9 @@
 
         private System.Windows.Forms.WebBrowser changeLogURL;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button UpdateButton;
+        private System.Windows.Forms.Button updateButton;
         private System.Windows.Forms.Button CancelButton;
-        private System.Windows.Forms.CheckBox SkipCheckBox;
+        private System.Windows.Forms.Button skipButton;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
