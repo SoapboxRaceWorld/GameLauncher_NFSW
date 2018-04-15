@@ -1692,7 +1692,7 @@ namespace GameLauncher {
             Random rnd = new Random();
             int random_avatar = rnd.Next(0, 26);
 
-            String validpresence = "apexopen,worldonline,sbrwofficial,chicane-roclosed,servidorhuehue";
+            String validpresence = new WebClientWithTimeout().DownloadString("https://launcher.soapboxrace.world/presence.txt");
             string[] each_presence = validpresence.Split(',');
 
             bool forwardtologo = true;
