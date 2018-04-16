@@ -294,7 +294,7 @@ namespace GameLauncher {
                 formGraphics.Dispose();
             }
 
-            if (Self.CheckForInternetConnection() == false) {
+            if (Self.CheckForInternetConnection() == false && !DetectLinux.LinuxDetected()) {
                 MessageBox.Show(null, Language.getLangString("ERROR_NOINTERNETCONNECTION", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
