@@ -1,5 +1,6 @@
 ﻿//Credits: https://stackoverflow.com/a/24187171
 
+using GameLauncher.App.Classes;
 using System;
 using System.Runtime.InteropServices;
 
@@ -54,11 +55,11 @@ public static class TaskbarProgress
 
     public static void SetState(IntPtr windowHandle, TaskbarStates taskbarState)
     {
-        if (taskbarSupported) taskbarInstance.SetProgressState(windowHandle, taskbarState);
+        if (taskbarSupported && !DetectLinux.LinuxDetected()) taskbarInstance.SetProgressState(windowHandle, taskbarState);
     }
 
     public static void SetValue(IntPtr windowHandle, double progressValue, double progressMax)
     {
-        if (taskbarSupported) taskbarInstance.SetProgressValue(windowHandle, (ulong)progressValue, (ulong)progressMax);
+        if (taskbarSupported && !DetectLinux.LinuxDetected()) taskbarInstance.SetProgressValue(windowHandle, (ulong)progressValue, (ulong)progressMax);
     }
 }
