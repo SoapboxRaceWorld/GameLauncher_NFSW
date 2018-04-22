@@ -25,6 +25,7 @@ ERROR_SERVEROFFLINE=Server seems to be offline.
 ERROR_TAMPERING=Launcher tampering detected. Please use original build.
 INSTALL_INFO=Howdy! Looks like it's your first time launching this launcher. Please press OK and specify where you wanna download all required gamefiles (or select your actual installation).
 INSTALL_WARNING=Installing NFSW in same directory as launcher is not suggested. Instead, we will install it on {0}
+MAIN_ALLOWEDCOUNTRIES=Warning, this server only accepts players from: {0}
 MAIN_BUILTINSERVERINIT=Soapbox server launched. Waiting for queries.
 MAIN_CANCEL=Cancel
 MAIN_DOWNLOADCOMPLETED=Download completed

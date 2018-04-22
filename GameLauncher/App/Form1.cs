@@ -213,7 +213,6 @@ namespace GameLauncher {
             addServer.Click += new EventHandler(addServer_Click);
             launcherVersion.Click += new EventHandler(OpenDebugWindow);
             showmap.Click += new EventHandler(OpenMapHandler);
-            inputeditor.Click += new EventHandler(OpenInputEditorHandler);
 
             email.KeyUp += new KeyEventHandler(loginbuttonenabler);
             email.KeyDown += new KeyEventHandler(loginEnter);
@@ -664,11 +663,6 @@ namespace GameLauncher {
             z.Show();
         }
 
-        private void OpenInputEditorHandler(object sender, EventArgs e) {
-            Form a = new InputEditor(SettingFile.Read("InstallationDirectory"));
-            a.Show();
-        }
-
         private void closebtn_MouseEnter(object sender, EventArgs e) {
             this.closebtn.BackgroundImage = Properties.Resources.close_hover;
         }
@@ -986,6 +980,12 @@ namespace GameLauncher {
                                 ticketRequired = false;
                             }
 
+                            if(json.allowedCountries != String.Empty) {
+                                allowedCountriesLabel.Text = String.Format(Language.getLangString("MAIN_ALLOWEDCOUNTRIES", UILanguage), json.allowedCountries);
+                            } else {
+                                allowedCountriesLabel.Text = "";
+                            }
+
                             numPlayers = String.Format(Language.getLangString("MAIN_PLAYERSOUTOF", UILanguage), json.onlineNumber, json.numberOfRegistered);
 
                             allowRegistration = true;
@@ -1139,6 +1139,7 @@ namespace GameLauncher {
             logoutButton.Font = new Font(fontFamily2, 10f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             legacyLaunch.Font = new Font(fontFamily1, 8f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            allowedCountriesLabel.Font = new Font(fontFamily1, 8f * DPIDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
         }
 
         private void registerText_LinkClicked(object sender, EventArgs e) {
@@ -1183,6 +1184,7 @@ namespace GameLauncher {
             this.verticalBanner.Visible = hideElements;
             this.onlineCount.Visible = hideElements;
             this.welcomeBack.Visible = hideElements;
+            this.allowedCountriesLabel.Visible = hideElements;
         }
 
         private void LoginFormElements(bool hideElements = false) {
@@ -1211,6 +1213,7 @@ namespace GameLauncher {
             this.playProgress.Visible = hideElements;
             this.playButton.Visible = hideElements;
             this.addServer.Visible = hideElements;
+            this.allowedCountriesLabel.Visible = hideElements;
         }
 
         /*

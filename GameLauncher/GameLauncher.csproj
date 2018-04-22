@@ -152,24 +152,12 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\JsonScheme.cs" />
-    <Compile Include="App\InputEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="App\InputEditor.Designer.cs">
-      <DependentUpon>InputEditor.cs</DependentUpon>
-    </Compile>
     <Compile Include="App\Program.cs" />
     <Compile Include="App\ShowMap.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="App\ShowMap.Designer.cs">
       <DependentUpon>ShowMap.cs</DependentUpon>
-    </Compile>
-    <Compile Include="App\UpdatePopup.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="App\UpdatePopup.Designer.cs">
-      <DependentUpon>UpdatePopup.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App\Classes\FontWrapper.cs" />
@@ -188,14 +176,8 @@
     <EmbeddedResource Include="App\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\InputEditor.resx">
-      <DependentUpon>InputEditor.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="App\ShowMap.resx">
       <DependentUpon>ShowMap.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App\UpdatePopup.resx">
-      <DependentUpon>UpdatePopup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

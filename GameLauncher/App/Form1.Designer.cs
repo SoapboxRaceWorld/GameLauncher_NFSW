@@ -90,6 +90,7 @@
             this.showmap = new System.Windows.Forms.Label();
             this.inputeditor = new System.Windows.Forms.Button();
             this.legacyLaunch = new System.Windows.Forms.CheckBox();
+            this.allowedCountriesLabel = new System.Windows.Forms.Label();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
@@ -809,6 +810,16 @@
             this.legacyLaunch.Text = "Use pre-1.9.1.9 launching function";
             this.legacyLaunch.UseVisualStyleBackColor = false;
             // 
+            // allowedCountriesLabel
+            // 
+            this.allowedCountriesLabel.AutoSize = true;
+            this.allowedCountriesLabel.BackColor = System.Drawing.Color.Transparent;
+            this.allowedCountriesLabel.ForeColor = System.Drawing.Color.Yellow;
+            this.allowedCountriesLabel.Location = new System.Drawing.Point(461, 406);
+            this.allowedCountriesLabel.Name = "allowedCountriesLabel";
+            this.allowedCountriesLabel.Size = new System.Drawing.Size(0, 13);
+            this.allowedCountriesLabel.TabIndex = 76;
+            // 
             // playProgress
             // 
             this.playProgress.BackColor = System.Drawing.Color.Transparent;
@@ -827,6 +838,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1000, 562);
+            this.Controls.Add(this.allowedCountriesLabel);
             this.Controls.Add(this.legacyLaunch);
             this.Controls.Add(this.inputeditor);
             this.Controls.Add(this.showmap);
@@ -969,5 +981,6 @@
         private System.Windows.Forms.Label showmap;
         private System.Windows.Forms.Button inputeditor;
         private System.Windows.Forms.CheckBox legacyLaunch;
+        private System.Windows.Forms.Label allowedCountriesLabel;
     }
 }

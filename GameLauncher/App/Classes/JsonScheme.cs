@@ -20,6 +20,7 @@ namespace SoapBox.JsonScheme {
         public string serverVersion { get; set; }
         public string passwordHashing { get; set; }
         public int setMaxUsersAllowed { get; set; }
+        public string allowedCountries { get; set; }
     }
 
     public class ObjList {
