@@ -599,14 +599,9 @@ namespace GameLauncher {
             presence.instance = true;
             DiscordRpc.UpdatePresence(presence);
 
-            //Thread newDownloaderThread = new Thread(launchNFSW);
-            //newDownloaderThread.Start();
-
-            if(!DetectLinux.LinuxDetected()) { 
-                this.BeginInvoke((MethodInvoker)delegate {
-                    launchNFSW();
-                });
-            }
+            this.BeginInvoke((MethodInvoker)delegate {
+                launchNFSW();
+            });
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
