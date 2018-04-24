@@ -916,6 +916,8 @@ namespace GameLauncher {
 
             long artificialPingStart = Self.getTimestamp();
 
+            allowedCountriesLabel.Text = "";
+
             Uri StringToUri = new Uri(serverIP + "/GetServerInformation");
             client.DownloadStringAsync(StringToUri);
             client.DownloadStringCompleted += (sender2, e2) => {
@@ -980,7 +982,7 @@ namespace GameLauncher {
                                 ticketRequired = false;
                             }
 
-                            if(json.allowedCountries != String.Empty) {
+                            if(!String.IsNullOrEmpty(json.allowedCountries)) {
                                 allowedCountriesLabel.Text = String.Format(Language.getLangString("MAIN_ALLOWEDCOUNTRIES", UILanguage), json.allowedCountries);
                             } else {
                                 allowedCountriesLabel.Text = "";
