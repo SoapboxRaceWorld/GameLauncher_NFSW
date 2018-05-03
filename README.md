@@ -10,4 +10,4 @@ A Rewrite of GameLauncher taken from Need For Speed: World
 ### Screenshot
 ![](screenshot.png)
 
-(Status as of `09.06.2017 01:45 GMT+2`)
+(Status as of `03.05.2018 5:25 GMT+2`)

@@ -74,7 +74,6 @@
             this.settingsLanguageDesc = new System.Windows.Forms.Label();
             this.settingsUILang = new System.Windows.Forms.ComboBox();
             this.settingsUILangText = new System.Windows.Forms.Label();
-            this.settingsUILangDesc = new System.Windows.Forms.Label();
             this.moreLanguages = new System.Windows.Forms.LinkLabel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.translatedBy = new System.Windows.Forms.Label();
@@ -92,6 +91,7 @@
             this.legacyLaunch = new System.Windows.Forms.CheckBox();
             this.allowedCountriesLabel = new System.Windows.Forms.Label();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.settingsUILangDesc = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).BeginInit();
@@ -622,17 +622,6 @@
             this.settingsUILangText.TabIndex = 49;
             this.settingsUILangText.Text = "LAUNCHER LANGUAGE:";
             // 
-            // settingsUILangDesc
-            // 
-            this.settingsUILangDesc.BackColor = System.Drawing.Color.Transparent;
-            this.settingsUILangDesc.ForeColor = System.Drawing.Color.White;
-            this.settingsUILangDesc.Location = new System.Drawing.Point(296, 332);
-            this.settingsUILangDesc.Name = "settingsUILangDesc";
-            this.settingsUILangDesc.Size = new System.Drawing.Size(427, 56);
-            this.settingsUILangDesc.TabIndex = 51;
-            this.settingsUILangDesc.Text = "Select the launcher language that the game text and audio should be displayed in." +
-    " Remember to restart your launcher.";
-            // 
             // moreLanguages
             // 
             this.moreLanguages.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -812,12 +801,11 @@
             // 
             // allowedCountriesLabel
             // 
-            this.allowedCountriesLabel.AutoSize = true;
             this.allowedCountriesLabel.BackColor = System.Drawing.Color.Transparent;
             this.allowedCountriesLabel.ForeColor = System.Drawing.Color.Yellow;
-            this.allowedCountriesLabel.Location = new System.Drawing.Point(461, 406);
+            this.allowedCountriesLabel.Location = new System.Drawing.Point(443, 406);
             this.allowedCountriesLabel.Name = "allowedCountriesLabel";
-            this.allowedCountriesLabel.Size = new System.Drawing.Size(0, 13);
+            this.allowedCountriesLabel.Size = new System.Drawing.Size(527, 43);
             this.allowedCountriesLabel.TabIndex = 76;
             // 
             // playProgress
@@ -831,6 +819,17 @@
             this.playProgress.Name = "playProgress";
             this.playProgress.Size = new System.Drawing.Size(700, 5);
             this.playProgress.Text = "downloadProgress";
+            // 
+            // settingsUILangDesc
+            // 
+            this.settingsUILangDesc.BackColor = System.Drawing.Color.Transparent;
+            this.settingsUILangDesc.ForeColor = System.Drawing.Color.White;
+            this.settingsUILangDesc.Location = new System.Drawing.Point(296, 332);
+            this.settingsUILangDesc.Name = "settingsUILangDesc";
+            this.settingsUILangDesc.Size = new System.Drawing.Size(427, 56);
+            this.settingsUILangDesc.TabIndex = 51;
+            this.settingsUILangDesc.Text = "Select the launcher language that the game text and audio should be displayed in." +
+    " Remember to restart your launcher.";
             // 
             // mainScreen
             // 
@@ -965,7 +964,6 @@
         private System.Windows.Forms.Label welcomeBack;
         private System.Windows.Forms.ComboBox settingsUILang;
         private System.Windows.Forms.Label settingsUILangText;
-        private System.Windows.Forms.Label settingsUILangDesc;
         private System.Windows.Forms.LinkLabel moreLanguages;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label translatedBy;
@@ -982,5 +980,6 @@
         private System.Windows.Forms.Button inputeditor;
         private System.Windows.Forms.CheckBox legacyLaunch;
         private System.Windows.Forms.Label allowedCountriesLabel;
+        private System.Windows.Forms.Label settingsUILangDesc;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 
@@ -26,16 +27,20 @@ namespace GameLauncherReborn {
         }
 
         public static void Restart(string param = "") {
-            ProcessStartInfo startInfo = Process.GetCurrentProcess().StartInfo;
-            startInfo.FileName = Application.ExecutablePath;
+            Application.Restart();
+        }
 
-            if(!String.IsNullOrEmpty(param)) {
-                startInfo.Arguments = param;
+        public static string CountryName(string twoLetterCountryCode) {
+            CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+
+            foreach (CultureInfo culture in cultures) {
+                RegionInfo region = new RegionInfo(culture.LCID);
+                if (region.TwoLetterISORegionName.ToUpper() == twoLetterCountryCode.ToUpper()) {
+                    return region.EnglishName;
+                }
             }
 
-            var exit = typeof(Application).GetMethod("ExitInternal", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-            exit.Invoke(null, null);
-            Process.Start(startInfo);
+            return String.Empty;
         }
 
         public static long getTimestamp(bool valid = false) {

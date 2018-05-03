@@ -22,6 +22,8 @@ using Microsoft.Win32;
 using GameLauncher.App;
 using GameLauncher.HashPassword;
 using System.Linq;
+using System.Net.Sockets;
+using System.Drawing.Drawing2D;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -917,11 +919,13 @@ namespace GameLauncher {
             long artificialPingStart = Self.getTimestamp();
 
             allowedCountriesLabel.Text = "";
+            verticalBanner.BackColor = Color.Transparent;
 
             Uri StringToUri = new Uri(serverIP + "/GetServerInformation");
             client.DownloadStringAsync(StringToUri);
             client.DownloadStringCompleted += (sender2, e2) => {
                 //serverPick.Enabled = true;
+
 
                 long artificialPingEnd = Self.getTimestamp();
 
@@ -983,7 +987,16 @@ namespace GameLauncher {
                             }
 
                             if(!String.IsNullOrEmpty(json.allowedCountries)) {
-                                allowedCountriesLabel.Text = String.Format(Language.getLangString("MAIN_ALLOWEDCOUNTRIES", UILanguage), json.allowedCountries);
+                                List<Object> countries = new List<Object>();
+                                String[] splitted = json.allowedCountries.Split(';');
+
+                                foreach(String splitter in splitted) {
+                                    countries.Add(Self.CountryName(splitter));
+                                }
+
+                                String allowed = String.Join(", ", countries);
+
+                                allowedCountriesLabel.Text = String.Format(Language.getLangString("MAIN_ALLOWEDCOUNTRIES", UILanguage), allowed);
                             } else {
                                 allowedCountriesLabel.Text = "";
                             }
@@ -1030,6 +1043,7 @@ namespace GameLauncher {
                                     MemoryStream memoryStream = new MemoryStream(e4.Result);
                                     image = Image.FromStream(memoryStream);
                                     verticalBanner.Image = image;
+                                    verticalBanner.BackColor = Color.Black;
                                 } catch {
                                     verticalBanner.Image = null;
                                 }
