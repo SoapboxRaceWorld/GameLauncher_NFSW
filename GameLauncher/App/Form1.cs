@@ -402,8 +402,9 @@ namespace GameLauncher {
                     response = streamReader.ReadToEnd();
 
                     serverlistloaded = true;
-                } else { 
-                    response = "Offline Built-In Server;http://localhost:4416/sbrw/Engine.svc";    
+                } else {
+                    response = "<GROUP>Offline Servers;</GROUP>\r\n";
+                    response += "Offline Built-In Server;http://localhost:4416/sbrw/Engine.svc";
                 }
             }
 
@@ -412,9 +413,6 @@ namespace GameLauncher {
             serverPick.ValueMember = "Value";
 
             List<Object> items = new List<Object>();
-
-            items.Add(new { Text = "<GROUP>Official Servers", Value = "" });
-
             String[] substrings = response.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             foreach (var substring in substrings) {
                 if (!String.IsNullOrEmpty(substring)) {
@@ -434,6 +432,11 @@ namespace GameLauncher {
                         items.Add(new { Text = substrings2[0], Value = substrings2[1] });
                     }
                 }
+            }
+
+            if (File.Exists("libOfflineServer.dll")) {
+                items.Add(new { Text = "<GROUP>Offline Server", Value = "" });
+                items.Add(new { Text = "Offline Built-In Server", Value = "http://localhost:4416/sbrw/Engine.svc" });
             }
 
             serverPick.DataSource = items;
@@ -1001,7 +1004,11 @@ namespace GameLauncher {
                                 allowedCountriesLabel.Text = "";
                             }
 
-                            numPlayers = String.Format(Language.getLangString("MAIN_PLAYERSOUTOF", UILanguage), json.onlineNumber, json.numberOfRegistered);
+                            if(json.maxUsersAllowed == 0) {
+                                numPlayers = String.Format(Language.getLangString("MAIN_PLAYERSOUTOF", UILanguage), json.onlineNumber, json.numberOfRegistered);
+                            } else {
+                                numPlayers = String.Format(Language.getLangString("MAIN_PLAYERSOUTOF", UILanguage), json.onlineNumber, json.maxUsersAllowed.ToString());
+                            }
 
                             allowRegistration = true;
 
@@ -1953,10 +1960,10 @@ namespace GameLauncher {
 
                         Notification.ContextMenu = ContextMenu;
 
-                        while(true) {
+                        /*while(true) {
                             Application.DoEvents();
                             Thread.Sleep(1000);
-                        }
+                        }*/
                     }
                 } else {
                     MessageBox.Show(null, Language.getLangString("ERROR_HASHMISMATCHNFSW", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2173,6 +2180,9 @@ namespace GameLauncher {
         }
 
         private void OnDownloadFinished() {
+
+            File.WriteAllBytes(SettingFile.Read("InstallationDirectory") + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
+
             playenabled = true;
             this.playProgress.Value = 100;
             this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;

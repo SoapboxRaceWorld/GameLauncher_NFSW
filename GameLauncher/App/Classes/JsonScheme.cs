@@ -19,7 +19,7 @@ namespace SoapBox.JsonScheme {
         public string requireTicket { get; set; }
         public string serverVersion { get; set; }
         public string passwordHashing { get; set; }
-        public int setMaxUsersAllowed { get; set; }
+        public int maxUsersAllowed { get; set; }
         public string allowedCountries { get; set; }
     }
 

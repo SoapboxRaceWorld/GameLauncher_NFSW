@@ -209,6 +209,7 @@
     <EmbeddedResource Include="SoapBoxModules\udpcrypt1.soapbox.module" />
     <EmbeddedResource Include="SoapBoxModules\udpcrypt2.soapbox.module" />
     <EmbeddedResource Include="SoapBoxModules\xmppsubject.soapbox.module" />
+    <EmbeddedResource Include="SoapBoxModules\BootFlow.gfx" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
