@@ -1953,7 +1953,7 @@ namespace GameLauncher {
 
                     if (builtinserver == true) {
                         this.playProgressText.Text = Language.getLangString("MAIN_BUILTINSERVERINIT", UILanguage).ToUpper();
-                    } else {
+					} else if (!DetectLinux.NativeLinuxDetected()) {
                         int secondsToCloseLauncher = 5;
 
                         while (secondsToCloseLauncher > 0) {
