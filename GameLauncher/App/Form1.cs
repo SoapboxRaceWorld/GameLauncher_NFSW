@@ -153,7 +153,10 @@ namespace GameLauncher {
             }
 
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-            ApplyEmbeddedFonts();
+			if (!DetectLinux.NativeLinuxDetected())
+			{
+				ApplyEmbeddedFonts();
+			}
 
             if(SettingFile.KeyExists("LauncherPosX") || SettingFile.KeyExists("LauncherPosY")) {
                 StartPosition = FormStartPosition.Manual;
@@ -388,7 +391,8 @@ namespace GameLauncher {
                     streamWriter.Write(response);
                     streamWriter.Close();
                 } catch { }
-            } catch {
+            } catch(Exception error) {
+				Console.WriteLine(error);
                 if(File.Exists("ServerCache")) {
                     FileStream fileStream = new FileStream("ServerCache", FileMode.Open);
 
@@ -2026,7 +2030,8 @@ namespace GameLauncher {
                 speechFile = "en";
             }            
 
-            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechhdr_" + speechFile + ".big")) {
+			if (!File.Exists(SettingFile.Read("InstallationDirectory") + "/Sound/Speech/copspeechhdr_" + speechFile + ".big")) {
+				Console.WriteLine("nofile");
                 this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_LOADINGFILELIST", UILanguage).ToUpper();
                 requiresRelogin = true;
 
@@ -2054,7 +2059,7 @@ namespace GameLauncher {
 
             TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
-            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe")) {
+            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "/nfsw.exe")) {
                 DownloadStartTime = DateTime.Now;
                 downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "", SettingFile.Read("InstallationDirectory"), false, false, 1130632198);
             } else {
@@ -2068,7 +2073,7 @@ namespace GameLauncher {
 
             TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
-            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\TracksHigh\\STREAML5RA_98.BUN")) {
+            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "/TracksHigh/STREAML5RA_98.BUN")) {
                 DownloadStartTime = DateTime.Now;
                 downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "TracksHigh", SettingFile.Read("InstallationDirectory"), false, false, 615494528);
             } else {
@@ -2182,6 +2187,13 @@ namespace GameLauncher {
         private void OnDownloadFinished() {
 
             File.WriteAllBytes(SettingFile.Read("InstallationDirectory") + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
+
+			if (WineManager.NeedEmbeddedWine() && !Directory.Exists("wine")) {
+				Directory.CreateDirectory("wine");
+				var wc = new WebClient();
+				wc.DownloadFile("https://rbs-nfsw.gitlab.io/wine.tar.gz", "wine.tar.gz");
+				Process.Start("tar xvf wine.tar.gz -C wine").WaitForExit();
+			}
 
             playenabled = true;
             this.playProgress.Value = 100;

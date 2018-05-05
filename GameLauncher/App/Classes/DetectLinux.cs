@@ -27,5 +27,9 @@ namespace GameLauncher.App.Classes {
         public static bool LinuxDetected() {
             return WineDetected() || MonoDetected();
         }
+
+		public static bool NativeLinuxDetected() {
+			return MonoDetected() && !WineDetected();
+		}
     }
 }
