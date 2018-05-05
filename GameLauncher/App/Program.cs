@@ -36,8 +36,8 @@ namespace GameLauncher {
             } catch { }*/
 
             try {
-                File.Delete("Languages\\Default.lng");
-                File.WriteAllText("Languages\\Default.lng", ExtractResource.AsString("GameLauncher.Language.Default.lng"));
+                File.Delete("Languages/Default.lng");
+                File.WriteAllText("Languages/Default.lng", ExtractResource.AsString("GameLauncher.Language.Default.lng"));
             }
             catch { }
 
