@@ -1792,7 +1792,7 @@ namespace GameLauncher {
 				} else {
 					psi.FileName = "wine";
 				}
-				psi.Arguments = "explorer /desktop=\"NFSW[" + UserId + "]" + ServerIP + "\" " + executable + " " + args;
+				psi.Arguments = "explorer /desktop=\"NFSW[" + UserId + "]" + ServerIP + ",1600x900\" " + executable + " " + args;
 				Console.WriteLine(psi.Arguments);
 			}
 
@@ -2211,25 +2211,36 @@ namespace GameLauncher {
             File.WriteAllBytes(SettingFile.Read("InstallationDirectory") + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
 
 			if (WineManager.NeedEmbeddedWine() && !Directory.Exists("wine")) {
-				if (!File.Exists("wine.tar.gz"))
+				var thread = new Thread(() =>
 				{
-					var wc = new WebClient();
-					wc.DownloadFile("https://rbs-nfsw.gitlab.io/wine.tar.gz", "wine.tar.gz");
-				}
-				Directory.CreateDirectory("wine");
-				Process.Start("tar", "xf wine.tar.gz -C wine").WaitForExit();
+					if (!File.Exists("wine.tar.gz"))
+					{
+						var wc = new WebClient();
+						this.playProgressText.Text = "DOWNLOADING WINE";
+						wc.DownloadFile("https://rbs-nfsw.gitlab.io/wine.tar.gz", "wine.tar.gz");
+					}
+					Directory.CreateDirectory("wine");
+					this.playProgressText.Text = "EXTRACTING WINE";
+					Process.Start("tar", "xf wine.tar.gz -C wine").WaitForExit();
+					EnablePlayButton();
+				});
+				thread.IsBackground = true;
+                thread.Start();
+				return;
 			}
+			EnablePlayButton();
+			TaskbarProgress.SetValue(this.Handle, 100, 100);
+            TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Normal);
+        }
 
-            playenabled = true;
-            this.playProgress.Value = 100;
-            this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
+		private void EnablePlayButton() {
+			playenabled = true;
+			this.playProgress.Value = 100;
+			this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
             this.playButton.ForeColor = Color.White;
             this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADCOMPLETED", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
-
-            TaskbarProgress.SetValue(this.Handle, 100, 100);
-            TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Normal);
-        }
+		}
 
         private void OnDownloadFailed(Exception ex) {
             String failureMessage;
