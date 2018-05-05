@@ -2213,6 +2213,14 @@ namespace GameLauncher {
 			if (WineManager.NeedEmbeddedWine() && !Directory.Exists("wine")) {
 				var thread = new Thread(() =>
 				{
+					if (!SettingFile.KeyExists("WineDownloadAccepted"))
+					{
+						this.Invoke(new Action(() =>
+						{
+							MessageBox.Show(this, "You have too new version of Wine, so older prebuilt version is downloaded", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+						}));
+						SettingFile.Write("WineDownloadAccepted", "1");
+					}
 					if (!File.Exists("wine.tar.gz"))
 					{
 						var wc = new WebClient();
