@@ -1769,10 +1769,32 @@ namespace GameLauncher {
         }
 
         private void LaunchGame(string UserId, string LoginToken, string ServerIP, Form x) {
+			var executable = SettingFile.Read("InstallationDirectory") + "/nfsw.exe";
+			var args = "SBRW " + ServerIP + " " + LoginToken + " " + UserId + " -advancedLaunch";
             ProcessStartInfo psi = new ProcessStartInfo();
             psi.UseShellExecute = false;
-            psi.FileName = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
-            psi.Arguments = "SBRW " + ServerIP + " " + LoginToken + " " + UserId + " -advancedLaunch";
+			if (!DetectLinux.NativeLinuxDetected())
+			{
+				psi.FileName = executable;
+				psi.Arguments = args;
+			} else {
+				if (WineManager.NeedEmbeddedWine())
+				{
+					var wine = Directory.GetCurrentDirectory() + "/wine";
+					var prefix = Directory.GetCurrentDirectory() + "/wineprefix";
+					psi.EnvironmentVariables.Add("WINEVERPATH", wine);
+					psi.EnvironmentVariables.Add("WINESERVER", wine + "/bin/wineserver");
+					psi.EnvironmentVariables.Add("WINELOADER", wine + "/bin/wine");
+					psi.EnvironmentVariables.Add("WINEDLLPATH", wine + "/lib/wine/fakedlls");
+					psi.EnvironmentVariables.Add("LD_LIBRARY_PATH", wine + "/lib");
+					psi.EnvironmentVariables.Add("WINEPREFIX", prefix);
+					psi.FileName = wine + "/bin/wine";
+				} else {
+					psi.FileName = "wine";
+				}
+				psi.Arguments = "explorer /desktop=\"NFSW[" + UserId + "]" + ServerIP + "\" " + executable + " " + args;
+				Console.WriteLine(psi.Arguments);
+			}
 
             Process nfsw_process = Process.Start(psi);
             nfsw_process.EnableRaisingEvents = true;
@@ -1925,7 +1947,7 @@ namespace GameLauncher {
             this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
 
             try {
-                if (WebClientWithTimeout.createHash(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC") {
+                if (WebClientWithTimeout.createHash(SettingFile.Read("InstallationDirectory") + "/nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC") {
 
                     StartGame(UserId, LoginToken, serverIP, this);
 
