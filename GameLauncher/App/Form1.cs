@@ -2189,10 +2189,10 @@ namespace GameLauncher {
             File.WriteAllBytes(SettingFile.Read("InstallationDirectory") + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
 
 			if (WineManager.NeedEmbeddedWine() && !Directory.Exists("wine")) {
-				Directory.CreateDirectory("wine");
 				var wc = new WebClient();
 				wc.DownloadFile("https://rbs-nfsw.gitlab.io/wine.tar.gz", "wine.tar.gz");
-				Process.Start("tar xvf wine.tar.gz -C wine").WaitForExit();
+				Directory.CreateDirectory("wine");
+				Process.Start("tar xvf wine.tar.gz", "-C wine").WaitForExit();
 			}
 
             playenabled = true;
