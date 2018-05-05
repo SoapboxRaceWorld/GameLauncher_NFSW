@@ -13,19 +13,23 @@ using GameLauncher.App;
 using System.Runtime.InteropServices;
 using GameLauncherReborn;
 
-namespace GameLauncher.App {
-    public partial class DebugWindow : Form {
+namespace GameLauncher.App
+{
+    public partial class DebugWindow : Form
+    {
         string ServerIP = String.Empty;
         string ServerName = String.Empty;
 
-        public DebugWindow(string serverIP, string serverName) {
+        public DebugWindow(string serverIP, string serverName)
+        {
             ServerIP = serverIP;
             ServerName = serverName;
 
             InitializeComponent();
         }
 
-        public static string AntivirusInstalled(string caller = "AntiVirusProduct") {
+        public static string AntivirusInstalled(string caller = "AntiVirusProduct")
+        {
             ManagementObjectSearcher wmiData = new ManagementObjectSearcher(@"root\SecurityCenter2", "SELECT * FROM " + caller);
             ManagementObjectCollection data = wmiData.Get();
 
@@ -45,11 +49,11 @@ namespace GameLauncher.App {
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
 
-        private void DebugWindow_Load(object sender, EventArgs e) {
+        private void DebugWindow_Load(object sender, EventArgs e)
+        {
             data.AutoGenerateColumns = true;
 
             IniFile SettingFile = new IniFile("Settings.ini");
-            string UserSettings = Environment.ExpandEnvironmentVariables("%AppData%\\Need for Speed World\\Settings\\UserSettings.xml");
 
             string TracksHigh = (SettingFile.Read("TracksHigh") == "1") ? "True" : "False";
             string Password = (!String.IsNullOrEmpty(SettingFile.Read("Password"))) ? "True" : "False";
@@ -59,75 +63,107 @@ namespace GameLauncher.App {
             string Firewall = String.Empty;
             string AntiSpyware = String.Empty;
 
-            try {
-                Antivirus = (String.IsNullOrEmpty(AntivirusInstalled())) ? "---" : AntivirusInstalled();
-                Firewall = (String.IsNullOrEmpty(AntivirusInstalled("FirewallProduct"))) ? "---" : AntivirusInstalled("FirewallProduct");
-                AntiSpyware = (String.IsNullOrEmpty(AntivirusInstalled("AntiSpywareProduct"))) ? "---" : AntivirusInstalled("AntiSpywareProduct");
-            } catch {
-                Antivirus = "Unknown";
-                Firewall = "Unknown";
-                AntiSpyware = "Unknown";
+            if (!DetectLinux.NativeLinuxDetected())
+            {
+                try
+                {
+                    Antivirus = (String.IsNullOrEmpty(AntivirusInstalled())) ? "---" : AntivirusInstalled();
+                    Firewall = (String.IsNullOrEmpty(AntivirusInstalled("FirewallProduct"))) ? "---" : AntivirusInstalled("FirewallProduct");
+                    AntiSpyware = (String.IsNullOrEmpty(AntivirusInstalled("AntiSpywareProduct"))) ? "---" : AntivirusInstalled("AntiSpywareProduct");
+                }
+                catch
+                {
+                    Antivirus = "Unknown";
+                    Firewall = "Unknown";
+                    AntiSpyware = "Unknown";
+                }
             }
 
             string LauncherPosition = "";
+            string OS = "";
 
-            var Win32_OperatingSystem = (from x in new ManagementObjectSearcher("SELECT Caption FROM Win32_OperatingSystem").Get().Cast<ManagementObject>()
-                select x.GetPropertyValue("Caption")).FirstOrDefault();
+            if (DetectLinux.WineDetected())
+            {
+                OS = "Wine";
+            }
+            else if (DetectLinux.NativeLinuxDetected())
+            {
+                OS = "Native Linux";
+            }
+            else
+            {
+                OS = (from x in new ManagementObjectSearcher("SELECT Caption FROM Win32_OperatingSystem").Get().Cast<ManagementObject>()
+                      select x.GetPropertyValue("Caption")).FirstOrDefault().ToString();
+            }
 
-            string OS = (DetectLinux.LinuxDetected()) ? "Linux" : Win32_OperatingSystem.ToString();
+            if (SettingFile.Read("LauncherPosX") + "x" + SettingFile.Read("LauncherPosY") == "x")
+            {
+                LauncherPosition = "Windows Default Position";
+            }
+            else
+            {
+                LauncherPosition = SettingFile.Read("LauncherPosX") + "x" + SettingFile.Read("LauncherPosY");
+            }
 
-            var Win32_Processor = (from x in new ManagementObjectSearcher("SELECT Name FROM Win32_Processor").Get().Cast<ManagementObject>()
-                select x.GetPropertyValue("Name")).FirstOrDefault();
-
+            long memKb = 0;
+            ulong lpFreeBytesAvailable = 0;
             List<string> GPUs = new List<string>();
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT Name FROM Win32_VideoController");
-            string graphicsCard = string.Empty;
-            foreach (ManagementObject mo in searcher.Get()) {
-                foreach (PropertyData property in mo.Properties) {
-                    GPUs.Add(property.Value.ToString());
+            string Win32_Processor = "";
+            if (!DetectLinux.NativeLinuxDetected())
+            {
+                GetPhysicallyInstalledSystemMemory(out memKb);
+
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT Name FROM Win32_VideoController");
+                string graphicsCard = string.Empty;
+                foreach (ManagementObject mo in searcher.Get())
+                {
+                    foreach (PropertyData property in mo.Properties)
+                    {
+                        GPUs.Add(property.Value.ToString());
+                    }
                 }
+
+                Win32_Processor = (from x in new ManagementObjectSearcher("SELECT Name FROM Win32_Processor").Get().Cast<ManagementObject>()
+                                   select x.GetPropertyValue("Name")).FirstOrDefault().ToString();
+
+                Kernel32.GetDiskFreeSpaceEx(SettingFile.Read("InstallationDirectory"), out lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
             }
 
             var Win32_VideoController = string.Join(" | ", GPUs);
 
-            long memKb;
-            GetPhysicallyInstalledSystemMemory(out memKb);
+            var settings = new List<ListType> {
+                new ListType{ Name = "InstallationDirectory", Value = SettingFile.Read("InstallationDirectory")},
+                new ListType{ Name = "Server Address", Value = ServerIP},
+                new ListType{ Name = "Server Name", Value = ServerName},
+                new ListType{ Name = "Credentials Saved", Value = Password},
+                new ListType{ Name = "Language", Value =  SettingFile.Read("Language")},
+                new ListType{ Name = "TracksHigh", Value = TracksHigh},
+                new ListType{ Name = "UILanguage", Value =  SettingFile.Read("UILanguage")},
+                new ListType{ Name = "SkipUpdate", Value = SkipUpdate},
+                new ListType{ Name = "LauncherPos", Value = LauncherPosition},
 
-            if(SettingFile.Read("LauncherPosX") + "x" + SettingFile.Read("LauncherPosY") == "x") {
-                LauncherPosition = "Windows Default Position";
-            } else {
-                LauncherPosition = SettingFile.Read("LauncherPosX") + "x" + SettingFile.Read("LauncherPosY");
-            }
-
-            Kernel32.GetDiskFreeSpaceEx(SettingFile.Read("InstallationDirectory"), out ulong lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
-
-            var settings = new[] {
-                new { Text = "InstallationDirectory", Value = SettingFile.Read("InstallationDirectory")},
-                new { Text = "Server Address", Value = ServerIP},
-                new { Text = "Server Name", Value = ServerName},
-                new { Text = "Credentials Saved", Value = Password},
-                new { Text = "Language", Value =  SettingFile.Read("Language")},
-                new { Text = "TracksHigh", Value = TracksHigh},
-                new { Text = "UILanguage", Value =  SettingFile.Read("UILanguage")},
-                new { Text = "SkipUpdate", Value = SkipUpdate},
-                new { Text = "LauncherPos", Value = LauncherPosition},
-
-                new { Text = "", Value = "" },
-                
-                new { Text = "Antivirus", Value = Antivirus },
-                new { Text = "Firewall", Value = Firewall },
-                new { Text = "AntiSpyware", Value = AntiSpyware },
-
-                new { Text = "", Value = "" },
-
-                new { Text = "Operating System", Value = OS },
-                new { Text = "Environment Version", Value = Environment.OSVersion.Version.ToString() },
-                new { Text = "CPU", Value = Win32_Processor.ToString() },
-                new { Text = "GPU", Value = Win32_VideoController.ToString() },
-                new { Text = "RAM", Value = (memKb / 1024).ToString() + "MB" },
-                new { Text = "Screen Resolution", Value = Screen.PrimaryScreen.Bounds.Width + "x" + Screen.PrimaryScreen.Bounds.Height },
-                new { Text = "Disk Space Left", Value = FormatFileSize(lpFreeBytesAvailable).ToString() },
+                new ListType{ Name = "", Value = "" },
             };
+
+            if (!DetectLinux.NativeLinuxDetected())
+            {
+                settings.AddRange(new[] {
+                    new ListType{ Name = "Antivirus", Value = Antivirus },
+                    new ListType{ Name = "Firewall", Value = Firewall },
+                    new ListType{ Name = "AntiSpyware", Value = AntiSpyware },
+                    new ListType{ Name = "", Value = "" },
+                    new ListType{ Name = "CPU", Value = Win32_Processor },
+                    new ListType{ Name = "GPU", Value = Win32_VideoController},
+                    new ListType{ Name = "RAM", Value = (memKb / 1024).ToString() + "MB" },
+                    new ListType{ Name = "Disk Space Left", Value = FormatFileSize(lpFreeBytesAvailable) },
+                    new ListType{ Name = "", Value = ""}
+                });
+            }
+            settings.AddRange(new[] {
+                new ListType{ Name = "Operating System", Value = OS},
+                new ListType{ Name = "Environment Version", Value = Environment.OSVersion.Version.ToString() },
+                new ListType{ Name = "Screen Resolution", Value = Screen.PrimaryScreen.Bounds.Width + "x" + Screen.PrimaryScreen.Bounds.Height }
+            });
 
             data.DataSource = settings;
 
@@ -135,25 +171,34 @@ namespace GameLauncher.App {
             style.Font = new Font(data.Font, FontStyle.Bold);
             data.Columns[0].DefaultCellStyle = style;
 
-            data.Columns[0].Width += 50; 
+            data.Columns[0].Width += 50;
 
-            int size_x = data.Columns[0].Width + data.Columns[1].Width + 7;
+            int size_x = 1024;
             int size_y = 450;
 
             data.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Size = new Size(size_x, size_y);
         }
 
-        public string FormatFileSize(ulong byteCount) {
+        public string FormatFileSize(ulong byteCount)
+        {
             double[] numArray = new double[] { 1073741824, 1048576, 1024, 0 };
             string[] strArrays = new string[] { "GB", "MB", "KB", "Bytes" };
-            for (int i = 0; i < (int)numArray.Length; i++) {
-                if ((double)byteCount >= numArray[i]) {
+            for (int i = 0; i < (int)numArray.Length; i++)
+            {
+                if ((double)byteCount >= numArray[i])
+                {
                     return string.Concat(string.Format("{0:0.00}", (double)byteCount / numArray[i]), strArrays[i]);
                 }
             }
 
             return "0 Bytes";
+        }
+
+        struct ListType
+        {
+			public string Name { get; set; }
+			public string Value { get; set; }
         }
     }
 }

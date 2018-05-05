@@ -16,7 +16,7 @@ namespace GameLauncher {
             int SysVersion = (int)Environment.OSVersion.Platform;
             bool mono = DetectLinux.MonoDetected();
             bool wine = DetectLinux.WineDetected();
-            bool linux = DetectLinux.LinuxDetected();
+            bool linux = DetectLinux.NativeLinuxDetected();
 
             /*if(Environment.OSVersion.Version.Major <= 5 && !linux) {
                 MessageBox.Show(null, "Windows XP Support has been terminated. Please upgrade your Operating System to 'Vista' or newer.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -45,16 +45,26 @@ namespace GameLauncher {
                 File.Delete(Directory.GetCurrentDirectory() + "\\tempname.zip");
             } catch { }
 
-            if (mono == true) {
-                MessageBox.Show(null, "Mono support is still under alpha stage. Therefore, launcher could not launch.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+			if (linux)
+			{
+				MessageBox.Show(null, "Native Linux support is still under alpha stage. Therefore, launcher or game could crash.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			}
+			else if (mono == true)
+			{
+				MessageBox.Show(null, "Mono support is still under alpha stage. Therefore, launcher could not launch.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			}
 
             if (!File.Exists("LZMA.dll")) {
                 File.WriteAllBytes("LZMA.dll", ExtractResource.AsByte("GameLauncher.LZMA.LZMA.dll"));
             }
 
-            if (!File.Exists("discord-rpc.dll")) {
+            if (!linux && !File.Exists("discord-rpc.dll")) {
                 File.WriteAllBytes("discord-rpc.dll", ExtractResource.AsByte("GameLauncher.Discord.discord-rpc.dll"));
+            }
+
+			if (linux && !File.Exists("libdiscord-rpc.so"))
+            {
+				File.WriteAllBytes("libdiscord-rpc.so", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.so"));
             }
 
             if (File.Exists("GameLauncherUpdater.exe")) {

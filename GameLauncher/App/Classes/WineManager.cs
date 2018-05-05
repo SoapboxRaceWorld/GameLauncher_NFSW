@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace GameLauncher.App.Classes
 {
@@ -25,5 +26,14 @@ namespace GameLauncher.App.Classes
 			var version = versionString.Split('.');
 			return Int32.Parse(version[1]) > 1;
 		}
+
+		public static string GetWinePrefix() {
+			return Directory.GetCurrentDirectory() + "/wineprefix";
+		}
+
+		public static string GetWineDirectory()
+        {
+            return Directory.GetCurrentDirectory() + "/wine";
+        }
     }
 }

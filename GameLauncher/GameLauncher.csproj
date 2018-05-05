@@ -214,6 +214,7 @@
     <EmbeddedResource Include="SoapBoxModules\xmppsubject.soapbox.module" />
     <EmbeddedResource Include="SoapBoxModules\BootFlow.gfx" />
     <Compile Include="App\Classes\WineManager.cs" />
+    <EmbeddedResource Include="Discord\libdiscord-rpc.so" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">

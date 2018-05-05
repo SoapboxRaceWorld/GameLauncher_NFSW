@@ -298,7 +298,7 @@ namespace GameLauncher {
                 formGraphics.Dispose();
             }
 
-            if (Self.CheckForInternetConnection() == false && !DetectLinux.LinuxDetected()) {
+            if (Self.CheckForInternetConnection() == false && !DetectLinux.WineDetected()) {
                 MessageBox.Show(null, Language.getLangString("ERROR_NOINTERNETCONNECTION", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -646,7 +646,7 @@ namespace GameLauncher {
             DiscordRpc.Shutdown();
 
             //Dirty way to terminate application (sometimes Application.Exit() didn't really quitted, was still running in background)
-            if (DetectLinux.LinuxDetected() == true) {
+            if (DetectLinux.WineDetected() == true) {
                 this.Close();
                 downloader.Stop();
                 Application.Exit();
@@ -1780,14 +1780,13 @@ namespace GameLauncher {
 			} else {
 				if (WineManager.NeedEmbeddedWine())
 				{
-					var wine = Directory.GetCurrentDirectory() + "/wine";
-					var prefix = Directory.GetCurrentDirectory() + "/wineprefix";
+					var wine = WineManager.GetWineDirectory();
 					psi.EnvironmentVariables.Add("WINEVERPATH", wine);
 					psi.EnvironmentVariables.Add("WINESERVER", wine + "/bin/wineserver");
 					psi.EnvironmentVariables.Add("WINELOADER", wine + "/bin/wine");
 					psi.EnvironmentVariables.Add("WINEDLLPATH", wine + "/lib/wine/fakedlls");
 					psi.EnvironmentVariables.Add("LD_LIBRARY_PATH", wine + "/lib");
-					psi.EnvironmentVariables.Add("WINEPREFIX", prefix);
+					psi.EnvironmentVariables.Add("WINEPREFIX", WineManager.GetWinePrefix());
 					psi.FileName = wine + "/bin/wine";
 				} else {
 					psi.FileName = "wine";
