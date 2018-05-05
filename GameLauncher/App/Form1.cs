@@ -74,7 +74,7 @@ namespace GameLauncher {
         Pen ColorIssues = new Pen(Color.FromArgb(255, 145, 0));
 
         IniFile SettingFile = new IniFile("Settings.ini");
-        string UserSettings = Environment.ExpandEnvironmentVariables("%AppData%\\Need for Speed World\\Settings\\UserSettings.xml");
+		string UserSettings = WineManager.GetUserSettingsPath();
 
         protected override void OnPaint(PaintEventArgs e) {
             Pen p = new Pen(Color.FromArgb(10, 17, 25));
@@ -1778,7 +1778,8 @@ namespace GameLauncher {
 				psi.FileName = executable;
 				psi.Arguments = args;
 			} else {
-				if (WineManager.NeedEmbeddedWine())
+				psi.EnvironmentVariables.Add("WINEDEBUG", "-d3d_shader,-d3d");
+				if (Directory.Exists("wine"))
 				{
 					var wine = WineManager.GetWineDirectory();
 					psi.EnvironmentVariables.Add("WINEVERPATH", wine);
@@ -1787,7 +1788,6 @@ namespace GameLauncher {
 					psi.EnvironmentVariables.Add("WINEDLLPATH", wine + "/lib/wine/fakedlls");
 					psi.EnvironmentVariables.Add("LD_LIBRARY_PATH", wine + "/lib");
 					psi.EnvironmentVariables.Add("WINEPREFIX", WineManager.GetWinePrefix());
-					psi.EnvironmentVariables.Add("WINEDEBUG", "-d3d_shader,-d3d");
 					psi.FileName = wine + "/bin/wine";
 				} else {
 					psi.FileName = "wine";
@@ -2208,25 +2208,16 @@ namespace GameLauncher {
 
         private void OnDownloadFinished() {
 
-            File.WriteAllBytes(SettingFile.Read("InstallationDirectory") + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
+			File.WriteAllBytes(SettingFile.Read("InstallationDirectory") + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
 
-			if (WineManager.NeedEmbeddedWine() && !Directory.Exists("wine")) {
+			if (WineManager.NeedEmbeddedWine() && !File.Exists("wine.tar.gz") && !Directory.Exists("wine")) {
+				MessageBox.Show(this, "You have unsupported version of Wine (supported versions are from 1.6.x -> 1.7.x)\n" +
+				                "You can place compiled version of Wine to launcher directory as wine.tar.gz or in directory called wine\n" +
+				                "Ready-to-use version: https://rbs-nfsw.gitlab.io/wine.tar.gz", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			}
+			if (File.Exists("wine.tar.gz")) {
 				var thread = new Thread(() =>
 				{
-					if (!SettingFile.KeyExists("WineDownloadAccepted"))
-					{
-						this.Invoke(new Action(() =>
-						{
-							MessageBox.Show(this, "You have too new version of Wine, so older prebuilt version is downloaded", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-						}));
-						SettingFile.Write("WineDownloadAccepted", "1");
-					}
-					if (!File.Exists("wine.tar.gz"))
-					{
-						var wc = new WebClient();
-						this.playProgressText.Text = "DOWNLOADING WINE";
-						wc.DownloadFile("https://rbs-nfsw.gitlab.io/wine.tar.gz", "wine.tar.gz");
-					}
 					Directory.CreateDirectory("wine");
 					this.playProgressText.Text = "EXTRACTING WINE";
 					Process.Start("tar", "xf wine.tar.gz -C wine").WaitForExit();

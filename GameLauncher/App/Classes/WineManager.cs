@@ -11,6 +11,10 @@ namespace GameLauncher.App.Classes
 			return Int32.Parse(version[1]) > 1;
 		}
 
+		public static bool HasEmbeddedWine() {
+			return Directory.Exists("wine");
+		}
+
 		public static string GetWineVersion() {
 			Process process = new Process();
             process.StartInfo.FileName = "wine";
@@ -38,5 +42,15 @@ namespace GameLauncher.App.Classes
         {
             return Directory.GetCurrentDirectory() + "/wine";
         }
+
+		public static string GetUserSettingsPath() {
+			string appdata = "";
+			if (DetectLinux.NativeLinuxDetected()) {
+				appdata = GetWinePrefix() + "/drive_c/users/" + Environment.UserName + "/Application Data";
+			} else {
+				appdata = Environment.GetEnvironmentVariable("AppData");
+			}
+			return appdata + "/Need for Speed World/Settings/UserSettings.xml";
+		}
     }
 }
