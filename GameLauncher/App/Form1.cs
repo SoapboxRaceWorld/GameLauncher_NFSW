@@ -1787,6 +1787,7 @@ namespace GameLauncher {
 					psi.EnvironmentVariables.Add("WINEDLLPATH", wine + "/lib/wine/fakedlls");
 					psi.EnvironmentVariables.Add("LD_LIBRARY_PATH", wine + "/lib");
 					psi.EnvironmentVariables.Add("WINEPREFIX", WineManager.GetWinePrefix());
+					psi.EnvironmentVariables.Add("WINEDEBUG", "-d3d_shader,-d3d");
 					psi.FileName = wine + "/bin/wine";
 				} else {
 					psi.FileName = "wine";
