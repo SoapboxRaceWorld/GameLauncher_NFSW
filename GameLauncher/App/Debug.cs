@@ -12,6 +12,7 @@ using GameLauncher;
 using GameLauncher.App;
 using System.Runtime.InteropServices;
 using GameLauncherReborn;
+using System.IO;
 
 namespace GameLauncher.App
 {
@@ -146,7 +147,7 @@ namespace GameLauncher.App
             };
 
 			if (DetectLinux.NativeLinuxDetected()) {
-				var embedded = WineManager.NeedEmbeddedWine();
+				var embedded = Directory.Exists("wine");
 				settings.Add(new ListType { Name = "Embedded Wine", Value = embedded.ToString() });
 				if (!embedded) {
 					settings.Add(new ListType { Name = "Wine version", Value = WineManager.GetWineVersion() });
