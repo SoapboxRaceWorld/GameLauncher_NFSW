@@ -146,7 +146,7 @@ namespace GameLauncher.App
             };
 
 			if (DetectLinux.NativeLinuxDetected()) {
-				var embedded = WineManager.NeedEmbeddedWine() && false;
+				var embedded = WineManager.NeedEmbeddedWine();
 				settings.Add(new ListType { Name = "Embedded Wine", Value = embedded.ToString() });
 				if (!embedded) {
 					settings.Add(new ListType { Name = "Wine version", Value = WineManager.GetWineVersion() });

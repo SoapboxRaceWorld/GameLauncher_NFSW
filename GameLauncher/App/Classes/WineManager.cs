@@ -7,8 +7,11 @@ namespace GameLauncher.App.Classes
     public class WineManager
     {
 		public static bool NeedEmbeddedWine() {
-			var version = GetWineVersion().Split('.');
-			return Int32.Parse(version[1]) > 1;
+			var version = GetWineVersion();
+			if (version == "") {
+				return true;
+			}
+			return Int32.Parse(version.Split('.')[1]) > 1;
 		}
 
 		public static bool HasEmbeddedWine() {
