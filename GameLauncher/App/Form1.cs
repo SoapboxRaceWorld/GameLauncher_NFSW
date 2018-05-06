@@ -1779,15 +1779,17 @@ namespace GameLauncher {
 				psi.Arguments = args;
 			} else {
 				psi.EnvironmentVariables.Add("WINEDEBUG", "-d3d_shader,-d3d");
-				if (Directory.Exists("wine"))
+				psi.EnvironmentVariables.Add("WINEPREFIX", WineManager.GetWinePrefix());
+				var wine = WineManager.GetWineDirectory();
+				Console.WriteLine(wine);
+				if (Directory.Exists(wine))
 				{
-					var wine = WineManager.GetWineDirectory();
+					Console.WriteLine("Embedded wine found");
 					psi.EnvironmentVariables.Add("WINEVERPATH", wine);
 					psi.EnvironmentVariables.Add("WINESERVER", wine + "/bin/wineserver");
 					psi.EnvironmentVariables.Add("WINELOADER", wine + "/bin/wine");
 					psi.EnvironmentVariables.Add("WINEDLLPATH", wine + "/lib/wine/fakedlls");
 					psi.EnvironmentVariables.Add("LD_LIBRARY_PATH", wine + "/lib");
-					psi.EnvironmentVariables.Add("WINEPREFIX", WineManager.GetWinePrefix());
 					psi.FileName = wine + "/bin/wine";
 				} else {
 					psi.FileName = "wine";
