@@ -2215,7 +2215,7 @@ namespace GameLauncher {
 				                "You can place compiled version of Wine to launcher directory as wine.tar.gz or in directory called wine\n" +
 				                "Ready-to-use version: https://rbs-nfsw.gitlab.io/wine.tar.gz", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 			}
-			if (File.Exists("wine.tar.gz")) {
+			if (File.Exists("wine.tar.gz") && !Directory.Exists("wine")) {
 				var thread = new Thread(() =>
 				{
 					Directory.CreateDirectory("wine");
