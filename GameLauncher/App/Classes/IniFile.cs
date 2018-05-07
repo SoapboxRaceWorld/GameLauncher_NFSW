@@ -1,44 +1,72 @@
 ﻿using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
+using IniParser;
+using IniParser.Model;
 
-//Source of this class: https://stackoverflow.com/questions/217902/reading-writing-an-ini-file
 namespace GameLauncher.App.Classes {
-    class IniFile {
+	class IniFile {
         string Path;
-        string EXE = Assembly.GetExecutingAssembly().GetName().Name;
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        static extern long WritePrivateProfileString(string Section, string Key, string Value, string FilePath);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        static extern int GetPrivateProfileString(string Section, string Key, string Default, StringBuilder RetVal, int Size, string FilePath);
+		string EXE = Assembly.GetExecutingAssembly().GetName().Name;
+        FileIniDataParser Parser;
+        IniData Data;
 
         public IniFile(string IniPath = null) {
             Path = new FileInfo(IniPath ?? EXE + ".ini").FullName.ToString();
+			Parser = new FileIniDataParser();
+			if (File.Exists(Path))
+			{
+				Data = Parser.ReadFile(Path);
+			} else {
+				Data = new IniData();
+			}
         }
 
         public string Read(string Key, string Section = null) {
-            var RetVal = new StringBuilder(255);
-            GetPrivateProfileString(Section ?? EXE, Key, "", RetVal, 255, Path);
-            return RetVal.ToString();
+			if (Section == null)
+			{
+				return Data.Global[Key];
+			}
+			else
+			{
+				return Data[Section][Key];
+			}
         }
 
         public void Write(string Key, string Value, string Section = null) {
-            WritePrivateProfileString(Section ?? EXE, Key, Value, Path);
+			if (Section == null)
+            {
+                Data.Global[Key] = Value;
+            }
+            else
+            {
+				Data[Section][Key] = Value;
+            }
+            Parser.WriteFile(Path, Data);
         }
 
         public void DeleteKey(string Key, string Section = null) {
-            Write(Key, null, Section ?? EXE);
+			if (Section == null)
+            {
+				Data.Global.RemoveKey(Key);
+            }
+            else
+            {
+				Data[Section].RemoveKey(Key);
+            }
+            Parser.WriteFile(Path, Data);
         }
 
-        public void DeleteSection(string Section = null) {
-            Write(null, null, Section ?? EXE);
+        public void DeleteSection(string Section) {
+			Data.Sections.RemoveSection(Section);
+            Parser.WriteFile(Path, Data);
         }
 
         public bool KeyExists(string Key, string Section = null) {
-            return Read(Key, Section).Length > 0;
-        }
+			if (Section == null)
+			{
+				return Data.Global.ContainsKey(Key);
+			}
+			return Data[Section].ContainsKey(Key);
+		}
     }
 }

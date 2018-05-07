@@ -24,8 +24,13 @@ namespace GameLauncher.App.Classes {
             return (SysVersion == 4 || SysVersion == 6 || SysVersion == 128);
         }
 
+		[Obsolete("LinuxDetected is deprecated, please use WineDetected instead.")]
         public static bool LinuxDetected() {
-            return WineDetected() || MonoDetected();
+			return WineDetected();
         }
+
+		public static bool NativeLinuxDetected() {
+			return MonoDetected() && !WineDetected();
+		}
     }
 }

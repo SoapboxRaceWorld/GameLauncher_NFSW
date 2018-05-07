@@ -74,7 +74,7 @@ namespace GameLauncher {
         Pen ColorIssues = new Pen(Color.FromArgb(255, 145, 0));
 
         IniFile SettingFile = new IniFile("Settings.ini");
-        string UserSettings = Environment.ExpandEnvironmentVariables("%AppData%\\Need for Speed World\\Settings\\UserSettings.xml");
+		string UserSettings = WineManager.GetUserSettingsPath();
 
         protected override void OnPaint(PaintEventArgs e) {
             Pen p = new Pen(Color.FromArgb(10, 17, 25));
@@ -153,7 +153,10 @@ namespace GameLauncher {
             }
 
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-            ApplyEmbeddedFonts();
+			if (!DetectLinux.NativeLinuxDetected())
+			{
+				ApplyEmbeddedFonts();
+			}
 
             if(SettingFile.KeyExists("LauncherPosX") || SettingFile.KeyExists("LauncherPosY")) {
                 StartPosition = FormStartPosition.Manual;
@@ -295,7 +298,7 @@ namespace GameLauncher {
                 formGraphics.Dispose();
             }
 
-            if (Self.CheckForInternetConnection() == false && !DetectLinux.LinuxDetected()) {
+            if (Self.CheckForInternetConnection() == false && !DetectLinux.WineDetected()) {
                 MessageBox.Show(null, Language.getLangString("ERROR_NOINTERNETCONNECTION", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -388,7 +391,8 @@ namespace GameLauncher {
                     streamWriter.Write(response);
                     streamWriter.Close();
                 } catch { }
-            } catch {
+            } catch(Exception error) {
+				Console.WriteLine(error);
                 if(File.Exists("ServerCache")) {
                     FileStream fileStream = new FileStream("ServerCache", FileMode.Open);
 
@@ -642,7 +646,7 @@ namespace GameLauncher {
             DiscordRpc.Shutdown();
 
             //Dirty way to terminate application (sometimes Application.Exit() didn't really quitted, was still running in background)
-            if (DetectLinux.LinuxDetected() == true) {
+            if (DetectLinux.WineDetected() == true) {
                 this.Close();
                 downloader.Stop();
                 Application.Exit();
@@ -1765,10 +1769,34 @@ namespace GameLauncher {
         }
 
         private void LaunchGame(string UserId, string LoginToken, string ServerIP, Form x) {
+			var executable = SettingFile.Read("InstallationDirectory") + "/nfsw.exe";
+			var args = "SBRW " + ServerIP + " " + LoginToken + " " + UserId + " -advancedLaunch";
             ProcessStartInfo psi = new ProcessStartInfo();
             psi.UseShellExecute = false;
-            psi.FileName = SettingFile.Read("InstallationDirectory") + "\\nfsw.exe";
-            psi.Arguments = "SBRW " + ServerIP + " " + LoginToken + " " + UserId + " -advancedLaunch";
+			if (!DetectLinux.NativeLinuxDetected())
+			{
+				psi.FileName = executable;
+				psi.Arguments = args;
+			} else {
+				psi.EnvironmentVariables.Add("WINEDEBUG", "-d3d_shader,-d3d");
+				psi.EnvironmentVariables.Add("WINEPREFIX", WineManager.GetWinePrefix());
+				var wine = WineManager.GetWineDirectory();
+				Console.WriteLine(wine);
+				if (Directory.Exists(wine))
+				{
+					Console.WriteLine("Embedded wine found");
+					psi.EnvironmentVariables.Add("WINEVERPATH", wine);
+					psi.EnvironmentVariables.Add("WINESERVER", wine + "/bin/wineserver");
+					psi.EnvironmentVariables.Add("WINELOADER", wine + "/bin/wine");
+					psi.EnvironmentVariables.Add("WINEDLLPATH", wine + "/lib/wine/fakedlls");
+					psi.EnvironmentVariables.Add("LD_LIBRARY_PATH", wine + "/lib");
+					psi.FileName = wine + "/bin/wine";
+				} else {
+					psi.FileName = "wine";
+				}
+				psi.Arguments = "explorer /desktop=\"NFSW[" + UserId + "]" + ServerIP + ",1600x900\" " + executable + " " + args;
+				Console.WriteLine(psi.Arguments);
+			}
 
             Process nfsw_process = Process.Start(psi);
             nfsw_process.EnableRaisingEvents = true;
@@ -1921,13 +1949,13 @@ namespace GameLauncher {
             this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
 
             try {
-                if (WebClientWithTimeout.createHash(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC") {
+                if (WebClientWithTimeout.createHash(SettingFile.Read("InstallationDirectory") + "/nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC") {
 
                     StartGame(UserId, LoginToken, serverIP, this);
 
                     if (builtinserver == true) {
                         this.playProgressText.Text = Language.getLangString("MAIN_BUILTINSERVERINIT", UILanguage).ToUpper();
-                    } else {
+					} else if (!DetectLinux.NativeLinuxDetected()) {
                         int secondsToCloseLauncher = 5;
 
                         while (secondsToCloseLauncher > 0) {
@@ -2026,7 +2054,8 @@ namespace GameLauncher {
                 speechFile = "en";
             }            
 
-            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechhdr_" + speechFile + ".big")) {
+			if (!File.Exists(SettingFile.Read("InstallationDirectory") + "/Sound/Speech/copspeechhdr_" + speechFile + ".big")) {
+				Console.WriteLine("nofile");
                 this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_LOADINGFILELIST", UILanguage).ToUpper();
                 requiresRelogin = true;
 
@@ -2054,7 +2083,7 @@ namespace GameLauncher {
 
             TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
-            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\nfsw.exe")) {
+            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "/nfsw.exe")) {
                 DownloadStartTime = DateTime.Now;
                 downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "", SettingFile.Read("InstallationDirectory"), false, false, 1130632198);
             } else {
@@ -2068,7 +2097,7 @@ namespace GameLauncher {
 
             TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
-            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "\\TracksHigh\\STREAML5RA_98.BUN")) {
+            if (!File.Exists(SettingFile.Read("InstallationDirectory") + "/TracksHigh/STREAML5RA_98.BUN")) {
                 DownloadStartTime = DateTime.Now;
                 downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "TracksHigh", SettingFile.Read("InstallationDirectory"), false, false, 615494528);
             } else {
@@ -2181,18 +2210,38 @@ namespace GameLauncher {
 
         private void OnDownloadFinished() {
 
-            File.WriteAllBytes(SettingFile.Read("InstallationDirectory") + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
+			File.WriteAllBytes(SettingFile.Read("InstallationDirectory") + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
 
-            playenabled = true;
-            this.playProgress.Value = 100;
-            this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
+			if (WineManager.NeedEmbeddedWine() && !File.Exists("wine.tar.gz") && !Directory.Exists("wine")) {
+				MessageBox.Show(this, "You have unsupported version of Wine (supported versions are from 1.6.x -> 1.7.x)\n" +
+				                "You can place compiled version of Wine to launcher directory as wine.tar.gz or in directory called wine\n" +
+				                "Ready-to-use version: https://rbs-nfsw.gitlab.io/wine.tar.gz", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			}
+			if (File.Exists("wine.tar.gz") && !Directory.Exists("wine")) {
+				var thread = new Thread(() =>
+				{
+					Directory.CreateDirectory("wine");
+					this.playProgressText.Text = "EXTRACTING WINE";
+					Process.Start("tar", "xf wine.tar.gz -C wine").WaitForExit();
+					EnablePlayButton();
+				});
+				thread.IsBackground = true;
+                thread.Start();
+				return;
+			}
+			EnablePlayButton();
+			TaskbarProgress.SetValue(this.Handle, 100, 100);
+            TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Normal);
+        }
+
+		private void EnablePlayButton() {
+			playenabled = true;
+			this.playProgress.Value = 100;
+			this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
             this.playButton.ForeColor = Color.White;
             this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADCOMPLETED", UILanguage).ToUpper();
             this.playProgressTime.Text = "";
-
-            TaskbarProgress.SetValue(this.Handle, 100, 100);
-            TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Normal);
-        }
+		}
 
         private void OnDownloadFailed(Exception ex) {
             String failureMessage;
