@@ -22,8 +22,7 @@ using Microsoft.Win32;
 using GameLauncher.App;
 using GameLauncher.HashPassword;
 using System.Linq;
-using System.Net.Sockets;
-using System.Drawing.Drawing2D;
+using System.ComponentModel;
 
 namespace GameLauncher {
     public partial class mainScreen : Form {
@@ -2189,12 +2188,15 @@ namespace GameLauncher {
             return string.Format("{0}:{1}:{2}", hours, str, seconds.ToString("D02"));
         }
 
-        private void OnDownloadProgress(long downloadLength, long downloadCurrent, long compressedLength, string filename) {
+        private void OnDownloadProgress(long downloadLength, long downloadCurrent, long compressedLength, string filename, int skiptime = 0) {
             if (downloadCurrent < compressedLength) {
                 int width = this.playProgressText.Width;
                 string file = filename.Replace(SettingFile.Read("InstallationDirectory") + "/", "").ToUpper();
                 this.playProgressText.Text = string.Format(Language.getLangString("MAIN_DOWNLOADING", UILanguage).ToUpper(), this.FormatFileSize(downloadCurrent), this.FormatFileSize(compressedLength), file);
-                this.playProgressTime.Text = this.EstimateFinishTime(downloadCurrent, compressedLength);
+
+                if(skiptime == 0) { 
+                    this.playProgressTime.Text = this.EstimateFinishTime(downloadCurrent, compressedLength);
+                }
             }
 
             try { 
@@ -2208,27 +2210,42 @@ namespace GameLauncher {
             TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Normal);
         }
 
-        private void OnDownloadFinished() {
+        void wineDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)  {
+            this.BeginInvoke((MethodInvoker)delegate {
+                OnDownloadProgress(e.TotalBytesToReceive, e.BytesReceived, e.TotalBytesToReceive+1, "wine.tar.gz", 1);
+            });
+        }
 
+        void wineDownloadCompleted(object sender, AsyncCompletedEventArgs e) {
+            this.BeginInvoke((MethodInvoker)delegate {
+                if (File.Exists("wine.tar.gz") && !Directory.Exists("wine")) {
+                    var thread = new Thread(() => {
+                        Directory.CreateDirectory("wine");
+                        this.playProgressText.Text = "EXTRACTING WINE";
+                        Process.Start("tar", "xf wine.tar.gz -C wine").WaitForExit();
+                        EnablePlayButton();
+                    });
+
+                    thread.IsBackground = true;
+                    thread.Start();
+                    return;
+                }
+            });
+        }
+
+        private void OnDownloadFinished() {
 			File.WriteAllBytes(SettingFile.Read("InstallationDirectory") + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
 
-			if (WineManager.NeedEmbeddedWine() && !File.Exists("wine.tar.gz") && !Directory.Exists("wine")) {
-				MessageBox.Show(this, "You have unsupported version of Wine (supported versions are from 1.6.x -> 1.7.x)\n" +
-				                "You can place compiled version of Wine to launcher directory as wine.tar.gz or in directory called wine\n" +
-				                "Ready-to-use version: https://rbs-nfsw.gitlab.io/wine.tar.gz", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-			}
-			if (File.Exists("wine.tar.gz") && !Directory.Exists("wine")) {
-				var thread = new Thread(() =>
-				{
-					Directory.CreateDirectory("wine");
-					this.playProgressText.Text = "EXTRACTING WINE";
-					Process.Start("tar", "xf wine.tar.gz -C wine").WaitForExit();
-					EnablePlayButton();
-				});
-				thread.IsBackground = true;
-                thread.Start();
-				return;
-			}
+            if(DetectLinux.MonoDetected() == true) {
+			    if (WineManager.NeedEmbeddedWine() && !File.Exists("wine.tar.gz") && !Directory.Exists("wine")) {
+                    WebClientWithTimeout wineDownload = new WebClientWithTimeout();
+
+                    wineDownload.DownloadProgressChanged += new DownloadProgressChangedEventHandler(wineDownloadProgressChanged);
+                    wineDownload.DownloadFileCompleted += new AsyncCompletedEventHandler(wineDownloadCompleted);
+                    wineDownload.DownloadFileAsync(new Uri("https://launcher.soapboxrace.world/patch/linux/wine.tar.gz"), "wine.tar.gz");
+			    }
+            }
+
 			EnablePlayButton();
 			TaskbarProgress.SetValue(this.Handle, 100, 100);
             TaskbarProgress.SetState(this.Handle, TaskbarProgress.TaskbarStates.Normal);
