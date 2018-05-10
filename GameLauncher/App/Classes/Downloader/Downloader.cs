@@ -419,7 +419,8 @@ namespace GameLauncher
                                     num2,
                                     num3,
                                     num4,
-                                    text6
+                                    text6,
+                                    0
                                 };
                                 this.mFE.Invoke(this.mProgressUpdated, args2);
                             }
@@ -534,7 +535,8 @@ namespace GameLauncher
                                         num2,
                                         num3,
                                         num4,
-                                        text6
+                                        text6,
+                                        0
                                     };
                                     this.mFE.BeginInvoke(this.mProgressUpdated, args3);
                                 }
@@ -767,7 +769,8 @@ namespace GameLauncher
                             num,
                             num2,
                             0,
-                            innerText
+                            innerText,
+                            0
                         };
                         this.mFE.BeginInvoke(this.mProgressUpdated, args3);
                     }
