@@ -21,38 +21,17 @@ namespace GameLauncher.App.Classes {
 			}
         }
 
-        public string Read(string Key, string Section = null) {
-			if (Section == null)
-			{
-				return Data.Global[Key];
-			}
-			else
-			{
-				return Data[Section][Key];
-			}
+        public string Read(string Key) {
+            return Data[EXE][Key];
         }
 
-        public void Write(string Key, string Value, string Section = null) {
-			if (Section == null)
-            {
-                Data.Global[Key] = Value;
-            }
-            else
-            {
-				Data[Section][Key] = Value;
-            }
+        public void Write(string Key, string Value) {
+            Data[EXE][Key] = Value;
             Parser.WriteFile(Path, Data);
         }
 
-        public void DeleteKey(string Key, string Section = null) {
-			if (Section == null)
-            {
-				Data.Global.RemoveKey(Key);
-            }
-            else
-            {
-				Data[Section].RemoveKey(Key);
-            }
+        public void DeleteKey(string Key) {
+			Data[EXE].RemoveKey(Key);
             Parser.WriteFile(Path, Data);
         }
 
@@ -61,12 +40,8 @@ namespace GameLauncher.App.Classes {
             Parser.WriteFile(Path, Data);
         }
 
-        public bool KeyExists(string Key, string Section = null) {
-			if (Section == null)
-			{
-				return Data.Global.ContainsKey(Key);
-			}
-			return Data[Section].ContainsKey(Key);
+        public bool KeyExists(string Key) {
+			return Data[EXE].ContainsKey(Key);
 		}
     }
 }
