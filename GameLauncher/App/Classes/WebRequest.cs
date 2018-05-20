@@ -41,6 +41,7 @@ namespace GameLauncherReborn {
 				request.Headers["X-HWID"] = "1234";
 			}
             request.Headers["X-GameLauncherHash"] = Value();
+            request.Headers["secret"] = "0148e7cc5b47aa2fb09c12caae2a4b65";
             request.Timeout = 30000;
 
             return request;
