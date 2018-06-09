@@ -1489,10 +1489,14 @@ namespace GameLauncher {
                             ExtraNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Ban");
                         }
 
-                        if (String.IsNullOrEmpty(ExtraNode.InnerText)) {
-                            MessageBox.Show(null, String.Format(Language.getLangString("MAIN_REGISTERSUCCESS", UILanguage), serverName), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (String.IsNullOrEmpty(ExtraNode.InnerText) || ExtraNode.InnerText == "SERVER FULL") {
+							if(ExtraNode.InnerText == "SERVER FULL") {
+								MessageBox.Show(null, String.Format(Language.getLangString("MAIN_REGISTERSUCCESS", UILanguage), serverName) + " However, server is actually full, therefore you cannot play it right now.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+							} else {
+								MessageBox.Show(null, String.Format(Language.getLangString("MAIN_REGISTERSUCCESS", UILanguage), serverName), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+							}
 
-                            UserId = UserIdNode.InnerText;
+							UserId = UserIdNode.InnerText;
                             LoginToken = LoginTokenNode.InnerText;
 
                             this.BackgroundImage = Properties.Resources.loginbg;

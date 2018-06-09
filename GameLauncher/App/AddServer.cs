@@ -27,7 +27,11 @@ namespace GameLauncher.App {
         }
 
         private void okButton_Click(object sender, EventArgs e) {
-            bool success = true;
+			if (!File.Exists("servers.txt")) {
+				File.Create("servers.txt");
+			}
+
+			bool success = true;
             error.Visible = false;
             this.Refresh();
 
