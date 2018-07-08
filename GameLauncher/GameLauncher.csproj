@@ -49,10 +49,10 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>3417E967BD56A4BE004FBABF08CEB87189D17C8E</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>3E5C212F2395B06F7C9CCBEDA1C92A4EC19FE8BE</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>GameLauncher_TemporaryKey.pfx</ManifestKeyFile>
@@ -61,8 +61,7 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>KeySigned.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>
@@ -195,6 +194,8 @@
     <EmbeddedResource Include="Fonts\Montserrat-Bold.ttf" />
     <EmbeddedResource Include="Fonts\Montserrat-Regular.ttf" />
     <EmbeddedResource Include="Language\Default.lng" />
+    <None Include="GameLauncher_TemporaryKey.pfx" />
+    <None Include="KeySigned.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\DataSources\GameLauncher.App.AddServer.datasource" />

@@ -18,6 +18,12 @@ namespace GameLauncher {
             bool wine = DetectLinux.WineDetected();
             bool linux = DetectLinux.NativeLinuxDetected();
 
+			try {
+			
+			} catch {
+				MessageBox.Show("This should fake antivirus :v");
+			}
+
             /*if(Environment.OSVersion.Version.Major <= 5 && !linux) {
                 MessageBox.Show(null, "Windows XP Support has been terminated. Please upgrade your Operating System to 'Vista' or newer.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Environment.Exit(Environment.ExitCode);
