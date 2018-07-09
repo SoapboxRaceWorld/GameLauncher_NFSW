@@ -12,6 +12,9 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using System.IO;
 
 namespace GameLauncher {
+
+    // FIXME: use translatable language strings here
+
     class Updater {
         internal static void checkForUpdate(object sender, EventArgs e) {
             try {
@@ -33,13 +36,13 @@ namespace GameLauncher {
                                 dia.DetailsExpanded = true;
                                 dia.Icon = TaskDialogStandardIcon.Information;
                                 dia.DetailsCollapsedLabel = "Show Changelog";
-                                dia.Text = "An update is available. Do you wanna download it?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + json.github_build;
+                                dia.Text = "An update is available. Do you want to download it?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + json.github_build;
                                 dia.DetailsExpandedText = new WebClientWithTimeout().DownloadString("https://launcher.soapboxrace.world/changelog/text.php");
                                 dia.ExpansionMode = TaskDialogExpandedDetailsLocation.ExpandFooter;
 
                                 TaskDialogCommandLink update = new TaskDialogCommandLink("update", "Yes", "Launcher will be updated to " + json.github_build + ".");
                                 TaskDialogCommandLink cancel = new TaskDialogCommandLink("cancel", "No", "Launcher will ask for update on next launch.");
-                                TaskDialogCommandLink skipupdate = new TaskDialogCommandLink("skipupdate", "Ignore", "This update will be skipped. Will ask again if new update will appear");
+                                TaskDialogCommandLink skipupdate = new TaskDialogCommandLink("skipupdate", "Ignore", "This update will be skipped. A new prompt will apear as soon as a newer update is available.");
 
                                 update.UseElevationIcon = true;
 
@@ -81,12 +84,12 @@ namespace GameLauncher {
                         try {
                             if (((Form)sender).Name == "mainScreen") { }
                         } catch {
-                            MessageBox.Show("Failed to check for update");
+                            MessageBox.Show("Failed to check for update!");
                         }
                     }
                 };
             } catch {
-                MessageBox.Show("Failed to check for update");
+                MessageBox.Show("Failed to check for update!");
             }
         }
     }
