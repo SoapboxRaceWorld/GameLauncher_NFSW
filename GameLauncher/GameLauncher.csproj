@@ -49,7 +49,7 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>3E5C212F2395B06F7C9CCBEDA1C92A4EC19FE8BE</ManifestCertificateThumbprint>
