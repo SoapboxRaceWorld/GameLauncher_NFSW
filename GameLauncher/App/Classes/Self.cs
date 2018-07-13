@@ -9,7 +9,14 @@ using System.Windows.Forms;
 
 namespace GameLauncherReborn {
     class Self {
-        public static void runAsAdmin() {
+		public static string mainserver = "https://launcher.soapboxrace.world";
+		//public static string mirrorserver = "http://mirror.nfsw.mtntr.eu";
+
+		public static string serverlisturl = mainserver + "/serverlist.txt";
+		public static string internetcheckurl = mainserver + "/generate_204.php";
+		public static string statsurl = mainserver + "/stats";
+
+		public static void runAsAdmin() {
             string[] args = Environment.GetCommandLineArgs();
 
             ProcessStartInfo processStartInfo = new ProcessStartInfo() {
@@ -57,10 +64,31 @@ namespace GameLauncherReborn {
             return ticks;
         }
 
+		public static string GetAuthServIDFromServerName(string ServerName, string response) {
+			string returnvalue = "nfsw";
+
+			try {
+				String[] substrings = response.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+				foreach (var substring in substrings) {
+					if (!String.IsNullOrEmpty(substring)) {
+						String[] substrings2 = substring.Split(new string[] { ";" }, StringSplitOptions.None);
+
+						if(substrings2[0] == ServerName) {
+							returnvalue = substrings2[2];
+						}
+					}
+				}
+			} catch {
+				returnvalue = "nfsw";
+			}
+
+			return returnvalue;
+		}
+
         public static bool CheckForInternetConnection() {
             try {
                 using (var client = new WebClientWithTimeout()) {
-                    using (client.OpenRead("http://clients3.google.com/generate_204")) {
+                    using (client.OpenRead(internetcheckurl)) {
                         return true;
                     }
                 }

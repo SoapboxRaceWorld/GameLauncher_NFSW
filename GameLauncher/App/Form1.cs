@@ -46,9 +46,10 @@ namespace GameLauncher {
         int NFSW_PID = 0;
         Thread nfswstarted = null;
         String PasswordHash = null;
+		String slresponse = "";
 
-        //String discordrpccode = (Debugger.IsAttached) ? "397461418640932864" : "378322260655603713";
-        String discordrpccode = "427355155537723393";
+		//String discordrpccode = (Debugger.IsAttached) ? "397461418640932864" : "378322260655603713";
+		String discordrpccode = "427355155537723393";
 
         int errorcode;
 
@@ -58,8 +59,9 @@ namespace GameLauncher {
         String LoginToken = "";
         String UserId = "";
         String serverIP = "";
-        String serverCacheKey = "18051995"; // Try to guess what this means for me :)
-        String langInfo;
+		//String serverCacheKey = "18051995";
+		String serverCacheKey = "02032019"; // Try to guess that now :)
+		String langInfo;
         String UILanguage;
         String newGameFilesPath;
         float DPIDefaultScale = 96f;
@@ -365,15 +367,13 @@ namespace GameLauncher {
             }
 
             //Fetch serverlist, and disable if failed to fetch.
-            var response = "";
             var response2 = "";
 
             try {
                 WebClient wc = new WebClientWithTimeout();
 
-                //string serverurl = "http://nfsw.metonator.ct8.pl/serverlist.txt";
-                string serverurl = "http://launcher.soapboxrace.world/serverlist.txt";
-                response += wc.DownloadString(serverurl);
+				string serverurl = Self.serverlisturl;
+				slresponse += wc.DownloadString(serverurl);
 
                 serverlistloaded = true;
 
@@ -387,7 +387,7 @@ namespace GameLauncher {
 
                     CryptoStream cryptoStream = new CryptoStream(fileStream, dESCryptoServiceProvider.CreateEncryptor(), CryptoStreamMode.Write);
                     StreamWriter streamWriter = new StreamWriter(cryptoStream);
-                    streamWriter.Write(response);
+                    streamWriter.Write(slresponse);
                     streamWriter.Close();
                 } catch { }
             } catch(Exception error) {
@@ -402,12 +402,12 @@ namespace GameLauncher {
 
                     CryptoStream cryptoStream = new CryptoStream(fileStream, dESCryptoServiceProvider.CreateDecryptor(), CryptoStreamMode.Read);
                     StreamReader streamReader = new StreamReader(cryptoStream);
-                    response = streamReader.ReadToEnd();
+					slresponse = streamReader.ReadToEnd();
 
                     serverlistloaded = true;
                 } else {
-                    response = "<GROUP>Offline Servers;</GROUP>\r\n";
-                    response += "Offline Built-In Server;http://localhost:4416/sbrw/Engine.svc";
+					slresponse = "<GROUP>Offline Servers;</GROUP>\r\n";
+					slresponse += "Offline Built-In Server;http://localhost:4416/sbrw/Engine.svc";
                 }
             }
 
@@ -416,7 +416,7 @@ namespace GameLauncher {
             serverPick.ValueMember = "Value";
 
             List<Object> items = new List<Object>();
-            String[] substrings = response.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+            String[] substrings = slresponse.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             foreach (var substring in substrings) {
                 if (!String.IsNullOrEmpty(substring)) {
                     String[] substrings2 = substring.Split(new string[] { ";" }, StringSplitOptions.None);
@@ -458,7 +458,7 @@ namespace GameLauncher {
                 if(SettingFile.KeyExists("Server")) {
                     skipServerTrigger = true;
 
-                    if(response.Contains(SettingFile.Read("Server"))) { 
+                    if(slresponse.Contains(SettingFile.Read("Server"))) { 
                         serverPick.SelectedValue = SettingFile.Read("Server");
                     } else {
                         serverPick.SelectedIndex = 1;
@@ -601,7 +601,7 @@ namespace GameLauncher {
 
             DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
             DiscordRpc.Initialize(discordrpccode, ref handlers, true, "");
-            presence.state = "In-Launcher";
+            presence.state = "In-Launcher: " + Application.ProductVersion;
             presence.largeImageText = "SBRW";
             presence.largeImageKey = "nfsw";
             presence.instance = true;
@@ -1718,34 +1718,17 @@ namespace GameLauncher {
             nfswstarted.Start();
 
             string serverName = serverPick.GetItemText(serverPick.SelectedItem);
-
-            string[] WordsArray = serverName.Split();
-            string richPresenceIconID = ((WordsArray.Length == 1) ? WordsArray[0] : WordsArray[0] + WordsArray[1]).ToLower();
+			string richPresenceIconID = Self.GetAuthServIDFromServerName(serverName, slresponse);
 
             Random rnd = new Random();
             int random_avatar = rnd.Next(0, 26);
-
-            String validpresence = new WebClientWithTimeout().DownloadString("https://launcher.soapboxrace.world/presence.txt");
-            string[] each_presence = validpresence.Split(',');
-
-            bool forwardtologo = true;
-
-            foreach (var presenceId in each_presence) {
-                if(presenceId == richPresenceIconID) {
-                    forwardtologo = false;
-                }
-            }
 
             DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
             DiscordRpc.Initialize(discordrpccode, ref handlers, true, "");
             presence.state = "In-Game: " + serverName;
             presence.largeImageText = serverName;
-            if(forwardtologo == false) {
-                presence.largeImageKey = richPresenceIconID;
-            } else {
-                presence.largeImageKey = "nfsw";
-            }
-            presence.smallImageText = email.Text.Split('@').ElementAtOrDefault(0);
+            presence.largeImageKey = richPresenceIconID;
+            presence.smallImageText = "";
             presence.smallImageKey = "avatar_" + random_avatar;
             presence.startTimestamp = Self.getTimestamp(true);
             presence.partyId = "SBRW";

@@ -61,7 +61,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>KeySigned.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>
@@ -105,8 +106,6 @@
     <Compile Include="App\AddServer.Designer.cs">
       <DependentUpon>AddServer.cs</DependentUpon>
     </Compile>
-    <Compile Include="App\Classes\Auth.cs" />
-    <Compile Include="App\Classes\Decryptor.cs" />
     <Compile Include="App\Classes\Delay.cs" />
     <Compile Include="App\Classes\DetectLinux.cs" />
     <Compile Include="App\Classes\Downloader\Downloader.cs" />
@@ -194,8 +193,6 @@
     <EmbeddedResource Include="Fonts\Montserrat-Bold.ttf" />
     <EmbeddedResource Include="Fonts\Montserrat-Regular.ttf" />
     <EmbeddedResource Include="Language\Default.lng" />
-    <None Include="GameLauncher_TemporaryKey.pfx" />
-    <None Include="KeySigned.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\DataSources\GameLauncher.App.AddServer.datasource" />

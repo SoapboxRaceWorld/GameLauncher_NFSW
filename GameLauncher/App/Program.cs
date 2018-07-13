@@ -35,12 +35,6 @@ namespace GameLauncher {
                 Directory.CreateDirectory("Languages");
             }
 
-            /*try {
-                WebClientWithTimeout client = new WebClientWithTimeout();
-                File.Delete("Languages\\Default.lng");
-                client.DownloadFile("https://raw.githubusercontent.com/metonator/GameLauncher_NFSW-translations/master/Languages/English.lng", "Languages\\Default.lng");
-            } catch { }*/
-
             try {
                 File.Delete("Languages/Default.lng");
                 File.WriteAllText("Languages/Default.lng", ExtractResource.AsString("GameLauncher.Language.Default.lng"));
@@ -51,12 +45,9 @@ namespace GameLauncher {
                 File.Delete(Directory.GetCurrentDirectory() + "\\tempname.zip");
             } catch { }
 
-			if (linux)
-			{
+			if (linux) {
 				MessageBox.Show(null, "Native Linux support is still under alpha stage. Therefore, launcher or game could crash.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-			}
-			else if (mono == true)
-			{
+			} else if (mono == true) {
 				MessageBox.Show(null, "Mono support is still under alpha stage. Therefore, launcher could not launch.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 			}
 
@@ -68,8 +59,7 @@ namespace GameLauncher {
                 File.WriteAllBytes("discord-rpc.dll", ExtractResource.AsByte("GameLauncher.Discord.discord-rpc.dll"));
             }
 
-			if (linux && !File.Exists("libdiscord-rpc.so"))
-            {
+			if (linux && !File.Exists("libdiscord-rpc.so")) {
 				File.WriteAllBytes("libdiscord-rpc.so", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.so"));
             }
 
@@ -82,6 +72,9 @@ namespace GameLauncher {
                 File.WriteAllBytes("GL_Update.exe", ExtractResource.AsByte("GameLauncher.Updater.GL_Update.exe"));
             } catch { }
 
+			if(!File.Exists("servers.txt")) {
+				File.Create("servers.txt");
+			}
 
             if(Debugger.IsAttached) {
                     Application.EnableVisualStyles();
