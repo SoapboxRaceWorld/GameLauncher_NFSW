@@ -73,7 +73,9 @@ namespace GameLauncher {
             } catch { }
 
 			if(!File.Exists("servers.txt")) {
-				File.Create("servers.txt");
+				try {
+					File.Create("servers.txt");
+				} catch { }
 			}
 
             if(Debugger.IsAttached) {

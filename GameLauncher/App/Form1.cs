@@ -244,33 +244,34 @@ namespace GameLauncher {
             registerText.Click += new EventHandler(registerText_LinkClicked);
 
             //Simple check if we have enough permission to write file and remove them
-            try {
-                string file = Directory.GetCurrentDirectory() + "\\test.txt";
-                File.WriteAllText(file, "test");
-                File.Delete(file);
-            } catch {
-                MessageBox.Show(null, Language.getLangString("ERROR_NOPERMISSION", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            if(!Self.hasWriteAccessToFolder(Directory.GetCurrentDirectory())) {
+				MessageBox.Show(null, Language.getLangString("ERROR_NOPERMISSION", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
 
             //Somewhere here we will setup the game installation directory
             if (String.IsNullOrEmpty(SettingFile.Read("InstallationDirectory"))) {
                     MessageBox.Show(null, Language.getLangString("INSTALL_INFO", UILanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    var fbd = new FolderBrowserDialog();
-                    DialogResult result = fbd.ShowDialog();
+					var fbd = new FolderBrowserDialog();
+					DialogResult result = fbd.ShowDialog();
 
-                    if (result == DialogResult.OK) {                        
-                        if(fbd.SelectedPath == Environment.CurrentDirectory) {
-                            Directory.CreateDirectory("GameFiles");
-                            MessageBox.Show(null, String.Format(Language.getLangString("INSTALL_WARNING", UILanguage), Environment.CurrentDirectory + "\\GameFiles"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            SettingFile.Write("InstallationDirectory", Environment.CurrentDirectory + "\\GameFiles");
-                        } else {
-                            SettingFile.Write("InstallationDirectory", fbd.SelectedPath);
-                        }
-                    } else {
-                        Environment.Exit(Environment.ExitCode);
-                    }
-            }
+					if (result == DialogResult.OK) {
+						if (!Self.hasWriteAccessToFolder(fbd.SelectedPath)) {
+							MessageBox.Show(null, "You don't have enough permission to select this path as installation folder. Please select another directory.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+							Environment.Exit(Environment.ExitCode);
+						}
+
+						if (fbd.SelectedPath == Environment.CurrentDirectory) {
+							Directory.CreateDirectory("GameFiles");
+							MessageBox.Show(null, String.Format(Language.getLangString("INSTALL_WARNING", "en"), Environment.CurrentDirectory + "\\GameFiles"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+							SettingFile.Write("InstallationDirectory", Environment.CurrentDirectory + "\\GameFiles");
+						} else {
+							SettingFile.Write("InstallationDirectory", fbd.SelectedPath);
+						}
+					} else {
+						Environment.Exit(Environment.ExitCode);
+					}
+			}
 
             //Replace cursor
             if (File.Exists(SettingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur")) {
@@ -425,16 +426,20 @@ namespace GameLauncher {
             }
 
             if (File.Exists("servers.txt")) {
-                items.Add(new { Text = "<GROUP>Custom Servers", Value = "" });
-                response2 += File.ReadAllText("servers.txt");
+				try {
+					items.Add(new { Text = "<GROUP>Custom Servers", Value = "" });
+					response2 += File.ReadAllText("servers.txt");
 
-                String[] substrings_custom = response2.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-                foreach (var substring in substrings_custom) {
-                    if (!String.IsNullOrEmpty(substring)) {
-                        String[] substrings2 = substring.Split(new string[] { ";" }, StringSplitOptions.None);
-                        items.Add(new { Text = substrings2[0], Value = substrings2[1] });
-                    }
-                }
+					String[] substrings_custom = response2.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+					foreach (var substring in substrings_custom) {
+						if (!String.IsNullOrEmpty(substring)) {
+							String[] substrings2 = substring.Split(new string[] { ";" }, StringSplitOptions.None);
+							items.Add(new { Text = substrings2[0], Value = substrings2[1] });
+						}
+					}
+				} catch {
+
+				}
             }
 
             if (File.Exists("libOfflineServer.dll")) {
@@ -1718,7 +1723,7 @@ namespace GameLauncher {
             nfswstarted.Start();
 
             string serverName = serverPick.GetItemText(serverPick.SelectedItem);
-			string richPresenceIconID = Self.GetAuthServIDFromServerName(serverName, slresponse);
+			string richPresenceIconID = Self.getDiscordRPCImageIDFromServerName(serverName, slresponse);
 
             Random rnd = new Random();
             int random_avatar = rnd.Next(0, 26);

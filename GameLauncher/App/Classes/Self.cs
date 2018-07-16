@@ -1,9 +1,13 @@
-﻿using System;
+﻿using GameLauncher.App.Classes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Net.Sockets;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 using System.Windows.Forms;
 
@@ -15,6 +19,8 @@ namespace GameLauncherReborn {
 		public static string serverlisturl = mainserver + "/serverlist.txt";
 		public static string internetcheckurl = mainserver + "/generate_204.php";
 		public static string statsurl = mainserver + "/stats";
+
+		private static IniFile SettingFile = new IniFile("Settings.ini");
 
 		public static void runAsAdmin() {
             string[] args = Environment.GetCommandLineArgs();
@@ -64,7 +70,18 @@ namespace GameLauncherReborn {
             return ticks;
         }
 
-		public static string GetAuthServIDFromServerName(string ServerName, string response) {
+		public static bool hasWriteAccessToFolder(string path) {
+			try {
+				File.Create(path + "temp.txt").Close();
+				File.Delete(path + "temp.txt");
+			} catch (UnauthorizedAccessException) {
+				return false;
+			}
+
+			return true;
+		}
+
+		public static string getDiscordRPCImageIDFromServerName(string ServerName, string response) {
 			string returnvalue = "nfsw";
 
 			try {
