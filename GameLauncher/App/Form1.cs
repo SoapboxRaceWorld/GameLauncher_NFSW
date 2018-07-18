@@ -39,16 +39,15 @@ namespace GameLauncher {
         bool loggedIn = false;
         bool restartRequired = false;
         bool allowRegistration = false;
-        bool requiresRelogin = false;
         bool isIndex = false;
         bool useLegacy = true;
+		bool isDownloading = true;
+
         int lastSelectedServerId = 0;
         int NFSW_PID = 0;
         Thread nfswstarted = null;
         String PasswordHash = null;
 		String slresponse = "";
-
-		//String discordrpccode = (Debugger.IsAttached) ? "397461418640932864" : "378322260655603713";
 		String discordrpccode = "427355155537723393";
 
         int errorcode;
@@ -59,7 +58,6 @@ namespace GameLauncher {
         String LoginToken = "";
         String UserId = "";
         String serverIP = "";
-		//String serverCacheKey = "18051995";
 		String serverCacheKey = "02032019"; // Try to guess that now :)
 		String langInfo;
         String UILanguage;
@@ -741,6 +739,11 @@ namespace GameLauncher {
             if((loginEnabled == false || serverEnabled == false) && builtinserver == false) {
                 return;
             }
+
+			if(isDownloading == true) {
+				MessageBox.Show(null, "Please wait while launcher is still downloading gamefiles.", "GameLauncher", MessageBoxButtons.OK);
+				return;
+			}
 
             serverIP = serverPick.SelectedValue.ToString();
             string serverName = serverPick.GetItemText(serverPick.SelectedItem);
@@ -1835,108 +1838,7 @@ namespace GameLauncher {
             if (playenabled == false) {
                 return;
             }
-
-            //Relogin here
-            if(requiresRelogin == true) {
-                string serverLoginResponse;
-                string encryptedpassword;
-
-                if (useSavedPassword) {
-                    encryptedpassword = SettingFile.Read("Password");
-                } else {
-                    if (PasswordHash == "BCRYPT") {
-                        encryptedpassword = BCrypt.HashPassword(registerPassword.Text.ToString());
-                    } else {
-                        encryptedpassword = SHA.HashPassword(registerPassword.Text.ToString());
-                    }
-                }
-
-                try {
-                    WebClient wc = new WebClientWithTimeout();
-
-                    string BuildURL = serverIP + "/User/authenticateUser?email=" + email.Text.ToString() + "&password=" + encryptedpassword.ToLower();
-
-                    serverLoginResponse = wc.DownloadString(BuildURL);
-                } catch (WebException ex) {
-                    if (ex.Status == WebExceptionStatus.ProtocolError) {
-                        HttpWebResponse serverReply = (HttpWebResponse)ex.Response;
-                        if (serverReply == null) {
-                            errorcode = 500;
-                            serverLoginResponse = "<LoginStatusVO><UserId/><LoginToken/><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
-                        } else {
-                            using (StreamReader sr = new StreamReader(serverReply.GetResponseStream())) {
-                                errorcode = (int)serverReply.StatusCode;
-                                serverLoginResponse = sr.ReadToEnd();
-                            }
-                        }
-                    } else {
-                        serverLoginResponse = ex.Message;
-                    }
-                }
-
-                try {
-                    XmlDocument SBRW_XML = new XmlDocument();
-
-                    if (builtinserver == false) {
-                        SBRW_XML.LoadXml(serverLoginResponse);
-                    } else {
-                        SBRW_XML.LoadXml("<LoginStatusVO><UserId>1</UserId><LoginToken>aaaaaaaa-aaaa-aaaa-aaaaaaaa</LoginToken><Description/></LoginStatusVO>");
-                    }
-
-                    XmlNode ExtraNode;
-                    XmlNode LoginTokenNode;
-                    XmlNode UserIdNode;
-                    String msgBoxInfo = "";
-
-                    try {
-                        LoginTokenNode = SBRW_XML.SelectSingleNode("LoginStatusVO/LoginToken");
-                        UserIdNode = SBRW_XML.SelectSingleNode("LoginStatusVO/UserId");
-
-                        if (SBRW_XML.SelectSingleNode("LoginStatusVO/Ban") == null) {
-                            if (SBRW_XML.SelectSingleNode("LoginStatusVO/Description") == null) {
-                                ExtraNode = SBRW_XML.SelectSingleNode("html/body");
-                            } else {
-                                ExtraNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Description");
-                            }
-                        } else {
-                            ExtraNode = SBRW_XML.SelectSingleNode("LoginStatusVO/Ban");
-                        }
-
-                        if (!String.IsNullOrEmpty(ExtraNode.InnerText)) {
-                            if (ExtraNode.SelectSingleNode("Reason") != null) {
-                                msgBoxInfo = String.Format(Language.getLangString("BANNED_INFO", UILanguage), serverPick.GetItemText(serverPick.SelectedItem)) + "\n";
-                                msgBoxInfo += String.Format(Language.getLangString("BANNED_REASON", UILanguage), ExtraNode.SelectSingleNode("Reason").InnerText);
-
-                                if (ExtraNode.SelectSingleNode("Expires") != null) {
-                                    msgBoxInfo += "\n" + String.Format(Language.getLangString("BANNED_EXPIRETIME", UILanguage), ExtraNode.SelectSingleNode("Expires").InnerText);
-                                } else {
-                                    msgBoxInfo += "\n" + Language.getLangString("BANNED_EXPIRENEVER", UILanguage);
-                                }
-                            } else {
-                                if (ExtraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?") {
-                                    msgBoxInfo = Language.getLangString("ERROR_TAMPERING", UILanguage);
-                                } else {
-                                    if (SBRW_XML.SelectSingleNode("html/body") == null) {
-                                        msgBoxInfo = ExtraNode.InnerText;
-                                    } else {
-                                        msgBoxInfo = "ERROR " + errorcode + ": " + ExtraNode.InnerText;
-                                    }
-                                }
-                            }
-
-                            ConsoleLog(msgBoxInfo, "error");
-                        } else {
-                            UserId = UserIdNode.InnerText;
-                            LoginToken = LoginTokenNode.InnerText;
-                        }
-                    } catch {
-                        MessageBox.Show(Language.getLangString("ERROR_SERVERDOWN", UILanguage));
-                    }
-                } catch {
-                    MessageBox.Show(Language.getLangString("ERROR_SERVERDOWN", UILanguage));
-                }
-            }
-                
+			
             this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
 
             try {
@@ -2048,7 +1950,6 @@ namespace GameLauncher {
 			if (!File.Exists(SettingFile.Read("InstallationDirectory") + "/Sound/Speech/copspeechhdr_" + speechFile + ".big")) {
 				Console.WriteLine("nofile");
                 this.playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_LOADINGFILELIST", UILanguage).ToUpper();
-                requiresRelogin = true;
 
                 Kernel32.GetDiskFreeSpaceEx(SettingFile.Read("InstallationDirectory"), out ulong lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
                 if (lpFreeBytesAvailable <= 4000000000) {
@@ -2246,6 +2147,7 @@ namespace GameLauncher {
         }
 
 		private void EnablePlayButton() {
+			isDownloading = false;
 			playenabled = true;
 			this.playProgress.Value = 100;
 			this.playButton.BackgroundImage = Properties.Resources.largebutton_enabled;

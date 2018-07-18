@@ -26,8 +26,10 @@ namespace GameLauncher.App.Classes {
         }
 
         public void Write(string Key, string Value) {
-            Data[EXE][Key] = Value;
-            Parser.WriteFile(Path, Data);
+			try {
+				Data[EXE][Key] = Value;
+				Parser.WriteFile(Path, Data);
+			} catch { }
         }
 
         public void DeleteKey(string Key) {
