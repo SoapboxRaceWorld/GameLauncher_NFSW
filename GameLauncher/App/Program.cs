@@ -18,17 +18,6 @@ namespace GameLauncher {
             bool wine = DetectLinux.WineDetected();
             bool linux = DetectLinux.NativeLinuxDetected();
 
-			try {
-			
-			} catch {
-				MessageBox.Show("This should fake antivirus :v");
-			}
-
-            /*if(Environment.OSVersion.Version.Major <= 5 && !linux) {
-                MessageBox.Show(null, "Windows XP Support has been terminated. Please upgrade your Operating System to 'Vista' or newer.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                Environment.Exit(Environment.ExitCode);
-            }*/
-
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 
             if (!Directory.Exists("Languages")) {
@@ -44,12 +33,6 @@ namespace GameLauncher {
             try {
                 File.Delete(Directory.GetCurrentDirectory() + "\\tempname.zip");
             } catch { }
-
-			if (linux) {
-				MessageBox.Show(null, "Native Linux support is still under alpha stage. Therefore, launcher or game could crash.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-			} else if (mono == true) {
-				MessageBox.Show(null, "Mono support is still under alpha stage. Therefore, launcher could not launch.", "GameLauncher.exe", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-			}
 
             if (!File.Exists("LZMA.dll")) {
                 File.WriteAllBytes("LZMA.dll", ExtractResource.AsByte("GameLauncher.LZMA.LZMA.dll"));
