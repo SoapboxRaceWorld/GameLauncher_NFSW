@@ -600,13 +600,13 @@ namespace GameLauncher {
                 useLegacy = false;
             }
 
-            DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
-            DiscordRpc.Initialize(discordrpccode, ref handlers, true, "");
-            presence.state = "In-Launcher: " + Application.ProductVersion;
-            presence.largeImageText = "SBRW";
-            presence.largeImageKey = "nfsw";
-            presence.instance = true;
-            DiscordRpc.UpdatePresence(presence);
+			DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
+			DiscordRpc.Initialize(discordrpccode, ref handlers, true, "");
+			presence.state = "In-Launcher: " + Application.ProductVersion;
+			presence.largeImageText = "SBRW";
+			presence.largeImageKey = "nfsw";
+			presence.instance = true;
+			DiscordRpc.UpdatePresence(presence);
 
             this.BeginInvoke((MethodInvoker)delegate {
                 launchNFSW();
