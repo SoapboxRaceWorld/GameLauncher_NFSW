@@ -18,7 +18,12 @@ namespace GameLauncher {
             bool wine = DetectLinux.WineDetected();
             bool linux = DetectLinux.NativeLinuxDetected();
 
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+			Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+
+			if (Self.isTempFolder(Directory.GetCurrentDirectory())) {
+				MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+				Environment.Exit(0);
+			}
 
             if (!Directory.Exists("Languages")) {
                 Directory.CreateDirectory("Languages");

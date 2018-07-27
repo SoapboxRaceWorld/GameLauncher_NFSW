@@ -9,7 +9,6 @@ using System.IO;
 using System.Xml;
 using System.Diagnostics;
 using System.Threading;
-using System.Text.RegularExpressions;
 using System.Reflection;
 using System.Net.NetworkInformation;
 using GameLauncher.Resources;
@@ -21,7 +20,6 @@ using GameLauncherReborn;
 using Microsoft.Win32;
 using GameLauncher.App;
 using GameLauncher.HashPassword;
-using System.Linq;
 using System.ComponentModel;
 
 namespace GameLauncher {
@@ -1255,14 +1253,6 @@ namespace GameLauncher {
          * Because why should i close Form1 and create/open Form2 if it will look a bit more responsive...
          */
 
-        public bool validateEmail(string email) {
-            String theEmailPattern = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
-                                   + "@"
-                                   + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
-
-            return Regex.IsMatch(email, theEmailPattern);
-        }
-
         private void RegisterFormElements(bool hideElements = true) {
             isIndex = false;
 
@@ -1385,7 +1375,7 @@ namespace GameLauncher {
                 drawErrorAroundTextBox(registerEmail);
                 errorEmail.Text = Language.getLangString("ERROR_REGISTER_MAILEMPTY", UILanguage).ToUpper();
                 registerSuccess = false;
-            } else if(validateEmail(registerEmail.Text) == false) {
+            } else if(Self.validateEmail(registerEmail.Text) == false) {
                 drawErrorAroundTextBox(registerEmail);
                 errorEmail.Text = Language.getLangString("ERROR_REGISTER_MAILCORRECT", UILanguage).ToUpper();
                 registerSuccess = false;

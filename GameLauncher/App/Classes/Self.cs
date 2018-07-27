@@ -1,14 +1,9 @@
 ﻿using GameLauncher.App.Classes;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Net.Sockets;
-using System.Security.AccessControl;
-using System.Security.Principal;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace GameLauncherReborn {
@@ -119,5 +114,17 @@ namespace GameLauncherReborn {
             form.Top = (Screen.PrimaryScreen.Bounds.Height - form.Height) / 2;
             form.Left = (Screen.PrimaryScreen.Bounds.Width - form.Width) / 2;
         }
-    }
+
+		public static bool validateEmail(string email) {
+			String theEmailPattern = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
+								   + "@"
+								   + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
+
+			return Regex.IsMatch(email, theEmailPattern);
+		}
+
+		public static bool isTempFolder(string directory) {
+			return Path.GetTempPath() == directory.Substring(0, Path.GetTempPath().Length); //too lazy for regex
+		}
+	}
 }
