@@ -13,7 +13,6 @@ namespace GameLauncher {
     static class Program {
         [STAThread]
         static void Main() {       
-            int SysVersion = (int)Environment.OSVersion.Platform;
             bool mono = DetectLinux.MonoDetected();
             bool wine = DetectLinux.WineDetected();
             bool linux = DetectLinux.NativeLinuxDetected();
@@ -79,7 +78,7 @@ namespace GameLauncher {
                 Mutex mutex = new Mutex(false, "GameLauncherNFSW-MeTonaTOR");
                 try {
                     if (mutex.WaitOne(0, false)) {
-                        String[] files = { "Newtonsoft.Json.dll", "LZMA.dll" };
+                        String[] files = { "Newtonsoft.Json.dll", "INIFileParser.dll", "Microsoft.WindowsAPICodePack.dll", "Microsoft.WindowsAPICodePack.Shell.dll" };
                         List<string> missingfiles = new List<string>();
 
                         foreach (string file in files) {
@@ -96,10 +95,8 @@ namespace GameLauncher {
                             }
 
                             message += "\nCurrent directory: " + Directory.GetCurrentDirectory();
-                            message += "\nYou will be moved to the project page for re-download.";
 
                             MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases");
                             Environment.Exit(1);
                         }
 

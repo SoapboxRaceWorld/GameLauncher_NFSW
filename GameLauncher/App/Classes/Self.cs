@@ -124,7 +124,7 @@ namespace GameLauncherReborn {
 		}
 
 		public static bool isTempFolder(string directory) {
-			return Path.GetTempPath() == directory.Substring(0, Path.GetTempPath().Length); //too lazy for regex
+			return directory.Contains("Temp"); //too lazy for regex
 		}
 	}
 }
