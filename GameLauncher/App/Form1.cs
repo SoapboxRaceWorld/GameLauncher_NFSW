@@ -1715,7 +1715,7 @@ namespace GameLauncher {
             nfswstarted.IsBackground = true;
             nfswstarted.Start();
 
-            string serverName = "MostWanted Experimental";
+            string serverName = serverPick.GetItemText(serverPick.SelectedItem);
 			string richPresenceIconID = Self.getDiscordRPCImageIDFromServerName(serverName, slresponse);
 
             Random rnd = new Random();
