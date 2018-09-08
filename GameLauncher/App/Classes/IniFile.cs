@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using IniParser;
 using IniParser.Model;
@@ -24,6 +25,11 @@ namespace GameLauncher.App.Classes {
         public string Read(string Key) {
             return Data[EXE][Key];
         }
+
+	    public int ReadInt(string Key)
+	    {
+	        return Convert.ToInt32(Data[EXE][Key]);
+	    }
 
         public void Write(string Key, string Value) {
 			try {

@@ -8,11 +8,15 @@ using System.Windows.Forms;
 
 namespace GameLauncherReborn {
     class Self {
-		public static string mainserver = "https://launcher.soapboxrace.world";
-		//public static string mirrorserver = "http://mirror.nfsw.mtntr.eu";
+#if DEBUG
+        public static string mainserver = "http://192.168.6.13:7888";
+#else
+        public static string mainserver = "https://launchpad.soapboxrace.world";
+#endif
 
-		public static string serverlisturl = mainserver + "/serverlist.txt";
-		public static string internetcheckurl = mainserver + "/generate_204.php";
+        public static string serverlisturl = mainserver + "/servers";
+
+        public static string internetcheckurl = mainserver + "/generate_204.php";
 		public static string statsurl = mainserver + "/stats";
 
 		private static IniFile SettingFile = new IniFile("Settings.ini");

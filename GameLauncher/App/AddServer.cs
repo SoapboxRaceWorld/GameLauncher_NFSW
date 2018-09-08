@@ -11,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GameLauncher.App.Classes;
+using GameLauncher.HashPassword;
 
 namespace GameLauncher.App {
     public partial class AddServer : Form {
@@ -27,8 +29,8 @@ namespace GameLauncher.App {
         }
 
         private void okButton_Click(object sender, EventArgs e) {
-			if (!File.Exists("servers.txt")) {
-				File.Create("servers.txt");
+			if (!File.Exists("servers.json")) {
+				File.Create("servers.json");
 			}
 
 			bool success = true;
@@ -107,12 +109,28 @@ namespace GameLauncher.App {
 
             if (success == true) {
                 try {
-                    StreamReader sr = new StreamReader("servers.txt");
+                    StreamReader sr = new StreamReader("servers.json");
                     String oldcontent = sr.ReadToEnd();
                     sr.Close();
 
-                    String addString = serverName.Text + ";" + wellFormattedURL + "\r\n";
-                    File.WriteAllText("servers.txt", oldcontent + addString);
+                    if (string.IsNullOrWhiteSpace(oldcontent))
+                    {
+                        oldcontent = "[]";
+                    }
+
+                    var servers = JsonConvert.DeserializeObject<List<ServerInfo>>(oldcontent);
+
+                    servers.Add(new ServerInfo
+                    {
+                        Name = serverName.Text,
+                        IpAddress = wellFormattedURL,
+                        IsSpecial = false,
+                        Id = SHA.HashPassword(uriResult.Host)
+                    });
+
+                    //String addString = serverName.Text + ";" + wellFormattedURL + "\r\n";
+                    //File.WriteAllText("servers.txt", oldcontent + addString);
+                    File.WriteAllText("servers.json", JsonConvert.SerializeObject(servers));
                     MessageBox.Show(null, "New server will be added on next start of launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 } catch(Exception ex) {
                     MessageBox.Show(null, "Failed to add new server. " + ex.Message, "GameLauncher", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);

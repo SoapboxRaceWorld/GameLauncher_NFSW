@@ -1,64 +1,81 @@
-﻿using GameLauncherReborn;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
-using System.Text;
-using System.Windows.Forms;
-using GameLauncher.App.Classes;
-using GameLauncher.App;
-using Microsoft.WindowsAPICodePack;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using System.IO;
+using System.Windows.Forms;
+using GameLauncherReborn;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using Newtonsoft.Json;
 
-namespace GameLauncher {
-
+namespace GameLauncher.App.Classes.Events
+{
     // FIXME: use translatable language strings here
-
-    class Updater {
-        internal static void checkForUpdate(object sender, EventArgs e) {
-            try {
+    internal class Updater
+    {
+        internal static void CheckForUpdate(object sender, EventArgs e)
+        {
+            try
+            {
                 var client = new WebClientWithTimeout();
 
-                Uri StringToUri = new Uri("http://launcher.soapboxrace.world/checkUpdate.php?version=" + Application.ProductVersion);
+                var uri = new Uri(Self.mainserver + "/launcher/update?version=" + Application.ProductVersion);
                 client.CancelAsync();
-                client.DownloadStringAsync(StringToUri);
-                client.DownloadStringCompleted += (sender2, e2) => {
-                    try {
-                        CheckVersion json = JsonConvert.DeserializeObject<CheckVersion>(e2.Result);
+                client.DownloadStringAsync(uri);
+                client.DownloadStringCompleted += (sender2, e2) =>
+                {
+                    try
+                    {
+                        var json = JsonConvert.DeserializeObject<UpdateCheckResponse>(e2.Result);
 
-                        if (json.update.info == true) {
-                            IniFile SettingFile = new IniFile("Settings.ini");
-                            if (SettingFile.Read("IgnoreUpdateVersion") != json.github_build) {
-                                TaskDialog dia = new TaskDialog();
-                                dia.Caption = "Update";
-                                dia.InstructionText = "An update is available!";
-                                dia.DetailsExpanded = true;
-                                dia.Icon = TaskDialogStandardIcon.Information;
-                                dia.DetailsCollapsedLabel = "Show Changelog";
-                                dia.Text = "An update is available. Do you want to download it?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + json.github_build;
-                                dia.DetailsExpandedText = new WebClientWithTimeout().DownloadString("https://launcher.soapboxrace.world/changelog/text.php");
-                                dia.ExpansionMode = TaskDialogExpandedDetailsLocation.ExpandFooter;
+                        if (json.Code != 0)
+                        {
+                            MessageBox.Show("Launchpad update service returned an error: " + json.Code);
+                            return;
+                        }
 
-                                TaskDialogCommandLink update = new TaskDialogCommandLink("update", "Yes", "Launcher will be updated to " + json.github_build + ".");
-                                TaskDialogCommandLink cancel = new TaskDialogCommandLink("cancel", "No", "Launcher will ask for update on next launch.");
-                                TaskDialogCommandLink skipupdate = new TaskDialogCommandLink("skipupdate", "Ignore", "This update will be skipped. A new prompt will apear as soon as a newer update is available.");
+                        if (json.Payload.UpdateExists)
+                        {
+                            var settingFile = new IniFile("Settings.ini");
+                            if (settingFile.Read("IgnoreUpdateVersion") != json.Payload.LatestVersion)
+                            {
+                                var dia = new TaskDialog
+                                {
+                                    Caption = "Update",
+                                    InstructionText = "An update is available!",
+                                    DetailsExpanded = true,
+                                    Icon = TaskDialogStandardIcon.Information,
+                                    DetailsCollapsedLabel = "Show Changelog",
+                                    Text = "An update is available. Do you want to download it?\nYour version: " +
+                                           Application.ProductVersion + "\nUpdated version: " + json.Payload.LatestVersion,
+                                    DetailsExpandedText =
+                                        new WebClientWithTimeout().DownloadString(Self.mainserver + "/launcher/changelog"),
+                                    ExpansionMode = TaskDialogExpandedDetailsLocation.ExpandFooter
+                                };
+
+                                var update = new TaskDialogCommandLink("update", "Yes", "Launcher will be updated to " + json.Payload.LatestVersion + ".");
+                                var cancel = new TaskDialogCommandLink("cancel", "No", "Launcher will ask you to update on the next launch.");
+                                var skipupdate = new TaskDialogCommandLink("skipupdate", "Ignore", "This update will be skipped. A new prompt will apear as soon as a newer update is available.");
 
                                 update.UseElevationIcon = true;
 
-                                skipupdate.Click += (sender3, e3) => {
-                                    SettingFile.Write("IgnoreUpdateVersion", json.github_build);
+                                skipupdate.Click += (sender3, e3) =>
+                                {
+                                    settingFile.Write("IgnoreUpdateVersion", json.Payload.LatestVersion);
                                     dia.Close();
                                 };
 
-                                cancel.Click += (sender3, e3) => {
+                                cancel.Click += (sender3, e3) =>
+                                {
                                     dia.Close();
                                 };
 
-                                update.Click += (sender3, e3) => {
-                                    if (File.Exists("GL_Update.exe")) {
+                                update.Click += (sender3, e3) =>
+                                {
+                                    if (File.Exists("GL_Update.exe"))
+                                    {
                                         Process.Start(@"GL_Update.exe", Process.GetCurrentProcess().Id.ToString());
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
                                     }
 
@@ -73,22 +90,34 @@ namespace GameLauncher {
 
                                 //new UpdatePopup(json.github_build).Show();
                             }
-                        } else {
-                            try {
-                                if (((Form)sender).Name == "mainScreen") {}
-                            } catch {
+                        }
+                        else
+                        {
+                            try
+                            {
+                                if (((Form)sender).Name == "mainScreen") { }
+                            }
+                            catch
+                            {
                                 MessageBox.Show("Your launcher is up-to-date");
                             }
                         }
-                    } catch {
-                        try {
+                    }
+                    catch
+                    {
+                        try
+                        {
                             if (((Form)sender).Name == "mainScreen") { }
-                        } catch {
+                        }
+                        catch
+                        {
                             MessageBox.Show("Failed to check for update!");
                         }
                     }
                 };
-            } catch {
+            }
+            catch
+            {
                 MessageBox.Show("Failed to check for update!");
             }
         }

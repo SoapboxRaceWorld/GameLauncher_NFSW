@@ -1,17 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Newtonsoft.Json;
 
-namespace GameLauncher {
-    public class Update {
-        public bool info { get; set; }
-        public string download { get; set; }
+namespace GameLauncher.App.Classes.Events
+{
+    public class Update
+    {
+        [JsonProperty("download_url")]
+        public string DownloadUrl { get; set; }
     }
 
-    public class CheckVersion {
-        public string current_version { get; set; }
-        public string github_build { get; set; }
-        public Update update { get; set; }
+    public class CheckVersion
+    {
+        [JsonProperty("client_version")]
+        public string ClientVersion { get; set; }
+
+        [JsonProperty("latest_version")]
+        public string LatestVersion { get; set; }
+
+        [JsonProperty("update_exists")]
+        public bool UpdateExists { get; set; }
+        
+        [JsonProperty("update")]
+        public Update Update { get; set; }
+    }
+
+    public class UpdateCheckResponse
+    {
+        [JsonProperty("code")]
+        public int Code { get; set; }
+
+        [JsonProperty("payload")]
+        public CheckVersion Payload { get; set; }
     }
 }
