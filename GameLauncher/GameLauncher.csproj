@@ -52,7 +52,7 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>65CECF3A6E4BD0A415E243AB70A9795232F971F5</ManifestCertificateThumbprint>
@@ -64,7 +64,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>ZpevdoCanFuckMe.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>
@@ -228,7 +229,6 @@
     <EmbeddedResource Include="Fonts\Montserrat-Bold.ttf" />
     <EmbeddedResource Include="Fonts\Montserrat-Regular.ttf" />
     <EmbeddedResource Include="Language\Default.lng" />
-    <None Include="GameLauncher_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\DataSources\GameLauncher.App.AddServer.datasource" />
@@ -254,7 +254,6 @@
     <Compile Include="App\Classes\WineManager.cs" />
     <EmbeddedResource Include="Discord\libdiscord-rpc.so" />
     <EmbeddedResource Include="SoapBoxModules\global.ini" />
-    <None Include="ZpevdoCanFuckMe.pfx" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -293,7 +292,6 @@
     <None Include="Resources\buttons_close.png" />
     <None Include="Resources\luncher.png" />
     <EmbeddedResource Include="LZMA\LZMA.dll" />
-    <EmbeddedResource Include="SoapBoxModules\lightfx.dll" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Updater\GL_Update_Release.exe" />
