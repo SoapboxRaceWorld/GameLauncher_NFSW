@@ -2688,14 +2688,15 @@ namespace GameLauncher
         {
             try
             {
-                ModManager.Download(ModManager.GetMods(serverKey), _settingFile.Read("InstallationDirectory"), serverKey);
-
+                ModManager.Download(ModManager.GetMods(serverKey), _settingFile.Read("InstallationDirectory"), serverKey, playProgressText, playProgress);
                 return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                MessageBox.Show(e.Message);
                 ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
+                Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                 return false;
             }
         }
