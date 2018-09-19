@@ -171,6 +171,7 @@
     </Compile>
     <Compile Include="App\Classes\Proxy\NancyGzipCompression.cs" />
     <Compile Include="App\Classes\Proxy\ProxyHandler.cs" />
+    <Compile Include="App\Classes\RPC\DiscordRPC.cs" />
     <Compile Include="App\Classes\Self.cs" />
     <Compile Include="App\Classes\ServerProxy.cs" />
     <Compile Include="App\Classes\Singleton.cs" />
