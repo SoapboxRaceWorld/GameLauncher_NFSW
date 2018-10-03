@@ -719,7 +719,17 @@ namespace GameLauncher
                 Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
                 if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/lightfx.dll"))
                 {
-                    File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/lightfx.dll", ExtractResource.AsByte("GameLauncher.SoapBoxModules.lightfx.dll"));
+                    //File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/lightfx.dll", ExtractResource.AsByte("GameLauncher.SoapBoxModules.lightfx.dll"));
+                    //Instead of extracting this file, we gonna download it from web, coz why not.
+                    try
+                    {
+                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/lightfx.dll", new WebClientWithTimeout().DownloadData("https://cdn.rawgit.com/SoapboxRaceWorld/GameLauncher_NFSW/93be2c5c/GameLauncher/SoapBoxModules/lightfx.dll"));
+                    }
+                    catch
+                    {
+                        ConsoleLog("Failed to fetch 'lightfx.dll' module. Freeroam might not work correctly.", "error");
+                    }
+
                     Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/modules");
                     File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/modules/udpcrc.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrc.soapbox.module"));
                     File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/modules/udpcrypt1.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrypt1.soapbox.module"));
@@ -2561,10 +2571,10 @@ namespace GameLauncher
                 {
                     DownloadCoreFiles();
                 }
-            }
-
-            OnDownloadFinished();
-        }
+            } else {
+				OnDownloadFinished();
+			}
+		}
 
         public void DownloadCoreFiles()
         {
@@ -2576,7 +2586,7 @@ namespace GameLauncher
             if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/nfsw.exe"))
             {
                 _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "", _settingFile.Read("InstallationDirectory"), false, false, 1130632198);
+                _downloader.StartDownload("http://launcher.soapboxrace.world/ea_nfsw_section", "", _settingFile.Read("InstallationDirectory"), false, false, 1130632198);
             }
             else
             {
@@ -2594,7 +2604,7 @@ namespace GameLauncher
             if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/TracksHigh/STREAML5RA_98.BUN"))
             {
                 _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "TracksHigh", _settingFile.Read("InstallationDirectory"), false, false, 615494528);
+                _downloader.StartDownload("http://launcher.soapboxrace.world/ea_nfsw_section", "TracksHigh", _settingFile.Read("InstallationDirectory"), false, false, 615494528);
             }
             else
             {
@@ -2623,7 +2633,7 @@ namespace GameLauncher
                 else
                 {
                     WebClient wc = new WebClientWithTimeout();
-                    var response = wc.DownloadString("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client/" + _settingFile.Read("Language").ToLower() + "/index.xml");
+                    var response = wc.DownloadString("http://launcher.soapboxrace.world/ea_nfsw_section/" + _settingFile.Read("Language").ToLower() + "/index.xml");
 
                     response = response.Substring(3, response.Length - 3);
 
@@ -2648,7 +2658,7 @@ namespace GameLauncher
             if (!File.Exists(_settingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big"))
             {
                 _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", speechFile, _settingFile.Read("InstallationDirectory"), false, false, speechSize);
+                _downloader.StartDownload("http://launcher.soapboxrace.world/ea_nfsw_section", speechFile, _settingFile.Read("InstallationDirectory"), false, false, speechSize);
             }
             else
             {
@@ -2666,7 +2676,7 @@ namespace GameLauncher
             if (_settingFile.Read("TracksHigh") == "1" && !File.Exists(_settingFile.Read("InstallationDirectory") + "\\Tracks\\STREAML5RA_98.BUN"))
             {
                 _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "Tracks", _settingFile.Read("InstallationDirectory"), false, false, 278397707);
+                _downloader.StartDownload("http://launcher.soapboxrace.world/ea_nfsw_section", "Tracks", _settingFile.Read("InstallationDirectory"), false, false, 278397707);
             }
             else
             {
@@ -2678,8 +2688,7 @@ namespace GameLauncher
         {
             try
             {
-                ModManager.Download(ModManager.GetMods(serverKey), _settingFile.Read("InstallationDirectory"), serverKey);
-
+                ModManager.Download(ModManager.GetMods(serverKey), _settingFile.Read("InstallationDirectory"), serverKey, playProgressText, playProgress);
                 return true;
             }
             catch (Exception e)
@@ -2796,7 +2805,7 @@ namespace GameLauncher
 
                     wineDownload.DownloadProgressChanged += WineDownloadProgressChanged;
                     wineDownload.DownloadFileCompleted += WineDownloadCompleted;
-                    wineDownload.DownloadFileAsync(new Uri("https://launcher.soapboxrace.world/patch/linux/wine.tar.gz"), "wine.tar.gz");
+                    wineDownload.DownloadFileAsync(new Uri("https://launcher.soapboxrace.world/linux/wine.tar.gz"), "wine.tar.gz");
                 }
             }
 
@@ -2819,6 +2828,7 @@ namespace GameLauncher
         private void OnDownloadFailed(Exception ex)
         {
             string failureMessage;
+            MessageBox.Show(null, "Failed to extract GameFiles. You can try to install them manually by downloading: \nhttps://mega.nz/#!6ho3GI4I!5_1WvT0gQQTrc3t_Z8HX2GeENkoTU7y8Qs_J6TNeco0", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             try
             {

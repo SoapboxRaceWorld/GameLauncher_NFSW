@@ -119,14 +119,17 @@ namespace GameLauncher.App.Classes
             }
         }
 
-        public static bool Download(List<ModInfo> mods, string gameDir, string serverKey)
+        public static bool Download(List<ModInfo> mods, string gameDir, string serverKey, System.Windows.Forms.Label playProgress, ProgressBarEx progress)
         {
             ServerInfo serverInfo;
+            playProgress.Text = ("Downloading mods for " + serverKey).ToUpper();
+            progress.Value = 0;
+
+            int currentModCount = 0;
 
             using (var wc = new WebClient())
             {
                 var data = wc.DownloadString(Self.mainserver + $"/servers/{serverKey}");
-
                 serverInfo = JsonConvert.DeserializeObject<ServerInfo>(data);
             }
 
@@ -137,6 +140,8 @@ namespace GameLauncher.App.Classes
 
             foreach (var mod in mods)
             {
+                int totalModsCount = mod.Files.Count;
+
                 if (ModCache.Contains($"{serverKey}::{mod.Id}"))
                 {
                     foreach (var file in mod.Files)
@@ -162,6 +167,13 @@ namespace GameLauncher.App.Classes
                     {
                         try
                         {
+                            currentModCount++;
+
+                            playProgress.Text = ("Downloading " + serverKey + " files: " + file.Path).ToUpper();
+                            progress.Value = Convert.ToInt32(Decimal.Divide(currentModCount, totalModsCount) * 100);
+
+                            System.Windows.Forms.Application.DoEvents();
+
                             var fileData = wc.DownloadData(url + file.Path);
 
                             var computedHash = ComputeSha256Hash(fileData);

@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Flurl.Http.Content;
+using GameLauncher.App.Classes.RPC;
+using GameLauncherReborn;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Extensions;
@@ -21,6 +23,7 @@ namespace GameLauncher.App.Classes.Proxy
 
         private static Response ProxyRequest(NancyContext context)
         {
+            string POSTContent = String.Empty;
             var serverUrl = ServerProxy.Instance.GetServerUrl();
 
             if (string.IsNullOrEmpty(serverUrl))
@@ -64,9 +67,10 @@ namespace GameLauncher.App.Classes.Proxy
                     }
                 case "POST":
                     {
+                        POSTContent = context.Request.Body.AsString();
                         response = url.PostAsync(
                             new CapturedStringContent(
-                                context.Request.Body.AsString()
+                                POSTContent
                             )
                         ).Result;
                         break;
@@ -90,6 +94,8 @@ namespace GameLauncher.App.Classes.Proxy
                         throw new Exception($"unsupported method: {context.Request.Method}");
                     }
             }
+
+            DiscordRPC.handleGameState(fixedPath, response.Content.ReadAsStringAsync().Result, POSTContent);
 
             return new TextResponse(
                 response.Content.ReadAsStringAsync().Result,
