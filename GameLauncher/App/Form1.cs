@@ -2571,10 +2571,10 @@ namespace GameLauncher
                 {
                     DownloadCoreFiles();
                 }
-            }
-
-            OnDownloadFinished();
-        }
+            } else {
+				OnDownloadFinished();
+			}
+		}
 
         public void DownloadCoreFiles()
         {
@@ -2586,7 +2586,7 @@ namespace GameLauncher
             if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/nfsw.exe"))
             {
                 _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "", _settingFile.Read("InstallationDirectory"), false, false, 1130632198);
+                _downloader.StartDownload("http://launcher.soapboxrace.world/ea_nfsw_section", "", _settingFile.Read("InstallationDirectory"), false, false, 1130632198);
             }
             else
             {
@@ -2604,7 +2604,7 @@ namespace GameLauncher
             if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/TracksHigh/STREAML5RA_98.BUN"))
             {
                 _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "TracksHigh", _settingFile.Read("InstallationDirectory"), false, false, 615494528);
+                _downloader.StartDownload("http://launcher.soapboxrace.world/ea_nfsw_section", "TracksHigh", _settingFile.Read("InstallationDirectory"), false, false, 615494528);
             }
             else
             {
@@ -2633,7 +2633,7 @@ namespace GameLauncher
                 else
                 {
                     WebClient wc = new WebClientWithTimeout();
-                    var response = wc.DownloadString("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client/" + _settingFile.Read("Language").ToLower() + "/index.xml");
+                    var response = wc.DownloadString("http://launcher.soapboxrace.world/ea_nfsw_section/" + _settingFile.Read("Language").ToLower() + "/index.xml");
 
                     response = response.Substring(3, response.Length - 3);
 
@@ -2658,7 +2658,7 @@ namespace GameLauncher
             if (!File.Exists(_settingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big"))
             {
                 _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", speechFile, _settingFile.Read("InstallationDirectory"), false, false, speechSize);
+                _downloader.StartDownload("http://launcher.soapboxrace.world/ea_nfsw_section", speechFile, _settingFile.Read("InstallationDirectory"), false, false, speechSize);
             }
             else
             {
@@ -2676,7 +2676,7 @@ namespace GameLauncher
             if (_settingFile.Read("TracksHigh") == "1" && !File.Exists(_settingFile.Read("InstallationDirectory") + "\\Tracks\\STREAML5RA_98.BUN"))
             {
                 _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload("http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client", "Tracks", _settingFile.Read("InstallationDirectory"), false, false, 278397707);
+                _downloader.StartDownload("http://launcher.soapboxrace.world/ea_nfsw_section", "Tracks", _settingFile.Read("InstallationDirectory"), false, false, 278397707);
             }
             else
             {
@@ -2694,9 +2694,7 @@ namespace GameLauncher
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                MessageBox.Show(e.Message);
                 ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
-                Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                 return false;
             }
         }
@@ -2807,7 +2805,7 @@ namespace GameLauncher
 
                     wineDownload.DownloadProgressChanged += WineDownloadProgressChanged;
                     wineDownload.DownloadFileCompleted += WineDownloadCompleted;
-                    wineDownload.DownloadFileAsync(new Uri("https://launcher.soapboxrace.world/patch/linux/wine.tar.gz"), "wine.tar.gz");
+                    wineDownload.DownloadFileAsync(new Uri("https://launcher.soapboxrace.world/linux/wine.tar.gz"), "wine.tar.gz");
                 }
             }
 
