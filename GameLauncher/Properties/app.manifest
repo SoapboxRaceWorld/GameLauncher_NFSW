@@ -16,7 +16,7 @@
             Usuń ten element, jeśli aplikacja wymaga wirtualizacji w celu zachowania
             zgodności z poprzednimi wersjami.
         -->
-        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel level="requireAdministrator" uiAccess="false" />
       </requestedPrivileges>
       <applicationRequestMinimum>
         <defaultAssemblyRequest permissionSetReference="Custom" />

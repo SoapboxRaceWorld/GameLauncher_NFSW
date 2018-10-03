@@ -295,8 +295,6 @@
     <EmbeddedResource Include="LZMA\LZMA.dll" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Updater\GL_Update_Release.exe" />
-    <EmbeddedResource Include="Updater\GL_Update_Debug.exe" />
     <EmbeddedResource Include="SoapBoxModules\ModManager.dll" />
     <EmbeddedResource Include="SoapBoxModules\dinput8.dll" />
     <None Include="Resources\tick.png" />

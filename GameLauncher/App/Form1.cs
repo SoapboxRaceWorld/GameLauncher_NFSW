@@ -723,7 +723,7 @@ namespace GameLauncher
                     //Instead of extracting this file, we gonna download it from web, coz why not.
                     try
                     {
-                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/lightfx.dll", new WebClientWithTimeout().DownloadData("https://cdn.rawgit.com/SoapboxRaceWorld/GameLauncher_NFSW/93be2c5c/GameLauncher/SoapBoxModules/lightfx.dll"));
+                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/lightfx.dll", new WebClientWithTimeout().DownloadData("http://launcher.soapboxrace.world/lightfx.dll"));
                     }
                     catch
                     {
@@ -1907,7 +1907,9 @@ namespace GameLauncher
 
             if (registerSuccess)
             {
-                _serverIp = serverPick.SelectedValue.ToString();
+				if (!(serverPick.SelectedItem is ServerInfo server)) return;
+
+				_serverIp = server.IpAddress;
                 var serverName = serverPick.GetItemText(serverPick.SelectedItem);
                 var encryptedpassword = "";
                 var serverLoginResponse = "";
@@ -1934,6 +1936,8 @@ namespace GameLauncher
                     {
                         buildUrl = _serverIp + "/User/createUser?email=" + registerEmail.Text + "&password=" + encryptedpassword.ToLower();
                     }
+
+					Console.WriteLine(buildUrl);
 
                     serverLoginResponse = wc.DownloadString(buildUrl);
                 }

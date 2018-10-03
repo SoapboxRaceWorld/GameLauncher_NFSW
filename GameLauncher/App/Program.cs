@@ -63,27 +63,20 @@ namespace GameLauncher
                 File.WriteAllBytes("libdiscord-rpc.so", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.so"));
             }
 
-            if (File.Exists("GameLauncherUpdater.exe"))
-            {
-                File.Delete("GameLauncherUpdater.exe");
-            }
+			if (File.Exists("GL_Update.exe")) {
+				File.Delete("GL_Update.exe");
+			}
 
-            try
-            {
-                File.Delete("GL_Update.exe");
-
-#if DEBUG
-                File.WriteAllBytes("GL_Update.exe", ExtractResource.AsByte("GameLauncher.Updater.GL_Update_Debug.exe"));
-#else
-                File.WriteAllBytes("GL_Update.exe", ExtractResource.AsByte("GameLauncher.Updater.GL_Update_Release.exe"));
-#endif
-                //File.WriteAllBytes("GL_Update.exe", ExtractResource.AsByte("GameLauncher.Updater.GL_Update.exe"));
-            }
-            catch
-            {
-                // ignored
-            }
-
+			if(!File.Exists("GameLauncherUpdater.exe")) {
+				try
+				{
+					File.WriteAllBytes("GameLauncherUpdater.exe", new WebClientWithTimeout().DownloadData("http://launcher.soapboxrace.world/GameLauncherUpdater.exe"));
+				}
+				catch
+				{
+					// ignored
+				}
+			}
             if (!File.Exists("servers.json"))
             {
                 try
