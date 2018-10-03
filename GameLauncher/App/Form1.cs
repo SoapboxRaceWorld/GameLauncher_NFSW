@@ -2830,6 +2830,7 @@ namespace GameLauncher
         private void OnDownloadFailed(Exception ex)
         {
             string failureMessage;
+            MessageBox.Show(null, "Failed to extract GameFiles. You can try to install them manually by downloading: \nhttps://mega.nz/#!6ho3GI4I!5_1WvT0gQQTrc3t_Z8HX2GeENkoTU7y8Qs_J6TNeco0", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             try
             {
