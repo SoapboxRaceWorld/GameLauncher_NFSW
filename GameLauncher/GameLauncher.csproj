@@ -146,6 +146,7 @@
     <Compile Include="App\Classes\Downloader\DownloadManager.cs" />
     <Compile Include="App\Classes\Downloader\HashManager.cs" />
     <Compile Include="App\Classes\Downloader\ProgressUpdated.cs" />
+    <Compile Include="App\Classes\Downloader\ShowExtract.cs" />
     <Compile Include="App\Classes\Downloader\ShowMessage.cs" />
     <Compile Include="App\Classes\Downloader\UncompressionException.cs" />
     <Compile Include="App\Classes\Downloader\VerifyCommand.cs" />
