@@ -146,7 +146,8 @@ namespace GameLauncher
                 ProgressUpdated = new ProgressUpdated(OnDownloadProgress),
                 DownloadFinished = new DownloadFinished(DownloadTracksFiles),
                 DownloadFailed = new DownloadFailed(OnDownloadFailed),
-                ShowMessage = new ShowMessage(OnShowMessage)
+                ShowMessage = new ShowMessage(OnShowMessage),
+				ShowExtract = new ShowExtract(OnShowExtract)
             };
 
             if (Environment.OSVersion.Version.Major > 5)
@@ -2809,7 +2810,7 @@ namespace GameLauncher
 
                     wineDownload.DownloadProgressChanged += WineDownloadProgressChanged;
                     wineDownload.DownloadFileCompleted += WineDownloadCompleted;
-                    wineDownload.DownloadFileAsync(new Uri("https://launcher.soapboxrace.world/linux/wine.tar.gz"), "wine.tar.gz");
+                    wineDownload.DownloadFileAsync(new Uri("http://launcher.soapboxrace.world/linux/wine.tar.gz"), "wine.tar.gz");
                 }
             }
 
@@ -2832,7 +2833,7 @@ namespace GameLauncher
         private void OnDownloadFailed(Exception ex)
         {
             string failureMessage;
-            MessageBox.Show(null, "Failed to extract GameFiles. You can try to install them manually by downloading: \nhttps://mega.nz/#!6ho3GI4I!5_1WvT0gQQTrc3t_Z8HX2GeENkoTU7y8Qs_J6TNeco0", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(null, "Failed to extract GameFiles. You can try to install them manually by downloading: \n\nhttps://mega.nz/#!6ho3GI4I!5_1WvT0gQQTrc3t_Z8HX2GeENkoTU7y8Qs_J6TNeco0", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             try
             {
@@ -2851,6 +2852,10 @@ namespace GameLauncher
             TaskbarProgress.SetValue(Handle, 100, 100);
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Error);
         }
+
+		private void OnShowExtract(string filename, int currentCount, int allFilesCount) {
+			playProgressText.Text = "EXTRACTING: " + filename.Replace(_settingFile.Read("InstallationDirectory") + "/", "").ToUpper() + "(" + currentCount + "/" + allFilesCount + ")";
+		}
 
         private void OnShowMessage(string message, string header)
         {

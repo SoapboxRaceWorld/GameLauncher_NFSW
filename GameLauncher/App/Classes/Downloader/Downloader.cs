@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Cache;
 using System.Text;
@@ -37,9 +38,11 @@ namespace GameLauncher
 
         private DownloadFailed mDownloadFailed;
 
-        private ShowMessage mShowMessage;
+		private ShowMessage mShowMessage;
 
-        private static string mCurrentLocalVersion = string.Empty;
+		private ShowExtract mShowExtract;
+
+		private static string mCurrentLocalVersion = string.Empty;
 
         private static string mCurrentServerVersion = string.Empty;
 
@@ -51,9 +54,11 @@ namespace GameLauncher
 
         private static XmlDocument mIndexCached = null;
 
-        private static bool mStopFlag = false;
+		private static bool mStopFlag = false;
 
-        public bool Downloading {
+		public static Label label2;
+
+		public bool Downloading {
             get {
                 return this.mDownloading;
             }
@@ -86,16 +91,25 @@ namespace GameLauncher
             }
         }
 
-        public ShowMessage ShowMessage {
-            get {
-                return this.mShowMessage;
-            }
-            set {
-                this.mShowMessage = value;
-            }
-        }
+		public ShowMessage ShowMessage {
+			get {
+				return this.mShowMessage;
+			}
+			set {
+				this.mShowMessage = value;
+			}
+		}
 
-        public static string ServerVersion {
+		public ShowExtract ShowExtract {
+			get {
+				return this.mShowExtract;
+			}
+			set {
+				this.mShowExtract = value;
+			}
+		}
+
+		public static string ServerVersion {
             get {
                 return Downloader.mCurrentServerVersion;
             }
@@ -110,7 +124,7 @@ namespace GameLauncher
             this.mHashThreads = hashThreads;
             this.mFE = fe;
             this.mDownloadManager = new DownloadManager(downloadThreads, downloadChunks);
-        }
+		}
 
         public void StartDownload(string indexUrl, string package, string patchPath, bool calculateHashes, bool useIndexCache, ulong downloadSize)
         {
@@ -272,6 +286,7 @@ namespace GameLauncher
                     int i = 0;
                     bool flag2 = false;
                     int num11;
+					int fileschecked = 0;
                     foreach (XmlNode xmlNode in xmlNodeList)
                     {
                         XmlNodeList xmlNodeList2 = xmlNode.SelectNodes("compressed");
@@ -365,7 +380,9 @@ namespace GameLauncher
                     int num13 = 0;
                     foreach (XmlNode xmlNode2 in xmlNodeList)
                     {
-                        if (Downloader.mStopFlag)
+						fileschecked++;
+
+						if (Downloader.mStopFlag)
                         {
                             break;
                         }
@@ -574,7 +591,10 @@ namespace GameLauncher
                                 IntPtr value = new IntPtr(num22);
                                 int num24 = LZMA.LzmaUncompressBuf2File(text6, ref value, array3, ref intPtr, array5, outPropsSize);
 
-                                if (num24 != 0)
+								object[] xxxxxx = new object[] { text6, fileschecked, xmlNodeList.Count};
+								this.mFE.BeginInvoke(this.mShowExtract, xxxxxx);
+
+								if (num24 != 0)
                                 {
                                     MessageBox.Show("Decompression returned " + num24);
                                     throw new UncompressionException(num24, "Decompression returned " + num24);
