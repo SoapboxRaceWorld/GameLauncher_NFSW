@@ -70,9 +70,9 @@ namespace GameLauncher.App.Classes.Events
 
                                 update.Click += (sender3, e3) =>
                                 {
-                                    if (File.Exists("GameLauncherUpdate.exe"))
+                                    if (File.Exists("GameLauncherUpdater.exe"))
                                     {
-                                        Process.Start(@"GameLauncherUpdate.exe", Process.GetCurrentProcess().Id.ToString());
+                                        Process.Start(@"GameLauncherUpdater.exe", Process.GetCurrentProcess().Id.ToString());
                                     }
                                     else
                                     {
