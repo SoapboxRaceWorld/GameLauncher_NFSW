@@ -633,14 +633,15 @@ namespace GameLauncher
 
                     if (_slresponse.Contains(_settingFile.Read("Server")))
                     {
-                        var index =
-                            finalItems.FindIndex(i => string.Equals(i.Id, _settingFile.Read("Server")));
 
-                        if (index >= 0)
+						var index =
+                            finalItems.FindIndex(i => string.Equals(i.IpAddress, _settingFile.Read("Server")));
+
+						if (index >= 0)
                         {
                             serverPick.SelectedIndex = index;
                         }
-                    }
+					}
                     else
                     {
                         serverPick.SelectedIndex = 1;
@@ -863,7 +864,8 @@ namespace GameLauncher
 
             if (_serverlistloaded)
             {
-                try { _settingFile.Write("Server", serverPick.SelectedValue.ToString()); } catch { }
+				if (!(serverPick.SelectedItem is ServerInfo server)) return;
+				try { _settingFile.Write("Server", server.IpAddress); } catch { }
             }
 
             if (_windowMoved)
