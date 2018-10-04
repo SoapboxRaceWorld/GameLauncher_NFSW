@@ -84,8 +84,6 @@ namespace GameLauncher
 			  .Select(s => s[random.Next(s.Length)]).ToArray());
 		}
 
-		public string nfsw_newfilename;
-
         protected override void OnPaint(PaintEventArgs e)
         {
             var p = new Pen(Color.FromArgb(10, 17, 25));
@@ -393,9 +391,8 @@ namespace GameLauncher
                 Self.centerScreen(this);
                 _windowMoved = true;
             }
-			nfsw_newfilename = "nfsw_" + RandomString(10) + ".exe";
 
-			launcherVersion.Text = "v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 6) + " | " + nfsw_newfilename;
+			launcherVersion.Text = "v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 6);
             translatedBy.Text = Language.getLangString("MAIN_TRANSLATED", _uiLanguage);
 
             if (!_settingFile.KeyExists("SkipUpdate"))
@@ -876,12 +873,6 @@ namespace GameLauncher
 
             //Fix InstallationDirectory
             _settingFile.Write("InstallationDirectory", Path.GetFullPath(_settingFile.Read("InstallationDirectory")));
-
-			try {
-				var oldfilename = _settingFile.Read("InstallationDirectory") + "\\nfsw.exe";
-				var newfilename = _settingFile.Read("InstallationDirectory") + "\\" + nfsw_newfilename;
-				File.Delete(newfilename);
-			} catch { }
 
 			//Kill NFSW.exe aswell
 			//Process[] allOfThem = Process.GetProcessesByName("nfsw");
@@ -2317,8 +2308,6 @@ namespace GameLauncher
         private void LaunchGameLegacy(string userId, string loginToken, string serverIp, Form x)
         {
 			var oldfilename = _settingFile.Read("InstallationDirectory") + "\\nfsw.exe";
-			var newfilename = _settingFile.Read("InstallationDirectory") + "\\" + nfsw_newfilename;
-			File.Copy(oldfilename, newfilename, true);
 
 			var cParams = "SBRW " + serverIp + " " + loginToken + " " + userId + " -legacyLaunch";
 
@@ -2337,15 +2326,13 @@ namespace GameLauncher
         private void LaunchGame(string userId, string loginToken, string serverIp, Form x)
         {
 			var oldfilename = _settingFile.Read("InstallationDirectory") + "\\nfsw.exe";
-			var newfilename = _settingFile.Read("InstallationDirectory") + "\\" + nfsw_newfilename;
-			File.Copy(oldfilename, newfilename, true);
 
 			var args = "SBRW " + serverIp + " " + loginToken + " " + userId + " -advancedLaunch";
             var psi = new ProcessStartInfo();
             psi.UseShellExecute = false;
             if (!DetectLinux.NativeLinuxDetected())
             {
-                psi.FileName = newfilename;
+                psi.FileName = oldfilename;
                 psi.Arguments = args;
             }
             else
@@ -2368,7 +2355,7 @@ namespace GameLauncher
                 {
                     psi.FileName = "wine";
                 }
-                psi.Arguments = "explorer /desktop=\"NFSW[" + userId + "]" + serverIp + ",1600x900\" " + newfilename + " " + args;
+                psi.Arguments = "explorer /desktop=\"NFSW[" + userId + "]" + serverIp + ",1600x900\" " + oldfilename + " " + args;
                 Console.WriteLine(psi.Arguments);
             }
 
