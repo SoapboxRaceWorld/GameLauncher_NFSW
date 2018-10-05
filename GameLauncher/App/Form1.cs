@@ -76,6 +76,7 @@ namespace GameLauncher
         private readonly IniFile _settingFile = new IniFile("Settings.ini");
         private readonly string _userSettings = WineManager.GetUserSettingsPath();
         private string _presenceLargeImageKey;
+        private string _NFSW_Installation_Source;
 
 		private static Random random = new Random();
 		public static string RandomString(int length) {
@@ -391,8 +392,9 @@ namespace GameLauncher
                 Self.centerScreen(this);
                 _windowMoved = true;
             }
+            _NFSW_Installation_Source = _settingFile.KeyExists("CDN") ? _settingFile.Read("CDN") : "http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client";
 
-			launcherVersion.Text = "v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 6);
+            launcherVersion.Text = "v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 6) + "\n" + "CDN: " + _NFSW_Installation_Source;
             translatedBy.Text = Language.getLangString("MAIN_TRANSLATED", _uiLanguage);
 
             if (!_settingFile.KeyExists("SkipUpdate"))
@@ -406,6 +408,8 @@ namespace GameLauncher
                     _settingFile.Write("SkipUpdate", "1");
                 }
             }
+
+
 
             ContextMenu = new ContextMenu();
 
@@ -2602,7 +2606,7 @@ namespace GameLauncher
             if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/nfsw.exe"))
             {
                 _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload("http://launcher.soapboxrace.world/ea_nfsw_section", "", _settingFile.Read("InstallationDirectory"), false, false, 1130632198);
+                _downloader.StartDownload(_NFSW_Installation_Source, "", _settingFile.Read("InstallationDirectory"), false, false, 1130632198);
             }
             else
             {
@@ -2620,7 +2624,7 @@ namespace GameLauncher
             if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/TracksHigh/STREAML5RA_98.BUN"))
             {
                 _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload("http://launcher.soapboxrace.world/ea_nfsw_section", "TracksHigh", _settingFile.Read("InstallationDirectory"), false, false, 615494528);
+                _downloader.StartDownload(_NFSW_Installation_Source, "TracksHigh", _settingFile.Read("InstallationDirectory"), false, false, 615494528);
             }
             else
             {
@@ -2649,7 +2653,7 @@ namespace GameLauncher
                 else
                 {
                     WebClient wc = new WebClientWithTimeout();
-                    var response = wc.DownloadString("http://launcher.soapboxrace.world/ea_nfsw_section/" + _settingFile.Read("Language").ToLower() + "/index.xml");
+                    var response = wc.DownloadString(_NFSW_Installation_Source + "/" + _settingFile.Read("Language").ToLower() + "/index.xml");
 
                     response = response.Substring(3, response.Length - 3);
 
@@ -2674,7 +2678,7 @@ namespace GameLauncher
             if (!File.Exists(_settingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big"))
             {
                 _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload("http://launcher.soapboxrace.world/ea_nfsw_section", speechFile, _settingFile.Read("InstallationDirectory"), false, false, speechSize);
+                _downloader.StartDownload(_NFSW_Installation_Source, speechFile, _settingFile.Read("InstallationDirectory"), false, false, speechSize);
             }
             else
             {
@@ -2692,7 +2696,7 @@ namespace GameLauncher
             if (_settingFile.Read("TracksHigh") == "1" && !File.Exists(_settingFile.Read("InstallationDirectory") + "\\Tracks\\STREAML5RA_98.BUN"))
             {
                 _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload("http://launcher.soapboxrace.world/ea_nfsw_section", "Tracks", _settingFile.Read("InstallationDirectory"), false, false, 278397707);
+                _downloader.StartDownload(_NFSW_Installation_Source, "Tracks", _settingFile.Read("InstallationDirectory"), false, false, 278397707);
             }
             else
             {
