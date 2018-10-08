@@ -75,7 +75,7 @@ namespace GameLauncher
 
         private readonly IniFile _settingFile = new IniFile("Settings.ini");
         private readonly string _userSettings = WineManager.GetUserSettingsPath();
-        private string _presenceLargeImageKey;
+        private string _presenceImageKey;
         private string _NFSW_Installation_Source;
 
 		private static Random random = new Random();
@@ -1634,7 +1634,8 @@ namespace GameLauncher
 
         private void forgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(serverPick.SelectedValue.ToString().Replace("Engine.svc", "") + "forgotPasswd.jsp");
+            var serverInfo = (ServerInfo)serverPick.SelectedItem;
+            Process.Start(serverInfo.IpAddress.ToString().Replace("Engine.svc", "") + "forgotPasswd.jsp");
         }
 
         private void moreLanguages_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -2288,23 +2289,19 @@ namespace GameLauncher
             var selectedServer = (ServerInfo) serverPick.SelectedItem;
             //_presenceLargeImageKey = Self.getDiscordRPCImageIDFromServerName(serverName, _slresponse);
 
-            _presenceLargeImageKey = selectedServer.DiscordPresenceKey;
+            _presenceImageKey = selectedServer.DiscordPresenceKey;
 
             var rnd = new Random();
             var randomAvatar = rnd.Next(0, 26);
 
             var handlers = new DiscordRpc.EventHandlers();
             DiscordRpc.Initialize(_discordrpccode, ref handlers, true, "");
-            _presence.state = "In-Game: " + selectedServer.Name;
-            _presence.largeImageText = selectedServer.Name;
-            _presence.largeImageKey = _presenceLargeImageKey;
-            _presence.smallImageText = "";
-            _presence.smallImageKey = "avatar_" + randomAvatar;
+            _presence.state = "Loading game...";
+            _presence.largeImageText = "Need for Speed: World";
+            _presence.largeImageKey = "nfsw";
+            _presence.smallImageText = selectedServer.Name;
+            _presence.smallImageKey = _presenceImageKey;
             _presence.startTimestamp = Self.getTimestamp(true);
-            _presence.partyId = "SBRW";
-            _presence.matchSecret = "SBRW2";
-            _presence.joinSecret = "SBRW3";
-            _presence.spectateSecret = "SBRW4";
             _presence.instance = true;
             DiscordRpc.UpdatePresence(_presence);
         }
@@ -2450,6 +2447,7 @@ namespace GameLauncher
                 if (WebClientWithTimeout.createHash(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC")
                 {
                     ServerProxy.Instance.SetServerUrl(_serverIp);
+                    ServerProxy.Instance.SetServerName(serverInfo.Name);
 
                     StartGame(_userId, _loginToken, _serverIp, this);
 
@@ -2869,7 +2867,7 @@ namespace GameLauncher
         }
 
 		private void OnShowExtract(string filename, int currentCount, int allFilesCount) {
-			playProgressText.Text = "EXTRACTING: " + filename.Replace(_settingFile.Read("InstallationDirectory") + "/", "").ToUpper() + "(" + currentCount + "/" + allFilesCount + ")";
+			playProgressText.Text = "EXTRACTING " + filename.Replace(_settingFile.Read("InstallationDirectory") + "/", "").ToUpper() + " (" + currentCount + "/" + allFilesCount + ")";
 		}
 
         private void OnShowMessage(string message, string header)

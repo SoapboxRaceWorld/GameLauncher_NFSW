@@ -3,33 +3,25 @@ using Nancy.Hosting.Self;
 
 namespace GameLauncher.App.Classes
 {
-    /// <summary>
-    /// Class to handle proxying game server requests.
-    /// This should allow for the usage of CloudFlare, SSL, HTTP/2, etc.
-    /// </summary>
     public class ServerProxy : Singleton<ServerProxy>
     {
         private string _serverUrl;
+        private string _serverName;
         private NancyHost _host;
 
-        /// <summary>
-        /// Get the current server URL.
-        /// </summary>
-        /// <returns></returns>
         public string GetServerUrl() => _serverUrl;
 
-        /// <summary>
-        /// Set the server URL that the proxy should use.
-        /// </summary>
-        /// <param name="serverUrl"></param>
         public void SetServerUrl(string serverUrl)
         {
             _serverUrl = serverUrl;
         }
 
-        /// <summary>
-        /// Start the proxy.
-        /// </summary>
+        public string GetServerName() => _serverName;
+        public void SetServerName(string serverName)
+        {
+            _serverName = serverName;
+        }
+
         public void Start()
         {
             if (_host != null)
