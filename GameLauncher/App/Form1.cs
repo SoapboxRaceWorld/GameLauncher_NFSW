@@ -2489,8 +2489,6 @@ namespace GameLauncher
 
             try
             {
-                MessageBox.Show(WebClientWithTimeout.createHash(_settingFile.Read("InstallationDirectory") + "/nfsw.exe"));
-
                 if (WebClientWithTimeout.createHash(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC")
                 {
                     ServerProxy.Instance.SetServerUrl(_serverIp);
