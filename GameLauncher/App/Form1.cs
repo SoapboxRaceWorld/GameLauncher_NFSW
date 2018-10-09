@@ -22,6 +22,7 @@ using GameLauncher.App;
 using GameLauncher.HashPassword;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace GameLauncher
 {
@@ -77,8 +78,11 @@ namespace GameLauncher
         private readonly string _userSettings = WineManager.GetUserSettingsPath();
         private string _presenceImageKey;
         private string _NFSW_Installation_Source;
+        private string _blacklistedXML;
+        private string _realServername;
 
-		private static Random random = new Random();
+
+        private static Random random = new Random();
 		public static string RandomString(int length) {
 			const string chars = "qwertyuiopasdfghjklzxcvbnm1234567890_";
 			return new string(Enumerable.Repeat(chars, length)
@@ -851,6 +855,30 @@ namespace GameLauncher
             _presence.instance = true;
             DiscordRpc.UpdatePresence(_presence);
 
+            try {
+                //TODO HERE
+                //Download new BlackListedServers.dat via LaunchPad/JetPack and use that instead of static file.
+
+                var fileStream = new FileStream("BlackListedServers.dat", FileMode.Open);
+
+                var dEsCryptoServiceProvider = new DESCryptoServiceProvider() {
+                    Key = Encoding.ASCII.GetBytes("2137JPJP"),
+                    IV = Encoding.ASCII.GetBytes("NRSUCKXD")
+                };
+
+                var cryptoStream = new CryptoStream(fileStream, dEsCryptoServiceProvider.CreateDecryptor(), CryptoStreamMode.Read);
+                var streamReader = new StreamReader(cryptoStream);
+                _blacklistedXML = streamReader.ReadToEnd();
+
+                if (string.IsNullOrWhiteSpace(_slresponse)) {
+                    MessageBox.Show(null, "Unable to load important files, please extract all files from ZIP.", "GameLauncher", MessageBoxButtons.OK);
+                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                }
+            } catch {
+                MessageBox.Show(null, "Manipulation detected. Please re-download and extract launcher files.", "GameLauncher", MessageBoxButtons.OK);
+                Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+            }
+
             BeginInvoke((MethodInvoker)delegate
             {
                 LaunchNfsw();
@@ -1340,6 +1368,8 @@ namespace GameLauncher
                             var json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
                             try
                             {
+                                _realServername = json.serverName;
+                                imageServerName.Text = json.serverName;
                                 if (!string.IsNullOrEmpty(json.bannerUrl))
                                 {
                                     Uri uriResult;
@@ -1925,7 +1955,7 @@ namespace GameLauncher
 				if (!(serverPick.SelectedItem is ServerInfo server)) return;
 
 				_serverIp = server.IpAddress;
-                var serverName = serverPick.GetItemText(serverPick.SelectedItem);
+                var serverName = _realServername;
                 var encryptedpassword = "";
                 var serverLoginResponse = "";
                 string buildUrl;
@@ -2299,7 +2329,7 @@ namespace GameLauncher
             _presence.state = "Loading game...";
             _presence.largeImageText = "Need for Speed: World";
             _presence.largeImageKey = "nfsw";
-            _presence.smallImageText = selectedServer.Name;
+            _presence.smallImageText = _realServername;
             _presence.smallImageKey = _presenceImageKey;
             _presence.startTimestamp = Self.getTimestamp(true);
             _presence.instance = true;
@@ -2419,6 +2449,21 @@ namespace GameLauncher
 
         private void playButton_Click(object sender, EventArgs e)
         {
+            var LoadedBlackListXML = new XmlDocument();
+            LoadedBlackListXML.LoadXml(_blacklistedXML);
+
+            XmlNode BlackListNode = LoadedBlackListXML.SelectSingleNode("BlackList");
+            XmlNodeList BlackList = BlackListNode.SelectNodes("Entry");
+            foreach (XmlNode node in BlackList) {
+                var serverName = node.SelectSingleNode("Match");
+                var banReason = node.SelectSingleNode("Reason");
+
+                if(Regex.Match(_realServername, serverName.InnerText).Success) {
+                    MessageBox.Show(null, "This server has been banned by community votes. The final reason as of SBRW Team is:\n\n" + banReason.InnerText + "\n\nPlease select another server to play on.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+            }
+
             if (_loggedIn == false)
             {
                 loginButton_Click(sender, e);
@@ -2444,10 +2489,12 @@ namespace GameLauncher
 
             try
             {
+                MessageBox.Show(WebClientWithTimeout.createHash(_settingFile.Read("InstallationDirectory") + "/nfsw.exe"));
+
                 if (WebClientWithTimeout.createHash(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC")
                 {
                     ServerProxy.Instance.SetServerUrl(_serverIp);
-                    ServerProxy.Instance.SetServerName(serverInfo.Name);
+                    ServerProxy.Instance.SetServerName(_realServername);
 
                     StartGame(_userId, _loginToken, _serverIp, this);
 

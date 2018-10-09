@@ -116,7 +116,8 @@ namespace GameLauncher
                             "Microsoft.WindowsAPICodePack.dll",
                             "Microsoft.WindowsAPICodePack.Shell.dll",
                             "Flurl.dll",
-                            "Flurl.Http.dll"
+                            "Flurl.Http.dll",
+                            "BlackListedServers.dat"
                         };
                         var missingfiles = new List<string>();
 
