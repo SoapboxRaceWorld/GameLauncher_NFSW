@@ -2458,7 +2458,7 @@ namespace GameLauncher
                 var serverName = node.SelectSingleNode("Match");
                 var banReason = node.SelectSingleNode("Reason");
 
-                if(Regex.Match(_realServername, serverName.InnerText).Success) {
+                if(Regex.Match(_realServername, serverName.InnerText, RegexOptions.IgnoreCase).Success) {
                     MessageBox.Show(null, "This server has been banned by community votes. The final reason as of SBRW Team is:\n\n" + banReason.InnerText + "\n\nPlease select another server to play on.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
