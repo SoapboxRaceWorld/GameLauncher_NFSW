@@ -2331,7 +2331,6 @@ namespace GameLauncher
             _presence.largeImageKey = "nfsw";
             _presence.smallImageText = _realServername;
             _presence.smallImageKey = _presenceImageKey;
-            _presence.startTimestamp = Self.getTimestamp(true);
             _presence.instance = true;
             DiscordRpc.UpdatePresence(_presence);
         }

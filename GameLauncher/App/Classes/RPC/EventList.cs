@@ -7,15 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace GameLauncher.App.Classes.RPC {
-    public class RootObject {
-        public string id { get; set; }
-        public string trackname { get; set; }
-        public string type { get; set; }
-    }
-
     class EventList {
         public static string getEventName(int id) {
-            dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.events.json"));
+            dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.cars.json"));
 
             foreach (var item in dynJson) {
                 if (item.id == id) {
@@ -27,7 +21,7 @@ namespace GameLauncher.App.Classes.RPC {
         }
 
         public static string getEventType(int id) {
-            dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.events.json"));
+            dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.cars.json"));
 
             foreach (var item in dynJson) {
                 if (item.id == id) {
