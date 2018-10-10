@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace GameLauncher.App.Classes.RPC {
     class EventList {
         public static string getEventName(int id) {
-            dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.cars.json"));
+            dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.events.json"));
 
             foreach (var item in dynJson) {
                 if (item.id == id) {
@@ -17,11 +17,11 @@ namespace GameLauncher.App.Classes.RPC {
                 }
             }
 
-            return String.Empty;
+            return "EVENT:"+id;
         }
 
         public static string getEventType(int id) {
-            dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.cars.json"));
+            dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.events.json"));
 
             foreach (var item in dynJson) {
                 if (item.id == id) {
@@ -29,7 +29,7 @@ namespace GameLauncher.App.Classes.RPC {
                 }
             }
 
-            return String.Empty;
+            return "gamemode_freeroam";
         }
     }
 }

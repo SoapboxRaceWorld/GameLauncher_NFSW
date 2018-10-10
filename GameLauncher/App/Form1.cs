@@ -893,8 +893,7 @@ namespace GameLauncher
 
             if (_serverlistloaded)
             {
-				if (!(serverPick.SelectedItem is ServerInfo server)) return;
-				try { _settingFile.Write("Server", server.IpAddress); } catch { }
+				try { _settingFile.Write("Server", ((ServerInfo)serverPick.SelectedItem).IpAddress); } catch { }
             }
 
             if (_windowMoved)
@@ -2321,12 +2320,10 @@ namespace GameLauncher
 
             _presenceImageKey = selectedServer.DiscordPresenceKey;
 
-            var rnd = new Random();
-            var randomAvatar = rnd.Next(0, 26);
-
             var handlers = new DiscordRpc.EventHandlers();
             DiscordRpc.Initialize(_discordrpccode, ref handlers, true, "");
-            _presence.state = "Loading game...";
+            _presence.state = _realServername;
+            _presence.details = "Loading game...";
             _presence.largeImageText = "Need for Speed: World";
             _presence.largeImageKey = "nfsw";
             _presence.smallImageText = _realServername;

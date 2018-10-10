@@ -24,6 +24,7 @@ namespace GameLauncher.App.Classes.Proxy
         private static Response ProxyRequest(NancyContext context)
         {
             string POSTContent = String.Empty;
+            string GETContent = String.Empty;
             var serverUrl = ServerProxy.Instance.GetServerUrl();
 
             if (string.IsNullOrEmpty(serverUrl))
@@ -45,6 +46,8 @@ namespace GameLauncher.App.Classes.Proxy
 
                 queryParams[param] = value;
             }
+
+            GETContent = string.Join(";", queryParams.Select(x => x.Key + "=" + x.Value).ToArray());
 
             foreach (var header in context.Request.Headers)
             {
@@ -95,7 +98,7 @@ namespace GameLauncher.App.Classes.Proxy
                     }
             }
 
-            DiscordRPC.handleGameState(fixedPath, response.Content.ReadAsStringAsync().Result, POSTContent);
+            DiscordRPC.handleGameState(fixedPath, response.Content.ReadAsStringAsync().Result, POSTContent, GETContent);
 
             return new TextResponse(
                 response.Content.ReadAsStringAsync().Result,

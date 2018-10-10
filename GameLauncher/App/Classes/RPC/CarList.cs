@@ -9,7 +9,7 @@ namespace GameLauncher.App.Classes.RPC
 {
     class CarList
     {
-        public static string getEventName(string id)
+        public static string getCarName(string id)
         {
             dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.cars.json"));
 
@@ -21,7 +21,7 @@ namespace GameLauncher.App.Classes.RPC
                 }
             }
 
-            return String.Empty;
+            return "CARID:"+id;
         }
     }
 }
