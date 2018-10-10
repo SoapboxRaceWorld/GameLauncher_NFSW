@@ -39,10 +39,10 @@ namespace GameLauncher.App.Classes.RPC {
         public static void handleGameState(string uri, string serverreply = "", string POST = "", string GET = "") {
             var SBRW_XML = new XmlDocument();      
 
-            Console.WriteLine("POST: " + POST);
+            /*Console.WriteLine("POST: " + POST);
             Console.WriteLine("GET: " + GET);
             Console.WriteLine("serverreply: " + serverreply);
-            Console.WriteLine("------------------------------------");
+            Console.WriteLine("------------------------------------");*/
 
             if (uri == "/User/SecureLoginPersona") {
                 canUpdateProfileField = true;
@@ -72,22 +72,8 @@ namespace GameLauncher.App.Classes.RPC {
                 PersonaLevel = SBRW_XML.SelectSingleNode("ProfileData/Level").InnerText;
                 PersonaAvatarId = (SBRW_XML.SelectSingleNode("ProfileData/IconIndex").InnerText == "26") ? "nfsw" : "avatar_" + SBRW_XML.SelectSingleNode("ProfileData/IconIndex").InnerText;
                 PersonaId = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
-
-                Console.WriteLine(PersonaId);
-
-                _presence.details = "Driving " + PersonaCarId;
-                _presence.state = serverName;
-                _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
-                _presence.largeImageKey = PersonaAvatarId;
-                _presence.smallImageText = (inSafehouse == true) ? "Safehouse" : "In-Freeroam";
-                _presence.smallImageKey = "gamemode_freeroam";
-                _presence.startTimestamp = RPCstartTimestamp;
-                _presence.instance = true;
-                DiscordRpc.UpdatePresence(_presence);
-
-                canUpdateProfileField = false;
             }
-            if (uri == "/matchmaking/leavelobby" || uri == "/event/arbitration" || uri == "/DriverPersona/UpdatePersonaPresence") {
+            if (uri == "/matchmaking/leavelobby" || uri == "/event/arbitration") {
                 _presence.details = "Driving " + PersonaCarId;
                 _presence.state = serverName;
                 _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
@@ -110,6 +96,26 @@ namespace GameLauncher.App.Classes.RPC {
                 _presence.largeImageKey = PersonaAvatarId;
                 _presence.smallImageText = EventList.getEventName(Convert.ToInt32(EventID));
                 _presence.smallImageKey = EventList.getEventType(Convert.ToInt32(EventID));
+                _presence.startTimestamp = RPCstartTimestamp;
+                _presence.instance = true;
+                DiscordRpc.UpdatePresence(_presence);
+            }
+
+            //IN SAFEHOUSE/FREEROAM
+            if (uri == "/DriverPersona/UpdatePersonaPresence") {
+                string UpdatePersonaPresenceParam = GET.Split(';').Last().Split('=').Last();
+                if(UpdatePersonaPresenceParam == "1") {
+                    _presence.details = "Driving " + PersonaCarId;
+                    _presence.smallImageText = "In-Freeroam";
+                } else {
+                    _presence.details = "In Safehouse";
+                    _presence.smallImageText = "In-Safehouse";
+                }
+
+                _presence.state = serverName;
+                _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
+                _presence.largeImageKey = PersonaAvatarId;
+                _presence.smallImageKey = "gamemode_freeroam";
                 _presence.startTimestamp = RPCstartTimestamp;
                 _presence.instance = true;
                 DiscordRpc.UpdatePresence(_presence);
