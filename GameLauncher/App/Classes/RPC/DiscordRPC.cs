@@ -85,20 +85,6 @@ namespace GameLauncher.App.Classes.RPC {
                 DiscordRpc.UpdatePresence(_presence);
             }
 
-            if(uri == "/personas/inventory/objects") {
-                _presence.details = "In Safehouse as " + PersonaName;
-                _presence.state = serverName;
-                _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
-                _presence.largeImageKey = PersonaAvatarId;
-                _presence.smallImageText = "Safehouse";
-                _presence.smallImageKey = "gamemode_freeroam";
-                _presence.startTimestamp = RPCstartTimestamp;
-                _presence.instance = true;
-                DiscordRpc.UpdatePresence(_presence);
-
-                //inSafehouse = true;
-            }
-
             if (Regex.Match(uri, "/matchmaking/launchevent").Success) {
                 string[] splitted_uri = uri.Split('/');
                 var EventID = splitted_uri[3];
@@ -113,10 +99,6 @@ namespace GameLauncher.App.Classes.RPC {
                 _presence.instance = true;
                 DiscordRpc.UpdatePresence(_presence);
             }
-        }
-
-        public static string eventName(int eventId) {
-            return String.Empty;
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
-using System.Windows;
+using System.Windows.Forms;
 using GameLauncherReborn;
 using Newtonsoft.Json;
 
@@ -151,7 +151,7 @@ namespace GameLauncher.App.Classes
                         if (computedHash != file.Hash)
                         {
                             MessageBox.Show($"Hash mismatch! Expected {file.Hash}, got {computedHash}",
-                                "ModNet Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                "ModNet Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Environment.Exit(1);
                         }
                     }
@@ -180,7 +180,7 @@ namespace GameLauncher.App.Classes
                             if (computedHash != file.Hash)
                             {
                                 MessageBox.Show($"Hash mismatch! Expected {file.Hash}, got {computedHash}",
-                                    "ModNet Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    "ModNet Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 Environment.Exit(1);
                             }
 
@@ -201,7 +201,7 @@ namespace GameLauncher.App.Classes
                         }
                         catch (Exception e)
                         {
-                            MessageBox.Show(e.Message, "ModNet Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(e.Message, "ModNet Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
