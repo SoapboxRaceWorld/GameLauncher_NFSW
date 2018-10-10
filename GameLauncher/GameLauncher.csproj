@@ -173,6 +173,7 @@
     <Compile Include="App\Classes\Proxy\NancyGzipCompression.cs" />
     <Compile Include="App\Classes\Proxy\ProxyHandler.cs" />
     <Compile Include="App\Classes\RPC\DiscordRPC.cs" />
+    <Compile Include="App\Classes\RPC\EventList.cs" />
     <Compile Include="App\Classes\Self.cs" />
     <Compile Include="App\Classes\ServerProxy.cs" />
     <Compile Include="App\Classes\Singleton.cs" />
@@ -231,6 +232,7 @@
     <EmbeddedResource Include="Fonts\Montserrat-Bold.ttf" />
     <EmbeddedResource Include="Fonts\Montserrat-Regular.ttf" />
     <EmbeddedResource Include="Language\Default.lng" />
+    <EmbeddedResource Include="App\Classes\RPC\JSON\events.json" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\DataSources\GameLauncher.App.AddServer.datasource" />

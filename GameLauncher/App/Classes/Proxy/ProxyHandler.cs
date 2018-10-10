@@ -34,7 +34,7 @@ namespace GameLauncher.App.Classes.Proxy
             var fixedPath = context.Request.Path.Replace("/nfsw/Engine.svc", "");
             var fullUrl = new Uri(serverUrl).Append(fixedPath);
 
-            Console.WriteLine($@"{context.Request.Method} {context.Request.Path} -> {fixedPath} -> {serverUrl} -> {fullUrl}");
+            Console.WriteLine($@"{context.Request.Method} {context.Request.Path} -> {fullUrl}");
 
             var queryParams = new Dictionary<string, object>();
             var headers = new Dictionary<string, object>();
