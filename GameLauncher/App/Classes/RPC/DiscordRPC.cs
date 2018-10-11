@@ -18,7 +18,7 @@ namespace GameLauncher.App.Classes.RPC {
         //Some checks
         private static string serverName = ServerProxy.Instance.GetServerName();
         private static bool canUpdateProfileField = false;
-        private static bool inSafehouse = false;
+        private static bool eventTerminatedManually = false;
         private static int EventID;
         private static string carslotsXML = String.Empty;
 
@@ -37,32 +37,46 @@ namespace GameLauncher.App.Classes.RPC {
         public static List<string> PersonaIds = new List<string>();
 
         public static void handleGameState(string uri, string serverreply = "", string POST = "", string GET = "") {
-            var SBRW_XML = new XmlDocument();      
-
-            /*Console.WriteLine("POST: " + POST);
-            Console.WriteLine("GET: " + GET);
-            Console.WriteLine("serverreply: " + serverreply);
-            Console.WriteLine("------------------------------------");*/
+            var SBRW_XML = new XmlDocument();
+            string[] splitted_uri = uri.Split('/');
 
             if (uri == "/User/SecureLoginPersona") {
                 canUpdateProfileField = true;
             }
+            if (uri == "/User/SecureLogoutPersona") {
+                PersonaId = String.Empty;
+                PersonaName = String.Empty;
+                PersonaLevel = String.Empty;
+                PersonaAvatarId = String.Empty;
+                PersonaCarId = String.Empty;
+                PersonaCarName = String.Empty;
+            }
 
             //FIRST PERSONA EVER LOCALIZED IN CODE
             if (uri == "/User/GetPermanentSession") {
-                SBRW_XML.LoadXml(serverreply);
+                try {
+                    SBRW_XML.LoadXml(serverreply);
 
-                PersonaName = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/Name").InnerText.Replace("¤", "[S]");
-                PersonaLevel = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/Level").InnerText;
-                PersonaAvatarId = (SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/IconIndex").InnerText == "26") ? "nfsw" : "avatar_" + SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/IconIndex").InnerText;
-                PersonaId = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/PersonaId").InnerText;
+                    PersonaName = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/Name").InnerText.Replace("¤", "[S]");
+                    PersonaLevel = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/Level").InnerText;
+                    PersonaAvatarId = (SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/IconIndex").InnerText == "26") ? "nfsw" : "avatar_" + SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/IconIndex").InnerText;
+                    PersonaId = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/PersonaId").InnerText;
 
-                //Let's get rest of PERSONAIDs
-                XmlNode UserInfo = SBRW_XML.SelectSingleNode("UserInfo");
-                XmlNodeList personas = UserInfo.SelectNodes("personas/ProfileData");
-                foreach (XmlNode node in personas) {
-                    PersonaIds.Add(node.SelectSingleNode("PersonaId").InnerText);
+                    //Let's get rest of PERSONAIDs
+                    XmlNode UserInfo = SBRW_XML.SelectSingleNode("UserInfo");
+                    XmlNodeList personas = UserInfo.SelectNodes("personas/ProfileData");
+                    foreach (XmlNode node in personas) {
+                        PersonaIds.Add(node.SelectSingleNode("PersonaId").InnerText);
+                    }
+                } catch (Exception) {
+
                 }
+            }
+
+            //CREATE/DELETE PERSONA Handler
+            if (uri == "/DriverPersona/CreatePersona") {
+                SBRW_XML.LoadXml(serverreply);
+                PersonaIds.Add(SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText);
             }
 
             //DRIVING CARNAME
@@ -74,7 +88,7 @@ namespace GameLauncher.App.Classes.RPC {
                 PersonaId = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
             }
             if (uri == "/matchmaking/leavelobby" || uri == "/event/arbitration") {
-                _presence.details = "Driving " + PersonaCarId;
+                _presence.details = "Driving " + PersonaCarName;
                 _presence.state = serverName;
                 _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
                 _presence.largeImageKey = PersonaAvatarId;
@@ -83,6 +97,8 @@ namespace GameLauncher.App.Classes.RPC {
                 _presence.startTimestamp = RPCstartTimestamp;
                 _presence.instance = true;
                 DiscordRpc.UpdatePresence(_presence);
+
+                eventTerminatedManually = true;
             }
 
             //IN LOBBY
@@ -99,13 +115,15 @@ namespace GameLauncher.App.Classes.RPC {
                 _presence.startTimestamp = RPCstartTimestamp;
                 _presence.instance = true;
                 DiscordRpc.UpdatePresence(_presence);
+
+                eventTerminatedManually = false;
             }
 
             //IN SAFEHOUSE/FREEROAM
             if (uri == "/DriverPersona/UpdatePersonaPresence") {
                 string UpdatePersonaPresenceParam = GET.Split(';').Last().Split('=').Last();
                 if(UpdatePersonaPresenceParam == "1") {
-                    _presence.details = "Driving " + PersonaCarId;
+                    _presence.details = "Driving " + PersonaCarName;
                     _presence.smallImageText = "In-Freeroam";
                 } else {
                     _presence.details = "In Safehouse";
@@ -123,7 +141,6 @@ namespace GameLauncher.App.Classes.RPC {
 
             //IN EVENT
             if (Regex.Match(uri, "/matchmaking/launchevent").Success) {
-                string[] splitted_uri = uri.Split('/');
                 EventID = Convert.ToInt32(splitted_uri[3]);
 
                 _presence.details = "In Event: " + EventList.getEventName(EventID);
@@ -135,8 +152,10 @@ namespace GameLauncher.App.Classes.RPC {
                 _presence.startTimestamp = RPCstartTimestamp;
                 _presence.instance = true;
                 DiscordRpc.UpdatePresence(_presence);
+
+                eventTerminatedManually = false;
             }
-            if (uri == "/event/launched") {
+            if (uri == "/event/launched" && eventTerminatedManually == false) {
                 _presence.details = "In Event: " + EventList.getEventName(EventID);
                 _presence.state = serverName;
                 _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
@@ -149,14 +168,41 @@ namespace GameLauncher.App.Classes.RPC {
             }
 
             //CARS RELATED
-            if (uri == "/personas/"+PersonaId+"/carslots") {
-                carslotsXML = serverreply;
-            }
-            if (Regex.Match(uri, "/personas/" +PersonaId+"/defaultcar").Success) {
-                string[] splitted_uri = uri.Split('/');
-                PersonaCarId = splitted_uri[4];
-            }
+            foreach (var single_personaId in PersonaIds) {
+                if (Regex.Match(uri, "/personas/" + single_personaId + "/carslots", RegexOptions.IgnoreCase).Success) {
+                    carslotsXML = serverreply;
 
+                    SBRW_XML.LoadXml(carslotsXML);
+
+                    int DefaultID = Convert.ToInt32(SBRW_XML.SelectSingleNode("CarSlotInfoTrans/DefaultOwnedCarIndex").InnerText);
+                    int current = 0;
+
+                    XmlNode CarsOwnedByPersona = SBRW_XML.SelectSingleNode("CarSlotInfoTrans/CarsOwnedByPersona");
+                    XmlNodeList OwnedCarTrans = CarsOwnedByPersona.SelectNodes("OwnedCarTrans");
+
+                    foreach (XmlNode node in OwnedCarTrans) {
+                        if(DefaultID == current) {
+                            PersonaCarName = CarList.getCarName(node.SelectSingleNode("CustomCar/Name").InnerText);
+                        }
+                        current++;
+                    }
+                }
+                if (Regex.Match(uri, "/personas/" + single_personaId + "/defaultcar", RegexOptions.IgnoreCase).Success) {
+                    if(splitted_uri.Last() != "defaultcar") {
+                        string receivedId = splitted_uri.Last();
+
+                        SBRW_XML.LoadXml(carslotsXML);
+                        XmlNode CarsOwnedByPersona = SBRW_XML.SelectSingleNode("CarSlotInfoTrans/CarsOwnedByPersona");
+                        XmlNodeList OwnedCarTrans = CarsOwnedByPersona.SelectNodes("OwnedCarTrans");
+
+                        foreach (XmlNode node in OwnedCarTrans) {
+                            if (receivedId == node.SelectSingleNode("Id").InnerText) {
+                                PersonaCarName = CarList.getCarName(node.SelectSingleNode("CustomCar/Name").InnerText);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
