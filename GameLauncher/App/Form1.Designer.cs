@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainScreen));
             this.closebtn = new System.Windows.Forms.PictureBox();
-            this.minimizebtn = new System.Windows.Forms.PictureBox();
             this.email = new System.Windows.Forms.TextBox();
             this.password = new System.Windows.Forms.TextBox();
             this.serverPick = new System.Windows.Forms.ComboBox();
@@ -93,7 +92,6 @@
             this.settingsUILangDesc = new System.Windows.Forms.Label();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
@@ -103,24 +101,13 @@
             // closebtn
             // 
             this.closebtn.BackColor = System.Drawing.Color.Transparent;
-            this.closebtn.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("closebtn.BackgroundImage")));
-            this.closebtn.Location = new System.Drawing.Point(918, 2);
+            this.closebtn.BackgroundImage = global::GameLauncher.Properties.Resources.close;
+            this.closebtn.Location = new System.Drawing.Point(838, 24);
             this.closebtn.Name = "closebtn";
-            this.closebtn.Size = new System.Drawing.Size(52, 26);
+            this.closebtn.Size = new System.Drawing.Size(24, 24);
             this.closebtn.TabIndex = 0;
             this.closebtn.TabStop = false;
             this.closebtn.Click += new System.EventHandler(this.closebtn_Click);
-            // 
-            // minimizebtn
-            // 
-            this.minimizebtn.BackColor = System.Drawing.Color.Transparent;
-            this.minimizebtn.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("minimizebtn.BackgroundImage")));
-            this.minimizebtn.Location = new System.Drawing.Point(886, 2);
-            this.minimizebtn.Name = "minimizebtn";
-            this.minimizebtn.Size = new System.Drawing.Size(26, 26);
-            this.minimizebtn.TabIndex = 0;
-            this.minimizebtn.TabStop = false;
-            this.minimizebtn.Click += new System.EventHandler(this.minimizebtn_Click);
             // 
             // email
             // 
@@ -153,7 +140,7 @@
             this.serverPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.serverPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.serverPick.FormattingEnabled = true;
-            this.serverPick.Location = new System.Drawing.Point(720, 33);
+            this.serverPick.Location = new System.Drawing.Point(323, 28);
             this.serverPick.Name = "serverPick";
             this.serverPick.Size = new System.Drawing.Size(223, 21);
             this.serverPick.TabIndex = 5;
@@ -195,7 +182,7 @@
             this.onlineCount.AutoSize = true;
             this.onlineCount.BackColor = System.Drawing.Color.Transparent;
             this.onlineCount.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.onlineCount.Location = new System.Drawing.Point(34, 373);
+            this.onlineCount.Location = new System.Drawing.Point(42, 375);
             this.onlineCount.Name = "onlineCount";
             this.onlineCount.Size = new System.Drawing.Size(127, 13);
             this.onlineCount.TabIndex = 11;
@@ -273,7 +260,7 @@
             // 
             this.settingsButton.BackColor = System.Drawing.Color.Transparent;
             this.settingsButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("settingsButton.BackgroundImage")));
-            this.settingsButton.Location = new System.Drawing.Point(856, 2);
+            this.settingsButton.Location = new System.Drawing.Point(765, 2);
             this.settingsButton.Name = "settingsButton";
             this.settingsButton.Size = new System.Drawing.Size(26, 26);
             this.settingsButton.TabIndex = 21;
@@ -282,9 +269,9 @@
             // verticalBanner
             // 
             this.verticalBanner.BackColor = System.Drawing.Color.Transparent;
-            this.verticalBanner.Location = new System.Drawing.Point(31, 126);
+            this.verticalBanner.Location = new System.Drawing.Point(39, 144);
             this.verticalBanner.Name = "verticalBanner";
-            this.verticalBanner.Size = new System.Drawing.Size(371, 273);
+            this.verticalBanner.Size = new System.Drawing.Size(523, 223);
             this.verticalBanner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.verticalBanner.TabIndex = 22;
             this.verticalBanner.TabStop = false;
@@ -512,7 +499,7 @@
             this.playProgressTime.Cursor = System.Windows.Forms.Cursors.Default;
             this.playProgressTime.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.playProgressTime.ForeColor = System.Drawing.Color.White;
-            this.playProgressTime.Location = new System.Drawing.Point(667, 471);
+            this.playProgressTime.Location = new System.Drawing.Point(558, 471);
             this.playProgressTime.Name = "playProgressTime";
             this.playProgressTime.Size = new System.Drawing.Size(72, 19);
             this.playProgressTime.TabIndex = 42;
@@ -535,9 +522,9 @@
             this.imageServerName.BackColor = System.Drawing.Color.Transparent;
             this.imageServerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.imageServerName.ForeColor = System.Drawing.Color.White;
-            this.imageServerName.Location = new System.Drawing.Point(31, 185);
+            this.imageServerName.Location = new System.Drawing.Point(39, 144);
             this.imageServerName.Name = "imageServerName";
-            this.imageServerName.Size = new System.Drawing.Size(370, 188);
+            this.imageServerName.Size = new System.Drawing.Size(523, 223);
             this.imageServerName.TabIndex = 19;
             this.imageServerName.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.imageServerName.UseCompatibleTextRendering = true;
@@ -757,7 +744,7 @@
             // 
             // addServer
             // 
-            this.addServer.Location = new System.Drawing.Point(947, 32);
+            this.addServer.Location = new System.Drawing.Point(550, 27);
             this.addServer.Name = "addServer";
             this.addServer.Size = new System.Drawing.Size(23, 23);
             this.addServer.TabIndex = 68;
@@ -768,7 +755,7 @@
             // 
             this.showmap.BackColor = System.Drawing.Color.Transparent;
             this.showmap.ForeColor = System.Drawing.Color.DarkGray;
-            this.showmap.Location = new System.Drawing.Point(829, 58);
+            this.showmap.Location = new System.Drawing.Point(432, 52);
             this.showmap.Name = "showmap";
             this.showmap.Size = new System.Drawing.Size(141, 15);
             this.showmap.TabIndex = 70;
@@ -836,7 +823,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1000, 562);
+            this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.allowedCountriesLabel);
             this.Controls.Add(this.legacyLaunch);
             this.Controls.Add(this.inputeditor);
@@ -877,7 +864,6 @@
             this.Controls.Add(this.serverPick);
             this.Controls.Add(this.password);
             this.Controls.Add(this.email);
-            this.Controls.Add(this.minimizebtn);
             this.Controls.Add(this.closebtn);
             this.Controls.Add(this.settingsSave);
             this.Controls.Add(this.settingsLanguageDesc);
@@ -907,7 +893,6 @@
             this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.Load += new System.EventHandler(this.mainScreen_Load);
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.minimizebtn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).EndInit();
@@ -920,7 +905,6 @@
         #endregion
 
         private System.Windows.Forms.PictureBox closebtn;
-        private System.Windows.Forms.PictureBox minimizebtn;
         private System.Windows.Forms.TextBox email;
         private System.Windows.Forms.TextBox password;
         private System.Windows.Forms.ComboBox serverPick;

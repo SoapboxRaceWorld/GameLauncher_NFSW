@@ -41,7 +41,7 @@ namespace GameLauncher
         private bool _loggedIn;
         private bool _restartRequired;
         private bool _allowRegistration;
-        private bool _isIndex;
+        //private bool _isIndex = false;
         private bool _useLegacy = true;
         private bool _isDownloading = true;
 
@@ -68,7 +68,7 @@ namespace GameLauncher
 
         private readonly DiscordRpc.RichPresence _presence = new DiscordRpc.RichPresence();
 
-        private Graphics _formGraphics;
+        //private Graphics _formGraphics;
         private readonly Pen _colorOffline = new Pen(Color.FromArgb(128, 0, 0));
         private readonly Pen _colorOnline = new Pen(Color.FromArgb(0, 128, 0));
         private readonly Pen _colorLoading = new Pen(Color.FromArgb(0, 0, 0));
@@ -214,9 +214,9 @@ namespace GameLauncher
             settingsButton.MouseLeave += new EventHandler(settingsButton_MouseLeave);
             settingsButton.Click += new EventHandler(settingsButton_Click);
 
-            minimizebtn.MouseEnter += new EventHandler(minimizebtn_MouseEnter);
-            minimizebtn.MouseLeave += new EventHandler(minimizebtn_MouseLeave);
-            minimizebtn.Click += new EventHandler(minimizebtn_Click);
+            //minimizebtn.MouseEnter += new EventHandler(minimizebtn_MouseEnter);
+            //minimizebtn.MouseLeave += new EventHandler(minimizebtn_MouseLeave);
+            //minimizebtn.Click += new EventHandler(minimizebtn_Click);
 
             loginButton.MouseEnter += new EventHandler(loginButton_MouseEnter);
             loginButton.MouseLeave += new EventHandler(loginButton_MouseLeave);
@@ -332,7 +332,7 @@ namespace GameLauncher
             imageServerName.Location = pos;
             imageServerName.BackColor = Color.Transparent;
 
-            var pos2 = PointToScreen(onlineCount.Location);
+            /*var pos2 = PointToScreen(onlineCount.Location);
             pos2 = verticalBanner.PointToClient(pos2);
             onlineCount.Parent = verticalBanner;
             onlineCount.Location = pos2;
@@ -344,7 +344,7 @@ namespace GameLauncher
                 _formGraphics.DrawRectangle(_colorLoading, new Rectangle(new Point(30, 125), new Size(372, 274)));
                 _formGraphics.DrawRectangle(_colorLoading, new Rectangle(new Point(29, 124), new Size(374, 276)));
                 _formGraphics.Dispose();
-            }
+            }*/
 
             if (Self.CheckForInternetConnection() == false && !DetectLinux.WineDetected())
             {
@@ -980,21 +980,21 @@ namespace GameLauncher
             closebtn.BackgroundImage = Properties.Resources.close;
         }
 
-        private void minimizebtn_Click(object sender, EventArgs e)
+        /*private void minimizebtn_Click(object sender, EventArgs e)
         {
-            minimizebtn.BackgroundImage = Properties.Resources.minimize_click;
+            //minimizebtn.BackgroundImage = Properties.Resources.minimize_click;
             WindowState = FormWindowState.Minimized;
         }
 
         private void minimizebtn_MouseEnter(object sender, EventArgs e)
         {
-            minimizebtn.BackgroundImage = Properties.Resources.minimize_hover;
+            //minimizebtn.BackgroundImage = Properties.Resources.minimize_hover;
         }
 
         private void minimizebtn_MouseLeave(object sender, EventArgs e)
         {
-            minimizebtn.BackgroundImage = Properties.Resources.minimize;
-        }
+            //minimizebtn.BackgroundImage = Properties.Resources.minimize;
+        }*/
 
         private void LoginEnter(object sender, KeyEventArgs e)
         {
@@ -1274,10 +1274,10 @@ namespace GameLauncher
 
             _allowRegistration = false;
 
-            _formGraphics = CreateGraphics();
+            /*_formGraphics = CreateGraphics();
             _formGraphics.DrawRectangle(_colorLoading, new Rectangle(new Point(30, 125), new Size(372, 274)));
             _formGraphics.DrawRectangle(_colorLoading, new Rectangle(new Point(29, 124), new Size(374, 276)));
-            _formGraphics.Dispose();
+            _formGraphics.Dispose();*/
 
 
             imageServerName.Text = serverInfo.Name;
@@ -1335,13 +1335,12 @@ namespace GameLauncher
 
                 if (e2.Error != null)
                 {
-                    if (_isIndex)
-                    {
+                    /*if (_isIndex) {
                         _formGraphics = CreateGraphics();
                         _formGraphics.DrawRectangle(_colorOffline, new Rectangle(new Point(30, 125), new Size(372, 274)));
                         _formGraphics.DrawRectangle(_colorOffline, new Rectangle(new Point(29, 124), new Size(374, 276)));
                         _formGraphics.Dispose();
-                    }
+                    }*/
 
                     onlineCount.Text = Language.getLangString("ERROR_SERVEROFFLINE", _uiLanguage);
                     _serverEnabled = false;
@@ -1468,13 +1467,13 @@ namespace GameLauncher
                                 _passwordHash = "SHA1";
                             }
 
-                            if (_isIndex)
+                            /*if (_isIndex)
                             {
                                 _formGraphics = CreateGraphics();
                                 _formGraphics.DrawRectangle(_colorOnline, new Rectangle(new Point(30, 125), new Size(372, 274)));
                                 _formGraphics.DrawRectangle(_colorOnline, new Rectangle(new Point(29, 124), new Size(374, 276)));
                                 _formGraphics.Dispose();
-                            }
+                            }*/
                         }
                     }
 
@@ -1550,13 +1549,13 @@ namespace GameLauncher
                                         }
                                         else
                                         {
-                                            if (_isIndex)
+                                            /*if (_isIndex)
                                             {
                                                 _formGraphics = CreateGraphics();
                                                 _formGraphics.DrawRectangle(_colorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
                                                 _formGraphics.DrawRectangle(_colorIssues, new Rectangle(new Point(29, 124), new Size(374, 276)));
                                                 _formGraphics.Dispose();
-                                            }
+                                            }*/
 
                                             onlineCount.Text += string.Format(Language.getLangString("MAIN_PINGSUCCESS", _uiLanguage), (artificialPingEnd - artificialPingStart).ToString());
                                             onlineCount.Text += " (HTTP)";
@@ -1565,13 +1564,13 @@ namespace GameLauncher
                                 }
                                 else
                                 {
-                                    if (_isIndex)
+                                    /*if (_isIndex)
                                     {
                                         _formGraphics = CreateGraphics();
                                         _formGraphics.DrawRectangle(_colorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
                                         _formGraphics.DrawRectangle(_colorIssues, new Rectangle(new Point(29, 124), new Size(374, 276)));
                                         _formGraphics.Dispose();
-                                    }
+                                    }*/
 
                                     onlineCount.Text += Language.getLangString("MAIN_PINGFAILED", _uiLanguage);
                                 }
@@ -1580,13 +1579,13 @@ namespace GameLauncher
                     }
                     else
                     {
-                        if (_isIndex)
+                        /*if (_isIndex)
                         {
                             _formGraphics = CreateGraphics();
                             _formGraphics.DrawRectangle(_colorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
                             _formGraphics.DrawRectangle(_colorIssues, new Rectangle(new Point(29, 124), new Size(374, 276)));
                             _formGraphics.Dispose();
-                        }
+                        }*/
 
                         onlineCount.Text += Language.getLangString("MAIN_PINGDISABLED", _uiLanguage);
                     }
@@ -1674,8 +1673,6 @@ namespace GameLauncher
 
         private void LoggedInFormElements(bool hideElements)
         {
-            _isIndex = true;
-
             if (hideElements)
             {
                 currentWindowInfo.Text = Language.getLangString("MAIN_INFORMATION", _uiLanguage).ToUpper();
@@ -1697,8 +1694,6 @@ namespace GameLauncher
 
         private void LoginFormElements(bool hideElements = false)
         {
-            _isIndex = true;
-
             if (hideElements)
             {
                 currentWindowInfo.Text = Language.getLangString("MAIN_INFORMATION", _uiLanguage).ToUpper();
@@ -1733,8 +1728,6 @@ namespace GameLauncher
 
         private void RegisterFormElements(bool hideElements = true)
         {
-            _isIndex = false;
-
             if (hideElements)
             {
                 currentWindowInfo.Location = new Point(53, 150);
@@ -2278,8 +2271,6 @@ namespace GameLauncher
 
         private void SettingsFormElements(bool hideElements = true)
         {
-            _isIndex = false;
-
             if (hideElements)
             {
                 currentWindowInfo.Text = Language.getLangString("MAIN_INFORMATIONSETTINGS", _uiLanguage).ToUpper();
