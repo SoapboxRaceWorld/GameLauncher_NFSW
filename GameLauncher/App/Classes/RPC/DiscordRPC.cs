@@ -87,7 +87,7 @@ namespace GameLauncher.App.Classes.RPC {
                 PersonaAvatarId = (SBRW_XML.SelectSingleNode("ProfileData/IconIndex").InnerText == "26") ? "nfsw" : "avatar_" + SBRW_XML.SelectSingleNode("ProfileData/IconIndex").InnerText;
                 PersonaId = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
             }
-            if (uri == "/matchmaking/leavelobby" || uri == "/event/arbitration") {
+            if (uri == "/matchmaking/leavelobby") {
                 _presence.details = "Driving " + PersonaCarName;
                 _presence.state = serverName;
                 _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
@@ -104,9 +104,9 @@ namespace GameLauncher.App.Classes.RPC {
             //IN LOBBY
             if (uri == "/matchmaking/acceptinvite") {
                 SBRW_XML.LoadXml(serverreply);
-                var EventID = SBRW_XML.SelectSingleNode("LobbyInfo/EventId").InnerText;
+                EventID = Convert.ToInt32(SBRW_XML.SelectSingleNode("LobbyInfo/EventId").InnerText);
 
-                _presence.details = "In Lobby: " + EventList.getEventName(Convert.ToInt32(EventID));
+                _presence.details = "In Lobby: " + EventList.getEventName(EventID);
                 _presence.state = serverName;
                 _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
                 _presence.largeImageKey = PersonaAvatarId;
@@ -143,6 +143,19 @@ namespace GameLauncher.App.Classes.RPC {
             if (Regex.Match(uri, "/matchmaking/launchevent").Success) {
                 EventID = Convert.ToInt32(splitted_uri[3]);
 
+                _presence.details = "In Event: " + EventList.getEventName(EventID);
+                _presence.state = serverName;
+                _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
+                _presence.largeImageKey = PersonaAvatarId;
+                _presence.smallImageText = EventList.getEventName(EventID);
+                _presence.smallImageKey = EventList.getEventType(EventID);
+                _presence.startTimestamp = RPCstartTimestamp;
+                _presence.instance = true;
+                DiscordRpc.UpdatePresence(_presence);
+
+                eventTerminatedManually = false;
+            }
+            if (uri == "/event/arbitration") {
                 _presence.details = "In Event: " + EventList.getEventName(EventID);
                 _presence.state = serverName;
                 _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
