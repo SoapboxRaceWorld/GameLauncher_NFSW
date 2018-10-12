@@ -27,7 +27,7 @@ namespace GameLauncher.App.Classes.Proxy
             string GETContent = String.Empty;
             var serverUrl = ServerProxy.Instance.GetServerUrl();
 
-            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+            //System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
             /*if (string.IsNullOrEmpty(serverUrl))
             {
