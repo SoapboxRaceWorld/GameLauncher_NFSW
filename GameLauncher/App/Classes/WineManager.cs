@@ -48,7 +48,7 @@ namespace GameLauncher.App.Classes
 
 		public static string GetUserSettingsPath() {
 			string appdata = "";
-			if (DetectLinux.NativeLinuxDetected()) {
+			if (DetectLinux.UnixDetected()) {
 				appdata = GetWinePrefix() + "/drive_c/users/" + Environment.UserName + "/Application Data";
 			} else {
 				appdata = Environment.GetEnvironmentVariable("AppData");

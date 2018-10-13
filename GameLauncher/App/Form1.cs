@@ -186,7 +186,7 @@ namespace GameLauncher
             }
 
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-            if (!DetectLinux.NativeLinuxDetected())
+            if (!DetectLinux.UnixDetected())
             {
                 ApplyEmbeddedFonts();
             }
@@ -2348,7 +2348,7 @@ namespace GameLauncher
 			var args = "SBRW " + serverIp + " " + loginToken + " " + userId + " -advancedLaunch";
             var psi = new ProcessStartInfo();
             psi.UseShellExecute = false;
-            if (!DetectLinux.NativeLinuxDetected())
+            if (!DetectLinux.UnixDetected())
             {
                 psi.FileName = oldfilename;
                 psi.Arguments = args;
@@ -2487,7 +2487,7 @@ namespace GameLauncher
                     {
                         playProgressText.Text = Language.getLangString("MAIN_BUILTINSERVERINIT", _uiLanguage).ToUpper();
                     }
-                    else if (!DetectLinux.NativeLinuxDetected())
+                    else if (!DetectLinux.UnixDetected())
                     {
                         var secondsToCloseLauncher = 5;
 
@@ -2825,7 +2825,14 @@ namespace GameLauncher
                     {
                         Directory.CreateDirectory("wine");
                         playProgressText.Text = "EXTRACTING WINE";
-                        Process.Start("tar", "xf wine.tar.gz -C wine")?.WaitForExit();
+                        if (DetectLinux.MacOSDetected())
+                        {
+                            Process.Start("tar", "xf wine.tar.gz -C wine --strip-components=1")?.WaitForExit();
+                        }
+                        else
+                        {
+                            Process.Start("tar", "xf wine.tar.gz -C wine")?.WaitForExit();
+                        }
                         EnablePlayButton();
                     })
                     { IsBackground = true };
@@ -2847,7 +2854,7 @@ namespace GameLauncher
                 // ignored
             }
 
-            if (DetectLinux.MonoDetected())
+            if (DetectLinux.UnixDetected())
             {
                 if (WineManager.NeedEmbeddedWine() && !File.Exists("wine.tar.gz") && !Directory.Exists("wine"))
                 {
@@ -2855,7 +2862,13 @@ namespace GameLauncher
 
                     wineDownload.DownloadProgressChanged += WineDownloadProgressChanged;
                     wineDownload.DownloadFileCompleted += WineDownloadCompleted;
-                    wineDownload.DownloadFileAsync(new Uri("http://launcher.soapboxrace.world/linux/wine.tar.gz"), "wine.tar.gz");
+                    if (DetectLinux.MacOSDetected()) {
+                        wineDownload.DownloadFileAsync(new Uri("https://dl.winehq.org/wine-builds/macosx/pool/portable-winehq-stable-3.0.2-osx.tar.gz"), "wine.tar.gz");
+                    }
+                    else
+                    {
+                        wineDownload.DownloadFileAsync(new Uri("http://launcher.soapboxrace.world/linux/wine.tar.gz"), "wine.tar.gz");
+                    }
                 }
             }
 

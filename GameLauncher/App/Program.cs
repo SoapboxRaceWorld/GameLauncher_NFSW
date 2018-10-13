@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes;
@@ -14,8 +15,6 @@ namespace GameLauncher
         [STAThread]
         internal static void Main()
         {
-            var linux = DetectLinux.NativeLinuxDetected();
-
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath) ?? throw new InvalidOperationException());
 
             if (Self.isTempFolder(Directory.GetCurrentDirectory()))
@@ -53,12 +52,12 @@ namespace GameLauncher
                 File.WriteAllBytes("LZMA.dll", ExtractResource.AsByte("GameLauncher.LZMA.LZMA.dll"));
             }
 
-            if (!linux && !File.Exists("discord-rpc.dll"))
+            if (!DetectLinux.UnixDetected() && !File.Exists("discord-rpc.dll"))
             {
                 File.WriteAllBytes("discord-rpc.dll", ExtractResource.AsByte("GameLauncher.Discord.discord-rpc.dll"));
             }
 
-            if (linux && !File.Exists("libdiscord-rpc.so"))
+            if (DetectLinux.LinuxDetected() && !File.Exists("libdiscord-rpc.so"))
             {
                 File.WriteAllBytes("libdiscord-rpc.so", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.so"));
             }
@@ -88,6 +87,8 @@ namespace GameLauncher
                     // ignored
                 }
             }
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             if (Debugger.IsAttached)
             {

@@ -5,16 +5,40 @@ using System.Security;
 using System.Collections;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
+using GameLauncher.App.Classes;
 
 namespace Security {
     public class FingerPrint {
         private static string fingerPrint = string.Empty;
         public static string Value() {
             if (string.IsNullOrEmpty(fingerPrint)) {
-                fingerPrint = GetHash(cpuId() + baseId() + diskId() + videoId());
+                if (!DetectLinux.UnixDetected())
+                {
+                    fingerPrint = WindowsValue();
+                }
+                else if (DetectLinux.LinuxDetected())
+                {
+                    fingerPrint = LinuxValue();
+                }
+                else
+                {
+                    fingerPrint = "hwid-not-impl";
+                }
             }
 
             return fingerPrint;
+        }
+
+        private static string WindowsValue() {
+            return GetHash(cpuId() + baseId() + diskId() + videoId());
+        }
+
+        private static string LinuxValue() {
+            var machineId = File.ReadAllLines("/etc/machine-id")[0];
+            var idBytes = Encoding.ASCII.GetBytes(machineId);
+            var hmac = new HMACSHA256(Encoding.ASCII.GetBytes("GameLauncher_NFSW"));
+            return GetHexString(hmac.ComputeHash(idBytes));
         }
 
         public static string GetHash(string s) {
