@@ -117,6 +117,12 @@ namespace GameLauncher
                     {
                         string[] files =
                         {
+                            "Newtonsoft.Json.dll",
+                            "INIFileParser.dll",
+                            "Microsoft.WindowsAPICodePack.dll",
+                            "Microsoft.WindowsAPICodePack.Shell.dll",
+                            "Flurl.dll",
+                            "Flurl.Http.dll",
                             "BlackListedServers.dat"
                         };
                         var missingfiles = new List<string>();
