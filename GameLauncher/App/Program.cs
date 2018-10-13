@@ -62,7 +62,12 @@ namespace GameLauncher
                 File.WriteAllBytes("libdiscord-rpc.so", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.so"));
             }
 
-			if (File.Exists("GL_Update.exe")) {
+            if (DetectLinux.MacOSDetected() && !File.Exists("libdiscord-rpc.so"))
+            {
+                File.WriteAllBytes("libdiscord-rpc.dylib", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.dylib"));
+            }
+
+            if (File.Exists("GL_Update.exe")) {
 				File.Delete("GL_Update.exe");
 			}
 
