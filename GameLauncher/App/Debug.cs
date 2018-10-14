@@ -64,7 +64,7 @@ namespace GameLauncher.App
             string Firewall = String.Empty;
             string AntiSpyware = String.Empty;
 
-            if (!DetectLinux.UnixDetected())
+            if (!DetectLinux.NativeLinuxDetected())
             {
                 try
                 {
@@ -87,12 +87,9 @@ namespace GameLauncher.App
             {
                 OS = "Wine";
             }
-            else if (DetectLinux.LinuxDetected())
+            else if (DetectLinux.NativeLinuxDetected())
             {
-                OS = "Linux";
-            }
-            else if (DetectLinux.MacOSDetected()) {
-                OS = "MacOS";
+                OS = "Native Linux";
             }
             else
             {
@@ -113,7 +110,7 @@ namespace GameLauncher.App
             ulong lpFreeBytesAvailable = 0;
             List<string> GPUs = new List<string>();
             string Win32_Processor = "";
-            if (!DetectLinux.UnixDetected())
+            if (!DetectLinux.NativeLinuxDetected())
             {
                 GetPhysicallyInstalledSystemMemory(out memKb);
 
@@ -149,7 +146,7 @@ namespace GameLauncher.App
                 new ListType{ Name = "", Value = "" },
             };
 
-			if (DetectLinux.UnixDetected()) {
+			if (DetectLinux.NativeLinuxDetected()) {
 				var embedded = Directory.Exists("wine");
 				settings.Add(new ListType { Name = "Embedded Wine", Value = embedded.ToString() });
 				if (!embedded) {
@@ -158,7 +155,7 @@ namespace GameLauncher.App
 				settings.Add(new ListType { Name = "", Value = "" });
 			}
 
-            if (!DetectLinux.UnixDetected())
+            if (!DetectLinux.NativeLinuxDetected())
             {
                 settings.AddRange(new[] {
                     new ListType{ Name = "Antivirus", Value = Antivirus },
