@@ -186,7 +186,7 @@ namespace GameLauncher
             }
 
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-            if (!DetectLinux.NativeLinuxDetected())
+            if (!DetectLinux.UnixDetected())
             {
                 ApplyEmbeddedFonts();
             }
@@ -260,7 +260,7 @@ namespace GameLauncher
             password.KeyUp += new KeyEventHandler(Loginbuttonenabler);
             password.KeyDown += new KeyEventHandler(LoginEnter);
 
-            serverPick.TextChanged += new EventHandler(serverPick_TextChanged);
+            serverPick.SelectedIndexChanged += new EventHandler(serverPick_SelectedIndexChanged);
             serverPick.DrawItem += new DrawItemEventHandler(comboBox1_DrawItem);
 
             forgotPassword.LinkClicked += new LinkLabelLinkClickedEventHandler(forgotPassword_LinkClicked);
@@ -656,7 +656,7 @@ namespace GameLauncher
                     //I don't know other way to fix this call...
                     if (serverPick.SelectedIndex == 1)
                     {
-                        serverPick_TextChanged(sender, e);
+                        serverPick_SelectedIndexChanged(sender, e);
                     }
                 }
             }
@@ -889,8 +889,6 @@ namespace GameLauncher
         {
             closebtn.BackgroundImage = Properties.Resources.close_click;
 
-            Notification.Visible = false;
-
             if (_serverlistloaded)
             {
 				try { _settingFile.Write("Server", ((ServerInfo)serverPick.SelectedItem).IpAddress); } catch { }
@@ -905,13 +903,13 @@ namespace GameLauncher
             //Fix InstallationDirectory
             _settingFile.Write("InstallationDirectory", Path.GetFullPath(_settingFile.Read("InstallationDirectory")));
 
-			//Kill NFSW.exe aswell
-			//Process[] allOfThem = Process.GetProcessesByName("nfsw");
-			//foreach (var oneProcess in allOfThem) {
-			//    Process.GetProcessById(oneProcess.Id).Kill();
-			//}
+            //Kill NFSW.exe aswell
+            //Process[] allOfThem = Process.GetProcessesByName("nfsw");
+            //foreach (var oneProcess in allOfThem) {
+            //    Process.GetProcessById(oneProcess.Id).Kill();
+            //}
 
-			if (_nfswPid != 0)
+            if (_nfswPid != 0)
             {
                 try
                 {
@@ -1258,7 +1256,7 @@ namespace GameLauncher
             }
         }
 
-        private void serverPick_TextChanged(object sender, EventArgs e)
+        private void serverPick_SelectedIndexChanged(object sender, EventArgs e)
         {
             var serverInfo = (ServerInfo)serverPick.SelectedItem;
 
@@ -1354,118 +1352,109 @@ namespace GameLauncher
                     }
                     else
                     {
-                        if (Environment.OSVersion.Version.Major <= 5)
+                        var json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
+                        try
                         {
-                            _ticketRequired = true;
-                            verticalImageUrl = null;
-                            _allowRegistration = true;
-                            numPlayers = Language.getLangString("MAIN_UNKNOWN", _uiLanguage);
-                        }
-                        else
-                        {
-                            var json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
-                            try
+                            _realServername = json.serverName;
+                            imageServerName.Text = json.serverName;
+                            if (!string.IsNullOrEmpty(json.bannerUrl))
                             {
-                                _realServername = json.serverName;
-                                imageServerName.Text = json.serverName;
-                                if (!string.IsNullOrEmpty(json.bannerUrl))
+                                Uri uriResult;
+                                bool result;
+
+                                try
                                 {
-                                    Uri uriResult;
-                                    bool result;
+                                    result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                                }
+                                catch
+                                {
+                                    result = false;
+                                }
 
-                                    try
-                                    {
-                                        result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-                                    }
-                                    catch
-                                    {
-                                        result = false;
-                                    }
-
-                                    if (result)
-                                    {
-                                        verticalImageUrl = json.bannerUrl;
-                                    }
-                                    else
-                                    {
-                                        verticalImageUrl = null;
-                                    }
+                                if (result)
+                                {
+                                    verticalImageUrl = json.bannerUrl;
                                 }
                                 else
                                 {
                                     verticalImageUrl = null;
                                 }
                             }
-                            catch
+                            else
                             {
                                 verticalImageUrl = null;
                             }
+                        }
+                        catch
+                        {
+                            verticalImageUrl = null;
+                        }
 
-                            try
+                        try
+                        {
+                            if (string.IsNullOrEmpty(json.requireTicket))
                             {
-                                if (string.IsNullOrEmpty(json.requireTicket))
-                                {
-                                    _ticketRequired = true;
-                                }
-                                else if (json.requireTicket == "true")
-                                {
-                                    _ticketRequired = true;
-                                }
-                                else
-                                {
-                                    _ticketRequired = false;
-                                }
+                                _ticketRequired = true;
                             }
-                            catch
+                            else if (json.requireTicket == "true")
+                            {
+                                _ticketRequired = true;
+                            }
+                            else
                             {
                                 _ticketRequired = false;
                             }
+                        }
+                        catch
+                        {
+                            _ticketRequired = false;
+                        }
 
-                            if (!string.IsNullOrEmpty(json.allowedCountries))
+                        if (!string.IsNullOrEmpty(json.allowedCountries))
+                        {
+                            var countries = new List<object>();
+                            var splitted = json.allowedCountries.Split(';');
+
+                            foreach (var splitter in splitted)
                             {
-                                var countries = new List<object>();
-                                var splitted = json.allowedCountries.Split(';');
+                                countries.Add(Self.CountryName(splitter));
+                            }
 
-                                foreach (var splitter in splitted)
-                                {
-                                    countries.Add(Self.CountryName(splitter));
-                                }
+                            var allowed = string.Join(", ", countries);
 
-                                var allowed = string.Join(", ", countries);
+                            allowedCountriesLabel.Text = string.Format(Language.getLangString("MAIN_ALLOWEDCOUNTRIES", _uiLanguage), allowed);
+                        }
+                        else
+                        {
+                            allowedCountriesLabel.Text = "";
+                        }
 
-                                allowedCountriesLabel.Text = string.Format(Language.getLangString("MAIN_ALLOWEDCOUNTRIES", _uiLanguage), allowed);
+                        if (json.maxUsersAllowed == 0)
+                        {
+                            numPlayers = string.Format(Language.getLangString("MAIN_PLAYERSOUTOF", _uiLanguage), json.onlineNumber, json.numberOfRegistered);
+                        }
+                        else
+                        {
+                            numPlayers = string.Format(Language.getLangString("MAIN_PLAYERSOUTOF", _uiLanguage), json.onlineNumber, json.maxUsersAllowed.ToString());
+                        }
+
+                        _allowRegistration = true;
+
+                        try
+                        {
+                            if (json.passwordHashing == "BCRYPT")
+                            {
+                                _passwordHash = "BCRYPT";
                             }
                             else
-                            {
-                                allowedCountriesLabel.Text = "";
-                            }
-
-                            if (json.maxUsersAllowed == 0)
-                            {
-                                numPlayers = string.Format(Language.getLangString("MAIN_PLAYERSOUTOF", _uiLanguage), json.onlineNumber, json.numberOfRegistered);
-                            }
-                            else
-                            {
-                                numPlayers = string.Format(Language.getLangString("MAIN_PLAYERSOUTOF", _uiLanguage), json.onlineNumber, json.maxUsersAllowed.ToString());
-                            }
-
-                            _allowRegistration = true;
-
-                            try
-                            {
-                                if (json.passwordHashing == "BCRYPT")
-                                {
-                                    _passwordHash = "BCRYPT";
-                                }
-                                else
-                                {
-                                    _passwordHash = "SHA1";
-                                }
-                            }
-                            catch
                             {
                                 _passwordHash = "SHA1";
                             }
+                        }
+                        catch
+                        {
+                            _passwordHash = "SHA1";
+                        }
 
                             /*if (_isIndex)
                             {
@@ -1516,7 +1505,7 @@ namespace GameLauncher
 
                     onlineCount.Text += ". ";
 
-                    if (DetectLinux.WineDetected() == false)
+                    if (!DetectLinux.WineDetected() && !DetectLinux.UnixDetected())
                     {
                         var pingSender = new Ping();
                         pingSender.SendAsync(stringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
@@ -2298,8 +2287,8 @@ namespace GameLauncher
 
         private void StartGame(string userId, string loginToken, string serverIp, Form x)
         {
-            _nfswstarted = _useLegacy 
-                ? new Thread(() => LaunchGameLegacy(userId, loginToken, "http://127.0.0.1:6262/nfsw/Engine.svc", this)) 
+            _nfswstarted = _useLegacy
+                ? new Thread(() => LaunchGameLegacy(userId, loginToken, "http://127.0.0.1:6262/nfsw/Engine.svc", this))
                 : new Thread(() => LaunchGame(userId, loginToken, "http://127.0.0.1:6262/nfsw/Engine.svc", this));
 
             _nfswstarted.IsBackground = true;
@@ -2343,18 +2332,19 @@ namespace GameLauncher
 
         private void LaunchGame(string userId, string loginToken, string serverIp, Form x)
         {
-			var oldfilename = _settingFile.Read("InstallationDirectory") + "\\nfsw.exe";
+			var oldfilename = _settingFile.Read("InstallationDirectory") + "/nfsw.exe";
 
 			var args = "SBRW " + serverIp + " " + loginToken + " " + userId + " -advancedLaunch";
             var psi = new ProcessStartInfo();
             psi.UseShellExecute = false;
-            if (!DetectLinux.NativeLinuxDetected())
+            if (!DetectLinux.UnixDetected())
             {
                 psi.FileName = oldfilename;
                 psi.Arguments = args;
             }
             else
             {
+                WineManager.InitWinePrefix();
                 psi.EnvironmentVariables.Add("WINEDEBUG", "-d3d_shader,-d3d");
                 psi.EnvironmentVariables.Add("WINEPREFIX", WineManager.GetWinePrefix());
                 var wine = WineManager.GetWineDirectory();
@@ -2373,7 +2363,7 @@ namespace GameLauncher
                 {
                     psi.FileName = "wine";
                 }
-                psi.Arguments = "explorer /desktop=\"NFSW[" + userId + "]" + serverIp + ",1600x900\" " + oldfilename + " " + args;
+                psi.Arguments = oldfilename + " " + args;
                 Console.WriteLine(psi.Arguments);
             }
 
@@ -2487,7 +2477,7 @@ namespace GameLauncher
                     {
                         playProgressText.Text = Language.getLangString("MAIN_BUILTINSERVERINIT", _uiLanguage).ToUpper();
                     }
-                    else if (!DetectLinux.NativeLinuxDetected())
+                    else if (!DetectLinux.UnixDetected())
                     {
                         var secondsToCloseLauncher = 5;
 
@@ -2825,7 +2815,14 @@ namespace GameLauncher
                     {
                         Directory.CreateDirectory("wine");
                         playProgressText.Text = "EXTRACTING WINE";
-                        Process.Start("tar", "xf wine.tar.gz -C wine")?.WaitForExit();
+                        if (DetectLinux.MacOSDetected())
+                        {
+                            Process.Start("tar", "xf wine.tar.gz -C wine --strip-components=1")?.WaitForExit();
+                        }
+                        else
+                        {
+                            Process.Start("tar", "xf wine.tar.gz -C wine")?.WaitForExit();
+                        }
                         EnablePlayButton();
                     })
                     { IsBackground = true };
@@ -2847,7 +2844,7 @@ namespace GameLauncher
                 // ignored
             }
 
-            if (DetectLinux.MonoDetected())
+            if (DetectLinux.UnixDetected())
             {
                 if (WineManager.NeedEmbeddedWine() && !File.Exists("wine.tar.gz") && !Directory.Exists("wine"))
                 {
@@ -2855,7 +2852,13 @@ namespace GameLauncher
 
                     wineDownload.DownloadProgressChanged += WineDownloadProgressChanged;
                     wineDownload.DownloadFileCompleted += WineDownloadCompleted;
-                    wineDownload.DownloadFileAsync(new Uri("http://launcher.soapboxrace.world/linux/wine.tar.gz"), "wine.tar.gz");
+                    if (DetectLinux.MacOSDetected()) {
+                        wineDownload.DownloadFileAsync(new Uri("https://dl.winehq.org/wine-builds/macosx/pool/portable-winehq-stable-3.0.2-osx.tar.gz"), "wine.tar.gz");
+                    }
+                    else
+                    {
+                        wineDownload.DownloadFileAsync(new Uri("http://launcher.soapboxrace.world/linux/wine.tar.gz"), "wine.tar.gz");
+                    }
                 }
             }
 
