@@ -37,7 +37,7 @@ namespace Security {
         private static string LinuxValue() {
             var machineId = File.ReadAllLines("/etc/machine-id")[0];
             var idBytes = Encoding.ASCII.GetBytes(machineId);
-            var hmac = new HMACSHA256(Encoding.ASCII.GetBytes("GameLauncher_NFSW"));
+            var hmac = new HMACSHA1(Encoding.ASCII.GetBytes("GameLauncher_NFSW"));
             return GetHexString(hmac.ComputeHash(idBytes));
         }
 

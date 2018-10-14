@@ -15,7 +15,7 @@ namespace GameLauncher.App.Classes
 		}
 
 		public static bool HasEmbeddedWine() {
-			return Directory.Exists("wine");
+			return Directory.Exists(GetWineDirectory());
 		}
 
 		public static string GetWineVersion() {
@@ -55,5 +55,35 @@ namespace GameLauncher.App.Classes
 			}
 			return appdata + "/Need for Speed World/Settings/UserSettings.xml";
 		}
+
+        public static void SetProcessParams(ref ProcessStartInfo psi) {
+            psi.UseShellExecute = false;
+            psi.EnvironmentVariables.Add("WINEPREFIX", GetWinePrefix());
+            var wine = GetWineDirectory();
+            if (Directory.Exists(wine))
+            {
+                psi.EnvironmentVariables.Add("WINEVERPATH", wine);
+                psi.EnvironmentVariables.Add("WINESERVER", wine + "/bin/wineserver");
+                psi.EnvironmentVariables.Add("WINELOADER", wine + "/bin/wine");
+                psi.EnvironmentVariables.Add("WINEDLLPATH", wine + "/lib/wine/fakedlls");
+                psi.EnvironmentVariables.Add("LD_LIBRARY_PATH", wine + "/lib");
+                psi.FileName = wine + "/bin/wine";
+            }
+            else
+            {
+                psi.FileName = "wine";
+            }
+        }
+
+        public static void InitWinePrefix() {
+            var regPath = Path.Combine(Path.GetTempPath(), "gamelauncher_wine_opts.reg");
+            File.WriteAllBytes(regPath, ExtractResource.AsByte("GameLauncher.wine_opts.reg"));
+
+            var psi = new ProcessStartInfo();
+            SetProcessParams(ref psi);
+            psi.Arguments = "regedit \"" + regPath + "\"";
+            Process.Start(psi).WaitForExit();
+            File.Delete(regPath);
+        }
     }
 }
