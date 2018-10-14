@@ -1463,7 +1463,6 @@ namespace GameLauncher
                                 _formGraphics.DrawRectangle(_colorOnline, new Rectangle(new Point(29, 124), new Size(374, 276)));
                                 _formGraphics.Dispose();
                             }*/
-                        }
                     }
 
                     onlineCount.Text = string.Format(Language.getLangString("MAIN_PLAYERSONSERVER", _uiLanguage), numPlayers); // "Players on server: " + numPlayers;
