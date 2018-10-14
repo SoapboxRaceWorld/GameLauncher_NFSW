@@ -36,7 +36,12 @@ namespace GameLauncherReborn {
         protected override WebRequest GetWebRequest(Uri address) {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
             request.UserAgent = "GameLauncher (+https://github.com/SoapboxRaceWorld/GameLauncher_NFSW)";
-		    request.Headers["X-HWID"] = Security.FingerPrint.Value();
+			if (!DetectLinux.NativeLinuxDetected())
+			{
+				request.Headers["X-HWID"] = Security.FingerPrint.Value();
+			} else {
+				request.Headers["X-HWID"] = "1234";
+			}
             request.Headers["X-GameLauncherHash"] = Value();
             request.Timeout = 30000;
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes;
@@ -15,6 +14,8 @@ namespace GameLauncher
         [STAThread]
         internal static void Main()
         {
+            var linux = DetectLinux.NativeLinuxDetected();
+
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath) ?? throw new InvalidOperationException());
 
             if (Self.isTempFolder(Directory.GetCurrentDirectory()))
@@ -52,22 +53,17 @@ namespace GameLauncher
                 File.WriteAllBytes("LZMA.dll", ExtractResource.AsByte("GameLauncher.LZMA.LZMA.dll"));
             }
 
-            if (!DetectLinux.UnixDetected() && !File.Exists("discord-rpc.dll"))
+            if (!linux && !File.Exists("discord-rpc.dll"))
             {
                 File.WriteAllBytes("discord-rpc.dll", ExtractResource.AsByte("GameLauncher.Discord.discord-rpc.dll"));
             }
 
-            if (DetectLinux.LinuxDetected() && !File.Exists("libdiscord-rpc.so"))
+            if (linux && !File.Exists("libdiscord-rpc.so"))
             {
                 File.WriteAllBytes("libdiscord-rpc.so", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.so"));
             }
 
-            if (DetectLinux.MacOSDetected() && !File.Exists("libdiscord-rpc.so"))
-            {
-                File.WriteAllBytes("libdiscord-rpc.dylib", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.dylib"));
-            }
-
-            if (File.Exists("GL_Update.exe")) {
+			if (File.Exists("GL_Update.exe")) {
 				File.Delete("GL_Update.exe");
 			}
 
@@ -93,8 +89,6 @@ namespace GameLauncher
                 }
             }
 
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
             if (Debugger.IsAttached)
             {
                 ServerProxy.Instance.Start();
@@ -117,12 +111,6 @@ namespace GameLauncher
                     {
                         string[] files =
                         {
-                            "Newtonsoft.Json.dll",
-                            "INIFileParser.dll",
-                            "Microsoft.WindowsAPICodePack.dll",
-                            "Microsoft.WindowsAPICodePack.Shell.dll",
-                            "Flurl.dll",
-                            "Flurl.Http.dll",
                             "BlackListedServers.dat"
                         };
                         var missingfiles = new List<string>();
