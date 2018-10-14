@@ -58,6 +58,7 @@ namespace GameLauncher.App.Classes
 
         public static void SetProcessParams(ref ProcessStartInfo psi) {
             psi.UseShellExecute = false;
+            psi.EnvironmentVariables.Add("WINEDLLOVERRIDES", "mscoree,mshtml=");
             psi.EnvironmentVariables.Add("WINEPREFIX", GetWinePrefix());
             var wine = GetWineDirectory();
             if (Directory.Exists(wine))
