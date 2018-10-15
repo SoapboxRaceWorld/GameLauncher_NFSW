@@ -80,8 +80,8 @@ namespace GameLauncher
         private string _NFSW_Installation_Source;
         private string _blacklistedXML;
         private string _realServername;
-
-
+        private string _OS;
+               
         private static Random random = new Random();
 		public static string RandomString(int length) {
 			const string chars = "qwertyuiopasdfghjklzxcvbnm1234567890_";
@@ -151,6 +151,12 @@ namespace GameLauncher
         {
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            if (DetectLinux.UnixDetected()) {
+                _OS = DetectLinux.Distro();
+            } else {
+                _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
+            }
 
             _downloader = new Downloader(this, 3, 2, 16)
             {
@@ -849,7 +855,8 @@ namespace GameLauncher
 
             var handlers = new DiscordRpc.EventHandlers();
             DiscordRpc.Initialize(_discordrpccode, ref handlers, true, "");
-            _presence.state = "In-Launcher: " + Application.ProductVersion;
+            _presence.state = _OS;
+            _presence.details = "In-Launcher: " + Application.ProductVersion;
             _presence.largeImageText = "SBRW";
             _presence.largeImageKey = "nfsw";
             _presence.instance = true;
@@ -2436,7 +2443,7 @@ namespace GameLauncher
 
                 if(Regex.Match(_realServername, serverName.InnerText, RegexOptions.IgnoreCase).Success) {
                     MessageBox.Show(null, "This server has been banned by community votes. The final reason as of SBRW Team is:\n\n" + banReason.InnerText + "\n\nPlease select another server to play on.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
+                    //return;
                 }
             }
 

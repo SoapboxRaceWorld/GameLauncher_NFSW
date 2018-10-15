@@ -5,6 +5,7 @@ using System.Diagnostics;
 namespace GameLauncher.App.Classes {
     class DetectLinux {
         private static string _kernelName = null;
+        private static string _linuxDistro = null;
 
         public static bool WineDetected() {
             bool wine = false;
@@ -34,6 +35,23 @@ namespace GameLauncher.App.Classes {
 
         public static bool MacOSDetected() {
             return UnixDetected() && KernelName() == "Darwin";
+        }
+
+        public static string Distro() {
+            if(_linuxDistro == null) {
+                var ps = new ProcessStartInfo
+                {
+                    FileName = "lsb_release",
+                    Arguments = "-d",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                };
+                var p = Process.Start(ps);
+                _linuxDistro = p.StandardOutput.ReadLine().Replace("Description:", "").Trim();
+                p.StandardOutput.ReadToEnd();
+            }
+
+            return _linuxDistro;
         }
 
         private static string KernelName() {
