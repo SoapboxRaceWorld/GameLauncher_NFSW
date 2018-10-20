@@ -1266,6 +1266,7 @@ namespace GameLauncher
         private void serverPick_SelectedIndexChanged(object sender, EventArgs e)
         {
             var serverInfo = (ServerInfo)serverPick.SelectedItem;
+            _realServername = serverInfo.Name; //Its not real, but it solves some issues.
 
             if (serverInfo.IsSpecial)
             {
