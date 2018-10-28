@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace GameLauncherReborn {
     class Language {
-        public static List<Object> getLanguages() {
+        /*public static List<Object> getLanguages() {
             List<Object> languages = new List<Object>();
             languages.Add(new { Text = "Default", Value = "Default" });
 
@@ -66,6 +66,6 @@ namespace GameLauncherReborn {
             } else {
                 return ID;
             }
-        }
+        }*/
     }
 }

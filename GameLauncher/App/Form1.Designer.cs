@@ -71,9 +71,6 @@
             this.logoutButton = new System.Windows.Forms.Button();
             this.welcomeBack = new System.Windows.Forms.Label();
             this.settingsLanguageDesc = new System.Windows.Forms.Label();
-            this.settingsUILang = new System.Windows.Forms.ComboBox();
-            this.settingsUILangText = new System.Windows.Forms.Label();
-            this.moreLanguages = new System.Windows.Forms.LinkLabel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.translatedBy = new System.Windows.Forms.Label();
             this.settingsGameFiles = new System.Windows.Forms.Button();
@@ -89,7 +86,6 @@
             this.inputeditor = new System.Windows.Forms.Button();
             this.legacyLaunch = new System.Windows.Forms.CheckBox();
             this.allowedCountriesLabel = new System.Windows.Forms.Label();
-            this.settingsUILangDesc = new System.Windows.Forms.Label();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).BeginInit();
@@ -585,46 +581,6 @@
             this.settingsLanguageDesc.Text = "Select the language that the game text and audio should be displayed in. This wil" +
     "l not affect your chat or server options.";
             // 
-            // settingsUILang
-            // 
-            this.settingsUILang.BackColor = System.Drawing.Color.White;
-            this.settingsUILang.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.settingsUILang.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.settingsUILang.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
-            this.settingsUILang.FormattingEnabled = true;
-            this.settingsUILang.Location = new System.Drawing.Point(59, 353);
-            this.settingsUILang.Name = "settingsUILang";
-            this.settingsUILang.Size = new System.Drawing.Size(210, 21);
-            this.settingsUILang.TabIndex = 48;
-            // 
-            // settingsUILangText
-            // 
-            this.settingsUILangText.AutoSize = true;
-            this.settingsUILangText.BackColor = System.Drawing.Color.Transparent;
-            this.settingsUILangText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
-            this.settingsUILangText.ForeColor = System.Drawing.Color.White;
-            this.settingsUILangText.Location = new System.Drawing.Point(56, 328);
-            this.settingsUILangText.Name = "settingsUILangText";
-            this.settingsUILangText.Size = new System.Drawing.Size(180, 18);
-            this.settingsUILangText.TabIndex = 49;
-            this.settingsUILangText.Text = "LAUNCHER LANGUAGE:";
-            // 
-            // moreLanguages
-            // 
-            this.moreLanguages.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.moreLanguages.AutoSize = true;
-            this.moreLanguages.BackColor = System.Drawing.Color.Transparent;
-            this.moreLanguages.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.moreLanguages.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.moreLanguages.LinkColor = System.Drawing.Color.White;
-            this.moreLanguages.Location = new System.Drawing.Point(56, 376);
-            this.moreLanguages.Name = "moreLanguages";
-            this.moreLanguages.Size = new System.Drawing.Size(101, 13);
-            this.moreLanguages.TabIndex = 53;
-            this.moreLanguages.TabStop = true;
-            this.moreLanguages.Text = "More languages!";
-            this.moreLanguages.VisitedLinkColor = System.Drawing.Color.White;
-            // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
@@ -795,17 +751,6 @@
             this.allowedCountriesLabel.Size = new System.Drawing.Size(10, 10);
             this.allowedCountriesLabel.TabIndex = 76;
             // 
-            // settingsUILangDesc
-            // 
-            this.settingsUILangDesc.BackColor = System.Drawing.Color.Transparent;
-            this.settingsUILangDesc.ForeColor = System.Drawing.Color.White;
-            this.settingsUILangDesc.Location = new System.Drawing.Point(296, 332);
-            this.settingsUILangDesc.Name = "settingsUILangDesc";
-            this.settingsUILangDesc.Size = new System.Drawing.Size(427, 56);
-            this.settingsUILangDesc.TabIndex = 51;
-            this.settingsUILangDesc.Text = "Select the launcher language that the game text and audio should be displayed in." +
-    " Remember to restart your launcher.";
-            // 
             // playProgress
             // 
             this.playProgress.BackColor = System.Drawing.Color.Transparent;
@@ -838,9 +783,6 @@
             this.Controls.Add(this.settingsGameFilesCurrent);
             this.Controls.Add(this.translatedBy);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.moreLanguages);
-            this.Controls.Add(this.settingsUILangDesc);
-            this.Controls.Add(this.settingsUILangText);
             this.Controls.Add(this.welcomeBack);
             this.Controls.Add(this.playProgress);
             this.Controls.Add(this.registerButton);
@@ -875,14 +817,13 @@
             this.Controls.Add(this.playButton);
             this.Controls.Add(this.logoutButton);
             this.Controls.Add(this.registerPassword);
-            this.Controls.Add(this.registerConfirmPassword);
             this.Controls.Add(this.registerPasswordText);
             this.Controls.Add(this.imageServerName);
             this.Controls.Add(this.settingsGameFiles);
-            this.Controls.Add(this.settingsUILang);
             this.Controls.Add(this.settingsQuality);
             this.Controls.Add(this.settingsLanguage);
             this.Controls.Add(this.verticalBanner);
+            this.Controls.Add(this.registerConfirmPassword);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -946,9 +887,6 @@
         private GameLauncherReborn.ProgressBarEx playProgress;
         private System.Windows.Forms.Button logoutButton;
         private System.Windows.Forms.Label welcomeBack;
-        private System.Windows.Forms.ComboBox settingsUILang;
-        private System.Windows.Forms.Label settingsUILangText;
-        private System.Windows.Forms.LinkLabel moreLanguages;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label translatedBy;
         private System.Windows.Forms.Button settingsGameFiles;
@@ -964,6 +902,5 @@
         private System.Windows.Forms.Button inputeditor;
         private System.Windows.Forms.CheckBox legacyLaunch;
         private System.Windows.Forms.Label allowedCountriesLabel;
-        private System.Windows.Forms.Label settingsUILangDesc;
     }
 }

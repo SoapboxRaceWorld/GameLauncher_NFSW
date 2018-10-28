@@ -174,23 +174,6 @@ namespace GameLauncher
             }
 
             InitializeComponent();
-
-            var uIlanguages = Language.getLanguages();
-            settingsUILang.DisplayMember = "Text";
-            settingsUILang.ValueMember = "Value";
-            settingsUILang.DataSource = uIlanguages;
-
-            if (_settingFile.KeyExists("UILanguage"))
-            {
-                settingsUILang.SelectedValue = _settingFile.Read("UILanguage");
-                _uiLanguage = _settingFile.Read("UILanguage");
-            }
-            else
-            {
-                settingsUILang.SelectedValue = "Default";
-                _uiLanguage = "Default";
-            }
-
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
             if (!DetectLinux.UnixDetected())
             {
@@ -270,7 +253,6 @@ namespace GameLauncher
             serverPick.DrawItem += new DrawItemEventHandler(comboBox1_DrawItem);
 
             forgotPassword.LinkClicked += new LinkLabelLinkClickedEventHandler(forgotPassword_LinkClicked);
-            moreLanguages.LinkClicked += new LinkLabelLinkClickedEventHandler(moreLanguages_LinkClicked);
 
             MouseDown += new MouseEventHandler(moveWindow_MouseDown);
             MouseMove += new MouseEventHandler(moveWindow_MouseMove);
@@ -287,13 +269,13 @@ namespace GameLauncher
             //Simple check if we have enough permission to write file and remove them
             if (!Self.hasWriteAccessToFolder(Directory.GetCurrentDirectory()))
             {
-                MessageBox.Show(null, Language.getLangString("ERROR_NOPERMISSION", _uiLanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(null, "Failed to write the test file. Make sure you're running the launcher with administrative privileges.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             //Somewhere here we will setup the game installation directory
             if (string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory")))
             {
-                MessageBox.Show(null, Language.getLangString("INSTALL_INFO", _uiLanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(null, "Howdy! Looks like it's the first time this launcher is started. Please press OK and specify where you want to download all required game files (or select your actual installation).", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 var fbd = new FolderBrowserDialog();
                 var result = fbd.ShowDialog();
@@ -309,7 +291,7 @@ namespace GameLauncher
                     if (fbd.SelectedPath == Environment.CurrentDirectory)
                     {
                         Directory.CreateDirectory("GameFiles");
-                        MessageBox.Show(null, string.Format(Language.getLangString("INSTALL_WARNING", "en"), Environment.CurrentDirectory + "\\GameFiles"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. Instead, we will install it on {0}.", Environment.CurrentDirectory + "\\GameFiles"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         _settingFile.Write("InstallationDirectory", Environment.CurrentDirectory + "\\GameFiles");
                     }
                     else
@@ -354,7 +336,7 @@ namespace GameLauncher
 
             if (Self.CheckForInternetConnection() == false && !DetectLinux.WineDetected())
             {
-                MessageBox.Show(null, Language.getLangString("ERROR_NOINTERNETCONNECTION", _uiLanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(null, "Failed to connect to internet. Please check if your firewall is not blocking launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             ModManager.LoadModCache();
@@ -405,7 +387,7 @@ namespace GameLauncher
             _NFSW_Installation_Source = _settingFile.KeyExists("CDN") ? _settingFile.Read("CDN") : "http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client";
 
             launcherVersion.Text = "v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 6) + "\n" + "CDN: " + _NFSW_Installation_Source;
-            translatedBy.Text = Language.getLangString("MAIN_TRANSLATED", _uiLanguage);
+            translatedBy.Text = ""; //Empty
 
             if (!_settingFile.KeyExists("SkipUpdate"))
             {
@@ -425,14 +407,14 @@ namespace GameLauncher
 
             if (Environment.OSVersion.Version.Major >= 6)
             {
-                ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CHECKUPDATE", _uiLanguage), Updater.CheckForUpdate));
+                ContextMenu.MenuItems.Add(new MenuItem("Check for updates.", Updater.CheckForUpdate));
             }
 
-            ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_ABOUT", _uiLanguage), About.showAbout));
-            ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_SETTINGS", _uiLanguage), settingsButton_Click));
-            ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_ADDSERVER", _uiLanguage), addServer_Click));
+            ContextMenu.MenuItems.Add(new MenuItem("About", About.showAbout));
+            ContextMenu.MenuItems.Add(new MenuItem("Settings", settingsButton_Click));
+            ContextMenu.MenuItems.Add(new MenuItem("Add Server", addServer_Click));
             ContextMenu.MenuItems.Add("-");
-            ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CLOSE", _uiLanguage), closebtn_Click));
+            ContextMenu.MenuItems.Add(new MenuItem("Close launcher", closebtn_Click));
 
             Notification.ContextMenu = ContextMenu;
             Notification.Icon = new Icon(Icon, Icon.Width, Icon.Height);
@@ -732,7 +714,7 @@ namespace GameLauncher
                 {
                     var newdir = Directory.GetCurrentDirectory() + "\\GameFiles";
                     _settingFile.Write("InstallationDirectory", newdir);
-                    MessageBox.Show(null, string.Format(Language.getLangString("ERROR_404DRIVE", _uiLanguage), drive, newdir), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(null, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
@@ -796,19 +778,9 @@ namespace GameLauncher
             //Reshow missing elements
             LoginFormElements(true);
 
-            //Command-line Arguments
-            var args = Environment.GetCommandLineArgs();
-            if (args.Length == 2)
-            {
-                MessageBox.Show(Language.getLangString("MAIN_UPDATED", _uiLanguage));
-            }
-
-            //Possible fix for "MAXIMUM" texture (untested, but worth adding that refference)
-            try
-            {
+            try {
                 var gameInstallDirValue = Registry.GetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", RegistryValueKind.String).ToString();
-                if (gameInstallDirValue != Path.GetFullPath(_settingFile.Read("InstallationDirectory")))
-                {
+                if (gameInstallDirValue != Path.GetFullPath(_settingFile.Read("InstallationDirectory"))) {
                     try
                     {
                         Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", Path.GetFullPath(_settingFile.Read("InstallationDirectory")));
@@ -878,12 +850,12 @@ namespace GameLauncher
                 _blacklistedXML = streamReader.ReadToEnd();
 
                 if (string.IsNullOrWhiteSpace(_slresponse)) {
-                    MessageBox.Show(null, "Unable to load important files, please extract all files from ZIP.", "GameLauncher", MessageBoxButtons.OK);
-                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                    //MessageBox.Show(null, "Unable to load important files, please extract all files from ZIP.", "GameLauncher", MessageBoxButtons.OK);
+                    //Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                 }
             } catch {
-                MessageBox.Show(null, "Manipulation detected. Please re-download and extract launcher files.", "GameLauncher", MessageBoxButtons.OK);
-                Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                //MessageBox.Show(null, "Manipulation detected. Please re-download and extract launcher files.", "GameLauncher", MessageBoxButtons.OK);
+                //Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
             }
 
             BeginInvoke((MethodInvoker)delegate
@@ -1129,7 +1101,7 @@ namespace GameLauncher
 
             if (string.IsNullOrEmpty(serverLoginResponse))
             {
-                ConsoleLog(Language.getLangString("ERROR_SERVEROFFLINE", _uiLanguage), "error");
+                ConsoleLog("Server seems to be offline.", "error");
             }
             else
             {
@@ -1174,23 +1146,23 @@ namespace GameLauncher
                     {
                         if (extraNode.SelectSingleNode("Reason") != null)
                         {
-                            msgBoxInfo = string.Format(Language.getLangString("BANNED_INFO", _uiLanguage), serverName) + "\n";
-                            msgBoxInfo += string.Format(Language.getLangString("BANNED_REASON", _uiLanguage), extraNode.SelectSingleNode("Reason").InnerText);
+                            msgBoxInfo = string.Format("You got banned on {0}.", serverName) + "\n";
+                            msgBoxInfo += string.Format("Reason: {0}", extraNode.SelectSingleNode("Reason").InnerText);
 
                             if (extraNode.SelectSingleNode("Expires") != null)
                             {
-                                msgBoxInfo += "\n" + string.Format(Language.getLangString("BANNED_EXPIRETIME", _uiLanguage), extraNode.SelectSingleNode("Expires").InnerText);
+                                msgBoxInfo += "\n" + string.Format("Ban expires {0}", extraNode.SelectSingleNode("Expires").InnerText);
                             }
                             else
                             {
-                                msgBoxInfo += "\n" + Language.getLangString("BANNED_EXPIRENEVER", _uiLanguage);
+                                msgBoxInfo += "\n" + "Banned forever.";
                             }
                         }
                         else
                         {
                             if (extraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?")
                             {
-                                msgBoxInfo = Language.getLangString("ERROR_TAMPERING", _uiLanguage);
+                                msgBoxInfo = "Launcher tampering detected. Please use original build.";
                             }
                             else
                             {
@@ -1198,7 +1170,7 @@ namespace GameLauncher
                                 {
                                     if (extraNode.InnerText == "LOGIN ERROR")
                                     {
-                                        msgBoxInfo = Language.getLangString("ERROR_INVALIDCREDS", _uiLanguage);
+                                        msgBoxInfo = "Invalid e-mail or password.";
                                     }
                                     else
                                     {
@@ -1225,12 +1197,12 @@ namespace GameLauncher
                         LoginFormElements(false);
                         LoggedInFormElements(true);
 
-                        welcomeBack.Text = string.Format(Language.getLangString("MAIN_WELCOMEBACK", _uiLanguage), username).ToUpper();
+                        welcomeBack.Text = string.Format("Welcome back, {0}!", username).ToUpper();
                     }
                 }
                 catch
                 {
-                    ConsoleLog(Language.getLangString("ERROR_SERVEROFFLINE", _uiLanguage), "error");
+                    ConsoleLog("Server seems to be offline.", "error");
                 }
             }
         }
@@ -1310,14 +1282,14 @@ namespace GameLauncher
             {
                 _builtinserver = true;
                 loginButton.Image = Properties.Resources.smallbutton_enabled;
-                loginButton.Text = Language.getLangString("MAIN_LAUNCH", _uiLanguage).ToUpper();
+                loginButton.Text = "Launch".ToUpper();
                 loginButton.ForeColor = Color.White;
             }
             else
             {
                 _builtinserver = false;
                 loginButton.Image = Properties.Resources.smallbutton_disabled;
-                loginButton.Text = Language.getLangString("MAIN_LOGIN", _uiLanguage).ToUpper();
+                loginButton.Text = "Login".ToUpper();
                 loginButton.ForeColor = Color.Gray;
             }
 
@@ -1348,7 +1320,7 @@ namespace GameLauncher
                         _formGraphics.Dispose();
                     }*/
 
-                    onlineCount.Text = Language.getLangString("ERROR_SERVEROFFLINE", _uiLanguage);
+                    onlineCount.Text = "Server seems to be offline.";
                     _serverEnabled = false;
                     _allowRegistration = false;
                 }
@@ -1430,7 +1402,7 @@ namespace GameLauncher
 
                             var allowed = string.Join(", ", countries);
 
-                            allowedCountriesLabel.Text = string.Format(Language.getLangString("MAIN_ALLOWEDCOUNTRIES", _uiLanguage), allowed);
+                            allowedCountriesLabel.Text = string.Format("Warning, this server only accepts players from: {0}", allowed);
                         }
                         else
                         {
@@ -1439,11 +1411,11 @@ namespace GameLauncher
 
                         if (json.maxUsersAllowed == 0)
                         {
-                            numPlayers = string.Format(Language.getLangString("MAIN_PLAYERSOUTOF", _uiLanguage), json.onlineNumber, json.numberOfRegistered);
+                            numPlayers = string.Format("{0} out of {1}", json.onlineNumber, json.numberOfRegistered);
                         }
                         else
                         {
-                            numPlayers = string.Format(Language.getLangString("MAIN_PLAYERSOUTOF", _uiLanguage), json.onlineNumber, json.maxUsersAllowed.ToString());
+                            numPlayers = string.Format("{0} out of {1}", json.onlineNumber, json.maxUsersAllowed.ToString());
                         }
 
                         _allowRegistration = true;
@@ -1473,7 +1445,7 @@ namespace GameLauncher
                             }*/
                     }
 
-                    onlineCount.Text = string.Format(Language.getLangString("MAIN_PLAYERSONSERVER", _uiLanguage), numPlayers); // "Players on server: " + numPlayers;
+                    onlineCount.Text = string.Format("Players on server: {0}", numPlayers); // "Players on server: " + numPlayers;
                     _serverEnabled = true;
 
                     if (!string.IsNullOrEmpty(verticalImageUrl))
@@ -1522,7 +1494,7 @@ namespace GameLauncher
 
                             if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server")
                             {
-                                onlineCount.Text += string.Format(Language.getLangString("MAIN_PINGSUCCESS", _uiLanguage), reply.RoundtripTime);
+                                onlineCount.Text += string.Format("Server ping is {0}ms.", reply.RoundtripTime);
                             }
                             else
                             {
@@ -1541,7 +1513,7 @@ namespace GameLauncher
 
                                         if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server")
                                         {
-                                            onlineCount.Text += string.Format(Language.getLangString("MAIN_PINGSUCCESS", _uiLanguage), reply.RoundtripTime);
+                                            onlineCount.Text += string.Format("Server ping is {0}ms.", reply.RoundtripTime);
                                         }
                                         else
                                         {
@@ -1553,7 +1525,7 @@ namespace GameLauncher
                                                 _formGraphics.Dispose();
                                             }*/
 
-                                            onlineCount.Text += string.Format(Language.getLangString("MAIN_PINGSUCCESS", _uiLanguage), (artificialPingEnd - artificialPingStart).ToString());
+                                            onlineCount.Text += string.Format("Server ping is {0}ms.", (artificialPingEnd - artificialPingStart).ToString());
                                             onlineCount.Text += " (HTTP)";
                                         }
                                     };
@@ -1568,7 +1540,7 @@ namespace GameLauncher
                                         _formGraphics.Dispose();
                                     }*/
 
-                                    onlineCount.Text += Language.getLangString("MAIN_PINGFAILED", _uiLanguage);
+                                    onlineCount.Text += "Server doesn't allow pinging.";
                                 }
                             }
                         };
@@ -1583,7 +1555,7 @@ namespace GameLauncher
                             _formGraphics.Dispose();
                         }*/
 
-                        onlineCount.Text += Language.getLangString("MAIN_PINGDISABLED", _uiLanguage);
+                        onlineCount.Text += "Ping is disabled on non-Windows platform.";
                     }
                 }
             };
@@ -1623,8 +1595,6 @@ namespace GameLauncher
             settingsSave.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsLanguageDesc.Font = new Font(fontFamily1, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             settingsQualityDesc.Font = new Font(fontFamily1, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsUILangDesc.Font = new Font(fontFamily1, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsUILangText.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             settingsGamePathText.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsGameFilesCurrent.Font = new Font(fontFamily2, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
@@ -1640,13 +1610,13 @@ namespace GameLauncher
             if (_allowRegistration)
             {
                 BackgroundImage = Properties.Resources.secondarybackground;
-                currentWindowInfo.Text = string.Format(Language.getLangString("MAIN_INFORMATIONREG", _uiLanguage), serverPick.GetItemText(serverPick.SelectedItem)).ToUpper();
+                currentWindowInfo.Text = string.Format("Register on {0}", serverPick.GetItemText(serverPick.SelectedItem)).ToUpper();
                 LoginFormElements(false);
                 RegisterFormElements(true);
             }
             else
             {
-                MessageBox.Show(Language.getLangString("ERROR_SERVEROFFLINE", _uiLanguage));
+                MessageBox.Show("Server seems to be offline.");
             }
         }
 
@@ -1671,7 +1641,7 @@ namespace GameLauncher
         {
             if (hideElements)
             {
-                currentWindowInfo.Text = Language.getLangString("MAIN_INFORMATION", _uiLanguage).ToUpper();
+                currentWindowInfo.Text = "Enter your account information to Log In:".ToUpper();
                 currentWindowInfo.Location = new Point(479, 140);
                 currentWindowInfo.Size = new Size(222, 46);
             }
@@ -1692,7 +1662,7 @@ namespace GameLauncher
         {
             if (hideElements)
             {
-                currentWindowInfo.Text = Language.getLangString("MAIN_INFORMATION", _uiLanguage).ToUpper();
+                currentWindowInfo.Text = "Enter your account information to Log In:".ToUpper();
                 currentWindowInfo.Location = new Point(479, 140);
                 currentWindowInfo.Size = new Size(222, 46);
             }
@@ -1766,7 +1736,7 @@ namespace GameLauncher
 
         private void logoutButton_Click(object sender, EventArgs e)
         {
-            var reply = MessageBox.Show(null, string.Format(Language.getLangString("MAIN_LOGOUTCONFIRM", _uiLanguage), serverPick.GetItemText(serverPick.SelectedItem)), "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            var reply = MessageBox.Show(null, string.Format("Are you sure you want to log out from {0}?", serverPick.GetItemText(serverPick.SelectedItem)), "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (reply == DialogResult.Yes)
             {
                 BackgroundImage = Properties.Resources.loginbg;
@@ -1820,7 +1790,7 @@ namespace GameLauncher
         {
             errorEmail.Text = ""; errorPassword.Text = ""; errorConfirm.Text = ""; errorTicket.Text = ""; errorTOS.Text = ""; registerAgree.ForeColor = Color.White;
             BackgroundImage = Properties.Resources.loginbg;
-            currentWindowInfo.Text = Language.getLangString("MAIN_INFORMATION", _uiLanguage).ToUpper();
+            currentWindowInfo.Text = "Enter your account information to Log In:".ToUpper();
             RegisterFormElements(false);
             LoginFormElements(true);
         }
@@ -1863,13 +1833,13 @@ namespace GameLauncher
             if (string.IsNullOrEmpty(registerEmail.Text))
             {
                 DrawErrorAroundTextBox(registerEmail);
-                errorEmail.Text = Language.getLangString("ERROR_REGISTER_MAILEMPTY", _uiLanguage).ToUpper();
+                errorEmail.Text = "Please enter your e-mail.".ToUpper();
                 registerSuccess = false;
             }
             else if (Self.validateEmail(registerEmail.Text) == false)
             {
                 DrawErrorAroundTextBox(registerEmail);
-                errorEmail.Text = Language.getLangString("ERROR_REGISTER_MAILCORRECT", _uiLanguage).ToUpper();
+                errorEmail.Text = "Please enter a valid e-mail address.".ToUpper();
                 registerSuccess = false;
             }
             else
@@ -1880,7 +1850,7 @@ namespace GameLauncher
             if (string.IsNullOrEmpty(registerTicket.Text) && _ticketRequired)
             {
                 DrawErrorAroundTextBox(registerTicket);
-                errorTicket.Text = Language.getLangString("ERROR_REGISTER_TICKET", _uiLanguage).ToUpper();
+                errorTicket.Text = "Please enter your ticket.".ToUpper();
                 registerSuccess = false;
             }
             else
@@ -1891,7 +1861,7 @@ namespace GameLauncher
             if (string.IsNullOrEmpty(registerPassword.Text))
             {
                 DrawErrorAroundTextBox(registerPassword);
-                errorPassword.Text = Language.getLangString("ERROR_REGISTER_PASSWORDEMPTY", _uiLanguage).ToUpper();
+                errorPassword.Text = "Please enter your password.".ToUpper();
                 registerSuccess = false;
                 passwordfield = true;
             }
@@ -1903,7 +1873,7 @@ namespace GameLauncher
             if (string.IsNullOrEmpty(registerConfirmPassword.Text))
             {
                 DrawErrorAroundTextBox(registerConfirmPassword);
-                errorConfirm.Text = Language.getLangString("ERROR_REGISTER_PASSWORDVERIFY", _uiLanguage).ToUpper();
+                errorConfirm.Text = "Please confirm your password.".ToUpper();
                 registerSuccess = false;
             }
             else
@@ -1915,7 +1885,7 @@ namespace GameLauncher
             {
                 DrawErrorAroundTextBox(registerConfirmPassword);
                 DrawErrorAroundTextBox(registerPassword);
-                errorPassword.Text = Language.getLangString("ERROR_REGISTER_PASSWORDMISMATCH", _uiLanguage).ToUpper();
+                errorPassword.Text = "Passwords don't match.".ToUpper();
                 registerSuccess = false;
             }
             else
@@ -1929,7 +1899,7 @@ namespace GameLauncher
             if (!registerAgree.Checked)
             {
                 registerAgree.ForeColor = Color.Red;
-                errorTOS.Text = Language.getLangString("ERROR_REGISTER_TOS", _uiLanguage).ToUpper();
+                errorTOS.Text = "You have not agreed to the Terms of Service.".ToUpper();
                 registerSuccess = false;
             }
             else
@@ -2027,11 +1997,11 @@ namespace GameLauncher
                         {
                             if (extraNode.InnerText == "SERVER FULL")
                             {
-                                MessageBox.Show(null, string.Format(Language.getLangString("MAIN_REGISTERSUCCESS", _uiLanguage), serverName) + " However, server is actually full, therefore you cannot play it right now.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show(null, string.Format("Successfully registered on {0}. However, server is actually full, therefore you cannot play it right now.", serverName), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                             else
                             {
-                                MessageBox.Show(null, string.Format(Language.getLangString("MAIN_REGISTERSUCCESS", _uiLanguage), serverName), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show(null, string.Format("Successfully registered on {0}. You can log in now.", serverName), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
 
                             _userId = userIdNode.InnerText;
@@ -2051,16 +2021,16 @@ namespace GameLauncher
                         {
                             if (extraNode.SelectSingleNode("Reason") != null)
                             {
-                                msgBoxInfo = string.Format(Language.getLangString("BANNED_INFO", _uiLanguage), serverPick.GetItemText(serverPick.SelectedItem)) + "\n";
-                                msgBoxInfo += string.Format(Language.getLangString("BANNED_REASON", _uiLanguage), extraNode.SelectSingleNode("Reason").InnerText);
+                                msgBoxInfo = string.Format("You got banned on {0}.", serverPick.GetItemText(serverPick.SelectedItem)) + "\n";
+                                msgBoxInfo += string.Format("Reason: {0}", extraNode.SelectSingleNode("Reason").InnerText);
 
                                 if (extraNode.SelectSingleNode("Expires") != null)
                                 {
-                                    msgBoxInfo += "\n" + string.Format(Language.getLangString("BANNED_EXPIRETIME", _uiLanguage), extraNode.SelectSingleNode("Expires").InnerText);
+                                    msgBoxInfo += "\n" + string.Format("Ban expires {0}", extraNode.SelectSingleNode("Expires").InnerText);
                                 }
                                 else
                                 {
-                                    msgBoxInfo += "\n" + Language.getLangString("BANNED_EXPIRENEVER", _uiLanguage);
+                                    msgBoxInfo += "\n" + "Banned forever.";
                                 }
 
                                 ConsoleLog(msgBoxInfo, "error");
@@ -2069,7 +2039,7 @@ namespace GameLauncher
                             {
                                 if (extraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?")
                                 {
-                                    msgBoxInfo = Language.getLangString("ERROR_TAMPERING", _uiLanguage);
+                                    msgBoxInfo = "Launcher tampering detected. Please use original build.";
                                     ConsoleLog(msgBoxInfo, "error");
                                 }
                                 else
@@ -2091,12 +2061,12 @@ namespace GameLauncher
                     }
                     catch
                     {
-                        MessageBox.Show(Language.getLangString("ERROR_SERVEROFFLINE", _uiLanguage));
+                        MessageBox.Show("Server seems to be offline.");
                     }
                 }
                 catch
                 {
-                    MessageBox.Show(Language.getLangString("ERROR_SERVEROFFLINE", _uiLanguage));
+                    MessageBox.Show("Server seems to be offline.");
                 }
             }
             else
@@ -2201,12 +2171,6 @@ namespace GameLauncher
 
             userSettingsXml.Save(_userSettings);
 
-            if (_settingFile.Read("UILanguage") != settingsUILang.SelectedValue.ToString())
-            {
-                _settingFile.Write("UILanguage", settingsUILang.SelectedValue.ToString());
-                _restartRequired = true;
-            }
-
             if (_settingFile.Read("InstallationDirectory") != _newGameFilesPath)
             {
                 _settingFile.Write("InstallationDirectory", _newGameFilesPath);
@@ -2226,7 +2190,7 @@ namespace GameLauncher
 
             if (_restartRequired)
             {
-                MessageBox.Show(null, Language.getLangString("MAIN_LAUNCHERRESTART", _uiLanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(null, "Launcher needs to restart to apply new settings.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 Application.Restart();
                 closebtn_Click(sender, e);
@@ -2269,7 +2233,7 @@ namespace GameLauncher
         {
             if (hideElements)
             {
-                currentWindowInfo.Text = Language.getLangString("MAIN_INFORMATIONSETTINGS", _uiLanguage).ToUpper();
+                currentWindowInfo.Text = "Please select your game settings:".ToUpper();
                 currentWindowInfo.Location = new Point(53, 150);
                 currentWindowInfo.Size = new Size(700, 46);
             }
@@ -2281,10 +2245,6 @@ namespace GameLauncher
             settingsQuality.Visible = hideElements;
             settingsQualityText.Visible = hideElements;
             settingsQualityDesc.Visible = hideElements;
-            settingsUILang.Visible = hideElements;
-            settingsUILangText.Visible = hideElements;
-            settingsUILangDesc.Visible = hideElements;
-            moreLanguages.Visible = hideElements;
             settingsGameFiles.Visible = hideElements;
             settingsGameFilesCurrent.Visible = hideElements;
             settingsGamePathText.Visible = hideElements;
@@ -2482,7 +2442,7 @@ namespace GameLauncher
 
                     if (_builtinserver)
                     {
-                        playProgressText.Text = Language.getLangString("MAIN_BUILTINSERVERINIT", _uiLanguage).ToUpper();
+                        playProgressText.Text = "Soapbox server launched. Waiting for queries.".ToUpper();
                     }
                     else if (!DetectLinux.UnixDetected())
                     {
@@ -2490,12 +2450,12 @@ namespace GameLauncher
 
                         while (secondsToCloseLauncher > 0)
                         {
-                            playProgressText.Text = string.Format(Language.getLangString("MAIN_LOADINGGAME", _uiLanguage), secondsToCloseLauncher).ToUpper(); //"LOADING GAME. LAUNCHER WILL MINIMIZE ITSELF IN " + secondsToCloseLauncher + " SECONDS";
+                            playProgressText.Text = string.Format("Loading game. Launcher will minimize in {0} seconds.", secondsToCloseLauncher).ToUpper(); //"LOADING GAME. LAUNCHER WILL MINIMIZE ITSELF IN " + secondsToCloseLauncher + " SECONDS";
                             Delay.WaitSeconds(1);
                             secondsToCloseLauncher--;
                         }
 
-                        playProgressText.Text = string.Format(Language.getLangString("MAIN_LOADINGGAME", _uiLanguage), 0).ToUpper();
+                        playProgressText.Text = string.Format("Loading game. Launcher will minimize in {0} seconds.", 0).ToUpper();
 
                         WindowState = FormWindowState.Minimized;
                         ShowInTaskbar = false;
@@ -2504,13 +2464,13 @@ namespace GameLauncher
 
                         if (Environment.OSVersion.Version.Major >= 6)
                         {
-                            ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CHECKUPDATE", _uiLanguage), Updater.CheckForUpdate));
+                            ContextMenu.MenuItems.Add(new MenuItem("Check for updates.", Updater.CheckForUpdate));
                         }
 
-                        ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_ABOUT", _uiLanguage), About.showAbout));
-                        ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_ADDSERVER", _uiLanguage), addServer_Click));
+                        ContextMenu.MenuItems.Add(new MenuItem("About", About.showAbout));
+                        ContextMenu.MenuItems.Add(new MenuItem("Add Server", addServer_Click));
                         ContextMenu.MenuItems.Add("-");
-                        ContextMenu.MenuItems.Add(new MenuItem(Language.getLangString("CONTEXT_CLOSE", _uiLanguage), (sender2, e2) =>
+                        ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", (sender2, e2) =>
                         {
                             MessageBox.Show(null, "Please close the game before closing launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }));
@@ -2529,12 +2489,12 @@ namespace GameLauncher
                 }
                 else
                 {
-                    MessageBox.Show(null, Language.getLangString("ERROR_HASHMISMATCHNFSW", _uiLanguage), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(null, Language.getLangString("ERROR_404NFSW", _uiLanguage) + "\n\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(null, "Failed to find NFSW.exe. Make sure you have \"Need for Speed™: World\" installed on your PC." + "\n\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2583,7 +2543,7 @@ namespace GameLauncher
             playButton.BackgroundImage = Properties.Resources.largebutton_disabled;
             playButton.ForeColor = Color.Gray;
 
-            playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_CHECKINGFILES", _uiLanguage).ToUpper();
+            playProgressText.Text = "Checking up all files".ToUpper();
             playProgressTime.Text = "";
 
             string speechFile;
@@ -2599,14 +2559,13 @@ namespace GameLauncher
 
             if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/Sound/Speech/copspeechhdr_" + speechFile + ".big"))
             {
-                Console.WriteLine("nofile");
-                playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_LOADINGFILELIST", _uiLanguage).ToUpper();
+                playProgressText.Text = "Loading list of files to download...".ToUpper();
 
                 Kernel32.GetDiskFreeSpaceEx(_settingFile.Read("InstallationDirectory"), out var lpFreeBytesAvailable, out _, out _);
                 if (lpFreeBytesAvailable <= 4000000000)
                 {
                     playProgress.Value = 100;
-                    playProgressText.Text = Language.getLangString("ERROR_NOTENOUGHSPACE", _uiLanguage).ToUpper();
+                    playProgressText.Text = "Failed to download game files. Please make sure you have at least 4GB free space on hard drive.".ToUpper();
                     playProgressTime.Hide();
                     playProgressTime.Text = "";
                     playProgress.ProgressColor = Color.Orange;
@@ -2625,7 +2584,7 @@ namespace GameLauncher
 
         public void DownloadCoreFiles()
         {
-            playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_CHECKINGCORE", _uiLanguage).ToUpper();
+            playProgressText.Text = "Checking core files...".ToUpper();
             playProgressTime.Text = "";
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
@@ -2643,7 +2602,7 @@ namespace GameLauncher
 
         public void DownloadTracksFiles()
         {
-            playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_CHECKINGTRACKS", _uiLanguage).ToUpper();
+            playProgressText.Text = "Checking track files...".ToUpper();
             playProgressTime.Text = "";
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
@@ -2661,7 +2620,7 @@ namespace GameLauncher
 
         public void DownloadSpeechFiles()
         {
-            playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_LOOKINGSPEECH", _uiLanguage).ToUpper();
+            playProgressText.Text = "Looking for correct speech files...".ToUpper();
             playProgressTime.Text = "";
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
@@ -2700,7 +2659,7 @@ namespace GameLauncher
                 _langInfo = "ENGLISH";
             }
 
-            playProgressText.Text = string.Format(Language.getLangString("MAIN_DOWNLOADER_CHECKINGSPEECH", _uiLanguage), _langInfo).ToUpper();
+            playProgressText.Text = string.Format("Checking for {0} speech files.", _langInfo).ToUpper();
 
             if (!File.Exists(_settingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big"))
             {
@@ -2715,7 +2674,7 @@ namespace GameLauncher
 
         public void DownloadTracksHighFiles()
         {
-            playProgressText.Text = Language.getLangString("MAIN_DOWNLOADER_CHECKINGTRACKSHIGH", _uiLanguage).ToUpper();
+            playProgressText.Text = "Checking track (high) files.".ToUpper();
             playProgressTime.Text = "";
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
@@ -2782,7 +2741,7 @@ namespace GameLauncher
             if (downloadCurrent < compressedLength)
             {
                 var file = filename.Replace(_settingFile.Read("InstallationDirectory") + "/", "").ToUpper();
-                playProgressText.Text = string.Format(Language.getLangString("MAIN_DOWNLOADING", _uiLanguage).ToUpper(), FormatFileSize(downloadCurrent), FormatFileSize(compressedLength), file);
+                playProgressText.Text = string.Format("Downloading {2} ({0}/{1})".ToUpper(), FormatFileSize(downloadCurrent), FormatFileSize(compressedLength), file);
 
                 if (skiptime == 0)
                 {
@@ -2881,7 +2840,7 @@ namespace GameLauncher
             playProgress.Value = 100;
             playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
             playButton.ForeColor = Color.White;
-            playProgressText.Text = Language.getLangString("MAIN_DOWNLOADCOMPLETED", _uiLanguage).ToUpper();
+            playProgressText.Text = "Download completed.".ToUpper();
             playProgressTime.Text = "";
         }
 
@@ -2900,7 +2859,7 @@ namespace GameLauncher
             }
 
             playProgress.Value = 100;
-            playProgressText.Text = string.Format(Language.getLangString("MAIN_DOWNLOADFAILED", _uiLanguage), failureMessage).ToUpper();
+            playProgressText.Text = string.Format("Download failed. {0}", failureMessage).ToUpper();
             playProgressTime.Text = "";
             playProgress.ProgressColor = Color.Red;
 
@@ -2919,7 +2878,7 @@ namespace GameLauncher
 
         public void SetTranslations(string langId)
         {
-            emailLabel.Text = Language.getLangString("MAIN_EMAIL", langId).ToUpper();
+            /*emailLabel.Text = Language.getLangString("MAIN_EMAIL", langId).ToUpper();
             passwordLabel.Text = Language.getLangString("MAIN_PASSWORD", langId).ToUpper();
             rememberMe.Text = Language.getLangString("MAIN_REMEMBERME", langId).ToUpper();
             forgotPassword.Text = Language.getLangString("MAIN_FORGOTPASS", langId).ToUpper();
@@ -2941,7 +2900,7 @@ namespace GameLauncher
             settingsUILangText.Text = Language.getLangString("MAIN_SETTINGSUILANG", langId).ToUpper();
             settingsUILangDesc.Text = Language.getLangString("MAIN_SETTINGSUIDESC", langId);
 
-            logoutButton.Text = Language.getLangString("MAIN_LOGOUT", langId).ToUpper();
+            logoutButton.Text = Language.getLangString("MAIN_LOGOUT", langId).ToUpper();*/
         }
     }
 }
