@@ -107,24 +107,24 @@
             // 
             // email
             // 
-            this.email.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(35)))), ((int)(((byte)(81)))));
+            this.email.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
             this.email.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.email.Font = new System.Drawing.Font("Arial", 14F);
             this.email.ForeColor = System.Drawing.Color.White;
-            this.email.Location = new System.Drawing.Point(473, 285);
+            this.email.Location = new System.Drawing.Point(599, 238);
             this.email.Name = "email";
-            this.email.Size = new System.Drawing.Size(244, 22);
+            this.email.Size = new System.Drawing.Size(251, 22);
             this.email.TabIndex = 2;
             // 
             // password
             // 
-            this.password.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(35)))), ((int)(((byte)(81)))));
+            this.password.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
             this.password.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.password.Font = new System.Drawing.Font("Arial", 14F);
             this.password.ForeColor = System.Drawing.Color.White;
-            this.password.Location = new System.Drawing.Point(761, 285);
+            this.password.Location = new System.Drawing.Point(600, 288);
             this.password.Name = "password";
-            this.password.Size = new System.Drawing.Size(182, 22);
+            this.password.Size = new System.Drawing.Size(251, 22);
             this.password.TabIndex = 4;
             this.password.UseSystemPasswordChar = true;
             this.password.WordWrap = false;
@@ -218,7 +218,7 @@
             this.emailLabel.BackColor = System.Drawing.Color.Transparent;
             this.emailLabel.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.emailLabel.ForeColor = System.Drawing.Color.White;
-            this.emailLabel.Location = new System.Drawing.Point(460, 238);
+            this.emailLabel.Location = new System.Drawing.Point(902, 74);
             this.emailLabel.Name = "emailLabel";
             this.emailLabel.Size = new System.Drawing.Size(148, 19);
             this.emailLabel.TabIndex = 2;
@@ -230,7 +230,7 @@
             this.passwordLabel.BackColor = System.Drawing.Color.Transparent;
             this.passwordLabel.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.passwordLabel.ForeColor = System.Drawing.Color.White;
-            this.passwordLabel.Location = new System.Drawing.Point(747, 238);
+            this.passwordLabel.Location = new System.Drawing.Point(920, 238);
             this.passwordLabel.Name = "passwordLabel";
             this.passwordLabel.Size = new System.Drawing.Size(106, 19);
             this.passwordLabel.TabIndex = 3;
@@ -445,7 +445,7 @@
             this.playProgressText.BackColor = System.Drawing.Color.Transparent;
             this.playProgressText.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.playProgressText.ForeColor = System.Drawing.Color.White;
-            this.playProgressText.Location = new System.Drawing.Point(33, 471);
+            this.playProgressText.Location = new System.Drawing.Point(55, 422);
             this.playProgressText.Name = "playProgressText";
             this.playProgressText.Size = new System.Drawing.Size(120, 19);
             this.playProgressText.TabIndex = 10;
@@ -506,7 +506,7 @@
             // 
             this.launcherVersion.BackColor = System.Drawing.Color.Transparent;
             this.launcherVersion.ForeColor = System.Drawing.Color.DarkGray;
-            this.launcherVersion.Location = new System.Drawing.Point(535, 520);
+            this.launcherVersion.Location = new System.Drawing.Point(426, 487);
             this.launcherVersion.Name = "launcherVersion";
             this.launcherVersion.Size = new System.Drawing.Size(453, 33);
             this.launcherVersion.TabIndex = 2;
@@ -564,7 +564,7 @@
             this.welcomeBack.BackColor = System.Drawing.Color.Transparent;
             this.welcomeBack.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.welcomeBack.ForeColor = System.Drawing.Color.White;
-            this.welcomeBack.Location = new System.Drawing.Point(460, 238);
+            this.welcomeBack.Location = new System.Drawing.Point(904, 84);
             this.welcomeBack.Name = "welcomeBack";
             this.welcomeBack.Size = new System.Drawing.Size(158, 19);
             this.welcomeBack.TabIndex = 46;
@@ -756,17 +756,21 @@
             this.playProgress.BackColor = System.Drawing.Color.Transparent;
             this.playProgress.BackgroundColor = System.Drawing.Color.Black;
             this.playProgress.Border = false;
+            this.playProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.playProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.playProgress.GradiantPosition = GameLauncherReborn.ProgressBarEx.GradiantArea.None;
             this.playProgress.Image = null;
-            this.playProgress.Location = new System.Drawing.Point(37, 494);
+            this.playProgress.Location = new System.Drawing.Point(40, 447);
             this.playProgress.Name = "playProgress";
-            this.playProgress.Size = new System.Drawing.Size(700, 5);
+            this.playProgress.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.playProgress.RoundedCorners = false;
+            this.playProgress.Size = new System.Drawing.Size(521, 15);
             this.playProgress.Text = "downloadProgress";
             // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImage = global::GameLauncher.Properties.Resources.full;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.allowedCountriesLabel);

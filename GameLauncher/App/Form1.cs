@@ -174,7 +174,6 @@ namespace GameLauncher
             }
 
             InitializeComponent();
-            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
             if (!DetectLinux.UnixDetected())
             {
                 ApplyEmbeddedFonts();
@@ -193,7 +192,7 @@ namespace GameLauncher
             }
 
             MaximizeBox = false;
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
 
             closebtn.MouseEnter += new EventHandler(closebtn_MouseEnter);
             closebtn.MouseLeave += new EventHandler(closebtn_MouseLeave);
@@ -2171,41 +2170,30 @@ namespace GameLauncher
 
             userSettingsXml.Save(_userSettings);
 
-            if (_settingFile.Read("InstallationDirectory") != _newGameFilesPath)
-            {
+            if (_settingFile.Read("InstallationDirectory") != _newGameFilesPath) {
                 _settingFile.Write("InstallationDirectory", _newGameFilesPath);
                 _restartRequired = true;
             }
 
-            if (legacyLaunch.Checked)
-            {
+            if (legacyLaunch.Checked) {
                 _useLegacy = true;
                 _settingFile.Write("UseLegacyLaunchMethod", "1");
-            }
-            else
-            {
+            } else {
                 _useLegacy = false;
                 _settingFile.Write("UseLegacyLaunchMethod", "0");
             }
 
-            if (_restartRequired)
-            {
-                MessageBox.Show(null, "Launcher needs to restart to apply new settings.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                Application.Restart();
-                closebtn_Click(sender, e);
+            if (_restartRequired) {
+                MessageBox.Show(null, "In order to see settings changes, you need to restart launcher manually.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             SettingsFormElements(false);
 
-            if (_loggedIn)
-            {
+            if (_loggedIn) {
                 BackgroundImage = Properties.Resources.loggedbg;
                 LoginFormElements();
                 LoggedInFormElements(true);
-            }
-            else
-            {
+            } else {
                 BackgroundImage = Properties.Resources.loginbg;
                 LoggedInFormElements(false);
                 LoginFormElements(true);

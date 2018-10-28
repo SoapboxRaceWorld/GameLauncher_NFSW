@@ -301,6 +301,7 @@
     <EmbeddedResource Include="LZMA\LZMA.dll" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\full.png" />
     <None Include="Resources\loggedbg.png" />
     <None Include="Resources\loginbg.png" />
     <None Include="Resources\mainwindow.png" />
