@@ -307,9 +307,9 @@ namespace GameLauncherReborn
                 if (rec.Width < rec.Height)
                     rad = Convert.ToInt32(rec.Width / 2.5);
 
-                using (LinearGradientBrush _BackColorBrush = new LinearGradientBrush(StartPoint, EndPoint, _BackColor, _GradiantColor))
+
+                using (Brush _BackColorBrush = new SolidBrush(Color.FromArgb(0, 0, 0, 0)))
                 {
-                    _BackColorBrush.Blend = bBlend;
                     if (_RoundedCorners)
                     {
                         gp.AddArc(rec.X, rec.Y, rad, rad, 180, 90);

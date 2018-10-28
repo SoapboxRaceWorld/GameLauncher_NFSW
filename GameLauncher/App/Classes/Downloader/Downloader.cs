@@ -591,6 +591,8 @@ namespace GameLauncher
                                 IntPtr value = new IntPtr(num22);
                                 int num24 = LZMA.LzmaUncompressBuf2File(text6, ref value, array3, ref intPtr, array5, outPropsSize);
 
+
+                                //TODO: use total file lenght and extracted file length instead of files checked and total array size.
 								object[] xxxxxx = new object[] { text6, fileschecked, xmlNodeList.Count};
 								this.mFE.BeginInvoke(this.mShowExtract, xxxxxx);
 

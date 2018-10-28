@@ -87,6 +87,7 @@
             this.legacyLaunch = new System.Windows.Forms.CheckBox();
             this.allowedCountriesLabel = new System.Windows.Forms.Label();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
@@ -111,7 +112,7 @@
             this.email.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.email.Font = new System.Drawing.Font("Arial", 14F);
             this.email.ForeColor = System.Drawing.Color.White;
-            this.email.Location = new System.Drawing.Point(599, 238);
+            this.email.Location = new System.Drawing.Point(600, 238);
             this.email.Name = "email";
             this.email.Size = new System.Drawing.Size(251, 22);
             this.email.TabIndex = 2;
@@ -445,7 +446,7 @@
             this.playProgressText.BackColor = System.Drawing.Color.Transparent;
             this.playProgressText.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.playProgressText.ForeColor = System.Drawing.Color.White;
-            this.playProgressText.Location = new System.Drawing.Point(55, 422);
+            this.playProgressText.Location = new System.Drawing.Point(51, 419);
             this.playProgressText.Name = "playProgressText";
             this.playProgressText.Size = new System.Drawing.Size(120, 19);
             this.playProgressText.TabIndex = 10;
@@ -762,15 +763,31 @@
             this.playProgress.Image = null;
             this.playProgress.Location = new System.Drawing.Point(40, 447);
             this.playProgress.Name = "playProgress";
-            this.playProgress.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.playProgress.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(84)))), ((int)(((byte)(92)))));
             this.playProgress.RoundedCorners = false;
             this.playProgress.Size = new System.Drawing.Size(521, 15);
             this.playProgress.Text = "downloadProgress";
             // 
+            // extractingProgress
+            // 
+            this.extractingProgress.BackColor = System.Drawing.Color.Transparent;
+            this.extractingProgress.BackgroundColor = System.Drawing.Color.Black;
+            this.extractingProgress.Border = false;
+            this.extractingProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.extractingProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.extractingProgress.GradiantPosition = GameLauncherReborn.ProgressBarEx.GradiantArea.None;
+            this.extractingProgress.Image = null;
+            this.extractingProgress.Location = new System.Drawing.Point(40, 447);
+            this.extractingProgress.Name = "extractingProgress";
+            this.extractingProgress.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.extractingProgress.RoundedCorners = false;
+            this.extractingProgress.Size = new System.Drawing.Size(521, 15);
+            this.extractingProgress.Text = "downloadProgress";
+            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackgroundImage = global::GameLauncher.Properties.Resources.full;
+            this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg1;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.allowedCountriesLabel);
@@ -788,7 +805,6 @@
             this.Controls.Add(this.translatedBy);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.welcomeBack);
-            this.Controls.Add(this.playProgress);
             this.Controls.Add(this.registerButton);
             this.Controls.Add(this.launcherVersion);
             this.Controls.Add(this.playProgressTime);
@@ -828,6 +844,8 @@
             this.Controls.Add(this.settingsLanguage);
             this.Controls.Add(this.verticalBanner);
             this.Controls.Add(this.registerConfirmPassword);
+            this.Controls.Add(this.extractingProgress);
+            this.Controls.Add(this.playProgress);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -906,5 +924,6 @@
         private System.Windows.Forms.Button inputeditor;
         private System.Windows.Forms.CheckBox legacyLaunch;
         private System.Windows.Forms.Label allowedCountriesLabel;
+        private GameLauncherReborn.ProgressBarEx extractingProgress;
     }
 }

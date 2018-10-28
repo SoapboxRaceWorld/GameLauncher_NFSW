@@ -319,13 +319,13 @@ namespace GameLauncher
             imageServerName.Location = pos;
             imageServerName.BackColor = Color.Transparent;
 
-            /*var pos2 = PointToScreen(onlineCount.Location);
-            pos2 = verticalBanner.PointToClient(pos2);
-            onlineCount.Parent = verticalBanner;
-            onlineCount.Location = pos2;
-            onlineCount.BackColor = Color.Transparent;
+            var pos2 = PointToScreen(extractingProgress.Location);
+            pos2 = playProgress.PointToClient(pos2);
+            extractingProgress.Parent = playProgress;
+            extractingProgress.Location = pos2;
+            extractingProgress.BackColor = Color.Transparent;
 
-            if (_isIndex)
+            /*if (_isIndex)
             {
                 _formGraphics = CreateGraphics();
                 _formGraphics.DrawRectangle(_colorLoading, new Rectangle(new Point(30, 125), new Size(372, 274)));
@@ -2826,6 +2826,7 @@ namespace GameLauncher
             _isDownloading = false;
             _playenabled = true;
             playProgress.Value = 100;
+            extractingProgress.Value = 100;
             playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
             playButton.ForeColor = Color.White;
             playProgressText.Text = "Download completed.".ToUpper();
@@ -2837,12 +2838,9 @@ namespace GameLauncher
             string failureMessage;
             MessageBox.Show(null, "Failed to extract GameFiles. You can try to install them manually by downloading: \n\nhttps://mega.nz/#!6ho3GI4I!5_1WvT0gQQTrc3t_Z8HX2GeENkoTU7y8Qs_J6TNeco0", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            try
-            {
+            try {
                 failureMessage = ex.Message;
-            }
-            catch
-            {
+            } catch {
                 failureMessage = "No internet access";
             }
 
@@ -2857,38 +2855,16 @@ namespace GameLauncher
 
 		private void OnShowExtract(string filename, int currentCount, int allFilesCount) {
 			playProgressText.Text = "EXTRACTING " + filename.Replace(_settingFile.Read("InstallationDirectory") + "/", "").ToUpper() + " (" + currentCount + "/" + allFilesCount + ")";
-		}
+            extractingProgress.Value = (int)(100 * currentCount / allFilesCount);
+        }
 
         private void OnShowMessage(string message, string header)
         {
             MessageBox.Show(message, header);
         }
 
-        public void SetTranslations(string langId)
-        {
-            /*emailLabel.Text = Language.getLangString("MAIN_EMAIL", langId).ToUpper();
-            passwordLabel.Text = Language.getLangString("MAIN_PASSWORD", langId).ToUpper();
-            rememberMe.Text = Language.getLangString("MAIN_REMEMBERME", langId).ToUpper();
-            forgotPassword.Text = Language.getLangString("MAIN_FORGOTPASS", langId).ToUpper();
-            playButton.Text = Language.getLangString("MAIN_PLAY", langId).ToUpper();
+        public void SetTranslations(string langId) {
 
-            registerEmailText.Text = Language.getLangString("MAIN_REGISTEREMAIL", langId).ToUpper();
-            registerPasswordText.Text = Language.getLangString("MAIN_REGISTERPASS", langId).ToUpper();
-            registerConfirmPasswordText.Text = Language.getLangString("MAIN_REGISTERCONFIRMPASS", langId).ToUpper();
-            registerTicketText.Text = Language.getLangString("MAIN_REGISTERTICKET", langId).ToUpper();
-            registerAgree.Text = Language.getLangString("MAIN_REGISTERTOS", langId).ToUpper();
-            registerButton.Text = Language.getLangString("MAIN_REGISTER", langId).ToUpper();
-            registerCancel.Text = Language.getLangString("MAIN_CANCEL", langId).ToUpper();
-
-            settingsLanguageText.Text = Language.getLangString("MAIN_SETTINGSLANG", langId).ToUpper();
-            settingsQualityText.Text = Language.getLangString("MAIN_SETTINGSQUALITY", langId).ToUpper();
-            settingsSave.Text = Language.getLangString("MAIN_SAVE", langId).ToUpper();
-            settingsLanguageDesc.Text = Language.getLangString("MAIN_SETTINGSDESCLANG", langId);
-            settingsQualityDesc.Text = Language.getLangString("MAIN_SETTINGSDESCQUALITY", langId);
-            settingsUILangText.Text = Language.getLangString("MAIN_SETTINGSUILANG", langId).ToUpper();
-            settingsUILangDesc.Text = Language.getLangString("MAIN_SETTINGSUIDESC", langId);
-
-            logoutButton.Text = Language.getLangString("MAIN_LOGOUT", langId).ToUpper();*/
         }
     }
 }
