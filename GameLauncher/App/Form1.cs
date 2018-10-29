@@ -2350,10 +2350,10 @@ namespace GameLauncher
                             x.ShowInTaskbar = true;
 
                             //Lets assume known issues
-                            String errorMsg = "Game Crash with exitcode: " + exitCode.ToString() + " (" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073741819) errorMsg = "Game Crash: Access Violation (" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073740940) errorMsg = "Game Crash: Heap Corruption (" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073740791) errorMsg = "Game Crash: Stack buffer overflow (" + exitCode.ToString("X") + ")";
+                            String errorMsg = "Game Crash with exitcode: " + exitCode.ToString() + " (0x" + exitCode.ToString("X") + ")";
+                            if (exitCode == -1073741819) errorMsg = "Game Crash: Access Violation (0x" + exitCode.ToString("X") + ")";
+                            if (exitCode == -1073740940) errorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")";
+                            if (exitCode == -1073740791) errorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")";
 
                             playProgressText.Text = errorMsg.ToUpper();
                             playProgress.Value = 100;
