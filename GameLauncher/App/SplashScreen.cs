@@ -1,4 +1,5 @@
 ﻿using GameLauncher.App.Classes;
+using GameLauncherReborn;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,11 +23,12 @@ namespace GameLauncher.App {
 
         private void SplashScreen_Load(object sender, EventArgs e) {
             this.Show();
-            for(int x = 0; x <= 95; x++) {
-                loadingBar.Value = x;
-                Delay.WaitMSeconds(30);
-                Application.DoEvents();
+
+            for (int x = 0; x <= 600; x++) {
+                Thread.Sleep(1);
+                this.Refresh();
             }
         }
+
     }
 }

@@ -28,21 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.loadingBar = new GameLauncherReborn.ProgressBarEx();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // loadingBar
+            // pictureBox1
             // 
-            this.loadingBar.BackColor = System.Drawing.Color.Transparent;
-            this.loadingBar.Border = false;
-            this.loadingBar.GradiantPosition = GameLauncherReborn.ProgressBarEx.GradiantArea.None;
-            this.loadingBar.Image = null;
-            this.loadingBar.Location = new System.Drawing.Point(0, 295);
-            this.loadingBar.Name = "loadingBar";
-            this.loadingBar.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.loadingBar.RoundedCorners = false;
-            this.loadingBar.Size = new System.Drawing.Size(300, 5);
-            this.loadingBar.Text = "progressBarEx1";
+            this.pictureBox1.Image = global::GameLauncher.Properties.Resources.splash;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(300, 300);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // SplashScreen
             // 
@@ -50,7 +47,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(19)))), ((int)(((byte)(19)))));
             this.ClientSize = new System.Drawing.Size(300, 300);
-            this.Controls.Add(this.loadingBar);
+            this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "SplashScreen";
             this.ShowIcon = false;
@@ -58,12 +55,13 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SplashScreen";
             this.TopMost = true;
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private GameLauncherReborn.ProgressBarEx loadingBar;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
