@@ -2348,7 +2348,14 @@ namespace GameLauncher
                             x.WindowState = FormWindowState.Normal;
                             x.Opacity = 1;
                             x.ShowInTaskbar = true;
-                            playProgressText.Text = ("Game crashed with exitCode: " + exitCode.ToString()).ToUpper();
+
+                            //Lets assume known issues
+                            String errorMsg = "Game Crash with exitcode: " + exitCode.ToString() + " (" + exitCode.ToString("X") + ")";
+                            if (exitCode == -1073741819) errorMsg = "Game Crash: Access Violation (" + exitCode.ToString("X") + ")";
+                            if (exitCode == -1073740940) errorMsg = "Game Crash: Heap Corruption (" + exitCode.ToString("X") + ")";
+                            if (exitCode == -1073740791) errorMsg = "Game Crash: Stack buffer overflow (" + exitCode.ToString("X") + ")";
+
+                            playProgressText.Text = errorMsg.ToUpper();
                             playProgress.Value = 100;
                             playProgress.ForeColor = Color.Red;
 
@@ -2367,7 +2374,7 @@ namespace GameLauncher
                             _nfswstarted.Abort();
 
                             var errorReply = MessageBox.Show(null,
-                                "Looks like the game crashed with an error. Would you like to restart the game?",
+                                errorMsg + "\nWould you like to restart the game?",
                                 "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                             if (errorReply == DialogResult.No)
                             {
