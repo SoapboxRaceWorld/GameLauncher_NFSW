@@ -286,7 +286,7 @@ namespace GameLauncher
                     int i = 0;
                     bool flag2 = false;
                     int num11;
-					int fileschecked = 0;
+					long fileschecked = 0;
                     foreach (XmlNode xmlNode in xmlNodeList)
                     {
                         XmlNodeList xmlNodeList2 = xmlNode.SelectNodes("compressed");
@@ -380,7 +380,7 @@ namespace GameLauncher
                     int num13 = 0;
                     foreach (XmlNode xmlNode2 in xmlNodeList)
                     {
-						fileschecked++;
+						//fileschecked++;
 
 						if (Downloader.mStopFlag)
                         {
@@ -593,7 +593,9 @@ namespace GameLauncher
 
 
                                 //TODO: use total file lenght and extracted file length instead of files checked and total array size.
-								object[] xxxxxx = new object[] { text6, fileschecked, xmlNodeList.Count};
+                                fileschecked =+ num3;
+
+                                object[] xxxxxx = new object[] { text6, fileschecked, num4};
 								this.mFE.BeginInvoke(this.mShowExtract, xxxxxx);
 
 								if (num24 != 0)

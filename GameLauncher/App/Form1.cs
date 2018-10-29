@@ -2359,16 +2359,10 @@ namespace GameLauncher
                             playProgress.Value = 100;
                             playProgress.ForeColor = Color.Red;
 
-                            if (_nfswPid != 0)
-                            {
-                                try
-                                {
+                            if (_nfswPid != 0) {
+                                try {
                                     Process.GetProcessById(_nfswPid).Kill();
-                                }
-                                catch
-                                {
-                                    // ignored
-                                }
+                                } catch { /* ignored */ }
                             }
 
                             _nfswstarted.Abort();
@@ -2482,11 +2476,6 @@ namespace GameLauncher
                         Refresh();
 
                         Notification.ContextMenu = ContextMenu;
-
-                        /*while(true) {
-                            Application.DoEvents();
-                            Thread.Sleep(1000);
-                        }*/
                     }
                 }
                 else
@@ -2700,7 +2689,6 @@ namespace GameLauncher
             }
         }
 
-        //EA Downloader compatibility (sorry EA)
         private string FormatFileSize(long byteCount)
         {
             var numArray = new double[] { 1000000000, 1000000, 1000, 0 };
@@ -2739,23 +2727,14 @@ namespace GameLauncher
 
         private void OnDownloadProgress(long downloadLength, long downloadCurrent, long compressedLength, string filename, int skiptime = 0)
         {
-            if (downloadCurrent < compressedLength) //
-            {
-                var file = filename.Replace(_settingFile.Read("InstallationDirectory") + "/", "").ToUpper();
-
+            if (downloadCurrent < compressedLength) {
                 playProgressText.Text = String.Format("Downloading — {0} of {1} ({3}%) — {2}", FormatFileSize(downloadCurrent), FormatFileSize(compressedLength), EstimateFinishTime(downloadCurrent, compressedLength), (int)(100 * downloadCurrent / compressedLength)).ToUpper();
-                if (skiptime == 0) {
-                    //playProgressTime.Text = EstimateFinishTime(downloadCurrent, compressedLength);
-                }
             }
 
-            try
-            {
+            try {
                 playProgress.Value = (int)(100 * downloadCurrent / compressedLength);
                 TaskbarProgress.SetValue(Handle, (int)(100 * downloadCurrent / compressedLength), 100);
-            }
-            catch
-            {
+            } catch {
                 TaskbarProgress.SetValue(Handle, 0, 100);
                 playProgress.Value = 0;
             }
@@ -2863,9 +2842,9 @@ namespace GameLauncher
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Error);
         }
 
-		private void OnShowExtract(string filename, int currentCount, int allFilesCount) {
+		private void OnShowExtract(string filename, long currentCount, long allFilesCount) {
             if(playProgress.Value == 100)
-                playProgressText.Text = String.Format("Extracting — {0} of {1} ({3}%) — {2}", (currentCount), (allFilesCount), EstimateFinishTime(currentCount, allFilesCount), (int)(100 * currentCount / allFilesCount)).ToUpper();
+                playProgressText.Text = String.Format("Extracting — {0} of {1} ({3}%) — {2}", FormatFileSize(currentCount), FormatFileSize(allFilesCount), EstimateFinishTime(currentCount, allFilesCount), (int)(100 * currentCount / allFilesCount)).ToUpper();
             
             extractingProgress.Value = (int)(100 * currentCount / allFilesCount);
         }

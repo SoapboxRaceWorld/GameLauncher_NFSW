@@ -242,7 +242,6 @@
     <None Include="app.config" />
     <EmbeddedResource Include="Fonts\Montserrat-Bold.ttf" />
     <EmbeddedResource Include="Fonts\Montserrat-Regular.ttf" />
-    <EmbeddedResource Include="Language\Default.lng" />
     <EmbeddedResource Include="App\Classes\RPC\JSON\events.json" />
     <EmbeddedResource Include="App\Classes\RPC\JSON\cars.json" />
     <EmbeddedResource Include="Discord\libdiscord-rpc.dylib" />
