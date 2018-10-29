@@ -496,7 +496,7 @@
             this.playProgressTime.Cursor = System.Windows.Forms.Cursors.Default;
             this.playProgressTime.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.playProgressTime.ForeColor = System.Drawing.Color.White;
-            this.playProgressTime.Location = new System.Drawing.Point(558, 471);
+            this.playProgressTime.Location = new System.Drawing.Point(905, 291);
             this.playProgressTime.Name = "playProgressTime";
             this.playProgressTime.Size = new System.Drawing.Size(72, 19);
             this.playProgressTime.TabIndex = 42;
@@ -718,7 +718,6 @@
             this.showmap.TabIndex = 70;
             this.showmap.Text = "[ SHOW MAP ]";
             this.showmap.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            this.showmap.Visible = false;
             // 
             // inputeditor
             // 

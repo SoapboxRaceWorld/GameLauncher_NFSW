@@ -33,15 +33,15 @@ namespace GameLauncher.App {
 
         private void ShowMap_Load(object sender, EventArgs e) {
 
-            this.Close();
-            MessageBox.Show(null, "This function is not yet ready.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //this.Close();
+            //MessageBox.Show(null, "This function is not yet ready.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-            /*WebClient wc = new WebClientWithTimeout();
+            WebClient wc = new WebClientWithTimeout();
             string BuildURL = ServerIP + "/GetFreeroamJson";
             ServerReply = wc.DownloadString(BuildURL);
 
             if(String.IsNullOrEmpty(ServerReply)) {
-                this.Close();
+                //this.Close();
                 MessageBox.Show(null, "This server does not have freeroam preview.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             } else {
                 ServerReply = ServerReply.Replace("updateMap(", String.Empty);
@@ -74,7 +74,7 @@ namespace GameLauncher.App {
 
                 this.Text = "Freeroam: " + ServerName;
                 this.srvInfo.Text = "ServerName: " + ServerName + "\nPlayers on freeroam: " + json.objList.Count();
-            }*/
+            }
         }
     }
 }

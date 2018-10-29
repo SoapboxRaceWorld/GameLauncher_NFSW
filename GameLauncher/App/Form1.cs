@@ -385,7 +385,7 @@ namespace GameLauncher
             }
             _NFSW_Installation_Source = _settingFile.KeyExists("CDN") ? _settingFile.Read("CDN") : "http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client";
 
-            launcherVersion.Text = "v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 6) + "\n" + "CDN: " + _NFSW_Installation_Source;
+            launcherVersion.Text = "v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 10);
             translatedBy.Text = ""; //Empty
 
             if (!_settingFile.KeyExists("SkipUpdate"))
@@ -2553,7 +2553,7 @@ namespace GameLauncher
                 if (lpFreeBytesAvailable <= 4000000000)
                 {
                     playProgress.Value = 100;
-                    playProgressText.Text = "Failed to download game files. Please make sure you have at least 4GB free space on hard drive.".ToUpper();
+                    playProgressText.Text = "Please make sure you have at least 4GB free space on hard drive.".ToUpper();
                     playProgressTime.Hide();
                     playProgressTime.Text = "";
                     playProgress.ProgressColor = Color.Orange;
