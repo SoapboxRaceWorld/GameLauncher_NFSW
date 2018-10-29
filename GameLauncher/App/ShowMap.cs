@@ -71,10 +71,10 @@ namespace GameLauncher.App {
                         Controls[con].Size = new Size(SquareSize, SquareSize);
                     };
                 }
-
-                this.Text = "Freeroam: " + ServerName;
-                this.srvInfo.Text = "ServerName: " + ServerName + "\nPlayers on freeroam: " + json.objList.Count();
             }
+
+            this.Text = "Freeroam: " + ServerName;
+            this.srvInfo.Text = "ServerName: " + ServerName;
         }
     }
 }

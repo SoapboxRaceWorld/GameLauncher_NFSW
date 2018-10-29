@@ -939,7 +939,7 @@ namespace GameLauncher
         {
             if (!(serverPick.SelectedItem is ServerInfo server)) return;
 
-            var form = new ShowMap(server.IpAddress, server.Name);
+            var form = new ShowMap(server.IpAddress, _realServername);
 
             form.Show();
             //Form z = new ShowMap(serverPick.SelectedValue.ToString(), serverPick.GetItemText(serverPick.SelectedItem));
@@ -2381,23 +2381,26 @@ namespace GameLauncher
 
         private void playButton_Click(object sender, EventArgs e)
         {
-            var LoadedBlackListXML = new XmlDocument();
-            LoadedBlackListXML.LoadXml(_blacklistedXML);
+            try {
+                var LoadedBlackListXML = new XmlDocument();
+                LoadedBlackListXML.LoadXml(_blacklistedXML);
 
-            XmlNode BlackListNode = LoadedBlackListXML.SelectSingleNode("BlackList");
-            XmlNodeList BlackList = BlackListNode.SelectNodes("Entry");
-            foreach (XmlNode node in BlackList) {
-                var serverName = node.SelectSingleNode("Match");
-                var banReason = node.SelectSingleNode("Reason");
+                XmlNode BlackListNode = LoadedBlackListXML.SelectSingleNode("BlackList");
+                XmlNodeList BlackList = BlackListNode.SelectNodes("Entry");
+                foreach (XmlNode node in BlackList) {
+                    var serverName = node.SelectSingleNode("Match");
+                    var banReason = node.SelectSingleNode("Reason");
 
-                if(Regex.Match(_realServername, serverName.InnerText, RegexOptions.IgnoreCase).Success) {
-                    MessageBox.Show(null, "This server has been banned by community votes. The final reason as of SBRW Team is:\n\n" + banReason.InnerText + "\n\nPlease select another server to play on.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
+                    if(Regex.Match(_realServername, serverName.InnerText, RegexOptions.IgnoreCase).Success) {
+                        MessageBox.Show(null, "This server has been banned by community votes. The final reason as of SBRW Team is:\n\n" + banReason.InnerText + "\n\nPlease select another server to play on.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
                 }
-            }
+            } catch(Exception ex) { Console.WriteLine(ex.Message); }
 
             if (_loggedIn == false)
             {
+                if(_useSavedPassword == false) return;
                 loginButton_Click(sender, e);
             }
 
