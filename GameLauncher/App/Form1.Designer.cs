@@ -64,7 +64,6 @@
             this.playButton = new System.Windows.Forms.Button();
             this.Notification = new System.Windows.Forms.NotifyIcon(this.components);
             this.forgotPassword = new System.Windows.Forms.LinkLabel();
-            this.playProgressTime = new System.Windows.Forms.Label();
             this.launcherVersion = new System.Windows.Forms.Label();
             this.imageServerName = new System.Windows.Forms.Label();
             this.registerCancel = new System.Windows.Forms.Button();
@@ -137,7 +136,7 @@
             this.serverPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.serverPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.serverPick.FormattingEnabled = true;
-            this.serverPick.Location = new System.Drawing.Point(323, 28);
+            this.serverPick.Location = new System.Drawing.Point(612, 55);
             this.serverPick.Name = "serverPick";
             this.serverPick.Size = new System.Drawing.Size(223, 21);
             this.serverPick.TabIndex = 5;
@@ -489,20 +488,6 @@
             this.forgotPassword.Text = "I FORGOT MY PASSWORD";
             this.forgotPassword.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(228)))), ((int)(((byte)(0)))));
             // 
-            // playProgressTime
-            // 
-            this.playProgressTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.playProgressTime.BackColor = System.Drawing.Color.Transparent;
-            this.playProgressTime.Cursor = System.Windows.Forms.Cursors.Default;
-            this.playProgressTime.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
-            this.playProgressTime.ForeColor = System.Drawing.Color.White;
-            this.playProgressTime.Location = new System.Drawing.Point(905, 291);
-            this.playProgressTime.Name = "playProgressTime";
-            this.playProgressTime.Size = new System.Drawing.Size(72, 19);
-            this.playProgressTime.TabIndex = 42;
-            this.playProgressTime.Text = "0:00:00";
-            this.playProgressTime.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // launcherVersion
             // 
             this.launcherVersion.BackColor = System.Drawing.Color.Transparent;
@@ -701,7 +686,7 @@
             // 
             // addServer
             // 
-            this.addServer.Location = new System.Drawing.Point(550, 27);
+            this.addServer.Location = new System.Drawing.Point(839, 54);
             this.addServer.Name = "addServer";
             this.addServer.Size = new System.Drawing.Size(23, 23);
             this.addServer.TabIndex = 68;
@@ -712,7 +697,7 @@
             // 
             this.showmap.BackColor = System.Drawing.Color.Transparent;
             this.showmap.ForeColor = System.Drawing.Color.DarkGray;
-            this.showmap.Location = new System.Drawing.Point(432, 52);
+            this.showmap.Location = new System.Drawing.Point(721, 79);
             this.showmap.Name = "showmap";
             this.showmap.Size = new System.Drawing.Size(141, 15);
             this.showmap.TabIndex = 70;
@@ -806,7 +791,6 @@
             this.Controls.Add(this.welcomeBack);
             this.Controls.Add(this.registerButton);
             this.Controls.Add(this.launcherVersion);
-            this.Controls.Add(this.playProgressTime);
             this.Controls.Add(this.playProgressText);
             this.Controls.Add(this.registerAgree);
             this.Controls.Add(this.registerConfirmPasswordText);
@@ -901,7 +885,6 @@
         private System.Windows.Forms.NotifyIcon Notification;
         private System.Windows.Forms.LinkLabel forgotPassword;
         internal System.Windows.Forms.Label playProgressText;
-        internal System.Windows.Forms.Label playProgressTime;
         private System.Windows.Forms.Label launcherVersion;
         private System.Windows.Forms.Label imageServerName;
         private System.Windows.Forms.Button registerCancel;

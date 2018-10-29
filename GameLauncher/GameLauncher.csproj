@@ -205,6 +205,12 @@
     <Compile Include="App\ShowMap.Designer.cs">
       <DependentUpon>ShowMap.cs</DependentUpon>
     </Compile>
+    <Compile Include="App\SplashScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\SplashScreen.Designer.cs">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App\Classes\FontWrapper.cs" />
     <EmbeddedResource Include="App\AddServer.resx">
@@ -224,6 +230,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="App\ShowMap.resx">
       <DependentUpon>ShowMap.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\SplashScreen.resx">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

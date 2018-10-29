@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
+using GameLauncher.App;
 using GameLauncher.App.Classes;
 using GameLauncherReborn;
 
@@ -13,6 +14,12 @@ namespace GameLauncher {
         [STAThread]
         internal static void Main() {
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath) ?? throw new InvalidOperationException());
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            Form SplashScreen2 = new SplashScreen();
+            SplashScreen2.Show();
 
             if (Self.isTempFolder(Directory.GetCurrentDirectory())) {
                 MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
@@ -59,9 +66,7 @@ namespace GameLauncher {
 
             if (Debugger.IsAttached) {
                 ServerProxy.Instance.Start();
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new MainScreen());
+                Application.Run(new MainScreen(SplashScreen2));
             } else {
                 if (NFSW.isNFSWRunning()) {
                     MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -100,9 +105,7 @@ namespace GameLauncher {
                             MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         } else { 
                             ServerProxy.Instance.Start();
-                            Application.EnableVisualStyles();
-                            Application.SetCompatibleTextRenderingDefault(false);
-                            Application.Run(new MainScreen());
+                            Application.Run(new MainScreen(SplashScreen2));
                         }
                     } else {
                         MessageBox.Show(null, "An instance of the application is already running.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -81,7 +81,9 @@ namespace GameLauncher
         private string _blacklistedXML;
         private string _realServername;
         private string _OS;
-               
+
+        Form _splashscreen;
+
         private static Random random = new Random();
 		public static string RandomString(int length) {
 			const string chars = "qwertyuiopasdfghjklzxcvbnm1234567890_";
@@ -147,8 +149,11 @@ namespace GameLauncher
             }
         }
 
-        public MainScreen()
+        public MainScreen(Form splashscreen)
         {
+
+            _splashscreen = splashscreen;
+
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
@@ -861,6 +866,8 @@ namespace GameLauncher
             {
                 LaunchNfsw();
             });
+
+            _splashscreen.Hide();
         }
 
         private void closebtn_Click(object sender, EventArgs e)
@@ -1576,7 +1583,6 @@ namespace GameLauncher
             forgotPassword.Font = new Font(fontFamily2, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             onlineCount.Font = new Font(fontFamily1, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             playProgressText.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            playProgressTime.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             playButton.Font = new Font(fontFamily2, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             currentWindowInfo.Font = new Font(fontFamily2, 11.35f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             imageServerName.Font = new Font(fontFamily2, 25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
@@ -1648,7 +1654,6 @@ namespace GameLauncher
             logoutButton.Visible = hideElements;
             playProgress.Visible = hideElements;
             playProgressText.Visible = hideElements;
-            playProgressTime.Visible = hideElements;
             playButton.Visible = hideElements;
             settingsButton.Visible = hideElements;
             verticalBanner.Visible = hideElements;
@@ -1678,7 +1683,6 @@ namespace GameLauncher
             forgotPassword.Visible = hideElements;
             settingsButton.Visible = hideElements;
             verticalBanner.Visible = hideElements;
-            playProgressTime.Visible = hideElements;
             playProgressText.Visible = hideElements;
             playProgress.Visible = hideElements;
             playButton.Visible = hideElements;
@@ -2535,7 +2539,6 @@ namespace GameLauncher
             playButton.ForeColor = Color.Gray;
 
             playProgressText.Text = "Checking up all files".ToUpper();
-            playProgressTime.Text = "";
 
             string speechFile;
 
@@ -2557,8 +2560,6 @@ namespace GameLauncher
                 {
                     playProgress.Value = 100;
                     playProgressText.Text = "Please make sure you have at least 4GB free space on hard drive.".ToUpper();
-                    playProgressTime.Hide();
-                    playProgressTime.Text = "";
                     playProgress.ProgressColor = Color.Orange;
 
                     TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
@@ -2576,7 +2577,6 @@ namespace GameLauncher
         public void DownloadCoreFiles()
         {
             playProgressText.Text = "Checking core files...".ToUpper();
-            playProgressTime.Text = "";
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
@@ -2594,7 +2594,6 @@ namespace GameLauncher
         public void DownloadTracksFiles()
         {
             playProgressText.Text = "Checking track files...".ToUpper();
-            playProgressTime.Text = "";
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
@@ -2612,7 +2611,6 @@ namespace GameLauncher
         public void DownloadSpeechFiles()
         {
             playProgressText.Text = "Looking for correct speech files...".ToUpper();
-            playProgressTime.Text = "";
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
@@ -2666,7 +2664,6 @@ namespace GameLauncher
         public void DownloadTracksHighFiles()
         {
             playProgressText.Text = "Checking track (high) files.".ToUpper();
-            playProgressTime.Text = "";
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
@@ -2699,13 +2696,13 @@ namespace GameLauncher
         //EA Downloader compatibility (sorry EA)
         private string FormatFileSize(long byteCount)
         {
-            var numArray = new double[] { 1073741824, 1048576, 1024, 0 };
+            var numArray = new double[] { 1000000000, 1000000, 1000, 0 };
             var strArrays = new[] { "GB", "MB", "KB", "Bytes" };
             for (var i = 0; i < numArray.Length; i++)
             {
                 if (byteCount >= numArray[i])
                 {
-                    return string.Concat($"{byteCount / numArray[i]:0.00}", strArrays[i]);
+                    return string.Concat($"{byteCount / numArray[i]:0.00} ", strArrays[i]);
                 }
             }
 
@@ -2715,28 +2712,33 @@ namespace GameLauncher
         private string EstimateFinishTime(long current, long total)
         {
             var num = current / (double)total;
-            if (num < 0.0500000007450581)
-            {
-                return "";
+            if (num < 0.00185484899838312) {
+                return "Calculating";
             }
+
             var now = DateTime.Now - _downloadStartTime;
             var timeSpan = TimeSpan.FromTicks((long)(now.Ticks / num)) - now;
-            object hours = timeSpan.Hours;
-            var str = timeSpan.Minutes.ToString("D02");
-            var seconds = timeSpan.Seconds;
-            return $"{hours}:{str}:{seconds:D02}";
+
+            int rHours = Convert.ToInt32(timeSpan.Hours.ToString()) + 1;
+            int rMinutes = Convert.ToInt32(timeSpan.Minutes.ToString()) + 1;
+            int rSeconds = Convert.ToInt32(timeSpan.Seconds.ToString()) + 1;
+
+            if (rHours > 1) return rHours.ToString() + " hours remaining";
+            if (rMinutes > 1) return rMinutes.ToString() + " minutes remaining";
+            if (rSeconds > 1) return rSeconds.ToString() + " seconds remaining";
+
+            return "Just now";
         }
 
         private void OnDownloadProgress(long downloadLength, long downloadCurrent, long compressedLength, string filename, int skiptime = 0)
         {
-            if (downloadCurrent < compressedLength)
+            if (downloadCurrent < compressedLength) //
             {
                 var file = filename.Replace(_settingFile.Read("InstallationDirectory") + "/", "").ToUpper();
-                playProgressText.Text = string.Format("Downloading {2} ({0}/{1})".ToUpper(), FormatFileSize(downloadCurrent), FormatFileSize(compressedLength), file);
 
-                if (skiptime == 0)
-                {
-                    playProgressTime.Text = EstimateFinishTime(downloadCurrent, compressedLength);
+                playProgressText.Text = String.Format("Downloading — {0} of {1} ({3}%) — {2}", FormatFileSize(downloadCurrent), FormatFileSize(compressedLength), EstimateFinishTime(downloadCurrent, compressedLength), (int)(100 * downloadCurrent / compressedLength)).ToUpper();
+                if (skiptime == 0) {
+                    //playProgressTime.Text = EstimateFinishTime(downloadCurrent, compressedLength);
                 }
             }
 
@@ -2833,7 +2835,6 @@ namespace GameLauncher
             playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
             playButton.ForeColor = Color.White;
             playProgressText.Text = "Download completed.".ToUpper();
-            playProgressTime.Text = "";
         }
 
         private void OnDownloadFailed(Exception ex)
@@ -2844,12 +2845,11 @@ namespace GameLauncher
             try {
                 failureMessage = ex.Message;
             } catch {
-                failureMessage = "No internet access";
+                failureMessage = "Download failed.";
             }
 
             playProgress.Value = 100;
-            playProgressText.Text = string.Format("Download failed. {0}", failureMessage).ToUpper();
-            playProgressTime.Text = "";
+            playProgressText.Text = failureMessage.ToUpper();
             playProgress.ProgressColor = Color.Red;
 
             TaskbarProgress.SetValue(Handle, 100, 100);
@@ -2857,7 +2857,9 @@ namespace GameLauncher
         }
 
 		private void OnShowExtract(string filename, int currentCount, int allFilesCount) {
-			playProgressText.Text = "EXTRACTING " + filename.Replace(_settingFile.Read("InstallationDirectory") + "/", "").ToUpper() + " (" + currentCount + "/" + allFilesCount + ")";
+            if(playProgress.Value == 100)
+                playProgressText.Text = String.Format("Extracting — {0} of {1} ({3}%) — {2}", (currentCount), (allFilesCount), EstimateFinishTime(currentCount, allFilesCount), (int)(100 * currentCount / allFilesCount)).ToUpper();
+            
             extractingProgress.Value = (int)(100 * currentCount / allFilesCount);
         }
 

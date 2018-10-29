@@ -3,8 +3,8 @@
 - [x] Full HTTPS Support
 - [x] Detailed DiscordRPC
 - [ ] New UI
-- [ ] Semi-Native linux support
-- [ ] Semi-Native Native macOS support
+- [X] Semi-Native linux support
+- [X] Semi-Native Native macOS support
 - [ ] Ability to save credentials for all servers (currenly only last one is saved)
 - [ ] Display detailed information about server
 - [ ] Adding a marquee or static news line.
@@ -17,6 +17,7 @@
 - Rare bug while there's no blacklisted serverllist
 - Common bug while user press play now without log in details in
 - Detecting real linux distro
+- Freeroam servername window
 
 # FEATURES:
 - Download ProgressBar now has 2 displays, blue for extracted files and gray for downloaded chunks
