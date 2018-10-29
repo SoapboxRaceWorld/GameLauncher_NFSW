@@ -40,6 +40,11 @@ namespace GameLauncher.App.Classes.RPC {
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');
 
+            if(uri == "/getrebroadcasters")
+            {
+                Console.WriteLine(serverreply);
+            }
+
             if (uri == "/User/SecureLoginPersona") {
                 canUpdateProfileField = true;
             }

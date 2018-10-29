@@ -867,7 +867,8 @@ namespace GameLauncher
                 LaunchNfsw();
             });
 
-            _splashscreen.Hide();
+            if(_splashscreen != null)
+                _splashscreen.Hide();
         }
 
         private void closebtn_Click(object sender, EventArgs e)

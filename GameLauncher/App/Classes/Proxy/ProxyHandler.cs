@@ -27,8 +27,6 @@ namespace GameLauncher.App.Classes.Proxy
             string GETContent = String.Empty;
             var serverUrl = ServerProxy.Instance.GetServerUrl();
 
-            //System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
-
             /*if (string.IsNullOrEmpty(serverUrl))
             {
                 return new TextResponse(HttpStatusCode.BadGateway, "Not open for business");
@@ -102,8 +100,10 @@ namespace GameLauncher.App.Classes.Proxy
 
             DiscordRPC.handleGameState(fixedPath, response.Content.ReadAsStringAsync().Result, POSTContent, GETContent);
 
+            
+
             return new TextResponse(
-                response.Content.ReadAsStringAsync().Result,
+                response.Content.ReadAsStringAsync().Result.Replace("<Host>104.248.0.202</Host>", "<Host>127.0.0.1</Host>"),
                 response.Content.Headers.ContentType.ToString()
             )
             {
