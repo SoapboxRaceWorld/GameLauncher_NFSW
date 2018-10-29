@@ -440,6 +440,7 @@ namespace GameLauncher
                                     text6,
                                     0
                                 };
+
                                 this.mFE.Invoke(this.mProgressUpdated, args2);
                             }
                             int num17 = int.Parse(xmlNode2.SelectSingleNode("section").InnerText);
@@ -556,6 +557,7 @@ namespace GameLauncher
                                         text6,
                                         0
                                     };
+
                                     this.mFE.BeginInvoke(this.mProgressUpdated, args3);
                                 }
                             }
@@ -797,6 +799,7 @@ namespace GameLauncher
                             innerText,
                             0
                         };
+
                         this.mFE.BeginInvoke(this.mProgressUpdated, args3);
                     }
                     if (flag3)
