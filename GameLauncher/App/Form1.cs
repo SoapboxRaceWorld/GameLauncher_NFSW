@@ -23,6 +23,7 @@ using GameLauncher.HashPassword;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ShadowDemo;
 
 namespace GameLauncher
 {
@@ -93,9 +94,9 @@ namespace GameLauncher
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            var p = new Pen(Color.FromArgb(10, 17, 25));
-            e.Graphics.DrawRectangle(p, new Rectangle(new Point(0, 0), new Size(Size.Width - 1, Size.Height - 1)));
-            e.Graphics.DrawRectangle(p, new Rectangle(new Point(2, 2), new Size(Size.Width - 5, Size.Height - 5)));
+            //var p = new Pen(Color.FromArgb(10, 17, 25));
+            //e.Graphics.DrawRectangle(p, new Rectangle(new Point(0, 0), new Size(Size.Width - 1, Size.Height - 1)));
+            //e.Graphics.DrawRectangle(p, new Rectangle(new Point(2, 2), new Size(Size.Width - 5, Size.Height - 5)));
         }
 
         private void moveWindow_MouseDown(object sender, MouseEventArgs e)
@@ -151,7 +152,6 @@ namespace GameLauncher
 
         public MainScreen(Form splashscreen)
         {
-
             _splashscreen = splashscreen;
 
             ServicePointManager.Expect100Continue = true;
@@ -383,6 +383,14 @@ namespace GameLauncher
 
         private void mainScreen_Load(object sender, EventArgs e)
         {
+            var f = new Dropshadow(this) {
+                ShadowBlur = 40,
+                ShadowSpread = -28,
+                ShadowColor = Color.Black
+            };
+
+            f.RefreshShadow();
+
             if (Location.X >= Screen.PrimaryScreen.Bounds.Width || Location.Y >= Screen.PrimaryScreen.Bounds.Height || Location.X <= 0 || Location.Y <= 0)
             {
                 Self.centerScreen(this);
@@ -1648,8 +1656,6 @@ namespace GameLauncher
             if (hideElements)
             {
                 currentWindowInfo.Text = "Enter your account information to Log In:".ToUpper();
-                currentWindowInfo.Location = new Point(479, 140);
-                currentWindowInfo.Size = new Size(222, 46);
             }
 
             logoutButton.Visible = hideElements;
@@ -1668,8 +1674,6 @@ namespace GameLauncher
             if (hideElements)
             {
                 currentWindowInfo.Text = "Enter your account information to Log In:".ToUpper();
-                currentWindowInfo.Location = new Point(479, 140);
-                currentWindowInfo.Size = new Size(222, 46);
             }
 
             rememberMe.Visible = hideElements;
@@ -1698,12 +1702,6 @@ namespace GameLauncher
 
         private void RegisterFormElements(bool hideElements = true)
         {
-            if (hideElements)
-            {
-                currentWindowInfo.Location = new Point(53, 150);
-                currentWindowInfo.Size = new Size(700, 46);
-            }
-
             registerButton.Visible = hideElements;
             registerEmail.Visible = hideElements;
             registerEmailText.Visible = hideElements;
@@ -2016,9 +2014,6 @@ namespace GameLauncher
                             RegisterFormElements(false);
                             LoginFormElements(true);
 
-                            currentWindowInfo.Location = new Point(479, 140);
-                            currentWindowInfo.Size = new Size(222, 46);
-
                             _loggedIn = true;
                         }
                         else
@@ -2227,8 +2222,6 @@ namespace GameLauncher
             if (hideElements)
             {
                 currentWindowInfo.Text = "Please select your game settings:".ToUpper();
-                currentWindowInfo.Location = new Point(53, 150);
-                currentWindowInfo.Size = new Size(700, 46);
             }
 
             settingsSave.Visible = hideElements;
@@ -2275,7 +2268,6 @@ namespace GameLauncher
         private void LaunchGameLegacy(string userId, string loginToken, string serverIp, Form x)
         {
 			var oldfilename = _settingFile.Read("InstallationDirectory") + "\\nfsw.exe";
-
 			var cParams = "SBRW " + serverIp + " " + loginToken + " " + userId + " -legacyLaunch";
 
 			var proc = Process.Start(oldfilename, cParams);
@@ -2283,8 +2275,7 @@ namespace GameLauncher
 
             _nfswPid = proc.Id;
 
-            proc.Exited += (sender2, e2) =>
-            {
+            proc.Exited += (sender2, e2) => {
                 _nfswPid = 0;
                 closebtn_Click(sender2, e2);
             };
@@ -2296,21 +2287,18 @@ namespace GameLauncher
 
 			var args = "SBRW " + serverIp + " " + loginToken + " " + userId + " -advancedLaunch";
             var psi = new ProcessStartInfo();
-            psi.UseShellExecute = false;
-            if (!DetectLinux.UnixDetected())
-            {
+            //psi.UseShellExecute = false;
+            
+            if (!DetectLinux.UnixDetected()) {
                 psi.FileName = oldfilename;
                 psi.Arguments = args;
-            }
-            else
-            {
+            } else {
                 WineManager.InitWinePrefix();
                 psi.EnvironmentVariables.Add("WINEDEBUG", "-d3d_shader,-d3d");
                 psi.EnvironmentVariables.Add("WINEPREFIX", WineManager.GetWinePrefix());
                 var wine = WineManager.GetWineDirectory();
-                Console.WriteLine(wine);
-                if (Directory.Exists(wine))
-                {
+
+                if (Directory.Exists(wine)) {
                     Console.WriteLine("Embedded wine found");
                     psi.EnvironmentVariables.Add("WINEVERPATH", wine);
                     psi.EnvironmentVariables.Add("WINESERVER", wine + "/bin/wineserver");
@@ -2318,43 +2306,35 @@ namespace GameLauncher
                     psi.EnvironmentVariables.Add("WINEDLLPATH", wine + "/lib/wine/fakedlls");
                     psi.EnvironmentVariables.Add("LD_LIBRARY_PATH", wine + "/lib");
                     psi.FileName = wine + "/bin/wine";
-                }
-                else
-                {
+                } else {
                     psi.FileName = "wine";
                 }
+
                 psi.Arguments = oldfilename + " " + args;
-                Console.WriteLine(psi.Arguments);
             }
 
             var nfswProcess = Process.Start(psi);
-            if (nfswProcess != null)
-            {
+            if (nfswProcess != null) {
                 nfswProcess.EnableRaisingEvents = true;
                 _nfswPid = nfswProcess.Id;
 
-                nfswProcess.Exited += (sender2, e2) =>
-                {
+                nfswProcess.Exited += (sender2, e2) => {
                     _nfswPid = 0;
                     var exitCode = nfswProcess.ExitCode;
 
-                    if (exitCode == 0)
-                    {
+                    if (exitCode == 0) {
                         closebtn_Click(null, null);
-                    }
-                    else
-                    {
-                        x.BeginInvoke(new Action(() =>
-                        {
+                    } else {
+                        x.BeginInvoke(new Action(() => {
                             x.WindowState = FormWindowState.Normal;
                             x.Opacity = 1;
                             x.ShowInTaskbar = true;
 
-                            //Lets assume known issues
                             String errorMsg = "Game Crash with exitcode: " + exitCode.ToString() + " (0x" + exitCode.ToString("X") + ")";
                             if (exitCode == -1073741819) errorMsg = "Game Crash: Access Violation (0x" + exitCode.ToString("X") + ")";
                             if (exitCode == -1073740940) errorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")";
                             if (exitCode == -1073740791) errorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")";
+                            if (exitCode == -805306369) errorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")";
 
                             playProgressText.Text = errorMsg.ToUpper();
                             playProgress.Value = 100;
@@ -2371,12 +2351,9 @@ namespace GameLauncher
                             var errorReply = MessageBox.Show(null,
                                 errorMsg + "\nWould you like to restart the game?",
                                 "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                            if (errorReply == DialogResult.No)
-                            {
+                            if (errorReply == DialogResult.No) {
                                 closebtn_Click(null, null);
-                            }
-                            else
-                            {
+                            } else {
                                 Application.Restart();
                             }
                         }));

@@ -111,9 +111,9 @@
             this.email.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.email.Font = new System.Drawing.Font("Arial", 14F);
             this.email.ForeColor = System.Drawing.Color.White;
-            this.email.Location = new System.Drawing.Point(600, 238);
+            this.email.Location = new System.Drawing.Point(648, 238);
             this.email.Name = "email";
-            this.email.Size = new System.Drawing.Size(251, 22);
+            this.email.Size = new System.Drawing.Size(187, 22);
             this.email.TabIndex = 2;
             // 
             // password
@@ -122,9 +122,9 @@
             this.password.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.password.Font = new System.Drawing.Font("Arial", 14F);
             this.password.ForeColor = System.Drawing.Color.White;
-            this.password.Location = new System.Drawing.Point(600, 288);
+            this.password.Location = new System.Drawing.Point(648, 288);
             this.password.Name = "password";
-            this.password.Size = new System.Drawing.Size(251, 22);
+            this.password.Size = new System.Drawing.Size(187, 22);
             this.password.TabIndex = 4;
             this.password.UseSystemPasswordChar = true;
             this.password.WordWrap = false;
@@ -148,9 +148,9 @@
             this.currentWindowInfo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.currentWindowInfo.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.currentWindowInfo.ForeColor = System.Drawing.Color.White;
-            this.currentWindowInfo.Location = new System.Drawing.Point(648, 106);
+            this.currentWindowInfo.Location = new System.Drawing.Point(646, 155);
             this.currentWindowInfo.Name = "currentWindowInfo";
-            this.currentWindowInfo.Size = new System.Drawing.Size(222, 117);
+            this.currentWindowInfo.Size = new System.Drawing.Size(222, 61);
             this.currentWindowInfo.TabIndex = 16;
             this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN";
             this.currentWindowInfo.UseCompatibleTextRendering = true;
@@ -162,7 +162,7 @@
             this.rememberMe.BackColor = System.Drawing.Color.Transparent;
             this.rememberMe.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.rememberMe.ForeColor = System.Drawing.Color.White;
-            this.rememberMe.Location = new System.Drawing.Point(463, 322);
+            this.rememberMe.Location = new System.Drawing.Point(614, 327);
             this.rememberMe.Name = "rememberMe";
             this.rememberMe.Size = new System.Drawing.Size(210, 19);
             this.rememberMe.TabIndex = 5;
@@ -256,7 +256,7 @@
             // 
             this.settingsButton.BackColor = System.Drawing.Color.Transparent;
             this.settingsButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("settingsButton.BackgroundImage")));
-            this.settingsButton.Location = new System.Drawing.Point(765, 2);
+            this.settingsButton.Location = new System.Drawing.Point(806, 24);
             this.settingsButton.Name = "settingsButton";
             this.settingsButton.Size = new System.Drawing.Size(26, 26);
             this.settingsButton.TabIndex = 21;
@@ -480,7 +480,7 @@
             this.forgotPassword.AutoSize = true;
             this.forgotPassword.BackColor = System.Drawing.Color.Transparent;
             this.forgotPassword.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(228)))), ((int)(((byte)(0)))));
-            this.forgotPassword.Location = new System.Drawing.Point(460, 360);
+            this.forgotPassword.Location = new System.Drawing.Point(611, 345);
             this.forgotPassword.Name = "forgotPassword";
             this.forgotPassword.Size = new System.Drawing.Size(143, 13);
             this.forgotPassword.TabIndex = 6;
@@ -771,7 +771,7 @@
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg1;
+            this.BackgroundImage = global::GameLauncher.Properties.Resources.this_is_a_test;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.allowedCountriesLabel);
@@ -836,7 +836,7 @@
             this.Name = "MainScreen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GameLauncher";
-            this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.TransparencyKey = System.Drawing.Color.Red;
             this.Load += new System.EventHandler(this.mainScreen_Load);
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).EndInit();

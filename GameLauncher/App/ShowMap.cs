@@ -32,8 +32,11 @@ namespace GameLauncher.App {
         }
 
         private void ShowMap_Load(object sender, EventArgs e) {
-            WebClient wc = new WebClientWithTimeout();
-            string BuildURL = "http://localhost:9995/users";
+            this.Close();
+            MessageBox.Show(null, "Freeroam Map is not yet completed. This is planned to be released on next major update.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            /*WebClient wc = new WebClientWithTimeout();
+            string BuildURL = "http://localhost:9995/users"; //go-freeroam
             ServerReply = wc.DownloadString(BuildURL);
 
             if(String.IsNullOrEmpty(ServerReply)) {
@@ -77,7 +80,7 @@ namespace GameLauncher.App {
 
                 this.Text = "Freeroam: " + ServerName;
                 this.srvInfo.Text = "Players: " + freeroam.Count.ToString();
-            }
+            }*/
         }
     }
 }
