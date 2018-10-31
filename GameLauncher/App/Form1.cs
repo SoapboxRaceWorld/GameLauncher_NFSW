@@ -2248,8 +2248,8 @@ namespace GameLauncher
         private void StartGame(string userId, string loginToken, string serverIp, Form x)
         {
             _nfswstarted = _useLegacy
-                ? new Thread(() => LaunchGameLegacy(userId, loginToken, "http://127.0.0.1:6262/nfsw/Engine.svc", this))
-                : new Thread(() => LaunchGame(userId, loginToken, "http://127.0.0.1:6262/nfsw/Engine.svc", this));
+                ? new Thread(() => LaunchGameLegacy(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this))
+                : new Thread(() => LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this));
 
             _nfswstarted.IsBackground = true;
             _nfswstarted.Start();
@@ -2452,10 +2452,10 @@ namespace GameLauncher
                             secondsToCloseLauncher--;
                         }
 
-                        playProgressText.Text = string.Format("Loading game. Launcher will minimize in {0} seconds.", 0).ToUpper();
+                        playProgressText.Text = "You shall not see it!!!11!!".ToUpper();
 
-                        WindowState = FormWindowState.Minimized;
-                        ShowInTaskbar = false;
+                        //WindowState = FormWindowState.Minimized;
+                        //ShowInTaskbar = false;
 
                         ContextMenu = new ContextMenu();
 

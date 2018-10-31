@@ -145,6 +145,7 @@ namespace GameLauncher.App
                 new ListType{ Name = "UILanguage", Value =  SettingFile.Read("UILanguage")},
                 new ListType{ Name = "SkipUpdate", Value = SkipUpdate},
                 new ListType{ Name = "LauncherPos", Value = LauncherPosition},
+                new ListType{ Name = "ProxyPort", Value = Self.ProxyPort.ToString()},
 
                 new ListType{ Name = "", Value = "" },
             };

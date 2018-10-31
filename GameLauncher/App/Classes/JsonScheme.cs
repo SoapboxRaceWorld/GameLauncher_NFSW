@@ -23,13 +23,8 @@ namespace SoapBox.JsonScheme {
         public string allowedCountries { get; set; }
     }
 
-    public class ObjList {
-        public string id { get; set; }
-        public int x { get; set; }
-        public int y { get; set; }
-    }
-
     public class FreeroamObject {
-        public List<ObjList> objList { get; set; }
+        public int[] position { get; set; }
+        public string username { get; set; }
     }
 }
