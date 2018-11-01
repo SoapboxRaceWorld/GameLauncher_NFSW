@@ -2778,29 +2778,22 @@ namespace GameLauncher
 
         private void OnDownloadFinished()
         {
-            try
-            {
+            try {
                 File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
-            }
-            catch
-            {
+            } catch {
                 // ignored
             }
 
-            if (DetectLinux.UnixDetected())
-            {
-                if (WineManager.NeedEmbeddedWine() && !File.Exists("wine.tar.gz") && !Directory.Exists("wine"))
-                {
+            if (DetectLinux.UnixDetected()) {
+                if (WineManager.NeedEmbeddedWine() && !File.Exists("wine.tar.gz") && !Directory.Exists("wine")) {
                     var wineDownload = new WebClientWithTimeout();
 
                     wineDownload.DownloadProgressChanged += WineDownloadProgressChanged;
                     wineDownload.DownloadFileCompleted += WineDownloadCompleted;
                     if (DetectLinux.MacOSDetected()) {
-                        wineDownload.DownloadFileAsync(new Uri("https://dl.winehq.org/wine-builds/macosx/pool/portable-winehq-stable-3.0.2-osx.tar.gz"), "wine.tar.gz");
-                    }
-                    else
-                    {
-                        wineDownload.DownloadFileAsync(new Uri("http://launcher.soapboxrace.world/linux/wine.tar.gz"), "wine.tar.gz");
+                        wineDownload.DownloadFileAsync(new Uri("http://launcher.soapboxrace.world/winebuild/wine_macos.tar.gz"), "wine.tar.gz");
+                    } else {
+                        wineDownload.DownloadFileAsync(new Uri("http://launcher.soapboxrace.world/winebuild/wine_linux.tar.gz"), "wine.tar.gz");
                     }
                 }
             }
@@ -2813,8 +2806,7 @@ namespace GameLauncher
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
         }
 
-        private void EnablePlayButton()
-        {
+        private void EnablePlayButton() {
             _isDownloading = false;
             _playenabled = true;
 
