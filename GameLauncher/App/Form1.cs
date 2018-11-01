@@ -324,11 +324,11 @@ namespace GameLauncher
             imageServerName.Location = pos;
             imageServerName.BackColor = Color.Transparent;
 
-            var pos2 = PointToScreen(extractingProgress.Location);
+            /*var pos2 = PointToScreen(extractingProgress.Location);
             pos2 = playProgress.PointToClient(pos2);
             extractingProgress.Parent = playProgress;
             extractingProgress.Location = pos2;
-            extractingProgress.BackColor = Color.Transparent;
+            extractingProgress.BackColor = Color.Transparent;*/
 
             /*if (_isIndex)
             {
@@ -1660,6 +1660,7 @@ namespace GameLauncher
 
             logoutButton.Visible = hideElements;
             playProgress.Visible = hideElements;
+            extractingProgress.Visible = hideElements;
             playProgressText.Visible = hideElements;
             playButton.Visible = hideElements;
             settingsButton.Visible = hideElements;
@@ -1690,9 +1691,11 @@ namespace GameLauncher
             verticalBanner.Visible = hideElements;
             playProgressText.Visible = hideElements;
             playProgress.Visible = hideElements;
+            extractingProgress.Visible = hideElements;
             playButton.Visible = hideElements;
             addServer.Visible = hideElements;
             allowedCountriesLabel.Visible = hideElements;
+            showmap.Visible = hideElements;
         }
 
         /*
@@ -2513,6 +2516,8 @@ namespace GameLauncher
             playButton.ForeColor = Color.Gray;
 
             playProgressText.Text = "Checking up all files".ToUpper();
+            playProgress.Width = 0;
+            extractingProgress.Width = 0;
 
             string speechFile;
 
@@ -2532,9 +2537,13 @@ namespace GameLauncher
                 Kernel32.GetDiskFreeSpaceEx(_settingFile.Read("InstallationDirectory"), out var lpFreeBytesAvailable, out _, out _);
                 if (lpFreeBytesAvailable <= 4000000000)
                 {
-                    playProgress.Value = 100;
+
+                    extractingProgress.Value = 100;
+                    extractingProgress.Width = 519;
+                    extractingProgress.Image = null;
+                    extractingProgress.ProgressColor = Color.Orange;
+
                     playProgressText.Text = "Please make sure you have at least 4GB free space on hard drive.".ToUpper();
-                    playProgress.ProgressColor = Color.Orange;
 
                     TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
                     TaskbarProgress.SetValue(Handle, 100, 100);
@@ -2551,6 +2560,8 @@ namespace GameLauncher
         public void DownloadCoreFiles()
         {
             playProgressText.Text = "Checking core files...".ToUpper();
+            playProgress.Width = 0;
+            extractingProgress.Width = 0;
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
@@ -2568,6 +2579,8 @@ namespace GameLauncher
         public void DownloadTracksFiles()
         {
             playProgressText.Text = "Checking track files...".ToUpper();
+            playProgress.Width = 0;
+            extractingProgress.Width = 0;
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
@@ -2585,6 +2598,8 @@ namespace GameLauncher
         public void DownloadSpeechFiles()
         {
             playProgressText.Text = "Looking for correct speech files...".ToUpper();
+            playProgress.Width = 0;
+            extractingProgress.Width = 0;
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
@@ -2638,6 +2653,8 @@ namespace GameLauncher
         public void DownloadTracksHighFiles()
         {
             playProgressText.Text = "Checking track (high) files.".ToUpper();
+            playProgress.Width = 0;
+            extractingProgress.Width = 0;
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
@@ -2711,10 +2728,13 @@ namespace GameLauncher
 
             try {
                 playProgress.Value = (int)(100 * downloadCurrent / compressedLength);
+                playProgress.Width = (int)(519 * downloadCurrent / compressedLength);
+
                 TaskbarProgress.SetValue(Handle, (int)(100 * downloadCurrent / compressedLength), 100);
             } catch {
                 TaskbarProgress.SetValue(Handle, 0, 100);
                 playProgress.Value = 0;
+                playProgress.Width = 0;
             }
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
@@ -2786,6 +2806,9 @@ namespace GameLauncher
             }
 
             EnablePlayButton();
+
+            extractingProgress.Width = 519;
+
             TaskbarProgress.SetValue(Handle, 100, 100);
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
         }
@@ -2794,8 +2817,10 @@ namespace GameLauncher
         {
             _isDownloading = false;
             _playenabled = true;
-            playProgress.Value = 100;
+
             extractingProgress.Value = 100;
+            extractingProgress.Width = 519;
+
             playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
             playButton.ForeColor = Color.White;
             playProgressText.Text = "Download completed.".ToUpper();
@@ -2804,7 +2829,7 @@ namespace GameLauncher
         private void OnDownloadFailed(Exception ex)
         {
             string failureMessage;
-            MessageBox.Show(null, "Failed to extract GameFiles. You can try to install them manually by downloading: \n\nhttps://mega.nz/#!6ho3GI4I!5_1WvT0gQQTrc3t_Z8HX2GeENkoTU7y8Qs_J6TNeco0", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(null, "Failed to download gamefiles. Possible cause is that CDN went offline. Please select other CDN from Settings", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             try {
                 failureMessage = ex.Message;
@@ -2812,9 +2837,12 @@ namespace GameLauncher
                 failureMessage = "Download failed.";
             }
 
-            playProgress.Value = 100;
+            extractingProgress.Value = 100;
+            extractingProgress.Width = 519;
+            extractingProgress.Image = null;
+            extractingProgress.ProgressColor = Color.FromArgb(254,0,0);
+
             playProgressText.Text = failureMessage.ToUpper();
-            playProgress.ProgressColor = Color.Red;
 
             TaskbarProgress.SetValue(Handle, 100, 100);
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Error);
@@ -2825,6 +2853,7 @@ namespace GameLauncher
                 playProgressText.Text = String.Format("Extracting — {0} of {1} ({3}%) — {2}", FormatFileSize(currentCount), FormatFileSize(allFilesCount), EstimateFinishTime(currentCount, allFilesCount), (int)(100 * currentCount / allFilesCount)).ToUpper();
             
             extractingProgress.Value = (int)(100 * currentCount / allFilesCount);
+            extractingProgress.Width = (int)(519 * currentCount / allFilesCount);
         }
 
         private void OnShowMessage(string message, string header)

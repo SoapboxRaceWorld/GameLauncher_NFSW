@@ -255,10 +255,10 @@
             // settingsButton
             // 
             this.settingsButton.BackColor = System.Drawing.Color.Transparent;
-            this.settingsButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("settingsButton.BackgroundImage")));
-            this.settingsButton.Location = new System.Drawing.Point(806, 24);
+            this.settingsButton.BackgroundImage = global::GameLauncher.Properties.Resources.settingsbtn1;
+            this.settingsButton.Location = new System.Drawing.Point(805, 24);
             this.settingsButton.Name = "settingsButton";
-            this.settingsButton.Size = new System.Drawing.Size(26, 26);
+            this.settingsButton.Size = new System.Drawing.Size(24, 24);
             this.settingsButton.TabIndex = 21;
             this.settingsButton.TabStop = false;
             // 
@@ -744,12 +744,12 @@
             this.extractingProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.extractingProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.extractingProgress.GradiantPosition = GameLauncherReborn.ProgressBarEx.GradiantArea.None;
-            this.extractingProgress.Image = null;
-            this.extractingProgress.Location = new System.Drawing.Point(40, 447);
+            this.extractingProgress.Image = global::GameLauncher.Properties.Resources.progress;
+            this.extractingProgress.Location = new System.Drawing.Point(41, 448);
             this.extractingProgress.Name = "extractingProgress";
-            this.extractingProgress.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.extractingProgress.ProgressColor = System.Drawing.Color.Green;
             this.extractingProgress.RoundedCorners = false;
-            this.extractingProgress.Size = new System.Drawing.Size(521, 15);
+            this.extractingProgress.Size = new System.Drawing.Size(519, 13);
             this.extractingProgress.Text = "downloadProgress";
             // 
             // playProgress
@@ -758,20 +758,21 @@
             this.playProgress.BackgroundColor = System.Drawing.Color.Black;
             this.playProgress.Border = false;
             this.playProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.playProgress.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.playProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.playProgress.GradiantPosition = GameLauncherReborn.ProgressBarEx.GradiantArea.None;
-            this.playProgress.Image = null;
-            this.playProgress.Location = new System.Drawing.Point(40, 447);
+            this.playProgress.Image = global::GameLauncher.Properties.Resources.progressgrayscale;
+            this.playProgress.Location = new System.Drawing.Point(41, 448);
             this.playProgress.Name = "playProgress";
             this.playProgress.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(84)))), ((int)(((byte)(92)))));
             this.playProgress.RoundedCorners = false;
-            this.playProgress.Size = new System.Drawing.Size(521, 15);
+            this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
             // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackgroundImage = global::GameLauncher.Properties.Resources.this_is_a_test;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.allowedCountriesLabel);
@@ -825,10 +826,10 @@
             this.Controls.Add(this.settingsQuality);
             this.Controls.Add(this.settingsLanguage);
             this.Controls.Add(this.registerConfirmPassword);
-            this.Controls.Add(this.extractingProgress);
-            this.Controls.Add(this.playProgress);
             this.Controls.Add(this.imageServerName);
             this.Controls.Add(this.verticalBanner);
+            this.Controls.Add(this.extractingProgress);
+            this.Controls.Add(this.playProgress);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
