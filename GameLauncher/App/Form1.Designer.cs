@@ -83,7 +83,6 @@
             this.addServer = new System.Windows.Forms.Button();
             this.showmap = new System.Windows.Forms.Label();
             this.inputeditor = new System.Windows.Forms.Button();
-            this.legacyLaunch = new System.Windows.Forms.CheckBox();
             this.allowedCountriesLabel = new System.Windows.Forms.Label();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
@@ -715,18 +714,6 @@
             this.inputeditor.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.inputeditor.UseVisualStyleBackColor = true;
             // 
-            // legacyLaunch
-            // 
-            this.legacyLaunch.AutoSize = true;
-            this.legacyLaunch.BackColor = System.Drawing.Color.Transparent;
-            this.legacyLaunch.ForeColor = System.Drawing.Color.White;
-            this.legacyLaunch.Location = new System.Drawing.Point(59, 455);
-            this.legacyLaunch.Name = "legacyLaunch";
-            this.legacyLaunch.Size = new System.Drawing.Size(189, 17);
-            this.legacyLaunch.TabIndex = 74;
-            this.legacyLaunch.Text = "Use pre-1.9.1.9 launching function";
-            this.legacyLaunch.UseVisualStyleBackColor = false;
-            // 
             // allowedCountriesLabel
             // 
             this.allowedCountriesLabel.BackColor = System.Drawing.Color.Transparent;
@@ -776,7 +763,6 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.allowedCountriesLabel);
-            this.Controls.Add(this.legacyLaunch);
             this.Controls.Add(this.inputeditor);
             this.Controls.Add(this.showmap);
             this.Controls.Add(this.addServer);
@@ -905,7 +891,6 @@
         private System.Windows.Forms.Button addServer;
         private System.Windows.Forms.Label showmap;
         private System.Windows.Forms.Button inputeditor;
-        private System.Windows.Forms.CheckBox legacyLaunch;
         private System.Windows.Forms.Label allowedCountriesLabel;
         private GameLauncherReborn.ProgressBarEx extractingProgress;
     }

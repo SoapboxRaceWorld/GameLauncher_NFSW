@@ -43,7 +43,6 @@ namespace GameLauncher
         private bool _restartRequired;
         private bool _allowRegistration;
         //private bool _isIndex = false;
-        private bool _useLegacy = true;
         private bool _isDownloading = true;
 
         private int _lastSelectedServerId;
@@ -817,25 +816,6 @@ namespace GameLauncher
             settingsGameFilesCurrent.Text = "CURRENT DIRECTORY: " + _newGameFilesPath;
 
             SetTranslations(_uiLanguage);
-
-            if (_settingFile.KeyExists("UseLegacyLaunchMethod"))
-            {
-                if (_settingFile.Read("UseLegacyLaunchMethod") == "1")
-                {
-                    legacyLaunch.Checked = true;
-                    _useLegacy = true;
-                }
-                else
-                {
-                    legacyLaunch.Checked = false;
-                    _useLegacy = false;
-                }
-            }
-            else
-            {
-                legacyLaunch.Checked = true;
-                _useLegacy = false;
-            }
 
             var handlers = new DiscordRpc.EventHandlers();
             DiscordRpc.Initialize(_discordrpccode, ref handlers, true, "");
@@ -1615,7 +1595,6 @@ namespace GameLauncher
 
             logoutButton.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
-            legacyLaunch.Font = new Font(fontFamily1, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             allowedCountriesLabel.Font = new Font(fontFamily1, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
         }
 
@@ -2178,14 +2157,6 @@ namespace GameLauncher
                 _restartRequired = true;
             }
 
-            if (legacyLaunch.Checked) {
-                _useLegacy = true;
-                _settingFile.Write("UseLegacyLaunchMethod", "1");
-            } else {
-                _useLegacy = false;
-                _settingFile.Write("UseLegacyLaunchMethod", "0");
-            }
-
             if (_restartRequired) {
                 MessageBox.Show(null, "In order to see settings changes, you need to restart launcher manually.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -2238,14 +2209,11 @@ namespace GameLauncher
             settingsGameFilesCurrent.Visible = hideElements;
             settingsGamePathText.Visible = hideElements;
             inputeditor.Visible = hideElements;
-            legacyLaunch.Visible = hideElements;
         }
 
         private void StartGame(string userId, string loginToken, string serverIp, Form x)
         {
-            _nfswstarted = _useLegacy
-                ? new Thread(() => LaunchGameLegacy(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this))
-                : new Thread(() => LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this));
+            _nfswstarted = new Thread(() => LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this));
 
             _nfswstarted.IsBackground = true;
             _nfswstarted.Start();
