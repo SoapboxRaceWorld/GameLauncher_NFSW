@@ -171,7 +171,7 @@ namespace GameLauncher.App.Classes
 
                             playProgress.Text = ("Downloading " + serverKey + " files: " + file.Path).ToUpper();
                             progress.Value = Convert.ToInt32(Decimal.Divide(currentModCount, totalModsCount) * 100);
-                            progress.Width = (int)(5.19*progress.Value);
+                            progress.Width = Convert.ToInt32(Decimal.Divide(currentModCount, totalModsCount) * 519);
 
                             System.Windows.Forms.Application.DoEvents();
 
