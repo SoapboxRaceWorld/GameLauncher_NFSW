@@ -378,6 +378,8 @@ namespace GameLauncher
 
             f.RefreshShadow();
 
+            Text = "GameLauncherReborn v" + Application.ProductVersion;
+
             if (Location.X >= Screen.PrimaryScreen.Bounds.Width || Location.Y >= Screen.PrimaryScreen.Bounds.Height || Location.X <= 0 || Location.Y <= 0)
             {
                 Self.centerScreen(this);
@@ -2454,7 +2456,7 @@ namespace GameLauncher
 
                     extractingProgress.Value = 100;
                     extractingProgress.Width = 519;
-                    extractingProgress.Image = null;
+                    extractingProgress.Image = Properties.Resources.warningprogress;
                     extractingProgress.ProgressColor = Color.Orange;
 
                     playProgressText.Text = "Please make sure you have at least 4GB free space on hard drive.".ToUpper();
@@ -2745,7 +2747,7 @@ namespace GameLauncher
 
             extractingProgress.Value = 100;
             extractingProgress.Width = 519;
-            extractingProgress.Image = null;
+            extractingProgress.Image = Properties.Resources.errorprogress;
             extractingProgress.ProgressColor = Color.FromArgb(254,0,0);
 
             playProgressText.Text = failureMessage.ToUpper();
