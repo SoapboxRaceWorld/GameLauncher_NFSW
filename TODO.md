@@ -21,3 +21,5 @@
 
 # FEATURES:
 - Download ProgressBar now has 2 displays, blue for extracted files and gray for downloaded chunks
+- Proxy Port uses random port between 6260 and 6269
+- LegacyLaunch is now gone, AdvancedLaunch will be used instead

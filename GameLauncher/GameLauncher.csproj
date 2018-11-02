@@ -295,12 +295,16 @@
     <None Include="Resources\cancelbutton_enabled.png" />
     <None Include="Resources\cancelbutton_disabled.png" />
     <None Include="Resources\cancelbutton_click.png" />
-    <None Include="Resources\SBRW512.png" />
     <None Include="Resources\registerButton_en.png" />
     <None Include="Resources\buttons_info.png" />
     <EmbeddedResource Include="LZMA\LZMA.dll" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\logo.png" />
+    <None Include="Resources\loggedbg.png" />
+    <None Include="Resources\warningprogress.png" />
+    <None Include="Resources\loginbg.png" />
+    <None Include="Resources\errorprogress.png" />
     <None Include="Resources\progressgrayscale.png" />
     <None Include="Resources\progress.png" />
     <None Include="Resources\screenshot.png" />
@@ -308,8 +312,6 @@
     <None Include="Resources\settingsbtn.png" />
     <None Include="Resources\settingsbtn_hover.png" />
     <None Include="Resources\secondarybackground.png" />
-    <None Include="Resources\loginbg.png" />
-    <None Include="Resources\loggedbg.png" />
     <None Include="Resources\splash.gif" />
     <None Include="Resources\close_click.png" />
     <None Include="Resources\close.png" />

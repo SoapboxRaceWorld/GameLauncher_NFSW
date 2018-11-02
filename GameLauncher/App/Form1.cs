@@ -68,7 +68,6 @@ namespace GameLauncher
 
         private readonly DiscordRpc.RichPresence _presence = new DiscordRpc.RichPresence();
 
-        //private Graphics _formGraphics;
         private readonly Pen _colorOffline = new Pen(Color.FromArgb(128, 0, 0));
         private readonly Pen _colorOnline = new Pen(Color.FromArgb(0, 128, 0));
         private readonly Pen _colorLoading = new Pen(Color.FromArgb(0, 0, 0));
@@ -82,6 +81,9 @@ namespace GameLauncher
         private string _realServername;
         private string _OS;
 
+        private Point _startPoint = new Point(38, 144);
+        private Point _endPoint = new Point(562, 144);
+
         Form _splashscreen;
 
         private static Random random = new Random();
@@ -91,8 +93,7 @@ namespace GameLauncher
 			  .Select(s => s[random.Next(s.Length)]).ToArray());
 		}
 
-        protected override void OnPaint(PaintEventArgs e)
-        {
+        protected override void OnPaint(PaintEventArgs e){
             //var p = new Pen(Color.FromArgb(10, 17, 25));
             //e.Graphics.DrawRectangle(p, new Rectangle(new Point(0, 0), new Size(Size.Width - 1, Size.Height - 1)));
             //e.Graphics.DrawRectangle(p, new Rectangle(new Point(2, 2), new Size(Size.Width - 5, Size.Height - 5)));
@@ -261,6 +262,10 @@ namespace GameLauncher
             MouseMove += new MouseEventHandler(moveWindow_MouseMove);
             MouseUp += new MouseEventHandler(moveWindow_MouseUp);
 
+            logo.MouseDown += new MouseEventHandler(moveWindow_MouseDown);
+            logo.MouseMove += new MouseEventHandler(moveWindow_MouseMove);
+            logo.MouseUp += new MouseEventHandler(moveWindow_MouseUp);
+
             playButton.MouseEnter += new EventHandler(playButton_MouseEnter);
             playButton.MouseLeave += new EventHandler(playButton_MouseLeave);
             playButton.Click += new EventHandler(playButton_Click);
@@ -323,19 +328,7 @@ namespace GameLauncher
             imageServerName.Location = pos;
             imageServerName.BackColor = Color.Transparent;
 
-            /*var pos2 = PointToScreen(extractingProgress.Location);
-            pos2 = playProgress.PointToClient(pos2);
-            extractingProgress.Parent = playProgress;
-            extractingProgress.Location = pos2;
-            extractingProgress.BackColor = Color.Transparent;*/
-
-            /*if (_isIndex)
-            {
-                _formGraphics = CreateGraphics();
-                _formGraphics.DrawRectangle(_colorLoading, new Rectangle(new Point(30, 125), new Size(372, 274)));
-                _formGraphics.DrawRectangle(_colorLoading, new Rectangle(new Point(29, 124), new Size(374, 276)));
-                _formGraphics.Dispose();
-            }*/
+            ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
             if (Self.CheckForInternetConnection() == false && !DetectLinux.WineDetected())
             {
@@ -350,11 +343,6 @@ namespace GameLauncher
             var font = (sender as ComboBox).Font;
             var backgroundColor = Brushes.White;
             var textColor = Brushes.Black;
-
-            //String ServerListText = (sender as ComboBox).Items[e.Index].ToString();
-            //ServerListText = ServerListText.Replace("{ Text = ", "");
-            //int lastLocation = ServerListText.IndexOf(", Value = ");
-            //ServerListText = ServerListText.Substring(0, lastLocation);
 
             var serverListText = "";
 
@@ -440,8 +428,6 @@ namespace GameLauncher
                 rememberMe.Checked = true;
             }
 
-            //Fetch serverlist, and disable if failed to fetch.
-
             try
             {
                 WebClient wc = new WebClientWithTimeout();
@@ -507,14 +493,10 @@ namespace GameLauncher
                             Id = "__offlinebuiltin__"
                         }
                     });
-                    //slresponse = "<GROUP>Offline Servers;</GROUP>\r\n";
-                    //slresponse += "Offline Built-In Server;http://localhost:4416/sbrw/Engine.svc";
                 }
             }
 
-            //Time to add servers
             serverPick.DisplayMember = "Name";
-            //serverPick.ValueMember = "Value";
 
             var resItems = JsonConvert.DeserializeObject<List<ServerInfo>>(_slresponse);
             var finalItems = new List<ServerInfo>();
@@ -1247,14 +1229,9 @@ namespace GameLauncher
 
             _allowRegistration = false;
 
-            /*_formGraphics = CreateGraphics();
-            _formGraphics.DrawRectangle(_colorLoading, new Rectangle(new Point(30, 125), new Size(372, 274)));
-            _formGraphics.DrawRectangle(_colorLoading, new Rectangle(new Point(29, 124), new Size(374, 276)));
-            _formGraphics.Dispose();*/
-
+            ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
             imageServerName.Text = serverInfo.Name;
-            //imageServerName.Text = serverPick.GetItemText(serverPick.SelectedItem);
 
             _loginEnabled = false;
 
@@ -1308,12 +1285,7 @@ namespace GameLauncher
 
                 if (e2.Error != null)
                 {
-                    /*if (_isIndex) {
-                        _formGraphics = CreateGraphics();
-                        _formGraphics.DrawRectangle(_colorOffline, new Rectangle(new Point(30, 125), new Size(372, 274)));
-                        _formGraphics.DrawRectangle(_colorOffline, new Rectangle(new Point(29, 124), new Size(374, 276)));
-                        _formGraphics.Dispose();
-                    }*/
+                    ServerStatusBar(_colorOffline, _startPoint, _endPoint);
 
                     onlineCount.Text = "Server seems to be offline.";
                     _serverEnabled = false;
@@ -1431,13 +1403,7 @@ namespace GameLauncher
                             _passwordHash = "SHA1";
                         }
 
-                            /*if (_isIndex)
-                            {
-                                _formGraphics = CreateGraphics();
-                                _formGraphics.DrawRectangle(_colorOnline, new Rectangle(new Point(30, 125), new Size(372, 274)));
-                                _formGraphics.DrawRectangle(_colorOnline, new Rectangle(new Point(29, 124), new Size(374, 276)));
-                                _formGraphics.Dispose();
-                            }*/
+                        ServerStatusBar(_colorOnline, _startPoint, _endPoint);
                     }
 
                     onlineCount.Text = string.Format("Players on server: {0}", numPlayers); // "Players on server: " + numPlayers;
@@ -1512,13 +1478,7 @@ namespace GameLauncher
                                         }
                                         else
                                         {
-                                            /*if (_isIndex)
-                                            {
-                                                _formGraphics = CreateGraphics();
-                                                _formGraphics.DrawRectangle(_colorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
-                                                _formGraphics.DrawRectangle(_colorIssues, new Rectangle(new Point(29, 124), new Size(374, 276)));
-                                                _formGraphics.Dispose();
-                                            }*/
+                                            ServerStatusBar(_colorIssues, _startPoint, _endPoint);
 
                                             onlineCount.Text += string.Format("Server ping is {0}ms.", (artificialPingEnd - artificialPingStart).ToString());
                                             onlineCount.Text += " (HTTP)";
@@ -1527,14 +1487,7 @@ namespace GameLauncher
                                 }
                                 else
                                 {
-                                    /*if (_isIndex)
-                                    {
-                                        _formGraphics = CreateGraphics();
-                                        _formGraphics.DrawRectangle(_colorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
-                                        _formGraphics.DrawRectangle(_colorIssues, new Rectangle(new Point(29, 124), new Size(374, 276)));
-                                        _formGraphics.Dispose();
-                                    }*/
-
+                                    ServerStatusBar(_colorIssues, _startPoint, _endPoint);
                                     onlineCount.Text += "Server doesn't allow pinging.";
                                 }
                             }
@@ -1542,14 +1495,7 @@ namespace GameLauncher
                     }
                     else
                     {
-                        /*if (_isIndex)
-                        {
-                            _formGraphics = CreateGraphics();
-                            _formGraphics.DrawRectangle(_colorIssues, new Rectangle(new Point(30, 125), new Size(372, 274)));
-                            _formGraphics.DrawRectangle(_colorIssues, new Rectangle(new Point(29, 124), new Size(374, 276)));
-                            _formGraphics.Dispose();
-                        }*/
-
+                        ServerStatusBar(_colorIssues, _startPoint, _endPoint);
                         onlineCount.Text += "Ping is disabled on non-Windows platform.";
                     }
                 }
@@ -2823,6 +2769,16 @@ namespace GameLauncher
 
         public void SetTranslations(string langId) {
 
+        }
+
+        public void ServerStatusBar(Pen color, Point startPoint, Point endPoint, int Thickness = 2) {
+            Graphics _formGraphics = CreateGraphics();
+            
+            for (int x = 0; x <= Thickness; x++) {
+                _formGraphics.DrawLine(color, new Point(startPoint.X, startPoint.Y-x), new Point(endPoint.X, endPoint.Y-x));
+            }
+
+            _formGraphics.Dispose();
         }
     }
 }

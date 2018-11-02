@@ -70,7 +70,7 @@
             this.logoutButton = new System.Windows.Forms.Button();
             this.welcomeBack = new System.Windows.Forms.Label();
             this.settingsLanguageDesc = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.logo = new System.Windows.Forms.PictureBox();
             this.translatedBy = new System.Windows.Forms.Label();
             this.settingsGameFiles = new System.Windows.Forms.Button();
             this.settingsGameFilesCurrent = new System.Windows.Forms.LinkLabel();
@@ -90,7 +90,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             this.SuspendLayout();
             // 
             // closebtn
@@ -110,7 +110,7 @@
             this.email.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.email.Font = new System.Drawing.Font("Arial", 14F);
             this.email.ForeColor = System.Drawing.Color.White;
-            this.email.Location = new System.Drawing.Point(648, 238);
+            this.email.Location = new System.Drawing.Point(650, 193);
             this.email.Name = "email";
             this.email.Size = new System.Drawing.Size(187, 22);
             this.email.TabIndex = 2;
@@ -121,7 +121,7 @@
             this.password.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.password.Font = new System.Drawing.Font("Arial", 14F);
             this.password.ForeColor = System.Drawing.Color.White;
-            this.password.Location = new System.Drawing.Point(648, 288);
+            this.password.Location = new System.Drawing.Point(650, 245);
             this.password.Name = "password";
             this.password.Size = new System.Drawing.Size(187, 22);
             this.password.TabIndex = 4;
@@ -135,9 +135,9 @@
             this.serverPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.serverPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.serverPick.FormattingEnabled = true;
-            this.serverPick.Location = new System.Drawing.Point(612, 55);
+            this.serverPick.Location = new System.Drawing.Point(599, 65);
             this.serverPick.Name = "serverPick";
-            this.serverPick.Size = new System.Drawing.Size(223, 21);
+            this.serverPick.Size = new System.Drawing.Size(236, 21);
             this.serverPick.TabIndex = 5;
             // 
             // currentWindowInfo
@@ -147,7 +147,7 @@
             this.currentWindowInfo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.currentWindowInfo.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.currentWindowInfo.ForeColor = System.Drawing.Color.White;
-            this.currentWindowInfo.Location = new System.Drawing.Point(646, 155);
+            this.currentWindowInfo.Location = new System.Drawing.Point(646, 105);
             this.currentWindowInfo.Name = "currentWindowInfo";
             this.currentWindowInfo.Size = new System.Drawing.Size(222, 61);
             this.currentWindowInfo.TabIndex = 16;
@@ -161,7 +161,7 @@
             this.rememberMe.BackColor = System.Drawing.Color.Transparent;
             this.rememberMe.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.rememberMe.ForeColor = System.Drawing.Color.White;
-            this.rememberMe.Location = new System.Drawing.Point(614, 327);
+            this.rememberMe.Location = new System.Drawing.Point(615, 285);
             this.rememberMe.Name = "rememberMe";
             this.rememberMe.Size = new System.Drawing.Size(210, 19);
             this.rememberMe.TabIndex = 5;
@@ -479,7 +479,7 @@
             this.forgotPassword.AutoSize = true;
             this.forgotPassword.BackColor = System.Drawing.Color.Transparent;
             this.forgotPassword.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(228)))), ((int)(((byte)(0)))));
-            this.forgotPassword.Location = new System.Drawing.Point(611, 345);
+            this.forgotPassword.Location = new System.Drawing.Point(612, 307);
             this.forgotPassword.Name = "forgotPassword";
             this.forgotPassword.Size = new System.Drawing.Size(143, 13);
             this.forgotPassword.TabIndex = 6;
@@ -566,16 +566,16 @@
             this.settingsLanguageDesc.Text = "Select the language that the game text and audio should be displayed in. This wil" +
     "l not affect your chat or server options.";
             // 
-            // pictureBox1
+            // logo
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Image = global::GameLauncher.Properties.Resources.SBRW512;
-            this.pictureBox1.Location = new System.Drawing.Point(38, 28);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(231, 72);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.logo.BackColor = System.Drawing.Color.Transparent;
+            this.logo.Image = global::GameLauncher.Properties.Resources.logo;
+            this.logo.Location = new System.Drawing.Point(38, 34);
+            this.logo.Name = "logo";
+            this.logo.Size = new System.Drawing.Size(227, 60);
+            this.logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.logo.TabIndex = 0;
+            this.logo.TabStop = false;
             // 
             // translatedBy
             // 
@@ -685,7 +685,7 @@
             // 
             // addServer
             // 
-            this.addServer.Location = new System.Drawing.Point(839, 54);
+            this.addServer.Location = new System.Drawing.Point(839, 64);
             this.addServer.Name = "addServer";
             this.addServer.Size = new System.Drawing.Size(23, 23);
             this.addServer.TabIndex = 68;
@@ -696,9 +696,9 @@
             // 
             this.showmap.BackColor = System.Drawing.Color.Transparent;
             this.showmap.ForeColor = System.Drawing.Color.DarkGray;
-            this.showmap.Location = new System.Drawing.Point(721, 79);
+            this.showmap.Location = new System.Drawing.Point(481, 349);
             this.showmap.Name = "showmap";
-            this.showmap.Size = new System.Drawing.Size(141, 15);
+            this.showmap.Size = new System.Drawing.Size(79, 15);
             this.showmap.TabIndex = 70;
             this.showmap.Text = "[ SHOW MAP ]";
             this.showmap.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -774,7 +774,7 @@
             this.Controls.Add(this.settingsGamePathText);
             this.Controls.Add(this.settingsGameFilesCurrent);
             this.Controls.Add(this.translatedBy);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.logo);
             this.Controls.Add(this.welcomeBack);
             this.Controls.Add(this.registerButton);
             this.Controls.Add(this.launcherVersion);
@@ -829,7 +829,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.registerText)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -878,7 +878,7 @@
         private GameLauncherReborn.ProgressBarEx playProgress;
         private System.Windows.Forms.Button logoutButton;
         private System.Windows.Forms.Label welcomeBack;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox logo;
         private System.Windows.Forms.Label translatedBy;
         private System.Windows.Forms.Button settingsGameFiles;
         private System.Windows.Forms.LinkLabel settingsGameFilesCurrent;
