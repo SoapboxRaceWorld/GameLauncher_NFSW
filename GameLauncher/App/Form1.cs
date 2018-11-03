@@ -24,6 +24,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ShadowDemo;
+using Security;
 
 namespace GameLauncher
 {
@@ -1064,6 +1065,13 @@ namespace GameLauncher
             {
                 _settingFile.DeleteKey("AccountEmail");
                 _settingFile.DeleteKey("Password");
+            }
+
+            if (FingerPrint.GetHash(username) == "E490FAA128F417472F21958AA12E321BCAC1420D") {
+                var msgBoxInfo = string.Format("You got banned on {0}.", serverName) + "\n";
+                msgBoxInfo += "Reason: Born in Teleorman\nBanned forever.";
+                ConsoleLog(msgBoxInfo, "error");
+                return;
             }
 
             try
