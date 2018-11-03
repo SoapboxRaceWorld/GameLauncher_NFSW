@@ -13,14 +13,26 @@ namespace GameLauncher {
     internal static class Program {
         [STAThread]
         internal static void Main() {
+
+            DateTime end = new DateTime(2018, 11, 05, 20, 0, 0); //12 o'clock
+            DateTime now = DateTime.Now;
+
+            Console.WriteLine(end);
+            Console.WriteLine(now);
+
+            if (now >= end) {
+                MessageBox.Show(null, "Launcher trial terminated.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+            }
+
+
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath) ?? throw new InvalidOperationException());
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Form SplashScreen2 = null;
-            /*Form SplashScreen2 = new SplashScreen();
-            SplashScreen2.Show();*/
+            Form SplashScreen2 = new SplashScreen();
+            SplashScreen2.Show();
 
             if (Self.isTempFolder(Directory.GetCurrentDirectory())) {
                 MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);

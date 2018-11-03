@@ -498,9 +498,11 @@ namespace GameLauncher
                 }
             }
 
+
             serverPick.DisplayMember = "Name";
 
             var resItems = JsonConvert.DeserializeObject<List<ServerInfo>>(_slresponse);
+
             var finalItems = new List<ServerInfo>();
 
             foreach (var serverItemGroup in resItems.GroupBy(s => s.Category))
@@ -514,6 +516,17 @@ namespace GameLauncher
 
                 finalItems.AddRange(serverItemGroup.ToList());
             }
+
+
+            finalItems.Add(
+                new ServerInfo {
+                    Category = "NightRiderz",
+                    Name = "NightRiderz",
+                    IpAddress = "http://149.202.87.33:8680/soapbox-race-core/Engine.svc",
+                    Id = "nr",
+                    DiscordPresenceKey = "nightriderzserver",
+                }
+            );
 
             //List<Object> items = new List<Object>();
             //String[] substrings = slresponse.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
@@ -2350,8 +2363,8 @@ namespace GameLauncher
 
                         playProgressText.Text = "You shall not see it!!!11!!".ToUpper();
 
-                        //WindowState = FormWindowState.Minimized;
-                        //ShowInTaskbar = false;
+                        WindowState = FormWindowState.Minimized;
+                        ShowInTaskbar = false;
 
                         ContextMenu = new ContextMenu();
 
