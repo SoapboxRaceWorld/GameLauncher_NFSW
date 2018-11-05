@@ -46,10 +46,11 @@ namespace GameLauncher.App.Classes.RPC {
             //fetch stats//
 
             if(uri == "/events/gettreasurehunteventsession") {
+                PersonaTreasure = 0;
                 SBRW_XML.LoadXml(serverreply);
                 var xPersonaTreasure = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/CoinsCollected").InnerText);
                 for (var i = 0; i < 15; i++) {
-                    if ((xPersonaTreasure & (1 << i)) != 0) PersonaTreasure++;
+                    if ((xPersonaTreasure & (1 << (15 - i))) != 0) PersonaTreasure++;
                 }
 
                 TotalTreasure = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/NumCoins").InnerText);
