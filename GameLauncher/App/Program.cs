@@ -13,19 +13,6 @@ namespace GameLauncher {
     internal static class Program {
         [STAThread]
         internal static void Main() {
-
-            DateTime end = new DateTime(2018, 11, 05, 20, 0, 0); //12 o'clock
-            DateTime now = DateTime.Now;
-
-            Console.WriteLine(end);
-            Console.WriteLine(now);
-
-            if (now >= end) {
-                MessageBox.Show(null, "Launcher trial terminated.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-            }
-
-
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath) ?? throw new InvalidOperationException());
 
             Application.EnableVisualStyles();
@@ -37,10 +24,6 @@ namespace GameLauncher {
             if (Self.isTempFolder(Directory.GetCurrentDirectory())) {
                 MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 Environment.Exit(0);
-            }
-
-            if (!Directory.Exists("Languages")) {
-                Directory.CreateDirectory("Languages");
             }
 
             try {
@@ -111,8 +94,6 @@ namespace GameLauncher {
                             foreach (var file in missingfiles) {
                                 message += "• " + file + "\n";
                             }
-
-                            message += "\nCurrent directory: " + Directory.GetCurrentDirectory();
 
                             MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         } else { 

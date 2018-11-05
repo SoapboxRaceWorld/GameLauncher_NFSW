@@ -278,12 +278,14 @@ namespace GameLauncher
             //Simple check if we have enough permission to write file and remove them
             if (!Self.hasWriteAccessToFolder(Directory.GetCurrentDirectory()))
             {
+                if (_splashscreen != null) _splashscreen.Hide();
                 MessageBox.Show(null, "Failed to write the test file. Make sure you're running the launcher with administrative privileges.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             //Somewhere here we will setup the game installation directory
             if (string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory")))
             {
+                if(_splashscreen != null) _splashscreen.Hide();
                 MessageBox.Show(null, "Howdy! Looks like it's the first time this launcher is started. Please press OK and specify where you want to download all required game files (or select your actual installation).", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 var fbd = new FolderBrowserDialog();
@@ -333,6 +335,7 @@ namespace GameLauncher
 
             if (Self.CheckForInternetConnection() == false && !DetectLinux.WineDetected())
             {
+                if (_splashscreen != null) _splashscreen.Hide();
                 MessageBox.Show(null, "Failed to connect to internet. Please check if your firewall is not blocking launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
@@ -855,6 +858,8 @@ namespace GameLauncher
 
             if(_splashscreen != null)
                 _splashscreen.Hide();
+
+            this.BringToFront();
         }
 
         private void closebtn_Click(object sender, EventArgs e)
@@ -2275,6 +2280,8 @@ namespace GameLauncher
                             if (exitCode == -1073740940) errorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")";
                             if (exitCode == -1073740791) errorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")";
                             if (exitCode == -805306369) errorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")";
+                            if (exitCode == -4) errorMsg = "Another instance is already executed";
+                            if (exitCode == -3) errorMsg = "Session expired";
 
                             playProgressText.Text = errorMsg.ToUpper();
                             playProgress.Value = 100;

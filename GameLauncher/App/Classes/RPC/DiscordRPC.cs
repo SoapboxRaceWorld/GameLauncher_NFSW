@@ -19,6 +19,7 @@ namespace GameLauncher.App.Classes.RPC {
         private static string serverName = ServerProxy.Instance.GetServerName();
         private static bool canUpdateProfileField = false;
         private static bool eventTerminatedManually = false;
+        //private static bool collectingTreasures = false;
         private static int EventID;
         private static string carslotsXML = String.Empty;
 
@@ -34,11 +35,43 @@ namespace GameLauncher.App.Classes.RPC {
         public static string PersonaAvatarId = String.Empty;
         public static string PersonaCarId = String.Empty;
         public static string PersonaCarName = String.Empty;
+        public static int PersonaTreasure = 0;
+        public static int TotalTreasure = 15;
         public static List<string> PersonaIds = new List<string>();
 
         public static void handleGameState(string uri, string serverreply = "", string POST = "", string GET = "") {
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');
+
+            //fetch stats//
+
+            if(uri == "/events/gettreasurehunteventsession") {
+                SBRW_XML.LoadXml(serverreply);
+                var xPersonaTreasure = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/CoinsCollected").InnerText);
+                String binaryPersonaTreasure = Convert.ToString(xPersonaTreasure, 2);
+                foreach (char c in binaryPersonaTreasure) {
+                    if(c.ToString() == "1") PersonaTreasure++;
+                }
+
+                TotalTreasure = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/NumCoins").InnerText);
+            }
+
+            if (uri == "/events/notifycoincollected") {
+                PersonaTreasure++;
+
+                _presence.details = "Collecting TE: "+PersonaTreasure+"/"+TotalTreasure;
+                _presence.state = serverName;
+                _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
+                _presence.largeImageKey = PersonaAvatarId;
+                _presence.smallImageText = "In-Freeroam";
+                _presence.smallImageKey = "gamemode_treasure";
+                _presence.startTimestamp = RPCstartTimestamp;
+                _presence.instance = true;
+                DiscordRpc.UpdatePresence(_presence);
+
+                Console.WriteLine(serverreply);
+            }
+
 
             if (uri == "/User/SecureLoginPersona") {
                 canUpdateProfileField = true;
@@ -50,6 +83,7 @@ namespace GameLauncher.App.Classes.RPC {
                 PersonaAvatarId = String.Empty;
                 PersonaCarId = String.Empty;
                 PersonaCarName = String.Empty;
+                PersonaTreasure = 0;
             }
 
             //FIRST PERSONA EVER LOCALIZED IN CODE

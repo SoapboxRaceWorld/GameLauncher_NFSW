@@ -27,15 +27,14 @@ namespace GameLauncher.App.Classes.Proxy
             string GETContent = String.Empty;
             var serverUrl = ServerProxy.Instance.GetServerUrl();
 
-            /*if (string.IsNullOrEmpty(serverUrl))
-            {
+            if (string.IsNullOrEmpty(serverUrl)) {
                 return new TextResponse(HttpStatusCode.BadGateway, "Not open for business");
-            }*/
+            }
 
             var fixedPath = context.Request.Path.Replace("/nfsw/Engine.svc", "");
             var fullUrl = new Uri(serverUrl).Append(fixedPath);
 
-            //Console.WriteLine($@"{context.Request.Method} {fixedPath} -> {fullUrl.Host}");
+            Console.WriteLine($@"{context.Request.Method} {fixedPath} -> {fullUrl.Host}");
 
             var queryParams = new Dictionary<string, object>();
             var headers = new Dictionary<string, object>();
