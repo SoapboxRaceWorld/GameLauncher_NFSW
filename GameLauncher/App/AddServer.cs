@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GameLauncher.App.Classes;
 using GameLauncher.HashPassword;
+using DiscordWebhook;
 
 namespace GameLauncher.App {
     public partial class AddServer : Form {
@@ -132,7 +133,15 @@ namespace GameLauncher.App {
                     //File.WriteAllText("servers.txt", oldcontent + addString);
                     File.WriteAllText("servers.json", JsonConvert.SerializeObject(servers));
                     MessageBox.Show(null, "New server will be added on next start of launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                } catch(Exception ex) {
+
+                    //Send WebHook
+                    //https://discordapp.com/api/webhooks/509140869358682114/tOJRNqW4T_-HbyF9bLrevjjSYUfzrdYUNP-a4dnDKF_Ro22iLMjpFeQxcCT85H9TKVQ5
+
+                    Webhook hook = new Webhook("https://discordapp.com/api/webhooks/509140869358682114/tOJRNqW4T_-HbyF9bLrevjjSYUfzrdYUNP-a4dnDKF_Ro22iLMjpFeQxcCT85H9TKVQ5");
+                    hook.Send("**[New server spotted]** " + serverName.Text + ": " + wellFormattedURL);
+
+                }
+                catch (Exception ex) {
                     MessageBox.Show(null, "Failed to add new server. " + ex.Message, "GameLauncher", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
                 }
 

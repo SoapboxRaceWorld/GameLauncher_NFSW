@@ -320,7 +320,7 @@ namespace GameLauncher
             if (File.Exists(_settingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur"))
             {
                 var mycursor = new Cursor(Cursor.Current.Handle);
-                var colorcursorhandle = User32.LoadCursorFromFile(_settingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur");
+                var colorcursorhandle = User32.LoadCursorFromFile("C:\\Users\\MeTonaTOR\\Desktop\\Metro X3 by exsess\\Light\\White\\X3_arrow.ani");
                 mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
                 Cursor = mycursor;
             }
@@ -350,24 +350,28 @@ namespace GameLauncher
 
             var serverListText = "";
 
-            if (sender is ComboBox cb)
-            {
-                if (cb.Items[e.Index] is ServerInfo si)
-                {
+            if (sender is ComboBox cb) {
+                if (cb.Items[e.Index] is ServerInfo si) {
                     serverListText = si.Name;
                 }
             }
 
             e.Graphics.FillRectangle(backgroundColor, e.Bounds);
 
-            if (serverListText.StartsWith("<GROUP>"))
-            {
+            if (serverListText.StartsWith("<GROUP>")) {
                 font = new Font(font, FontStyle.Bold);
                 e.Graphics.DrawString(serverListText.Replace("<GROUP>", string.Empty), font, textColor, e.Bounds);
-            }
-            else
-            {
+            } else {
                 font = new Font(font, FontStyle.Regular);
+                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit) {
+                    backgroundColor = SystemBrushes.Highlight;
+                    textColor = SystemBrushes.HighlightText;
+                } else {
+                    backgroundColor = SystemBrushes.Window;
+                    textColor = SystemBrushes.WindowText;
+                }
+
+                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
                 e.Graphics.DrawString("    " + serverListText, font, textColor, e.Bounds);
             }
         }

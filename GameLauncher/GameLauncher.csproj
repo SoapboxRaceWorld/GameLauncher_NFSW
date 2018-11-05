@@ -193,7 +193,8 @@
     <Compile Include="App\Debug.Designer.cs">
       <DependentUpon>Debug.cs</DependentUpon>
     </Compile>
-    <Compile Include="App\Discord\Discord.cs" />
+    <Compile Include="App\Discord\RPC.cs" />
+    <Compile Include="App\Discord\WebHook.cs" />
     <Compile Include="App\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
