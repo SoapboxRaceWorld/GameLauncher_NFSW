@@ -64,7 +64,7 @@ namespace GameLauncher.App.Classes.RPC {
             if (uri == "/events/notifycoincollected") {
                 PersonaTreasure++;
 
-                _presence.details = "Collecting TE: "+PersonaTreasure+"/"+TotalTreasure;
+                _presence.details = "Collecting Treasures ("+PersonaTreasure+" of "+TotalTreasure+")";
                 _presence.state = serverName;
                 _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
                 _presence.largeImageKey = PersonaAvatarId;
