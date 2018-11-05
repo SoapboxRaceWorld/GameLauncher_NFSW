@@ -37,6 +37,7 @@ namespace GameLauncher.App.Classes.RPC {
         public static string PersonaCarName = String.Empty;
         public static int PersonaTreasure = 0;
         public static int TotalTreasure = 15;
+        public static int TEDay = 0;
         public static List<string> PersonaIds = new List<string>();
 
         public static void handleGameState(string uri, string serverreply = "", string POST = "", string GET = "") {
@@ -47,6 +48,9 @@ namespace GameLauncher.App.Classes.RPC {
 
             if(uri == "/events/gettreasurehunteventsession") {
                 PersonaTreasure = 0;
+                TotalTreasure = 15;
+                TEDay = 0;
+
                 SBRW_XML.LoadXml(serverreply);
                 var xPersonaTreasure = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/CoinsCollected").InnerText);
                 for (var i = 0; i < 15; i++) {
@@ -54,6 +58,7 @@ namespace GameLauncher.App.Classes.RPC {
                 }
 
                 TotalTreasure = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/NumCoins").InnerText);
+                TEDay = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/Streak").InnerText);
             }
 
             if (uri == "/events/notifycoincollected") {
@@ -63,7 +68,7 @@ namespace GameLauncher.App.Classes.RPC {
                 _presence.state = serverName;
                 _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
                 _presence.largeImageKey = PersonaAvatarId;
-                _presence.smallImageText = "In-Freeroam";
+                _presence.smallImageText = "Treasure Hunt - Day: " + TEDay;
                 _presence.smallImageKey = "gamemode_treasure";
                 _presence.startTimestamp = RPCstartTimestamp;
                 _presence.instance = true;
