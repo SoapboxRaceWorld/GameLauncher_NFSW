@@ -102,7 +102,7 @@ namespace GameLauncher.App.Classes.Proxy
             
 
             return new TextResponse(
-                response.Content.ReadAsStringAsync().Result.Replace("<Host>104.248.0.202</Host>", "<Host>127.0.0.1</Host>"),
+                response.Content.ReadAsStringAsync().Result,
                 response.Content.Headers.ContentType.ToString()
             )
             {

@@ -371,7 +371,6 @@ namespace GameLauncher
                     textColor = SystemBrushes.WindowText;
                 }
 
-                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
                 e.Graphics.DrawString("    " + serverListText, font, textColor, e.Bounds);
             }
         }
