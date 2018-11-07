@@ -245,11 +245,18 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
-    <EmbeddedResource Include="Fonts\Montserrat-Bold.ttf" />
-    <EmbeddedResource Include="Fonts\Montserrat-Regular.ttf" />
     <EmbeddedResource Include="App\Classes\RPC\JSON\events.json" />
     <EmbeddedResource Include="App\Classes\RPC\JSON\cars.json" />
     <EmbeddedResource Include="Discord\libdiscord-rpc.dylib" />
+    <EmbeddedResource Include="Fonts\Airport-Cyr.ttf" />
+    <EmbeddedResource Include="Fonts\Akrobat-Black.otf" />
+    <EmbeddedResource Include="Fonts\Akrobat-Bold.otf" />
+    <EmbeddedResource Include="Fonts\Akrobat-ExtraBold.otf" />
+    <EmbeddedResource Include="Fonts\Akrobat-ExtraLight.otf" />
+    <EmbeddedResource Include="Fonts\Akrobat-Light.otf" />
+    <EmbeddedResource Include="Fonts\Akrobat-Regular.otf" />
+    <EmbeddedResource Include="Fonts\Akrobat-SemiBold.otf" />
+    <EmbeddedResource Include="Fonts\Akrobat-Thin.otf" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\DataSources\GameLauncher.App.AddServer.datasource" />
@@ -303,6 +310,12 @@
     <EmbeddedResource Include="LZMA\LZMA.dll" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\full.png" />
+    <None Include="Resources\webicon.png" />
+    <None Include="Resources\ac_warning.png" />
+    <None Include="Resources\ac_unknown.png" />
+    <None Include="Resources\ac_success.png" />
+    <None Include="Resources\ac_error.png" />
     <None Include="Resources\logo.png" />
     <None Include="Resources\loggedbg.png" />
     <None Include="Resources\warningprogress.png" />

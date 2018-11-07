@@ -17,7 +17,7 @@ namespace GameLauncher {
 
 
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            Application.SetCompatibleTextRenderingDefault(true);
 
             Form SplashScreen2 = new SplashScreen();
             SplashScreen2.Show();

@@ -198,7 +198,8 @@ namespace GameLauncher
             }
 
             MaximizeBox = false;
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+            //SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
 
             closebtn.MouseEnter += new EventHandler(closebtn_MouseEnter);
             closebtn.MouseLeave += new EventHandler(closebtn_MouseLeave);
@@ -246,7 +247,7 @@ namespace GameLauncher
             settingsGameFilesCurrent.Click += new EventHandler(settingsGameFilesCurrent_Click);
 
             addServer.Click += new EventHandler(addServer_Click);
-            launcherVersion.Click += new EventHandler(OpenDebugWindow);
+            launcherStatusDesc.Click += new EventHandler(OpenDebugWindow);
             showmap.Click += new EventHandler(OpenMapHandler);
 
             email.KeyUp += new KeyEventHandler(Loginbuttonenabler);
@@ -393,7 +394,7 @@ namespace GameLauncher
             }
             _NFSW_Installation_Source = _settingFile.KeyExists("CDN") ? _settingFile.Read("CDN") : "http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client";
 
-            launcherVersion.Text = "v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 10);
+            launcherStatusDesc.Text = "Version : v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 7);
             translatedBy.Text = ""; //Empty
 
             if (!_settingFile.KeyExists("SkipUpdate"))
@@ -1258,6 +1259,10 @@ namespace GameLauncher
 
             _loginEnabled = false;
 
+            ServerStatusText.Text = "Server Status - Pinging";
+            ServerStatusText.ForeColor = Color.FromArgb(66, 179, 189);
+            ServerStatusDesc.Text = "";
+
             loginButton.ForeColor = Color.Gray;
             password.Text = "";
             var verticalImageUrl = "";
@@ -1270,8 +1275,6 @@ namespace GameLauncher
 
             var wordsArray = serverName.Split();
             var richPresenceIconId = ((wordsArray.Length == 1) ? wordsArray[0] : wordsArray[0] + wordsArray[1]).ToLower();
-
-            onlineCount.Text = "";
 
             if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server")
             {
@@ -1310,7 +1313,9 @@ namespace GameLauncher
                 {
                     ServerStatusBar(_colorOffline, _startPoint, _endPoint);
 
-                    onlineCount.Text = "Server seems to be offline.";
+                    ServerStatusText.Text = "Server Status - Offline ( OFF )";
+                    ServerStatusText.ForeColor = Color.FromArgb(254, 0, 0);
+                    ServerStatusDesc.Text = "Server seems to be offline.";
                     _serverEnabled = false;
                     _allowRegistration = false;
                 }
@@ -1401,11 +1406,11 @@ namespace GameLauncher
 
                         if (json.maxUsersAllowed == 0)
                         {
-                            numPlayers = string.Format("{0} out of {1}", json.onlineNumber, json.numberOfRegistered);
+                            numPlayers = string.Format("{0}/{1}", json.onlineNumber, json.numberOfRegistered);
                         }
                         else
                         {
-                            numPlayers = string.Format("{0} out of {1}", json.onlineNumber, json.maxUsersAllowed.ToString());
+                            numPlayers = string.Format("{0}/{1}", json.onlineNumber, json.maxUsersAllowed.ToString());
                         }
 
                         _allowRegistration = true;
@@ -1429,7 +1434,9 @@ namespace GameLauncher
                         ServerStatusBar(_colorOnline, _startPoint, _endPoint);
                     }
 
-                    onlineCount.Text = string.Format("Players on server: {0}", numPlayers); // "Players on server: " + numPlayers;
+                    ServerStatusText.Text = "Server Status - Online ( ON )";
+                    ServerStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+                    ServerStatusDesc.Text = string.Format("players in game - {0}", numPlayers);
                     _serverEnabled = true;
 
                     if (!string.IsNullOrEmpty(verticalImageUrl))
@@ -1466,7 +1473,7 @@ namespace GameLauncher
                         };
                     }
 
-                    onlineCount.Text += ". ";
+                    //onlineCount.Text += ". ";
 
                     if (!DetectLinux.WineDetected() && !DetectLinux.UnixDetected())
                     {
@@ -1478,7 +1485,7 @@ namespace GameLauncher
 
                             if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server")
                             {
-                                onlineCount.Text += string.Format("Server ping is {0}ms.", reply.RoundtripTime);
+                                //onlineCount.Text += string.Format("Server ping is {0}ms.", reply.RoundtripTime);
                             }
                             else
                             {
@@ -1497,21 +1504,21 @@ namespace GameLauncher
 
                                         if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server")
                                         {
-                                            onlineCount.Text += string.Format("Server ping is {0}ms.", reply.RoundtripTime);
+                                            //onlineCount.Text += string.Format("Server ping is {0}ms.", reply.RoundtripTime);
                                         }
                                         else
                                         {
                                             ServerStatusBar(_colorIssues, _startPoint, _endPoint);
 
-                                            onlineCount.Text += string.Format("Server ping is {0}ms.", (artificialPingEnd - artificialPingStart).ToString());
-                                            onlineCount.Text += " (HTTP)";
+                                            //onlineCount.Text += string.Format("Server ping is {0}ms.", (artificialPingEnd - artificialPingStart).ToString());
+                                            //onlineCount.Text += " (HTTP)";
                                         }
                                     };
                                 }
                                 else
                                 {
                                     ServerStatusBar(_colorIssues, _startPoint, _endPoint);
-                                    onlineCount.Text += "Server doesn't allow pinging.";
+                                    //onlineCount.Text += "Server doesn't allow pinging.";
                                 }
                             }
                         };
@@ -1519,15 +1526,25 @@ namespace GameLauncher
                     else
                     {
                         ServerStatusBar(_colorIssues, _startPoint, _endPoint);
-                        onlineCount.Text += "Ping is disabled on non-Windows platform.";
+                        //onlineCount.Text += "Ping is disabled on non-Windows platform.";
                     }
                 }
             };
         }
 
-        private void ApplyEmbeddedFonts()
-        {
-            var fontFamily1 = FontWrapper.Instance.GetFontFamily("Montserrat-Regular.ttf");
+        private void ApplyEmbeddedFonts() {
+            FontFamily AirportCyr = FontWrapper.Instance.GetFontFamily("Airport-Cyr.ttf");
+            FontFamily AkrobatSemiBold = FontWrapper.Instance.GetFontFamily("Akrobat-SemiBold.otf");
+
+            launcherStatusText.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            launcherStatusDesc.Font = new Font(AirportCyr, 7f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+
+            ServerStatusText.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            ServerStatusDesc.Font = new Font(AirportCyr, 7f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+
+
+            /*var fontFamily1 = FontWrapper.Instance.GetFontFamily("Montserrat-Regular.ttf");
             var fontFamily2 = FontWrapper.Instance.GetFontFamily("Montserrat-Bold.ttf");
 
             //Implement them to elements
@@ -1563,8 +1580,7 @@ namespace GameLauncher
             settingsGameFilesCurrent.Font = new Font(fontFamily2, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             logoutButton.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-
-            allowedCountriesLabel.Font = new Font(fontFamily1, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            allowedCountriesLabel.Font = new Font(fontFamily1, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);*/
         }
 
         private void registerText_LinkClicked(object sender, EventArgs e)
@@ -1613,7 +1629,12 @@ namespace GameLauncher
             playButton.Visible = hideElements;
             settingsButton.Visible = hideElements;
             verticalBanner.Visible = hideElements;
-            onlineCount.Visible = hideElements;
+            ServerStatusText.Visible = hideElements;
+            ServerStatusIcon.Visible = hideElements;
+            ServerStatusDesc.Visible = hideElements;
+            launcherIconStatus.Visible = hideElements;
+            launcherStatusDesc.Visible = hideElements;
+            launcherStatusText.Visible = hideElements;
             welcomeBack.Visible = hideElements;
             allowedCountriesLabel.Visible = hideElements;
         }
@@ -1627,7 +1648,12 @@ namespace GameLauncher
 
             rememberMe.Visible = hideElements;
             loginButton.Visible = hideElements;
-            onlineCount.Visible = hideElements;
+            ServerStatusText.Visible = hideElements;
+            ServerStatusIcon.Visible = hideElements;
+            ServerStatusDesc.Visible = hideElements;
+            launcherIconStatus.Visible = hideElements;
+            launcherStatusDesc.Visible = hideElements;
+            launcherStatusText.Visible = hideElements;
             registerText.Visible = hideElements;
             serverPick.Visible = hideElements;
             email.Visible = hideElements;
@@ -2080,41 +2106,49 @@ namespace GameLauncher
             _settingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString());
 
             var userSettingsXml = new XmlDocument();
-            if (File.Exists(_userSettings))
-            {
-                try
-                {
-                    //File has been found, lets change Language setting
-                    userSettingsXml.Load(_userSettings);
-                    var language = userSettingsXml.SelectSingleNode("Settings/UI/Language");
-                    language.InnerText = settingsLanguage.SelectedValue.ToString();
-                }
-                catch
-                {
-                    //XML is Corrupted... let's delete it and create new one
-                    File.Delete(_userSettings);
 
+            try
+            { 
+                if (File.Exists(_userSettings)) {
+                    try  {
+                        userSettingsXml.Load(_userSettings);
+                        var language = userSettingsXml.SelectSingleNode("Settings/UI/Language");
+                        language.InnerText = settingsLanguage.SelectedValue.ToString();
+                    } catch {
+                        File.Delete(_userSettings);
+
+                        var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
+                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
+                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
+                        var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
+
+                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue + "</DefaultChatGroup>";
+                        ui.InnerXml = "<Language Type=\"string\">" + settingsLanguage.SelectedValue + "</Language>";
+
+                        var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
+                    }
+                } else {
                     var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
                     var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
                     var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
                     var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
 
-                    chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue + "</DefaultChatGroup>";
-                    ui.InnerXml = "<Language Type=\"string\">" + settingsLanguage.SelectedValue + "</Language>";
+                    chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue.ToString() + "</DefaultChatGroup>";
+                    ui.InnerXml = "<Language Type=\"string\">" + settingsLanguage.SelectedValue.ToString() + "</Language>";
 
                     var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
                 }
-            }
-            else
-            {
-                //There's no file like that, let's create it
+            } catch(Exception ex) {
+                MessageBox.Show(null, "There was an error saving your settings to actual file. Restoring default.\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                File.Delete(_userSettings);
+
                 var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
                 var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
                 var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
                 var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
 
-                chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue.ToString() + "</DefaultChatGroup>";
-                ui.InnerXml = "<Language Type=\"string\">" + settingsLanguage.SelectedValue.ToString() + "</Language>";
+                chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue + "</DefaultChatGroup>";
+                ui.InnerXml = "<Language Type=\"string\">" + settingsLanguage.SelectedValue + "</Language>";
 
                 var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
             }
@@ -2614,7 +2648,8 @@ namespace GameLauncher
         {
             try
             {
-                ModManager.Download(ModManager.GetMods(serverKey), _settingFile.Read("InstallationDirectory"), serverKey, playProgressText, playProgress);
+                playProgress.Width = 1;
+                ModManager.Download(ModManager.GetMods(serverKey), _settingFile.Read("InstallationDirectory"), serverKey, playProgressText, extractingProgress);
                 return true;
             }
             catch (Exception e)

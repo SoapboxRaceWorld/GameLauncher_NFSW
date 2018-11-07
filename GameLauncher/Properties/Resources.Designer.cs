@@ -63,6 +63,46 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ac_error {
+            get {
+                object obj = ResourceManager.GetObject("ac_error", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ac_success {
+            get {
+                object obj = ResourceManager.GetObject("ac_success", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ac_unknown {
+            get {
+                object obj = ResourceManager.GetObject("ac_unknown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ac_warning {
+            get {
+                object obj = ResourceManager.GetObject("ac_warning", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap cancelbutton_click {
             get {
                 object obj = ResourceManager.GetObject("cancelbutton_click", resourceCulture);
@@ -136,6 +176,16 @@ namespace GameLauncher.Properties {
         internal static System.Drawing.Bitmap errorprogress {
             get {
                 object obj = ResourceManager.GetObject("errorprogress", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap full {
+            get {
+                object obj = ResourceManager.GetObject("full", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -376,6 +426,16 @@ namespace GameLauncher.Properties {
         internal static System.Drawing.Bitmap warningprogress {
             get {
                 object obj = ResourceManager.GetObject("warningprogress", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap webicon {
+            get {
+                object obj = ResourceManager.GetObject("webicon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

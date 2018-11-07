@@ -37,7 +37,6 @@
             this.currentWindowInfo = new System.Windows.Forms.Label();
             this.rememberMe = new System.Windows.Forms.CheckBox();
             this.Timeout = new System.Windows.Forms.Timer(this.components);
-            this.onlineCount = new System.Windows.Forms.Label();
             this.loginButton = new System.Windows.Forms.Button();
             this.registerText = new System.Windows.Forms.PictureBox();
             this.emailLabel = new System.Windows.Forms.Label();
@@ -64,7 +63,7 @@
             this.playButton = new System.Windows.Forms.Button();
             this.Notification = new System.Windows.Forms.NotifyIcon(this.components);
             this.forgotPassword = new System.Windows.Forms.LinkLabel();
-            this.launcherVersion = new System.Windows.Forms.Label();
+            this.launcherStatusDesc = new System.Windows.Forms.Label();
             this.imageServerName = new System.Windows.Forms.Label();
             this.registerCancel = new System.Windows.Forms.Button();
             this.logoutButton = new System.Windows.Forms.Button();
@@ -84,6 +83,11 @@
             this.showmap = new System.Windows.Forms.Label();
             this.inputeditor = new System.Windows.Forms.Button();
             this.allowedCountriesLabel = new System.Windows.Forms.Label();
+            this.launcherIconStatus = new System.Windows.Forms.PictureBox();
+            this.launcherStatusText = new System.Windows.Forms.Label();
+            this.ServerStatusDesc = new System.Windows.Forms.Label();
+            this.ServerStatusText = new System.Windows.Forms.Label();
+            this.ServerStatusIcon = new System.Windows.Forms.PictureBox();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
@@ -91,6 +95,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.launcherIconStatus)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ServerStatusIcon)).BeginInit();
             this.SuspendLayout();
             // 
             // closebtn
@@ -171,18 +177,6 @@
             // Timeout
             // 
             this.Timeout.Interval = 3000;
-            // 
-            // onlineCount
-            // 
-            this.onlineCount.AutoSize = true;
-            this.onlineCount.BackColor = System.Drawing.Color.Transparent;
-            this.onlineCount.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.onlineCount.Location = new System.Drawing.Point(42, 375);
-            this.onlineCount.Name = "onlineCount";
-            this.onlineCount.Size = new System.Drawing.Size(127, 13);
-            this.onlineCount.TabIndex = 11;
-            this.onlineCount.Text = "Retrieving server status...";
-            this.onlineCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // loginButton
             // 
@@ -444,7 +438,7 @@
             this.playProgressText.BackColor = System.Drawing.Color.Transparent;
             this.playProgressText.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.playProgressText.ForeColor = System.Drawing.Color.White;
-            this.playProgressText.Location = new System.Drawing.Point(49, 420);
+            this.playProgressText.Location = new System.Drawing.Point(54, 422);
             this.playProgressText.Name = "playProgressText";
             this.playProgressText.Size = new System.Drawing.Size(120, 19);
             this.playProgressText.TabIndex = 10;
@@ -487,16 +481,17 @@
             this.forgotPassword.Text = "I FORGOT MY PASSWORD";
             this.forgotPassword.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(228)))), ((int)(((byte)(0)))));
             // 
-            // launcherVersion
+            // launcherStatusDesc
             // 
-            this.launcherVersion.BackColor = System.Drawing.Color.Transparent;
-            this.launcherVersion.ForeColor = System.Drawing.Color.DarkGray;
-            this.launcherVersion.Location = new System.Drawing.Point(426, 487);
-            this.launcherVersion.Name = "launcherVersion";
-            this.launcherVersion.Size = new System.Drawing.Size(453, 33);
-            this.launcherVersion.TabIndex = 2;
-            this.launcherVersion.Text = "v0.0.0.0";
-            this.launcherVersion.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.launcherStatusDesc.AutoSize = true;
+            this.launcherStatusDesc.BackColor = System.Drawing.Color.Transparent;
+            this.launcherStatusDesc.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.launcherStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(134)))), ((int)(((byte)(134)))), ((int)(((byte)(134)))));
+            this.launcherStatusDesc.Location = new System.Drawing.Point(65, 491);
+            this.launcherStatusDesc.Name = "launcherStatusDesc";
+            this.launcherStatusDesc.Size = new System.Drawing.Size(146, 13);
+            this.launcherStatusDesc.TabIndex = 5;
+            this.launcherStatusDesc.Text = "Version : 2.0.0.0-Build123456";
             // 
             // imageServerName
             // 
@@ -695,8 +690,8 @@
             // showmap
             // 
             this.showmap.BackColor = System.Drawing.Color.Transparent;
-            this.showmap.ForeColor = System.Drawing.Color.DarkGray;
-            this.showmap.Location = new System.Drawing.Point(481, 349);
+            this.showmap.ForeColor = System.Drawing.Color.White;
+            this.showmap.Location = new System.Drawing.Point(481, 374);
             this.showmap.Name = "showmap";
             this.showmap.Size = new System.Drawing.Size(79, 15);
             this.showmap.TabIndex = 70;
@@ -722,6 +717,60 @@
             this.allowedCountriesLabel.Name = "allowedCountriesLabel";
             this.allowedCountriesLabel.Size = new System.Drawing.Size(10, 10);
             this.allowedCountriesLabel.TabIndex = 76;
+            // 
+            // launcherIconStatus
+            // 
+            this.launcherIconStatus.BackColor = System.Drawing.Color.Transparent;
+            this.launcherIconStatus.Image = global::GameLauncher.Properties.Resources.ac_success;
+            this.launcherIconStatus.Location = new System.Drawing.Point(38, 476);
+            this.launcherIconStatus.Name = "launcherIconStatus";
+            this.launcherIconStatus.Size = new System.Drawing.Size(21, 24);
+            this.launcherIconStatus.TabIndex = 79;
+            this.launcherIconStatus.TabStop = false;
+            // 
+            // launcherStatusText
+            // 
+            this.launcherStatusText.BackColor = System.Drawing.Color.Transparent;
+            this.launcherStatusText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.launcherStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
+            this.launcherStatusText.Location = new System.Drawing.Point(65, 476);
+            this.launcherStatusText.Name = "launcherStatusText";
+            this.launcherStatusText.Size = new System.Drawing.Size(161, 14);
+            this.launcherStatusText.TabIndex = 4;
+            this.launcherStatusText.Text = "Anti-Cheat System - Activated";
+            this.launcherStatusText.UseCompatibleTextRendering = true;
+            // 
+            // ServerStatusDesc
+            // 
+            this.ServerStatusDesc.AutoSize = true;
+            this.ServerStatusDesc.BackColor = System.Drawing.Color.Transparent;
+            this.ServerStatusDesc.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.ServerStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(134)))), ((int)(((byte)(134)))), ((int)(((byte)(134)))));
+            this.ServerStatusDesc.Location = new System.Drawing.Point(258, 491);
+            this.ServerStatusDesc.Name = "ServerStatusDesc";
+            this.ServerStatusDesc.Size = new System.Drawing.Size(0, 13);
+            this.ServerStatusDesc.TabIndex = 8;
+            // 
+            // ServerStatusText
+            // 
+            this.ServerStatusText.BackColor = System.Drawing.Color.Transparent;
+            this.ServerStatusText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.ServerStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.ServerStatusText.Location = new System.Drawing.Point(258, 476);
+            this.ServerStatusText.Name = "ServerStatusText";
+            this.ServerStatusText.Size = new System.Drawing.Size(148, 13);
+            this.ServerStatusText.TabIndex = 7;
+            this.ServerStatusText.Text = "Server Status - Pinging";
+            // 
+            // ServerStatusIcon
+            // 
+            this.ServerStatusIcon.BackColor = System.Drawing.Color.Transparent;
+            this.ServerStatusIcon.Image = global::GameLauncher.Properties.Resources.webicon;
+            this.ServerStatusIcon.Location = new System.Drawing.Point(225, 478);
+            this.ServerStatusIcon.Name = "ServerStatusIcon";
+            this.ServerStatusIcon.Size = new System.Drawing.Size(21, 24);
+            this.ServerStatusIcon.TabIndex = 6;
+            this.ServerStatusIcon.TabStop = false;
             // 
             // extractingProgress
             // 
@@ -759,9 +808,14 @@
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImage = global::GameLauncher.Properties.Resources.full;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.ServerStatusIcon);
+            this.Controls.Add(this.ServerStatusText);
+            this.Controls.Add(this.ServerStatusDesc);
+            this.Controls.Add(this.launcherStatusText);
+            this.Controls.Add(this.launcherIconStatus);
             this.Controls.Add(this.allowedCountriesLabel);
             this.Controls.Add(this.inputeditor);
             this.Controls.Add(this.showmap);
@@ -777,7 +831,7 @@
             this.Controls.Add(this.logo);
             this.Controls.Add(this.welcomeBack);
             this.Controls.Add(this.registerButton);
-            this.Controls.Add(this.launcherVersion);
+            this.Controls.Add(this.launcherStatusDesc);
             this.Controls.Add(this.playProgressText);
             this.Controls.Add(this.registerAgree);
             this.Controls.Add(this.registerConfirmPasswordText);
@@ -790,7 +844,6 @@
             this.Controls.Add(this.emailLabel);
             this.Controls.Add(this.registerText);
             this.Controls.Add(this.loginButton);
-            this.Controls.Add(this.onlineCount);
             this.Controls.Add(this.rememberMe);
             this.Controls.Add(this.currentWindowInfo);
             this.Controls.Add(this.serverPick);
@@ -830,6 +883,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.launcherIconStatus)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ServerStatusIcon)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -844,7 +899,6 @@
         private System.Windows.Forms.Label currentWindowInfo;
         private System.Windows.Forms.CheckBox rememberMe;
         private System.Windows.Forms.Timer Timeout;
-        private System.Windows.Forms.Label onlineCount;
         private System.Windows.Forms.Button loginButton;
         private System.Windows.Forms.PictureBox registerText;
         private System.Windows.Forms.Label emailLabel;
@@ -872,7 +926,7 @@
         private System.Windows.Forms.NotifyIcon Notification;
         private System.Windows.Forms.LinkLabel forgotPassword;
         internal System.Windows.Forms.Label playProgressText;
-        private System.Windows.Forms.Label launcherVersion;
+        private System.Windows.Forms.Label launcherStatusDesc;
         private System.Windows.Forms.Label imageServerName;
         private System.Windows.Forms.Button registerCancel;
         private GameLauncherReborn.ProgressBarEx playProgress;
@@ -893,5 +947,10 @@
         private System.Windows.Forms.Button inputeditor;
         private System.Windows.Forms.Label allowedCountriesLabel;
         private GameLauncherReborn.ProgressBarEx extractingProgress;
+        private System.Windows.Forms.PictureBox launcherIconStatus;
+        private System.Windows.Forms.Label launcherStatusText;
+        private System.Windows.Forms.Label ServerStatusDesc;
+        private System.Windows.Forms.Label ServerStatusText;
+        private System.Windows.Forms.PictureBox ServerStatusIcon;
     }
 }
