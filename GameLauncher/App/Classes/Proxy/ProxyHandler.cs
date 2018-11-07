@@ -99,8 +99,6 @@ namespace GameLauncher.App.Classes.Proxy
 
             DiscordRPC.handleGameState(fixedPath, response.Content.ReadAsStringAsync().Result, POSTContent, GETContent);
 
-            
-
             return new TextResponse(
                 response.Content.ReadAsStringAsync().Result,
                 response.Content.Headers.ContentType.ToString()

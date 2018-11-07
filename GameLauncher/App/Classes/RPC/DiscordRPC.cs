@@ -46,7 +46,25 @@ namespace GameLauncher.App.Classes.RPC {
 
             //fetch stats//
 
-            if(uri == "/events/gettreasurehunteventsession") {
+            /*if(uri == "/DriverPersona/GetPersonaBaseFromList" && POST != String.Empty) {
+                SBRW_XML.LoadXml(serverreply);
+                String PersonaFriend = SBRW_XML.SelectSingleNode("ArrayOfPersonaBase/PersonaBase/Name").InnerText;
+
+                if(PersonaFriend != PersonaName) { 
+                    var notification = new NotifyIcon()  {
+                        Visible = true,
+                        Icon = System.Drawing.SystemIcons.Information,
+                        BalloonTipIcon = ToolTipIcon.Info,
+                        BalloonTipTitle = "Friend Request - " + serverName,
+                        BalloonTipText = PersonaFriend + " wants to be your friend. Go ingame to accept or decline",
+                    };
+
+                    notification.ShowBalloonTip(5000);
+                    notification.Dispose();
+                }
+            }*/
+
+            if (uri == "/events/gettreasurehunteventsession") {
                 PersonaTreasure = 0;
                 TotalTreasure = 15;
                 TEDay = 0;
@@ -64,7 +82,7 @@ namespace GameLauncher.App.Classes.RPC {
             if (uri == "/events/notifycoincollected") {
                 PersonaTreasure++;
 
-                _presence.details = "Collecting Treasures ("+PersonaTreasure+" of "+TotalTreasure+")";
+                _presence.details = "Collecting TH ("+PersonaTreasure+" of "+TotalTreasure+")";
                 _presence.state = serverName;
                 _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
                 _presence.largeImageKey = PersonaAvatarId;

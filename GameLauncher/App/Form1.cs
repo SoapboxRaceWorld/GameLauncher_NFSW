@@ -316,14 +316,13 @@ namespace GameLauncher
                 }
             }
 
-            //Replace cursor
-            if (File.Exists(_settingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur"))
-            {
-                var mycursor = new Cursor(Cursor.Current.Handle);
-                var colorcursorhandle = User32.LoadCursorFromFile("C:\\Users\\MeTonaTOR\\Desktop\\Metro X3 by exsess\\Light\\White\\X3_arrow.ani");
-                mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
-                Cursor = mycursor;
-            }
+            string temporaryFile = Path.GetTempFileName();
+            File.WriteAllBytes(temporaryFile, ExtractResource.AsByte("GameLauncher.SoapBoxModules.cursor.ani"));
+            Cursor mycursor = new Cursor(Cursor.Current.Handle);
+            IntPtr colorcursorhandle = User32.LoadCursorFromFile(temporaryFile);
+            mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
+            Cursor = mycursor;
+            File.Delete(temporaryFile);
 
             var pos = PointToScreen(imageServerName.Location);
             pos = verticalBanner.PointToClient(pos);
@@ -356,10 +355,9 @@ namespace GameLauncher
                 }
             }
 
-            e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-
             if (serverListText.StartsWith("<GROUP>")) {
                 font = new Font(font, FontStyle.Bold);
+                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
                 e.Graphics.DrawString(serverListText.Replace("<GROUP>", string.Empty), font, textColor, e.Bounds);
             } else {
                 font = new Font(font, FontStyle.Regular);
@@ -371,6 +369,7 @@ namespace GameLauncher
                     textColor = SystemBrushes.WindowText;
                 }
 
+                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
                 e.Graphics.DrawString("    " + serverListText, font, textColor, e.Bounds);
             }
         }
