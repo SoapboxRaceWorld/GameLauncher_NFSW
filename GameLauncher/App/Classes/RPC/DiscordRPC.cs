@@ -45,6 +45,11 @@ namespace GameLauncher.App.Classes.RPC {
             string[] splitted_uri = uri.Split('/');
 
             //fetch stats//
+            
+            if(uri == "/Session/GetChatInfo") {
+                SBRW_XML.LoadXml(serverreply);
+                Console.WriteLine(serverreply);
+            }
 
             /*if(uri == "/DriverPersona/GetPersonaBaseFromList" && POST != String.Empty) {
                 SBRW_XML.LoadXml(serverreply);
@@ -63,6 +68,8 @@ namespace GameLauncher.App.Classes.RPC {
                     notification.Dispose();
                 }
             }*/
+
+
 
             if (uri == "/events/gettreasurehunteventsession") {
                 PersonaTreasure = 0;

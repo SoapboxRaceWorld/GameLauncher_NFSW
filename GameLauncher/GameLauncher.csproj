@@ -187,6 +187,7 @@
     <Compile Include="App\Classes\WebRequest.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="App\Classes\XMPP\MITM_XMPP.cs" />
     <Compile Include="App\Debug.cs">
       <SubType>Form</SubType>
     </Compile>

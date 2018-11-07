@@ -100,7 +100,7 @@ namespace GameLauncher.App.Classes.Proxy
             DiscordRPC.handleGameState(fixedPath, response.Content.ReadAsStringAsync().Result, POSTContent, GETContent);
 
             return new TextResponse(
-                response.Content.ReadAsStringAsync().Result,
+                response.Content.ReadAsStringAsync().Result/*.Replace("<ip>145.239.5.103</ip>", "<ip>127.0.0.1</ip>")*/,
                 response.Content.Headers.ContentType.ToString()
             )
             {
