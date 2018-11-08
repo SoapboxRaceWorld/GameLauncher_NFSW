@@ -1615,22 +1615,22 @@ namespace GameLauncher
 
         private void registerCancel_MouseDown(object sender, EventArgs e)
         {
-            registerCancel.Image = Properties.Resources.cancelbutton_click;
+            registerCancel.Image = Properties.Resources.graybutton_click;
         }
 
         private void registerCancel_MouseEnter(object sender, EventArgs e)
         {
-            registerCancel.Image = Properties.Resources.cancelbutton_hover;
+            registerCancel.Image = Properties.Resources.graybutton_hover;
         }
 
         private void registerCancel_MouseLeave(object sender, EventArgs e)
         {
-            registerCancel.Image = Properties.Resources.cancelbutton_enabled;
+            registerCancel.Image = Properties.Resources.graybutton;
         }
 
         private void registerCancel_MouseUp(object sender, EventArgs e)
         {
-            registerCancel.Image = Properties.Resources.cancelbutton_hover;
+            registerCancel.Image = Properties.Resources.graybutton_hover;
         }
 
         public void DrawErrorAroundTextBox(TextBox x)

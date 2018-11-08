@@ -418,10 +418,10 @@
             this.registerCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.registerCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.registerCancel.ForeColor = System.Drawing.Color.White;
-            this.registerCancel.Image = global::GameLauncher.Properties.Resources.cancelbutton_enabled;
-            this.registerCancel.Location = new System.Drawing.Point(615, 442);
+            this.registerCancel.Image = global::GameLauncher.Properties.Resources.graybutton;
+            this.registerCancel.Location = new System.Drawing.Point(614, 440);
             this.registerCancel.Name = "registerCancel";
-            this.registerCancel.Size = new System.Drawing.Size(130, 50);
+            this.registerCancel.Size = new System.Drawing.Size(231, 35);
             this.registerCancel.TabIndex = 43;
             this.registerCancel.Text = "CANCEL";
             this.registerCancel.UseVisualStyleBackColor = false;
@@ -692,11 +692,11 @@
             this.Controls.Add(this.imageServerName);
             this.Controls.Add(this.verticalBanner);
             this.Controls.Add(this.settingsSave);
-            this.Controls.Add(this.playButton);
-            this.Controls.Add(this.registerText);
             this.Controls.Add(this.registerCancel);
             this.Controls.Add(this.loginButton);
             this.Controls.Add(this.registerButton);
+            this.Controls.Add(this.playButton);
+            this.Controls.Add(this.registerText);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
