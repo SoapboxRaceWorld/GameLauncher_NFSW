@@ -38,9 +38,6 @@
             this.rememberMe = new System.Windows.Forms.CheckBox();
             this.Timeout = new System.Windows.Forms.Timer(this.components);
             this.loginButton = new System.Windows.Forms.Button();
-            this.registerText = new System.Windows.Forms.PictureBox();
-            this.emailLabel = new System.Windows.Forms.Label();
-            this.passwordLabel = new System.Windows.Forms.Label();
             this.registerButton = new System.Windows.Forms.Button();
             this.settingsButton = new System.Windows.Forms.PictureBox();
             this.verticalBanner = new System.Windows.Forms.PictureBox();
@@ -53,10 +50,6 @@
             this.registerTicket = new System.Windows.Forms.TextBox();
             this.registerPassword = new System.Windows.Forms.TextBox();
             this.registerConfirmPassword = new System.Windows.Forms.TextBox();
-            this.registerEmailText = new System.Windows.Forms.Label();
-            this.registerPasswordText = new System.Windows.Forms.Label();
-            this.registerTicketText = new System.Windows.Forms.Label();
-            this.registerConfirmPasswordText = new System.Windows.Forms.Label();
             this.registerAgree = new System.Windows.Forms.CheckBox();
             this.playProgressText = new System.Windows.Forms.Label();
             this.playButton = new System.Windows.Forms.Button();
@@ -66,17 +59,11 @@
             this.imageServerName = new System.Windows.Forms.Label();
             this.registerCancel = new System.Windows.Forms.Button();
             this.logoutButton = new System.Windows.Forms.Button();
-            this.welcomeBack = new System.Windows.Forms.Label();
             this.logo = new System.Windows.Forms.PictureBox();
             this.translatedBy = new System.Windows.Forms.Label();
             this.settingsGameFiles = new System.Windows.Forms.Button();
             this.settingsGameFilesCurrent = new System.Windows.Forms.LinkLabel();
             this.settingsGamePathText = new System.Windows.Forms.Label();
-            this.errorTicket = new System.Windows.Forms.Label();
-            this.errorConfirm = new System.Windows.Forms.Label();
-            this.errorPassword = new System.Windows.Forms.Label();
-            this.errorEmail = new System.Windows.Forms.Label();
-            this.errorTOS = new System.Windows.Forms.Label();
             this.addServer = new System.Windows.Forms.Button();
             this.showmap = new System.Windows.Forms.Label();
             this.inputeditor = new System.Windows.Forms.Button();
@@ -86,10 +73,10 @@
             this.ServerStatusDesc = new System.Windows.Forms.Label();
             this.ServerStatusText = new System.Windows.Forms.Label();
             this.ServerStatusIcon = new System.Windows.Forms.PictureBox();
+            this.registerText = new System.Windows.Forms.Button();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.registerText)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
@@ -139,7 +126,7 @@
             this.serverPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.serverPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.serverPick.FormattingEnabled = true;
-            this.serverPick.Location = new System.Drawing.Point(599, 65);
+            this.serverPick.Location = new System.Drawing.Point(601, 65);
             this.serverPick.Name = "serverPick";
             this.serverPick.Size = new System.Drawing.Size(236, 21);
             this.serverPick.TabIndex = 5;
@@ -151,7 +138,7 @@
             this.currentWindowInfo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.currentWindowInfo.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.currentWindowInfo.ForeColor = System.Drawing.Color.White;
-            this.currentWindowInfo.Location = new System.Drawing.Point(657, 101);
+            this.currentWindowInfo.Location = new System.Drawing.Point(653, 106);
             this.currentWindowInfo.Name = "currentWindowInfo";
             this.currentWindowInfo.Size = new System.Drawing.Size(194, 61);
             this.currentWindowInfo.TabIndex = 16;
@@ -184,48 +171,13 @@
             this.loginButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.loginButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.loginButton.ForeColor = System.Drawing.Color.White;
-            this.loginButton.Image = global::GameLauncher.Properties.Resources.smallbutton_enabled;
-            this.loginButton.Location = new System.Drawing.Point(667, 455);
+            this.loginButton.Image = global::GameLauncher.Properties.Resources.graybutton;
+            this.loginButton.Location = new System.Drawing.Point(615, 395);
             this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(130, 50);
+            this.loginButton.Size = new System.Drawing.Size(231, 35);
             this.loginButton.TabIndex = 12;
             this.loginButton.Text = "LOG IN";
             this.loginButton.UseVisualStyleBackColor = false;
-            // 
-            // registerText
-            // 
-            this.registerText.BackColor = System.Drawing.Color.Transparent;
-            this.registerText.Image = global::GameLauncher.Properties.Resources.registerButton_en;
-            this.registerText.Location = new System.Drawing.Point(606, 372);
-            this.registerText.Margin = new System.Windows.Forms.Padding(0);
-            this.registerText.Name = "registerText";
-            this.registerText.Size = new System.Drawing.Size(250, 60);
-            this.registerText.TabIndex = 7;
-            this.registerText.TabStop = false;
-            // 
-            // emailLabel
-            // 
-            this.emailLabel.AutoSize = true;
-            this.emailLabel.BackColor = System.Drawing.Color.Transparent;
-            this.emailLabel.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
-            this.emailLabel.ForeColor = System.Drawing.Color.White;
-            this.emailLabel.Location = new System.Drawing.Point(902, 74);
-            this.emailLabel.Name = "emailLabel";
-            this.emailLabel.Size = new System.Drawing.Size(148, 19);
-            this.emailLabel.TabIndex = 2;
-            this.emailLabel.Text = "E-MAIL ADDRESS";
-            // 
-            // passwordLabel
-            // 
-            this.passwordLabel.AutoSize = true;
-            this.passwordLabel.BackColor = System.Drawing.Color.Transparent;
-            this.passwordLabel.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
-            this.passwordLabel.ForeColor = System.Drawing.Color.White;
-            this.passwordLabel.Location = new System.Drawing.Point(920, 238);
-            this.passwordLabel.Name = "passwordLabel";
-            this.passwordLabel.Size = new System.Drawing.Size(106, 19);
-            this.passwordLabel.TabIndex = 3;
-            this.passwordLabel.Text = "PASSWORD";
             // 
             // registerButton
             // 
@@ -234,11 +186,11 @@
             this.registerButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.registerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.registerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.registerButton.ForeColor = System.Drawing.Color.White;
-            this.registerButton.Image = global::GameLauncher.Properties.Resources.smallbutton_enabled;
-            this.registerButton.Location = new System.Drawing.Point(721, 427);
+            this.registerButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
+            this.registerButton.Image = global::GameLauncher.Properties.Resources.greenbutton;
+            this.registerButton.Location = new System.Drawing.Point(614, 400);
             this.registerButton.Name = "registerButton";
-            this.registerButton.Size = new System.Drawing.Size(130, 50);
+            this.registerButton.Size = new System.Drawing.Size(231, 35);
             this.registerButton.TabIndex = 19;
             this.registerButton.Text = "REGISTER";
             this.registerButton.UseVisualStyleBackColor = false;
@@ -329,94 +281,57 @@
             // 
             // registerEmail
             // 
-            this.registerEmail.Location = new System.Drawing.Point(46, 155);
+            this.registerEmail.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.registerEmail.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.registerEmail.Font = new System.Drawing.Font("Arial", 14F);
+            this.registerEmail.ForeColor = System.Drawing.Color.White;
+            this.registerEmail.Location = new System.Drawing.Point(650, 172);
             this.registerEmail.Name = "registerEmail";
-            this.registerEmail.Size = new System.Drawing.Size(210, 20);
+            this.registerEmail.Size = new System.Drawing.Size(187, 22);
             this.registerEmail.TabIndex = 30;
             // 
             // registerTicket
             // 
-            this.registerTicket.Location = new System.Drawing.Point(46, 347);
+            this.registerTicket.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.registerTicket.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.registerTicket.Font = new System.Drawing.Font("Arial", 14F);
+            this.registerTicket.ForeColor = System.Drawing.Color.White;
+            this.registerTicket.Location = new System.Drawing.Point(650, 319);
             this.registerTicket.Name = "registerTicket";
-            this.registerTicket.Size = new System.Drawing.Size(210, 20);
+            this.registerTicket.Size = new System.Drawing.Size(187, 22);
             this.registerTicket.TabIndex = 31;
             // 
             // registerPassword
             // 
-            this.registerPassword.Location = new System.Drawing.Point(46, 219);
+            this.registerPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.registerPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.registerPassword.Font = new System.Drawing.Font("Arial", 14F);
+            this.registerPassword.ForeColor = System.Drawing.Color.White;
+            this.registerPassword.Location = new System.Drawing.Point(650, 221);
             this.registerPassword.Name = "registerPassword";
-            this.registerPassword.PasswordChar = '•';
-            this.registerPassword.Size = new System.Drawing.Size(210, 20);
+            this.registerPassword.Size = new System.Drawing.Size(187, 22);
             this.registerPassword.TabIndex = 32;
+            this.registerPassword.UseSystemPasswordChar = true;
             // 
             // registerConfirmPassword
             // 
-            this.registerConfirmPassword.Location = new System.Drawing.Point(46, 283);
+            this.registerConfirmPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.registerConfirmPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.registerConfirmPassword.Font = new System.Drawing.Font("Arial", 14F);
+            this.registerConfirmPassword.ForeColor = System.Drawing.Color.White;
+            this.registerConfirmPassword.Location = new System.Drawing.Point(650, 270);
             this.registerConfirmPassword.Name = "registerConfirmPassword";
-            this.registerConfirmPassword.PasswordChar = '•';
-            this.registerConfirmPassword.Size = new System.Drawing.Size(210, 20);
+            this.registerConfirmPassword.Size = new System.Drawing.Size(187, 22);
             this.registerConfirmPassword.TabIndex = 33;
-            // 
-            // registerEmailText
-            // 
-            this.registerEmailText.AutoSize = true;
-            this.registerEmailText.BackColor = System.Drawing.Color.Transparent;
-            this.registerEmailText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.registerEmailText.ForeColor = System.Drawing.Color.White;
-            this.registerEmailText.Location = new System.Drawing.Point(43, 130);
-            this.registerEmailText.Name = "registerEmailText";
-            this.registerEmailText.Size = new System.Drawing.Size(131, 18);
-            this.registerEmailText.TabIndex = 34;
-            this.registerEmailText.Text = "EMAIL ADDRESS:";
-            this.registerEmailText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // registerPasswordText
-            // 
-            this.registerPasswordText.AutoSize = true;
-            this.registerPasswordText.BackColor = System.Drawing.Color.Transparent;
-            this.registerPasswordText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.registerPasswordText.ForeColor = System.Drawing.Color.White;
-            this.registerPasswordText.Location = new System.Drawing.Point(43, 194);
-            this.registerPasswordText.Name = "registerPasswordText";
-            this.registerPasswordText.Size = new System.Drawing.Size(100, 18);
-            this.registerPasswordText.TabIndex = 35;
-            this.registerPasswordText.Text = "PASSWORD:";
-            this.registerPasswordText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // registerTicketText
-            // 
-            this.registerTicketText.AutoSize = true;
-            this.registerTicketText.BackColor = System.Drawing.Color.Transparent;
-            this.registerTicketText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.registerTicketText.ForeColor = System.Drawing.Color.White;
-            this.registerTicketText.Location = new System.Drawing.Point(43, 323);
-            this.registerTicketText.Name = "registerTicketText";
-            this.registerTicketText.Size = new System.Drawing.Size(64, 18);
-            this.registerTicketText.TabIndex = 36;
-            this.registerTicketText.Text = "TICKET:";
-            this.registerTicketText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // registerConfirmPasswordText
-            // 
-            this.registerConfirmPasswordText.AutoSize = true;
-            this.registerConfirmPasswordText.BackColor = System.Drawing.Color.Transparent;
-            this.registerConfirmPasswordText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.registerConfirmPasswordText.ForeColor = System.Drawing.Color.White;
-            this.registerConfirmPasswordText.Location = new System.Drawing.Point(43, 259);
-            this.registerConfirmPasswordText.Name = "registerConfirmPasswordText";
-            this.registerConfirmPasswordText.Size = new System.Drawing.Size(174, 18);
-            this.registerConfirmPasswordText.TabIndex = 37;
-            this.registerConfirmPasswordText.Text = "CONFIRM PASSWORD:";
-            this.registerConfirmPasswordText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.registerConfirmPassword.UseSystemPasswordChar = true;
             // 
             // registerAgree
             // 
-            this.registerAgree.AutoSize = true;
             this.registerAgree.BackColor = System.Drawing.Color.Transparent;
             this.registerAgree.ForeColor = System.Drawing.Color.White;
-            this.registerAgree.Location = new System.Drawing.Point(46, 445);
+            this.registerAgree.Location = new System.Drawing.Point(615, 354);
             this.registerAgree.Name = "registerAgree";
-            this.registerAgree.Size = new System.Drawing.Size(333, 17);
+            this.registerAgree.Size = new System.Drawing.Size(232, 35);
             this.registerAgree.TabIndex = 38;
             this.registerAgree.Text = "BY REGISTERING YOU AGREE TO THE TERMS OF SERVICE";
             this.registerAgree.UseVisualStyleBackColor = false;
@@ -436,7 +351,7 @@
             // playButton
             // 
             this.playButton.BackColor = System.Drawing.Color.Transparent;
-            this.playButton.BackgroundImage = global::GameLauncher.Properties.Resources.largebutton_enabled;
+            this.playButton.BackgroundImage = global::GameLauncher.Properties.Resources.playbutton;
             this.playButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.playButton.FlatAppearance.BorderSize = 0;
             this.playButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
@@ -444,9 +359,9 @@
             this.playButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.playButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.playButton.ForeColor = System.Drawing.Color.Transparent;
-            this.playButton.Location = new System.Drawing.Point(761, 431);
+            this.playButton.Location = new System.Drawing.Point(616, 406);
             this.playButton.Name = "playButton";
-            this.playButton.Size = new System.Drawing.Size(219, 86);
+            this.playButton.Size = new System.Drawing.Size(230, 63);
             this.playButton.TabIndex = 15;
             this.playButton.Text = "PLAY NOW";
             this.playButton.UseVisualStyleBackColor = false;
@@ -504,7 +419,7 @@
             this.registerCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.registerCancel.ForeColor = System.Drawing.Color.White;
             this.registerCancel.Image = global::GameLauncher.Properties.Resources.cancelbutton_enabled;
-            this.registerCancel.Location = new System.Drawing.Point(585, 427);
+            this.registerCancel.Location = new System.Drawing.Point(615, 442);
             this.registerCancel.Name = "registerCancel";
             this.registerCancel.Size = new System.Drawing.Size(130, 50);
             this.registerCancel.TabIndex = 43;
@@ -519,25 +434,13 @@
             this.logoutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.logoutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.logoutButton.ForeColor = System.Drawing.Color.White;
-            this.logoutButton.Image = global::GameLauncher.Properties.Resources.smallbutton_enabled;
-            this.logoutButton.Location = new System.Drawing.Point(914, 336);
+            this.logoutButton.Image = global::GameLauncher.Properties.Resources.graybutton;
+            this.logoutButton.Location = new System.Drawing.Point(615, 364);
             this.logoutButton.Name = "logoutButton";
-            this.logoutButton.Size = new System.Drawing.Size(130, 50);
+            this.logoutButton.Size = new System.Drawing.Size(231, 35);
             this.logoutButton.TabIndex = 44;
             this.logoutButton.Text = "LOG OUT";
             this.logoutButton.UseVisualStyleBackColor = false;
-            // 
-            // welcomeBack
-            // 
-            this.welcomeBack.AutoSize = true;
-            this.welcomeBack.BackColor = System.Drawing.Color.Transparent;
-            this.welcomeBack.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
-            this.welcomeBack.ForeColor = System.Drawing.Color.White;
-            this.welcomeBack.Location = new System.Drawing.Point(904, 84);
-            this.welcomeBack.Name = "welcomeBack";
-            this.welcomeBack.Size = new System.Drawing.Size(158, 19);
-            this.welcomeBack.TabIndex = 46;
-            this.welcomeBack.Text = "WELCOME BACK, ";
             // 
             // logo
             // 
@@ -600,61 +503,6 @@
             this.settingsGamePathText.TabIndex = 60;
             this.settingsGamePathText.Text = "GAMEFILES PATH:";
             this.settingsGamePathText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // errorTicket
-            // 
-            this.errorTicket.AutoSize = true;
-            this.errorTicket.BackColor = System.Drawing.Color.Transparent;
-            this.errorTicket.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.errorTicket.ForeColor = System.Drawing.Color.Red;
-            this.errorTicket.Location = new System.Drawing.Point(296, 419);
-            this.errorTicket.Name = "errorTicket";
-            this.errorTicket.Size = new System.Drawing.Size(0, 13);
-            this.errorTicket.TabIndex = 62;
-            // 
-            // errorConfirm
-            // 
-            this.errorConfirm.AutoSize = true;
-            this.errorConfirm.BackColor = System.Drawing.Color.Transparent;
-            this.errorConfirm.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.errorConfirm.ForeColor = System.Drawing.Color.Red;
-            this.errorConfirm.Location = new System.Drawing.Point(296, 355);
-            this.errorConfirm.Name = "errorConfirm";
-            this.errorConfirm.Size = new System.Drawing.Size(0, 13);
-            this.errorConfirm.TabIndex = 63;
-            // 
-            // errorPassword
-            // 
-            this.errorPassword.AutoSize = true;
-            this.errorPassword.BackColor = System.Drawing.Color.Transparent;
-            this.errorPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.errorPassword.ForeColor = System.Drawing.Color.Red;
-            this.errorPassword.Location = new System.Drawing.Point(296, 291);
-            this.errorPassword.Name = "errorPassword";
-            this.errorPassword.Size = new System.Drawing.Size(0, 13);
-            this.errorPassword.TabIndex = 64;
-            // 
-            // errorEmail
-            // 
-            this.errorEmail.AutoSize = true;
-            this.errorEmail.BackColor = System.Drawing.Color.Transparent;
-            this.errorEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.errorEmail.ForeColor = System.Drawing.Color.Red;
-            this.errorEmail.Location = new System.Drawing.Point(296, 228);
-            this.errorEmail.Name = "errorEmail";
-            this.errorEmail.Size = new System.Drawing.Size(0, 13);
-            this.errorEmail.TabIndex = 65;
-            // 
-            // errorTOS
-            // 
-            this.errorTOS.AutoSize = true;
-            this.errorTOS.BackColor = System.Drawing.Color.Transparent;
-            this.errorTOS.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.errorTOS.ForeColor = System.Drawing.Color.Red;
-            this.errorTOS.Location = new System.Drawing.Point(56, 484);
-            this.errorTOS.Name = "errorTOS";
-            this.errorTOS.Size = new System.Drawing.Size(0, 13);
-            this.errorTOS.TabIndex = 66;
             // 
             // addServer
             // 
@@ -750,6 +598,22 @@
             this.ServerStatusIcon.TabIndex = 6;
             this.ServerStatusIcon.TabStop = false;
             // 
+            // registerText
+            // 
+            this.registerText.BackColor = System.Drawing.Color.Transparent;
+            this.registerText.FlatAppearance.BorderSize = 0;
+            this.registerText.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.registerText.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.registerText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.registerText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
+            this.registerText.Image = global::GameLauncher.Properties.Resources.greenbutton;
+            this.registerText.Location = new System.Drawing.Point(615, 442);
+            this.registerText.Name = "registerText";
+            this.registerText.Size = new System.Drawing.Size(231, 35);
+            this.registerText.TabIndex = 82;
+            this.registerText.Text = "REGISTER";
+            this.registerText.UseVisualStyleBackColor = false;
+            // 
             // extractingProgress
             // 
             this.extractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -798,53 +662,41 @@
             this.Controls.Add(this.inputeditor);
             this.Controls.Add(this.showmap);
             this.Controls.Add(this.addServer);
-            this.Controls.Add(this.errorTOS);
-            this.Controls.Add(this.errorEmail);
-            this.Controls.Add(this.errorPassword);
-            this.Controls.Add(this.errorConfirm);
-            this.Controls.Add(this.errorTicket);
-            this.Controls.Add(this.settingsGamePathText);
             this.Controls.Add(this.settingsGameFilesCurrent);
             this.Controls.Add(this.translatedBy);
             this.Controls.Add(this.logo);
-            this.Controls.Add(this.welcomeBack);
-            this.Controls.Add(this.registerButton);
             this.Controls.Add(this.launcherStatusDesc);
             this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.forgotPassword);
-            this.Controls.Add(this.passwordLabel);
-            this.Controls.Add(this.emailLabel);
-            this.Controls.Add(this.registerText);
             this.Controls.Add(this.rememberMe);
             this.Controls.Add(this.currentWindowInfo);
             this.Controls.Add(this.serverPick);
             this.Controls.Add(this.password);
-            this.Controls.Add(this.email);
             this.Controls.Add(this.closebtn);
-            this.Controls.Add(this.settingsSave);
-            this.Controls.Add(this.registerCancel);
-            this.Controls.Add(this.playButton);
             this.Controls.Add(this.logoutButton);
-            this.Controls.Add(this.settingsGameFiles);
             this.Controls.Add(this.settingsQuality);
-            this.Controls.Add(this.settingsLanguage);
-            this.Controls.Add(this.extractingProgress);
-            this.Controls.Add(this.playProgress);
             this.Controls.Add(this.settingsQualityText);
-            this.Controls.Add(this.settingsLanguageText);
-            this.Controls.Add(this.loginButton);
-            this.Controls.Add(this.registerEmailText);
             this.Controls.Add(this.registerEmail);
-            this.Controls.Add(this.registerPasswordText);
             this.Controls.Add(this.registerPassword);
-            this.Controls.Add(this.registerConfirmPasswordText);
             this.Controls.Add(this.registerConfirmPassword);
-            this.Controls.Add(this.registerTicketText);
             this.Controls.Add(this.registerTicket);
             this.Controls.Add(this.registerAgree);
             this.Controls.Add(this.playProgressText);
+            this.Controls.Add(this.settingsGamePathText);
+            this.Controls.Add(this.settingsLanguageText);
+            this.Controls.Add(this.settingsLanguage);
+            this.Controls.Add(this.settingsGameFiles);
+            this.Controls.Add(this.extractingProgress);
+            this.Controls.Add(this.playProgress);
+            this.Controls.Add(this.email);
             this.Controls.Add(this.imageServerName);
             this.Controls.Add(this.verticalBanner);
+            this.Controls.Add(this.settingsSave);
+            this.Controls.Add(this.playButton);
+            this.Controls.Add(this.registerText);
+            this.Controls.Add(this.registerCancel);
+            this.Controls.Add(this.loginButton);
+            this.Controls.Add(this.registerButton);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -855,7 +707,6 @@
             this.TransparencyKey = System.Drawing.Color.Red;
             this.Load += new System.EventHandler(this.mainScreen_Load);
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.registerText)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
@@ -876,9 +727,6 @@
         private System.Windows.Forms.CheckBox rememberMe;
         private System.Windows.Forms.Timer Timeout;
         private System.Windows.Forms.Button loginButton;
-        private System.Windows.Forms.PictureBox registerText;
-        private System.Windows.Forms.Label emailLabel;
-        private System.Windows.Forms.Label passwordLabel;
         private System.Windows.Forms.Button registerButton;
         private System.Windows.Forms.PictureBox settingsButton;
         private System.Windows.Forms.PictureBox verticalBanner;
@@ -891,10 +739,6 @@
         private System.Windows.Forms.TextBox registerTicket;
         private System.Windows.Forms.TextBox registerPassword;
         private System.Windows.Forms.TextBox registerConfirmPassword;
-        private System.Windows.Forms.Label registerEmailText;
-        private System.Windows.Forms.Label registerPasswordText;
-        private System.Windows.Forms.Label registerTicketText;
-        private System.Windows.Forms.Label registerConfirmPasswordText;
         private System.Windows.Forms.CheckBox registerAgree;
         private System.Windows.Forms.Button playButton;
         private System.Windows.Forms.NotifyIcon Notification;
@@ -905,17 +749,11 @@
         private System.Windows.Forms.Button registerCancel;
         private GameLauncherReborn.ProgressBarEx playProgress;
         private System.Windows.Forms.Button logoutButton;
-        private System.Windows.Forms.Label welcomeBack;
         private System.Windows.Forms.PictureBox logo;
         private System.Windows.Forms.Label translatedBy;
         private System.Windows.Forms.Button settingsGameFiles;
         private System.Windows.Forms.LinkLabel settingsGameFilesCurrent;
         private System.Windows.Forms.Label settingsGamePathText;
-        private System.Windows.Forms.Label errorTicket;
-        private System.Windows.Forms.Label errorConfirm;
-        private System.Windows.Forms.Label errorPassword;
-        private System.Windows.Forms.Label errorEmail;
-        private System.Windows.Forms.Label errorTOS;
         private System.Windows.Forms.Button addServer;
         private System.Windows.Forms.Label showmap;
         private System.Windows.Forms.Button inputeditor;
@@ -926,5 +764,6 @@
         private System.Windows.Forms.Label ServerStatusDesc;
         private System.Windows.Forms.Label ServerStatusText;
         private System.Windows.Forms.PictureBox ServerStatusIcon;
+        private System.Windows.Forms.Button registerText;
     }
 }

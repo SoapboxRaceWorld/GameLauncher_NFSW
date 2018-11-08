@@ -45,13 +45,13 @@ namespace GameLauncher.App.Classes.Events {
                 if (e.Cancelled) {
                     text.Text = "Launcher Status - Error";
                     status.Image = Properties.Resources.ac_error;
-                    text.ForeColor = Color.Red;
+                    text.ForeColor = Color.FromArgb(254, 0, 0);
                     description.Text = "Event cancelled.";
                 } else if (e.Error != null) {
-                    text.Text = "Launcher Status - Error";
-                    status.Image = Properties.Resources.ac_error;
-                    text.ForeColor = Color.Red;
-                    description.Text = "Event cancelled.";
+                    text.Text = "Launcher Status";
+                    status.Image = Properties.Resources.ac_success;
+                    text.ForeColor = Color.FromArgb(0x9fc120);
+                    description.Text = "Version : v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 7);
                 } else {
                     UpdateCheckResponse updater = JsonConvert.DeserializeObject<UpdateCheckResponse>(e.Result);
 
@@ -116,9 +116,9 @@ namespace GameLauncher.App.Classes.Events {
                             }
                         }
                     } else {
-                        text.Text = "Launcher Status - Updated";
+                        text.Text = "Launcher Status - Internal Error";
                         status.Image = Properties.Resources.ac_success;
-                        text.ForeColor = Color.FromArgb(0x9fc120);
+                        text.ForeColor = Color.FromArgb(254, 0, 0);
                         description.Text = "Version : " + Application.ProductVersion;
                     }
                 }

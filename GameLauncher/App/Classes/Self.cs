@@ -9,11 +9,8 @@ using System.Windows.Forms;
 
 namespace GameLauncherReborn {
     class Self {
-#if DEBUG
-        public static string mainserver = "http://192.168.6.13:7888";
-#else
+        public static string new_endpoint = "http://nfswgl.metonator.cloud";
         public static string mainserver = "https://launchpad.soapboxrace.world";
-#endif
 
         public static string serverlisturl = mainserver + "/servers";
 
@@ -39,7 +36,7 @@ namespace GameLauncherReborn {
             try {
                 Process.Start(processStartInfo);
             } catch (Exception exception1) {
-                MessageBox.Show("Failed to self-run as admin: " + exception1);
+                MessageBox.Show("Failed to self-run as admin: " + exception1.Message);
             }
         }
 

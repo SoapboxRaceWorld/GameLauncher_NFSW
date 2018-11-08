@@ -43,7 +43,7 @@ namespace GameLauncher
         private bool _loggedIn;
         private bool _restartRequired;
         private bool _allowRegistration;
-        //private bool _isIndex = false;
+        private bool _spEnabled = false;
         private bool _isDownloading = true;
 
         private int _lastSelectedServerId;
@@ -612,7 +612,7 @@ namespace GameLauncher
                 _loginEnabled = true;
                 _serverEnabled = true;
                 _useSavedPassword = true;
-                loginButton.Image = Properties.Resources.smallbutton_enabled;
+                loginButton.Image = Properties.Resources.graybutton;
                 loginButton.ForeColor = Color.White;
             }
             else
@@ -620,7 +620,7 @@ namespace GameLauncher
                 _loginEnabled = false;
                 _serverEnabled = false;
                 _useSavedPassword = false;
-                loginButton.Image = Properties.Resources.smallbutton_disabled;
+                loginButton.Image = Properties.Resources.graybutton;
                 loginButton.ForeColor = Color.Gray;
             }
 
@@ -882,13 +882,13 @@ namespace GameLauncher
             if (string.IsNullOrEmpty(email.Text) || string.IsNullOrEmpty(password.Text))
             {
                 _loginEnabled = false;
-                loginButton.Image = Properties.Resources.smallbutton_disabled;
+                loginButton.Image = Properties.Resources.graybutton;
                 loginButton.ForeColor = Color.Gray;
             }
             else
             {
                 _loginEnabled = true;
-                loginButton.Image = Properties.Resources.smallbutton_enabled;
+                loginButton.Image = Properties.Resources.graybutton;
                 loginButton.ForeColor = Color.White;
             }
 
@@ -899,11 +899,11 @@ namespace GameLauncher
         {
             if (_loginEnabled || _builtinserver)
             {
-                loginButton.Image = Properties.Resources.smallbutton_hover;
+                loginButton.Image = Properties.Resources.graybutton_hover;
             }
             else
             {
-                loginButton.Image = Properties.Resources.smallbutton_disabled;
+                loginButton.Image = Properties.Resources.graybutton;
             }
         }
 
@@ -911,11 +911,11 @@ namespace GameLauncher
         {
             if (_loginEnabled || _builtinserver)
             {
-                loginButton.Image = Properties.Resources.smallbutton_click;
+                loginButton.Image = Properties.Resources.graybutton_click;
             }
             else
             {
-                loginButton.Image = Properties.Resources.smallbutton_disabled;
+                loginButton.Image = Properties.Resources.graybutton;
             }
         }
 
@@ -1019,83 +1019,59 @@ namespace GameLauncher
                     loginTokenNode = sbrwXml.SelectSingleNode("LoginStatusVO/LoginToken");
                     userIdNode = sbrwXml.SelectSingleNode("LoginStatusVO/UserId");
 
-                    if (sbrwXml.SelectSingleNode("LoginStatusVO/Ban") == null)
-                    {
-                        if (sbrwXml.SelectSingleNode("LoginStatusVO/Description") == null)
-                        {
+                    if (sbrwXml.SelectSingleNode("LoginStatusVO/Ban") == null) {
+                        if (sbrwXml.SelectSingleNode("LoginStatusVO/Description") == null) {
                             extraNode = sbrwXml.SelectSingleNode("html/body");
-                        }
-                        else
-                        {
+                        } else {
                             extraNode = sbrwXml.SelectSingleNode("LoginStatusVO/Description");
                         }
-                    }
-                    else
-                    {
+                    } else {
                         extraNode = sbrwXml.SelectSingleNode("LoginStatusVO/Ban");
                     }
 
-                    if (!string.IsNullOrEmpty(extraNode.InnerText))
-                    {
-                        if (extraNode.SelectSingleNode("Reason") != null)
-                        {
+                    if (!string.IsNullOrEmpty(extraNode.InnerText)) {
+                        if (extraNode.SelectSingleNode("Reason") != null) {
                             msgBoxInfo = string.Format("You got banned on {0}.", serverName) + "\n";
                             msgBoxInfo += string.Format("Reason: {0}", extraNode.SelectSingleNode("Reason").InnerText);
 
-                            if (extraNode.SelectSingleNode("Expires") != null)
-                            {
+                            if (extraNode.SelectSingleNode("Expires") != null) {
                                 msgBoxInfo += "\n" + string.Format("Ban expires {0}", extraNode.SelectSingleNode("Expires").InnerText);
-                            }
-                            else
-                            {
+                            } else {
                                 msgBoxInfo += "\n" + "Banned forever.";
                             }
-                        }
-                        else
-                        {
-                            if (extraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?")
-                            {
+                        } else {
+                            if (extraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?") {
                                 msgBoxInfo = "Launcher tampering detected. Please use original build.";
-                            }
-                            else
-                            {
-                                if (sbrwXml.SelectSingleNode("html/body") == null)
-                                {
-                                    if (extraNode.InnerText == "LOGIN ERROR")
-                                    {
+                            } else {
+                                if (sbrwXml.SelectSingleNode("html/body") == null) {
+                                    if (extraNode.InnerText == "LOGIN ERROR") {
                                         msgBoxInfo = "Invalid e-mail or password.";
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         msgBoxInfo = extraNode.InnerText;
                                     }
-                                }
-                                else
-                                {
+                                } else {
                                     msgBoxInfo = "ERROR " + _errorcode + ": " + extraNode.InnerText;
                                 }
                             }
                         }
 
                         ConsoleLog(msgBoxInfo, "error");
-                    }
-                    else
-                    {
+                    } else {
                         _userId = userIdNode.InnerText;
                         _loginToken = loginTokenNode.InnerText;
+
+                        if(sbrwXml.SelectSingleNode("LoginStatusVO/Warning") != null) {
+                            MessageBox.Show(null, sbrwXml.SelectSingleNode("LoginStatusVO/Warning").InnerText, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
 
                         _loggedIn = true;
 
                         BackgroundImage = Properties.Resources.loggedbg;
                         LoginFormElements(false);
                         LoggedInFormElements(true);
-
-                        welcomeBack.Text = string.Format("Welcome back, {0}!", username).ToUpper();
                     }
-                }
-                catch
-                {
-                    ConsoleLog("Server seems to be offline.", "error");
+                } catch(Exception ex) {
+                    ConsoleLog("An error occured. Please contact developer with this details:\n\nServerName: " + _realServername + "\nIP: " + _serverIp + "\nError: " + ex.Message, "error");
                 }
             }
         }
@@ -1104,12 +1080,12 @@ namespace GameLauncher
         {
             if (_loginEnabled || _builtinserver)
             {
-                loginButton.Image = Properties.Resources.smallbutton_hover;
+                loginButton.Image = Properties.Resources.graybutton_hover;
                 loginButton.ForeColor = Color.White;
             }
             else
             {
-                loginButton.Image = Properties.Resources.smallbutton_disabled;
+                loginButton.Image = Properties.Resources.graybutton;
                 loginButton.ForeColor = Color.Gray;
             }
         }
@@ -1118,12 +1094,12 @@ namespace GameLauncher
         {
             if (_loginEnabled || _builtinserver)
             {
-                loginButton.Image = Properties.Resources.smallbutton_enabled;
+                loginButton.Image = Properties.Resources.graybutton;
                 loginButton.ForeColor = Color.White;
             }
             else
             {
-                loginButton.Image = Properties.Resources.smallbutton_disabled;
+                loginButton.Image = Properties.Resources.graybutton;
                 loginButton.ForeColor = Color.Gray;
             }
         }
@@ -1171,14 +1147,14 @@ namespace GameLauncher
             if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server")
             {
                 _builtinserver = true;
-                loginButton.Image = Properties.Resources.smallbutton_enabled;
+                loginButton.Image = Properties.Resources.graybutton;
                 loginButton.Text = "Launch".ToUpper();
                 loginButton.ForeColor = Color.White;
             }
             else
             {
                 _builtinserver = false;
-                loginButton.Image = Properties.Resources.smallbutton_disabled;
+                loginButton.Image = Properties.Resources.graybutton;
                 loginButton.Text = "Login".ToUpper();
                 loginButton.ForeColor = Color.Gray;
             }
@@ -1186,6 +1162,7 @@ namespace GameLauncher
             var client = new WebClientWithTimeout();
 
             serverPick.Enabled = false;
+            _spEnabled = false;
 
             var artificialPingStart = Self.getTimestamp();
 
@@ -1197,7 +1174,7 @@ namespace GameLauncher
             client.DownloadStringCompleted += (sender2, e2) =>
             {
                 serverPick.Enabled = true;
-
+                _spEnabled = true;
 
                 var artificialPingEnd = Self.getTimestamp();
 
@@ -1435,30 +1412,19 @@ namespace GameLauncher
             ServerStatusDesc.Font = new Font(AirportCyr, 7f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
-            var fontFamily1 = AkrobatSemiBold;
             var fontFamily2 = AkrobatSemiBold;
 
-            /*var fontFamily1 = FontWrapper.Instance.GetFontFamily("Montserrat-Regular.ttf");
-            var fontFamily2 = FontWrapper.Instance.GetFontFamily("Montserrat-Bold.ttf");*/
-
-            //Implement them to elements
-            email.Font = new Font(fontFamily1, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            email.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             loginButton.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            password.Font = new Font(fontFamily1, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            rememberMe.Font = new Font(fontFamily1, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            emailLabel.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            passwordLabel.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            password.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            rememberMe.Font = new Font(fontFamily2, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             forgotPassword.Font = new Font(fontFamily2, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             playProgressText.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             playButton.Font = new Font(fontFamily2, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             currentWindowInfo.Font = new Font(fontFamily2, 11.35f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             imageServerName.Font = new Font(fontFamily2, 25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
-            registerEmailText.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerPasswordText.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerConfirmPasswordText.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerTicketText.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerAgree.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerAgree.Font = new Font(fontFamily2, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             registerButton.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             registerCancel.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
@@ -1470,39 +1436,33 @@ namespace GameLauncher
             settingsGameFilesCurrent.Font = new Font(fontFamily2, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             logoutButton.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            allowedCountriesLabel.Font = new Font(fontFamily1, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            allowedCountriesLabel.Font = new Font(AirportCyr, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+
+            //register things
+            registerEmail.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerPassword.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerConfirmPassword.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerTicket.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+
+            registerButton.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerText.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
         }
 
         private void registerText_LinkClicked(object sender, EventArgs e)
         {
-            if (_allowRegistration)
-            {
-                BackgroundImage = Properties.Resources.secondarybackground;
-                currentWindowInfo.Text = "";
+            if (_allowRegistration) {
+                BackgroundImage = (_ticketRequired) ? Properties.Resources.register_ticket : Properties.Resources.register_noticket;
+                currentWindowInfo.Text = "REGISTER ON " + _realServername.ToUpper() + ":";
                 LoginFormElements(false);
                 RegisterFormElements(true);
-            }
-            else
-            {
-                MessageBox.Show("Server seems to be offline.");
+            } else {
+                MessageBox.Show(null, "Server seems to be offline.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void githubLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ConsoleLog("Redirecting into GitHub Issue page", "info");
-            Process.Start("https://discord.gg/JqN2nMY");
-        }
-
-        private void forgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
+        private void forgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             var serverInfo = (ServerInfo)serverPick.SelectedItem;
             Process.Start(serverInfo.IpAddress.ToString().Replace("Engine.svc", "") + "forgotPasswd.jsp");
-        }
-
-        private void moreLanguages_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start("https://github.com/metonator/GameLauncher_NFSW-translations/tree/master/Languages");
         }
 
         private void LoggedInFormElements(bool hideElements)
@@ -1525,7 +1485,6 @@ namespace GameLauncher
             launcherIconStatus.Visible = hideElements;
             launcherStatusDesc.Visible = hideElements;
             launcherStatusText.Visible = hideElements;
-            welcomeBack.Visible = hideElements;
             allowedCountriesLabel.Visible = hideElements;
         }
 
@@ -1548,53 +1507,43 @@ namespace GameLauncher
             serverPick.Visible = hideElements;
             email.Visible = hideElements;
             password.Visible = hideElements;
-            emailLabel.Visible = hideElements;
-            passwordLabel.Visible = hideElements;
             forgotPassword.Visible = hideElements;
             settingsButton.Visible = hideElements;
             verticalBanner.Visible = hideElements;
             playProgressText.Visible = hideElements;
             playProgress.Visible = hideElements;
             extractingProgress.Visible = hideElements;
-            playButton.Visible = hideElements;
             addServer.Visible = hideElements;
             allowedCountriesLabel.Visible = hideElements;
             showmap.Visible = hideElements;
+            serverPick.Enabled = _spEnabled;
         }
 
-        /*
-         * REGISTER PAGE LAYOUT
-         * Because why should i close Form1 and create/open Form2 if it will look a bit more responsive...
-         */
-
-        private void RegisterFormElements(bool hideElements = true)
-        {
+        private void RegisterFormElements(bool hideElements = true) {
             registerButton.Visible = hideElements;
             registerEmail.Visible = hideElements;
-            registerEmailText.Visible = hideElements;
             registerPassword.Visible = hideElements;
-            registerPasswordText.Visible = hideElements;
             registerConfirmPassword.Visible = hideElements;
-            registerConfirmPasswordText.Visible = hideElements;
             registerAgree.Visible = hideElements;
             registerCancel.Visible = hideElements;
+            registerTicket.Visible = (_ticketRequired) ? hideElements : false;
 
-            if (_ticketRequired)
-            {
-                registerTicket.Visible = hideElements;
-                registerTicketText.Visible = hideElements;
-            }
-            else
-            {
-                registerTicket.Visible = false;
-                registerTicketText.Visible = false;
-            }
+            verticalBanner.Visible = hideElements;
+            extractingProgress.Visible = hideElements;
+            playProgress.Visible = hideElements;
+            playProgressText.Visible = hideElements;
+            showmap.Visible = hideElements;
 
-            errorConfirm.Visible = hideElements;
-            errorEmail.Visible = hideElements;
-            errorPassword.Visible = hideElements;
-            errorTicket.Visible = hideElements;
-            errorTOS.Visible = hideElements;
+            ServerStatusText.Visible = hideElements;
+            ServerStatusIcon.Visible = hideElements;
+            ServerStatusDesc.Visible = hideElements;
+            launcherIconStatus.Visible = hideElements;
+            launcherStatusDesc.Visible = hideElements;
+            launcherStatusText.Visible = hideElements;
+
+            addServer.Visible = hideElements;
+            serverPick.Visible = hideElements;
+            serverPick.Enabled = false;
 
             // Reset fields
             registerEmail.Text = "";
@@ -1603,61 +1552,61 @@ namespace GameLauncher
             registerAgree.Checked = false;
         }
 
-        private void logoutButton_Click(object sender, EventArgs e)
-        {
+        private void logoutButton_Click(object sender, EventArgs e) {
             var reply = MessageBox.Show(null, string.Format("Are you sure you want to log out from {0}?", serverPick.GetItemText(serverPick.SelectedItem)), "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (reply == DialogResult.Yes)
-            {
+            if (reply == DialogResult.Yes) {
                 BackgroundImage = Properties.Resources.loginbg;
                 _loggedIn = false;
                 LoggedInFormElements(false);
                 LoginFormElements(true);
+
+                _userId = String.Empty;
+                _loginToken = String.Empty;
             }
         }
 
         private void logoutButton_MouseDown(object sender, EventArgs e)
         {
-            logoutButton.Image = Properties.Resources.smallbutton_click;
+            logoutButton.Image = Properties.Resources.graybutton_click;
         }
 
         private void logoutButton_MouseEnter(object sender, EventArgs e)
         {
-            logoutButton.Image = Properties.Resources.smallbutton_hover;
+            logoutButton.Image = Properties.Resources.graybutton_hover;
         }
 
         private void logoutButton_MouseLeave(object sender, EventArgs e)
         {
-            logoutButton.Image = Properties.Resources.smallbutton_enabled;
+            logoutButton.Image = Properties.Resources.graybutton;
         }
 
         private void logoutButton_MouseUp(object sender, EventArgs e)
         {
-            logoutButton.Image = Properties.Resources.smallbutton_hover;
+            logoutButton.Image = Properties.Resources.graybutton_hover;
         }
 
         private void registerButton_MouseEnter(object sender, EventArgs e)
         {
-            registerButton.Image = Properties.Resources.smallbutton_hover;
+            registerButton.Image = Properties.Resources.greenbutton_hover;
         }
 
         private void registerButton_MouseLeave(object sender, EventArgs e)
         {
-            registerButton.Image = Properties.Resources.smallbutton_enabled;
+            registerButton.Image = Properties.Resources.greenbutton;
         }
 
         private void registerButton_MouseUp(object sender, EventArgs e)
         {
-            registerButton.Image = Properties.Resources.smallbutton_hover;
+            registerButton.Image = Properties.Resources.greenbutton_hover;
         }
 
         private void registerButton_MouseDown(object sender, EventArgs e)
         {
-            registerButton.Image = Properties.Resources.smallbutton_click;
+            registerButton.Image = Properties.Resources.greenbutton_click;
         }
 
         private void registerCancel_Click(object sender, EventArgs e)
         {
-            errorEmail.Text = ""; errorPassword.Text = ""; errorConfirm.Text = ""; errorTicket.Text = ""; errorTOS.Text = ""; registerAgree.ForeColor = Color.White;
             BackgroundImage = Properties.Resources.loginbg;
             currentWindowInfo.Text = "Enter your account information to Log In:".ToUpper();
             RegisterFormElements(false);
@@ -1693,92 +1642,38 @@ namespace GameLauncher
             g.DrawRectangle(p, new Rectangle(x.Location.X - variance, x.Location.Y - variance, x.Width + variance, x.Height + variance));
         }
 
-        private void registerButton_Click(object sender, EventArgs e)
-        {
-            var registerSuccess = true;
-            var passwordfield = false;
+        private void registerButton_Click(object sender, EventArgs e) {
             Refresh();
 
-            if (string.IsNullOrEmpty(registerEmail.Text))
-            {
-                DrawErrorAroundTextBox(registerEmail);
-                errorEmail.Text = "Please enter your e-mail.".ToUpper();
-                registerSuccess = false;
-            }
-            else if (Self.validateEmail(registerEmail.Text) == false)
-            {
-                DrawErrorAroundTextBox(registerEmail);
-                errorEmail.Text = "Please enter a valid e-mail address.".ToUpper();
-                registerSuccess = false;
-            }
-            else
-            {
-                errorEmail.Text = "";
+            List<string> registerErrors = new List<string>(); 
+
+            if (string.IsNullOrEmpty(registerEmail.Text)) {
+                registerErrors.Add("Please enter your e-mail.");
+            } else if (Self.validateEmail(registerEmail.Text) == false) {
+                registerErrors.Add("Please enter a valid e-mail address.");
             }
 
-            if (string.IsNullOrEmpty(registerTicket.Text) && _ticketRequired)
-            {
-                DrawErrorAroundTextBox(registerTicket);
-                errorTicket.Text = "Please enter your ticket.".ToUpper();
-                registerSuccess = false;
-            }
-            else
-            {
-                errorTicket.Text = "";
+            if (string.IsNullOrEmpty(registerTicket.Text) && _ticketRequired) {
+                registerErrors.Add("Please enter your ticket.");
             }
 
-            if (string.IsNullOrEmpty(registerPassword.Text))
-            {
-                DrawErrorAroundTextBox(registerPassword);
-                errorPassword.Text = "Please enter your password.".ToUpper();
-                registerSuccess = false;
-                passwordfield = true;
-            }
-            else
-            {
-                errorPassword.Text = "";
+            if (string.IsNullOrEmpty(registerPassword.Text)) {
+                registerErrors.Add("Please enter your password.");
             }
 
-            if (string.IsNullOrEmpty(registerConfirmPassword.Text))
-            {
-                DrawErrorAroundTextBox(registerConfirmPassword);
-                errorConfirm.Text = "Please confirm your password.".ToUpper();
-                registerSuccess = false;
-            }
-            else
-            {
-                errorConfirm.Text = "";
+            if (string.IsNullOrEmpty(registerConfirmPassword.Text)) {
+                registerErrors.Add("Please confirm your password.");
             }
 
-            if (registerConfirmPassword.Text != registerPassword.Text)
-            {
-                DrawErrorAroundTextBox(registerConfirmPassword);
-                DrawErrorAroundTextBox(registerPassword);
-                errorPassword.Text = "Passwords don't match.".ToUpper();
-                registerSuccess = false;
-            }
-            else
-            {
-                if (passwordfield == false)
-                {
-                    errorPassword.Text = "";
-                }
+            if (registerConfirmPassword.Text != registerPassword.Text) {
+                registerErrors.Add("Passwords don't match.");
             }
 
-            if (!registerAgree.Checked)
-            {
-                registerAgree.ForeColor = Color.Red;
-                errorTOS.Text = "You have not agreed to the Terms of Service.".ToUpper();
-                registerSuccess = false;
-            }
-            else
-            {
-                registerAgree.ForeColor = Color.White;
-                errorTOS.Text = "";
+            if (!registerAgree.Checked) {
+                registerErrors.Add("You have not agreed to the Terms of Service.");
             }
 
-            if (registerSuccess)
-            {
+            if (registerErrors.Count == 0) {
 				if (!(serverPick.SelectedItem is ServerInfo server)) return;
 
 				_serverIp = server.IpAddress;
@@ -1841,35 +1736,25 @@ namespace GameLauncher
                     XmlNode userIdNode;
                     var msgBoxInfo = "";
 
-                    try
-                    {
+                    try {
                         loginTokenNode = sbrwXml.SelectSingleNode("LoginStatusVO/LoginToken");
                         userIdNode = sbrwXml.SelectSingleNode("LoginStatusVO/UserId");
 
-                        if (sbrwXml.SelectSingleNode("LoginStatusVO/Ban") == null)
-                        {
-                            if (sbrwXml.SelectSingleNode("LoginStatusVO/Description") == null)
-                            {
+                        if (sbrwXml.SelectSingleNode("LoginStatusVO/Ban") == null) {
+                            if (sbrwXml.SelectSingleNode("LoginStatusVO/Description") == null) {
                                 extraNode = sbrwXml.SelectSingleNode("html/body");
-                            }
-                            else
+                            } else
                             {
                                 extraNode = sbrwXml.SelectSingleNode("LoginStatusVO/Description");
                             }
-                        }
-                        else
-                        {
+                        } else {
                             extraNode = sbrwXml.SelectSingleNode("LoginStatusVO/Ban");
                         }
 
-                        if (string.IsNullOrEmpty(extraNode.InnerText) || extraNode.InnerText == "SERVER FULL")
-                        {
-                            if (extraNode.InnerText == "SERVER FULL")
-                            {
+                        if (string.IsNullOrEmpty(extraNode.InnerText) || extraNode.InnerText == "SERVER FULL") {
+                            if (extraNode.InnerText == "SERVER FULL") {
                                 MessageBox.Show(null, string.Format("Successfully registered on {0}. However, server is actually full, therefore you cannot play it right now.", serverName), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            }
-                            else
-                            {
+                            } else {
                                 MessageBox.Show(null, string.Format("Successfully registered on {0}. You can log in now.", serverName), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
 
@@ -1882,62 +1767,47 @@ namespace GameLauncher
                             LoginFormElements(true);
 
                             _loggedIn = true;
-                        }
-                        else
-                        {
-                            if (extraNode.SelectSingleNode("Reason") != null)
-                            {
+                        } else {
+                            if (extraNode.SelectSingleNode("Reason") != null) {
                                 msgBoxInfo = string.Format("You got banned on {0}.", serverPick.GetItemText(serverPick.SelectedItem)) + "\n";
                                 msgBoxInfo += string.Format("Reason: {0}", extraNode.SelectSingleNode("Reason").InnerText);
 
-                                if (extraNode.SelectSingleNode("Expires") != null)
-                                {
+                                if (extraNode.SelectSingleNode("Expires") != null) {
                                     msgBoxInfo += "\n" + string.Format("Ban expires {0}", extraNode.SelectSingleNode("Expires").InnerText);
-                                }
-                                else
-                                {
+                                } else {
                                     msgBoxInfo += "\n" + "Banned forever.";
                                 }
 
                                 ConsoleLog(msgBoxInfo, "error");
-                            }
-                            else
-                            {
-                                if (extraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?")
-                                {
+                            } else {
+                                if (extraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?") {
                                     msgBoxInfo = "Launcher tampering detected. Please use original build.";
                                     ConsoleLog(msgBoxInfo, "error");
-                                }
-                                else
-                                {
-                                    if (sbrwXml.SelectSingleNode("html/body") == null)
-                                    {
-                                        DrawErrorAroundTextBox(registerEmail);
-                                        errorEmail.Text = extraNode.InnerText.ToUpper();
-                                        Shake();
-                                    }
-                                    else
-                                    {
+                                } else {
+                                    if (sbrwXml.SelectSingleNode("html/body") == null) {
+                                        ConsoleLog(extraNode.InnerText, "error");
+                                    } else {
                                         msgBoxInfo = "ERROR " + _errorcode + ": " + extraNode.InnerText;
                                         ConsoleLog(msgBoxInfo, "error");
                                     }
                                 }
                             }
                         }
-                    }
-                    catch
-                    {
+                    } catch {
                         MessageBox.Show("Server seems to be offline.");
                     }
-                }
-                catch
-                {
+                } catch {
                     MessageBox.Show("Server seems to be offline.");
                 }
-            }
-            else
-            {
+            } else {
                 Shake();
+                var message = "There were some errors while registering, please fix them:\n\n";
+
+                foreach (var error in registerErrors) {
+                    message += "• " + error + "\n";
+                }
+
+                MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2242,7 +2112,7 @@ namespace GameLauncher
                 return;
             }
 
-            playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
+            playButton.BackgroundImage = Properties.Resources.playbutton;
 
             var serverInfo = (ServerInfo)serverPick.SelectedItem;
 
@@ -2318,7 +2188,7 @@ namespace GameLauncher
                 return;
             }
 
-            playButton.BackgroundImage = Properties.Resources.largebutton_hover;
+            playButton.BackgroundImage = Properties.Resources.playbutton_hover;
         }
 
         private void playButton_MouseDown(object sender, EventArgs e)
@@ -2328,7 +2198,7 @@ namespace GameLauncher
                 return;
             }
 
-            playButton.BackgroundImage = Properties.Resources.largebutton_click;
+            playButton.BackgroundImage = Properties.Resources.playbutton_click;
         }
 
         private void playButton_MouseEnter(object sender, EventArgs e)
@@ -2338,7 +2208,7 @@ namespace GameLauncher
                 return;
             }
 
-            playButton.BackgroundImage = Properties.Resources.largebutton_hover;
+            playButton.BackgroundImage = Properties.Resources.playbutton_hover;
         }
 
         private void playButton_MouseLeave(object sender, EventArgs e)
@@ -2348,12 +2218,12 @@ namespace GameLauncher
                 return;
             }
 
-            playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
+            playButton.BackgroundImage = Properties.Resources.playbutton;
         }
 
         private void LaunchNfsw()
         {
-            playButton.BackgroundImage = Properties.Resources.largebutton_disabled;
+            playButton.BackgroundImage = Properties.Resources.playbutton;
             playButton.ForeColor = Color.Gray;
 
             playProgressText.Text = "Checking up all files".ToUpper();
@@ -2655,7 +2525,7 @@ namespace GameLauncher
             extractingProgress.Value = 100;
             extractingProgress.Width = 519;
 
-            playButton.BackgroundImage = Properties.Resources.largebutton_enabled;
+            playButton.BackgroundImage = Properties.Resources.playbutton;
             playButton.ForeColor = Color.White;
             playProgressText.Text = "Download completed.".ToUpper();
         }

@@ -195,7 +195,6 @@
       <DependentUpon>Debug.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Discord\RPC.cs" />
-    <Compile Include="App\Discord\WebHook.cs" />
     <Compile Include="App\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -310,6 +309,17 @@
     <EmbeddedResource Include="LZMA\LZMA.dll" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\playbutton_hover.png" />
+    <None Include="Resources\playbutton_click.png" />
+    <None Include="Resources\playbutton.png" />
+    <None Include="Resources\graybutton_hover.png" />
+    <None Include="Resources\graybutton_click.png" />
+    <None Include="Resources\graybutton.png" />
+    <None Include="Resources\greenbutton_click.png" />
+    <None Include="Resources\greenbutton_hover.png" />
+    <None Include="Resources\greenbutton.png" />
+    <None Include="Resources\register_ticket.png" />
+    <None Include="Resources\register_noticket.png" />
     <None Include="Resources\full.png" />
     <None Include="Resources\webicon.png" />
     <None Include="Resources\ac_warning.png" />
