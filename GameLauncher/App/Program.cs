@@ -19,8 +19,9 @@ namespace GameLauncher {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
 
-            Form SplashScreen2 = new SplashScreen();
-            SplashScreen2.Show();
+            Form SplashScreen2 = null;
+            /*Form SplashScreen2 = new SplashScreen();
+            SplashScreen2.Show();*/
 
             if (Self.isTempFolder(Directory.GetCurrentDirectory())) {
                 MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
