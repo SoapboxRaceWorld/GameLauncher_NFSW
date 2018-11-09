@@ -2039,9 +2039,10 @@ namespace GameLauncher
                             if (exitCode == -1073740791) errorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")";
                             if (exitCode == -805306369) errorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")";
 
-                            if (exitCode == -4) errorMsg = "Another instance is already executed";
-                            if (exitCode == -6) errorMsg = "Password incorrect while pressing Play Now";
                             if (exitCode == -3) errorMsg = "Server were unable to resolve your request";
+                            if (exitCode == -4) errorMsg = "Another instance is already executed";
+                            if (exitCode == -5) errorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
+                            if (exitCode == -6) errorMsg = "Password incorrect while pressing Play Now";
 
                             playProgressText.Text = errorMsg.ToUpper();
                             playProgress.Value = 100;
