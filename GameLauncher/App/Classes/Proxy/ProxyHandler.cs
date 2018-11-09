@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Flurl.Http.Content;
+using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.RPC;
 using GameLauncherReborn;
 using Nancy;
@@ -27,15 +28,14 @@ namespace GameLauncher.App.Classes.Proxy
             string GETContent = String.Empty;
             var serverUrl = ServerProxy.Instance.GetServerUrl();
 
-            /*if (string.IsNullOrEmpty(serverUrl))
-            {
+            if (string.IsNullOrEmpty(serverUrl)) {
                 return new TextResponse(HttpStatusCode.BadGateway, "Not open for business");
-            }*/
+            }
 
             var fixedPath = context.Request.Path.Replace("/nfsw/Engine.svc", "");
             var fullUrl = new Uri(serverUrl).Append(fixedPath);
 
-            //Console.WriteLine($@"{context.Request.Method} {fixedPath} -> {fullUrl.Host}");
+            Log.Debug($@"GAME REQUESTED: {context.Request.Method} {fixedPath} -> {fullUrl.Host}");
 
             var queryParams = new Dictionary<string, object>();
             var headers = new Dictionary<string, object>();
@@ -100,10 +100,8 @@ namespace GameLauncher.App.Classes.Proxy
 
             DiscordRPC.handleGameState(fixedPath, response.Content.ReadAsStringAsync().Result, POSTContent, GETContent);
 
-            
-
             return new TextResponse(
-                response.Content.ReadAsStringAsync().Result.Replace("<Host>104.248.0.202</Host>", "<Host>127.0.0.1</Host>"),
+                response.Content.ReadAsStringAsync().Result/*.Replace("<ip>145.239.5.103</ip>", "<ip>127.0.0.1</ip>")*/,
                 response.Content.Headers.ContentType.ToString()
             )
             {

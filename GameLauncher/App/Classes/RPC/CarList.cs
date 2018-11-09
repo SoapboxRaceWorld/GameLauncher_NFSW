@@ -21,7 +21,7 @@ namespace GameLauncher.App.Classes.RPC
                 }
             }
 
-            return "CARID:"+id;
+            return "Traffic Car ("+id+")";
         }
     }
 }

@@ -63,9 +63,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cancelbutton_click {
+        internal static System.Drawing.Bitmap ac_error {
             get {
-                object obj = ResourceManager.GetObject("cancelbutton_click", resourceCulture);
+                object obj = ResourceManager.GetObject("ac_error", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cancelbutton_disabled {
+        internal static System.Drawing.Bitmap ac_success {
             get {
-                object obj = ResourceManager.GetObject("cancelbutton_disabled", resourceCulture);
+                object obj = ResourceManager.GetObject("ac_success", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cancelbutton_enabled {
+        internal static System.Drawing.Bitmap ac_unknown {
             get {
-                object obj = ResourceManager.GetObject("cancelbutton_enabled", resourceCulture);
+                object obj = ResourceManager.GetObject("ac_unknown", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -93,9 +93,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cancelbutton_hover {
+        internal static System.Drawing.Bitmap ac_warning {
             get {
-                object obj = ResourceManager.GetObject("cancelbutton_hover", resourceCulture);
+                object obj = ResourceManager.GetObject("ac_warning", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -143,9 +143,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap largebutton_click {
+        internal static System.Drawing.Bitmap graybutton {
             get {
-                object obj = ResourceManager.GetObject("largebutton_click", resourceCulture);
+                object obj = ResourceManager.GetObject("graybutton", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -153,9 +153,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap largebutton_disabled {
+        internal static System.Drawing.Bitmap graybutton_click {
             get {
-                object obj = ResourceManager.GetObject("largebutton_disabled", resourceCulture);
+                object obj = ResourceManager.GetObject("graybutton_click", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -163,9 +163,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap largebutton_enabled {
+        internal static System.Drawing.Bitmap graybutton_hover {
             get {
-                object obj = ResourceManager.GetObject("largebutton_enabled", resourceCulture);
+                object obj = ResourceManager.GetObject("graybutton_hover", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -173,9 +173,29 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap largebutton_hover {
+        internal static System.Drawing.Bitmap greenbutton {
             get {
-                object obj = ResourceManager.GetObject("largebutton_hover", resourceCulture);
+                object obj = ResourceManager.GetObject("greenbutton", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap greenbutton_click {
+            get {
+                object obj = ResourceManager.GetObject("greenbutton_click", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap greenbutton_hover {
+            get {
+                object obj = ResourceManager.GetObject("greenbutton_hover", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -223,6 +243,36 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap playbutton {
+            get {
+                object obj = ResourceManager.GetObject("playbutton", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap playbutton_click {
+            get {
+                object obj = ResourceManager.GetObject("playbutton_click", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap playbutton_hover {
+            get {
+                object obj = ResourceManager.GetObject("playbutton_hover", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap progress {
             get {
                 object obj = ResourceManager.GetObject("progress", resourceCulture);
@@ -243,9 +293,19 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap registerButton_en {
+        internal static System.Drawing.Bitmap register_noticket {
             get {
-                object obj = ResourceManager.GetObject("registerButton_en", resourceCulture);
+                object obj = ResourceManager.GetObject("register_noticket", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap register_ticket {
+            get {
+                object obj = ResourceManager.GetObject("register_ticket", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -313,56 +373,6 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap smallbutton_click {
-            get {
-                object obj = ResourceManager.GetObject("smallbutton_click", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap smallbutton_disabled {
-            get {
-                object obj = ResourceManager.GetObject("smallbutton_disabled", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap smallbutton_enabled {
-            get {
-                object obj = ResourceManager.GetObject("smallbutton_enabled", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap smallbutton_hover {
-            get {
-                object obj = ResourceManager.GetObject("smallbutton_hover", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap splash {
-            get {
-                object obj = ResourceManager.GetObject("splash", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap tick {
             get {
                 object obj = ResourceManager.GetObject("tick", resourceCulture);
@@ -376,6 +386,16 @@ namespace GameLauncher.Properties {
         internal static System.Drawing.Bitmap warningprogress {
             get {
                 object obj = ResourceManager.GetObject("warningprogress", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap webicon {
+            get {
+                object obj = ResourceManager.GetObject("webicon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

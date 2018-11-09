@@ -8,6 +8,7 @@ using System.IO;
 using System.Security.Cryptography;
 using GameLauncher.App.Classes;
 using GameLauncher.HashPassword;
+using GameLauncher.App.Classes.Logger;
 
 namespace GameLauncherReborn {
     public class WebClientWithTimeout : WebClient {
@@ -34,6 +35,8 @@ namespace GameLauncherReborn {
         }
 
         protected override WebRequest GetWebRequest(Uri address) {
+            Log.Debug("Getting request: " + address.ToString());
+
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
             request.UserAgent = "GameLauncher (+https://github.com/SoapboxRaceWorld/GameLauncher_NFSW)";
 		    request.Headers["X-HWID"] = Security.FingerPrint.Value();

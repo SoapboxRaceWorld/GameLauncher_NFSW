@@ -19,6 +19,7 @@ namespace GameLauncher.App.Classes.RPC {
         private static string serverName = ServerProxy.Instance.GetServerName();
         private static bool canUpdateProfileField = false;
         private static bool eventTerminatedManually = false;
+        //private static bool collectingTreasures = false;
         private static int EventID;
         private static string carslotsXML = String.Empty;
 
@@ -34,11 +35,73 @@ namespace GameLauncher.App.Classes.RPC {
         public static string PersonaAvatarId = String.Empty;
         public static string PersonaCarId = String.Empty;
         public static string PersonaCarName = String.Empty;
+        public static int PersonaTreasure = 0;
+        public static int TotalTreasure = 15;
+        public static int TEDay = 0;
         public static List<string> PersonaIds = new List<string>();
 
         public static void handleGameState(string uri, string serverreply = "", string POST = "", string GET = "") {
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');
+
+            //fetch stats//
+            
+            if(uri == "/Session/GetChatInfo") {
+                SBRW_XML.LoadXml(serverreply);
+                Console.WriteLine(serverreply);
+            }
+
+            /*if(uri == "/DriverPersona/GetPersonaBaseFromList" && POST != String.Empty) {
+                SBRW_XML.LoadXml(serverreply);
+                String PersonaFriend = SBRW_XML.SelectSingleNode("ArrayOfPersonaBase/PersonaBase/Name").InnerText;
+
+                if(PersonaFriend != PersonaName) { 
+                    var notification = new NotifyIcon()  {
+                        Visible = true,
+                        Icon = System.Drawing.SystemIcons.Information,
+                        BalloonTipIcon = ToolTipIcon.Info,
+                        BalloonTipTitle = "Friend Request - " + serverName,
+                        BalloonTipText = PersonaFriend + " wants to be your friend. Go ingame to accept or decline",
+                    };
+
+                    notification.ShowBalloonTip(5000);
+                    notification.Dispose();
+                }
+            }*/
+
+
+
+            if (uri == "/events/gettreasurehunteventsession") {
+                PersonaTreasure = 0;
+                TotalTreasure = 15;
+                TEDay = 0;
+
+                SBRW_XML.LoadXml(serverreply);
+                var xPersonaTreasure = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/CoinsCollected").InnerText);
+                for (var i = 0; i < 15; i++) {
+                    if ((xPersonaTreasure & (1 << (15 - i))) != 0) PersonaTreasure++;
+                }
+
+                TotalTreasure = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/NumCoins").InnerText);
+                TEDay = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/Streak").InnerText);
+            }
+
+            if (uri == "/events/notifycoincollected") {
+                PersonaTreasure++;
+
+                _presence.details = "Collecting gems (" + PersonaTreasure+" of "+TotalTreasure+")";
+                _presence.state = serverName;
+                _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
+                _presence.largeImageKey = PersonaAvatarId;
+                _presence.smallImageText = "Treasure Hunt - Day: " + TEDay;
+                _presence.smallImageKey = "gamemode_treasure";
+                _presence.startTimestamp = RPCstartTimestamp;
+                _presence.instance = true;
+                DiscordRpc.UpdatePresence(_presence);
+
+                Console.WriteLine(serverreply);
+            }
+
 
             if (uri == "/User/SecureLoginPersona") {
                 canUpdateProfileField = true;
@@ -50,6 +113,7 @@ namespace GameLauncher.App.Classes.RPC {
                 PersonaAvatarId = String.Empty;
                 PersonaCarId = String.Empty;
                 PersonaCarName = String.Empty;
+                PersonaTreasure = 0;
             }
 
             //FIRST PERSONA EVER LOCALIZED IN CODE

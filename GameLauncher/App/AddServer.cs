@@ -128,11 +128,11 @@ namespace GameLauncher.App {
                         Id = SHA.HashPassword(uriResult.Host)
                     });
 
-                    //String addString = serverName.Text + ";" + wellFormattedURL + "\r\n";
-                    //File.WriteAllText("servers.txt", oldcontent + addString);
                     File.WriteAllText("servers.json", JsonConvert.SerializeObject(servers));
+
                     MessageBox.Show(null, "New server will be added on next start of launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                } catch(Exception ex) {
+                }
+                catch (Exception ex) {
                     MessageBox.Show(null, "Failed to add new server. " + ex.Message, "GameLauncher", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
                 }
 

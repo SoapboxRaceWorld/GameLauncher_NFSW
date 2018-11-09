@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("GameLauncher")]
 [assembly: AssemblyDescription("GameLauncher for Need For Speed(TM): World")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SBRW Team")]
+[assembly: AssemblyCompany("MTNTR")]
 [assembly: AssemblyProduct("GameLauncher")]
 [assembly: AssemblyCopyright("OpenSource")]
 [assembly: AssemblyTrademark("")]
@@ -33,4 +33,4 @@ using System.Runtime.InteropServices;
 // przy użyciu symbolu „*”, tak jak pokazano poniżej:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("2.0.0.*")]
-[assembly: AssemblyFileVersion("1.9.9.9")]
+[assembly: AssemblyFileVersion("2.0.0.2")]

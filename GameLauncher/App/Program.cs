@@ -7,43 +7,33 @@ using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App;
 using GameLauncher.App.Classes;
+using GameLauncher.App.Classes.Logger;
 using GameLauncherReborn;
 
 namespace GameLauncher {
     internal static class Program {
         [STAThread]
         internal static void Main() {
+            File.Delete("log.txt");
 
-            DateTime end = new DateTime(2018, 11, 05, 20, 0, 0); //12 o'clock
-            DateTime now = DateTime.Now;
-
-            Console.WriteLine(end);
-            Console.WriteLine(now);
-
-            if (now >= end) {
-                MessageBox.Show(null, "Launcher trial terminated.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-            }
-
-
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath) ?? throw new InvalidOperationException());
+            Log.Debug("GameLauncher v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 7));            
+            Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            Application.SetCompatibleTextRenderingDefault(true);
 
-            Form SplashScreen2 = new SplashScreen();
-            SplashScreen2.Show();
+            Form SplashScreen2 = null;
+
+            Log.Debug("Checking current directory");
 
             if (Self.isTempFolder(Directory.GetCurrentDirectory())) {
                 MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 Environment.Exit(0);
             }
 
-            if (!Directory.Exists("Languages")) {
-                Directory.CreateDirectory("Languages");
-            }
-
             try {
+                Log.Debug("Deleting temporary files");
                 File.Delete(Directory.GetCurrentDirectory() + "\\tempname.zip");
             } catch { /* ignored */ }
 
@@ -77,7 +67,9 @@ namespace GameLauncher {
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             if (Debugger.IsAttached) {
+                Log.Debug("Checking Proxy");
                 ServerProxy.Instance.Start();
+                Log.Debug("Starting MainScreen");
                 Application.Run(new MainScreen(SplashScreen2));
             } else {
                 if (NFSW.isNFSWRunning()) {
@@ -112,11 +104,15 @@ namespace GameLauncher {
                                 message += "• " + file + "\n";
                             }
 
-                            message += "\nCurrent directory: " + Directory.GetCurrentDirectory();
-
                             MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        } else { 
+                        } else {
+                            Log.Debug("Checking Proxy");
                             ServerProxy.Instance.Start();
+
+                            Application.ThreadException += new ThreadExceptionEventHandler(ThreadExceptionEventHandler);
+                            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(UnhandledExceptionEventHandler);
+                            
+                            Log.Debug("Starting MainScreen");
                             Application.Run(new MainScreen(SplashScreen2));
                         }
                     } else {
@@ -127,6 +123,16 @@ namespace GameLauncher {
                     mutex = null;
                 }
             }
+        }
+
+        static void UnhandledExceptionEventHandler(object sender, UnhandledExceptionEventArgs e) {
+            Log.Error(((Exception)e.ExceptionObject).Message);
+            MessageBox.Show(null, ((Exception)e.ExceptionObject).Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        static void ThreadExceptionEventHandler(object sender, ThreadExceptionEventArgs e) {
+            Log.Error(e.Exception.Message);
+            MessageBox.Show(null, e.Exception.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

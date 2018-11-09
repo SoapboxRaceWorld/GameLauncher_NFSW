@@ -9,14 +9,9 @@ using System.Windows.Forms;
 
 namespace GameLauncherReborn {
     class Self {
-#if DEBUG
-        public static string mainserver = "http://192.168.6.13:7888";
-#else
-        public static string mainserver = "https://launchpad.soapboxrace.world";
-#endif
+        public static string mainserver = "http://launcher.soapboxrace.world"; //mirroring launchpad (VISTA USERS)
 
         public static string serverlisturl = mainserver + "/servers";
-
         public static string internetcheckurl = mainserver + "/generate_204.php";
 		public static string statsurl = mainserver + "/stats";
 
@@ -39,25 +34,12 @@ namespace GameLauncherReborn {
             try {
                 Process.Start(processStartInfo);
             } catch (Exception exception1) {
-                MessageBox.Show("Failed to self-run as admin: " + exception1);
+                MessageBox.Show("Failed to self-run as admin: " + exception1.Message);
             }
         }
 
         public static void Restart(string param = "") {
             Application.Restart();
-        }
-
-        public static string CountryName(string twoLetterCountryCode) {
-            CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
-
-            foreach (CultureInfo culture in cultures) {
-                RegionInfo region = new RegionInfo(culture.LCID);
-                if (region.TwoLetterISORegionName.ToUpper() == twoLetterCountryCode.ToUpper()) {
-                    return region.EnglishName;
-                }
-            }
-
-            return String.Empty;
         }
 
         public static long getTimestamp(bool valid = false) {
@@ -81,27 +63,6 @@ namespace GameLauncherReborn {
 			}
 
 			return true;
-		}
-
-		public static string getDiscordRPCImageIDFromServerName(string ServerName, string response) {
-			string returnvalue = "nfsw";
-
-			try {
-				String[] substrings = response.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-				foreach (var substring in substrings) {
-					if (!String.IsNullOrEmpty(substring)) {
-						String[] substrings2 = substring.Split(new string[] { ";" }, StringSplitOptions.None);
-
-						if(substrings2[0] == ServerName) {
-							returnvalue = substrings2[2];
-						}
-					}
-				}
-			} catch {
-				returnvalue = "nfsw";
-			}
-
-			return returnvalue;
 		}
 
         public static bool CheckForInternetConnection() {

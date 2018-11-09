@@ -142,7 +142,6 @@ namespace GameLauncher.App
                 new ListType{ Name = "Credentials Saved", Value = Password},
                 new ListType{ Name = "Language", Value =  SettingFile.Read("Language")},
                 new ListType{ Name = "TracksHigh", Value = TracksHigh},
-                new ListType{ Name = "UILanguage", Value =  SettingFile.Read("UILanguage")},
                 new ListType{ Name = "SkipUpdate", Value = SkipUpdate},
                 new ListType{ Name = "LauncherPos", Value = LauncherPosition},
                 new ListType{ Name = "ProxyPort", Value = Self.ProxyPort.ToString()},
