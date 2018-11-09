@@ -25,6 +25,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using ShadowDemo;
 using Security;
+using GameLauncher.App.Classes.Logger;
 
 namespace GameLauncher
 {
@@ -63,7 +64,6 @@ namespace GameLauncher
         private string _serverIp = "";
         private readonly string _serverCacheKey = "02032019"; // Try to guess that now :)
         private string _langInfo;
-        private string _uiLanguage;
         private string _newGameFilesPath;
         private readonly float _dpiDefaultScale = 96f;
 
@@ -93,12 +93,6 @@ namespace GameLauncher
 			  .Select(s => s[random.Next(s.Length)]).ToArray());
 		}
 
-        protected override void OnPaint(PaintEventArgs e){
-            //var p = new Pen(Color.FromArgb(10, 17, 25));
-            //e.Graphics.DrawRectangle(p, new Rectangle(new Point(0, 0), new Size(Size.Width - 1, Size.Height - 1)));
-            //e.Graphics.DrawRectangle(p, new Rectangle(new Point(2, 2), new Size(Size.Width - 5, Size.Height - 5)));
-        }
-
         private void moveWindow_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Y <= 90) _mouseDownPoint = new Point(e.X, e.Y);
@@ -107,7 +101,6 @@ namespace GameLauncher
         private void moveWindow_MouseUp(object sender, MouseEventArgs e)
         {
             _mouseDownPoint = Point.Empty;
-            //this.Refresh();
             Opacity = 1;
         }
 
@@ -150,22 +143,23 @@ namespace GameLauncher
             }
         }
 
-        public MainScreen(Form splashscreen)
-        {
+        public MainScreen(Form splashscreen) {
+            Log.Debug("Entered mainScreen");
             _splashscreen = splashscreen;
 
+            Log.Debug("Setting SSL Protocol");
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
+            Log.Debug("Detecting OS");
             if (DetectLinux.UnixDetected()) {
                 _OS = DetectLinux.Distro();
             } else {
                 _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
             }
 
-            _downloader = new Downloader(this, 3, 2, 16)
-            {
-                //DOWNLOADFUNCTIONS
+            Log.Debug("Detected OS: " + _OS);
+            _downloader = new Downloader(this, 3, 2, 16) {
                 ProgressUpdated = new ProgressUpdated(OnDownloadProgress),
                 DownloadFinished = new DownloadFinished(DownloadTracksFiles),
                 DownloadFailed = new DownloadFailed(OnDownloadFailed),
@@ -173,33 +167,32 @@ namespace GameLauncher
 				ShowExtract = new ShowExtract(OnShowExtract)
             };
 
-            if (Environment.OSVersion.Version.Major > 5)
-            {
-                Font = new Font(Font.Name, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
-            }
-
+            Log.Debug("InitializeComponent");
             InitializeComponent();
-            if (!DetectLinux.UnixDetected())
-            {
+
+            if (!DetectLinux.UnixDetected()) {
+                Log.Debug("Applying Fonts");
                 ApplyEmbeddedFonts();
             }
 
-            if (_settingFile.KeyExists("LauncherPosX") || _settingFile.KeyExists("LauncherPosY"))
-            {
+            Log.Debug("Setting launcher location");
+            if (_settingFile.KeyExists("LauncherPosX") || _settingFile.KeyExists("LauncherPosY")) {
                 StartPosition = FormStartPosition.Manual;
                 var posX = int.Parse(_settingFile.Read("LauncherPosX"));
                 var posY = int.Parse(_settingFile.Read("LauncherPosY"));
                 Location = new Point(posX, posY);
-            }
-            else
-            {
+                Log.Debug("Launcher Location: " + posX + "x" + posY);
+            } else {
+                Log.Debug("Launcher Location: CenterScreen");
                 Self.centerScreen(this);
             }
 
+            Log.Debug("Disabling MaximizeBox");
             MaximizeBox = false;
-            //SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+            Log.Debug("Setting Styles");
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
 
+            Log.Debug("Applying EventHandlers");
             closebtn.MouseEnter += new EventHandler(closebtn_MouseEnter);
             closebtn.MouseLeave += new EventHandler(closebtn_MouseLeave);
             closebtn.Click += new EventHandler(closebtn_Click);
@@ -207,10 +200,6 @@ namespace GameLauncher
             settingsButton.MouseEnter += new EventHandler(settingsButton_MouseEnter);
             settingsButton.MouseLeave += new EventHandler(settingsButton_MouseLeave);
             settingsButton.Click += new EventHandler(settingsButton_Click);
-
-            //minimizebtn.MouseEnter += new EventHandler(minimizebtn_MouseEnter);
-            //minimizebtn.MouseLeave += new EventHandler(minimizebtn_MouseLeave);
-            //minimizebtn.Click += new EventHandler(minimizebtn_Click);
 
             loginButton.MouseEnter += new EventHandler(loginButton_MouseEnter);
             loginButton.MouseLeave += new EventHandler(loginButton_MouseLeave);
@@ -275,47 +264,47 @@ namespace GameLauncher
 
             registerText.Click += new EventHandler(registerText_LinkClicked);
 
-            //Simple check if we have enough permission to write file and remove them
-            if (!Self.hasWriteAccessToFolder(Directory.GetCurrentDirectory()))
-            {
+            this.Load += new EventHandler(mainScreen_Load);
+
+            Log.Debug("Checking permissions");
+            if (!Self.hasWriteAccessToFolder(Directory.GetCurrentDirectory())) {
                 if (_splashscreen != null) _splashscreen.Hide();
+                Log.Error("Check Permission Failed.");
                 MessageBox.Show(null, "Failed to write the test file. Make sure you're running the launcher with administrative privileges.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            //Somewhere here we will setup the game installation directory
-            if (string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory")))
-            {
+            Log.Debug("Checking InstallationDirectory");
+            if (string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory"))) {
                 if(_splashscreen != null) _splashscreen.Hide();
+                Log.Debug("First run!");
                 MessageBox.Show(null, "Howdy! Looks like it's the first time this launcher is started. Please press OK and specify where you want to download all required game files (or select your actual installation).", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 var fbd = new FolderBrowserDialog();
                 var result = fbd.ShowDialog();
 
-                if (result == DialogResult.OK)
-                {
-                    if (!Self.hasWriteAccessToFolder(fbd.SelectedPath))
-                    {
+                if (result == DialogResult.OK) {
+                    if (!Self.hasWriteAccessToFolder(fbd.SelectedPath)) {
+                        Log.Error("Not enough permissions. Exiting.");
                         MessageBox.Show(null, "You don't have enough permission to select this path as installation folder. Please select another directory.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         Environment.Exit(Environment.ExitCode);
                     }
 
-                    if (fbd.SelectedPath == Environment.CurrentDirectory)
-                    {
+                    if (fbd.SelectedPath == Environment.CurrentDirectory) {
                         Directory.CreateDirectory("GameFiles");
+                        Log.Debug("Installing NFSW in same directory where the launcher resides is disadvised.");
                         MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. Instead, we will install it on {0}.", Environment.CurrentDirectory + "\\GameFiles"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         _settingFile.Write("InstallationDirectory", Environment.CurrentDirectory + "\\GameFiles");
-                    }
-                    else
-                    {
+                    } else {
+                        Log.Debug("Directory Set: " + fbd.SelectedPath);
                         _settingFile.Write("InstallationDirectory", fbd.SelectedPath);
                     }
-                }
-                else
-                {
+                } else {
+                    Log.Debug("Exiting");
                     Environment.Exit(Environment.ExitCode);
                 }
             }
 
+            Log.Debug("Setting cursor.");
             string temporaryFile = Path.GetTempFileName();
             File.WriteAllBytes(temporaryFile, ExtractResource.AsByte("GameLauncher.SoapBoxModules.cursor.ani"));
             Cursor mycursor = new Cursor(Cursor.Current.Handle);
@@ -324,20 +313,24 @@ namespace GameLauncher
             Cursor = mycursor;
             File.Delete(temporaryFile);
 
+            Log.Debug("Doing magic with imageServerName");
             var pos = PointToScreen(imageServerName.Location);
             pos = verticalBanner.PointToClient(pos);
             imageServerName.Parent = verticalBanner;
             imageServerName.Location = pos;
             imageServerName.BackColor = Color.Transparent;
 
+            Log.Debug("Setting ServerStatusBar");
             ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
-            if (Self.CheckForInternetConnection() == false && !DetectLinux.WineDetected())
-            {
+            Log.Debug("Checking internet connection");
+            if (Self.CheckForInternetConnection() == false && !DetectLinux.WineDetected()) {
                 if (_splashscreen != null) _splashscreen.Hide();
+                Log.Error("Failed to connect to internet. Please check if your firewall is not blocking launcher.");
                 MessageBox.Show(null, "Failed to connect to internet. Please check if your firewall is not blocking launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+            Log.Debug("Loading ModManager Cache");
             ModManager.LoadModCache();
         }
 
@@ -374,25 +367,33 @@ namespace GameLauncher
             }
         }
 
-        private void mainScreen_Load(object sender, EventArgs e)
-        {
-            /*var f = new Dropshadow(this) {
+        private void mainScreen_Load(object sender, EventArgs e) {
+            Log.Debug("Entering mainScreen_Load");
+            Log.Debug("Applying Shadows");
+
+            var f = new Dropshadow(this) {
                 ShadowBlur = 40,
                 ShadowSpread = -28,
                 ShadowColor = Color.Black
             };
 
-            f.RefreshShadow();*/
+            f.RefreshShadow();
 
+            Log.Debug("Setting WindowName");
             Text = "GameLauncherReborn v" + Application.ProductVersion;
 
-            if (Location.X >= Screen.PrimaryScreen.Bounds.Width || Location.Y >= Screen.PrimaryScreen.Bounds.Height || Location.X <= 0 || Location.Y <= 0)
-            {
+            Log.Debug("Checking window location");
+            if (Location.X >= Screen.PrimaryScreen.Bounds.Width || Location.Y >= Screen.PrimaryScreen.Bounds.Height || Location.X <= 0 || Location.Y <= 0) {
+                Log.Debug("Window location restored to centerScreen");
+
                 Self.centerScreen(this);
                 _windowMoved = true;
             }
-            _NFSW_Installation_Source = _settingFile.KeyExists("CDN") ? _settingFile.Read("CDN") : "http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client";
 
+            _NFSW_Installation_Source = _settingFile.KeyExists("CDN") ? _settingFile.Read("CDN") : "http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client";
+            Log.Debug("_NFSW_Installation_Source is now " + _NFSW_Installation_Source);
+
+            Log.Debug("Applyinng ContextMenu");
             translatedBy.Text = "";
             ContextMenu = new ContextMenu();
 
@@ -410,13 +411,13 @@ namespace GameLauncher
             ContextMenu = null;
 
             email.Text = _settingFile.Read("AccountEmail");
-            if (!string.IsNullOrEmpty(_settingFile.Read("AccountEmail")) && !string.IsNullOrEmpty(_settingFile.Read("Password")))
-            {
+            if (!string.IsNullOrEmpty(_settingFile.Read("AccountEmail")) && !string.IsNullOrEmpty(_settingFile.Read("Password"))) {
+                Log.Debug("Restoring last saved email and password");
                 rememberMe.Checked = true;
             }
 
-            try
-            {
+            try {
+                Log.Debug("Loading serverlist");
                 WebClient wc = new WebClientWithTimeout();
 
                 var serverurl = Self.serverlisturl;
@@ -438,21 +439,16 @@ namespace GameLauncher
                     var streamWriter = new StreamWriter(cryptoStream);
                     streamWriter.Write(_slresponse);
                     streamWriter.Close();
+                } catch(Exception ex) {
+                    Log.Error(ex.Message);
                 }
-                catch
-                {
-                    // ignored
-                }
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine(error);
-                if (File.Exists("ServerCache.json"))
-                {
+            } catch (Exception error) {
+                Log.Error(error.Message + ". Restoring from ServerCache");
+
+                if (File.Exists("ServerCache.json")) {
                     var fileStream = new FileStream("ServerCache.json", FileMode.Open);
 
-                    var dEsCryptoServiceProvider = new DESCryptoServiceProvider()
-                    {
+                    var dEsCryptoServiceProvider = new DESCryptoServiceProvider() {
                         Key = Encoding.ASCII.GetBytes(_serverCacheKey),
                         IV = Encoding.ASCII.GetBytes(_serverCacheKey)
                     };
@@ -461,19 +457,14 @@ namespace GameLauncher
                     var streamReader = new StreamReader(cryptoStream);
                     _slresponse = streamReader.ReadToEnd();
 
-                    if (string.IsNullOrWhiteSpace(_slresponse))
-                    {
+                    if (string.IsNullOrWhiteSpace(_slresponse)) {
                         _slresponse = "[]";
                     }
 
                     _serverlistloaded = true;
-                }
-                else
-                {
-                    _slresponse = JsonConvert.SerializeObject(new[]
-                    {
-                        new ServerInfo
-                        {
+                } else {
+                    _slresponse = JsonConvert.SerializeObject(new[] {
+                        new ServerInfo {
                             Category = "OFFLINE",
                             Name = "Offline Built-In Server",
                             IpAddress = "http://localhost:4416/sbrw/Engine.svc",
@@ -483,7 +474,7 @@ namespace GameLauncher
                 }
             }
 
-
+            Log.Debug("Setting loaded serverlist");
             serverPick.DisplayMember = "Name";
 
             var resItems = JsonConvert.DeserializeObject<List<ServerInfo>>(_slresponse);
@@ -502,7 +493,7 @@ namespace GameLauncher
                 finalItems.AddRange(serverItemGroup.ToList());
             }
 
-
+            // LEO PLEASE ADD THIS SERVER!!!111!!
             finalItems.Add(
                 new ServerInfo {
                     Category = "NightRiderz",
@@ -607,6 +598,7 @@ namespace GameLauncher
                 }
             }
 
+            Log.Debug("Checking for password");
             if (_settingFile.KeyExists("Password"))
             {
                 _loginEnabled = true;
@@ -623,6 +615,8 @@ namespace GameLauncher
                 loginButton.Image = Properties.Resources.graybutton;
                 loginButton.ForeColor = Color.Gray;
             }
+
+            Log.Debug("Setting game language");
 
             settingsLanguage.DisplayMember = "Text";
             settingsLanguage.ValueMember = "Value";
@@ -647,6 +641,7 @@ namespace GameLauncher
             {
                 settingsLanguage.SelectedValue = _settingFile.Read("Language");
             }
+            Log.Debug("Setting texture quality");
 
             settingsQuality.DisplayMember = "Text";
             settingsQuality.ValueMember = "Value";
@@ -663,29 +658,28 @@ namespace GameLauncher
                 settingsQuality.SelectedValue = _settingFile.Read("TracksHigh");
             }
 
+            Log.Debug("Re-checking InstallationDirectory");
+
             var drive = Path.GetPathRoot(_settingFile.Read("InstallationDirectory"));
-            if (!Directory.Exists(drive))
-            {
-                if (!string.IsNullOrEmpty(drive))
-                {
+            if (!Directory.Exists(drive)) {
+                if (!string.IsNullOrEmpty(drive)) {
                     var newdir = Directory.GetCurrentDirectory() + "\\GameFiles";
                     _settingFile.Write("InstallationDirectory", newdir);
+                    Log.Debug(string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir));
+
                     MessageBox.Show(null, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
             //Soapbox Modules (without them Freeroam might fail)
-            try
-            {
+            Log.Debug("Installing modules");
+            try {
                 Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
-                if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/lightfx.dll"))
-                {
-                    try
-                    {
+                if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/lightfx.dll")) {
+                    try {
                         File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/lightfx.dll", new WebClientWithTimeout().DownloadData("http://launcher.soapboxrace.world/lightfx.dll"));
-                    }
-                    catch
-                    {
+                    } catch(Exception ex) {
+                        Log.Error(ex.Message);
                         ConsoleLog("Failed to fetch 'lightfx.dll' module. Freeroam might not work correctly.", "error");
                     }
 
@@ -695,13 +689,13 @@ namespace GameLauncher
                     File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/modules/udpcrypt2.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrypt2.soapbox.module"));
                     File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/modules/xmppsubject.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.xmppsubject.soapbox.module"));
                 }
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
+                Log.Error(ex.Message);
                 MessageBox.Show(null, ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 closebtn_Click(null, null);
             }
 
+            Log.Debug("Installing ModNet");
             //ModNet
             try
             {
@@ -719,46 +713,36 @@ namespace GameLauncher
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.StackTrace);
+                Log.Error(ex.Message);
                 MessageBox.Show(null, ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                closebtn_Click(null, null);
             }
 
-            //Hide other windows
-            RegisterFormElements(false);
-            SettingsFormElements(false);
-            LoggedInFormElements(false);
+            Log.Debug("Hiding RegisterFormElements"); RegisterFormElements(false);
+            Log.Debug("Hiding SettingsFormElements"); SettingsFormElements(false);
+            Log.Debug("Hiding LoggedInFormElements"); LoggedInFormElements(false);
 
-            //Reshow missing elements
-            LoginFormElements(true);
+            Log.Debug("Showing LoginFormElements"); LoginFormElements(true);
 
+            Log.Debug("Setting Registry Options");
             try {
                 var gameInstallDirValue = Registry.GetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", RegistryValueKind.String).ToString();
                 if (gameInstallDirValue != Path.GetFullPath(_settingFile.Read("InstallationDirectory"))) {
-                    try
-                    {
+                    try {
                         Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", Path.GetFullPath(_settingFile.Read("InstallationDirectory")));
                         Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "LaunchInstallDir", Path.GetFullPath(Application.ExecutablePath));
+                    } catch(Exception ex) {
+                        Log.Error(ex.Message);
                     }
-                    catch { }
                 }
-            }
-            catch { }
-
-            //Somewhere here translations?
-            if (string.IsNullOrEmpty(_settingFile.Read("UILanguage")))
-            {
-                _uiLanguage = "Default";
-            }
-            else
-            {
-                _uiLanguage = _settingFile.Read("UILanguage");
+            } catch(Exception ex) {
+                Log.Error(ex.Message);
             }
 
+            Log.Debug("Setting configurations");
             _newGameFilesPath = Path.GetFullPath(_settingFile.Read("InstallationDirectory"));
             settingsGameFilesCurrent.Text = "CURRENT DIRECTORY: " + _newGameFilesPath;
 
-            SetTranslations(_uiLanguage);
+            Log.Debug("Initializing DiscordRPC");
 
             var handlers = new DiscordRpc.EventHandlers();
             DiscordRpc.Initialize(_discordrpccode, ref handlers, true, "");
@@ -769,15 +753,17 @@ namespace GameLauncher
             _presence.instance = true;
             DiscordRpc.UpdatePresence(_presence);
 
-            BeginInvoke((MethodInvoker)delegate
-            {
+            BeginInvoke((MethodInvoker)delegate {
+                Log.Debug("Initialize Downloading Process");
                 LaunchNfsw();
             });
 
-            if(_splashscreen != null)
+            Log.Debug("Hiding splashScreen");
+            if (_splashscreen != null)
                 _splashscreen.Hide();
 
             this.BringToFront();
+            Log.Debug("Checking for update");
             new LauncherUpdateCheck(launcherIconStatus, launcherStatusText, launcherStatusDesc).checkAvailability();
         }
 
@@ -1166,7 +1152,7 @@ namespace GameLauncher
 
             var artificialPingStart = Self.getTimestamp();
 
-            allowedCountriesLabel.Text = "";
+            //allowedCountriesLabel.Text = "";
             verticalBanner.BackColor = Color.Transparent;
 
             var stringToUri = new Uri(serverIp + "/GetServerInformation");
@@ -1254,8 +1240,7 @@ namespace GameLauncher
                             _ticketRequired = false;
                         }
 
-                        if (!string.IsNullOrEmpty(json.allowedCountries))
-                        {
+                        /*if (!string.IsNullOrEmpty(json.allowedCountries)) {
                             var countries = new List<object>();
                             var splitted = json.allowedCountries.Split(';');
 
@@ -1267,11 +1252,9 @@ namespace GameLauncher
                             var allowed = string.Join(", ", countries);
 
                             allowedCountriesLabel.Text = string.Format("Warning, this server only accepts players from: {0}", allowed);
-                        }
-                        else
-                        {
+                        } else {
                             allowedCountriesLabel.Text = "";
-                        }
+                        }*/
 
                         if (json.maxUsersAllowed == 0)
                         {
@@ -1402,17 +1385,18 @@ namespace GameLauncher
         }
 
         private void ApplyEmbeddedFonts() {
-            FontFamily AirportCyr = FontWrapper.Instance.GetFontFamily("Airport-Cyr.ttf");
-            FontFamily AkrobatSemiBold = FontWrapper.Instance.GetFontFamily("Akrobat-SemiBold.otf");
+            Log.Debug("Getting AirportCyr"); FontFamily AirportCyr = FontWrapper.Instance.GetFontFamily("Airport-Cyr.ttf");
+            Log.Debug("Getting AkrobatSemiBold"); FontFamily AkrobatSemiBold = FontWrapper.Instance.GetFontFamily("Akrobat-SemiBold.ttf");
+            Log.Debug("Getting AkrobatRegular"); FontFamily AkrobatRegular = FontWrapper.Instance.GetFontFamily("Akrobat-Regular.ttf");
 
-            launcherStatusText.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            launcherStatusDesc.Font = new Font(AirportCyr, 7f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            Log.Debug("Applying AkrobatRegular mainScreen to launcherStatusText"); launcherStatusText.Font = new Font(AkrobatRegular, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            Log.Debug("Applying AirportCyr mainScreen to launcherStatusText"); launcherStatusDesc.Font = new Font(AirportCyr, 7f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
 
-            ServerStatusText.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            ServerStatusDesc.Font = new Font(AirportCyr, 7f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            Log.Debug("Applying AkrobatRegular mainScreen to ServerStatusText"); ServerStatusText.Font = new Font(AkrobatRegular, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            Log.Debug("Applying AirportCyr mainScreen to ServerStatusDesc"); ServerStatusDesc.Font = new Font(AirportCyr, 7f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            Log.Debug("Applying AkrobatSemiBold mainScreen to playProgressText"); playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
-            var fontFamily2 = AkrobatSemiBold;
+            /*var fontFamily2 = AkrobatSemiBold;
 
             email.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             loginButton.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
@@ -1436,7 +1420,7 @@ namespace GameLauncher
             settingsGameFilesCurrent.Font = new Font(fontFamily2, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             logoutButton.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            allowedCountriesLabel.Font = new Font(AirportCyr, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            //allowedCountriesLabel.Font = new Font(AirportCyr, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
 
             //register things
             registerEmail.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
@@ -1445,7 +1429,7 @@ namespace GameLauncher
             registerTicket.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
 
             registerButton.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerText.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerText.Font = new Font(fontFamily2, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);*/
         }
 
         private void registerText_LinkClicked(object sender, EventArgs e)
@@ -1485,7 +1469,7 @@ namespace GameLauncher
             launcherIconStatus.Visible = hideElements;
             launcherStatusDesc.Visible = hideElements;
             launcherStatusText.Visible = hideElements;
-            allowedCountriesLabel.Visible = hideElements;
+            //allowedCountriesLabel.Visible = hideElements;
         }
 
         private void LoginFormElements(bool hideElements = false)
@@ -1514,7 +1498,7 @@ namespace GameLauncher
             playProgress.Visible = hideElements;
             extractingProgress.Visible = hideElements;
             addServer.Visible = hideElements;
-            allowedCountriesLabel.Visible = hideElements;
+            //allowedCountriesLabel.Visible = hideElements;
             showmap.Visible = hideElements;
             serverPick.Enabled = _spEnabled;
         }
@@ -1842,22 +1826,22 @@ namespace GameLauncher
 
         private void settingsSave_MouseEnter(object sender, EventArgs e)
         {
-            settingsSave.Image = Properties.Resources.smallbutton_hover;
+            settingsSave.Image = Properties.Resources.greenbutton_hover;
         }
 
         private void settingsSave_MouseLeave(object sender, EventArgs e)
         {
-            settingsSave.Image = Properties.Resources.smallbutton_enabled;
+            settingsSave.Image = Properties.Resources.greenbutton;
         }
 
         private void settingsSave_MouseUp(object sender, EventArgs e)
         {
-            settingsSave.Image = Properties.Resources.smallbutton_hover;
+            settingsSave.Image = Properties.Resources.greenbutton_hover;
         }
 
         private void settingsSave_MouseDown(object sender, EventArgs e)
         {
-            settingsSave.Image = Properties.Resources.smallbutton_click;
+            settingsSave.Image = Properties.Resources.greenbutton_click;
         }
 
         private void settingsSave_Click(object sender, EventArgs e)
@@ -1969,7 +1953,6 @@ namespace GameLauncher
             settingsGameFiles.Visible = hideElements;
             settingsGameFilesCurrent.Visible = hideElements;
             settingsGamePathText.Visible = hideElements;
-            inputeditor.Visible = hideElements;
         }
 
         private void StartGame(string userId, string loginToken, string serverIp, Form x)
@@ -1979,9 +1962,7 @@ namespace GameLauncher
             _nfswstarted.IsBackground = true;
             _nfswstarted.Start();
 
-            //var serverName = serverPick.GetItemText(serverPick.SelectedItem);
             var selectedServer = (ServerInfo) serverPick.SelectedItem;
-            //_presenceLargeImageKey = Self.getDiscordRPCImageIDFromServerName(serverName, _slresponse);
 
             _presenceImageKey = selectedServer.DiscordPresenceKey;
 
@@ -1997,29 +1978,15 @@ namespace GameLauncher
             DiscordRpc.UpdatePresence(_presence);
         }
 
-        private void LaunchGameLegacy(string userId, string loginToken, string serverIp, Form x)
-        {
-			var oldfilename = _settingFile.Read("InstallationDirectory") + "\\nfsw.exe";
-			var cParams = "SBRW " + serverIp + " " + loginToken + " " + userId + " -legacyLaunch";
-
-			var proc = Process.Start(oldfilename, cParams);
-            proc.EnableRaisingEvents = true;
-
-            _nfswPid = proc.Id;
-
-            proc.Exited += (sender2, e2) => {
-                _nfswPid = 0;
-                closebtn_Click(sender2, e2);
-            };
-        }
-
-        private void LaunchGame(string userId, string loginToken, string serverIp, Form x)
-        {
+        private void LaunchGame(string userId, string loginToken, string serverIp, Form x) {
 			var oldfilename = _settingFile.Read("InstallationDirectory") + "/nfsw.exe";
 
 			var args = "SBRW " + serverIp + " " + loginToken + " " + userId + " -advancedLaunch";
             var psi = new ProcessStartInfo();
-            //psi.UseShellExecute = false;
+
+            if(DetectLinux.UnixDetected()) { 
+                psi.UseShellExecute = false;
+            }
             
             if (!DetectLinux.UnixDetected()) {
                 psi.FileName = oldfilename;
@@ -2563,10 +2530,6 @@ namespace GameLauncher
         private void OnShowMessage(string message, string header)
         {
             MessageBox.Show(message, header);
-        }
-
-        public void SetTranslations(string langId) {
-
         }
 
         public void ServerStatusBar(Pen color, Point startPoint, Point endPoint, int Thickness = 2) {

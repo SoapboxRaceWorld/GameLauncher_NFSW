@@ -1,10 +1,13 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.Logger;
+using System;
 using System.IO;
 using System.Reflection;
 
 namespace GameLauncher.App.Classes {
     class ExtractResource {
         public static byte[] AsByte(String filename) {
+            Log.Debug("Extracting " + filename + " as Byte");
+
             Assembly a = Assembly.GetExecutingAssembly();
             using (Stream resFilestream = a.GetManifestResourceStream(filename)) {
                 if (resFilestream == null) return null;
@@ -15,6 +18,8 @@ namespace GameLauncher.App.Classes {
         }
 
         public static String AsString(String filename) {
+            Log.Debug("Extracting " + filename + " as String");
+
             var assembly = Assembly.GetExecutingAssembly();
 
             using (Stream stream = assembly.GetManifestResourceStream(filename))

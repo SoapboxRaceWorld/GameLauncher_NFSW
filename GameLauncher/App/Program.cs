@@ -7,21 +7,25 @@ using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App;
 using GameLauncher.App.Classes;
+using GameLauncher.App.Classes.Logger;
 using GameLauncherReborn;
 
 namespace GameLauncher {
     internal static class Program {
         [STAThread]
         internal static void Main() {
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath) ?? throw new InvalidOperationException());
+            File.Delete("log.txt");
 
+            Log.Debug("GameLauncher v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 7));            
+            Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
 
             Form SplashScreen2 = null;
-            /*Form SplashScreen2 = new SplashScreen();
-            SplashScreen2.Show();*/
+
+            Log.Debug("Checking current directory");
 
             if (Self.isTempFolder(Directory.GetCurrentDirectory())) {
                 MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
@@ -29,6 +33,7 @@ namespace GameLauncher {
             }
 
             try {
+                Log.Debug("Deleting temporary files");
                 File.Delete(Directory.GetCurrentDirectory() + "\\tempname.zip");
             } catch { /* ignored */ }
 
@@ -62,7 +67,9 @@ namespace GameLauncher {
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             if (Debugger.IsAttached) {
+                Log.Debug("Checking Proxy");
                 ServerProxy.Instance.Start();
+                Log.Debug("Starting MainScreen");
                 Application.Run(new MainScreen(SplashScreen2));
             } else {
                 if (NFSW.isNFSWRunning()) {
@@ -98,8 +105,13 @@ namespace GameLauncher {
                             }
 
                             MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        } else { 
+                        } else {
+                            Log.Debug("Checking Proxy");
                             ServerProxy.Instance.Start();
+
+                            Application.ThreadException += new ThreadExceptionEventHandler((object sender, ThreadExceptionEventArgs e) => { Log.Error(e.Exception.Message); });
+                            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler((object sender, UnhandledExceptionEventArgs e) => { Log.Error(((Exception)e.ExceptionObject).Message); });
+                            Log.Debug("Starting MainScreen");
                             Application.Run(new MainScreen(SplashScreen2));
                         }
                     } else {

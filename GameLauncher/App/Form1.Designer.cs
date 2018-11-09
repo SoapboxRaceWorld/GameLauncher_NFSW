@@ -66,8 +66,6 @@
             this.settingsGamePathText = new System.Windows.Forms.Label();
             this.addServer = new System.Windows.Forms.Button();
             this.showmap = new System.Windows.Forms.Label();
-            this.inputeditor = new System.Windows.Forms.Button();
-            this.allowedCountriesLabel = new System.Windows.Forms.Label();
             this.launcherIconStatus = new System.Windows.Forms.PictureBox();
             this.launcherStatusText = new System.Windows.Forms.Label();
             this.ServerStatusDesc = new System.Windows.Forms.Label();
@@ -223,7 +221,7 @@
             this.settingsSave.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.settingsSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.settingsSave.ForeColor = System.Drawing.Color.White;
-            this.settingsSave.Image = global::GameLauncher.Properties.Resources.smallbutton_enabled;
+            this.settingsSave.Image = global::GameLauncher.Properties.Resources.greenbutton;
             this.settingsSave.Location = new System.Drawing.Point(721, 427);
             this.settingsSave.Name = "settingsSave";
             this.settingsSave.Size = new System.Drawing.Size(130, 50);
@@ -524,26 +522,6 @@
             this.showmap.Text = "[ SHOW MAP ]";
             this.showmap.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
-            // inputeditor
-            // 
-            this.inputeditor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.inputeditor.Location = new System.Drawing.Point(-10, -30);
-            this.inputeditor.Name = "inputeditor";
-            this.inputeditor.Size = new System.Drawing.Size(210, 23);
-            this.inputeditor.TabIndex = 72;
-            this.inputeditor.Text = "Edit Game Controls";
-            this.inputeditor.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.inputeditor.UseVisualStyleBackColor = true;
-            // 
-            // allowedCountriesLabel
-            // 
-            this.allowedCountriesLabel.BackColor = System.Drawing.Color.Transparent;
-            this.allowedCountriesLabel.ForeColor = System.Drawing.Color.Yellow;
-            this.allowedCountriesLabel.Location = new System.Drawing.Point(675, -11);
-            this.allowedCountriesLabel.Name = "allowedCountriesLabel";
-            this.allowedCountriesLabel.Size = new System.Drawing.Size(10, 10);
-            this.allowedCountriesLabel.TabIndex = 76;
-            // 
             // launcherIconStatus
             // 
             this.launcherIconStatus.BackColor = System.Drawing.Color.Transparent;
@@ -658,8 +636,6 @@
             this.Controls.Add(this.ServerStatusDesc);
             this.Controls.Add(this.launcherStatusText);
             this.Controls.Add(this.launcherIconStatus);
-            this.Controls.Add(this.allowedCountriesLabel);
-            this.Controls.Add(this.inputeditor);
             this.Controls.Add(this.showmap);
             this.Controls.Add(this.addServer);
             this.Controls.Add(this.settingsGameFilesCurrent);
@@ -705,7 +681,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GameLauncher";
             this.TransparencyKey = System.Drawing.Color.Red;
-            this.Load += new System.EventHandler(this.mainScreen_Load);
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).EndInit();
@@ -756,8 +731,6 @@
         private System.Windows.Forms.Label settingsGamePathText;
         private System.Windows.Forms.Button addServer;
         private System.Windows.Forms.Label showmap;
-        private System.Windows.Forms.Button inputeditor;
-        private System.Windows.Forms.Label allowedCountriesLabel;
         private GameLauncherReborn.ProgressBarEx extractingProgress;
         private System.Windows.Forms.PictureBox launcherIconStatus;
         private System.Windows.Forms.Label launcherStatusText;
