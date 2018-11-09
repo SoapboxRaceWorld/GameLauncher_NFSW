@@ -109,8 +109,9 @@ namespace GameLauncher {
                             Log.Debug("Checking Proxy");
                             ServerProxy.Instance.Start();
 
-                            Application.ThreadException += new ThreadExceptionEventHandler((object sender, ThreadExceptionEventArgs e) => { Log.Error(e.Exception.Message); });
-                            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler((object sender, UnhandledExceptionEventArgs e) => { Log.Error(((Exception)e.ExceptionObject).Message); });
+                            Application.ThreadException += new ThreadExceptionEventHandler(ThreadExceptionEventHandler);
+                            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(UnhandledExceptionEventHandler);
+                            
                             Log.Debug("Starting MainScreen");
                             Application.Run(new MainScreen(SplashScreen2));
                         }
@@ -122,6 +123,16 @@ namespace GameLauncher {
                     mutex = null;
                 }
             }
+        }
+
+        static void UnhandledExceptionEventHandler(object sender, UnhandledExceptionEventArgs e) {
+            Log.Error(((Exception)e.ExceptionObject).Message);
+            MessageBox.Show(null, ((Exception)e.ExceptionObject).Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        static void ThreadExceptionEventHandler(object sender, ThreadExceptionEventArgs e) {
+            Log.Error(e.Exception.Message);
+            MessageBox.Show(null, e.Exception.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

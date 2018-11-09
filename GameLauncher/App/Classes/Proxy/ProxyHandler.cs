@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Flurl.Http.Content;
+using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.RPC;
 using GameLauncherReborn;
 using Nancy;
@@ -34,7 +35,7 @@ namespace GameLauncher.App.Classes.Proxy
             var fixedPath = context.Request.Path.Replace("/nfsw/Engine.svc", "");
             var fullUrl = new Uri(serverUrl).Append(fixedPath);
 
-            Console.WriteLine($@"{context.Request.Method} {fixedPath} -> {fullUrl.Host}");
+            Log.Debug($@"GAME REQUESTED: {context.Request.Method} {fixedPath} -> {fullUrl.Host}");
 
             var queryParams = new Dictionary<string, object>();
             var headers = new Dictionary<string, object>();
