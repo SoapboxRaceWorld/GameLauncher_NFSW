@@ -1950,9 +1950,16 @@ namespace GameLauncher
             settingsGamePathText.Visible = hideElements;
         }
 
-        private void StartGame(string userId, string loginToken, string serverIp, Form x)
-        {
-            _nfswstarted = new Thread(() => LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this));
+        private void StartGame(string userId, string loginToken, string serverIp, Form x) {
+            Log.Debug("Using: " + Environment.OSVersion.Version.Major);
+
+            _nfswstarted = new Thread(() => {
+                if(Environment.OSVersion.Version.Major == 10) { 
+                    LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this);
+                } else {
+                    LaunchGame(userId, loginToken, _serverIp, this);
+                }
+            });
 
             _nfswstarted.IsBackground = true;
             _nfswstarted.Start();

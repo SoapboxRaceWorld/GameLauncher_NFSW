@@ -17,7 +17,7 @@ namespace GameLauncherReborn {
 
 		private static IniFile SettingFile = new IniFile("Settings.ini");
 
-        public static int ProxyPort = new Random().Next(6260, 6269);
+        public static int ProxyPort = new Random().Next(6280, 6290);
 
         public static void runAsAdmin() {
             string[] args = Environment.GetCommandLineArgs();

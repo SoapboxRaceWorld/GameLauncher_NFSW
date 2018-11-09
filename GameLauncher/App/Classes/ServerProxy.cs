@@ -20,13 +20,11 @@ namespace GameLauncher.App.Classes
         }
 
         public string GetServerName() => _serverName;
-        public void SetServerName(string serverName)
-        {
+        public void SetServerName(string serverName) {
             _serverName = serverName;
         }
 
-        public void Start()
-        {
+        public void Start() {
             Log.Debug("Setting Proxy under :"+Self.ProxyPort);
 
             if (_host != null) {
@@ -36,8 +34,7 @@ namespace GameLauncher.App.Classes
 
             try { 
                 _host = new NancyHost(new Uri("http://127.0.0.1:" + Self.ProxyPort), new NancyBootstrapper(), new HostConfiguration {
-                    AllowChunkedEncoding = false,
-                    UrlReservations = new UrlReservations() { CreateAutomatically = true }
+                    AllowChunkedEncoding = false
                 });
 
                 Log.Debug("Starting Proxy");
