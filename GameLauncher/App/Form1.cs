@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -315,7 +315,7 @@ namespace GameLauncher
             }
 
             //Replace cursor
-            if (File.Exists(_settingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur"))
+            if (!DetectLinux.UnixDetected() && File.Exists(_settingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur"))
             {
                 var mycursor = new Cursor(Cursor.Current.Handle);
                 var colorcursorhandle = User32.LoadCursorFromFile(_settingFile.Read("InstallationDirectory") + "\\Media\\Cursors\\default.cur");
