@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -304,14 +304,16 @@ namespace GameLauncher
                 }
             }
 
-            Log.Debug("Setting cursor.");
-            string temporaryFile = Path.GetTempFileName();
-            File.WriteAllBytes(temporaryFile, ExtractResource.AsByte("GameLauncher.SoapBoxModules.cursor.ani"));
-            Cursor mycursor = new Cursor(Cursor.Current.Handle);
-            IntPtr colorcursorhandle = User32.LoadCursorFromFile(temporaryFile);
-            mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
-            Cursor = mycursor;
-            File.Delete(temporaryFile);
+            if (!DetectLinux.UnixDetected()) {
+                Log.Debug("Setting cursor.");
+                string temporaryFile = Path.GetTempFileName();
+                File.WriteAllBytes(temporaryFile, ExtractResource.AsByte("GameLauncher.SoapBoxModules.cursor.ani"));
+                Cursor mycursor = new Cursor(Cursor.Current.Handle);
+                IntPtr colorcursorhandle = User32.LoadCursorFromFile(temporaryFile);
+                mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
+                Cursor = mycursor;
+                File.Delete(temporaryFile);
+            }
 
             Log.Debug("Doing magic with imageServerName");
             var pos = PointToScreen(imageServerName.Location);
