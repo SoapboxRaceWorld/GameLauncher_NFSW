@@ -44,7 +44,6 @@ namespace GameLauncher
         private bool _loggedIn;
         private bool _restartRequired;
         private bool _allowRegistration;
-        private bool _spEnabled = false;
         private bool _isDownloading = true;
 
         private int _lastSelectedServerId;
@@ -1161,9 +1160,6 @@ namespace GameLauncher
 
             WebClientWithTimeout client = new WebClientWithTimeout();
 
-            serverPick.Enabled = false;
-            _spEnabled = false;
-
             var artificialPingStart = Self.getTimestamp();
 
             //allowedCountriesLabel.Text = "";
@@ -1173,13 +1169,11 @@ namespace GameLauncher
             client.DownloadStringAsync(stringToUri);
 
             //Timer here
-            System.Timers.Timer aTimer = new System.Timers.Timer(2000);
+            System.Timers.Timer aTimer = new System.Timers.Timer(30000);
             aTimer.Elapsed += (x, y) => { client.CancelAsync(); };
             aTimer.Enabled = true;
 
             client.DownloadStringCompleted += (sender2, e2) => {
-                serverPick.Enabled = true;
-                _spEnabled = true;
                 aTimer.Enabled = false;
 
                 var artificialPingEnd = Self.getTimestamp();
@@ -1541,7 +1535,7 @@ namespace GameLauncher
             addServer.Visible = hideElements;
             //allowedCountriesLabel.Visible = hideElements;
             showmap.Visible = hideElements;
-            serverPick.Enabled = _spEnabled;
+            serverPick.Enabled = true;
         }
 
         private void RegisterFormElements(bool hideElements = true) {
@@ -1721,6 +1715,8 @@ namespace GameLauncher
                             } else {
                                 allowReg = false;
                             }
+                        } else {
+                            allowReg = true;
                         }
                     }
                 } catch {
