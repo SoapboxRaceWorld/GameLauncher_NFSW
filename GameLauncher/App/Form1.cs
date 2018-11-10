@@ -1171,15 +1171,28 @@ namespace GameLauncher
 
             var stringToUri = new Uri(serverIp + "/GetServerInformation");
             client.DownloadStringAsync(stringToUri);
-            client.DownloadStringCompleted += (sender2, e2) =>
-            {
+
+            //Timer here
+            System.Timers.Timer aTimer = new System.Timers.Timer(2000);
+            aTimer.Elapsed += (x, y) => { client.CancelAsync(); };
+            aTimer.Enabled = true;
+
+            client.DownloadStringCompleted += (sender2, e2) => {
                 serverPick.Enabled = true;
                 _spEnabled = true;
+                aTimer.Enabled = false;
 
                 var artificialPingEnd = Self.getTimestamp();
 
-                if (e2.Error != null)
-                {
+                if(e2.Cancelled) {
+                    ServerStatusBar(_colorOffline, _startPoint, _endPoint);
+
+                    ServerStatusText.Text = "Server Status - Offline ( OFF )";
+                    ServerStatusText.ForeColor = Color.FromArgb(254, 0, 0);
+                    ServerStatusDesc.Text = "Ping timedout!";
+                    _serverEnabled = false;
+                    _allowRegistration = false;
+                } else if (e2.Error != null) {
                     ServerStatusBar(_colorOffline, _startPoint, _endPoint);
 
                     ServerStatusText.Text = "Server Status - Offline ( OFF )";
@@ -1187,9 +1200,7 @@ namespace GameLauncher
                     ServerStatusDesc.Text = "Server seems to be offline.";
                     _serverEnabled = false;
                     _allowRegistration = false;
-                }
-                else
-                {
+                } else {
                     if (serverName == "Offline Built-In Server")
                     {
                         numPlayers = "∞";
