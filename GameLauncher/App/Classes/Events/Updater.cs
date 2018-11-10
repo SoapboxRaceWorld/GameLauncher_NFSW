@@ -117,7 +117,7 @@ namespace GameLauncher.App.Classes.Events {
                         }
                     } else {
                         text.Text = "Launcher Status - Internal Error";
-                        status.Image = Properties.Resources.ac_success;
+                        status.Image = Properties.Resources.ac_error;
                         text.ForeColor = Color.FromArgb(254, 0, 0);
                         description.Text = "Version : " + Application.ProductVersion;
                     }

@@ -1677,141 +1677,158 @@ namespace GameLauncher
                 registerErrors.Add("You have not agreed to the Terms of Service.");
             }
 
-            if (registerErrors.Count == 0) {
-				if (!(serverPick.SelectedItem is ServerInfo server)) return;
+            //Check Password for breach site
+            bool allowReg = false;
 
-				_serverIp = server.IpAddress;
-                var serverName = _realServername;
-                var encryptedpassword = "";
-                var serverLoginResponse = "";
-                string buildUrl;
+            try {
+                WebClientWithTimeout breachCheck = new WebClientWithTimeout();
+                String checkPassword = SHA.HashPassword(registerPassword.Text.ToString()).ToUpper();
 
-                if (_passwordHash == "BCRYPT")
-                {
-                    encryptedpassword = BCrypt.HashPassword(registerPassword.Text.ToString());
-                }
-                else
-                {
-                    encryptedpassword = SHA.HashPassword(registerPassword.Text.ToString());
-                }
+                var regex = new Regex(@"([0-9A-Z]{5})([0-9A-Z]{35})").Split(checkPassword);
 
-                try
-                {
-                    WebClientWithTimeout wc = new WebClientWithTimeout();
+                String range = regex[1];
+                String verify = regex[2];
+                String serverReply = breachCheck.DownloadString("https://api.pwnedpasswords.com/range/"+range);
 
-                    if (_ticketRequired)
-                    {
-                        buildUrl = _serverIp + "/User/createUser?email=" + registerEmail.Text + "&password=" + encryptedpassword.ToLower() + "&inviteTicket=" + registerTicket.Text;
-                    }
-                    else
-                    {
-                        buildUrl = _serverIp + "/User/createUser?email=" + registerEmail.Text + "&password=" + encryptedpassword.ToLower();
-                    }
-
-					Console.WriteLine(buildUrl);
-
-                    serverLoginResponse = wc.DownloadString(buildUrl);
-                }
-                catch (WebException ex)
-                {
-                    var serverReply = (HttpWebResponse)ex.Response;
-                    if (serverReply == null)
-                    {
-                        _errorcode = 500;
-                        serverLoginResponse = "<LoginStatusVO><UserId/><LoginToken/><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
-                    }
-                    else
-                    {
-                        using (var sr = new StreamReader(serverReply.GetResponseStream()))
-                        {
-                            _errorcode = (int)serverReply.StatusCode;
-                            serverLoginResponse = sr.ReadToEnd();
+                string[] hashes = serverReply.Split('\n');
+                foreach (string hash in hashes) {
+                    var splitChecks = hash.Split(':');
+                    if(splitChecks[0] == verify) {
+                        DialogResult passwordCheckReply = MessageBox.Show(null, "Password used for registration was breached "+Convert.ToInt32(splitChecks[1])+ " times, you should consider using different one.\r\nAlternatively you can use unsafe password anyway. Use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        if(passwordCheckReply == DialogResult.Yes) {
+                            allowReg = true;
+                        } else {
+                            allowReg = false;
                         }
                     }
                 }
+            } catch {
+                allowReg = true;
+            }
 
-                try
-                {
-                    var sbrwXml = new XmlDocument();
-                    sbrwXml.LoadXml(serverLoginResponse);
+            if(allowReg == true) {
+                if (registerErrors.Count == 0) {
+				    if (!(serverPick.SelectedItem is ServerInfo server)) return;
 
-                    XmlNode extraNode;
-                    XmlNode loginTokenNode;
-                    XmlNode userIdNode;
-                    var msgBoxInfo = "";
+				    _serverIp = server.IpAddress;
+                    var serverName = _realServername;
+                    var encryptedpassword = "";
+                    var serverLoginResponse = "";
+                    string buildUrl;
+
+                    if (_passwordHash == "BCRYPT") {
+                        encryptedpassword = BCrypt.HashPassword(registerPassword.Text.ToString());
+                    } else {
+                        encryptedpassword = SHA.HashPassword(registerPassword.Text.ToString());
+                    }
 
                     try {
-                        loginTokenNode = sbrwXml.SelectSingleNode("LoginStatusVO/LoginToken");
-                        userIdNode = sbrwXml.SelectSingleNode("LoginStatusVO/UserId");
+                        WebClientWithTimeout wc = new WebClientWithTimeout();
 
-                        if (sbrwXml.SelectSingleNode("LoginStatusVO/Ban") == null) {
-                            if (sbrwXml.SelectSingleNode("LoginStatusVO/Description") == null) {
-                                extraNode = sbrwXml.SelectSingleNode("html/body");
-                            } else
-                            {
-                                extraNode = sbrwXml.SelectSingleNode("LoginStatusVO/Description");
-                            }
+                        if (_ticketRequired) {
+                            buildUrl = _serverIp + "/User/createUser?email=" + registerEmail.Text + "&password=" + encryptedpassword.ToLower() + "&inviteTicket=" + registerTicket.Text;
                         } else {
-                            extraNode = sbrwXml.SelectSingleNode("LoginStatusVO/Ban");
+                            buildUrl = _serverIp + "/User/createUser?email=" + registerEmail.Text + "&password=" + encryptedpassword.ToLower();
                         }
 
-                        if (string.IsNullOrEmpty(extraNode.InnerText) || extraNode.InnerText == "SERVER FULL") {
-                            if (extraNode.InnerText == "SERVER FULL") {
-                                MessageBox.Show(null, string.Format("Successfully registered on {0}. However, server is actually full, therefore you cannot play it right now.", serverName), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+					    Console.WriteLine(buildUrl);
+
+                        serverLoginResponse = wc.DownloadString(buildUrl);
+                    } catch (WebException ex) {
+                        var serverReply = (HttpWebResponse)ex.Response;
+                        if (serverReply == null) {
+                            _errorcode = 500;
+                            serverLoginResponse = "<LoginStatusVO><UserId/><LoginToken/><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
+                        } else {
+                            using (var sr = new StreamReader(serverReply.GetResponseStream())) {
+                                _errorcode = (int)serverReply.StatusCode;
+                                serverLoginResponse = sr.ReadToEnd();
+                            }
+                        }
+                    }
+
+                    try {
+                        var sbrwXml = new XmlDocument();
+                        sbrwXml.LoadXml(serverLoginResponse);
+
+                        XmlNode extraNode;
+                        XmlNode loginTokenNode;
+                        XmlNode userIdNode;
+                        var msgBoxInfo = "";
+
+                        try {
+                            loginTokenNode = sbrwXml.SelectSingleNode("LoginStatusVO/LoginToken");
+                            userIdNode = sbrwXml.SelectSingleNode("LoginStatusVO/UserId");
+
+                            if (sbrwXml.SelectSingleNode("LoginStatusVO/Ban") == null) {
+                                if (sbrwXml.SelectSingleNode("LoginStatusVO/Description") == null) {
+                                    extraNode = sbrwXml.SelectSingleNode("html/body");
+                                } else
+                                {
+                                    extraNode = sbrwXml.SelectSingleNode("LoginStatusVO/Description");
+                                }
                             } else {
-                                MessageBox.Show(null, string.Format("Successfully registered on {0}. You can log in now.", serverName), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                extraNode = sbrwXml.SelectSingleNode("LoginStatusVO/Ban");
                             }
 
-                            _userId = userIdNode.InnerText;
-                            _loginToken = loginTokenNode.InnerText;
-
-                            BackgroundImage = Properties.Resources.loginbg;
-
-                            RegisterFormElements(false);
-                            LoginFormElements(true);
-
-                            _loggedIn = true;
-                        } else {
-                            if (extraNode.SelectSingleNode("Reason") != null) {
-                                msgBoxInfo = string.Format("You got banned on {0}.", serverPick.GetItemText(serverPick.SelectedItem)) + "\n";
-                                msgBoxInfo += string.Format("Reason: {0}", extraNode.SelectSingleNode("Reason").InnerText);
-
-                                if (extraNode.SelectSingleNode("Expires") != null) {
-                                    msgBoxInfo += "\n" + string.Format("Ban expires {0}", extraNode.SelectSingleNode("Expires").InnerText);
+                            if (string.IsNullOrEmpty(extraNode.InnerText) || extraNode.InnerText == "SERVER FULL") {
+                                if (extraNode.InnerText == "SERVER FULL") {
+                                    MessageBox.Show(null, string.Format("Successfully registered on {0}. However, server is actually full, therefore you cannot play it right now.", serverName), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 } else {
-                                    msgBoxInfo += "\n" + "Banned forever.";
+                                    MessageBox.Show(null, string.Format("Successfully registered on {0}. You can log in now.", serverName), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 }
 
-                                ConsoleLog(msgBoxInfo, "error");
+                                _userId = userIdNode.InnerText;
+                                _loginToken = loginTokenNode.InnerText;
+
+                                BackgroundImage = Properties.Resources.loginbg;
+
+                                RegisterFormElements(false);
+                                LoginFormElements(true);
+
+                                _loggedIn = true;
                             } else {
-                                if (extraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?") {
-                                    msgBoxInfo = "Launcher tampering detected. Please use original build.";
+                                if (extraNode.SelectSingleNode("Reason") != null) {
+                                    msgBoxInfo = string.Format("You got banned on {0}.", serverPick.GetItemText(serverPick.SelectedItem)) + "\n";
+                                    msgBoxInfo += string.Format("Reason: {0}", extraNode.SelectSingleNode("Reason").InnerText);
+
+                                    if (extraNode.SelectSingleNode("Expires") != null) {
+                                        msgBoxInfo += "\n" + string.Format("Ban expires {0}", extraNode.SelectSingleNode("Expires").InnerText);
+                                    } else {
+                                        msgBoxInfo += "\n" + "Banned forever.";
+                                    }
+
                                     ConsoleLog(msgBoxInfo, "error");
                                 } else {
-                                    if (sbrwXml.SelectSingleNode("html/body") == null) {
-                                        ConsoleLog(extraNode.InnerText, "error");
-                                    } else {
-                                        msgBoxInfo = "ERROR " + _errorcode + ": " + extraNode.InnerText;
+                                    if (extraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?") {
+                                        msgBoxInfo = "Launcher tampering detected. Please use original build.";
                                         ConsoleLog(msgBoxInfo, "error");
+                                    } else {
+                                        if (sbrwXml.SelectSingleNode("html/body") == null) {
+                                            ConsoleLog(extraNode.InnerText, "error");
+                                        } else {
+                                            msgBoxInfo = "ERROR " + _errorcode + ": " + extraNode.InnerText;
+                                            ConsoleLog(msgBoxInfo, "error");
+                                        }
                                     }
                                 }
                             }
+                        } catch {
+                            MessageBox.Show("Server seems to be offline.");
                         }
                     } catch {
                         MessageBox.Show("Server seems to be offline.");
                     }
-                } catch {
-                    MessageBox.Show("Server seems to be offline.");
-                }
-            } else {
-                Shake();
-                var message = "There were some errors while registering, please fix them:\n\n";
+                } else {
+                    Shake();
+                    var message = "There were some errors while registering, please fix them:\n\n";
 
-                foreach (var error in registerErrors) {
-                    message += "• " + error + "\n";
-                }
+                    foreach (var error in registerErrors) {
+                        message += "• " + error + "\n";
+                    }
 
-                MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -2489,8 +2506,7 @@ namespace GameLauncher
             });
         }
 
-        private void OnDownloadFinished()
-        {
+        private void OnDownloadFinished() {
             try {
                 File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
             } catch {
