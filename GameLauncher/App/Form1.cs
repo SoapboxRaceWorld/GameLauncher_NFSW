@@ -371,15 +371,18 @@ namespace GameLauncher
 
         private void mainScreen_Load(object sender, EventArgs e) {
             Log.Debug("Entering mainScreen_Load");
-            Log.Debug("Applying Shadows");
 
-            var f = new Dropshadow(this) {
-                ShadowBlur = 40,
-                ShadowSpread = -28,
-                ShadowColor = Color.Black
-            };
+            if(!DetectLinux.UnixDetected()) {
+                Log.Debug("Applying Shadows");
 
-            f.RefreshShadow();
+                var f = new Dropshadow(this) {
+                    ShadowBlur = 40,
+                    ShadowSpread = -28,
+                    ShadowColor = Color.Black
+                };
+
+                f.RefreshShadow();
+            }
 
             Log.Debug("Setting WindowName");
             Text = "GameLauncherReborn v" + Application.ProductVersion;
@@ -2235,22 +2238,24 @@ namespace GameLauncher
             {
                 playProgressText.Text = "Loading list of files to download...".ToUpper();
 
-                Kernel32.GetDiskFreeSpaceEx(_settingFile.Read("InstallationDirectory"), out var lpFreeBytesAvailable, out _, out _);
-                if (lpFreeBytesAvailable <= 4000000000)
-                {
+                if(!DetectLinux.UnixDetected()) {
+                    Kernel32.GetDiskFreeSpaceEx(_settingFile.Read("InstallationDirectory"), out var lpFreeBytesAvailable, out _, out _);
+                    if (lpFreeBytesAvailable <= 4000000000) {
 
-                    extractingProgress.Value = 100;
-                    extractingProgress.Width = 519;
-                    extractingProgress.Image = Properties.Resources.warningprogress;
-                    extractingProgress.ProgressColor = Color.Orange;
+                        extractingProgress.Value = 100;
+                        extractingProgress.Width = 519;
+                        extractingProgress.Image = Properties.Resources.warningprogress;
+                        extractingProgress.ProgressColor = Color.Orange;
 
-                    playProgressText.Text = "Please make sure you have at least 4GB free space on hard drive.".ToUpper();
+                        playProgressText.Text = "Please make sure you have at least 4GB free space on hard drive.".ToUpper();
 
-                    TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
-                    TaskbarProgress.SetValue(Handle, 100, 100);
-                }
-                else
-                {
+                        TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
+                        TaskbarProgress.SetValue(Handle, 100, 100);
+                    } else {
+                        DownloadCoreFiles();
+                    }
+                } else {
+                    //TODO: Linux check for free disk space
                     DownloadCoreFiles();
                 }
             } else {
@@ -2442,10 +2447,8 @@ namespace GameLauncher
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
         }
 
-        private void WineDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            BeginInvoke((MethodInvoker)delegate
-            {
+        private void WineDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
+            BeginInvoke((MethodInvoker)delegate {
                 OnDownloadProgress(e.TotalBytesToReceive, e.BytesReceived, e.TotalBytesToReceive + 1, "wine.tar.gz", 1);
             });
         }
