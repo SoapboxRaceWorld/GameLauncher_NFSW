@@ -1976,14 +1976,16 @@ namespace GameLauncher
         }
 
         private void StartGame(string userId, string loginToken, string serverIp, Form x) {
-            if (File.Exists("wine.tar.gz") && !Directory.Exists("wine")) {
-                Directory.CreateDirectory("wine");
-                playProgressText.Text = "EXTRACTING WINE";
+            if(DetectLinux.UnixDetected()) { 
+                if (File.Exists("wine.tar.gz") && !Directory.Exists("wine")) {
+                    Directory.CreateDirectory("wine");
+                    playProgressText.Text = "EXTRACTING WINE";
 
-                if (DetectLinux.MacOSDetected()) {
-                    Process.Start("tar", "xf wine.tar.gz -C wine --strip-components=1")?.WaitForExit();
-                } else {
-                    Process.Start("tar", "xf wine.tar.gz -C wine")?.WaitForExit();
+                    if (DetectLinux.MacOSDetected()) {
+                        Process.Start("tar", "xf wine.tar.gz -C wine --strip-components=1")?.WaitForExit();
+                    } else {
+                        Process.Start("tar", "xf wine.tar.gz -C wine")?.WaitForExit();
+                    }
                 }
             }
 
