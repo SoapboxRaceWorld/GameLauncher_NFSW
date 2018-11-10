@@ -1677,37 +1677,36 @@ namespace GameLauncher
                 registerErrors.Add("You have not agreed to the Terms of Service.");
             }
 
-            //Check Password for breach site
-            bool allowReg = false;
+            if (registerErrors.Count == 0) {
+                bool allowReg = false;
 
-            try {
-                WebClientWithTimeout breachCheck = new WebClientWithTimeout();
-                String checkPassword = SHA.HashPassword(registerPassword.Text.ToString()).ToUpper();
+                try {
+                    WebClientWithTimeout breachCheck = new WebClientWithTimeout();
+                    String checkPassword = SHA.HashPassword(registerPassword.Text.ToString()).ToUpper();
 
-                var regex = new Regex(@"([0-9A-Z]{5})([0-9A-Z]{35})").Split(checkPassword);
+                    var regex = new Regex(@"([0-9A-Z]{5})([0-9A-Z]{35})").Split(checkPassword);
 
-                String range = regex[1];
-                String verify = regex[2];
-                String serverReply = breachCheck.DownloadString("https://api.pwnedpasswords.com/range/"+range);
+                    String range = regex[1];
+                    String verify = regex[2];
+                    String serverReply = breachCheck.DownloadString("https://api.pwnedpasswords.com/range/"+range);
 
-                string[] hashes = serverReply.Split('\n');
-                foreach (string hash in hashes) {
-                    var splitChecks = hash.Split(':');
-                    if(splitChecks[0] == verify) {
-                        DialogResult passwordCheckReply = MessageBox.Show(null, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1])+ " times, you should consider using different one.\r\nAlternatively you can use unsafe password anyway. Use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                        if(passwordCheckReply == DialogResult.Yes) {
-                            allowReg = true;
-                        } else {
-                            allowReg = false;
+                    string[] hashes = serverReply.Split('\n');
+                    foreach (string hash in hashes) {
+                        var splitChecks = hash.Split(':');
+                        if(splitChecks[0] == verify) {
+                            DialogResult passwordCheckReply = MessageBox.Show(null, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1])+ " times, you should consider using different one.\r\nAlternatively you can use unsafe password anyway. Use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                            if(passwordCheckReply == DialogResult.Yes) {
+                                allowReg = true;
+                            } else {
+                                allowReg = false;
+                            }
                         }
                     }
+                } catch {
+                    allowReg = true;
                 }
-            } catch {
-                allowReg = true;
-            }
 
-            if(allowReg == true) {
-                if (registerErrors.Count == 0) {
+                if(allowReg == true) {
 				    if (!(serverPick.SelectedItem is ServerInfo server)) return;
 
 				    _serverIp = server.IpAddress;
