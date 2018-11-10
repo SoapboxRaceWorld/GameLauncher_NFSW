@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace GameLauncherReborn {
     class Self {
         public static string new_endpoint = "http://nfswgl.metonator.cloud";
-        public static string mainserver = "https://launchpad.soapboxrace.world";
+        public static string mainserver = "http://launcher.soapboxrace.world";
 
         public static string serverlisturl = mainserver + "/servers";
 
