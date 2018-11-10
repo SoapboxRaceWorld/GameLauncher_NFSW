@@ -1441,8 +1441,28 @@ namespace GameLauncher
         }
 
         private void forgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            var serverInfo = (ServerInfo)serverPick.SelectedItem;
-            Process.Start(serverInfo.IpAddress.ToString().Replace("Engine.svc", "") + "forgotPasswd.jsp");
+            string send = Prompt.ShowDialog("Please specify your email address.", "GameLauncher");
+
+            if(send != String.Empty) {
+                var serverInfo = (ServerInfo)serverPick.SelectedItem;
+                Uri resetPasswordUrl = new Uri(serverInfo.IpAddress + "/RecoveryPassword/forgotPassword");
+
+                var request = (HttpWebRequest)WebRequest.Create(resetPasswordUrl);
+                var postData = "email="+send;
+                var data = Encoding.ASCII.GetBytes(postData);
+                request.Method = "POST";
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = data.Length;
+                using (var stream = request.GetRequestStream()) {
+                    stream.Write(data, 0, data.Length);
+                }
+                var response = (HttpWebResponse)request.GetResponse();
+
+                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+
+                MessageBox.Show(null, responseString, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
         }
 
         private void LoggedInFormElements(bool hideElements)
