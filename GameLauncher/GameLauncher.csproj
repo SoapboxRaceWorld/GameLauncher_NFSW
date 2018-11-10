@@ -197,12 +197,6 @@
       <DependentUpon>Debug.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Discord\RPC.cs" />
-    <Compile Include="App\DummyForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="App\DummyForm.Designer.cs">
-      <DependentUpon>DummyForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="App\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -210,6 +204,12 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\JsonScheme.cs" />
+    <Compile Include="App\Form2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\Form2.Designer.cs">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="App\ShowMap.cs">
       <SubType>Form</SubType>
@@ -231,11 +231,11 @@
     <EmbeddedResource Include="App\Debug.resx">
       <DependentUpon>Debug.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\DummyForm.resx">
-      <DependentUpon>DummyForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="App\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\Form2.resx">
+      <DependentUpon>Form2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\ShowMap.resx">
       <DependentUpon>ShowMap.cs</DependentUpon>
@@ -253,7 +253,9 @@
     <EmbeddedResource Include="Fonts\Akrobat-Regular.ttf" />
     <EmbeddedResource Include="Fonts\Akrobat-SemiBold.ttf" />
     <None Include="packages.config" />
-    <None Include="Properties\app.manifest" />
+    <None Include="Properties\app.manifest">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\DataSources\GameLauncher.App.AddServer.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

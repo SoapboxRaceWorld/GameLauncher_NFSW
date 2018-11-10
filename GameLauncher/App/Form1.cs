@@ -420,7 +420,7 @@ namespace GameLauncher
 
             try {
                 Log.Debug("Loading serverlist");
-                WebClient wc = new WebClientWithTimeout();
+                WebClientWithTimeout wc = new WebClientWithTimeout();
 
                 var serverurl = Self.serverlisturl;
                 _slresponse += wc.DownloadString(serverurl);
@@ -956,7 +956,7 @@ namespace GameLauncher
 
             try
             {
-                WebClient wc = new WebClientWithTimeout();
+                WebClientWithTimeout wc = new WebClientWithTimeout();
                 var buildUrl = _serverIp + "/User/authenticateUser?email=" + username + "&password=" + encryptedpassword.ToLower();
                 serverLoginResponse = wc.DownloadString(buildUrl);
             }
@@ -1146,7 +1146,7 @@ namespace GameLauncher
                 loginButton.ForeColor = Color.Gray;
             }
 
-            var client = new WebClientWithTimeout();
+            WebClientWithTimeout client = new WebClientWithTimeout();
 
             serverPick.Enabled = false;
             _spEnabled = false;
@@ -1294,8 +1294,8 @@ namespace GameLauncher
 
                     if (!string.IsNullOrEmpty(verticalImageUrl))
                     {
-                        var client2 = new WebClientWithTimeout();
-                        var stringToUri3 = new Uri(verticalImageUrl);
+                        WebClientWithTimeout client2 = new WebClientWithTimeout();
+                        Uri stringToUri3 = new Uri(verticalImageUrl);
                         client2.DownloadDataAsync(stringToUri3);
                         client2.DownloadDataCompleted += (sender4, e4) =>
                         {
@@ -1453,11 +1453,12 @@ namespace GameLauncher
                 request.Method = "POST";
                 request.ContentType = "application/x-www-form-urlencoded";
                 request.ContentLength = data.Length;
+
                 using (var stream = request.GetRequestStream()) {
                     stream.Write(data, 0, data.Length);
                 }
-                var response = (HttpWebResponse)request.GetResponse();
 
+                var response = (HttpWebResponse)request.GetResponse();
                 var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
 
                 MessageBox.Show(null, responseString, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1693,7 +1694,7 @@ namespace GameLauncher
 
                 try
                 {
-                    WebClient wc = new WebClientWithTimeout();
+                    WebClientWithTimeout wc = new WebClientWithTimeout();
 
                     if (_ticketRequired)
                     {
@@ -2316,7 +2317,7 @@ namespace GameLauncher
                 }
                 else
                 {
-                    WebClient wc = new WebClientWithTimeout();
+                    WebClientWithTimeout wc = new WebClientWithTimeout();
                     var response = wc.DownloadString(_NFSW_Installation_Source + "/" + _settingFile.Read("Language").ToLower() + "/index.xml");
 
                     response = response.Substring(3, response.Length - 3);
@@ -2459,12 +2460,9 @@ namespace GameLauncher
                     {
                         Directory.CreateDirectory("wine");
                         playProgressText.Text = "EXTRACTING WINE";
-                        if (DetectLinux.MacOSDetected())
-                        {
+                        if (DetectLinux.MacOSDetected()) {
                             Process.Start("tar", "xf wine.tar.gz -C wine --strip-components=1")?.WaitForExit();
-                        }
-                        else
-                        {
+                        } else {
                             Process.Start("tar", "xf wine.tar.gz -C wine")?.WaitForExit();
                         }
                         EnablePlayButton();
@@ -2487,7 +2485,7 @@ namespace GameLauncher
 
             if (DetectLinux.UnixDetected()) {
                 if (WineManager.NeedEmbeddedWine() && !File.Exists("wine.tar.gz") && !Directory.Exists("wine")) {
-                    var wineDownload = new WebClientWithTimeout();
+                    WebClientWithTimeout wineDownload = new WebClientWithTimeout();
 
                     wineDownload.DownloadProgressChanged += WineDownloadProgressChanged;
                     wineDownload.DownloadFileCompleted += WineDownloadCompleted;
