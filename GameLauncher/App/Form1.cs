@@ -1694,7 +1694,7 @@ namespace GameLauncher
                 foreach (string hash in hashes) {
                     var splitChecks = hash.Split(':');
                     if(splitChecks[0] == verify) {
-                        DialogResult passwordCheckReply = MessageBox.Show(null, "Password used for registration was breached "+Convert.ToInt32(splitChecks[1])+ " times, you should consider using different one.\r\nAlternatively you can use unsafe password anyway. Use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        DialogResult passwordCheckReply = MessageBox.Show(null, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1])+ " times, you should consider using different one.\r\nAlternatively you can use unsafe password anyway. Use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         if(passwordCheckReply == DialogResult.Yes) {
                             allowReg = true;
                         } else {
