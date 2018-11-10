@@ -1189,7 +1189,7 @@ namespace GameLauncher
 
                     ServerStatusText.Text = "Server Status - Offline ( OFF )";
                     ServerStatusText.ForeColor = Color.FromArgb(254, 0, 0);
-                    ServerStatusDesc.Text = "Ping timedout!";
+                    ServerStatusDesc.Text = "Failed to connect to server.";
                     _serverEnabled = false;
                     _allowRegistration = false;
                 } else if (e2.Error != null) {
