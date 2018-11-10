@@ -74,6 +74,8 @@
             this.registerText = new System.Windows.Forms.Button();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.cdnText = new System.Windows.Forms.Label();
+            this.cdnPick = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
@@ -222,7 +224,7 @@
             this.settingsSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.settingsSave.ForeColor = System.Drawing.Color.White;
             this.settingsSave.Image = global::GameLauncher.Properties.Resources.greenbutton;
-            this.settingsSave.Location = new System.Drawing.Point(721, 427);
+            this.settingsSave.Location = new System.Drawing.Point(720, 437);
             this.settingsSave.Name = "settingsSave";
             this.settingsSave.Size = new System.Drawing.Size(130, 50);
             this.settingsSave.TabIndex = 23;
@@ -481,7 +483,7 @@
             this.settingsGameFilesCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.settingsGameFilesCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.settingsGameFilesCurrent.LinkColor = System.Drawing.Color.White;
-            this.settingsGameFilesCurrent.Location = new System.Drawing.Point(296, 221);
+            this.settingsGameFilesCurrent.Location = new System.Drawing.Point(46, 242);
             this.settingsGameFilesCurrent.Name = "settingsGameFilesCurrent";
             this.settingsGameFilesCurrent.Size = new System.Drawing.Size(86, 13);
             this.settingsGameFilesCurrent.TabIndex = 58;
@@ -515,7 +517,7 @@
             // 
             this.showmap.BackColor = System.Drawing.Color.Transparent;
             this.showmap.ForeColor = System.Drawing.Color.White;
-            this.showmap.Location = new System.Drawing.Point(481, 374);
+            this.showmap.Location = new System.Drawing.Point(483, 126);
             this.showmap.Name = "showmap";
             this.showmap.Size = new System.Drawing.Size(79, 15);
             this.showmap.TabIndex = 70;
@@ -625,12 +627,39 @@
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
             // 
+            // cdnText
+            // 
+            this.cdnText.AutoSize = true;
+            this.cdnText.BackColor = System.Drawing.Color.Transparent;
+            this.cdnText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.cdnText.ForeColor = System.Drawing.Color.White;
+            this.cdnText.Location = new System.Drawing.Point(296, 194);
+            this.cdnText.Name = "cdnText";
+            this.cdnText.Size = new System.Drawing.Size(45, 18);
+            this.cdnText.TabIndex = 83;
+            this.cdnText.Text = "CDN:";
+            this.cdnText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // cdnPick
+            // 
+            this.cdnPick.BackColor = System.Drawing.Color.White;
+            this.cdnPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cdnPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.cdnPick.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.cdnPick.FormattingEnabled = true;
+            this.cdnPick.Location = new System.Drawing.Point(299, 218);
+            this.cdnPick.Name = "cdnPick";
+            this.cdnPick.Size = new System.Drawing.Size(210, 21);
+            this.cdnPick.TabIndex = 84;
+            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.cdnPick);
+            this.Controls.Add(this.cdnText);
             this.Controls.Add(this.ServerStatusIcon);
             this.Controls.Add(this.ServerStatusText);
             this.Controls.Add(this.ServerStatusDesc);
@@ -738,5 +767,7 @@
         private System.Windows.Forms.Label ServerStatusText;
         private System.Windows.Forms.PictureBox ServerStatusIcon;
         private System.Windows.Forms.Button registerText;
+        private System.Windows.Forms.Label cdnText;
+        private System.Windows.Forms.ComboBox cdnPick;
     }
 }

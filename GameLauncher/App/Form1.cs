@@ -658,6 +658,16 @@ namespace GameLauncher
 
             settingsQuality.DataSource = quality;
 
+            cdnPick.DisplayMember = "Text";
+            cdnPick.ValueMember = "Value";
+
+            var cdn = new[] {
+                new { Text = "Electronic Arts Official CDN", Value = "http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client" },
+                new { Text = "MeTonaTOR Mirror - Hosted in PL", Value = "https://launcher.soapboxrace.world/ea_nfsw_section" },
+            };
+
+            cdnPick.DataSource = cdn;
+
             if (_settingFile.KeyExists("TracksHigh"))
             {
                 settingsQuality.SelectedValue = _settingFile.Read("TracksHigh");
@@ -1407,7 +1417,7 @@ namespace GameLauncher
             Log.Debug("Applying AkrobatSemiBold mainScreen to forgotPassword");             forgotPassword.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             Log.Debug("Applying AkrobatSemiBold mainScreen to playProgressText");           playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             Log.Debug("Applying AkrobatSemiBold mainScreen to playButton");                 playButton.Font = new Font(AkrobatSemiBold, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to currentWindowInfo");          currentWindowInfo.Font = new Font(AkrobatSemiBold, 11.35f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            Log.Debug("Applying AkrobatSemiBold mainScreen to currentWindowInfo");          currentWindowInfo.Font = new Font(AkrobatSemiBold, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             Log.Debug("Applying AkrobatSemiBold mainScreen to imageServerName");            imageServerName.Font = new Font(AkrobatSemiBold, 25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             Log.Debug("Applying AkrobatSemiBold mainScreen to registerAgree");              registerAgree.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
@@ -1884,6 +1894,7 @@ namespace GameLauncher
         {
             _settingFile.Write("Language", settingsLanguage.SelectedValue.ToString());
             _settingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString());
+            _settingFile.Write("CDN", cdnPick.SelectedValue.ToString());
 
             var userSettingsXml = new XmlDocument();
 
@@ -1986,6 +1997,8 @@ namespace GameLauncher
             settingsLanguageText.Visible = hideElements;
             settingsQuality.Visible = hideElements;
             settingsQualityText.Visible = hideElements;
+            cdnPick.Visible = hideElements;
+            cdnText.Visible = hideElements;
             settingsGameFiles.Visible = hideElements;
             settingsGameFilesCurrent.Visible = hideElements;
             settingsGamePathText.Visible = hideElements;

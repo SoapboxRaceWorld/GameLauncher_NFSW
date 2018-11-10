@@ -29,18 +29,15 @@ namespace GameLauncher.App.Classes.Events {
 
         public void checkAvailability() {
             text.Text = "Launcher Status - Checking...";
+            description.Text = "Version : v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 7);
             status.Image = Properties.Resources.ac_unknown;
             text.ForeColor = Color.FromArgb(0x848484);
-            description.Visible = false;
-
-            text.Location = new Point(text.Location.X, text.Location.Y + 4);
 
             WebClientWithTimeout update_data = new WebClientWithTimeout();
             update_data.CancelAsync();
             update_data.DownloadStringAsync(new Uri(Self.mainserver + "/launcher/update?version=" + Application.ProductVersion));
             update_data.DownloadStringCompleted += (sender, e) => {
                 description.Visible = true;
-                text.Location = new Point(text.Location.X, text.Location.Y - 4);
 
                 if (e.Cancelled) {
                     text.Text = "Launcher Status - Error";
@@ -119,7 +116,7 @@ namespace GameLauncher.App.Classes.Events {
                         text.Text = "Launcher Status - Internal Error";
                         status.Image = Properties.Resources.ac_error;
                         text.ForeColor = Color.FromArgb(254, 0, 0);
-                        description.Text = "Version : " + Application.ProductVersion;
+                        description.Text = "Version : v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 7);
                     }
                 }
             };
