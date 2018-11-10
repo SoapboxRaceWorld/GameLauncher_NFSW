@@ -38,7 +38,7 @@ namespace GameLauncherReborn {
             request.UserAgent = "GameLauncher (+https://github.com/SoapboxRaceWorld/GameLauncher_NFSW)";
 		    request.Headers["X-HWID"] = Security.FingerPrint.Value();
             request.Headers["X-GameLauncherHash"] = Value();
-            request.Timeout = 3000;
+            request.Timeout = 30000;
 
             return request;
         }
