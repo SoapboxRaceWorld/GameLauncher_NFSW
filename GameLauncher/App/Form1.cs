@@ -497,17 +497,6 @@ namespace GameLauncher
                 finalItems.AddRange(serverItemGroup.ToList());
             }
 
-            // LEO PLEASE ADD THIS SERVER!!!111!!
-            finalItems.Add(
-                new ServerInfo {
-                    Category = "NightRiderz",
-                    Name = "NightRiderz",
-                    IpAddress = "http://149.202.87.33:8680/soapbox-race-core/Engine.svc",
-                    Id = "nr",
-                    DiscordPresenceKey = "nightriderzserver",
-                }
-            );
-
             if (File.Exists("servers.json"))
             {
                 var fileItems = JsonConvert.DeserializeObject<List<ServerInfo>>(File.ReadAllText("servers.json")) ?? new List<ServerInfo>();
@@ -663,6 +652,7 @@ namespace GameLauncher
             var cdn = new[] {
                 new { Text = "Electronic Arts Official CDN", Value = "http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client" },
                 new { Text = "MeTonaTOR Mirror - Hosted in PL", Value = "https://launcher.soapboxrace.world/ea_nfsw_section" },
+                new { Text = "Your Machine - Hosted in ??", Value = "http://localhost/ea_nfsw_section" },
             };
 
             cdnPick.DataSource = cdn;
