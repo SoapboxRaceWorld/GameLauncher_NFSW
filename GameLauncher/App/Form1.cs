@@ -769,8 +769,7 @@ namespace GameLauncher
             new LauncherUpdateCheck(launcherIconStatus, launcherStatusText, launcherStatusDesc).checkAvailability();
         }
 
-        private void closebtn_Click(object sender, EventArgs e)
-        {
+        private void closebtn_Click(object sender, EventArgs e) {
             closebtn.BackgroundImage = Properties.Resources.close_click;
 
             if (_serverlistloaded)
@@ -1956,11 +1955,7 @@ namespace GameLauncher
             Log.Debug("Using: " + Environment.OSVersion.Version.Major);
 
             _nfswstarted = new Thread(() => {
-                if(Environment.OSVersion.Version.Major == 10) { 
-                    LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this);
-                } else {
-                    LaunchGame(userId, loginToken, _serverIp, this);
-                }
+                LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this);
             });
 
             _nfswstarted.IsBackground = true;
@@ -2034,15 +2029,17 @@ namespace GameLauncher
                             x.ShowInTaskbar = true;
 
                             String errorMsg = "Game Crash with exitcode: " + exitCode.ToString() + " (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073741819) errorMsg = "Game Crash: Access Violation (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073740940) errorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073740791) errorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -805306369) errorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")";
+                            if (exitCode == -1073741819)    errorMsg = "Game Crash: Access Violation (0x" + exitCode.ToString("X") + ")";
+                            if (exitCode == -1073740940)    errorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")";
+                            if (exitCode == -1073740791)    errorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")";
+                            if (exitCode == -805306369)     errorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")";
 
-                            if (exitCode == -3) errorMsg = "Server were unable to resolve your request";
-                            if (exitCode == -4) errorMsg = "Another instance is already executed";
-                            if (exitCode == -5) errorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
-                            if (exitCode == -6) errorMsg = "Password incorrect while pressing Play Now";
+                            if (exitCode == 1)              errorMsg = "You just killed nfsw.exe via Task Manager";
+
+                            if (exitCode == -3)             errorMsg = "Server were unable to resolve your request";
+                            if (exitCode == -4)             errorMsg = "Another instance is already executed";
+                            if (exitCode == -5)             errorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
+                            if (exitCode == -6)             errorMsg = "Server was unable to login via 'GetPermanentSession'";
 
                             playProgressText.Text = errorMsg.ToUpper();
                             playProgress.Value = 100;

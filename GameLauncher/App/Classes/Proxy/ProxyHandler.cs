@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Windows;
 using Flurl.Http;
 using Flurl.Http.Content;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.RPC;
 using GameLauncherReborn;
 using Nancy;
@@ -35,6 +33,8 @@ namespace GameLauncher.App.Classes.Proxy
 
             var fixedPath = context.Request.Path.Replace("/nfsw/Engine.svc", "");
             var fullUrl = new Uri(serverUrl).Append(fixedPath);
+
+            Console.WriteLine($@"{context.Request.Method} {fixedPath} -> {fullUrl.Host}");
 
             var queryParams = new Dictionary<string, object>();
             var headers = new Dictionary<string, object>();
@@ -99,10 +99,8 @@ namespace GameLauncher.App.Classes.Proxy
 
             DiscordRPC.handleGameState(fixedPath, response.Content.ReadAsStringAsync().Result, POSTContent, GETContent);
 
-            Log.Debug($@"GAME REQUESTED: {context.Request.Method} {fixedPath} -> {fullUrl.Host}. Resultsize: " + response.Content.ReadAsStringAsync().Result.Length);
-
             return new TextResponse(
-                response.Content.ReadAsStringAsync().Result,
+                response.Content.ReadAsStringAsync().Result/*.Replace("<ip>145.239.5.103</ip>", "<ip>127.0.0.1</ip>")*/,
                 response.Content.Headers.ContentType.ToString()
             )
             {

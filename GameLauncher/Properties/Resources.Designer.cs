@@ -313,16 +313,6 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap screenshot {
-            get {
-                object obj = ResourceManager.GetObject("screenshot", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap secondarybackground {
             get {
                 object obj = ResourceManager.GetObject("secondarybackground", resourceCulture);

@@ -9,15 +9,17 @@ using System.Windows.Forms;
 
 namespace GameLauncherReborn {
     class Self {
-        public static string mainserver = "http://launcher.soapboxrace.world"; //mirroring launchpad (VISTA USERS)
+        public static string new_endpoint = "http://nfswgl.metonator.cloud";
+        public static string mainserver = "https://launchpad.soapboxrace.world";
 
         public static string serverlisturl = mainserver + "/servers";
+
         public static string internetcheckurl = mainserver + "/generate_204.php";
 		public static string statsurl = mainserver + "/stats";
 
 		private static IniFile SettingFile = new IniFile("Settings.ini");
 
-        public static int ProxyPort = new Random().Next(7000, 7100);
+        public static int ProxyPort = new Random().Next(6260, 6269);
 
         public static void runAsAdmin() {
             string[] args = Environment.GetCommandLineArgs();
@@ -42,6 +44,19 @@ namespace GameLauncherReborn {
             Application.Restart();
         }
 
+        public static string CountryName(string twoLetterCountryCode) {
+            CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+
+            foreach (CultureInfo culture in cultures) {
+                RegionInfo region = new RegionInfo(culture.LCID);
+                if (region.TwoLetterISORegionName.ToUpper() == twoLetterCountryCode.ToUpper()) {
+                    return region.EnglishName;
+                }
+            }
+
+            return String.Empty;
+        }
+
         public static long getTimestamp(bool valid = false) {
             long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
 
@@ -63,6 +78,27 @@ namespace GameLauncherReborn {
 			}
 
 			return true;
+		}
+
+		public static string getDiscordRPCImageIDFromServerName(string ServerName, string response) {
+			string returnvalue = "nfsw";
+
+			try {
+				String[] substrings = response.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+				foreach (var substring in substrings) {
+					if (!String.IsNullOrEmpty(substring)) {
+						String[] substrings2 = substring.Split(new string[] { ";" }, StringSplitOptions.None);
+
+						if(substrings2[0] == ServerName) {
+							returnvalue = substrings2[2];
+						}
+					}
+				}
+			} catch {
+				returnvalue = "nfsw";
+			}
+
+			return returnvalue;
 		}
 
         public static bool CheckForInternetConnection() {

@@ -112,8 +112,8 @@
     <Reference Include="Nancy.Hosting.Self, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1-beta1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -203,7 +203,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\JsonScheme.cs" />
-    <Compile Include="App\Program.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="App\ShowMap.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -240,14 +240,8 @@
     <EmbeddedResource Include="App\Classes\RPC\JSON\cars.json" />
     <EmbeddedResource Include="Discord\libdiscord-rpc.dylib" />
     <EmbeddedResource Include="Fonts\Airport-Cyr.ttf" />
-    <EmbeddedResource Include="Fonts\Akrobat-Black.otf" />
-    <EmbeddedResource Include="Fonts\Akrobat-Bold.otf" />
-    <EmbeddedResource Include="Fonts\Akrobat-ExtraBold.otf" />
-    <EmbeddedResource Include="Fonts\Akrobat-ExtraLight.otf" />
-    <EmbeddedResource Include="Fonts\Akrobat-Light.otf" />
-    <EmbeddedResource Include="Fonts\Akrobat-Thin.otf" />
-    <EmbeddedResource Include="Fonts\Akrobat-SemiBold.ttf" />
     <EmbeddedResource Include="Fonts\Akrobat-Regular.ttf" />
+    <EmbeddedResource Include="Fonts\Akrobat-SemiBold.ttf" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\DataSources\GameLauncher.App.AddServer.datasource" />
@@ -312,7 +306,6 @@
     <None Include="Resources\errorprogress.png" />
     <None Include="Resources\progressgrayscale.png" />
     <None Include="Resources\progress.png" />
-    <None Include="Resources\screenshot.png" />
     <None Include="Resources\settingsbtn_click.png" />
     <None Include="Resources\settingsbtn.png" />
     <None Include="Resources\settingsbtn_hover.png" />

@@ -127,12 +127,23 @@ namespace GameLauncher {
 
         static void UnhandledExceptionEventHandler(object sender, UnhandledExceptionEventArgs e) {
             Log.Error(((Exception)e.ExceptionObject).Message);
-            MessageBox.Show(null, ((Exception)e.ExceptionObject).Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            using (ThreadExceptionDialog dialog = new ThreadExceptionDialog((Exception)e.ExceptionObject)) {
+                dialog.ShowDialog();
+            }
+
+            Application.Exit();
+            Environment.Exit(0);
         }
 
         static void ThreadExceptionEventHandler(object sender, ThreadExceptionEventArgs e) {
             Log.Error(e.Exception.Message);
-            MessageBox.Show(null, e.Exception.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            using (ThreadExceptionDialog dialog = new ThreadExceptionDialog(e.Exception)) {
+                dialog.ShowDialog();
+            }
+
+            Application.Exit();
+            Environment.Exit(0);
         }
     }
 }

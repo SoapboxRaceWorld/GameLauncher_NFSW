@@ -1,5 +1,4 @@
 ﻿using System;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.Proxy;
 using GameLauncherReborn;
 using Nancy.Hosting.Self;
@@ -20,28 +19,23 @@ namespace GameLauncher.App.Classes
         }
 
         public string GetServerName() => _serverName;
-        public void SetServerName(string serverName) {
+        public void SetServerName(string serverName)
+        {
             _serverName = serverName;
         }
 
-        public void Start() {
-            Log.Debug("Setting Proxy under :"+Self.ProxyPort);
-
-            if (_host != null) {
-                Log.Error("Proxy is already running!");
+        public void Start()
+        {
+            if (_host != null)
+            {
                 throw new Exception("Server already running!");
             }
 
-            try { 
-                _host = new NancyHost(new Uri("http://127.0.0.1:" + Self.ProxyPort), new NancyBootstrapper(), new HostConfiguration {
-                    AllowChunkedEncoding = false
-                });
-
-                Log.Debug("Starting Proxy");
-                _host.Start();
-            } catch(Exception ex) {
-                Log.Error(ex.Message);
-            }
+            _host = new NancyHost(new Uri("http://127.0.0.1:" + Self.ProxyPort), new NancyBootstrapper(), new HostConfiguration
+            {
+                AllowChunkedEncoding = false
+            });
+            _host.Start();
         }
 
         public void Stop()

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using GameLauncher.App.Classes.Logger;
 using IniParser;
 using IniParser.Model;
 
@@ -15,15 +14,10 @@ namespace GameLauncher.App.Classes {
         public IniFile(string IniPath = null) {
             Path = new FileInfo(IniPath ?? EXE + ".ini").FullName.ToString();
 			Parser = new FileIniDataParser();
-			if (File.Exists(Path)) {
-                try { 
-				    Data = Parser.ReadFile(Path);
-                } catch(Exception ex) {
-                    File.Delete(Path);
-                    Data = new IniData();
-                    Log.Error("Main INI: " + ex.Message);
-                }
-            } else {
+			if (File.Exists(Path))
+			{
+				Data = Parser.ReadFile(Path);
+			} else {
 				Data = new IniData();
 			}
         }
@@ -41,9 +35,7 @@ namespace GameLauncher.App.Classes {
 			try {
 				Data[EXE][Key] = Value;
 				Parser.WriteFile(Path, Data);
-			} catch(Exception ex) { 
-                Log.Error("INI Error on "+Key+": " + ex.Message);    
-            }
+			} catch { }
         }
 
         public void DeleteKey(string Key) {
