@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -127,7 +128,27 @@ namespace GameLauncherReborn {
 		}
 
 		public static bool isTempFolder(string directory) {
-			return directory.Contains("Temp"); //too lazy for regex
+			return directory.Contains("Temp");
 		}
-	}
+
+        public static string CleanFromUnknownChars(string s) {
+            StringBuilder sb = new StringBuilder(s.Length);
+            foreach (char c in s) {
+                if(
+                    (int)c >= 48 && (int)c <= 57 || 
+                    (int)c == 60 || 
+                    (int)c == 62 || 
+                    (int)c >= 65 && (int)c <= 90 || 
+                    (int)c >= 97 && (int)c <= 122 || 
+                    (int)c == 47 || 
+                    (int)c == 45 ||
+                    (int)c == 46
+                ) {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString();
+        }
+    }
 }

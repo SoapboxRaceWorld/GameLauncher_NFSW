@@ -4,8 +4,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
 using Flurl.Http;
 using Flurl.Http.Content;
+using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.RPC;
 using GameLauncherReborn;
 using Nancy;
@@ -35,7 +37,7 @@ namespace GameLauncher.App.Classes.Proxy
             var fixedPath = context.Request.Path.Replace("/nfsw/Engine.svc", "");
             var fullUrl = new Uri(serverUrl).Append(fixedPath);
 
-            Console.WriteLine($@"{context.Request.Method} {fixedPath} -> {fullUrl.Host}");
+            Log.Debug($@"{context.Request.Method} {fixedPath} -> {fullUrl.Host}");
 
             var queryParams = new Dictionary<string, object>();
             var headers = new Dictionary<string, object>();
@@ -101,8 +103,19 @@ namespace GameLauncher.App.Classes.Proxy
             String replyToServer = String.Empty;
 
             if(fixedPath == "/User/GetPermanentSession") {
-                replyToServer = Regex.Replace(response.Content.ReadAsStringAsync().Result, @"<Name>(.*?)(\W\s|\W)(.*?)<\/Name>", "<Name>$1$3</Name>", RegexOptions.Multiline);
-            } else {
+                replyToServer = Self.CleanFromUnknownChars(response.Content.ReadAsStringAsync().Result);
+
+                var SBRW_XML = new XmlDocument();
+                SBRW_XML.LoadXml(replyToServer);
+                XmlNode UserInfo = SBRW_XML.SelectSingleNode("UserInfo");
+                XmlNodeList personas = UserInfo.SelectNodes("personas/ProfileData");
+                Console.WriteLine("COUNT PERSONAS: " + personas.Count);
+
+                if(personas.Count == 0) {
+                    replyToServer = replyToServer.Replace("false", "true");
+                }
+            }
+            else {
                 replyToServer = response.Content.ReadAsStringAsync().Result;
             }
 

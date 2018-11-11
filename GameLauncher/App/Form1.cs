@@ -546,48 +546,50 @@ namespace GameLauncher
 
             serverPick.DataSource = finalItems;
 
-
-            if (_serverlistloaded)
-            {
-                try
-                {
+            Log.Debug("SERVERLIST: Checking...");
+            if (_serverlistloaded) {
+                Log.Debug("SERVERLIST: Setting first server in list");
+                try {
                     serverPick.SelectedIndex = 1;
-                }
-                catch
-                {
-                    // ignored
-                }
-
-                if (!_settingFile.KeyExists("Server"))
-                {
-                    _settingFile.Write("Server", ((ServerInfo)serverPick.SelectedItem).Id);
+                    Log.Debug("SERVERLIST: Selected 1");
+                } catch (Exception ex) {
+                    Log.Debug("SERVERLIST: " + ex.Message);
                 }
 
-                if (_settingFile.KeyExists("Server"))
-                {
+                Log.Debug("SERVERLIST: Checking if server is set on INI File");
+                if (!_settingFile.KeyExists("Server")) {
+                    Log.Debug("SERVERLIST: Failed to find anything... assuming " + ((ServerInfo)serverPick.SelectedItem).IpAddress);
+                    _settingFile.Write("Server", ((ServerInfo)serverPick.SelectedItem).IpAddress);
+                }
+
+                Log.Debug("SERVERLIST: Re-Checking if server is set on INI File");
+                if (_settingFile.KeyExists("Server")) {
+                    Log.Debug("SERVERLIST: Found something!");
                     _skipServerTrigger = true;
 
-                    if (_slresponse.Contains(_settingFile.Read("Server")))
-                    {
+                    Log.Debug("SERVERLIST: Checking if server exists on our database");
 
-						var index =
-                            finalItems.FindIndex(i => string.Equals(i.IpAddress, _settingFile.Read("Server")));
+                    if (_slresponse.Contains(_settingFile.Read("Server").Replace("/", "\\/"))) {
+                        Log.Debug("SERVERLIST: Server found! Checking ID");
+                        var index = finalItems.FindIndex(i => string.Equals(i.IpAddress, _settingFile.Read("Server")));
 
-						if (index >= 0)
-                        {
+                        Log.Debug("SERVERLIST: ID is " + index);
+                        if (index >= 0) {
+                            Log.Debug("SERVERLIST: ID set correctly");
                             serverPick.SelectedIndex = index;
                         }
-					}
-                    else
-                    {
+					} else {
+                        Log.Debug("SERVERLIST: Unable to find anything, assuming default");
                         serverPick.SelectedIndex = 1;
+                        Log.Debug("SERVERLIST: Deleting unknown entry");
                         _settingFile.DeleteKey("Server");
                     }
 
-                    if (serverPick.SelectedIndex == 1)
-                    {
+                    Log.Debug("SERVERLIST: Triggering server change");
+                    if (serverPick.SelectedIndex == 1) {
                         serverPick_SelectedIndexChanged(sender, e);
                     }
+                    Log.Debug("SERVERLIST: All done");
                 }
             }
 
@@ -776,7 +778,12 @@ namespace GameLauncher
 
             if (_serverlistloaded)
             {
-				try { _settingFile.Write("Server", ((ServerInfo)serverPick.SelectedItem).IpAddress); } catch { }
+				try {
+                    if (!(serverPick.SelectedItem is ServerInfo server)) return;
+                    _settingFile.Write("Server", server.IpAddress); 
+                } catch {
+                    
+                }
             }
 
             if (_windowMoved)
@@ -790,18 +797,6 @@ namespace GameLauncher
             Process[] allOfThem = Process.GetProcessesByName("nfsw");
             foreach (var oneProcess in allOfThem) {
                 Process.GetProcessById(oneProcess.Id).Kill();
-            }
-
-            if (_nfswPid != 0)
-            {
-                try
-                {
-                    Process.GetProcessById(_nfswPid).Kill();
-                }
-                catch
-                {
-                    // ignored
-                }
             }
 
             //Kill DiscordRPC
