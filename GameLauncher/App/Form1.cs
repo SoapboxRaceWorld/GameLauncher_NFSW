@@ -684,7 +684,8 @@ namespace GameLauncher
                 Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
                 if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/lightfx.dll")) {
                     try {
-                        string tempNameZip = Path.GetTempFileName();
+                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/lightfx.dll", new WebClientWithTimeout().DownloadData("http://launcher.soapboxrace.world/lightfx.dll"));
+                        /*string tempNameZip = Path.GetTempFileName();
 
                         File.WriteAllBytes(tempNameZip, ExtractResource.AsByte("GameLauncher.SoapBoxModules.lightfx.zip"));
 
@@ -693,7 +694,7 @@ namespace GameLauncher
                                 string fullName = entry.FullName;
                                 entry.ExtractToFile(Path.Combine(_settingFile.Read("InstallationDirectory"), fullName));
                             }
-                        }
+                        }*/
                     } catch(Exception ex) {
                         Log.Error(ex.Message);
                         ConsoleLog("Failed to fetch 'lightfx.dll' module. Freeroam might not work correctly.", "error");
