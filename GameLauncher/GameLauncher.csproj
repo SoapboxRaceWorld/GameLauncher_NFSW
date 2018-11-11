@@ -272,6 +272,7 @@
     <EmbeddedResource Include="SoapBoxModules\global.ini" />
     <EmbeddedResource Include="wine_opts.reg" />
     <EmbeddedResource Include="SoapBoxModules\cursor.ani" />
+    <EmbeddedResource Include="SoapBoxModules\lightfx.zip" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
