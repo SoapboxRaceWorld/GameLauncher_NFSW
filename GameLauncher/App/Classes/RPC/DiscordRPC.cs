@@ -44,12 +44,6 @@ namespace GameLauncher.App.Classes.RPC {
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');
 
-            //fetch stats//
-            if(uri == "/User/GetPermanentSession") {
-                SBRW_XML.LoadXml(serverreply);
-                Console.WriteLine(serverreply);
-            }
-
             /*if(uri == "/DriverPersona/GetPersonaBaseFromList" && POST != String.Empty) {
                 SBRW_XML.LoadXml(serverreply);
                 String PersonaFriend = SBRW_XML.SelectSingleNode("ArrayOfPersonaBase/PersonaBase/Name").InnerText;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Flurl.Http.Content;
@@ -97,10 +98,10 @@ namespace GameLauncher.App.Classes.Proxy
                     }
             }
 
-            String replyToServer;
+            String replyToServer = String.Empty;
 
             if(fixedPath == "/User/GetPermanentSession") {
-                replyToServer = response.Content.ReadAsStringAsync().Result.Replace("¤ ", "SBx").Replace("¤", "SBx");
+                replyToServer = Regex.Replace(response.Content.ReadAsStringAsync().Result, @"<Name>(.*?)(\W\s|\W)(.*?)<\/Name>", "<Name>$1$3</Name>", RegexOptions.Multiline);
             } else {
                 replyToServer = response.Content.ReadAsStringAsync().Result;
             }
