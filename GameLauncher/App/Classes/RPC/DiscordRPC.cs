@@ -45,8 +45,7 @@ namespace GameLauncher.App.Classes.RPC {
             string[] splitted_uri = uri.Split('/');
 
             //fetch stats//
-            
-            if(uri == "/Session/GetChatInfo") {
+            if(uri == "/User/GetPermanentSession") {
                 SBRW_XML.LoadXml(serverreply);
                 Console.WriteLine(serverreply);
             }
