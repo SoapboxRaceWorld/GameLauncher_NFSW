@@ -9,5 +9,3 @@ A Rewrite of GameLauncher taken from Need For Speed: World
 
 ### Screenshot
 ![](screenshot.png)
-
-(Planned look, final release may vary)
