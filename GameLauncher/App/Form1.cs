@@ -1163,7 +1163,6 @@ namespace GameLauncher {
                         var json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
                         try
                         {
-                            _realServername = json.serverName;
                             imageServerName.Text = json.serverName;
                             if (!string.IsNullOrEmpty(json.bannerUrl))
                             {
