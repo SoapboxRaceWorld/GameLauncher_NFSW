@@ -97,7 +97,7 @@
             // 
             // email
             // 
-            this.email.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.email.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(28)))), ((int)(((byte)(36)))));
             this.email.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.email.Font = new System.Drawing.Font("Arial", 14F);
             this.email.ForeColor = System.Drawing.Color.White;
@@ -108,7 +108,7 @@
             // 
             // password
             // 
-            this.password.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.password.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(28)))), ((int)(((byte)(36)))));
             this.password.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.password.Font = new System.Drawing.Font("Arial", 14F);
             this.password.ForeColor = System.Drawing.Color.White;
@@ -281,7 +281,7 @@
             // 
             // registerEmail
             // 
-            this.registerEmail.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.registerEmail.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(28)))), ((int)(((byte)(36)))));
             this.registerEmail.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.registerEmail.Font = new System.Drawing.Font("Arial", 14F);
             this.registerEmail.ForeColor = System.Drawing.Color.White;
@@ -292,7 +292,7 @@
             // 
             // registerTicket
             // 
-            this.registerTicket.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.registerTicket.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(28)))), ((int)(((byte)(36)))));
             this.registerTicket.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.registerTicket.Font = new System.Drawing.Font("Arial", 14F);
             this.registerTicket.ForeColor = System.Drawing.Color.White;
@@ -303,7 +303,7 @@
             // 
             // registerPassword
             // 
-            this.registerPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.registerPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(28)))), ((int)(((byte)(36)))));
             this.registerPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.registerPassword.Font = new System.Drawing.Font("Arial", 14F);
             this.registerPassword.ForeColor = System.Drawing.Color.White;

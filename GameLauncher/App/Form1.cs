@@ -124,25 +124,6 @@ namespace GameLauncher
             }
         }
 
-        public void ConsoleLog(string e, string type)
-        {
-            switch (type)
-            {
-                case "warning":
-                    break;
-                case "info":
-                    break;
-                case "error":
-                    Shake();
-                    MessageBox.Show(null, e, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    break;
-                case "success":
-                    break;
-                case "ping":
-                    break;
-            }
-        }
-
         public MainScreen(Form splashscreen) {
             Log.Debug("Entered mainScreen");
             _splashscreen = splashscreen;
@@ -697,7 +678,7 @@ namespace GameLauncher
                         }*/
                     } catch(Exception ex) {
                         Log.Error(ex.Message);
-                        ConsoleLog("Failed to fetch 'lightfx.dll' module. Freeroam might not work correctly.", "error");
+                        MessageBox.Show(null, "Failed to fetch 'lightfx.dll' module. Freeroam might not work correctly.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
                     Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/modules");
@@ -987,12 +968,9 @@ namespace GameLauncher
                 }
             }
 
-            if (string.IsNullOrEmpty(serverLoginResponse))
-            {
-                ConsoleLog("Server seems to be offline.", "error");
-            }
-            else
-            {
+            if (string.IsNullOrEmpty(serverLoginResponse)) {
+                MessageBox.Show(null, "Server seems to be offline.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } else {
                 try
                 {
                     var sbrwXml = new XmlDocument();
@@ -1049,8 +1027,8 @@ namespace GameLauncher
                                 }
                             }
                         }
+                        MessageBox.Show(null, msgBoxInfo, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                        ConsoleLog(msgBoxInfo, "error");
                     } else {
                         _userId = userIdNode.InnerText;
                         _loginToken = loginTokenNode.InnerText;
@@ -1066,7 +1044,7 @@ namespace GameLauncher
                         LoggedInFormElements(true);
                     }
                 } catch(Exception ex) {
-                    ConsoleLog("An error occured. Please contact developer with this details:\n\nServerName: " + _realServername + "\nIP: " + _serverIp + "\nError: " + ex.Message, "error");
+                    MessageBox.Show(null, "An error occured. Please contact developer with this details:\n\nServerName: " + _realServername + "\nIP: " + _serverIp + "\nError: " + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1810,17 +1788,18 @@ namespace GameLauncher
                                         msgBoxInfo += "\n" + "Banned forever.";
                                     }
 
-                                    ConsoleLog(msgBoxInfo, "error");
+                                    MessageBox.Show(null, msgBoxInfo, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 } else {
                                     if (extraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?") {
                                         msgBoxInfo = "Launcher tampering detected. Please use original build.";
-                                        ConsoleLog(msgBoxInfo, "error");
+                                        MessageBox.Show(null, msgBoxInfo, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     } else {
                                         if (sbrwXml.SelectSingleNode("html/body") == null) {
-                                            ConsoleLog(extraNode.InnerText, "error");
-                                        } else {
+                                            MessageBox.Show(null, msgBoxInfo, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        }
+                                        else {
                                             msgBoxInfo = "ERROR " + _errorcode + ": " + extraNode.InnerText;
-                                            ConsoleLog(msgBoxInfo, "error");
+                                            MessageBox.Show(null, msgBoxInfo, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                         }
                                     }
                                 }
