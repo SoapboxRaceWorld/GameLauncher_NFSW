@@ -47,8 +47,8 @@ namespace GameLauncher {
             if (!File.Exists("LZMA.dll"))
                 File.WriteAllBytes("LZMA.dll", ExtractResource.AsByte("GameLauncher.LZMA.LZMA.dll"));
 
-            /*if (!DetectLinux.UnixDetected() && !File.Exists("discord-rpc.dll"))
-                File.WriteAllBytes("discord-rpc.dll", ExtractResource.AsByte("GameLauncher.Discord.discord-rpc.dll"));*/
+            if (!DetectLinux.UnixDetected() && !File.Exists("discord-rpc.dll"))
+                File.WriteAllBytes("discord-rpc.dll", ExtractResource.AsByte("GameLauncher.Discord.discord-rpc.dll"));
 
             if (DetectLinux.LinuxDetected() && !File.Exists("libdiscord-rpc.so"))
                 File.WriteAllBytes("libdiscord-rpc.so", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.so"));
