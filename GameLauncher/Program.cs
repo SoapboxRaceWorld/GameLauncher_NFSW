@@ -17,6 +17,11 @@ namespace GameLauncher {
         internal static void Main() {
             File.Delete("log.txt");
 
+            /*foreach (string dll in Directory.GetFiles(Path.GetDirectoryName(Application.ExecutablePath), "*.dll")) { 
+                var versionInfo = FileVersionInfo.GetVersionInfo(dll);
+                string version = versionInfo.ProductVersion;
+            }*/
+
             Log.Debug("GameLauncher v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 7));            
             Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
@@ -82,24 +87,44 @@ namespace GameLauncher {
                 try {
                     if (mutex.WaitOne(0, false)) {
                         string[] files = {
-                            "Newtonsoft.Json.dll",
-                            "INIFileParser.dll",
-                            "Microsoft.WindowsAPICodePack.dll",
-                            "Microsoft.WindowsAPICodePack.Shell.dll",
-                            "Flurl.dll",
-                            "Flurl.Http.dll",
+                            "Bugsnag.dll - 2.2.0",
+                            "Flurl.dll - 2.8.0",
+                            "Flurl.Http.dll - 2.3.2",
+                            "INIFileParser.dll - 2.5.2",
+                            "Microsoft.WindowsAPICodePack.dll - 1.1.0.0",
+                            "Microsoft.WindowsAPICodePack.Shell.dll - 1.1.0.0",
+                            "Nancy.dll - 1.4.4",
+                            "Nancy.Hosting.Self.dll - 1.4.1",
+                            "Newtonsoft.Json.dll - 11.0.2",
                         };
 
                         var missingfiles = new List<string>();
 
                         foreach (var file in files) {
-                            if (!File.Exists(file)) {
-                                missingfiles.Add(file);
+                            var splitFileVersion = file.Split(new string[] { " - " }, StringSplitOptions.None);
+
+                            if (!File.Exists(splitFileVersion[0])) {
+                                missingfiles.Add(splitFileVersion[0] + " - Not Found");
+                            } else {
+                                try { 
+                                    var versionInfo = FileVersionInfo.GetVersionInfo(splitFileVersion[0]);
+                                    string version = versionInfo.ProductVersion;
+
+                                    if(version == "") {
+                                        missingfiles.Add(splitFileVersion[0] + " - Invalid File");
+                                    } else { 
+                                        if(version != splitFileVersion[1]) {
+                                            missingfiles.Add(splitFileVersion[0] + " - Invalid Version (" + splitFileVersion[1] + " != " + version + ")");
+                                        }
+                                    }
+                                } catch {
+                                    missingfiles.Add(splitFileVersion[0] + " - Invalid File");
+                                }
                             }
                         }
 
                         if (missingfiles.Count != 0) {
-                            var message = "Cannot launch GameLauncher. The following files are missing:\n\n";
+                            var message = "Cannot launch GameLauncher. The following files are invalid:\n\n";
 
                             foreach (var file in missingfiles) {
                                 message += "• " + file + "\n";
