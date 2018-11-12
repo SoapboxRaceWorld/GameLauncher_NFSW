@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Windows;
 using IniParser;
 using IniParser.Model;
 
@@ -39,8 +40,10 @@ namespace GameLauncher.App.Classes {
         }
 
         public void DeleteKey(string Key) {
-			Data[EXE].RemoveKey(Key);
-            Parser.WriteFile(Path, Data);
+            try {
+			    Data[EXE].RemoveKey(Key);
+                Parser.WriteFile(Path, Data);
+            } catch { }
         }
 
         public void DeleteSection(string Section) {
