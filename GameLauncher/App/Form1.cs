@@ -44,6 +44,8 @@ namespace GameLauncher {
         private bool _allowRegistration;
         private bool _isDownloading = true;
 
+        private bool _disabledModNet;
+
         private int _lastSelectedServerId;
         private int _nfswPid;
         private Thread _nfswstarted;
@@ -152,6 +154,10 @@ namespace GameLauncher {
                 Log.Debug("Applying Fonts");
                 ApplyEmbeddedFonts();
             }
+
+            //SETTINGS
+            _disabledModNet = (_settingFile.KeyExists("ModNetDisabled") && _settingFile.Read("ModNetDisabled") == "1") ? true : false;
+            //SETTINGS
 
             Log.Debug("Setting launcher location");
             if (_settingFile.KeyExists("LauncherPosX") || _settingFile.KeyExists("LauncherPosY")) {
@@ -310,8 +316,12 @@ namespace GameLauncher {
                 MessageBox.Show(null, "Failed to connect to internet. Please check if your firewall is not blocking launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            Log.Debug("Loading ModManager Cache");
-            ModManager.LoadModCache();
+            if(_disabledModNet == false) { 
+                Log.Debug("Loading ModManager Cache");
+                ModManager.LoadModCache();
+            } else {
+                ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
+            }
         }
 
         private void comboBox1_DrawItem(object sender, DrawItemEventArgs e)
@@ -678,27 +688,7 @@ namespace GameLauncher {
                 closebtn_Click(null, null);
             }
 
-            Log.Debug("Installing ModNet");
-            //ModNet
-            try
-            {
-                Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
-                if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/dinput8.dll"))
-                {
-                    File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/dinput8.dll",
-                        ExtractResource.AsByte("GameLauncher.SoapBoxModules.dinput8.dll"));
-                    Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/scripts");
-                    File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/scripts/global.ini",
-                        ExtractResource.AsString("GameLauncher.SoapBoxModules.global.ini"));
-                    File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/ModManager.asi",
-                        ExtractResource.AsByte("GameLauncher.SoapBoxModules.ModManager.dll"));
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-                MessageBox.Show(null, ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            modNetCheckbox.Checked = _disabledModNet;
 
             Log.Debug("Hiding RegisterFormElements"); RegisterFormElements(false);
             Log.Debug("Hiding SettingsFormElements"); SettingsFormElements(false);
@@ -1404,6 +1394,9 @@ namespace GameLauncher {
             Log.Debug("Applying AkrobatSemiBold mainScreen to registerText");               registerText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             Log.Debug("Applying cdnText mainScreen to settingsGamePathText");               cdnText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+
+            Log.Debug("Applying modNetCheckbox mainScreen to rememberMe");                  modNetCheckbox.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+
         }
 
         private void registerText_LinkClicked(object sender, EventArgs e)
@@ -1863,11 +1856,13 @@ namespace GameLauncher {
             _settingFile.Write("Language", settingsLanguage.SelectedValue.ToString());
             _settingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString());
             _settingFile.Write("CDN", cdnPick.SelectedValue.ToString());
+            _settingFile.Write("ModNetDisabled", (modNetCheckbox.Checked == true) ? "1" : "0");
+
+            _disabledModNet = modNetCheckbox.Checked;
 
             var userSettingsXml = new XmlDocument();
 
-            try
-            { 
+            try { 
                 if (File.Exists(_userSettings)) {
                     try  {
                         userSettingsXml.Load(_userSettings);
@@ -1970,6 +1965,7 @@ namespace GameLauncher {
             settingsGameFiles.Visible = hideElements;
             settingsGameFilesCurrent.Visible = hideElements;
             settingsGamePathText.Visible = hideElements;
+            modNetCheckbox.Visible = hideElements;
         }
 
         private void StartGame(string userId, string loginToken, string serverIp, Form x) {
@@ -2117,13 +2113,33 @@ namespace GameLauncher {
 
             var serverInfo = (ServerInfo)serverPick.SelectedItem;
 
-            if (serverInfo.DistributionUrl != "" && serverInfo.Id != "nfsw")
-            {
-                DownloadMods(serverInfo.Id);
-            }
-            else
-            {
-                ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
+            if (_disabledModNet == false) {
+                Log.Debug("Installing ModNet");
+                try {
+                    Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
+                    if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/dinput8.dll")) {
+                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/dinput8.dll",
+                            ExtractResource.AsByte("GameLauncher.SoapBoxModules.dinput8.dll"));
+                        Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/scripts");
+                        File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/scripts/global.ini",
+                            ExtractResource.AsString("GameLauncher.SoapBoxModules.global.ini"));
+                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/ModManager.asi",
+                            ExtractResource.AsByte("GameLauncher.SoapBoxModules.ModManager.dll"));
+                    }
+                } catch (Exception) { }
+
+                if (serverInfo.DistributionUrl != "" && serverInfo.Id != "nfsw") {
+                    DownloadMods(serverInfo.Id);
+                } else {
+                    ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
+                }
+            } else {
+                try {
+                    File.Delete(_settingFile.Read("InstallationDirectory") + "/dinput8.dll");
+                    File.Delete(_settingFile.Read("InstallationDirectory") + "/ModManager.asi");
+                    File.Delete(_settingFile.Read("InstallationDirectory") + "/scripts/global.ini");
+                }
+                catch (Exception) { }
             }
 
             try
@@ -2164,7 +2180,6 @@ namespace GameLauncher {
                             MessageBox.Show(null, "Please close the game before closing launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }));
 
-                        Text = "NEED FOR SPEED™ WORLD";
                         Update();
                         Refresh();
 

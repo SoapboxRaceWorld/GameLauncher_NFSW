@@ -74,6 +74,7 @@
             this.registerText = new System.Windows.Forms.Button();
             this.cdnText = new System.Windows.Forms.Label();
             this.cdnPick = new System.Windows.Forms.ComboBox();
+            this.modNetCheckbox = new System.Windows.Forms.CheckBox();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
@@ -619,6 +620,19 @@
             this.cdnPick.Size = new System.Drawing.Size(210, 21);
             this.cdnPick.TabIndex = 84;
             // 
+            // modNetCheckbox
+            // 
+            this.modNetCheckbox.AutoSize = true;
+            this.modNetCheckbox.BackColor = System.Drawing.Color.Transparent;
+            this.modNetCheckbox.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.modNetCheckbox.ForeColor = System.Drawing.Color.White;
+            this.modNetCheckbox.Location = new System.Drawing.Point(46, 275);
+            this.modNetCheckbox.Name = "modNetCheckbox";
+            this.modNetCheckbox.Size = new System.Drawing.Size(130, 19);
+            this.modNetCheckbox.TabIndex = 87;
+            this.modNetCheckbox.Text = "DISABLE MODNET";
+            this.modNetCheckbox.UseVisualStyleBackColor = false;
+            // 
             // extractingProgress
             // 
             this.extractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -658,6 +672,7 @@
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.modNetCheckbox);
             this.Controls.Add(this.cdnPick);
             this.Controls.Add(this.cdnText);
             this.Controls.Add(this.ServerStatusIcon);
@@ -694,7 +709,6 @@
             this.Controls.Add(this.extractingProgress);
             this.Controls.Add(this.playProgress);
             this.Controls.Add(this.email);
-            this.Controls.Add(this.imageServerName);
             this.Controls.Add(this.verticalBanner);
             this.Controls.Add(this.settingsSave);
             this.Controls.Add(this.registerCancel);
@@ -702,6 +716,7 @@
             this.Controls.Add(this.registerButton);
             this.Controls.Add(this.playButton);
             this.Controls.Add(this.registerText);
+            this.Controls.Add(this.imageServerName);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -769,5 +784,6 @@
         private System.Windows.Forms.Button registerText;
         private System.Windows.Forms.Label cdnText;
         private System.Windows.Forms.ComboBox cdnPick;
+        private System.Windows.Forms.CheckBox modNetCheckbox;
     }
 }
