@@ -152,9 +152,6 @@
     <Compile Include="App\Classes\Downloader\ShowMessage.cs" />
     <Compile Include="App\Classes\Downloader\UncompressionException.cs" />
     <Compile Include="App\Classes\Downloader\VerifyCommand.cs" />
-    <Compile Include="App\Classes\DropShadow.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="App\Classes\Events\About.cs">
       <SubType>Form</SubType>
     </Compile>

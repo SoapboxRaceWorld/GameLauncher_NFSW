@@ -72,10 +72,10 @@
             this.ServerStatusText = new System.Windows.Forms.Label();
             this.ServerStatusIcon = new System.Windows.Forms.PictureBox();
             this.registerText = new System.Windows.Forms.Button();
-            this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
-            this.playProgress = new GameLauncherReborn.ProgressBarEx();
             this.cdnText = new System.Windows.Forms.Label();
             this.cdnPick = new System.Windows.Forms.ComboBox();
+            this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
+            this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
@@ -315,7 +315,7 @@
             // 
             // registerConfirmPassword
             // 
-            this.registerConfirmPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.registerConfirmPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(28)))), ((int)(((byte)(36)))));
             this.registerConfirmPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.registerConfirmPassword.Font = new System.Drawing.Font("Arial", 14F);
             this.registerConfirmPassword.ForeColor = System.Drawing.Color.White;
@@ -594,6 +594,31 @@
             this.registerText.Text = "REGISTER";
             this.registerText.UseVisualStyleBackColor = false;
             // 
+            // cdnText
+            // 
+            this.cdnText.AutoSize = true;
+            this.cdnText.BackColor = System.Drawing.Color.Transparent;
+            this.cdnText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.cdnText.ForeColor = System.Drawing.Color.White;
+            this.cdnText.Location = new System.Drawing.Point(296, 194);
+            this.cdnText.Name = "cdnText";
+            this.cdnText.Size = new System.Drawing.Size(45, 18);
+            this.cdnText.TabIndex = 83;
+            this.cdnText.Text = "CDN:";
+            this.cdnText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // cdnPick
+            // 
+            this.cdnPick.BackColor = System.Drawing.Color.White;
+            this.cdnPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cdnPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.cdnPick.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.cdnPick.FormattingEnabled = true;
+            this.cdnPick.Location = new System.Drawing.Point(299, 218);
+            this.cdnPick.Name = "cdnPick";
+            this.cdnPick.Size = new System.Drawing.Size(210, 21);
+            this.cdnPick.TabIndex = 84;
+            // 
             // extractingProgress
             // 
             this.extractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -626,31 +651,6 @@
             this.playProgress.RoundedCorners = false;
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
-            // 
-            // cdnText
-            // 
-            this.cdnText.AutoSize = true;
-            this.cdnText.BackColor = System.Drawing.Color.Transparent;
-            this.cdnText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.cdnText.ForeColor = System.Drawing.Color.White;
-            this.cdnText.Location = new System.Drawing.Point(296, 194);
-            this.cdnText.Name = "cdnText";
-            this.cdnText.Size = new System.Drawing.Size(45, 18);
-            this.cdnText.TabIndex = 83;
-            this.cdnText.Text = "CDN:";
-            this.cdnText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // cdnPick
-            // 
-            this.cdnPick.BackColor = System.Drawing.Color.White;
-            this.cdnPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cdnPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.cdnPick.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
-            this.cdnPick.FormattingEnabled = true;
-            this.cdnPick.Location = new System.Drawing.Point(299, 218);
-            this.cdnPick.Name = "cdnPick";
-            this.cdnPick.Size = new System.Drawing.Size(210, 21);
-            this.cdnPick.TabIndex = 84;
             // 
             // MainScreen
             // 

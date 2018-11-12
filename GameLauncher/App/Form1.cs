@@ -23,7 +23,6 @@ using GameLauncher.HashPassword;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
-using ShadowDemo;
 using Security;
 using GameLauncher.App.Classes.Logger;
 using System.IO.Compression;
@@ -352,18 +351,6 @@ namespace GameLauncher
 
         private void mainScreen_Load(object sender, EventArgs e) {
             Log.Debug("Entering mainScreen_Load");
-
-            if(!DetectLinux.UnixDetected()) {
-                Log.Debug("Applying Shadows");
-
-                var f = new Dropshadow(this) {
-                    ShadowBlur = 40,
-                    ShadowSpread = -28,
-                    ShadowColor = Color.Black
-                };
-
-                f.RefreshShadow();
-            }
 
             Log.Debug("Setting WindowName");
             Text = "GameLauncherReborn v" + Application.ProductVersion;
@@ -1418,6 +1405,8 @@ namespace GameLauncher
 
             Log.Debug("Applying AkrobatSemiBold mainScreen to registerButton");             registerButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             Log.Debug("Applying AkrobatSemiBold mainScreen to registerText");               registerText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+
+            Log.Debug("Applying cdnText mainScreen to settingsGamePathText");               cdnText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
         }
 
         private void registerText_LinkClicked(object sender, EventArgs e)
