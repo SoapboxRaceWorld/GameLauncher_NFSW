@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
+using Bugsnag;
 using GameLauncher.App;
 using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Logger;
@@ -126,6 +127,9 @@ namespace GameLauncher {
         }
 
         static void UnhandledExceptionEventHandler(object sender, UnhandledExceptionEventArgs e) {
+            Bugsnag.Client bugsnag = new Bugsnag.Client(new Configuration("ba9a1f366203b461b2f031a12b9a0e41"));
+            bugsnag.Notify((Exception)e.ExceptionObject);
+
             Log.Error(((Exception)e.ExceptionObject).Message);
             using (ThreadExceptionDialog dialog = new ThreadExceptionDialog((Exception)e.ExceptionObject)) {
                 dialog.ShowDialog();
@@ -136,6 +140,9 @@ namespace GameLauncher {
         }
 
         static void ThreadExceptionEventHandler(object sender, ThreadExceptionEventArgs e) {
+            Bugsnag.Client bugsnag = new Bugsnag.Client(new Configuration("ba9a1f366203b461b2f031a12b9a0e41"));
+            bugsnag.Notify(e.Exception);
+
             Log.Error(e.Exception.Message);
 
             using (ThreadExceptionDialog dialog = new ThreadExceptionDialog(e.Exception)) {

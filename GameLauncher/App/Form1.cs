@@ -27,10 +27,8 @@ using Security;
 using GameLauncher.App.Classes.Logger;
 using System.IO.Compression;
 
-namespace GameLauncher
-{
-    public sealed partial class MainScreen : Form
-    {
+namespace GameLauncher {
+    public sealed partial class MainScreen : Form {
         private Point _mouseDownPoint = Point.Empty;
         private bool _loginEnabled;
         private bool _serverEnabled;
@@ -1428,7 +1426,7 @@ namespace GameLauncher
                 var serverInfo = (ServerInfo)serverPick.SelectedItem;
                 Uri resetPasswordUrl = new Uri(serverInfo.IpAddress + "/RecoveryPassword/forgotPassword");
 
-                var request = (HttpWebRequest)WebRequest.Create(resetPasswordUrl);
+                var request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
                 var postData = "email="+send;
                 var data = Encoding.ASCII.GetBytes(postData);
                 request.Method = "POST";

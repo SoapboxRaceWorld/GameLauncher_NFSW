@@ -36,7 +36,8 @@ namespace GameLauncherReborn {
         protected override WebRequest GetWebRequest(Uri address) {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
             request.UserAgent = "GameLauncher (+https://github.com/SoapboxRaceWorld/GameLauncher_NFSW)";
-		    request.Headers["X-HWID"] = Security.FingerPrint.Value();
+            request.Headers["X-HWID"] = Security.FingerPrint.Value();
+            request.Headers["X-UserAgent"] = "GameLauncherReborn "+Application.ProductVersion+" WinForms (+https://github.com/SoapboxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = Value();
             request.Timeout = 30000;
 
