@@ -150,5 +150,19 @@ namespace GameLauncherReborn {
 
             return sb.ToString();
         }
+
+        public static bool CheckArchitectureFile(string fileName) {
+            const int PE_POINTER_OFFSET = 60;
+            const int MACHINE_OFFSET = 4;
+            byte[] data = new byte[4096];
+
+            using (Stream s = new FileStream(fileName, FileMode.Open, FileAccess.Read)) {
+                s.Read(data, 0, 4096);
+            }
+
+            int PE_HEADER_ADDR = BitConverter.ToInt32(data, PE_POINTER_OFFSET);
+            int machineUint = BitConverter.ToUInt16(data, PE_HEADER_ADDR + MACHINE_OFFSET);
+            return machineUint == 0x014c;
+        }
     }
 }
