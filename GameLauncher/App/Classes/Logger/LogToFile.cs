@@ -11,9 +11,13 @@ namespace GameLauncher.App.Classes.Logger
     {
         private static void _toFile(string text, string errorname = "DEBUG")
         {
-            using (StreamWriter stream = new StreamWriter("log.txt", true))
-            {
-                stream.WriteLine("[" + errorname + "] " + text);
+
+            try { 
+                using (StreamWriter stream = new StreamWriter("log.txt", true)) {
+                    stream.WriteLine("[" + errorname + "] " + text);
+                    Console.WriteLine("[" + errorname + "] " + text);
+                }
+            } catch {
                 Console.WriteLine("[" + errorname + "] " + text);
             }
         }
