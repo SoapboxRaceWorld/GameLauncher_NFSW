@@ -759,7 +759,11 @@ namespace GameLauncher {
                 _settingFile.Write("LauncherPosY", Location.Y.ToString());
             }
 
-            _settingFile.Write("InstallationDirectory", Path.GetFullPath(_settingFile.Read("InstallationDirectory")));
+            try { 
+                _settingFile.Write("InstallationDirectory", Path.GetFullPath(_settingFile.Read("InstallationDirectory")));
+            } catch {
+                _settingFile.Write("InstallationDirectory", _settingFile.Read("InstallationDirectory"));
+            }
 
             Process[] allOfThem = Process.GetProcessesByName("nfsw");
             foreach (var oneProcess in allOfThem) {
