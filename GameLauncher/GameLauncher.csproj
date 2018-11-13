@@ -286,7 +286,6 @@
   <ItemGroup>
     <None Include="Resources\registerButton_en.png" />
     <None Include="Resources\buttons_info.png" />
-    <EmbeddedResource Include="LZMA\LZMA.dll" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\playbutton_hover.png" />

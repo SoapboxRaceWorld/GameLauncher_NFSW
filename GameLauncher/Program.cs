@@ -17,11 +17,6 @@ namespace GameLauncher {
         internal static void Main() {
             File.Delete("log.txt");
 
-            /*foreach (string dll in Directory.GetFiles(Path.GetDirectoryName(Application.ExecutablePath), "*.dll")) { 
-                var versionInfo = FileVersionInfo.GetVersionInfo(dll);
-                string version = versionInfo.ProductVersion;
-            }*/
-
             Log.Debug("GameLauncher v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 7));            
             Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
@@ -38,15 +33,6 @@ namespace GameLauncher {
                 Environment.Exit(0);
             }
 
-            try {
-                Log.Debug("Deleting temporary files");
-                File.Delete(Directory.GetCurrentDirectory() + "\\tempname.zip");
-            } catch { /* ignored */ }
-
-
-            if (!File.Exists("LZMA.dll"))
-                File.WriteAllBytes("LZMA.dll", ExtractResource.AsByte("GameLauncher.LZMA.LZMA.dll"));
-
             if (!DetectLinux.UnixDetected() && !File.Exists("discord-rpc.dll"))
                 File.WriteAllBytes("discord-rpc.dll", ExtractResource.AsByte("GameLauncher.Discord.discord-rpc.dll"));
 
@@ -55,9 +41,6 @@ namespace GameLauncher {
 
             if (DetectLinux.MacOSDetected() && !File.Exists("libdiscord-rpc.dylib"))
                 File.WriteAllBytes("libdiscord-rpc.dylib", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.dylib"));
-
-            if (File.Exists("GL_Update.exe")) 
-				File.Delete("GL_Update.exe");
 
 			if(!File.Exists("GameLauncherUpdater.exe")) {
 				try {
