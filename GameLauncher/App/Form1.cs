@@ -78,6 +78,7 @@ namespace GameLauncher {
         private string _presenceImageKey;
         private string _NFSW_Installation_Source;
         private string _realServername;
+        private string _realServernameBanner;
         private string _OS;
 
         private Point _startPoint = new Point(38, 144);
@@ -1059,10 +1060,11 @@ namespace GameLauncher {
         private void serverPick_SelectedIndexChanged(object sender, EventArgs e)
         {
             var serverInfo = (ServerInfo)serverPick.SelectedItem;
-            _realServername = serverInfo.Name; //Its not real, but it solves some issues.
 
-            if (serverInfo.IsSpecial)
-            {
+            _realServername = serverInfo.Name;
+            _realServernameBanner = serverInfo.Name;
+
+            if (serverInfo.IsSpecial) {
                 serverPick.SelectedIndex = _lastSelectedServerId;
                 return;
             }
@@ -1089,9 +1091,9 @@ namespace GameLauncher {
             verticalBanner.Image = null;
             verticalBanner.BackColor = Color.Transparent;
 
-            var serverIp = ((ServerInfo)serverPick.SelectedItem).IpAddress;
+            var serverIp = serverInfo.IpAddress;
             string numPlayers;
-            var serverName = ((ServerInfo)serverPick.SelectedItem).Name;
+            var serverName = serverInfo.Name;
 
             var wordsArray = serverName.Split();
             var richPresenceIconId = ((wordsArray.Length == 1) ? wordsArray[0] : wordsArray[0] + wordsArray[1]).ToLower();
@@ -1153,7 +1155,7 @@ namespace GameLauncher {
                     } else {
                         var json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
                         try {
-                            imageServerName.Text = json.serverName;
+                            _realServernameBanner = json.serverName;
                             if (!string.IsNullOrEmpty(json.bannerUrl)) {
                                 Uri uriResult;
                                 bool result;
@@ -1165,14 +1167,7 @@ namespace GameLauncher {
                                 }
 
                                 if (result) {
-                                    HttpWebRequest wrq = (HttpWebRequest)WebRequest.Create(json.bannerUrl);
-                                    wrq.Method = "HEAD";
-                                    var wrs = (HttpWebResponse)wrq.GetResponse();
-                                    if(wrs.ContentLength <= 1000000) {
-                                        verticalImageUrl = json.bannerUrl;
-                                    } else {
-                                        verticalImageUrl = null;
-                                    }
+                                    verticalImageUrl = json.bannerUrl;
                                 } else {
                                     verticalImageUrl = null;
                                 }
@@ -1241,12 +1236,17 @@ namespace GameLauncher {
                         WebClientWithTimeout client2 = new WebClientWithTimeout();
                         Uri stringToUri3 = new Uri(verticalImageUrl);
                         client2.DownloadDataAsync(stringToUri3);
+                        client2.DownloadProgressChanged += (sender4, e4) => {
+                            if (e4.TotalBytesToReceive > 2000000) {
+                                client2.CancelAsync();
+                            }
+                        };
+
                         client2.DownloadDataCompleted += (sender4, e4) => {
                             if (e4.Cancelled) {
-                                client2.CancelAsync();
                                 return;
                             } else if (e4.Error != null) {
-                                //What?
+                                return;
                             } else {
                                 try {
                                     Image image;
@@ -1254,6 +1254,8 @@ namespace GameLauncher {
                                     image = Image.FromStream(memoryStream);
                                     verticalBanner.Image = image;
                                     verticalBanner.BackColor = Color.Black;
+
+                                    imageServerName.Text = _realServernameBanner;
                                 } catch {
                                     verticalBanner.Image = null;
                                 }
