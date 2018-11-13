@@ -1148,66 +1148,50 @@ namespace GameLauncher {
                     _serverEnabled = false;
                     _allowRegistration = false;
                 } else {
-                    if (serverName == "Offline Built-In Server")
-                    {
+                    if (serverName == "Offline Built-In Server") {
                         numPlayers = "∞";
-                    }
-                    else
-                    {
+                    } else {
                         var json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
-                        try
-                        {
+                        try {
                             imageServerName.Text = json.serverName;
-                            if (!string.IsNullOrEmpty(json.bannerUrl))
-                            {
+                            if (!string.IsNullOrEmpty(json.bannerUrl)) {
                                 Uri uriResult;
                                 bool result;
 
-                                try
-                                {
+                                try {
                                     result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-                                }
-                                catch
-                                {
+                                } catch {
                                     result = false;
                                 }
 
-                                if (result)
-                                {
-                                    verticalImageUrl = json.bannerUrl;
-                                }
-                                else
-                                {
+                                if (result) {
+                                    HttpWebRequest wrq = (HttpWebRequest)WebRequest.Create(json.bannerUrl);
+                                    wrq.Method = "HEAD";
+                                    var wrs = (HttpWebResponse)wrq.GetResponse();
+                                    if(wrs.ContentLength <= 1000000) {
+                                        verticalImageUrl = json.bannerUrl;
+                                    } else {
+                                        verticalImageUrl = null;
+                                    }
+                                } else {
                                     verticalImageUrl = null;
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 verticalImageUrl = null;
                             }
-                        }
-                        catch
-                        {
+                        } catch {
                             verticalImageUrl = null;
                         }
 
-                        try
-                        {
-                            if (string.IsNullOrEmpty(json.requireTicket))
-                            {
+                        try {
+                            if (string.IsNullOrEmpty(json.requireTicket)) {
                                 _ticketRequired = true;
-                            }
-                            else if (json.requireTicket == "true")
-                            {
+                            } else if (json.requireTicket == "true") {
                                 _ticketRequired = true;
-                            }
-                            else
-                            {
+                            } else {
                                 _ticketRequired = false;
                             }
-                        }
-                        catch
-                        {
+                        } catch {
                             _ticketRequired = false;
                         }
 
@@ -1227,30 +1211,21 @@ namespace GameLauncher {
                             allowedCountriesLabel.Text = "";
                         }*/
 
-                        if (json.maxUsersAllowed == 0)
-                        {
+                        if (json.maxUsersAllowed == 0) {
                             numPlayers = string.Format("{0}/{1}", json.onlineNumber, json.numberOfRegistered);
-                        }
-                        else
-                        {
+                        } else {
                             numPlayers = string.Format("{0}/{1}", json.onlineNumber, json.maxUsersAllowed.ToString());
                         }
 
                         _allowRegistration = true;
 
-                        try
-                        {
-                            if (json.passwordHashing == "BCRYPT")
-                            {
+                        try {
+                            if (json.passwordHashing == "BCRYPT") {
                                 _passwordHash = "BCRYPT";
-                            }
-                            else
-                            {
+                            } else {
                                 _passwordHash = "SHA1";
                             }
-                        }
-                        catch
-                        {
+                        } catch {
                             _passwordHash = "SHA1";
                         }
 
@@ -1262,34 +1237,24 @@ namespace GameLauncher {
                     ServerStatusDesc.Text = string.Format("players in game - {0}", numPlayers);
                     _serverEnabled = true;
 
-                    if (!string.IsNullOrEmpty(verticalImageUrl))
-                    {
+                    if (!string.IsNullOrEmpty(verticalImageUrl)) {
                         WebClientWithTimeout client2 = new WebClientWithTimeout();
                         Uri stringToUri3 = new Uri(verticalImageUrl);
                         client2.DownloadDataAsync(stringToUri3);
-                        client2.DownloadDataCompleted += (sender4, e4) =>
-                        {
-                            if (e4.Cancelled)
-                            {
+                        client2.DownloadDataCompleted += (sender4, e4) => {
+                            if (e4.Cancelled) {
                                 client2.CancelAsync();
                                 return;
-                            }
-                            else if (e4.Error != null)
-                            {
+                            } else if (e4.Error != null) {
                                 //What?
-                            }
-                            else
-                            {
-                                try
-                                {
+                            } else {
+                                try {
                                     Image image;
                                     var memoryStream = new MemoryStream(e4.Result);
                                     image = Image.FromStream(memoryStream);
                                     verticalBanner.Image = image;
                                     verticalBanner.BackColor = Color.Black;
-                                }
-                                catch
-                                {
+                                } catch {
                                     verticalBanner.Image = null;
                                 }
                             }
@@ -1298,56 +1263,42 @@ namespace GameLauncher {
 
                     //onlineCount.Text += ". ";
 
-                    if (!DetectLinux.WineDetected() && !DetectLinux.UnixDetected())
-                    {
+                    if (!DetectLinux.WineDetected() && !DetectLinux.UnixDetected()) {
                         var pingSender = new Ping();
                         pingSender.SendAsync(stringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
-                        pingSender.PingCompleted += (sender3, e3) =>
-                        {
+                        pingSender.PingCompleted += (sender3, e3) => {
                             var reply = e3.Reply;
 
-                            if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server")
-                            {
+                            if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
                                 //onlineCount.Text += string.Format("Server ping is {0}ms.", reply.RoundtripTime);
-                            }
-                            else
-                            {
+                            } else {
                                 var hostEntry = Dns.GetHostEntry(stringToUri.Host);
 
-                                if (hostEntry.AddressList.Length > 0)
-                                {
+                                if (hostEntry.AddressList.Length > 0) {
                                     var ip = hostEntry.AddressList[0];
 
                                     var pingSender2 = new Ping();
                                     pingSender2.SendAsync(ip.ToString(), 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
 
-                                    pingSender2.PingCompleted += (sender4, e4) =>
-                                    {
+                                    pingSender2.PingCompleted += (sender4, e4) => {
                                         var reply2 = e4.Reply;
 
-                                        if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server")
-                                        {
+                                        if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
                                             //onlineCount.Text += string.Format("Server ping is {0}ms.", reply.RoundtripTime);
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             ServerStatusBar(_colorIssues, _startPoint, _endPoint);
 
                                             //onlineCount.Text += string.Format("Server ping is {0}ms.", (artificialPingEnd - artificialPingStart).ToString());
                                             //onlineCount.Text += " (HTTP)";
                                         }
                                     };
-                                }
-                                else
-                                {
+                                } else {
                                     ServerStatusBar(_colorIssues, _startPoint, _endPoint);
                                     //onlineCount.Text += "Server doesn't allow pinging.";
                                 }
                             }
                         };
-                    }
-                    else
-                    {
+                    } else {
                         ServerStatusBar(_colorIssues, _startPoint, _endPoint);
                         //onlineCount.Text += "Ping is disabled on non-Windows platform.";
                     }
