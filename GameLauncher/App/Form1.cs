@@ -1256,7 +1256,8 @@ namespace GameLauncher {
                                     verticalBanner.BackColor = Color.Black;
 
                                     imageServerName.Text = _realServernameBanner;
-                                } catch {
+                                } catch(Exception ex) {
+                                    Console.WriteLine(ex.Message);
                                     verticalBanner.Image = null;
                                 }
                             }
