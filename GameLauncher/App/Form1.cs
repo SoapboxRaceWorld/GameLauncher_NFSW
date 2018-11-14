@@ -1736,29 +1736,24 @@ namespace GameLauncher {
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
                     }
                 } else {
-                    var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
-                    var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
-                    var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
-                    var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
+                    try { 
+                        var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
+                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
+                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
+                        var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
 
-                    chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue.ToString() + "</DefaultChatGroup>";
-                    ui.InnerXml = "<Language Type=\"string\">" + settingsLanguage.SelectedValue.ToString() + "</Language>";
+                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue.ToString() + "</DefaultChatGroup>";
+                        ui.InnerXml = "<Language Type=\"string\">" + settingsLanguage.SelectedValue.ToString() + "</Language>";
 
-                    var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
+                        var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
+                    } catch (Exception ex) {
+                        MessageBox.Show(null, "There was an error saving your settings to actual file. Restoring default.\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        File.Delete(_userSettings);
+                    }
                 }
             } catch(Exception ex) {
                 MessageBox.Show(null, "There was an error saving your settings to actual file. Restoring default.\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 File.Delete(_userSettings);
-
-                var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
-                var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
-                var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
-                var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
-
-                chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue + "</DefaultChatGroup>";
-                ui.InnerXml = "<Language Type=\"string\">" + settingsLanguage.SelectedValue + "</Language>";
-
-                var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
             }
 
             userSettingsXml.Save(_userSettings);
