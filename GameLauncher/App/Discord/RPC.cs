@@ -5,7 +5,7 @@ using System.Text;
 
 public class DiscordRpc
 {
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     public delegate void ReadyCallback(ref DiscordUser connectedUser);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -68,6 +68,9 @@ public class DiscordRpc
         Yes = 1,
         Ignore = 2
     }
+
+
+
 
     [DllImport("discord-rpc", EntryPoint = "Discord_Initialize", CallingConvention = CallingConvention.Cdecl)]
     public static extern void Initialize(string applicationId, ref EventHandlers handlers, bool autoRegister, string optionalSteamId);

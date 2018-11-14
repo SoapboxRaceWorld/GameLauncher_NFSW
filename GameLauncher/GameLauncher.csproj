@@ -49,6 +49,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>

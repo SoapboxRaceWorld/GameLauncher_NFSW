@@ -18,6 +18,8 @@ namespace GameLauncher {
         internal static void Main() {
             File.Delete("log.txt");
 
+            Handlers _discordHandler = new Handlers();
+
             Log.Debug("GameLauncher v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 7));            
             Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
@@ -58,8 +60,9 @@ namespace GameLauncher {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             if (Debugger.IsAttached) {
                 var handlers = new DiscordRpc.EventHandlers();
-                //handlers.readyCallback = Handlers.ReadyCallback;
-                handlers.errorCallback = Handlers.ErrorCallback;
+
+                //handlers.readyCallback += _discordHandler.ReadyCallback;
+                handlers.errorCallback += _discordHandler.ErrorCallback;
                 DiscordRpc.Initialize("427355155537723393", ref handlers, true, String.Empty);
 
                 Application.ThreadException += new ThreadExceptionEventHandler(ThreadExceptionEventHandler);
@@ -129,8 +132,8 @@ namespace GameLauncher {
                             MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         } else {
                             var handlers = new DiscordRpc.EventHandlers();
-                            //handlers.readyCallback = Handlers.ReadyCallback;
-                            handlers.errorCallback = Handlers.ErrorCallback;
+                            //handlers.readyCallback = _discordHandler.ReadyCallback;
+                            handlers.errorCallback = _discordHandler.ErrorCallback;
                             DiscordRpc.Initialize("427355155537723393", ref handlers, true, String.Empty);
 
                             Log.Debug("Checking Proxy");

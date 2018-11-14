@@ -83,6 +83,8 @@ namespace GameLauncher {
         private Point _startPoint = new Point(38, 144);
         private Point _endPoint = new Point(562, 144);
 
+        ServerInfo _serverInfo = null;
+
         Form _splashscreen;
 
         private static Random random = new Random();
@@ -724,7 +726,7 @@ namespace GameLauncher {
             Log.Debug("Initializing DiscordRPC");
 
             _presence.state = _OS;
-            _presence.details = "In-Launcher: " + Application.ProductVersion;
+            _presence.details = "In-Launcher: " +  (Debugger.IsAttached ? "2.1.3.7" : Application.ProductVersion);
             _presence.largeImageText = "SBRW";
             _presence.largeImageKey = "nfsw";
             _presence.instance = true;
@@ -1062,12 +1064,12 @@ namespace GameLauncher {
 
         private void serverPick_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var serverInfo = (ServerInfo)serverPick.SelectedItem;
+            _serverInfo = (ServerInfo)serverPick.SelectedItem;
 
-            _realServername = serverInfo.Name;
-            _realServernameBanner = serverInfo.Name;
+            _realServername = _serverInfo.Name;
+            _realServernameBanner = _serverInfo.Name;
 
-            if (serverInfo.IsSpecial) {
+            if (_serverInfo.IsSpecial) {
                 serverPick.SelectedIndex = _lastSelectedServerId;
                 return;
             }
@@ -1080,7 +1082,7 @@ namespace GameLauncher {
 
             ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
-            imageServerName.Text = serverInfo.Name;
+            imageServerName.Text = _serverInfo.Name;
 
             _loginEnabled = false;
 
@@ -1094,9 +1096,9 @@ namespace GameLauncher {
             verticalBanner.Image = null;
             verticalBanner.BackColor = Color.Transparent;
 
-            var serverIp = serverInfo.IpAddress;
+            var serverIp = _serverInfo.IpAddress;
             string numPlayers;
-            var serverName = serverInfo.Name;
+            var serverName = _serverInfo.Name;
 
             var wordsArray = serverName.Split();
             var richPresenceIconId = ((wordsArray.Length == 1) ? wordsArray[0] : wordsArray[0] + wordsArray[1]).ToLower();
@@ -1972,7 +1974,7 @@ namespace GameLauncher {
         private void LaunchGame(string userId, string loginToken, string serverIp, Form x) {
 			var oldfilename = _settingFile.Read("InstallationDirectory") + "/nfsw.exe";
 
-			var args = "SBRW " + serverIp + " " + loginToken + " " + userId + " -advancedLaunch";
+            var args = _serverInfo.Id.ToUpper() + " " + serverIp + " " + loginToken + " " + userId + " -advancedLaunch";
             var psi = new ProcessStartInfo();
 
             if(DetectLinux.UnixDetected()) { 

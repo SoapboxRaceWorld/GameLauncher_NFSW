@@ -8,16 +8,24 @@ using System.Windows;
 
 namespace GameLauncher.App.Discord {
     class Handlers {
-        public Handlers()  {
-
+        private static Handlers instance = null;
+        public static Handlers Instance {
+            get {
+                if (instance == null)
+                {
+                    instance = new Handlers();
+                }
+                return instance;
+            }
         }
 
-        public static void ErrorCallback(int errorcode, string errormsg) {
+        public void ErrorCallback(int errorcode, string errormsg) {
             MessageBox.Show("Error " + errorcode + ": " + errormsg);
         }
 
-        public static void ReadyCallback(ref DiscordRpc.DiscordUser connectedUser) {
+        public void ReadyCallback(ref DiscordRpc.DiscordUser connectedUser) {
             Log.Debug(string.Format("Discord: connected to {0}#{1}: {2}", connectedUser.username, connectedUser.discriminator, connectedUser.userId));
+            System.Windows.Forms.Application.DoEvents();
         }
     }
 }
