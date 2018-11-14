@@ -24,8 +24,7 @@ namespace GameLauncher.App.Classes.RPC {
         private static string carslotsXML = String.Empty;
 
         public DiscordRPC() {
-            DiscordRpc.Initialize("427355155537723393", ref handlers, true, "");
-            Console.WriteLine("INITIALIZED!");
+
         }
 
         //Some data related, can be touched.

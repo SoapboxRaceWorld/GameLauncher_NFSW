@@ -9,6 +9,7 @@ using Bugsnag;
 using GameLauncher.App;
 using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Discord;
 using GameLauncherReborn;
 
 namespace GameLauncher {
@@ -56,6 +57,14 @@ namespace GameLauncher {
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             if (Debugger.IsAttached) {
+                var handlers = new DiscordRpc.EventHandlers();
+                //handlers.readyCallback = Handlers.ReadyCallback;
+                handlers.errorCallback = Handlers.ErrorCallback;
+                DiscordRpc.Initialize("427355155537723393", ref handlers, true, String.Empty);
+
+                Application.ThreadException += new ThreadExceptionEventHandler(ThreadExceptionEventHandler);
+                AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(UnhandledExceptionEventHandler);
+
                 Log.Debug("Checking Proxy");
                 ServerProxy.Instance.Start();
                 Log.Debug("Starting MainScreen");
@@ -119,6 +128,11 @@ namespace GameLauncher {
 
                             MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         } else {
+                            var handlers = new DiscordRpc.EventHandlers();
+                            //handlers.readyCallback = Handlers.ReadyCallback;
+                            handlers.errorCallback = Handlers.ErrorCallback;
+                            DiscordRpc.Initialize("427355155537723393", ref handlers, true, String.Empty);
+
                             Log.Debug("Checking Proxy");
                             ServerProxy.Instance.Start();
 

@@ -51,7 +51,6 @@ namespace GameLauncher {
         private Thread _nfswstarted;
         private string _passwordHash;
         private string _slresponse = "";
-        private readonly string _discordrpccode = "427355155537723393";
 
         private int _errorcode;
 
@@ -250,6 +249,12 @@ namespace GameLauncher {
             registerText.Click += new EventHandler(registerText_LinkClicked);
 
             this.Load += new EventHandler(mainScreen_Load);
+            this.Shown += (x,y) => {
+                new Thread(() => {
+                    DiscordRpc.RunCallbacks();
+                }).Start();
+            };
+
 
             Log.Debug("Checking permissions");
             if (!Self.hasWriteAccessToFolder(Directory.GetCurrentDirectory())) {
@@ -718,8 +723,6 @@ namespace GameLauncher {
 
             Log.Debug("Initializing DiscordRPC");
 
-            var handlers = new DiscordRpc.EventHandlers();
-            DiscordRpc.Initialize(_discordrpccode, ref handlers, true, "");
             _presence.state = _OS;
             _presence.details = "In-Launcher: " + Application.ProductVersion;
             _presence.largeImageText = "SBRW";
@@ -1956,8 +1959,6 @@ namespace GameLauncher {
 
             _presenceImageKey = selectedServer.DiscordPresenceKey;
 
-            var handlers = new DiscordRpc.EventHandlers();
-            DiscordRpc.Initialize(_discordrpccode, ref handlers, true, "");
             _presence.state = _realServername;
             _presence.details = "Loading game...";
             _presence.largeImageText = "Need for Speed: World";

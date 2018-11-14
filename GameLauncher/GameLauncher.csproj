@@ -199,6 +199,7 @@
     <Compile Include="App\Debug.Designer.cs">
       <DependentUpon>Debug.cs</DependentUpon>
     </Compile>
+    <Compile Include="App\Discord\Handlers.cs" />
     <Compile Include="App\Discord\RPC.cs" />
     <Compile Include="App\Form1.cs">
       <SubType>Form</SubType>
@@ -242,10 +243,11 @@
     <None Include="app.config" />
     <EmbeddedResource Include="App\Classes\RPC\JSON\events.json" />
     <EmbeddedResource Include="App\Classes\RPC\JSON\cars.json" />
-    <EmbeddedResource Include="Discord\libdiscord-rpc.dylib" />
     <EmbeddedResource Include="Fonts\Airport-Cyr.ttf" />
     <EmbeddedResource Include="Fonts\Akrobat-Regular.ttf" />
     <EmbeddedResource Include="Fonts\Akrobat-SemiBold.ttf" />
+    <EmbeddedResource Include="Discord\libdiscord-rpc.dylib" />
+    <EmbeddedResource Include="Discord\libdiscord-rpc.so" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest">
       <SubType>Designer</SubType>
@@ -271,7 +273,6 @@
     <EmbeddedResource Include="SoapBoxModules\xmppsubject.soapbox.module" />
     <EmbeddedResource Include="SoapBoxModules\BootFlow.gfx" />
     <Compile Include="App\Classes\WineManager.cs" />
-    <EmbeddedResource Include="Discord\libdiscord-rpc.so" />
     <EmbeddedResource Include="SoapBoxModules\global.ini" />
     <EmbeddedResource Include="wine_opts.reg" />
     <EmbeddedResource Include="SoapBoxModules\cursor.ani" />
