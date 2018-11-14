@@ -918,6 +918,10 @@ namespace GameLauncher {
                 _loginToken = Tokens.LoginToken;
                 _serverIp = Tokens.IPAddress;
 
+                if(!String.IsNullOrEmpty(Tokens.Warning)) {
+                    MessageBox.Show(null, Tokens.Warning, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
                 BackgroundImage = Properties.Resources.loggedbg;
                 LoginFormElements(false);
                 LoggedInFormElements(true);
