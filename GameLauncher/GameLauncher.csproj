@@ -143,6 +143,9 @@
     <Compile Include="App\AddServer.Designer.cs">
       <DependentUpon>AddServer.cs</DependentUpon>
     </Compile>
+    <Compile Include="App\Classes\Auth\ClassicAuth.cs" />
+    <Compile Include="App\Classes\Auth\ModernAuth.cs" />
+    <Compile Include="App\Classes\Auth\Tokens.cs" />
     <Compile Include="App\Classes\Delay.cs" />
     <Compile Include="App\Classes\DetectLinux.cs" />
     <Compile Include="App\Classes\Downloader\Downloader.cs" />
@@ -165,7 +168,6 @@
     </Compile>
     <Compile Include="App\Classes\Events\UpdaterSchema.cs" />
     <Compile Include="App\Classes\ExtractResource.cs" />
-    <Compile Include="App\Classes\HashPassword\BCrypt.cs" />
     <Compile Include="App\Classes\HashPassword\SHA.cs" />
     <Compile Include="App\Classes\HWID.cs" />
     <Compile Include="App\Classes\IniFile.cs" />

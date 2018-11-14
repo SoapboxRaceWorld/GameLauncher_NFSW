@@ -26,6 +26,7 @@ using System.Text.RegularExpressions;
 using Security;
 using GameLauncher.App.Classes.Logger;
 using System.IO.Compression;
+using GameLauncher.App.Classes.Auth;
 
 namespace GameLauncher {
     public sealed partial class MainScreen : Form {
@@ -43,6 +44,7 @@ namespace GameLauncher {
         private bool _restartRequired;
         private bool _allowRegistration;
         private bool _isDownloading = true;
+        private bool _modernAuthSupport = false;
 
         private bool _disabledModNet;
 
@@ -880,157 +882,47 @@ namespace GameLauncher {
             }
         }
 
-        private void loginButton_Click(object sender, EventArgs e)
-        {
-            if ((_loginEnabled == false || _serverEnabled == false) && _builtinserver == false)
-            {
+        private void loginButton_Click(object sender, EventArgs e) {
+            if ((_loginEnabled == false || _serverEnabled == false) && _builtinserver == false) {
                 return;
             }
 
-            if (_isDownloading)
-            {
+            if (_isDownloading) {
                 MessageBox.Show(null, "Please wait while launcher is still downloading gamefiles.", "GameLauncher", MessageBoxButtons.OK);
                 return;
             }
 
-            var serverInfo = (ServerInfo)serverPick.SelectedItem;
+            ServerInfo serverInfo = (ServerInfo)serverPick.SelectedItem;
 
-            _serverIp = serverInfo.IpAddress;
-            var serverName = serverInfo.Name;
-            var username = email.Text.ToString();
-            var encryptedpassword = "";
-            var serverLoginResponse = "";
+            String username = email.Text.ToString();
+            String pass = password.Text.ToString();
 
-            if (_useSavedPassword)
-            {
-                encryptedpassword = _settingFile.Read("Password");
-            }
-            else
-            {
-                if (_passwordHash == "BCRYPT")
-                {
-                    encryptedpassword = BCrypt.HashPassword(password.Text.ToString());
-                }
-                else
-                {
-                    encryptedpassword = SHA.HashPassword(password.Text.ToString());
-                }
-            }
+            Tokens.IPAddress = serverInfo.IpAddress;
+            Tokens.ServerName = serverInfo.Name;
 
-            if (rememberMe.Checked)
-            {
-                _settingFile.Write("AccountEmail", username);
-                _settingFile.Write("Password", encryptedpassword.ToLower());
-            }
-            else
-            {
-                _settingFile.DeleteKey("AccountEmail");
-                _settingFile.DeleteKey("Password");
-            }
-
-            try
-            {
-                WebClientWithTimeout wc = new WebClientWithTimeout();
-                var buildUrl = _serverIp + "/User/authenticateUser?email=" + username + "&password=" + encryptedpassword.ToLower();
-                serverLoginResponse = wc.DownloadString(buildUrl);
-            }
-            catch (WebException ex)
-            {
-                var serverReply = (HttpWebResponse)ex.Response;
-
-                if (serverReply == null)
-                {
-                    _errorcode = 500;
-                    serverLoginResponse = "<LoginStatusVO><UserId/><LoginToken/><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
-                }
-                else
-                {
-                    using (var sr = new StreamReader(serverReply.GetResponseStream()))
-                    {
-                        _errorcode = (int)serverReply.StatusCode;
-                        serverLoginResponse = sr.ReadToEnd();
-                    }
-                }
-            }
-
-            if (string.IsNullOrEmpty(serverLoginResponse)) {
-                MessageBox.Show(null, "Server seems to be offline.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (_modernAuthSupport == false) {
+                //ClassicAuth sends password in SHA1
+                String realpass = (_useSavedPassword) ? _settingFile.Read("Password") : SHA.HashPassword(password.Text.ToString());
+                ClassicAuth.Login(username, realpass);
             } else {
-                try
-                {
-                    var sbrwXml = new XmlDocument();
+                //ModernAuth sends passwords in plaintext, but is POST request
+                String realpass = (_useSavedPassword) ? _settingFile.Read("Password") : password.Text.ToString();
+                ModernAuth.Login(username, realpass);
 
-                    if (_builtinserver == false)
-                    {
-                        sbrwXml.LoadXml(serverLoginResponse);
-                    }
-                    else
-                    {
-                        sbrwXml.LoadXml("<LoginStatusVO><UserId>1</UserId><LoginToken>aaaaaaaa-aaaa-aaaa-aaaaaaaa</LoginToken><Description/></LoginStatusVO>");
-                    }
+                Tokens.Error = "Not implemented!";
+            }
 
-                    XmlNode extraNode;
-                    XmlNode loginTokenNode;
-                    XmlNode userIdNode;
-                    var msgBoxInfo = "";
+            if(String.IsNullOrEmpty(Tokens.Error)) {
+                _loggedIn = true;
+                _userId = Tokens.UserId;
+                _loginToken = Tokens.LoginToken;
+                _serverIp = Tokens.IPAddress;
 
-                    loginTokenNode = sbrwXml.SelectSingleNode("LoginStatusVO/LoginToken");
-                    userIdNode = sbrwXml.SelectSingleNode("LoginStatusVO/UserId");
-
-                    if (sbrwXml.SelectSingleNode("LoginStatusVO/Ban") == null) {
-                        if (sbrwXml.SelectSingleNode("LoginStatusVO/Description") == null) {
-                            extraNode = sbrwXml.SelectSingleNode("html/body");
-                        } else {
-                            extraNode = sbrwXml.SelectSingleNode("LoginStatusVO/Description");
-                        }
-                    } else {
-                        extraNode = sbrwXml.SelectSingleNode("LoginStatusVO/Ban");
-                    }
-
-                    if (!string.IsNullOrEmpty(extraNode.InnerText)) {
-                        if (extraNode.SelectSingleNode("Reason") != null) {
-                            msgBoxInfo = string.Format("You got banned on {0}.", serverName) + "\n";
-                            msgBoxInfo += string.Format("Reason: {0}", extraNode.SelectSingleNode("Reason").InnerText);
-
-                            if (extraNode.SelectSingleNode("Expires") != null) {
-                                msgBoxInfo += "\n" + string.Format("Ban expires {0}", extraNode.SelectSingleNode("Expires").InnerText);
-                            } else {
-                                msgBoxInfo += "\n" + "Banned forever.";
-                            }
-                        } else {
-                            if (extraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?") {
-                                msgBoxInfo = "Launcher tampering detected. Please use original build.";
-                            } else {
-                                if (sbrwXml.SelectSingleNode("html/body") == null) {
-                                    if (extraNode.InnerText == "LOGIN ERROR") {
-                                        msgBoxInfo = "Invalid e-mail or password.";
-                                    } else {
-                                        msgBoxInfo = extraNode.InnerText;
-                                    }
-                                } else {
-                                    msgBoxInfo = "ERROR " + _errorcode + ": " + extraNode.InnerText;
-                                }
-                            }
-                        }
-                        MessageBox.Show(null, msgBoxInfo, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    } else {
-                        _userId = userIdNode.InnerText;
-                        _loginToken = loginTokenNode.InnerText;
-
-                        if(sbrwXml.SelectSingleNode("LoginStatusVO/Warning") != null) {
-                            MessageBox.Show(null, sbrwXml.SelectSingleNode("LoginStatusVO/Warning").InnerText, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-
-                        _loggedIn = true;
-
-                        BackgroundImage = Properties.Resources.loggedbg;
-                        LoginFormElements(false);
-                        LoggedInFormElements(true);
-                    }
-                } catch(Exception ex) {
-                    MessageBox.Show(null, "An error occured. Please contact developer with this details:\n\nServerName: " + _realServername + "\nIP: " + _serverIp + "\nError: " + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                BackgroundImage = Properties.Resources.loggedbg;
+                LoginFormElements(false);
+                LoggedInFormElements(true);
+            } else {
+                MessageBox.Show(null, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1062,12 +954,13 @@ namespace GameLauncher {
             }
         }
 
-        private void serverPick_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _serverInfo = (ServerInfo)serverPick.SelectedItem;
+        private void serverPick_SelectedIndexChanged(object sender, EventArgs e) {
+            ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
+            _serverInfo = (ServerInfo)serverPick.SelectedItem;
             _realServername = _serverInfo.Name;
             _realServernameBanner = _serverInfo.Name;
+            _modernAuthSupport = false;
 
             if (_serverInfo.IsSpecial) {
                 serverPick.SelectedIndex = _lastSelectedServerId;
@@ -1077,13 +970,8 @@ namespace GameLauncher {
             if (!_skipServerTrigger) { return; }
 
             _lastSelectedServerId = serverPick.SelectedIndex;
-
             _allowRegistration = false;
-
-            ServerStatusBar(_colorLoading, _startPoint, _endPoint);
-
             imageServerName.Text = _serverInfo.Name;
-
             _loginEnabled = false;
 
             ServerStatusText.Text = "Server Status - Pinging";
@@ -1098,20 +986,13 @@ namespace GameLauncher {
 
             var serverIp = _serverInfo.IpAddress;
             string numPlayers;
-            var serverName = _serverInfo.Name;
 
-            var wordsArray = serverName.Split();
-            var richPresenceIconId = ((wordsArray.Length == 1) ? wordsArray[0] : wordsArray[0] + wordsArray[1]).ToLower();
-
-            if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server")
-            {
+            if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server") {
                 _builtinserver = true;
                 loginButton.Image = Properties.Resources.graybutton;
                 loginButton.Text = "Launch".ToUpper();
                 loginButton.ForeColor = Color.White;
-            }
-            else
-            {
+            } else {
                 _builtinserver = false;
                 loginButton.Image = Properties.Resources.graybutton;
                 loginButton.Text = "Login".ToUpper();
@@ -1119,16 +1000,12 @@ namespace GameLauncher {
             }
 
             WebClientWithTimeout client = new WebClientWithTimeout();
-
             var artificialPingStart = Self.getTimestamp();
-
-            //allowedCountriesLabel.Text = "";
             verticalBanner.BackColor = Color.Transparent;
 
             var stringToUri = new Uri(serverIp + "/GetServerInformation");
             client.DownloadStringAsync(stringToUri);
 
-            //Timer here
             System.Timers.Timer aTimer = new System.Timers.Timer(30000);
             aTimer.Elapsed += (x, y) => { client.CancelAsync(); };
             aTimer.Enabled = true;
@@ -1155,7 +1032,7 @@ namespace GameLauncher {
                     _serverEnabled = false;
                     _allowRegistration = false;
                 } else {
-                    if (serverName == "Offline Built-In Server") {
+                    if (_realServername == "Offline Built-In Server") {
                         numPlayers = "∞";
                     } else {
                         var json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
@@ -1195,6 +1072,18 @@ namespace GameLauncher {
                             _ticketRequired = false;
                         }
 
+                        try {
+                            if (string.IsNullOrEmpty(json.modernAuthSupport)) {
+                                _modernAuthSupport = false;
+                            } else if (json.modernAuthSupport == "true") {
+                                _modernAuthSupport = true;
+                            } else {
+                                _modernAuthSupport = false;
+                            }
+                        } catch {
+                            _modernAuthSupport = false;
+                        }
+
                         /*if (!string.IsNullOrEmpty(json.allowedCountries)) {
                             var countries = new List<object>();
                             var splitted = json.allowedCountries.Split(';');
@@ -1218,16 +1107,6 @@ namespace GameLauncher {
                         }
 
                         _allowRegistration = true;
-
-                        try {
-                            if (json.passwordHashing == "BCRYPT") {
-                                _passwordHash = "BCRYPT";
-                            } else {
-                                _passwordHash = "SHA1";
-                            }
-                        } catch {
-                            _passwordHash = "SHA1";
-                        }
 
                         ServerStatusBar(_colorOnline, _startPoint, _endPoint);
                     }
@@ -1277,7 +1156,7 @@ namespace GameLauncher {
                         pingSender.PingCompleted += (sender3, e3) => {
                             var reply = e3.Reply;
 
-                            if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
+                            if (reply.Status == IPStatus.Success && _realServername != "Offline Built-In Server") {
                                 //onlineCount.Text += string.Format("Server ping is {0}ms.", reply.RoundtripTime);
                             } else {
                                 var hostEntry = Dns.GetHostEntry(stringToUri.Host);
@@ -1291,7 +1170,7 @@ namespace GameLauncher {
                                     pingSender2.PingCompleted += (sender4, e4) => {
                                         var reply2 = e4.Reply;
 
-                                        if (reply.Status == IPStatus.Success && serverName != "Offline Built-In Server") {
+                                        if (reply.Status == IPStatus.Success && _realServername != "Offline Built-In Server") {
                                             //onlineCount.Text += string.Format("Server ping is {0}ms.", reply.RoundtripTime);
                                         } else {
                                             ServerStatusBar(_colorIssues, _startPoint, _endPoint);
@@ -1653,11 +1532,7 @@ namespace GameLauncher {
                     var serverLoginResponse = "";
                     string buildUrl;
 
-                    if (_passwordHash == "BCRYPT") {
-                        encryptedpassword = BCrypt.HashPassword(registerPassword.Text.ToString());
-                    } else {
-                        encryptedpassword = SHA.HashPassword(registerPassword.Text.ToString());
-                    }
+                    encryptedpassword = SHA.HashPassword(registerPassword.Text.ToString());
 
                     try {
                         WebClientWithTimeout wc = new WebClientWithTimeout();
