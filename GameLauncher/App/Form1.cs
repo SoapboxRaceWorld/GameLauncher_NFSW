@@ -896,23 +896,30 @@ namespace GameLauncher {
 
             String username = email.Text.ToString();
             String pass = password.Text.ToString();
+            String realpass;
 
             Tokens.IPAddress = serverInfo.IpAddress;
             Tokens.ServerName = serverInfo.Name;
 
             if (_modernAuthSupport == false) {
                 //ClassicAuth sends password in SHA1
-                String realpass = (_useSavedPassword) ? _settingFile.Read("Password") : SHA.HashPassword(password.Text.ToString());
+                realpass = (_useSavedPassword) ? _settingFile.Read("Password") : SHA.HashPassword(password.Text.ToString());
                 ClassicAuth.Login(username, realpass);
             } else {
                 //ModernAuth sends passwords in plaintext, but is POST request
-                String realpass = (_useSavedPassword) ? _settingFile.Read("Password") : password.Text.ToString();
+                realpass = (_useSavedPassword) ? _settingFile.Read("Password") : password.Text.ToString();
                 ModernAuth.Login(username, realpass);
-
-                Tokens.Error = "Not implemented!";
             }
 
-            if(String.IsNullOrEmpty(Tokens.Error)) {
+            if (rememberMe.Checked) {
+                _settingFile.Write("AccountEmail", username);
+                _settingFile.Write("Password", realpass);
+            } else {
+                _settingFile.DeleteKey("AccountEmail");
+                _settingFile.DeleteKey("Password");
+            }
+
+            if (String.IsNullOrEmpty(Tokens.Error)) {
                 _loggedIn = true;
                 _userId = Tokens.UserId;
                 _loginToken = Tokens.LoginToken;

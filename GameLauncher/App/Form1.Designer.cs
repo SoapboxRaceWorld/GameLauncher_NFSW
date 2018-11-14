@@ -151,7 +151,7 @@
             // 
             this.rememberMe.AutoSize = true;
             this.rememberMe.BackColor = System.Drawing.Color.Transparent;
-            this.rememberMe.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.rememberMe.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.rememberMe.ForeColor = System.Drawing.Color.White;
             this.rememberMe.Location = new System.Drawing.Point(615, 285);
             this.rememberMe.Name = "rememberMe";
@@ -624,7 +624,7 @@
             // 
             this.modNetCheckbox.AutoSize = true;
             this.modNetCheckbox.BackColor = System.Drawing.Color.Transparent;
-            this.modNetCheckbox.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.modNetCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.modNetCheckbox.ForeColor = System.Drawing.Color.White;
             this.modNetCheckbox.Location = new System.Drawing.Point(46, 275);
             this.modNetCheckbox.Name = "modNetCheckbox";

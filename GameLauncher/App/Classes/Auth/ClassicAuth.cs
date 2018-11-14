@@ -34,7 +34,7 @@ namespace GameLauncher.App.Classes.Auth {
             }
 
             if (string.IsNullOrEmpty(serverLoginResponse)) {
-              Tokens.Error = "Server seems to be offline.";
+                Tokens.Error = "Server seems to be offline.";
             } else {
                 try {
                     var sbrwXml = new XmlDocument();

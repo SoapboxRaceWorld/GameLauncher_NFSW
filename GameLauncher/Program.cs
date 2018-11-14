@@ -65,9 +65,6 @@ namespace GameLauncher {
                 handlers.errorCallback += _discordHandler.ErrorCallback;
                 DiscordRpc.Initialize("427355155537723393", ref handlers, true, String.Empty);
 
-                Application.ThreadException += new ThreadExceptionEventHandler(ThreadExceptionEventHandler);
-                AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(UnhandledExceptionEventHandler);
-
                 Log.Debug("Checking Proxy");
                 ServerProxy.Instance.Start();
                 Log.Debug("Starting MainScreen");
