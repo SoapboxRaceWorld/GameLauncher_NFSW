@@ -209,6 +209,7 @@
     <Compile Include="App\Discord\RichPresence.cs" />
     <Compile Include="App\Discord\RichPresenceBuilder.cs" />
     <Compile Include="App\Discord\RichPresenceStruct.cs" />
+    <Compile Include="App\Discord\SDK.cs" />
     <Compile Include="App\Form1.cs">
       <SubType>Form</SubType>
     </Compile>

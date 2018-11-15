@@ -28,6 +28,7 @@ using GameLauncher.App.Classes.Logger;
 using System.IO.Compression;
 using GameLauncher.App.Classes.Auth;
 using DiscordRPC;
+using DiscordSDK;
 
 namespace GameLauncher {
     public sealed partial class MainScreen : Form {
