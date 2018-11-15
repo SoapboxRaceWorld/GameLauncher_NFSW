@@ -1035,7 +1035,7 @@ namespace GameLauncher {
             var stringToUri = new Uri(serverIp + "/GetServerInformation");
             client.DownloadStringAsync(stringToUri);
 
-            System.Timers.Timer aTimer = new System.Timers.Timer(30000);
+            System.Timers.Timer aTimer = new System.Timers.Timer(10000);
             aTimer.Elapsed += (x, y) => { client.CancelAsync(); };
             aTimer.Enabled = true;
 
@@ -1105,7 +1105,11 @@ namespace GameLauncher {
                             if (string.IsNullOrEmpty(json.modernAuthSupport)) {
                                 _modernAuthSupport = false;
                             } else if (json.modernAuthSupport == "true") {
-                                _modernAuthSupport = true;
+                                if(stringToUri.Scheme == "https") {
+                                    _modernAuthSupport = true;
+                                } else {
+                                    _modernAuthSupport = false;
+                                }
                             } else {
                                 _modernAuthSupport = false;
                             }
