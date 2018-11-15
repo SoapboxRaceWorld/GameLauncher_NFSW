@@ -119,7 +119,7 @@ namespace GameLauncher.App.Classes.Proxy
                 replyToServer = response.Content.ReadAsStringAsync().Result;
             }
 
-            DiscordRPC.handleGameState(fixedPath, replyToServer, POSTContent, GETContent);
+            DiscordGamePresence.handleGameState(fixedPath, replyToServer, POSTContent, GETContent);
 
             return new TextResponse(replyToServer, response.Content.Headers.ContentType.ToString()) {
                 StatusCode = (HttpStatusCode)(int)response.StatusCode

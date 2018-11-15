@@ -155,7 +155,7 @@
             this.rememberMe.ForeColor = System.Drawing.Color.White;
             this.rememberMe.Location = new System.Drawing.Point(615, 285);
             this.rememberMe.Name = "rememberMe";
-            this.rememberMe.Size = new System.Drawing.Size(210, 19);
+            this.rememberMe.Size = new System.Drawing.Size(219, 19);
             this.rememberMe.TabIndex = 5;
             this.rememberMe.Text = "REMEMBER MY EMAIL ADDRESS";
             this.rememberMe.UseVisualStyleBackColor = false;
@@ -628,7 +628,7 @@
             this.modNetCheckbox.ForeColor = System.Drawing.Color.White;
             this.modNetCheckbox.Location = new System.Drawing.Point(46, 275);
             this.modNetCheckbox.Name = "modNetCheckbox";
-            this.modNetCheckbox.Size = new System.Drawing.Size(130, 19);
+            this.modNetCheckbox.Size = new System.Drawing.Size(132, 19);
             this.modNetCheckbox.TabIndex = 87;
             this.modNetCheckbox.Text = "DISABLE MODNET";
             this.modNetCheckbox.UseVisualStyleBackColor = false;

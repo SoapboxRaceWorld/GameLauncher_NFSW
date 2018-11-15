@@ -9,7 +9,6 @@ using Bugsnag;
 using GameLauncher.App;
 using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Logger;
-using GameLauncher.App.Discord;
 using GameLauncherReborn;
 
 namespace GameLauncher {
@@ -17,8 +16,6 @@ namespace GameLauncher {
         [STAThread]
         internal static void Main() {
             File.Delete("log.txt");
-
-            Handlers _discordHandler = new Handlers();
 
             Log.Debug("GameLauncher v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 7));            
             Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
@@ -36,14 +33,14 @@ namespace GameLauncher {
                 Environment.Exit(0);
             }
 
-            if (!DetectLinux.UnixDetected() && !File.Exists("discord-rpc.dll"))
+            /*if (!DetectLinux.UnixDetected() && !File.Exists("discord-rpc.dll"))
                 File.WriteAllBytes("discord-rpc.dll", ExtractResource.AsByte("GameLauncher.Discord.discord-rpc.dll"));
 
             if (DetectLinux.LinuxDetected() && !File.Exists("libdiscord-rpc.so"))
                 File.WriteAllBytes("libdiscord-rpc.so", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.so"));
 
             if (DetectLinux.MacOSDetected() && !File.Exists("libdiscord-rpc.dylib"))
-                File.WriteAllBytes("libdiscord-rpc.dylib", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.dylib"));
+                File.WriteAllBytes("libdiscord-rpc.dylib", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.dylib"));*/
 
 			if(!File.Exists("GameLauncherUpdater.exe")) {
 				try {
@@ -59,12 +56,6 @@ namespace GameLauncher {
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             if (Debugger.IsAttached) {
-                var handlers = new DiscordRpc.EventHandlers();
-
-                //handlers.readyCallback += _discordHandler.ReadyCallback;
-                handlers.errorCallback += _discordHandler.ErrorCallback;
-                DiscordRpc.Initialize("427355155537723393", ref handlers, true, String.Empty);
-
                 Log.Debug("Checking Proxy");
                 ServerProxy.Instance.Start();
                 Log.Debug("Starting MainScreen");
@@ -128,11 +119,6 @@ namespace GameLauncher {
 
                             MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         } else {
-                            var handlers = new DiscordRpc.EventHandlers();
-                            //handlers.readyCallback = _discordHandler.ReadyCallback;
-                            handlers.errorCallback = _discordHandler.ErrorCallback;
-                            DiscordRpc.Initialize("427355155537723393", ref handlers, true, String.Empty);
-
                             Log.Debug("Checking Proxy");
                             ServerProxy.Instance.Start();
 
@@ -151,6 +137,17 @@ namespace GameLauncher {
                 }
             }
         }
+
+       /* static void Discord_Ready(ref DiscordRpc.DiscordUser pUser) {
+            Invoke(new Action<DiscordRpc.DiscordUser>((user) => {
+                pbAvatarImage.ImageLocation = $"https://cdn.discordapp.com/avatars/{user.userId}/{user.avatar}.png?size=128";
+                lbUsername.Text = $"{user.username}#{user.discriminator}\n{user.userId}";
+
+                
+            }), pUser);
+
+            CurrentUser = pUser;
+        }*/
 
         static void UnhandledExceptionEventHandler(object sender, UnhandledExceptionEventArgs e) {
             Bugsnag.Client bugsnag = new Bugsnag.Client(new Configuration("ba9a1f366203b461b2f031a12b9a0e41"));

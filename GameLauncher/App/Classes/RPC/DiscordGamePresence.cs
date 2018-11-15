@@ -1,4 +1,5 @@
-﻿using GameLauncherReborn;
+﻿using DiscordRPC;
+using GameLauncherReborn;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,20 +11,18 @@ using System.Windows.Forms;
 using System.Xml;
 
 namespace GameLauncher.App.Classes.RPC {
-    class DiscordRPC {
+    class DiscordGamePresence {
         public static long RPCstartTimestamp = 0000000000;
-        public static DiscordRpc.RichPresence _presence = new DiscordRpc.RichPresence();
-        public static DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers();
+        public static RichPresence _presence = new RichPresence();
 
         //Some checks
         private static string serverName = ServerProxy.Instance.GetServerName();
         private static bool canUpdateProfileField = false;
         private static bool eventTerminatedManually = false;
-        //private static bool collectingTreasures = false;
         private static int EventID;
         private static string carslotsXML = String.Empty;
 
-        public DiscordRPC() {
+        public DiscordGamePresence() {
 
         }
 

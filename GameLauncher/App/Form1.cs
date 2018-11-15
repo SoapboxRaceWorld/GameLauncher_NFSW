@@ -27,6 +27,7 @@ using Security;
 using GameLauncher.App.Classes.Logger;
 using System.IO.Compression;
 using GameLauncher.App.Classes.Auth;
+using DiscordRPC;
 
 namespace GameLauncher {
     public sealed partial class MainScreen : Form {
@@ -67,7 +68,7 @@ namespace GameLauncher {
         private string _newGameFilesPath;
         private readonly float _dpiDefaultScale = 96f;
 
-        private readonly DiscordRpc.RichPresence _presence = new DiscordRpc.RichPresence();
+        private readonly RichPresence _presence = new RichPresence();
 
         private readonly Pen _colorOffline = new Pen(Color.FromArgb(128, 0, 0));
         private readonly Pen _colorOnline = new Pen(Color.FromArgb(0, 128, 0));
@@ -86,6 +87,10 @@ namespace GameLauncher {
         private Point _endPoint = new Point(562, 144);
 
         ServerInfo _serverInfo = null;
+
+        public EventHandlers Handlers;
+        public DiscordUser CurrentUser;
+        private Random rnd;
 
         Form _splashscreen;
 
@@ -116,20 +121,34 @@ namespace GameLauncher {
             Opacity = 0.9;
         }
 
-        public void Shake()
-        {
-            for (var i = 0; i < 5; i++)
-            {
-                Left += 10;
-                Thread.Sleep(40);
-                Left -= 10;
-                Thread.Sleep(40);
-            }
+        void Discord_Ready(ref DiscordUser pUser) {
+            //Invoke(new Action<DiscordUser>((user) => {
+                Log.Debug(String.Format("Connected as {0}#{1}: {2}", pUser.username, pUser.discriminator, pUser.userId));
+            //}), pUser);
+
+            //CurrentUser = pUser;
+        }
+
+        void Discord_Disconnect(int code, string message) {
+            MessageBox.Show($"Disconnected from Discord\n{message}", code.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        }
+
+        void Discord_Error(int code, string message) {
+            MessageBox.Show($"Discord Connection Error\n{message}", code.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public MainScreen(Form splashscreen) {
             Log.Debug("Entered mainScreen");
             _splashscreen = splashscreen;
+
+            rnd = new Random(Environment.TickCount);
+
+            var handlers = new EventHandlers();
+            //handlers.readyCallback = Discord_Ready; //Discord, please, fix that... (already reported on DiscordRPC Issues Page)
+            handlers.errorCallback = Discord_Error;
+            handlers.disconnectedCallback = Discord_Disconnect;
+            DiscordRpc.Initialize("427355155537723393", ref handlers, true, String.Empty);
+            DiscordRpc.Register("427355155537723393", "GameLauncher.exe --discord");
 
             Log.Debug("Setting SSL Protocol");
             ServicePointManager.Expect100Continue = true;
@@ -892,14 +911,12 @@ namespace GameLauncher {
                 return;
             }
 
-            ServerInfo serverInfo = (ServerInfo)serverPick.SelectedItem;
-
             String username = email.Text.ToString();
             String pass = password.Text.ToString();
             String realpass;
 
-            Tokens.IPAddress = serverInfo.IpAddress;
-            Tokens.ServerName = serverInfo.Name;
+            Tokens.IPAddress = _serverInfo.IpAddress;
+            Tokens.ServerName = _serverInfo.Name;
 
             if (_modernAuthSupport == false) {
                 //ClassicAuth sends password in SHA1
@@ -1270,8 +1287,7 @@ namespace GameLauncher {
             if(send != String.Empty) {
                 String responseString;
                 try { 
-                    var serverInfo = (ServerInfo)serverPick.SelectedItem;
-                    Uri resetPasswordUrl = new Uri(serverInfo.IpAddress + "/RecoveryPassword/forgotPassword");
+                    Uri resetPasswordUrl = new Uri(_serverInfo.IpAddress + "/RecoveryPassword/forgotPassword");
 
                     var request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
                     var postData = "email="+send;
@@ -1644,7 +1660,6 @@ namespace GameLauncher {
                         MessageBox.Show("Server seems to be offline.");
                     }
                 } else {
-                    Shake();
                     var message = "There were some errors while registering, please fix them:\n\n";
 
                     foreach (var error in registerErrors) {
@@ -1675,38 +1690,31 @@ namespace GameLauncher {
             LoginFormElements(false);
         }
 
-        private void settingsButton_MouseEnter(object sender, EventArgs e)
-        {
+        private void settingsButton_MouseEnter(object sender, EventArgs e) {
             settingsButton.BackgroundImage = Properties.Resources.settingsbtn_hover;
         }
 
-        private void settingsButton_MouseLeave(object sender, EventArgs e)
-        {
+        private void settingsButton_MouseLeave(object sender, EventArgs e) {
             settingsButton.BackgroundImage = Properties.Resources.settingsbtn;
         }
 
-        private void settingsSave_MouseEnter(object sender, EventArgs e)
-        {
+        private void settingsSave_MouseEnter(object sender, EventArgs e) {
             settingsSave.Image = Properties.Resources.greenbutton_hover;
         }
 
-        private void settingsSave_MouseLeave(object sender, EventArgs e)
-        {
+        private void settingsSave_MouseLeave(object sender, EventArgs e) {
             settingsSave.Image = Properties.Resources.greenbutton;
         }
 
-        private void settingsSave_MouseUp(object sender, EventArgs e)
-        {
+        private void settingsSave_MouseUp(object sender, EventArgs e) {
             settingsSave.Image = Properties.Resources.greenbutton_hover;
         }
 
-        private void settingsSave_MouseDown(object sender, EventArgs e)
-        {
+        private void settingsSave_MouseDown(object sender, EventArgs e) {
             settingsSave.Image = Properties.Resources.greenbutton_click;
         }
 
-        private void settingsSave_Click(object sender, EventArgs e)
-        {
+        private void settingsSave_Click(object sender, EventArgs e) {
             _settingFile.Write("Language", settingsLanguage.SelectedValue.ToString());
             _settingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString());
             _settingFile.Write("CDN", cdnPick.SelectedValue.ToString());
@@ -1792,15 +1800,12 @@ namespace GameLauncher {
             }
         }
 
-        private void settingsGameFilesCurrent_Click(object sender, EventArgs e)
-        {
+        private void settingsGameFilesCurrent_Click(object sender, EventArgs e) {
             Process.Start(_newGameFilesPath);
         }
 
-        private void SettingsFormElements(bool hideElements = true)
-        {
-            if (hideElements)
-            {
+        private void SettingsFormElements(bool hideElements = true) {
+            if (hideElements) {
                 currentWindowInfo.Text = "";
             }
 
@@ -1942,23 +1947,17 @@ namespace GameLauncher {
             }
         }
 
-        private void playButton_Click(object sender, EventArgs e)
-        {
-
-            if (_loggedIn == false)
-            {
+        private void playButton_Click(object sender, EventArgs e) {
+            if (_loggedIn == false) {
                 if(_useSavedPassword == false) return;
                 loginButton_Click(sender, e);
             }
 
-            if (_playenabled == false)
-            {
+            if (_playenabled == false) {
                 return;
             }
 
             playButton.BackgroundImage = Properties.Resources.playbutton;
-
-            var serverInfo = (ServerInfo)serverPick.SelectedItem;
 
             if (_disabledModNet == false) {
                 Log.Debug("Installing ModNet");
@@ -1975,8 +1974,8 @@ namespace GameLauncher {
                     }
                 } catch (Exception) { }
 
-                if (serverInfo.DistributionUrl != "" && serverInfo.Id != "nfsw") {
-                    DownloadMods(serverInfo.Id);
+                if (_serverInfo.DistributionUrl != "" && _serverInfo.Id != "nfsw") {
+                    DownloadMods(_serverInfo.Id);
                 } else {
                     ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
                 }
