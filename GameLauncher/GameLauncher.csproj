@@ -210,11 +210,11 @@
     <Compile Include="App\Discord\RichPresenceBuilder.cs" />
     <Compile Include="App\Discord\RichPresenceStruct.cs" />
     <Compile Include="App\Discord\SDK.cs" />
-    <Compile Include="App\Form1.cs">
+    <Compile Include="App\MainScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="App\MainScreen.Designer.cs">
+      <DependentUpon>MainScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\JsonScheme.cs" />
     <Compile Include="Program.cs" />
@@ -238,8 +238,8 @@
     <EmbeddedResource Include="App\Debug.resx">
       <DependentUpon>Debug.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="App\MainScreen.resx">
+      <DependentUpon>MainScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\ShowMap.resx">
       <DependentUpon>ShowMap.cs</DependentUpon>
