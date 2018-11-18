@@ -1432,6 +1432,7 @@ namespace GameLauncher {
             showmap.Visible = hideElements;
             serverPick.Enabled = true;
             randomServer.Visible = hideElements;
+            randomServer.Enabled = true;
         }
 
         private void RegisterFormElements(bool hideElements = true) {
@@ -1459,6 +1460,9 @@ namespace GameLauncher {
             addServer.Visible = hideElements;
             serverPick.Visible = hideElements;
             serverPick.Enabled = false;
+
+            randomServer.Visible = hideElements;
+            randomServer.Enabled = false;
 
             // Reset fields
             registerEmail.Text = "";

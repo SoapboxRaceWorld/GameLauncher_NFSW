@@ -58,7 +58,7 @@ namespace GameLauncher.App.Classes.Auth {
                         if (_errorcode == 500) {
                             serverLoginResponse = "{\"error\":\"Internal Server Error.\"}";
                         } else  {
-                            serverLoginResponse = "{\"error\":\""+httpResponse.StatusDescription+"\"}";
+                            serverLoginResponse = serverLoginResponse;
                         }
                     }
                 }
@@ -114,7 +114,7 @@ namespace GameLauncher.App.Classes.Auth {
                         if (_errorcode == 500) {
                             serverLoginResponse = "{\"error\":\"Internal Server Error.\"}";
                         } else {
-                            serverLoginResponse = "{\"error\":\"" + httpResponse.StatusDescription + "\"}";
+                            serverLoginResponse = serverLoginResponse;
                         }
                     }
                 }
