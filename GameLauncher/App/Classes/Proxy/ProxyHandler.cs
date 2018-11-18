@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 using Flurl.Http;
 using Flurl.Http.Content;
@@ -100,33 +101,96 @@ namespace GameLauncher.App.Classes.Proxy
                     }
             }
 
-            String replyToServer = String.Empty;
+            String replyToServer = response.Content.ReadAsStringAsync().Result;
 
-            /* WorldUnited™ Alpha 0.1
-             * Freeroam and Racecore, united
-             **/
+            Dictionary<string, string> powerups = new Dictionary<string, string>();
+            powerups.Add("-1681514783", "NITROUS");
+            powerups.Add("-537557654", "RUN FLATS");
+            powerups.Add("-1692359144", "INSTANT COOLDOWN");
+            powerups.Add("-364944936", "SHIELD");
+            powerups.Add("2236629", "SLINGSHOT");
+            powerups.Add("957701799", "READY");
+            powerups.Add("1805681994", "JUGGERNAUT");
+            powerups.Add("-611661916", "EMERGENCY EVADE");
+            powerups.Add("-1564932069", "TEAM EMERGENCY EVADE");
+            powerups.Add("1627606782", "ONE MORE LAP");
+            powerups.Add("1113720384", "TEAM SLINGSHOT");
+            powerups.Add("125509666", "TRAFFIC MAGNET");
 
-            /*if(fixedPath == "/getrebroadcasters") {
-                replyToServer = response.Content.ReadAsStringAsync().Result;
+            //Let's create faketimer
+            Dictionary<string, bool> executedPowerups = new Dictionary<string, bool>();
+            executedPowerups.Add("-1681514783", false);
+            executedPowerups.Add("-537557654", false);
+            executedPowerups.Add("-1692359144", false);
+            executedPowerups.Add("-364944936", false);
+            executedPowerups.Add("2236629", false);
+            executedPowerups.Add("957701799", false);
+            executedPowerups.Add("1805681994", false);
+            executedPowerups.Add("-611661916", false);
+            executedPowerups.Add("-1564932069", false);
+            executedPowerups.Add("1627606782", false);
+            executedPowerups.Add("1113720384", false);
+            executedPowerups.Add("125509666", false);
 
-                replyToServer = Regex.Replace(replyToServer, @"<Host>(.*?)<\/Host>", "<Host>37.233.101.12</Host>");
-                replyToServer = Regex.Replace(replyToServer, @"<Port>(.*?)<\/Port>", "<Port>9999</Port>");
+            Dictionary<string, int> executedPowerupsRemainingSecs = new Dictionary<string, int>();
 
-                Console.WriteLine(replyToServer);
-            } else*/ if (fixedPath == "/User/GetPermanentSession") {
-                replyToServer = Self.CleanFromUnknownChars(response.Content.ReadAsStringAsync().Result);
+            if (Regex.Match(fixedPath, "/powerups/activated/", RegexOptions.IgnoreCase).Success) {
+                String activatedHash = fixedPath.Split('/').Last();
+
+                Console.WriteLine("--- CHECK ACTIVATED POWERUPS ---");
+                foreach(KeyValuePair<string, bool> entry in executedPowerups) {
+                    Console.WriteLine(powerups[entry.Key] + ": " + entry.Value);
+                }
+
+                if (executedPowerups[activatedHash]) {
+                    var notification = new NotifyIcon() {
+                        Visible = true,
+                        Icon = System.Drawing.SystemIcons.Information,
+                        BalloonTipIcon = ToolTipIcon.Info,
+                        BalloonTipTitle = "GameLauncherReborn",
+                        BalloonTipText = "Hey! You can't use " + powerups[activatedHash] + " right now, wait " + executedPowerupsRemainingSecs[activatedHash] + "s for regeneration.",
+                    };
+
+                    notification.ShowBalloonTip(5000);
+                    notification.Dispose();
+
+                    replyToServer = null;
+                } else {
+                    Console.WriteLine("User activated " + powerups[activatedHash]);
+
+                    executedPowerups[activatedHash] = true;
+                    executedPowerupsRemainingSecs[activatedHash] = 15;
+
+                    System.Timers.Timer poweruptimer = new System.Timers.Timer();
+                    poweruptimer.Elapsed += (x, y) => { 
+                        if(executedPowerupsRemainingSecs[activatedHash] == 0) {
+                            executedPowerups[activatedHash] = false;
+                            executedPowerupsRemainingSecs.Remove(activatedHash);
+                            Console.WriteLine("Removed " + powerups[activatedHash]);
+
+                            poweruptimer.Close();
+                        } else {
+                            executedPowerupsRemainingSecs[activatedHash] -= 1;
+                            Console.WriteLine("Counting: " + executedPowerupsRemainingSecs[activatedHash]);
+                        }
+                    };
+
+                    poweruptimer.Interval = 1000;
+                    poweruptimer.Enabled = true;
+                }
+            }
+
+            if (fixedPath == "/User/GetPermanentSession") {
+                replyToServer = Self.CleanFromUnknownChars(replyToServer);
 
                 var SBRW_XML = new XmlDocument();
                 SBRW_XML.LoadXml(replyToServer);
                 XmlNode UserInfo = SBRW_XML.SelectSingleNode("UserInfo");
                 XmlNodeList personas = UserInfo.SelectNodes("personas/ProfileData");
-                Console.WriteLine("COUNT PERSONAS: " + personas.Count);
 
                 if(personas.Count == 0) {
                     replyToServer = replyToServer.Replace("false", "true");
                 }
-            } else {
-                replyToServer = response.Content.ReadAsStringAsync().Result;
             }
 
             DiscordGamePresence.handleGameState(fixedPath, replyToServer, POSTContent, GETContent);

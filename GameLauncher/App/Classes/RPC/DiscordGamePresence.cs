@@ -235,6 +235,8 @@ namespace GameLauncher.App.Classes.RPC {
                 DiscordRpc.UpdatePresence(_presence);
             }
 
+
+
             //CARS RELATED
             foreach (var single_personaId in PersonaIds) {
                 if (Regex.Match(uri, "/personas/" + single_personaId + "/carslots", RegexOptions.IgnoreCase).Success) {
