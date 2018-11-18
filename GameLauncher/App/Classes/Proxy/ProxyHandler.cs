@@ -102,7 +102,18 @@ namespace GameLauncher.App.Classes.Proxy
 
             String replyToServer = String.Empty;
 
-            if(fixedPath == "/User/GetPermanentSession") {
+            /* WorldUnited™ Alpha 0.1
+             * Freeroam and Racecore, united
+             **/
+
+            /*if(fixedPath == "/getrebroadcasters") {
+                replyToServer = response.Content.ReadAsStringAsync().Result;
+
+                replyToServer = Regex.Replace(replyToServer, @"<Host>(.*?)<\/Host>", "<Host>37.233.101.12</Host>");
+                replyToServer = Regex.Replace(replyToServer, @"<Port>(.*?)<\/Port>", "<Port>9999</Port>");
+
+                Console.WriteLine(replyToServer);
+            } else*/ if (fixedPath == "/User/GetPermanentSession") {
                 replyToServer = Self.CleanFromUnknownChars(response.Content.ReadAsStringAsync().Result);
 
                 var SBRW_XML = new XmlDocument();
@@ -114,8 +125,7 @@ namespace GameLauncher.App.Classes.Proxy
                 if(personas.Count == 0) {
                     replyToServer = replyToServer.Replace("false", "true");
                 }
-            }
-            else {
+            } else {
                 replyToServer = response.Content.ReadAsStringAsync().Result;
             }
 

@@ -93,6 +93,9 @@ namespace GameLauncher {
         public DiscordUser CurrentUser;
         private Random rnd;
 
+        List<ServerInfo> finalItems = new List<ServerInfo>();
+        Dictionary<string, int> serverStatusDictionary = new Dictionary<string, int>();
+
         Form _splashscreen;
 
         private static Random random = new Random();
@@ -275,7 +278,19 @@ namespace GameLauncher {
             this.Load += new EventHandler(mainScreen_Load);
             this.Shown += (x,y) => {
                 new Thread(() => {
-                    DiscordRpc.RunCallbacks();
+                    //Let's fetch all servers
+                    List<ServerInfo> allServs = finalItems.FindAll(i => string.Equals(i.IsSpecial, false));
+                    allServs.ForEach(delegate(ServerInfo server) {
+                        try { 
+                            WebClientWithTimeout pingServer = new WebClientWithTimeout();
+                            pingServer.DownloadString(server.IpAddress + "/GetServerInformation");
+                            serverStatusDictionary.Add(server.Id, 1);
+                        } catch {
+                            serverStatusDictionary.Add(server.Id, 0);
+                        }
+                    });
+
+                    //DiscordRpc.RunCallbacks();
                 }).Start();
             };
 
@@ -354,31 +369,42 @@ namespace GameLauncher {
             }
         }
 
-        private void comboBox1_DrawItem(object sender, DrawItemEventArgs e)
-        {
+        private void comboBox1_DrawItem(object sender, DrawItemEventArgs e) {
             var font = (sender as ComboBox).Font;
-            var backgroundColor = Brushes.White;
-            var textColor = Brushes.Black;
+            Brush backgroundColor;
+            Brush textColor;
 
             var serverListText = "";
+            int onlineStatus = 2; //0 = offline | 1 = online | 2 = checking
 
             if (sender is ComboBox cb) {
                 if (cb.Items[e.Index] is ServerInfo si) {
                     serverListText = si.Name;
+                    onlineStatus = serverStatusDictionary.ContainsKey(si.Id) ? serverStatusDictionary[si.Id] : 2;
                 }
             }
 
             if (serverListText.StartsWith("<GROUP>")) {
                 font = new Font(font, FontStyle.Bold);
-                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                e.Graphics.DrawString(serverListText.Replace("<GROUP>", string.Empty), font, textColor, e.Bounds);
+                e.Graphics.FillRectangle(Brushes.White, e.Bounds);
+                e.Graphics.DrawString(serverListText.Replace("<GROUP>", string.Empty), font, Brushes.Black, e.Bounds);
             } else {
                 font = new Font(font, FontStyle.Regular);
                 if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit) {
                     backgroundColor = SystemBrushes.Highlight;
                     textColor = SystemBrushes.HighlightText;
                 } else {
-                    backgroundColor = SystemBrushes.Window;
+                    if(onlineStatus == 2) {
+                        //CHECKING
+                        backgroundColor = Brushes.Khaki;
+                    } else if(onlineStatus == 1) {
+                        //ONLINE
+                        backgroundColor = Brushes.PaleGreen;
+                    } else {
+                        //OFFLINE
+                        backgroundColor = Brushes.LightCoral;
+                    }
+
                     textColor = SystemBrushes.WindowText;
                 }
 
@@ -489,8 +515,6 @@ namespace GameLauncher {
             serverPick.DisplayMember = "Name";
 
             var resItems = JsonConvert.DeserializeObject<List<ServerInfo>>(_slresponse);
-
-            var finalItems = new List<ServerInfo>();
 
             foreach (var serverItemGroup in resItems.GroupBy(s => s.Category))
             {
@@ -923,7 +947,7 @@ namespace GameLauncher {
 
             if (_modernAuthSupport == false) {
                 //ClassicAuth sends password in SHA1
-                realpass = (_useSavedPassword) ? _settingFile.Read("Password") : SHA.HashPassword(password.Text.ToString());
+                realpass = (_useSavedPassword) ? _settingFile.Read("Password") : SHA.HashPassword(password.Text.ToString()).ToLower();
                 ClassicAuth.Login(username, realpass);
             } else {
                 //ModernAuth sends passwords in plaintext, but is POST request
@@ -1568,7 +1592,7 @@ namespace GameLauncher {
                     Tokens.ServerName = _serverInfo.Name;
 
                     if (_modernAuthSupport == false) {
-                        realpass = SHA.HashPassword(registerPassword.Text.ToString());
+                        realpass = SHA.HashPassword(registerPassword.Text.ToString()).ToLower();
                         ClassicAuth.Register(username, realpass, token);
                     } else {
                         realpass = registerPassword.Text.ToString();
@@ -2363,6 +2387,21 @@ namespace GameLauncher {
             }
 
             _formGraphics.Dispose();
+        }
+
+        int rememberit;
+        private void randomServer_Click(object sender, EventArgs e) {
+            int total = (finalItems.Count)-(finalItems.FindAll(i => string.Equals(i.IsSpecial, true)).Count); //Prevent summing GROUPS
+            int randomizer = random.Next(total);
+
+            if (finalItems[total].IsSpecial == true) //Prevent picking GROUP as random server
+                randomizer = random.Next(total);
+
+            if (rememberit == randomizer) //Prevent picking same ID as current one
+                randomizer = random.Next(total);
+
+            serverPick.SelectedIndex = randomizer;
+            rememberit = randomizer;
         }
     }
 }
