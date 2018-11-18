@@ -33,7 +33,7 @@ namespace GameLauncher.App.Classes.Auth {
                     String json = new JavaScriptSerializer().Serialize(new {
                         email = email,
                         password = password,
-                        upgrade = false
+                        upgrade = true
                     });
 
                     streamWriter.Write(json);
@@ -91,7 +91,7 @@ namespace GameLauncher.App.Classes.Auth {
 
                 using (StreamWriter streamWriter = new StreamWriter(httpWebRequest.GetRequestStream())) {
                     object serializedPOST;
-                    String json = new JavaScriptSerializer().Serialize(new { email = email, password = password, inviteticket = token });
+                    String json = new JavaScriptSerializer().Serialize(new { email = email, password = password, ticket = token });
                     streamWriter.Write(json);
                 }
 

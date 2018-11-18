@@ -1431,6 +1431,7 @@ namespace GameLauncher {
             //allowedCountriesLabel.Visible = hideElements;
             showmap.Visible = hideElements;
             serverPick.Enabled = true;
+            randomServer.Visible = hideElements;
         }
 
         private void RegisterFormElements(bool hideElements = true) {
