@@ -284,9 +284,12 @@ namespace GameLauncher {
                         try { 
                             WebClientWithTimeout pingServer = new WebClientWithTimeout();
                             pingServer.DownloadString(server.IpAddress + "/GetServerInformation");
-                            serverStatusDictionary.Add(server.Id, 1);
+
+                            if(!serverStatusDictionary.ContainsKey(server.Id))
+                                serverStatusDictionary.Add(server.Id, 1);
                         } catch {
-                            serverStatusDictionary.Add(server.Id, 0);
+                            if (!serverStatusDictionary.ContainsKey(server.Id))
+                                serverStatusDictionary.Add(server.Id, 0);
                         }
                     });
 
