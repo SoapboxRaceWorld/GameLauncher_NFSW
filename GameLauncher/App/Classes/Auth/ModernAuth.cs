@@ -64,7 +64,13 @@ namespace GameLauncher.App.Classes.Auth {
             if(String.IsNullOrEmpty(serverLoginResponse)) {
                 Tokens.Error = "Server seems to be offline.";
             } else {
-                var LoginObjectResponse = JsonConvert.DeserializeObject<modernAuthObject>(serverLoginResponse);
+                modernAuthObject LoginObjectResponse;
+
+                try {
+                    LoginObjectResponse = JsonConvert.DeserializeObject<modernAuthObject>(serverLoginResponse);
+                } catch {
+                    LoginObjectResponse = JsonConvert.DeserializeObject<modernAuthObject>(_serverErrormsg);
+                }
 
                 if (String.IsNullOrEmpty(LoginObjectResponse.error)) { 
                     Tokens.UserId = LoginObjectResponse.userId;
