@@ -69,7 +69,7 @@ namespace GameLauncher.App.Classes.Proxy
                         Icon = System.Drawing.SystemIcons.Information,
                         BalloonTipIcon = ToolTipIcon.Info,
                         BalloonTipTitle = "GLAnti-Cheat v0.1",
-                        BalloonTipText = "Hey! You can't use " + powerups[activatedHash] + " right now. Therefore, this powerup has been disabled till next session.",
+                        BalloonTipText = "Hey! You can't use " + powerups[activatedHash] + " right now. Therefore, this powerup has been disabled till next event/freeroam session.",
                     };
 
                     notification.ShowBalloonTip(5000);
@@ -87,7 +87,15 @@ namespace GameLauncher.App.Classes.Proxy
                             foreach(KeyValuePair<string, bool> allpowerups in executedPowerups) {
                                 executedPowerups[allpowerups.Key] = false;
                                 executedPowerupsRemainingSecs[allpowerups.Key] = 0;
+
+                                executedPowerups.Remove(allpowerups.Key);
+                                executedPowerupsRemainingSecs.Remove(allpowerups.Key);
                             }
+
+                            executedPowerups[activatedHash] = false;
+                            executedPowerupsRemainingSecs[activatedHash] = 0;
+
+                            poweruptimer.Close();
                         } else { 
                             if (executedPowerupsRemainingSecs[activatedHash] == 0) {
                                 executedPowerups[activatedHash] = false;
