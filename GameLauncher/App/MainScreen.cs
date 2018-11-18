@@ -126,11 +126,11 @@ namespace GameLauncher {
         }
 
         void Discord_Ready(ref DiscordUser pUser) {
-            //Invoke(new Action<DiscordUser>((user) => {
-                Log.Debug(String.Format("Connected as {0}#{1}: {2}", pUser.username, pUser.discriminator, pUser.userId));
-            //}), pUser);
+            Invoke(new Action<DiscordUser>((user) => {
+                Log.Debug(String.Format("Connected as {0}#{1}: {2}", user.username, user.discriminator, user.userId));
+            }), pUser);
 
-            //CurrentUser = pUser;
+            CurrentUser = pUser;
         }
 
         void Discord_Disconnect(int code, string message) {
@@ -142,6 +142,22 @@ namespace GameLauncher {
         }
 
         public MainScreen(Form splashscreen) {
+
+            ParseUri uri = new ParseUri(Environment.GetCommandLineArgs());
+
+            if (uri.IsDiscordPresent()) {
+                var notification = new NotifyIcon() {
+                    Visible = true,
+                    Icon = System.Drawing.SystemIcons.Information,
+                    BalloonTipIcon = ToolTipIcon.Info,
+                    BalloonTipTitle = "GameLauncherReborn",
+                    BalloonTipText = "Discord features are not yet completed.",
+                };
+
+                notification.ShowBalloonTip(5000);
+                notification.Dispose();
+            }
+
             Log.Debug("Entered mainScreen");
             _splashscreen = splashscreen;
 
@@ -152,7 +168,7 @@ namespace GameLauncher {
             handlers.errorCallback = Discord_Error;
             handlers.disconnectedCallback = Discord_Disconnect;
             DiscordRpc.Initialize("427355155537723393", ref handlers, true, String.Empty);
-            DiscordRpc.Register("427355155537723393", "GameLauncher.exe --discord");
+            DiscordRpc.Register("427355155537723393", "\"" + Directory.GetCurrentDirectory() + "\\GameLauncher.exe\" --discord");
 
             Log.Debug("Setting SSL Protocol");
             ServicePointManager.Expect100Continue = true;
@@ -278,6 +294,8 @@ namespace GameLauncher {
             this.Load += new EventHandler(mainScreen_Load);
             this.Shown += (x,y) => {
                 new Thread(() => {
+                    DiscordRpc.RunCallbacks();
+
                     //Let's fetch all servers
                     List<ServerInfo> allServs = finalItems.FindAll(i => string.Equals(i.IsSpecial, false));
                     allServs.ForEach(delegate(ServerInfo server) {
@@ -292,8 +310,6 @@ namespace GameLauncher {
                                 serverStatusDictionary.Add(server.Id, 0);
                         }
                     });
-
-                    //DiscordRpc.RunCallbacks();
                 }).Start();
             };
 
@@ -1081,6 +1097,12 @@ namespace GameLauncher {
                     ServerStatusDesc.Text = "Failed to connect to server.";
                     _serverEnabled = false;
                     _allowRegistration = false;
+
+                    if(!serverStatusDictionary.ContainsKey(_serverInfo.Id)) {
+                        serverStatusDictionary.Add(_serverInfo.Id, 2);
+                    } else { 
+                        serverStatusDictionary[_serverInfo.Id] = 2; 
+                    }
                 } else if (e2.Error != null) {
                     ServerStatusBar(_colorOffline, _startPoint, _endPoint);
 
@@ -1089,10 +1111,22 @@ namespace GameLauncher {
                     ServerStatusDesc.Text = "Server seems to be offline.";
                     _serverEnabled = false;
                     _allowRegistration = false;
+
+                    if (!serverStatusDictionary.ContainsKey(_serverInfo.Id)) {
+                        serverStatusDictionary.Add(_serverInfo.Id, 0);
+                    } else {
+                        serverStatusDictionary[_serverInfo.Id] = 0;
+                    }
                 } else {
                     if (_realServername == "Offline Built-In Server") {
                         numPlayers = "∞";
                     } else {
+                        if (!serverStatusDictionary.ContainsKey(_serverInfo.Id)) {
+                            serverStatusDictionary.Add(_serverInfo.Id, 1);
+                        } else {
+                            serverStatusDictionary[_serverInfo.Id] = 1;
+                        }
+
                         var json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
                         try {
                             _realServernameBanner = json.serverName;

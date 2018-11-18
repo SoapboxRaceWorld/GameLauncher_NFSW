@@ -9,15 +9,16 @@ using Bugsnag;
 using GameLauncher.App;
 using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Logger;
+using GameLauncher.HashPassword;
 using GameLauncherReborn;
 
 namespace GameLauncher {
     internal static class Program {
         [STAThread]
         internal static void Main() {
+
             File.Delete("log.txt");
 
-            Log.Debug("GameLauncher v" + Application.ProductVersion + "build-" + WebClientWithTimeout.createHash(AppDomain.CurrentDomain.FriendlyName).Substring(0, 7));            
             Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 
@@ -33,14 +34,14 @@ namespace GameLauncher {
                 Environment.Exit(0);
             }
 
-            /*if (!DetectLinux.UnixDetected() && !File.Exists("discord-rpc.dll"))
+            if (!DetectLinux.UnixDetected() && !File.Exists("discord-rpc.dll"))
                 File.WriteAllBytes("discord-rpc.dll", ExtractResource.AsByte("GameLauncher.Discord.discord-rpc.dll"));
 
             if (DetectLinux.LinuxDetected() && !File.Exists("libdiscord-rpc.so"))
                 File.WriteAllBytes("libdiscord-rpc.so", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.so"));
 
             if (DetectLinux.MacOSDetected() && !File.Exists("libdiscord-rpc.dylib"))
-                File.WriteAllBytes("libdiscord-rpc.dylib", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.dylib"));*/
+                File.WriteAllBytes("libdiscord-rpc.dylib", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.dylib"));
 
 			if(!File.Exists("GameLauncherUpdater.exe")) {
 				try {
@@ -86,7 +87,7 @@ namespace GameLauncher {
                         foreach (var file in files) {
                             var splitFileVersion = file.Split(new string[] { " - " }, StringSplitOptions.None);
 
-                            if (!File.Exists(splitFileVersion[0])) {
+                            if (!File.Exists(Directory.GetCurrentDirectory() + "\\" + splitFileVersion[0])) {
                                 missingfiles.Add(splitFileVersion[0] + " - Not Found");
                             } else {
                                 try { 

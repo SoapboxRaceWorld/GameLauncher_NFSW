@@ -28,7 +28,7 @@ namespace DiscordRPC {
 		public static extern void Shutdown();
 
 		[DllImport("discord-rpc", EntryPoint = "Discord_RunCallbacks", CallingConvention = CallingConvention.Cdecl)]
-		public static extern void RunCallbacks();
+        public static extern void RunCallbacks();
 
 		[DllImport("discord-rpc", EntryPoint = "Discord_UpdatePresence", CallingConvention = CallingConvention.Cdecl)]
 		private static extern void UpdatePresenceNative(ref RichPresenceStruct presence);

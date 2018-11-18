@@ -20,17 +20,9 @@ namespace GameLauncherReborn {
             return GameLauncherHash;
         }
 
+        [Obsolete("WebClient.createHash is deprecated, please use SHA.HashFile instead.")]
         public static string createHash(string filename) {
-            SHA1 sha1 = new SHA1CryptoServiceProvider();
-            byte[] retVal = sha1.ComputeHash(File.OpenRead(filename));
-
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < retVal.Length; i++)
-            {
-                sb.Append(retVal[i].ToString("x2"));
-            }
-
-            return sb.ToString().ToUpper();
+            return SHA.HashFile(filename);
         }
 
         protected override WebRequest GetWebRequest(Uri address) {

@@ -57,6 +57,8 @@ namespace GameLauncher.App.Classes.Auth {
                         serverLoginResponse = sr.ReadToEnd();
                         if (_errorcode == 500) {
                             serverLoginResponse = "{\"error\":\"Internal Server Error.\"}";
+                        } else  {
+                            serverLoginResponse = "{\"error\":\""+httpResponse.StatusDescription+"\"}";
                         }
                     }
                 }
@@ -81,19 +83,15 @@ namespace GameLauncher.App.Classes.Auth {
         }
 
         public static void Register(String email, String password, String token = null) {
-            /*try {
+            try {
                 var buildUrl = Tokens.IPAddress + "/User/modernRegister";
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(buildUrl);
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
 
                 using (StreamWriter streamWriter = new StreamWriter(httpWebRequest.GetRequestStream())) {
-                    String json = new JavaScriptSerializer().Serialize(new {
-                        email = email,
-                        password = password,
-                        token = token /// How the actual fuck user now sends its inviteToken???? oO
-                    });
-
+                    object serializedPOST;
+                    String json = new JavaScriptSerializer().Serialize(new { email = email, password = password, inviteticket = token });
                     streamWriter.Write(json);
                 }
 
@@ -115,6 +113,8 @@ namespace GameLauncher.App.Classes.Auth {
                         serverLoginResponse = sr.ReadToEnd();
                         if (_errorcode == 500) {
                             serverLoginResponse = "{\"error\":\"Internal Server Error.\"}";
+                        } else {
+                            serverLoginResponse = "{\"error\":\"" + httpResponse.StatusDescription + "\"}";
                         }
                     }
                 }
@@ -137,9 +137,7 @@ namespace GameLauncher.App.Classes.Auth {
                 } else {
                     Tokens.Error = RegisterObjectResponse.error;
                 }
-            }*/
-
-            Tokens.Error = "API ISSUES";
+            }
         }
     }
 }
