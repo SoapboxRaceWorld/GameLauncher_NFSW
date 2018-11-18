@@ -18,7 +18,8 @@ namespace GameLauncher.App.Classes.Auth {
     }
 
     class ModernAuth {
-        private static int _errorcode;
+        private static int _serverErrorcode;
+        private static string _serverErrormsg;
         private static string serverLoginResponse;
         private static HttpWebResponse httpResponse;
 
@@ -41,25 +42,21 @@ namespace GameLauncher.App.Classes.Auth {
 
                 httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
                 using (var sr = new StreamReader(httpResponse.GetResponseStream()))  {
-                    _errorcode = (int)httpResponse.StatusCode;
+                    _serverErrorcode = (int)httpResponse.StatusCode;
                     serverLoginResponse = sr.ReadToEnd();
                 }
             } catch (WebException ex) {
                 httpResponse = (HttpWebResponse)ex.Response;
 
                 if (httpResponse == null) {
-                    _errorcode = 500;
+                    _serverErrorcode = 500;
                     serverLoginResponse = "{\"error\":\"Failed to get reply from server. Please retry.\"}";
                 } else {
                     using (var sr = new StreamReader(httpResponse.GetResponseStream())) {
-                        _errorcode = (int)httpResponse.StatusCode;
+                        _serverErrorcode = (int)httpResponse.StatusCode;
+                        _serverErrormsg = "{\"error\":\""+httpResponse.StatusDescription+"\"}";
 
                         serverLoginResponse = sr.ReadToEnd();
-                        if (_errorcode == 500) {
-                            serverLoginResponse = "{\"error\":\"Internal Server Error.\"}";
-                        } else  {
-                            serverLoginResponse = serverLoginResponse;
-                        }
                     }
                 }
             }
@@ -97,25 +94,21 @@ namespace GameLauncher.App.Classes.Auth {
 
                 httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
                 using (var sr = new StreamReader(httpResponse.GetResponseStream())) {
-                    _errorcode = (int)httpResponse.StatusCode;
+                    _serverErrorcode = (int)httpResponse.StatusCode;
                     serverLoginResponse = sr.ReadToEnd();
                 }
             } catch (WebException ex) {
                 httpResponse = (HttpWebResponse)ex.Response;
 
                 if (httpResponse == null) {
-                    _errorcode = 500;
+                    _serverErrorcode = 500;
                     serverLoginResponse = "{\"error\":\"Failed to get reply from server. Please retry.\"}";
                 } else {
                     using (var sr = new StreamReader(httpResponse.GetResponseStream())) {
-                        _errorcode = (int)httpResponse.StatusCode;
+                        _serverErrorcode = (int)httpResponse.StatusCode;
+                        _serverErrormsg = "{\"error\":\"" + httpResponse.StatusDescription + "\"}";
 
                         serverLoginResponse = sr.ReadToEnd();
-                        if (_errorcode == 500) {
-                            serverLoginResponse = "{\"error\":\"Internal Server Error.\"}";
-                        } else {
-                            serverLoginResponse = serverLoginResponse;
-                        }
                     }
                 }
             }
@@ -123,7 +116,13 @@ namespace GameLauncher.App.Classes.Auth {
             if (String.IsNullOrEmpty(serverLoginResponse)) {
                 Tokens.Error = "Server seems to be offline.";
             } else {
-                var RegisterObjectResponse = JsonConvert.DeserializeObject<modernAuthObject>(serverLoginResponse);
+                modernAuthObject RegisterObjectResponse;
+
+                try {
+                    RegisterObjectResponse = JsonConvert.DeserializeObject<modernAuthObject>(serverLoginResponse);
+                } catch {
+                    RegisterObjectResponse = JsonConvert.DeserializeObject<modernAuthObject>(_serverErrormsg);
+                }
 
                 if (String.IsNullOrEmpty(RegisterObjectResponse.error) || RegisterObjectResponse.error == "SERVER FULL") {
                     Tokens.UserId = RegisterObjectResponse.userId;
