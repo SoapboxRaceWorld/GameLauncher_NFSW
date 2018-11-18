@@ -52,6 +52,15 @@ namespace GameLauncher.App.Classes.Proxy
             if (Regex.Match(context.Request.Path, "/powerups/activated/", RegexOptions.IgnoreCase).Success) {
                 String activatedHash = context.Request.Path.Split('/').Last();
 
+                try { 
+                    Console.WriteLine("--- CHECK ACTIVATED POWERUPS ---");
+                    foreach (KeyValuePair<string, bool> entry in executedPowerups) {
+                        Console.WriteLine(powerups[entry.Key] + ": " + entry.Value);
+                    }
+                } catch {
+                    Console.WriteLine("No activated powerups were found!");
+                }
+
                 executedPowerups.TryGetValue(activatedHash, out activated);
 
                 if (activated) {
@@ -59,26 +68,35 @@ namespace GameLauncher.App.Classes.Proxy
                         Visible = true,
                         Icon = System.Drawing.SystemIcons.Information,
                         BalloonTipIcon = ToolTipIcon.Info,
-                        BalloonTipTitle = "GameLauncherReborn",
-                        BalloonTipText = "Hey! You can't use " + powerups[activatedHash] + " right now, wait " + executedPowerupsRemainingSecs[activatedHash] + "s for regeneration.",
+                        BalloonTipTitle = "GLAnti-Cheat v0.1",
+                        BalloonTipText = "Hey! You can't use " + powerups[activatedHash] + " right now. Therefore, this powerup has been disabled till next session.",
                     };
 
                     notification.ShowBalloonTip(5000);
+                    System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainScreen));
+                    notification.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
                     notification.Dispose();
 
                     Self.sendRequest = false;
                 } else {
-                    executedPowerupsRemainingSecs[activatedHash] = 12;
+                    executedPowerupsRemainingSecs[activatedHash] = 14;
 
                     System.Timers.Timer poweruptimer = new System.Timers.Timer();
                     poweruptimer.Elapsed += (x, y) => {
-                        if (executedPowerupsRemainingSecs[activatedHash] == 0) {
-                            executedPowerups[activatedHash] = false;
-                            executedPowerupsRemainingSecs[activatedHash] = 0;
-                            poweruptimer.Close();
-                        } else {
-                            executedPowerups[activatedHash] = true;
-                            executedPowerupsRemainingSecs[activatedHash] -= 1;
+                        if(activatedHash == "957701799") {
+                            foreach(KeyValuePair<string, bool> allpowerups in executedPowerups) {
+                                executedPowerups[allpowerups.Key] = false;
+                                executedPowerupsRemainingSecs[allpowerups.Key] = 0;
+                            }
+                        } else { 
+                            if (executedPowerupsRemainingSecs[activatedHash] == 0) {
+                                executedPowerups[activatedHash] = false;
+                                executedPowerupsRemainingSecs[activatedHash] = 0;
+                                poweruptimer.Close();
+                            } else {
+                                executedPowerups[activatedHash] = true;
+                                executedPowerupsRemainingSecs[activatedHash] -= 1;
+                            }
                         }
                     };
 
@@ -99,8 +117,7 @@ namespace GameLauncher.App.Classes.Proxy
             if (Self.sendRequest == true) {
                 var fixedPath = context.Request.Path.Replace("/nfsw/Engine.svc", "");
                 var fullUrl = new Uri(serverUrl).Append(fixedPath);
-
-                Log.Debug($@"{context.Request.Method} {fixedPath} -> {fullUrl}");
+                Log.Debug($@"{context.Request.Method} {fixedPath} -> ");
 
                 foreach (var param in context.Request.Query) {
                     var value = context.Request.Query[param];
@@ -113,10 +130,7 @@ namespace GameLauncher.App.Classes.Proxy
                     headers[header.Key] = (header.Key == "Host") ? fullUrl.Host : header.Value.First();
                 }
 
-                var url = new Flurl.Url(fullUrl.ToString())
-                            .SetQueryParams(queryParams)
-                            .WithHeaders(headers);
-
+                var url = new Flurl.Url(fullUrl.ToString()).SetQueryParams(queryParams).WithHeaders(headers);
                 HttpResponseMessage response;
 
                 switch (context.Request.Method){
@@ -152,6 +166,11 @@ namespace GameLauncher.App.Classes.Proxy
 
                 String replyToServer = response.Content.ReadAsStringAsync().Result;
 
+                /*if (fixedPath == "/getrebroadcasters"){
+                    replyToServer = Regex.Replace(replyToServer, @"<Host>(.*?)<\/Host>", "<Host>37.233.101.12</Host>");
+                    replyToServer = Regex.Replace(replyToServer, @"<Port>(.*?)<\/Port>", "<Port>9999</Port>");
+                }*/
+
                 if (fixedPath == "/User/GetPermanentSession") {
                     replyToServer = Self.CleanFromUnknownChars(replyToServer);
 
@@ -164,13 +183,17 @@ namespace GameLauncher.App.Classes.Proxy
                         replyToServer = replyToServer.Replace("false", "true");
                     }
                 }
+
+                if(fixedPath == "") {
+
+                }
+
                 DiscordGamePresence.handleGameState(fixedPath, replyToServer, POSTContent, GETContent);
 
                 return new TextResponse(replyToServer, response.Content.Headers.ContentType.ToString()) { StatusCode = (HttpStatusCode)(int)response.StatusCode };
             } else {
-                var fullUrl = new Uri(serverUrl).Append("/heartbeat");
-
-                Log.Debug($@"{context.Request.Method} /heartbeat -> {fullUrl}");
+                var fullUrl = new Uri(Self.internetcheckurl);
+                Log.Debug($@"{context.Request.Method} -> {fullUrl}");
 
                 foreach (var param in context.Request.Query) {
                     var value = context.Request.Query[param];
@@ -181,31 +204,16 @@ namespace GameLauncher.App.Classes.Proxy
                     headers[header.Key] = (header.Key == "Host") ? fullUrl.Host : header.Value.First();
                 }
 
-                var url = new Flurl.Url(fullUrl.ToString())
-                            .SetQueryParams(queryParams)
-                            .WithHeaders(headers);
+                var url = new Flurl.Url(fullUrl.ToString()).SetQueryParams().WithHeaders(headers);
 
                 HttpResponseMessage response;
                 switch (context.Request.Method) {
-                    case "POST": {
-                        POSTContent = context.Request.Body.AsString();
-                        response = url.PostAsync(
-                            new CapturedStringContent(
-                                POSTContent
-                            )
-                        ).Result;
-                        break;
-                    }
-                    case "GET":
-                    {
-                        response = url.GetAsync().Result;
-                        break;
-                    }
-                    default: {
-                        throw new Exception($"unsupported method: {context.Request.Method}");
-                    }
+                    case "GET": { response = url.GetAsync().Result; break; } 
+                    case "POST": {  POSTContent = context.Request.Body.AsString(); response = url.PostAsync( new CapturedStringContent( POSTContent ) ).Result; break; } 
+                    default: { throw new Exception($"unsupported method: {context.Request.Method}"); }
                 }
 
+                Self.sendRequest = true;
                 return new TextResponse(String.Empty, response.Content.Headers.ContentType.ToString()) { StatusCode = (HttpStatusCode)(int)response.StatusCode };
             }
         }
