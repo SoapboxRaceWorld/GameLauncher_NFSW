@@ -5,12 +5,13 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using Bugsnag;
 using GameLauncher.App;
 using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.HashPassword;
 using GameLauncherReborn;
+using SharpRaven;
+using SharpRaven.Data;
 
 namespace GameLauncher {
     internal static class Program {
@@ -71,7 +72,7 @@ namespace GameLauncher {
                 try {
                     if (mutex.WaitOne(0, false)) {
                         string[] files = {
-                            "Bugsnag.dll - 2.2.0",
+                            "SharpRaven.dll - 2.4.0",
                             "Flurl.dll - 2.8.0",
                             "Flurl.Http.dll - 2.3.2",
                             "INIFileParser.dll - 2.5.2",
@@ -92,7 +93,8 @@ namespace GameLauncher {
                             } else {
                                 try { 
                                     var versionInfo = FileVersionInfo.GetVersionInfo(splitFileVersion[0]);
-                                    string version = versionInfo.ProductVersion;
+                                    string[] versionsplit = versionInfo.ProductVersion.Split('+');
+                                    string version = versionsplit[0];
 
                                     if(version == "") {
                                         missingfiles.Add(splitFileVersion[0] + " - Invalid File");
@@ -139,23 +141,14 @@ namespace GameLauncher {
             }
         }
 
-       /* static void Discord_Ready(ref DiscordRpc.DiscordUser pUser) {
-            Invoke(new Action<DiscordRpc.DiscordUser>((user) => {
-                pbAvatarImage.ImageLocation = $"https://cdn.discordapp.com/avatars/{user.userId}/{user.avatar}.png?size=128";
-                lbUsername.Text = $"{user.username}#{user.discriminator}\n{user.userId}";
-
-                
-            }), pUser);
-
-            CurrentUser = pUser;
-        }*/
-
         static void UnhandledExceptionEventHandler(object sender, UnhandledExceptionEventArgs e) {
-            Bugsnag.Client bugsnag = new Bugsnag.Client(new Configuration("ba9a1f366203b461b2f031a12b9a0e41"));
-            bugsnag.Notify((Exception)e.ExceptionObject);
+            Exception exception = (Exception)e.ExceptionObject;
+            exception.Data.Add("BuildHash", SHA.HashFile(AppDomain.CurrentDomain.FriendlyName));
 
-            Log.Error(((Exception)e.ExceptionObject).Message);
-            using (ThreadExceptionDialog dialog = new ThreadExceptionDialog((Exception)e.ExceptionObject)) {
+            var ravenClient = new RavenClient("https://12973f6fa1054f51a8e3a840e7dc021c@sentry.io/1325472");
+            ravenClient.Capture(new SentryEvent(exception));
+
+            using (ThreadExceptionDialog dialog = new ThreadExceptionDialog(exception)) {
                 dialog.ShowDialog();
             }
 
@@ -164,12 +157,13 @@ namespace GameLauncher {
         }
 
         static void ThreadExceptionEventHandler(object sender, ThreadExceptionEventArgs e) {
-            Bugsnag.Client bugsnag = new Bugsnag.Client(new Configuration("ba9a1f366203b461b2f031a12b9a0e41"));
-            bugsnag.Notify(e.Exception);
+            Exception exception = (Exception)e.Exception;
+            exception.Data.Add("BuildHash", SHA.HashFile(AppDomain.CurrentDomain.FriendlyName));
 
-            Log.Error(e.Exception.Message);
+            var ravenClient = new RavenClient("https://12973f6fa1054f51a8e3a840e7dc021c@sentry.io/1325472");
+            ravenClient.Capture(new SentryEvent(exception));
 
-            using (ThreadExceptionDialog dialog = new ThreadExceptionDialog(e.Exception)) {
+            using (ThreadExceptionDialog dialog = new ThreadExceptionDialog(exception)) {
                 dialog.ShowDialog();
             }
 

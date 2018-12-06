@@ -145,6 +145,8 @@ namespace GameLauncher {
 
             ParseUri uri = new ParseUri(Environment.GetCommandLineArgs());
 
+            throw new Exception("This is a test");
+
             if (uri.IsDiscordPresent()) {
                 var notification = new NotifyIcon() {
                     Visible = true,
@@ -453,7 +455,10 @@ namespace GameLauncher {
             translatedBy.Text = "";
             ContextMenu = new ContextMenu();
 
-            ContextMenu.MenuItems.Add(new MenuItem("About", About.showAbout));
+            ContextMenu.MenuItems.Add(new MenuItem("About", (x,y) => {
+                About a = new About();
+                a.Show();
+            }));
             ContextMenu.MenuItems.Add(new MenuItem("Settings", settingsButton_Click));
             ContextMenu.MenuItems.Add(new MenuItem("Add Server", addServer_Click));
             ContextMenu.MenuItems.Add("-");
@@ -2016,7 +2021,10 @@ namespace GameLauncher {
                         ShowInTaskbar = false;
 
                         ContextMenu = new ContextMenu();
-                        ContextMenu.MenuItems.Add(new MenuItem("About", About.showAbout));
+                        ContextMenu.MenuItems.Add(new MenuItem("About", (x, y) => {
+                            About a = new About();
+                            a.Show();
+                        }));
                         ContextMenu.MenuItems.Add(new MenuItem("Add Server", addServer_Click));
                         ContextMenu.MenuItems.Add("-");
                         ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", (sender2, e2) =>
