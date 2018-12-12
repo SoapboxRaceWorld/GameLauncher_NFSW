@@ -145,8 +145,6 @@ namespace GameLauncher {
 
             ParseUri uri = new ParseUri(Environment.GetCommandLineArgs());
 
-            throw new Exception("This is a test");
-
             if (uri.IsDiscordPresent()) {
                 var notification = new NotifyIcon() {
                     Visible = true,
@@ -448,7 +446,7 @@ namespace GameLauncher {
                 _windowMoved = true;
             }
 
-            _NFSW_Installation_Source = _settingFile.KeyExists("CDN") ? _settingFile.Read("CDN") : "http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client";
+            _NFSW_Installation_Source = _settingFile.KeyExists("CDN") ? _settingFile.Read("CDN") : "https://launcher.soapboxrace.world/ea_nfsw_section";
             Log.Debug("_NFSW_Installation_Source is now " + _NFSW_Installation_Source);
 
             Log.Debug("Applyinng ContextMenu");
@@ -707,7 +705,7 @@ namespace GameLauncher {
             cdnPick.ValueMember = "Value";
 
             var cdn = new[] {
-                new { Text = "Electronic Arts Official CDN", Value = "http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client" },
+                //new { Text = "Electronic Arts Official CDN", Value = "http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client" }, //This one will stay in code... [*] 12-12-2018 14:15 GMT+1
                 new { Text = "MeTonaTOR Mirror - Hosted in PL", Value = "https://launcher.soapboxrace.world/ea_nfsw_section" },
                 new { Text = "Your Machine - Hosted in ??", Value = "http://localhost/ea_nfsw_section" },
             };
