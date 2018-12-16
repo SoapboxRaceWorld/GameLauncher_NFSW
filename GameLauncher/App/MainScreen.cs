@@ -723,16 +723,26 @@ namespace GameLauncher {
 
             settingsQuality.DataSource = quality;
 
-            cdnPick.DisplayMember = "Text";
-            cdnPick.ValueMember = "Value";
+            String _slresponse2 = String.Empty;
+            try
+            {
+                WebClientWithTimeout wc = new WebClientWithTimeout();
+                _slresponse2 = wc.DownloadString(Self.CDNUrlList);
+            }
+            catch
+            {
+                _slresponse2 = JsonConvert.SerializeObject(new[] {
+                    new CDNObject {
+                        name = "WorldOnlinePL Mirror",
+                        url = "http://145.239.5.103/cdn/gamefiles/1614b/"
+                    }
+                });
+            }
 
-            var cdn = new[] {
-                //new { Text = "Electronic Arts Official CDN", Value = "http://static.cdn.ea.com/blackbox/u/f/NFSWO/1614b/client" }, //This one will stay in code... [*] 12-12-2018 14:15 GMT+1
-                new { Text = "MeTonaTOR Mirror - Hosted in PL", Value = "https://launcher.soapboxrace.world/ea_nfsw_section" },
-                new { Text = "Your Machine - Hosted in ??", Value = "http://localhost/ea_nfsw_section" },
-            };
+            List<CDNObject> CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse2);
 
-            cdnPick.DataSource = cdn;
+            cdnPick.DisplayMember = "name";
+            cdnPick.DataSource = CDNList;
 
             if (_settingFile.KeyExists("TracksHigh"))
             {
@@ -1743,6 +1753,7 @@ namespace GameLauncher {
         private void settingsSave_Click(object sender, EventArgs e) {
             _settingFile.Write("Language", settingsLanguage.SelectedValue.ToString());
             _settingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString());
+            _settingFile.Write("CDN", ((CDNObject)cdnPick.SelectedItem).url);
             _settingFile.Write("ModNetDisabled", (modNetCheckbox.Checked == true) ? "1" : "0");
 
             _disabledModNet = modNetCheckbox.Checked;
