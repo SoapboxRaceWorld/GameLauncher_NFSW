@@ -17,6 +17,8 @@ namespace GameLauncherReborn {
         public static string internetcheckurl = mainserver + "/generate_204.php";
 		public static string statsurl = mainserver + "/stats";
 
+        public static string CDNUrlList = "http://145.239.5.103/cdn/list.json";
+
 		private static IniFile SettingFile = new IniFile("Settings.ini");
 
         public static int ProxyPort = new Random().Next(6260, 6269);
