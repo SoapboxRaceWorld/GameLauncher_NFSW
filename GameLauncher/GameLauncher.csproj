@@ -157,6 +157,7 @@
     <Compile Include="App\Classes\Auth\ClassicAuth.cs" />
     <Compile Include="App\Classes\Auth\ModernAuth.cs" />
     <Compile Include="App\Classes\Auth\Tokens.cs" />
+    <Compile Include="App\Classes\CDN.cs" />
     <Compile Include="App\Classes\Delay.cs" />
     <Compile Include="App\Classes\DetectLinux.cs" />
     <Compile Include="App\Classes\Downloader\Downloader.cs" />
@@ -223,6 +224,12 @@
       <DependentUpon>MainScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\JsonScheme.cs" />
+    <Compile Include="App\WelcomeScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\WelcomeScreen.Designer.cs">
+      <DependentUpon>WelcomeScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="App\ShowMap.cs">
       <SubType>Form</SubType>
@@ -249,6 +256,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="App\ShowMap.resx">
       <DependentUpon>ShowMap.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\WelcomeScreen.resx">
+      <DependentUpon>WelcomeScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

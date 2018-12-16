@@ -325,7 +325,11 @@ namespace GameLauncher {
             if (string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory"))) {
                 if(_splashscreen != null) _splashscreen.Hide();
                 Log.Debug("First run!");
-                MessageBox.Show(null, "Howdy! Looks like it's the first time this launcher is started. Please press OK and specify where you want to download all required game files (or select your actual installation).", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                Form welcome = new WelcomeScreen();
+                welcome.Show();
+
+                //MessageBox.Show(null, "Howdy! Looks like it's the first time this launcher is started. Please press OK and specify where you want to download all required game files (or select your actual installation).", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 var fbd = new FolderBrowserDialog();
                 var result = fbd.ShowDialog();
