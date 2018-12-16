@@ -327,12 +327,16 @@ namespace GameLauncher {
                 Log.Debug("First run!");
 
                 Form welcome = new WelcomeScreen();
-                welcome.Show();
+                DialogResult welcomereply = welcome.ShowDialog();
 
-                //MessageBox.Show(null, "Howdy! Looks like it's the first time this launcher is started. Please press OK and specify where you want to download all required game files (or select your actual installation).", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if(welcomereply != DialogResult.OK) {
+                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                }
 
                 var fbd = new FolderBrowserDialog();
                 var result = fbd.ShowDialog();
+
+                MessageBox.Show(result.ToString());
 
                 if (result == DialogResult.OK) {
                     if (!Self.hasWriteAccessToFolder(fbd.SelectedPath)) {
