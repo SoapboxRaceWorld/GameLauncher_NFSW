@@ -597,6 +597,17 @@ namespace GameLauncher {
                 });
             }
 
+            finalItems.Add(new ServerInfo
+            {
+                Name = "NightRiderz",
+                Category = "POWER",
+                DiscordPresenceKey = "nightriderzserver",
+                IsSpecial = false,
+                DistributionUrl = "",
+                IpAddress = "http://play.nightriderz.world:8680/soapbox-race-core/Engine.svc",
+                Id = "nr"
+            });
+
             serverPick.DataSource = finalItems;
 
             Log.Debug("SERVERLIST: Checking...");
