@@ -24,9 +24,21 @@ namespace GameLauncher.App {
 
         private void WelcomeScreen_Load(object sender, EventArgs e) {
             //CDN
-            WebClientWithTimeout wc = new WebClientWithTimeout();
-            String _slresponse = wc.DownloadString(Self.CDNUrlList);
+            String _slresponse = String.Empty;
+            try {
+                WebClientWithTimeout wc = new WebClientWithTimeout();
+                _slresponse = wc.DownloadString(Self.CDNUrlList);
+            } catch {
+                _slresponse = JsonConvert.SerializeObject(new[] {
+                    new CDNObject {
+                        name = "WorldOnlinePL Mirror",
+                        url = "http://145.239.5.103/cdn/gamefiles/1614b/"
+                    }
+                });
+            }
+
             CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
+
             CDNSource.DisplayMember = "name";
             CDNSource.DataSource = CDNList;
 
@@ -41,8 +53,8 @@ namespace GameLauncher.App {
         }
 
         private void Save_Click(object sender, EventArgs e) {
-            _settingFile.Write("TracksHigh", QualityDownload.SelectedValue.ToString());
-            _settingFile.Write("CDN", ((CDNObject)CDNSource.SelectedItem).url);
+            CDN.TrackHigh = QualityDownload.SelectedValue.ToString();
+            CDN.CDNUrl = ((CDNObject)CDNSource.SelectedItem).url;
 
             QuitWithoutSaving_Click(sender, e);
         }

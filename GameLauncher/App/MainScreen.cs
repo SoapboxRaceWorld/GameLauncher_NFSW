@@ -331,12 +331,15 @@ namespace GameLauncher {
 
                 if(welcomereply != DialogResult.OK) {
                     Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                } else {
+                    _settingFile.Write("CDN", CDN.CDNUrl);
+                    _settingFile.Write("TracksHigh", CDN.TrackHigh);
+
+                    _NFSW_Installation_Source = CDN.CDNUrl;
                 }
 
                 var fbd = new FolderBrowserDialog();
                 var result = fbd.ShowDialog();
-
-                MessageBox.Show(result.ToString());
 
                 if (result == DialogResult.OK) {
                     if (!Self.hasWriteAccessToFolder(fbd.SelectedPath)) {
@@ -454,7 +457,7 @@ namespace GameLauncher {
                 _windowMoved = true;
             }
 
-            _NFSW_Installation_Source = _settingFile.KeyExists("CDN") ? _settingFile.Read("CDN") : "https://launcher.soapboxrace.world/ea_nfsw_section";
+            _NFSW_Installation_Source = _settingFile.Read("CDN");
             Log.Debug("_NFSW_Installation_Source is now " + _NFSW_Installation_Source);
 
             Log.Debug("Applyinng ContextMenu");
@@ -1740,7 +1743,6 @@ namespace GameLauncher {
         private void settingsSave_Click(object sender, EventArgs e) {
             _settingFile.Write("Language", settingsLanguage.SelectedValue.ToString());
             _settingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString());
-            _settingFile.Write("CDN", cdnPick.SelectedValue.ToString());
             _settingFile.Write("ModNetDisabled", (modNetCheckbox.Checked == true) ? "1" : "0");
 
             _disabledModNet = modNetCheckbox.Checked;

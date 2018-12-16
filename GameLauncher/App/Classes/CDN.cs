@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace GameLauncher.App.Classes {
     class CDN {
-
+        public static string CDNUrl = String.Empty;
+        public static string TrackHigh = String.Empty;
     }
 
     public class CDNObject {

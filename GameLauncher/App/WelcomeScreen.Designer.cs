@@ -135,6 +135,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GameLauncher";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.WelcomeScreen_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
