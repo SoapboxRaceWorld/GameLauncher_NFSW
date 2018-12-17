@@ -457,7 +457,7 @@ namespace GameLauncher {
                 _windowMoved = true;
             }
 
-            _NFSW_Installation_Source = _settingFile.Read("CDN");
+            _NFSW_Installation_Source = _settingFile.KeyExists("CDN") ? _settingFile.Read("CDN") : "http://145.239.5.103/cdn/gamefiles/1614b/";
             Log.Debug("_NFSW_Installation_Source is now " + _NFSW_Installation_Source);
 
             Log.Debug("Applyinng ContextMenu");
