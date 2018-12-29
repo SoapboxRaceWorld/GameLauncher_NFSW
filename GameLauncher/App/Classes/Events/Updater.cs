@@ -82,7 +82,7 @@ namespace GameLauncher.App.Classes.Events {
 
                                     var update = new TaskDialogCommandLink("update", "Yes", "Launcher will be updated to " + updater.Payload.LatestVersion + ".");
                                     var cancel = new TaskDialogCommandLink("cancel", "No", "Launcher will ask you to update on the next launch.");
-                                    var skipupdate = new TaskDialogCommandLink("skipupdate", "Ignore", "This update will be skipped. A new prompt will apear as soon as a newer update is available.");
+                                    var skipupdate = new TaskDialogCommandLink("skipupdate", "Ignore", "This update will be skipped. A new prompt will appear as soon as a newer update is available.");
 
                                     update.UseElevationIcon = true;
 
