@@ -2023,8 +2023,10 @@ namespace GameLauncher {
 
             try
             {
-                if (WebClientWithTimeout.createHash(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC")
-                {
+                if (
+                    SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
+                    SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19"
+                ) {
                     ServerProxy.Instance.SetServerUrl(_serverIp);
                     ServerProxy.Instance.SetServerName(_realServername);
 
