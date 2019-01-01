@@ -100,6 +100,9 @@
     <Reference Include="Flurl.Http, Version=2.3.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Flurl.Http.2.3.2\lib\net45\Flurl.Http.dll</HintPath>
     </Reference>
+    <Reference Include="Leak.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Leak.Core.4.7.2\lib\net45\Leak.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAPICodePack.Core.1.1.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
@@ -160,18 +163,7 @@
     <Compile Include="App\Classes\CDN.cs" />
     <Compile Include="App\Classes\Delay.cs" />
     <Compile Include="App\Classes\DetectLinux.cs" />
-    <Compile Include="App\Classes\Downloader\Downloader.cs" />
-    <Compile Include="App\Classes\Downloader\DownloaderCommand.cs" />
-    <Compile Include="App\Classes\Downloader\DownloaderException.cs" />
-    <Compile Include="App\Classes\Downloader\DownloadFailed.cs" />
-    <Compile Include="App\Classes\Downloader\DownloadFinished.cs" />
-    <Compile Include="App\Classes\Downloader\DownloadManager.cs" />
-    <Compile Include="App\Classes\Downloader\HashManager.cs" />
-    <Compile Include="App\Classes\Downloader\ProgressUpdated.cs" />
-    <Compile Include="App\Classes\Downloader\ShowExtract.cs" />
-    <Compile Include="App\Classes\Downloader\ShowMessage.cs" />
-    <Compile Include="App\Classes\Downloader\UncompressionException.cs" />
-    <Compile Include="App\Classes\Downloader\VerifyCommand.cs" />
+    <Compile Include="App\Classes\Downloader\Torrent.cs" />
     <Compile Include="App\Classes\Events\UpdaterSchema.cs" />
     <Compile Include="App\Classes\ExtractResource.cs" />
     <Compile Include="App\Classes\HashPassword\SHA.cs" />

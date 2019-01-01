@@ -30,6 +30,10 @@ using GameLauncher.App.Classes.Auth;
 using DiscordRPC;
 using DiscordSDK;
 
+using Leak.Client;
+using Leak.Common;
+using Leak.Client.Swarm;
+
 namespace GameLauncher {
     public sealed partial class MainScreen : Form {
         private Point _mouseDownPoint = Point.Empty;
@@ -59,7 +63,6 @@ namespace GameLauncher {
         private int _errorcode;
 
         private DateTime _downloadStartTime;
-        private readonly Downloader _downloader;
 
         private string _loginToken = "";
         private string _userId = "";
@@ -182,14 +185,6 @@ namespace GameLauncher {
             }
 
             Log.Debug("Detected OS: " + _OS);
-            _downloader = new Downloader(this, 3, 2, 16) {
-                ProgressUpdated = new ProgressUpdated(OnDownloadProgress),
-                DownloadFinished = new DownloadFinished(DownloadTracksFiles),
-                DownloadFailed = new DownloadFailed(OnDownloadFailed),
-                ShowMessage = new ShowMessage(OnShowMessage),
-				ShowExtract = new ShowExtract(OnShowExtract)
-            };
-
             Log.Debug("InitializeComponent");
             InitializeComponent();
 
@@ -885,7 +880,6 @@ namespace GameLauncher {
             if (DetectLinux.WineDetected())
             {
                 Close();
-                _downloader.Stop();
                 Application.Exit();
                 Application.ExitThread();
                 Environment.Exit(Environment.ExitCode);
@@ -2141,8 +2135,7 @@ namespace GameLauncher {
                 speechFile = "en";
             }
 
-            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/Sound/Speech/copspeechhdr_" + speechFile + ".big"))
-            {
+            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/Sound/Speech/copspeechhdr_" + speechFile + ".big")) {
                 playProgressText.Text = "Loading list of files to download...".ToUpper();
 
                 if(!DetectLinux.UnixDetected()) {
@@ -2170,116 +2163,15 @@ namespace GameLauncher {
 			}
 		}
 
-        public void DownloadCoreFiles()
-        {
-            playProgressText.Text = "Checking core files...".ToUpper();
-            playProgress.Width = 0;
-            extractingProgress.Width = 0;
+        public void DownloadCoreFiles() {
+            //TORRENT TIME!
+            string destination = "D:\\NFSWDecentralizedTest";
+            NotificationCallback callback = Console.WriteLine;
 
-            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
+            string tracker = "udp://9.rarbg.me:2790/announce";
+            FileHash hash = FileHash.Parse("107D5070AC9F84561481116A9645E10D46B35E5D");
 
-            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/nfsw.exe"))
-            {
-                _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload(_NFSW_Installation_Source, "", _settingFile.Read("InstallationDirectory"), false, false, 1130632198);
-            }
-            else
-            {
-                DownloadTracksFiles();
-            }
-        }
-
-        public void DownloadTracksFiles()
-        {
-            playProgressText.Text = "Checking track files...".ToUpper();
-            playProgress.Width = 0;
-            extractingProgress.Width = 0;
-
-            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
-
-            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/TracksHigh/STREAML5RA_98.BUN"))
-            {
-                _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload(_NFSW_Installation_Source, "TracksHigh", _settingFile.Read("InstallationDirectory"), false, false, 278397707);
-            }
-            else
-            {
-                DownloadSpeechFiles();
-            }
-        }
-
-        public void DownloadSpeechFiles()
-        {
-            playProgressText.Text = "Looking for correct speech files...".ToUpper();
-            playProgress.Width = 0;
-            extractingProgress.Width = 0;
-
-            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
-
-            string speechFile;
-            ulong speechSize;
-
-            try
-            {
-                if (string.IsNullOrEmpty(_settingFile.Read("Language")))
-                {
-                    speechFile = "en";
-                    speechSize = 141805935;
-                    _langInfo = "ENGLISH";
-                }
-                else
-                {
-                    WebClientWithTimeout wc = new WebClientWithTimeout();
-                    var response = wc.DownloadString(_NFSW_Installation_Source + "/" + _settingFile.Read("Language").ToLower() + "/index.xml");
-
-                    response = response.Substring(3, response.Length - 3);
-
-                    var speechFileXml = new XmlDocument();
-                    speechFileXml.LoadXml(response);
-                    var speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
-
-                    speechFile = _settingFile.Read("Language").ToLower();
-                    speechSize = Convert.ToUInt64(speechSizeNode.InnerText);
-                    _langInfo = settingsLanguage.GetItemText(settingsLanguage.SelectedItem).ToUpper();
-                }
-            }
-            catch (Exception)
-            {
-                speechFile = "en";
-                speechSize = 141805935;
-                _langInfo = "ENGLISH";
-            }
-
-            playProgressText.Text = string.Format("Checking for {0} speech files.", _langInfo).ToUpper();
-
-            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big"))
-            {
-                _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload(_NFSW_Installation_Source, speechFile, _settingFile.Read("InstallationDirectory"), false, false, speechSize);
-            }
-            else
-            {
-                DownloadTracksHighFiles();
-            }
-        }
-
-        public void DownloadTracksHighFiles()
-        {
-            playProgressText.Text = "Checking track (high) files.".ToUpper();
-            playProgress.Width = 0;
-            extractingProgress.Width = 0;
-
-            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
-
-            if (_settingFile.Read("TracksHigh") == "1" && !File.Exists(_settingFile.Read("InstallationDirectory") + "\\Tracks\\STREAML5RA_98.BUN"))
-            {
-                _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload(_NFSW_Installation_Source, "Tracks", _settingFile.Read("InstallationDirectory"), false, false, 615494528);
-            }
-            else
-            {
-                OnDownloadFinished();
-            }
+            SwarmHelper.Download(destination, hash, tracker, callback);
         }
 
         public bool DownloadMods(string serverKey)
