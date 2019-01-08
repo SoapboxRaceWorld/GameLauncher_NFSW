@@ -2165,13 +2165,15 @@ namespace GameLauncher {
 
         public void DownloadCoreFiles() {
             //TORRENT TIME!
-            string destination = "D:\\NFSWDecentralizedTest";
+            /*string destination = "D:\\NFSWDecentralizedTest";
             NotificationCallback callback = Console.WriteLine;
 
             string tracker = "udp://9.rarbg.me:2790/announce";
             FileHash hash = FileHash.Parse("107D5070AC9F84561481116A9645E10D46B35E5D");
 
-            SwarmHelper.Download(destination, hash, tracker, callback);
+            SwarmHelper.Download(destination, hash, tracker, callback);*/
+		
+	MessageBox.Show("Function is not yet ready. Please use MEGA or any other link to get NFSW Instalation files");
         }
 
         public bool DownloadMods(string serverKey)
