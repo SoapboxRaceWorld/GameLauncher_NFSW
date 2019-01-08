@@ -598,13 +598,15 @@ namespace GameLauncher {
                     DiscordPresenceKey = "",
                     IsSpecial = false,
                     DistributionUrl = "",
-                    IpAddress = "http://localhost:4416/sbrw/Engine.svc",
+                    IpAddress = "http://localhost:2137/sbrw/Engine.svc", //YANSE gonna use that port soon(tm)
                     Id = "OFFLINE"
                 });
             }
 
             serverPick.DataSource = finalItems;
 
+		
+		//Seems all correct here, need debugging...
             Log.Debug("SERVERLIST: Checking...");
             if (_serverlistloaded) {
                 Log.Debug("SERVERLIST: Setting first server in list");
@@ -642,7 +644,16 @@ namespace GameLauncher {
                         serverPick.SelectedIndex = 1;
                         Log.Debug("SERVERLIST: Deleting unknown entry");
                         _settingFile.DeleteKey("Server");
-                    }
+                    } else {
+			//This function might be broken...
+			Log.Debug("SERVERLIST: Server not found in our database. Adding it to the list.");
+			servers.Add(new ServerInfo {
+			    Name = "Unknown Server",
+			    IpAddress = _settingFile.Read("Server"),
+		            IsSpecial = false,
+			    Id = SHA.HashPassword(_settingFile.Read("Server"))
+			});			    
+		    }
 
                     Log.Debug("SERVERLIST: Triggering server change");
                     if (serverPick.SelectedIndex == 1) {
