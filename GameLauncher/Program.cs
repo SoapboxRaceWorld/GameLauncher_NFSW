@@ -12,6 +12,7 @@ using GameLauncher.HashPassword;
 using GameLauncherReborn;
 using SharpRaven;
 using SharpRaven.Data;
+//using Memes;
 
 namespace GameLauncher {
     internal static class Program {
