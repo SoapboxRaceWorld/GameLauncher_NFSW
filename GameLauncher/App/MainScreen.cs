@@ -512,7 +512,9 @@ namespace GameLauncher {
                         Log.Error(ex.Message);
                     }
                 } catch (Exception error) {
-                    Log.Error(error.Message + ". Restoring from ServerCache");
+                    //REQUIRES REWORK...
+
+                    /*Log.Error(error.Message + ". Restoring from ServerCache");
 
                     if (File.Exists("ServerCache.json")) {
                         var fileStream = new FileStream("ServerCache.json", FileMode.Open);
@@ -540,7 +542,7 @@ namespace GameLauncher {
                                 Id = "__offlinebuiltin__"
                             }
                         });
-                    }
+                    }*/
                 }
 
                 Log.Debug("Setting loaded serverlist");
@@ -633,7 +635,7 @@ namespace GameLauncher {
 
                     Log.Debug("SERVERLIST: Checking if server exists on our database");
 
-                    if (_slresponse.Contains(_settingFile.Read("Server"))) {
+                    if ( finalItems.FindIndex(i => string.Equals(i.IpAddress, _settingFile.Read("Server"))) != 0 /*_slresponse.Contains(_settingFile.Read("Server"))*/) {
                         Log.Debug("SERVERLIST: Server found! Checking ID");
                         var index = finalItems.FindIndex(i => string.Equals(i.IpAddress, _settingFile.Read("Server")));
 
