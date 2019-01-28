@@ -551,14 +551,17 @@ namespace GameLauncher {
                 var resItems = JsonConvert.DeserializeObject<List<ServerInfo>>(_slresponse);
 
                 foreach (var serverItemGroup in resItems.GroupBy(s => s.Category))
-                {
-                    finalItems.Add(new ServerInfo
-                    {
-                        Id = $"__category-{serverItemGroup.Key}__",
-                        Name = $"<GROUP>{serverItemGroup.Key} Servers",
-                        IsSpecial = true
-                    });
+                {          
+                    if(finalItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1) {
+                        finalItems.Add(new ServerInfo {
+                            Id = $"__category-{serverItemGroup.Key}__",
+                            Name = $"<GROUP>{serverItemGroup.Key} Servers",
+                            IsSpecial = true
+                        });
+                    }
 
+
+                    // TODO: Fix duplicated server entry caused by multiple serverlists
                     finalItems.AddRange(serverItemGroup.ToList());
                 }
             }
