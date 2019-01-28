@@ -486,79 +486,79 @@ namespace GameLauncher {
                 rememberMe.Checked = true;
             }
 
-            try {
-                Log.Debug("Loading serverlist");
-                WebClientWithTimeout wc = new WebClientWithTimeout();
+            foreach(string serverurl in Self.serverlisturl) { 
+                try {
+                    Log.Debug("Loading serverlist");
+                    WebClientWithTimeout wc = new WebClientWithTimeout();
 
-                var serverurl = Self.serverlisturl;
-                _slresponse += wc.DownloadString(serverurl);
-
-                _serverlistloaded = true;
-
-                try
-                {
-                    var fileStream = new FileStream("ServerCache.json", FileMode.Create);
-
-                    var dEsCryptoServiceProvider = new DESCryptoServiceProvider()
-                    {
-                        Key = Encoding.ASCII.GetBytes(_serverCacheKey),
-                        IV = Encoding.ASCII.GetBytes(_serverCacheKey)
-                    };
-
-                    var cryptoStream = new CryptoStream(fileStream, dEsCryptoServiceProvider.CreateEncryptor(), CryptoStreamMode.Write);
-                    var streamWriter = new StreamWriter(cryptoStream);
-                    streamWriter.Write(_slresponse);
-                    streamWriter.Close();
-                } catch(Exception ex) {
-                    Log.Error(ex.Message);
-                }
-            } catch (Exception error) {
-                Log.Error(error.Message + ". Restoring from ServerCache");
-
-                if (File.Exists("ServerCache.json")) {
-                    var fileStream = new FileStream("ServerCache.json", FileMode.Open);
-
-                    var dEsCryptoServiceProvider = new DESCryptoServiceProvider() {
-                        Key = Encoding.ASCII.GetBytes(_serverCacheKey),
-                        IV = Encoding.ASCII.GetBytes(_serverCacheKey)
-                    };
-
-                    var cryptoStream = new CryptoStream(fileStream, dEsCryptoServiceProvider.CreateDecryptor(), CryptoStreamMode.Read);
-                    var streamReader = new StreamReader(cryptoStream);
-                    _slresponse = streamReader.ReadToEnd();
-
-                    if (string.IsNullOrWhiteSpace(_slresponse)) {
-                        _slresponse = "[]";
-                    }
-
+                    _slresponse = wc.DownloadString(serverurl);
                     _serverlistloaded = true;
-                } else {
-                    _slresponse = JsonConvert.SerializeObject(new[] {
-                        new ServerInfo {
-                            Category = "OFFLINE",
-                            Name = "Offline Built-In Server",
-                            IpAddress = "http://localhost:4416/sbrw/Engine.svc",
-                            Id = "__offlinebuiltin__"
+
+                    try
+                    {
+                        var fileStream = new FileStream("ServerCache.json", FileMode.Create);
+
+                        var dEsCryptoServiceProvider = new DESCryptoServiceProvider()
+                        {
+                            Key = Encoding.ASCII.GetBytes(_serverCacheKey),
+                            IV = Encoding.ASCII.GetBytes(_serverCacheKey)
+                        };
+
+                        var cryptoStream = new CryptoStream(fileStream, dEsCryptoServiceProvider.CreateEncryptor(), CryptoStreamMode.Write);
+                        var streamWriter = new StreamWriter(cryptoStream);
+                        streamWriter.Write(_slresponse);
+                        streamWriter.Close();
+                    } catch(Exception ex) {
+                        Log.Error(ex.Message);
+                    }
+                } catch (Exception error) {
+                    Log.Error(error.Message + ". Restoring from ServerCache");
+
+                    if (File.Exists("ServerCache.json")) {
+                        var fileStream = new FileStream("ServerCache.json", FileMode.Open);
+
+                        var dEsCryptoServiceProvider = new DESCryptoServiceProvider() {
+                            Key = Encoding.ASCII.GetBytes(_serverCacheKey),
+                            IV = Encoding.ASCII.GetBytes(_serverCacheKey)
+                        };
+
+                        var cryptoStream = new CryptoStream(fileStream, dEsCryptoServiceProvider.CreateDecryptor(), CryptoStreamMode.Read);
+                        var streamReader = new StreamReader(cryptoStream);
+                        _slresponse = streamReader.ReadToEnd();
+
+                        if (string.IsNullOrWhiteSpace(_slresponse)) {
+                            _slresponse = "[]";
                         }
-                    });
+
+                        _serverlistloaded = true;
+                    } else {
+                        _slresponse = JsonConvert.SerializeObject(new[] {
+                            new ServerInfo {
+                                Category = "OFFLINE",
+                                Name = "Offline Built-In Server",
+                                IpAddress = "http://localhost:4416/sbrw/Engine.svc",
+                                Id = "__offlinebuiltin__"
+                            }
+                        });
+                    }
                 }
-            }
 
-            Log.Debug("Setting loaded serverlist");
-            serverPick.DisplayMember = "Name";
+                Log.Debug("Setting loaded serverlist");
+                serverPick.DisplayMember = "Name";
 
-            var resItems = JsonConvert.DeserializeObject<List<ServerInfo>>(_slresponse);
+                var resItems = JsonConvert.DeserializeObject<List<ServerInfo>>(_slresponse);
 
-            foreach (var serverItemGroup in resItems.GroupBy(s => s.Category))
-            {
-                finalItems.Add(new ServerInfo
+                foreach (var serverItemGroup in resItems.GroupBy(s => s.Category))
                 {
-                    Id = $"__category-{serverItemGroup.Key}__",
-                    Name = $"<GROUP>{serverItemGroup.Key} Servers",
-                    IsSpecial = true
-                });
+                    finalItems.Add(new ServerInfo
+                    {
+                        Id = $"__category-{serverItemGroup.Key}__",
+                        Name = $"<GROUP>{serverItemGroup.Key} Servers",
+                        IsSpecial = true
+                    });
 
-                finalItems.AddRange(serverItemGroup.ToList());
+                    finalItems.AddRange(serverItemGroup.ToList());
+                }
             }
 
             if (File.Exists("servers.json"))

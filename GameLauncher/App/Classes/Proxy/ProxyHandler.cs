@@ -125,7 +125,6 @@ namespace GameLauncher.App.Classes.Proxy
             if (Self.sendRequest == true) {
                 var fixedPath = context.Request.Path.Replace("/nfsw/Engine.svc", "");
                 var fullUrl = new Uri(serverUrl).Append(fixedPath);
-                Log.Debug($@"{context.Request.Method} {fixedPath} -> ");
 
                 foreach (var param in context.Request.Query) {
                     var value = context.Request.Query[param];
@@ -195,6 +194,8 @@ namespace GameLauncher.App.Classes.Proxy
                 if(fixedPath == "") {
 
                 }
+
+                Log.Debug($@"{context.Request.Method} {fixedPath} -> {POSTContent} -> {GETContent} -> {replyToServer}");
 
                 DiscordGamePresence.handleGameState(fixedPath, replyToServer, POSTContent, GETContent);
 

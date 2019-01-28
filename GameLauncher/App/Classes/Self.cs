@@ -12,7 +12,14 @@ namespace GameLauncherReborn {
     class Self {
         public static string mainserver = "https://launchpad.soapboxrace.world";
 
-        public static string serverlisturl = mainserver + "/servers";
+        public static string[] serverlisturl = new string[] {
+            "https://launchpad.soapboxrace.world/servers",
+            "http://api.nightriderz.world/servers.json",
+            "http://worldunited.gg/serverlist.json",
+            "https://nfswonline.pl/lista_serwerow.json"
+        }; 
+
+        //public static string serverlisturl = mainserver + "/servers";
 
         public static string internetcheckurl = mainserver + "/generate_204.php";
 		public static string statsurl = mainserver + "/stats";
