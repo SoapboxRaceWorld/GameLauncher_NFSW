@@ -560,8 +560,6 @@ namespace GameLauncher {
                         });
                     }
 
-
-                    // TODO: Fix duplicated server entry caused by multiple serverlists
                     finalItems.AddRange(serverItemGroup.ToList());
                 }
             }
@@ -613,7 +611,17 @@ namespace GameLauncher {
                 });
             }
 
-            serverPick.DataSource = finalItems;
+            //Somewhere here i have to remove duplicates... 
+
+            List<ServerInfo> newFinalItems = new List<ServerInfo>();
+
+            foreach(ServerInfo xServ in finalItems) {
+                if(newFinalItems.FindIndex(i => string.Equals(i.Name, xServ.Name)) == -1) {
+                    newFinalItems.Add(xServ);
+                }
+            }
+
+            serverPick.DataSource = newFinalItems;
 
             Log.Debug("SERVERLIST: Checking...");
             if (_serverlistloaded) {
