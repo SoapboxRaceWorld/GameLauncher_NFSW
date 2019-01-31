@@ -167,8 +167,8 @@ namespace GameLauncher {
             //handlers.readyCallback = Discord_Ready; //Discord, please, fix that... (already reported on DiscordRPC Issues Page)
             handlers.errorCallback = Discord_Error;
             handlers.disconnectedCallback = Discord_Disconnect;
-            DiscordRpc.Initialize("427355155537723393", ref handlers, true, String.Empty);
-            DiscordRpc.Register("427355155537723393", "\"" + Directory.GetCurrentDirectory() + "\\GameLauncher.exe\" --discord");
+            DiscordRpc.Initialize(Self.DiscordRPCID, ref handlers, true, String.Empty);
+            DiscordRpc.Register(Self.DiscordRPCID, "\"" + Directory.GetCurrentDirectory() + "\\GameLauncher.exe\" --discord");
 
             Log.Debug("Setting SSL Protocol");
             ServicePointManager.Expect100Continue = true;
@@ -770,7 +770,7 @@ namespace GameLauncher {
                 Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
                 if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/lightfx.dll")) {
                     try {
-                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/lightfx.dll", new WebClientWithTimeout().DownloadData("http://launcher.soapboxrace.world/lightfx.dll"));
+                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/lightfx.dll", new WebClientWithTimeout().DownloadData( Self.mainserver + "/files/lightfx.dll"));
                         /*string tempNameZip = Path.GetTempFileName();
 
                         File.WriteAllBytes(tempNameZip, ExtractResource.AsByte("GameLauncher.SoapBoxModules.lightfx.zip"));
@@ -1244,8 +1244,12 @@ namespace GameLauncher {
                         ServerStatusBar(_colorOnline, _startPoint, _endPoint);
                     }
 
-                    ServerStatusText.Text = "Server Status - Online ( ON )";
-                    ServerStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+                    try { 
+                        ServerStatusText.Text = "Server Status - Online ( ON )";
+                        ServerStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+                    } catch {
+                        //¯\_(ツ)_/¯
+                    }
                     ServerStatusDesc.Text = string.Format("players in game - {0}", numPlayers);
                     _serverEnabled = true;
 

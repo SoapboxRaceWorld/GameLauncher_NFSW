@@ -10,11 +10,12 @@ using System.Windows.Forms;
 
 namespace GameLauncherReborn {
     class Self {
-        public static string mainserver = "https://launcher.worldunited.gg";
+        //public static string mainserver = "http://launcher.worldunited.gg";
+        public static string mainserver = "http://37.233.101.12";
 
         public static string[] serverlisturl = new string[] {
             mainserver + "/serverlist.json",
-	    "https://launchpad.soapboxrace.world/servers",
+	        "https://launchpad.soapboxrace.world/servers",
             "http://api.nightriderz.world/servers.json"
         }; 
 
@@ -23,9 +24,11 @@ namespace GameLauncherReborn {
         public static string internetcheckurl = mainserver + "/generate_204.php";
 		public static string statsurl = mainserver + "/stats";
 
-        public static string CDNUrlList = mainserver + "/list.json"; //hosted on WOPL, coz why not.
+        public static string CDNUrlList = mainserver + "/cdn_list.json"; //hosted on WOPL, coz why not.
 
 		private static IniFile SettingFile = new IniFile("Settings.ini");
+
+        public static string DiscordRPCID = "540651192179752970";
 
         public static int ProxyPort = new Random().Next(6260, 6269);
         public static Boolean sendRequest = true;

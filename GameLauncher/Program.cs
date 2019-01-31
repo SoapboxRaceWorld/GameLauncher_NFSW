@@ -47,7 +47,7 @@ namespace GameLauncher {
 
 			if(!File.Exists("GameLauncherUpdater.exe")) {
 				try {
-					File.WriteAllBytes("GameLauncherUpdater.exe", new WebClientWithTimeout().DownloadData("http://launcher.soapboxrace.world/GameLauncherUpdater.exe"));
+					File.WriteAllBytes("GameLauncherUpdater.exe", new WebClientWithTimeout().DownloadData(Self.mainserver + "/files/GameLauncherUpdater.exe"));
                 } catch { /* ignored */ }
             }
 
