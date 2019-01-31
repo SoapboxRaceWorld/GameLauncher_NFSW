@@ -10,13 +10,12 @@ using System.Windows.Forms;
 
 namespace GameLauncherReborn {
     class Self {
-        public static string mainserver = "https://launchpad.soapboxrace.world";
+        public static string mainserver = "https://launcher.worldunited.gg";
 
         public static string[] serverlisturl = new string[] {
-            "https://launchpad.soapboxrace.world/servers",
-            "http://worldunited.gg/serverlist.json",
-            "https://nfswonline.pl/lista_serwerow.json",
-            "http://api.nightriderz.world/servers.json",
+            mainserver + "/serverlist.json",
+	    "https://launchpad.soapboxrace.world/servers",
+            "http://api.nightriderz.world/servers.json"
         }; 
 
         //public static string serverlisturl = mainserver + "/servers";
@@ -24,7 +23,7 @@ namespace GameLauncherReborn {
         public static string internetcheckurl = mainserver + "/generate_204.php";
 		public static string statsurl = mainserver + "/stats";
 
-        public static string CDNUrlList = "http://145.239.5.103/cdn/list.json"; //hosted on WOPL, coz why not.
+        public static string CDNUrlList = mainserver + "/list.json"; //hosted on WOPL, coz why not.
 
 		private static IniFile SettingFile = new IniFile("Settings.ini");
 
