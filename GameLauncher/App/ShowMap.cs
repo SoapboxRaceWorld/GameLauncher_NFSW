@@ -19,7 +19,7 @@ namespace GameLauncher.App {
         int SquareSize = 4;
 
         public ShowMap(string serverIP, string serverName) {
-            ServerIP = serverIP;
+            ServerIP = new Uri(serverIP).Host;
             ServerName = serverName;
             InitializeComponent();
         }

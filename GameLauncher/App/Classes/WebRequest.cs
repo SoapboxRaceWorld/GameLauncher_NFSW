@@ -14,15 +14,10 @@ namespace GameLauncherReborn {
         private static string GameLauncherHash = string.Empty;
         public static string Value() {
             if (string.IsNullOrEmpty(GameLauncherHash)) {
-                GameLauncherHash = createHash(AppDomain.CurrentDomain.FriendlyName);
+                GameLauncherHash = SHA.HashFile(AppDomain.CurrentDomain.FriendlyName);
             }
 
             return GameLauncherHash;
-        }
-
-        [Obsolete("WebClient.createHash is deprecated, please use SHA.HashFile instead.")]
-        public static string createHash(string filename) {
-            return SHA.HashFile(filename);
         }
 
         protected override WebRequest GetWebRequest(Uri address) {
