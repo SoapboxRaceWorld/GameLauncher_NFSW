@@ -1,10 +1,8 @@
 using GameLauncher.App.Classes;
-using GameLauncherReborn;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Cache;
 using System.Text;
@@ -38,11 +36,9 @@ namespace GameLauncher
 
         private DownloadFailed mDownloadFailed;
 
-		private ShowMessage mShowMessage;
+        private ShowMessage mShowMessage;
 
-		private ShowExtract mShowExtract;
-
-		private static string mCurrentLocalVersion = string.Empty;
+        private static string mCurrentLocalVersion = string.Empty;
 
         private static string mCurrentServerVersion = string.Empty;
 
@@ -54,11 +50,9 @@ namespace GameLauncher
 
         private static XmlDocument mIndexCached = null;
 
-		private static bool mStopFlag = false;
+        private static bool mStopFlag = false;
 
-		public static Label label2;
-
-		public bool Downloading {
+        public bool Downloading {
             get {
                 return this.mDownloading;
             }
@@ -91,25 +85,16 @@ namespace GameLauncher
             }
         }
 
-		public ShowMessage ShowMessage {
-			get {
-				return this.mShowMessage;
-			}
-			set {
-				this.mShowMessage = value;
-			}
-		}
+        public ShowMessage ShowMessage {
+            get {
+                return this.mShowMessage;
+            }
+            set {
+                this.mShowMessage = value;
+            }
+        }
 
-		public ShowExtract ShowExtract {
-			get {
-				return this.mShowExtract;
-			}
-			set {
-				this.mShowExtract = value;
-			}
-		}
-
-		public static string ServerVersion {
+        public static string ServerVersion {
             get {
                 return Downloader.mCurrentServerVersion;
             }
@@ -124,7 +109,7 @@ namespace GameLauncher
             this.mHashThreads = hashThreads;
             this.mFE = fe;
             this.mDownloadManager = new DownloadManager(downloadThreads, downloadChunks);
-		}
+        }
 
         public void StartDownload(string indexUrl, string package, string patchPath, bool calculateHashes, bool useIndexCache, ulong downloadSize)
         {
@@ -175,11 +160,10 @@ namespace GameLauncher
                 //Downloader.mLogger.DebugFormat("File '{0}' downloaded", arg);
                 return;
             }
-            //MessageBox.Show("Error downloading file '" + arg + "'");
+            MessageBox.Show("Error downloading file '" + arg + "'");
             if (e.Error != null)
             {
-                //MessageBox.Show("Downloader_DownloadFileCompleted Exception: " + e.Error.ToString());
-                
+                MessageBox.Show("Downloader_DownloadFileCompleted Exception: " + e.Error.ToString());
             }
         }
 
@@ -194,29 +178,24 @@ namespace GameLauncher
                 }
                 else
                 {
-
-                    try {
-                        WebClientWithTimeout webClient = new WebClientWithTimeout();
-                        webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.Downloader_DownloadFileCompleted);
-                        string tempFileName = Path.GetTempFileName();
-                        webClient.DownloadFileAsync(new Uri(url), tempFileName);
-                        while (webClient.IsBusy)
+                    WebClient webClient = new WebClient();
+                    webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.Downloader_DownloadFileCompleted);
+                    string tempFileName = Path.GetTempFileName();
+                    webClient.DownloadFileAsync(new Uri(url), tempFileName);
+                    while (webClient.IsBusy)
+                    {
+                        if (Downloader.mStopFlag)
                         {
-                            if (Downloader.mStopFlag)
-                            {
-                                webClient.CancelAsync();
-                                result = null;
-                                return result;
-                            }
-                            Thread.Sleep(100);
+                            webClient.CancelAsync();
+                            result = null;
+                            return result;
                         }
-                        XmlDocument xmlDocument = new XmlDocument();
-                        xmlDocument.Load(tempFileName);
-                        Downloader.mIndexCached = xmlDocument;
-                        result = xmlDocument;
-                    } catch {
-                        result = null;
+                        Thread.Sleep(100);
                     }
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.Load(tempFileName);
+                    Downloader.mIndexCached = xmlDocument;
+                    result = xmlDocument;
                 }
             }
             catch (Exception ex)
@@ -267,7 +246,7 @@ namespace GameLauncher
                         num4 = (long)num;
                     }
                     long num5 = 0L;
-                    WebClientWithTimeout webClient = new WebClientWithTimeout();
+                    WebClient webClient = new WebClient();
                     webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
                     webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
                     webClient.Headers.Add("Accept-Encoding", "gzip,deflate");
@@ -286,7 +265,6 @@ namespace GameLauncher
                     int i = 0;
                     bool flag2 = false;
                     int num11;
-					long fileschecked = 0;
                     foreach (XmlNode xmlNode in xmlNodeList)
                     {
                         XmlNodeList xmlNodeList2 = xmlNode.SelectNodes("compressed");
@@ -380,9 +358,7 @@ namespace GameLauncher
                     int num13 = 0;
                     foreach (XmlNode xmlNode2 in xmlNodeList)
                     {
-						//fileschecked++;
-
-						if (Downloader.mStopFlag)
+                        if (Downloader.mStopFlag)
                         {
                             break;
                         }
@@ -437,10 +413,8 @@ namespace GameLauncher
                                     num2,
                                     num3,
                                     num4,
-                                    text6,
-                                    0
+                                    text6
                                 };
-
                                 this.mFE.Invoke(this.mProgressUpdated, args2);
                             }
                             int num17 = int.Parse(xmlNode2.SelectSingleNode("section").InnerText);
@@ -487,7 +461,7 @@ namespace GameLauncher
                                     array2 = this.mDownloadManager.GetFile(text7);
                                     if (array2 == null)
                                     {
-                                        //MessageBox.Show("DownloadManager returned a null buffer for file '" + text7 + "', aborting");
+                                        MessageBox.Show("DownloadManager returned a null buffer for file '" + text7 + "', aborting");
                                         if (this.mDownloadFailed != null)
                                         {
                                             if (!Downloader.mStopFlag)
@@ -554,10 +528,8 @@ namespace GameLauncher
                                         num2,
                                         num3,
                                         num4,
-                                        text6,
-                                        0
+                                        text6
                                     };
-
                                     this.mFE.BeginInvoke(this.mProgressUpdated, args3);
                                 }
                             }
@@ -592,15 +564,7 @@ namespace GameLauncher
                                 IntPtr intPtr = new IntPtr(num18);
                                 IntPtr value = new IntPtr(num22);
                                 int num24 = LZMA.LzmaUncompressBuf2File(text6, ref value, array3, ref intPtr, array5, outPropsSize);
-
-
-                                //TODO: use total file lenght and extracted file length instead of files checked and total array size.
-                                fileschecked =+ num3;
-
-                                object[] xxxxxx = new object[] { text6, fileschecked, num4};
-								this.mFE.BeginInvoke(this.mShowExtract, xxxxxx);
-
-								if (num24 != 0)
+                                if (num24 != 0)
                                 {
                                     MessageBox.Show("Decompression returned " + num24);
                                     throw new UncompressionException(num24, "Decompression returned " + num24);
@@ -719,7 +683,7 @@ namespace GameLauncher
                 else
                 {
                     long num = long.Parse(indexFile.SelectSingleNode("/index/header/length").InnerText);
-                    WebClientWithTimeout webClient = new WebClientWithTimeout();
+                    WebClient webClient = new WebClient();
                     webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
                     webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
                     webClient.Headers.Add("Accept-Encoding", "gzip,deflate");
@@ -796,10 +760,8 @@ namespace GameLauncher
                             num,
                             num2,
                             0,
-                            innerText,
-                            0
+                            innerText
                         };
-
                         this.mFE.BeginInvoke(this.mProgressUpdated, args3);
                     }
                     if (flag3)
@@ -856,7 +818,7 @@ namespace GameLauncher
 
         public static byte[] GetData(string url)
         {
-            WebClientWithTimeout webClient = new WebClientWithTimeout();
+            WebClient webClient = new WebClient();
             webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
             webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
             webClient.Headers.Add("Accept-Encoding", "gzip");
@@ -891,6 +853,10 @@ namespace GameLauncher
             IntPtr intPtr2 = new IntPtr(num);
             byte[] array3 = new byte[num];
             int num2 = LZMA.LzmaUncompress(array3, ref intPtr2, array, ref intPtr, array2, outPropsSize);
+            if (num2 != 0)
+            {
+                MessageBox.Show("Decompression returned " + num2);
+            }
             return new string(Encoding.UTF8.GetString(array3).ToCharArray());
         }
     }

@@ -18,16 +18,5 @@ namespace SoapBox.JsonScheme {
         public int onlineNumber { get; set; }
         public string requireTicket { get; set; }
         public string serverVersion { get; set; }
-        public int maxUsersAllowed { get; set; }
-        public string allowedCountries { get; set; }
-
-        public string freeroamMapSocket { get; set; }
-        public List<string> freeroamServers { get; set; }
-        public string modernAuthSupport { get; set; }
-    }
-
-    public class FreeroamObject {
-        public int[] position { get; set; }
-        public string username { get; set; }
     }
 }

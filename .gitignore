@@ -198,6 +198,7 @@ ClientBin/
 *.dbmdl
 *.dbproj.schemaview
 *.jfm
+*.pfx
 *.publishsettings
 orleans.codegen.cs
 
