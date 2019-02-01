@@ -1,4 +1,4 @@
-# GameLauncher_NFSW [![Build Status](https://img.shields.io/badge/build-failing-red.svg?branch=master)](https://github.com/metonator/GameLauncher_NFSW/latest)
+# GameLauncher_NFSW [![Build Status](https://img.shields.io/badge/build-failing-red.svg?branch=master)](https://github.com/metonator/GameLauncher_NFSW/releases/latest)
 A Rewrite of GameLauncher taken from Need For Speed: World
 
 ## Todo
