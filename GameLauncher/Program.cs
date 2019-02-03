@@ -36,15 +36,6 @@ namespace GameLauncher {
                 Environment.Exit(0);
             }
 
-            if (!DetectLinux.UnixDetected() && !File.Exists("discord-rpc.dll"))
-                File.WriteAllBytes("discord-rpc.dll", ExtractResource.AsByte("GameLauncher.Discord.discord-rpc.dll"));
-
-            if (DetectLinux.LinuxDetected() && !File.Exists("libdiscord-rpc.so"))
-                File.WriteAllBytes("libdiscord-rpc.so", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.so"));
-
-            if (DetectLinux.MacOSDetected() && !File.Exists("libdiscord-rpc.dylib"))
-                File.WriteAllBytes("libdiscord-rpc.dylib", ExtractResource.AsByte("GameLauncher.Discord.libdiscord-rpc.dylib"));
-
 			if(!File.Exists("GameLauncherUpdater.exe")) {
 				try {
 					File.WriteAllBytes("GameLauncherUpdater.exe", new WebClientWithTimeout().DownloadData(Self.mainserver + "/files/GameLauncherUpdater.exe"));
@@ -75,13 +66,13 @@ namespace GameLauncher {
                         string[] files = {
                             "SharpRaven.dll - 2.4.0",
                             "Flurl.dll - 2.8.0",
-                            "Flurl.Http.dll - 2.3.2",
+                            "Flurl.Http.dll - 2.4.0",
                             "INIFileParser.dll - 2.5.2",
                             "Microsoft.WindowsAPICodePack.dll - 1.1.0.0",
                             "Microsoft.WindowsAPICodePack.Shell.dll - 1.1.0.0",
-                            "Nancy.dll - 1.4.4",
+                            "Nancy.dll - 1.4.5",
                             "Nancy.Hosting.Self.dll - 1.4.1",
-                            "Newtonsoft.Json.dll - 11.0.2",
+                            "Newtonsoft.Json.dll - 12.0.1",
                         };
 
                         var missingfiles = new List<string>();

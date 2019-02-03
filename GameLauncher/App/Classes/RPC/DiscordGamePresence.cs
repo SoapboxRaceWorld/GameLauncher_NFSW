@@ -16,7 +16,7 @@ namespace GameLauncher.App.Classes.RPC {
         public static RichPresence _presence = new RichPresence();
 
         //Some checks
-        private static string serverName = ServerProxy.Instance.GetServerName();
+        private static readonly string serverName = ServerProxy.Instance.GetServerName();
         private static bool canUpdateProfileField = false;
         private static bool eventTerminatedManually = false;
         private static int EventID;
@@ -80,15 +80,17 @@ namespace GameLauncher.App.Classes.RPC {
             if (uri == "/events/notifycoincollected") {
                 PersonaTreasure++;
 
-                _presence.details = "Collecting gems (" + PersonaTreasure+" of "+TotalTreasure+")";
-                _presence.state = serverName;
-                _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
-                _presence.largeImageKey = PersonaAvatarId;
-                _presence.smallImageText = "Treasure Hunt - Day: " + TEDay;
-                _presence.smallImageKey = "gamemode_treasure";
-                _presence.startTimestamp = RPCstartTimestamp;
-                _presence.instance = true;
-                DiscordRpc.UpdatePresence(_presence);
+                _presence.Details = "Collecting gems (" + PersonaTreasure+" of "+TotalTreasure+")";
+                _presence.State = serverName;
+                _presence.Assets = new Assets
+                {
+                    LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                    LargeImageKey = PersonaAvatarId,
+                    SmallImageText = "Treasure Hunt - Day: " + TEDay,
+                    SmallImageKey = "gamemode_treasure"
+                };
+                //_presence.Timestamps = Timestamps. RPCstartTimestamp; TODO: repair
+                MainScreen.discordRpcClient.SetPresence(_presence);
 
                 Console.WriteLine(serverreply);
             }
@@ -143,15 +145,17 @@ namespace GameLauncher.App.Classes.RPC {
                 PersonaId = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
             }
             if (uri == "/matchmaking/leavelobby") {
-                _presence.details = "Driving " + PersonaCarName;
-                _presence.state = serverName;
-                _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
-                _presence.largeImageKey = PersonaAvatarId;
-                _presence.smallImageText = "In-Freeroam";
-                _presence.smallImageKey = "gamemode_freeroam";
-                _presence.startTimestamp = RPCstartTimestamp;
-                _presence.instance = true;
-                DiscordRpc.UpdatePresence(_presence);
+                _presence.Details = "Driving " + PersonaCarName;
+                _presence.State = serverName;
+                _presence.Assets = new Assets
+                {
+                    LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                    LargeImageKey = PersonaAvatarId,
+                    SmallImageText = "In-Freeroam",
+                    SmallImageKey = "gamemode_freeroam"
+                };
+                //_presence.startTimestamp = RPCstartTimestamp; TODO: repair
+                MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = true;
             }
@@ -161,15 +165,17 @@ namespace GameLauncher.App.Classes.RPC {
                 SBRW_XML.LoadXml(serverreply);
                 EventID = Convert.ToInt32(SBRW_XML.SelectSingleNode("LobbyInfo/EventId").InnerText);
 
-                _presence.details = "In Lobby: " + EventList.getEventName(EventID);
-                _presence.state = serverName;
-                _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
-                _presence.largeImageKey = PersonaAvatarId;
-                _presence.smallImageText = EventList.getEventName(Convert.ToInt32(EventID));
-                _presence.smallImageKey = EventList.getEventType(Convert.ToInt32(EventID));
-                _presence.startTimestamp = RPCstartTimestamp;
-                _presence.instance = true;
-                DiscordRpc.UpdatePresence(_presence);
+                _presence.Details = "In Lobby: " + EventList.getEventName(EventID);
+                _presence.State = serverName;
+                _presence.Assets = new Assets
+                {
+                    LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                    LargeImageKey = PersonaAvatarId,
+                    SmallImageText = EventList.getEventName(Convert.ToInt32(EventID)),
+                    SmallImageKey = EventList.getEventType(Convert.ToInt32(EventID))
+                };
+                //_presence.startTimestamp = RPCstartTimestamp; TODO: repair
+                MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = false;
             }
@@ -177,62 +183,68 @@ namespace GameLauncher.App.Classes.RPC {
             //IN SAFEHOUSE/FREEROAM
             if (uri == "/DriverPersona/UpdatePersonaPresence") {
                 string UpdatePersonaPresenceParam = GET.Split(';').Last().Split('=').Last();
+                _presence.Assets = new Assets();
                 if(UpdatePersonaPresenceParam == "1") {
-                    _presence.details = "Driving " + PersonaCarName;
-                    _presence.smallImageText = "In-Freeroam";
+                    _presence.Details = "Driving " + PersonaCarName;
+                    _presence.Assets.SmallImageText = "In-Freeroam";
                 } else {
-                    _presence.details = "In Safehouse";
-                    _presence.smallImageText = "In-Safehouse";
+                    _presence.Details = "In Safehouse";
+                    _presence.Assets.SmallImageText = "In-Safehouse";
                 }
 
-                _presence.state = serverName;
-                _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
-                _presence.largeImageKey = PersonaAvatarId;
-                _presence.smallImageKey = "gamemode_freeroam";
-                _presence.startTimestamp = RPCstartTimestamp;
-                _presence.instance = true;
-                DiscordRpc.UpdatePresence(_presence);
+                _presence.State = serverName;
+                _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
+                _presence.Assets.LargeImageKey = PersonaAvatarId;
+                _presence.Assets.SmallImageKey = "gamemode_freeroam";
+                //_presence.startTimestamp = RPCstartTimestamp; TODO: repair
+                MainScreen.discordRpcClient.SetPresence(_presence);
             }
 
             //IN EVENT
             if (Regex.Match(uri, "/matchmaking/launchevent").Success) {
                 EventID = Convert.ToInt32(splitted_uri[3]);
 
-                _presence.details = "In Event: " + EventList.getEventName(EventID);
-                _presence.state = serverName;
-                _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
-                _presence.largeImageKey = PersonaAvatarId;
-                _presence.smallImageText = EventList.getEventName(EventID);
-                _presence.smallImageKey = EventList.getEventType(EventID);
-                _presence.startTimestamp = RPCstartTimestamp;
-                _presence.instance = true;
-                DiscordRpc.UpdatePresence(_presence);
+                _presence.Details = "In Event: " + EventList.getEventName(EventID);
+                _presence.State = serverName;
+                _presence.Assets = new Assets
+                {
+                    LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                    LargeImageKey = PersonaAvatarId,
+                    SmallImageText = EventList.getEventName(EventID),
+                    SmallImageKey = EventList.getEventType(EventID)
+                };
+                //_presence.startTimestamp = RPCstartTimestamp; TODO: repair
+                MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = false;
             }
             if (uri == "/event/arbitration") {
-                _presence.details = "In Event: " + EventList.getEventName(EventID);
-                _presence.state = serverName;
-                _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
-                _presence.largeImageKey = PersonaAvatarId;
-                _presence.smallImageText = EventList.getEventName(EventID);
-                _presence.smallImageKey = EventList.getEventType(EventID);
-                _presence.startTimestamp = RPCstartTimestamp;
-                _presence.instance = true;
-                DiscordRpc.UpdatePresence(_presence);
+                _presence.Details = "In Event: " + EventList.getEventName(EventID);
+                _presence.State = serverName;
+                _presence.Assets = new Assets
+                {
+                    LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                    LargeImageKey = PersonaAvatarId,
+                    SmallImageText = EventList.getEventName(EventID),
+                    SmallImageKey = EventList.getEventType(EventID)
+                };
+                //_presence.startTimestamp = RPCstartTimestamp; TODO: repair
+                MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = false;
             }
             if (uri == "/event/launched" && eventTerminatedManually == false) {
-                _presence.details = "In Event: " + EventList.getEventName(EventID);
-                _presence.state = serverName;
-                _presence.largeImageText = PersonaName + " - Level: " + PersonaLevel;
-                _presence.largeImageKey = PersonaAvatarId;
-                _presence.smallImageText = EventList.getEventName(EventID);
-                _presence.smallImageKey = EventList.getEventType(EventID);
-                _presence.startTimestamp = Self.getTimestamp(true);
-                _presence.instance = true;
-                DiscordRpc.UpdatePresence(_presence);
+                _presence.Details = "In Event: " + EventList.getEventName(EventID);
+                _presence.State = serverName;
+                _presence.Assets = new Assets
+                {
+                    LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                    LargeImageKey = PersonaAvatarId,
+                    SmallImageText = EventList.getEventName(EventID),
+                    SmallImageKey = EventList.getEventType(EventID)
+                };
+                //_presence.startTimestamp = Self.getTimestamp(true); TODO: repair
+                MainScreen.discordRpcClient.SetPresence(_presence);
             }
 
 

@@ -28,7 +28,7 @@ using GameLauncher.App.Classes.Logger;
 using System.IO.Compression;
 using GameLauncher.App.Classes.Auth;
 using DiscordRPC;
-using DiscordSDK;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace GameLauncher {
     public sealed partial class MainScreen : Form {
@@ -89,8 +89,7 @@ namespace GameLauncher {
 
         ServerInfo _serverInfo = null;
 
-        public EventHandlers Handlers;
-        public DiscordUser CurrentUser;
+        public static DiscordRpcClient discordRpcClient;
         private Random rnd;
 
         List<ServerInfo> finalItems = new List<ServerInfo>();
@@ -125,19 +124,13 @@ namespace GameLauncher {
             Opacity = 0.9;
         }
 
-        void Discord_Ready(ref DiscordUser pUser) {
-            Invoke(new Action<DiscordUser>((user) => {
-                Log.Debug(String.Format("Connected as {0}#{1}: {2}", user.username, user.discriminator, user.userId));
-            }), pUser);
-
-            CurrentUser = pUser;
-        }
-
-        void Discord_Disconnect(int code, string message) {
+        void Discord_Disconnect(int code, string message) //TODO delete
+        {
             MessageBox.Show($"Disconnected from Discord\n{message}", code.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
-        void Discord_Error(int code, string message) {
+        void Discord_Error(int code, string message) //TODO delete
+        {
             MessageBox.Show($"Discord Connection Error\n{message}", code.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
@@ -163,12 +156,23 @@ namespace GameLauncher {
 
             rnd = new Random(Environment.TickCount);
 
-            var handlers = new EventHandlers();
+            discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID);
+
             //handlers.readyCallback = Discord_Ready; //Discord, please, fix that... (already reported on DiscordRPC Issues Page)
-            handlers.errorCallback = Discord_Error;
-            handlers.disconnectedCallback = Discord_Disconnect;
-            DiscordRpc.Initialize(Self.DiscordRPCID, ref handlers, true, String.Empty);
-            DiscordRpc.Register(Self.DiscordRPCID, "\"" + Directory.GetCurrentDirectory() + "\\GameLauncher.exe\" --discord");
+
+            //discordRpcClient.OnReady += (sender, e) =>
+            //{
+
+            //};
+
+            discordRpcClient.OnError += (sender, e) =>
+            {
+                MessageBox.Show($"Discord Connection Error\n{e.Message}", e.Code.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            };
+
+            //TODO: add more events
+
+            discordRpcClient.Initialize();
 
             Log.Debug("Setting SSL Protocol");
             ServicePointManager.Expect100Continue = true;
@@ -294,7 +298,7 @@ namespace GameLauncher {
             this.Load += new EventHandler(mainScreen_Load);
             this.Shown += (x,y) => {
                 new Thread(() => {
-                    DiscordRpc.RunCallbacks();
+                    discordRpcClient.Invoke();
 
                     //Let's fetch all servers
                     List<ServerInfo> allServs = finalItems.FindAll(i => string.Equals(i.IsSpecial, false));
@@ -338,29 +342,36 @@ namespace GameLauncher {
                     _NFSW_Installation_Source = CDN.CDNUrl;
                 }
 
-                var fbd = new FolderBrowserDialog();
-                var result = fbd.ShowDialog();
+                var fbd = new CommonOpenFileDialog
+                {
+                    EnsurePathExists = true,
+                    EnsureFileExists = false,
+                    AllowNonFileSystemItems = false,
+                    Title = "Select The Folder With NFS World Instalation",
+                    IsFolderPicker = true
+                };
 
-                if (result == DialogResult.OK) {
-                    if (!Self.hasWriteAccessToFolder(fbd.SelectedPath)) {
+                if (fbd.ShowDialog() == CommonFileDialogResult.Ok) {
+                    if (!Self.hasWriteAccessToFolder(fbd.FileName)) {
                         Log.Error("Not enough permissions. Exiting.");
                         MessageBox.Show(null, "You don't have enough permission to select this path as installation folder. Please select another directory.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         Environment.Exit(Environment.ExitCode);
                     }
 
-                    if (fbd.SelectedPath == Environment.CurrentDirectory) {
+                    if (fbd.DefaultFileName == Environment.CurrentDirectory) {
                         Directory.CreateDirectory("GameFiles");
                         Log.Debug("Installing NFSW in same directory where the launcher resides is disadvised.");
                         MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. Instead, we will install it on {0}.", Environment.CurrentDirectory + "\\GameFiles"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         _settingFile.Write("InstallationDirectory", Environment.CurrentDirectory + "\\GameFiles");
                     } else {
-                        Log.Debug("Directory Set: " + fbd.SelectedPath);
-                        _settingFile.Write("InstallationDirectory", fbd.SelectedPath);
+                        Log.Debug("Directory Set: " + fbd.FileName);
+                        _settingFile.Write("InstallationDirectory", fbd.FileName);
                     }
                 } else {
                     Log.Debug("Exiting");
                     Environment.Exit(Environment.ExitCode);
                 }
+                fbd.Dispose();
             }
 
             if (!DetectLinux.UnixDetected()) {
@@ -827,12 +838,14 @@ namespace GameLauncher {
 
             Log.Debug("Initializing DiscordRPC");
 
-            _presence.state = _OS;
-            _presence.details = "In-Launcher: " +  (Debugger.IsAttached ? "2.1.3.7" : Application.ProductVersion);
-            _presence.largeImageText = "SBRW";
-            _presence.largeImageKey = "nfsw";
-            _presence.instance = true;
-            DiscordRpc.UpdatePresence(_presence);
+            _presence.State = _OS;
+            _presence.Details = "In-Launcher: " +  (Debugger.IsAttached ? "2.1.3.7" : Application.ProductVersion);
+            _presence.Assets = new Assets
+            {
+                LargeImageText = "SBRW",
+                LargeImageKey = "nfsw"
+            };
+            discordRpcClient.SetPresence(_presence);
 
             BeginInvoke((MethodInvoker)delegate {
                 Log.Debug("Initialize Downloading Process");
@@ -879,7 +892,7 @@ namespace GameLauncher {
             }
 
             //Kill DiscordRPC
-            DiscordRpc.Shutdown();
+            discordRpcClient.Dispose();
 
             ServerProxy.Instance.Stop();
 
@@ -1168,11 +1181,10 @@ namespace GameLauncher {
                         try {
                             _realServernameBanner = json.serverName;
                             if (!string.IsNullOrEmpty(json.bannerUrl)) {
-                                Uri uriResult;
                                 bool result;
 
                                 try {
-                                    result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                                    result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 } catch {
                                     result = false;
                                 }
@@ -1250,7 +1262,20 @@ namespace GameLauncher {
                     } catch {
                         //¯\_(ツ)_/¯
                     }
-                    ServerStatusDesc.Text = string.Format("players in game - {0}", numPlayers);
+
+                    //for thread safety
+                    if (this.ServerStatusDesc.InvokeRequired)
+                    {
+                        ServerStatusDesc.Invoke(new Action(delegate ()
+                        {
+                            ServerStatusDesc.Text = string.Format("players in game - {0}", numPlayers);
+                        }));
+                    }
+                    else
+                    {
+                        this.ServerStatusDesc.Text = string.Format("players in game - {0}", numPlayers);
+                    }
+
                     _serverEnabled = true;
 
                     if (!string.IsNullOrEmpty(verticalImageUrl)) {
@@ -1878,22 +1903,26 @@ namespace GameLauncher {
                 }
             }
 
-            _nfswstarted = new Thread(() => {
+            _nfswstarted = new Thread(() =>
+            {
                 LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this);
-            });
-
-            _nfswstarted.IsBackground = true;
+            })
+            {
+                IsBackground = true
+            };
             _nfswstarted.Start();
 
             _presenceImageKey = _serverInfo.DiscordPresenceKey;
-            _presence.state = _realServername;
-            _presence.details = "Loading game...";
-            _presence.largeImageText = "Need for Speed: World";
-            _presence.largeImageKey = "nfsw";
-            _presence.smallImageText = _realServername;
-            _presence.smallImageKey = _presenceImageKey;
-            _presence.instance = true;
-            DiscordRpc.UpdatePresence(_presence);
+            _presence.State = _realServername;
+            _presence.Details = "Loading game...";
+            _presence.Assets = new Assets
+            {
+                LargeImageText = "Need for Speed: World",
+                LargeImageKey = "nfsw",
+                SmallImageText = _realServername,
+                SmallImageKey = _presenceImageKey
+            };
+            discordRpcClient.SetPresence(_presence);
         }
 
         private void LaunchGame(string userId, string loginToken, string serverIp, Form x) {
