@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -8,11 +8,14 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>GameLauncher</RootNamespace>
     <AssemblyName>GameLauncher</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>C:\Users\meton\Desktop\TEST\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -28,61 +31,35 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>original_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>GameLauncher.Program</StartupObject>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>3417E967BD56A4BE004FBABF08CEB87189D17C8E</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>65CECF3A6E4BD0A415E243AB70A9795232F971F5</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>GameLauncher_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>ZpevdoCanFuckMe.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -100,21 +77,90 @@
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    <Reference Include="DiscordRPC">
+      <HintPath>Discord\DiscordRPC.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Flurl, Version=2.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.2.8.0\lib\net40\Flurl.dll</HintPath>
+    </Reference>
+    <Reference Include="Flurl.Http, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.Http.2.4.0\lib\net45\Flurl.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAPICodePack.Core.1.1.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAPICodePack.Shell.1.1.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy, Version=1.4.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.1.4.5\lib\net40\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Hosting.Self, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="SharpRaven, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpRaven.2.4.0\lib\net45\SharpRaven.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
+    <Reference Include="INIFileParser">
+      <HintPath>..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="App\AddServer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\AddServer.Designer.cs">
+      <DependentUpon>AddServer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="App\Classes\Auth\ClassicAuth.cs" />
+    <Compile Include="App\Classes\Auth\ModernAuth.cs" />
+    <Compile Include="App\Classes\Auth\Tokens.cs" />
+    <Compile Include="App\Classes\CDN.cs" />
     <Compile Include="App\Classes\Delay.cs" />
     <Compile Include="App\Classes\DetectLinux.cs" />
     <Compile Include="App\Classes\Downloader\Downloader.cs" />
@@ -125,39 +171,89 @@
     <Compile Include="App\Classes\Downloader\DownloadManager.cs" />
     <Compile Include="App\Classes\Downloader\HashManager.cs" />
     <Compile Include="App\Classes\Downloader\ProgressUpdated.cs" />
+    <Compile Include="App\Classes\Downloader\ShowExtract.cs" />
     <Compile Include="App\Classes\Downloader\ShowMessage.cs" />
     <Compile Include="App\Classes\Downloader\UncompressionException.cs" />
     <Compile Include="App\Classes\Downloader\VerifyCommand.cs" />
-    <Compile Include="App\Classes\Events\About.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="App\Classes\Events\About.Designer.cs">
-      <DependentUpon>About.cs</DependentUpon>
-    </Compile>
     <Compile Include="App\Classes\Events\UpdaterSchema.cs" />
     <Compile Include="App\Classes\ExtractResource.cs" />
+    <Compile Include="App\Classes\HashPassword\SHA.cs" />
+    <Compile Include="App\Classes\HWID.cs" />
     <Compile Include="App\Classes\IniFile.cs" />
+    <Compile Include="App\Classes\Language.cs" />
+    <Compile Include="App\Classes\Logger\LogToFile.cs" />
+    <Compile Include="App\Classes\ModManager.cs" />
     <Compile Include="App\Classes\NativeFunctions.cs" />
     <Compile Include="App\Classes\Events\Updater.cs" />
+    <Compile Include="App\Classes\NFSW.cs" />
+    <Compile Include="App\Classes\ParseUri.cs" />
+    <Compile Include="App\Classes\ProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="App\Classes\Prompt.cs" />
+    <Compile Include="App\Classes\Proxy\NancyBootstrapper.cs" />
+    <Compile Include="App\Classes\Proxy\NancyGzipCompression.cs" />
+    <Compile Include="App\Classes\Proxy\ProxyHandler.cs" />
+    <Compile Include="App\Classes\RPC\CarList.cs" />
+    <Compile Include="App\Classes\RPC\DiscordGamePresence.cs" />
+    <Compile Include="App\Classes\RPC\EventList.cs" />
     <Compile Include="App\Classes\Self.cs" />
+    <Compile Include="App\Classes\ServerProxy.cs" />
+    <Compile Include="App\Classes\Singleton.cs" />
+    <Compile Include="App\Classes\TaskBar.cs" />
+    <Compile Include="App\Classes\UriExtensions.cs" />
     <Compile Include="App\Classes\WebRequest.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="App\Form1.cs">
+    <Compile Include="App\Classes\XMPP\MITM_XMPP.cs" />
+    <Compile Include="App\Debug.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="App\Debug.Designer.cs">
+      <DependentUpon>Debug.cs</DependentUpon>
+    </Compile>
+    <Compile Include="App\MainScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\MainScreen.Designer.cs">
+      <DependentUpon>MainScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\JsonScheme.cs" />
-    <Compile Include="App\Program.cs" />
+    <Compile Include="App\WelcomeScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\WelcomeScreen.Designer.cs">
+      <DependentUpon>WelcomeScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="App\ShowMap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\ShowMap.Designer.cs">
+      <DependentUpon>ShowMap.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App\Classes\FontWrapper.cs" />
-    <EmbeddedResource Include="App\Classes\Events\About.resx">
+    <EmbeddedResource Include="App\About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="App\AddServer.resx">
+      <DependentUpon>AddServer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\Classes\WebRequest.resx">
+      <DependentUpon>WebRequest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\Debug.resx">
+      <DependentUpon>Debug.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\MainScreen.resx">
+      <DependentUpon>MainScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\ShowMap.resx">
+      <DependentUpon>ShowMap.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\WelcomeScreen.resx">
+      <DependentUpon>WelcomeScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -165,14 +261,16 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
-    <EmbeddedResource Include="Fonts\Font_MyriadProSemiCondBold.ttf" />
-    <EmbeddedResource Include="Fonts\Font_Register.ttf" />
-    <EmbeddedResource Include="Fonts\Font_RegisterDemiBold.ttf" />
-    <EmbeddedResource Include="Fonts\Font_RegisterBoldItalic.ttf" />
-    <EmbeddedResource Include="Fonts\Font_MyriadProSemiCond.ttf" />
-    <EmbeddedResource Include="Fonts\Font_RegisterBold.ttf" />
+    <EmbeddedResource Include="App\Classes\RPC\JSON\events.json" />
+    <EmbeddedResource Include="App\Classes\RPC\JSON\cars.json" />
+    <EmbeddedResource Include="Fonts\Airport-Cyr.ttf" />
+    <EmbeddedResource Include="Fonts\Akrobat-Regular.ttf" />
+    <EmbeddedResource Include="Fonts\Akrobat-SemiBold.ttf" />
     <None Include="packages.config" />
-    <None Include="Properties\app.manifest" />
+    <None Include="Properties\app.manifest">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\DataSources\GameLauncher.App.AddServer.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -191,48 +289,11 @@
     <EmbeddedResource Include="SoapBoxModules\udpcrypt1.soapbox.module" />
     <EmbeddedResource Include="SoapBoxModules\udpcrypt2.soapbox.module" />
     <EmbeddedResource Include="SoapBoxModules\xmppsubject.soapbox.module" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\loginbg.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\playbg.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\server_offline.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\server_online.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\settingsbg.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\close.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\close_click.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\close_hover.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\minimize.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\minimize_click.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\minimize_hover.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\settingsbtn.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\settingsbtn_click.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\settingsbtn_hover.png" />
+    <EmbeddedResource Include="SoapBoxModules\BootFlow.gfx" />
+    <Compile Include="App\Classes\WineManager.cs" />
+    <EmbeddedResource Include="SoapBoxModules\global.ini" />
+    <EmbeddedResource Include="wine_opts.reg" />
+    <EmbeddedResource Include="SoapBoxModules\cursor.ani" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -242,21 +303,51 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="icon.ico" />
-    <EmbeddedResource Include="Updater\GameLauncherUpdater.exe" />
-    <None Include="Resources\aboutbg.png" />
-    <EmbeddedResource Include="LZMA\LZMA.dll" />
-    <None Include="Resources\playButton_click.png" />
-    <None Include="Resources\playButton_hover.png" />
-    <None Include="Resources\playButton_enable.png" />
-    <None Include="Resources\playButton_disable.png" />
-    <EmbeddedResource Include="SoapBoxModules\lightfx.dll" />
-    <None Include="Resources\registerbg.png" />
-    <None Include="Resources\button_hover.png" />
-    <None Include="Resources\button_enable.png" />
-    <None Include="Resources\button_disable.png" />
-    <None Include="Resources\button_click.png" />
+    <None Include="Resources\registerButton_en.png" />
+    <None Include="Resources\buttons_info.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\playbutton_hover.png" />
+    <None Include="Resources\playbutton_click.png" />
+    <None Include="Resources\playbutton.png" />
+    <None Include="Resources\graybutton_hover.png" />
+    <None Include="Resources\graybutton_click.png" />
+    <None Include="Resources\graybutton.png" />
+    <None Include="Resources\greenbutton_click.png" />
+    <None Include="Resources\greenbutton_hover.png" />
+    <None Include="Resources\greenbutton.png" />
+    <None Include="Resources\register_ticket.png" />
+    <None Include="Resources\register_noticket.png" />
+    <None Include="Resources\webicon.png" />
+    <None Include="Resources\ac_warning.png" />
+    <None Include="Resources\ac_unknown.png" />
+    <None Include="Resources\ac_success.png" />
+    <None Include="Resources\ac_error.png" />
+    <None Include="Resources\logo.png" />
+    <None Include="Resources\loggedbg.png" />
+    <None Include="Resources\warningprogress.png" />
+    <None Include="Resources\loginbg.png" />
+    <None Include="Resources\errorprogress.png" />
+    <None Include="Resources\progressgrayscale.png" />
+    <None Include="Resources\progress.png" />
+    <None Include="Resources\settingsbtn_click.png" />
+    <None Include="Resources\settingsbtn.png" />
+    <None Include="Resources\settingsbtn_hover.png" />
+    <None Include="Resources\secondarybackground.png" />
+    <None Include="Resources\close_click.png" />
+    <None Include="Resources\close.png" />
+    <None Include="Resources\close_hover.png" />
+    <EmbeddedResource Include="SoapBoxModules\ModManager.dll" />
+    <EmbeddedResource Include="SoapBoxModules\dinput8.dll" />
+    <None Include="Resources\tick.png" />
+    <None Include="Resources\map.png" />
+    <Content Include="original_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Discord\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

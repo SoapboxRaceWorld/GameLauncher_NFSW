@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("GameLauncher")]
 [assembly: AssemblyDescription("GameLauncher for Need For Speed(TM): World")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("MeTonaTOR")]
+[assembly: AssemblyCompany("MTNTR")]
 [assembly: AssemblyProduct("GameLauncher")]
 [assembly: AssemblyCopyright("OpenSource")]
 [assembly: AssemblyTrademark("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Możesz określić wszystkie wartości lub użyć domyślnych numerów kompilacji i poprawki
 // przy użyciu symbolu „*”, tak jak pokazano poniżej:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.158")]
-[assembly: AssemblyFileVersion("1.0.0.158")]
+[assembly: AssemblyVersion("2.0.2.2")]
+[assembly: AssemblyFileVersion("2.0.2.2")]
