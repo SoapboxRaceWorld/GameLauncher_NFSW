@@ -89,7 +89,6 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageText = "Treasure Hunt - Day: " + TEDay,
                     SmallImageKey = "gamemode_treasure"
                 };
-                //_presence.Timestamps = Timestamps. RPCstartTimestamp; TODO: repair
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
                 Console.WriteLine(serverreply);
@@ -154,7 +153,12 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageText = "In-Freeroam",
                     SmallImageKey = "gamemode_freeroam"
                 };
-                //_presence.startTimestamp = RPCstartTimestamp; TODO: repair
+
+                _presence.Timestamps = new Timestamps() {
+                    Start = null,
+                    End = null
+                };
+
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = true;
@@ -174,7 +178,6 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageText = EventList.getEventName(Convert.ToInt32(EventID)),
                     SmallImageKey = EventList.getEventType(Convert.ToInt32(EventID))
                 };
-                //_presence.startTimestamp = RPCstartTimestamp; TODO: repair
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = false;
@@ -196,7 +199,12 @@ namespace GameLauncher.App.Classes.RPC {
                 _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
                 _presence.Assets.LargeImageKey = PersonaAvatarId;
                 _presence.Assets.SmallImageKey = "gamemode_freeroam";
-                //_presence.startTimestamp = RPCstartTimestamp; TODO: repair
+
+                _presence.Timestamps = new Timestamps() {
+                    Start = null,
+                    End = null
+                };
+
                 MainScreen.discordRpcClient.SetPresence(_presence);
             }
 
@@ -213,7 +221,7 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageText = EventList.getEventName(EventID),
                     SmallImageKey = EventList.getEventType(EventID)
                 };
-                //_presence.startTimestamp = RPCstartTimestamp; TODO: repair
+
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = false;
@@ -228,7 +236,6 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageText = EventList.getEventName(EventID),
                     SmallImageKey = EventList.getEventType(EventID)
                 };
-                //_presence.startTimestamp = RPCstartTimestamp; TODO: repair
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = false;
@@ -243,7 +250,12 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageText = EventList.getEventName(EventID),
                     SmallImageKey = EventList.getEventType(EventID)
                 };
-                //_presence.startTimestamp = Self.getTimestamp(true); TODO: repair
+
+                _presence.Timestamps = new Timestamps() {
+                    Start = DateTime.UtcNow,
+                    End = null
+                };
+
                 MainScreen.discordRpcClient.SetPresence(_presence);
             }
 

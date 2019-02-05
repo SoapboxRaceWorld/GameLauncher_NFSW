@@ -158,12 +158,8 @@ namespace GameLauncher {
 
             discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID);
 
-            //handlers.readyCallback = Discord_Ready; //Discord, please, fix that... (already reported on DiscordRPC Issues Page)
-
-            //discordRpcClient.OnReady += (sender, e) =>
-            //{
-
-            //};
+            discordRpcClient.OnReady += (sender, e) => {
+            };
 
             discordRpcClient.OnError += (sender, e) =>
             {
