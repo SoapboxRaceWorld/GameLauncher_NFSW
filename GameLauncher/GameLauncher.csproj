@@ -82,9 +82,6 @@
     <Reference Include="Flurl.Http, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Flurl.Http.2.4.0\lib\net45\Flurl.Http.dll</HintPath>
     </Reference>
-    <Reference Include="ManagedLzma, Version=1.0.6.0, Culture=neutral, PublicKeyToken=9d213bf823a71bb8, processorArchitecture=MSIL">
-      <HintPath>..\packages\ManagedLzma.0.2.0-alpha-7\lib\net45\ManagedLzma.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAPICodePack.Core.1.1.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
@@ -106,9 +103,6 @@
       <HintPath>..\packages\SharpRaven.2.4.0\lib\net45\SharpRaven.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.1.36.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.1.1.36\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
-    </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
