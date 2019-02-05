@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,17 +10,16 @@ namespace GameLauncher.App.Classes.Logger
 {
     class Log
     {
+        private static ConcurrentQueue<string> buffer = new ConcurrentQueue<string>();
+
+        public static void StartLogging()
+        {
+            Task.Run(() => TaskKernel());
+        }
+
         private static void _toFile(string text, string errorname = "DEBUG")
         {
-
-            try { 
-                using (StreamWriter stream = new StreamWriter("log.txt", true)) {
-                    stream.WriteLine("[" + errorname + "] " + text);
-                    Console.WriteLine("[" + errorname + "] " + text);
-                }
-            } catch {
-                Console.WriteLine("[" + errorname + "] " + text);
-            }
+            buffer.Enqueue($"[{errorname}] {text}");
         }
 
         public static void Debug(string text)
@@ -40,6 +40,21 @@ namespace GameLauncher.App.Classes.Logger
         public static void Error(string text)
         {
             _toFile(text, "ERROR");
+        }
+
+        private static async void TaskKernel()
+        {
+            while (true)
+            {
+                if(buffer.Count > 0 && buffer.TryDequeue(out string merged))
+                {
+                    File.AppendAllText("log.txt", merged + Environment.NewLine);
+                    Console.WriteLine(merged);
+                } else
+                {
+                    await Task.Delay(30);
+                }
+            }
         }
     }
 }
