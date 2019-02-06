@@ -1,5 +1,0 @@
-language: csharp
-sudo: false
-solution: GameLauncher.sln
-notifications:
-  webhooks: https://ptb.discordapp.com/api/webhooks/326007061806579714/ngv0V7DslzrgLczLEzAAgT3-0UFQU0EBBV60lvAg8Rujts-JQaLcuKhxJUCtVef-UV8J
