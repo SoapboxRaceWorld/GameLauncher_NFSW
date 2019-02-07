@@ -286,7 +286,7 @@ namespace GameLauncher.App.Classes.RPC {
 
         public static Timestamps GetCurrentTimestamp()
         {
-            return new Timestamps { Start = RPCstartTimestamp, End = DateTime.Now };
+            return Timestamps.Now;
         }
     }
 }
