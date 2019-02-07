@@ -32,28 +32,9 @@ namespace Security {
             return fingerPrint;
         }
 
-        private static string WindowsValue() {
-            string location = @"SOFTWARE\Microsoft\Cryptography";
-            string name = "MachineGuid";
-            object machineGuid;
-
-            using (RegistryKey localMachineX64View =
-                RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
-            {
-                using (RegistryKey rk = localMachineX64View.OpenSubKey(location))
-                {
-                    if (rk == null)
-                        throw new KeyNotFoundException(
-                            string.Format("Key Not Found: {0}", location));
-
-                    machineGuid = rk.GetValue(name);
-                    if (machineGuid == null)
-                        throw new IndexOutOfRangeException(
-                            string.Format("Index Not Found: {0}", name));
-                }
-            }
-            var hmac = new HMACSHA1(Encoding.ASCII.GetBytes("GameLauncher_NFSW"));
-            return GetHexString(hmac.ComputeHash(Encoding.ASCII.GetBytes(machineGuid.ToString())));
+        private static string WindowsValue()
+        {
+            return GetHash(cpuId() + baseId() + diskId() + videoId());
         }
 
         private static string LinuxValue() {
@@ -90,6 +71,93 @@ namespace Security {
             }
 
             return s;
+        }
+
+        private static string identifier(string wmiClass, string wmiProperty, string wmiMustBeTrue)
+        {
+            string result = "";
+            ManagementClass mc = new ManagementClass(wmiClass);
+            ManagementObjectCollection moc = mc.GetInstances();
+            foreach (ManagementObject mo in moc)
+            {
+                if (mo[wmiMustBeTrue].ToString() == "True")
+                {
+                    if (result == "")
+                    {
+                        try
+                        {
+                            result = mo[wmiProperty].ToString();
+                            break;
+                        }
+                        catch { }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private static string identifier(string wmiClass, string wmiProperty)
+        {
+            string result = "";
+            ManagementClass mc = new ManagementClass(wmiClass);
+            ManagementObjectCollection moc = mc.GetInstances();
+            foreach (ManagementObject mo in moc)
+            {
+                if (result == "")
+                {
+                    try
+                    {
+                        result = mo[wmiProperty].ToString();
+                        break;
+                    }
+                    catch { }
+                }
+            }
+
+            return result;
+        }
+
+        private static string cpuId()
+        {
+            string retVal = identifier("Win32_Processor", "UniqueId");
+            if (retVal == "")
+            {
+                retVal = identifier("Win32_Processor", "ProcessorId");
+                if (retVal == "")
+                {
+                    retVal = identifier("Win32_Processor", "Name");
+
+                    if (retVal == "")
+                    {
+                        retVal = identifier("Win32_Processor", "Manufacturer");
+                    }
+
+                    retVal += identifier("Win32_Processor", "MaxClockSpeed");
+                }
+            }
+
+            return retVal;
+        }
+
+        private static string diskId()
+        {
+            return identifier("Win32_DiskDrive", "PNPDeviceId");
+        }
+
+        private static string baseId()
+        {
+            return identifier("Win32_BaseBoard", "Product") + " " + identifier("Win32_BaseBoard", "SerialNumber");
+        }
+
+        private static string videoId()
+        {
+            return identifier("Win32_VideoController", "PNPDeviceId");
+        }
+
+        private static string macId()
+        {
+            return identifier("Win32_NetworkAdapterConfiguration", "MACAddress", "IPEnabled");
         }
     }
 }
