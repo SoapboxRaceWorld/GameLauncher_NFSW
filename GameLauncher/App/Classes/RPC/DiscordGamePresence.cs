@@ -12,7 +12,7 @@ using System.Xml;
 
 namespace GameLauncher.App.Classes.RPC {
     class DiscordGamePresence {
-        public static long RPCstartTimestamp = 0000000000;
+        private static DateTime RPCstartTimestamp;
         public static RichPresence _presence = new RichPresence();
 
         //Some checks
@@ -21,10 +21,6 @@ namespace GameLauncher.App.Classes.RPC {
         private static bool eventTerminatedManually = false;
         private static int EventID;
         private static string carslotsXML = String.Empty;
-
-        public DiscordGamePresence() {
-
-        }
 
         //Some data related, can be touched.
         public static string PersonaId = String.Empty;
@@ -39,6 +35,8 @@ namespace GameLauncher.App.Classes.RPC {
         public static List<string> PersonaIds = new List<string>();
 
         public static void handleGameState(string uri, string serverreply = "", string POST = "", string GET = "") {
+            RPCstartTimestamp = DateTime.Now;
+
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');
 
@@ -153,12 +151,7 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageText = "In-Freeroam",
                     SmallImageKey = "gamemode_freeroam"
                 };
-
-                _presence.Timestamps = new Timestamps() {
-                    Start = null,
-                    End = null
-                };
-
+                _presence.Timestamps = GetCurrentTimestamp();
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = true;
@@ -200,10 +193,7 @@ namespace GameLauncher.App.Classes.RPC {
                 _presence.Assets.LargeImageKey = PersonaAvatarId;
                 _presence.Assets.SmallImageKey = "gamemode_freeroam";
 
-                _presence.Timestamps = new Timestamps() {
-                    Start = null,
-                    End = null
-                };
+                _presence.Timestamps = GetCurrentTimestamp();
 
                 MainScreen.discordRpcClient.SetPresence(_presence);
             }
@@ -251,15 +241,10 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageKey = EventList.getEventType(EventID)
                 };
 
-                _presence.Timestamps = new Timestamps() {
-                    Start = DateTime.UtcNow,
-                    End = null
-                };
+                _presence.Timestamps = GetCurrentTimestamp();
 
                 MainScreen.discordRpcClient.SetPresence(_presence);
             }
-
-
 
             //CARS RELATED
             foreach (var single_personaId in PersonaIds) {
@@ -297,6 +282,11 @@ namespace GameLauncher.App.Classes.RPC {
                     }
                 }
             }
+        }
+
+        public static Timestamps GetCurrentTimestamp()
+        {
+            return Timestamps.Now;
         }
     }
 }

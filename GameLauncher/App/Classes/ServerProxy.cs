@@ -33,7 +33,8 @@ namespace GameLauncher.App.Classes
 
             _host = new NancyHost(new Uri("http://127.0.0.1:" + Self.ProxyPort), new NancyBootstrapper(), new HostConfiguration
             {
-                AllowChunkedEncoding = false
+                AllowChunkedEncoding = false,
+                UrlReservations = new UrlReservations() { CreateAutomatically = true }
             });
             _host.Start();
         }

@@ -118,7 +118,7 @@ namespace GameLauncher.App.Classes.Events {
                                             if (File.Exists("GameLauncherUpdater.exe")) {
                                                 Process.Start(@"GameLauncherUpdater.exe", Process.GetCurrentProcess().Id.ToString());
                                             } else {
-                                                Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
+                                                Process.Start(@"https://github.com/worldunitedgg/GameLauncher_NFSW/releases/latest");
                                             }
 
                                             dia.Close();

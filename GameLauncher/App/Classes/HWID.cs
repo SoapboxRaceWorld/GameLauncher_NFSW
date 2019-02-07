@@ -7,6 +7,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using GameLauncher.App.Classes;
+using Microsoft.Win32;
+using System.Collections.Generic;
 
 namespace Security {
     public class FingerPrint {
@@ -30,7 +32,8 @@ namespace Security {
             return fingerPrint;
         }
 
-        private static string WindowsValue() {
+        private static string WindowsValue()
+        {
             return GetHash(cpuId() + baseId() + diskId() + videoId());
         }
 
@@ -70,17 +73,23 @@ namespace Security {
             return s;
         }
 
-        private static string identifier(string wmiClass, string wmiProperty, string wmiMustBeTrue) {
+        private static string identifier(string wmiClass, string wmiProperty, string wmiMustBeTrue)
+        {
             string result = "";
             ManagementClass mc = new ManagementClass(wmiClass);
             ManagementObjectCollection moc = mc.GetInstances();
-            foreach (ManagementObject mo in moc) {
-                if (mo[wmiMustBeTrue].ToString() == "True") {
-                    if (result == "") {
-                        try {
+            foreach (ManagementObject mo in moc)
+            {
+                if (mo[wmiMustBeTrue].ToString() == "True")
+                {
+                    if (result == "")
+                    {
+                        try
+                        {
                             result = mo[wmiProperty].ToString();
                             break;
-                        } catch { }
+                        }
+                        catch { }
                     }
                 }
             }
@@ -88,30 +97,39 @@ namespace Security {
             return result;
         }
 
-        private static string identifier(string wmiClass, string wmiProperty) {
+        private static string identifier(string wmiClass, string wmiProperty)
+        {
             string result = "";
             ManagementClass mc = new ManagementClass(wmiClass);
             ManagementObjectCollection moc = mc.GetInstances();
-            foreach (ManagementObject mo in moc) {
-                if (result == "") {
-                    try {
+            foreach (ManagementObject mo in moc)
+            {
+                if (result == "")
+                {
+                    try
+                    {
                         result = mo[wmiProperty].ToString();
                         break;
-                    } catch { }
+                    }
+                    catch { }
                 }
             }
 
             return result;
         }
 
-        private static string cpuId() {
+        private static string cpuId()
+        {
             string retVal = identifier("Win32_Processor", "UniqueId");
-            if (retVal == "") {
+            if (retVal == "")
+            {
                 retVal = identifier("Win32_Processor", "ProcessorId");
-                if (retVal == "") {
+                if (retVal == "")
+                {
                     retVal = identifier("Win32_Processor", "Name");
 
-                    if (retVal == "") {
+                    if (retVal == "")
+                    {
                         retVal = identifier("Win32_Processor", "Manufacturer");
                     }
 
@@ -122,19 +140,23 @@ namespace Security {
             return retVal;
         }
 
-        private static string diskId() {
+        private static string diskId()
+        {
             return identifier("Win32_DiskDrive", "PNPDeviceId");
         }
 
-        private static string baseId() {
+        private static string baseId()
+        {
             return identifier("Win32_BaseBoard", "Product") + " " + identifier("Win32_BaseBoard", "SerialNumber");
         }
 
-        private static string videoId() {
+        private static string videoId()
+        {
             return identifier("Win32_VideoController", "PNPDeviceId");
         }
 
-        private static string macId() {
+        private static string macId()
+        {
             return identifier("Win32_NetworkAdapterConfiguration", "MACAddress", "IPEnabled");
         }
     }

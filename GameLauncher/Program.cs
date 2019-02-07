@@ -21,6 +21,8 @@ namespace GameLauncher {
 
             File.Delete("log.txt");
 
+            Log.StartLogging();
+
             Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 

@@ -29,6 +29,8 @@ using System.IO.Compression;
 using GameLauncher.App.Classes.Auth;
 using DiscordRPC;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace GameLauncher {
     public sealed partial class MainScreen : Form {
@@ -124,16 +126,6 @@ namespace GameLauncher {
             Opacity = 0.9;
         }
 
-        void Discord_Disconnect(int code, string message) //TODO delete
-        {
-            MessageBox.Show($"Disconnected from Discord\n{message}", code.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-        }
-
-        void Discord_Error(int code, string message) //TODO delete
-        {
-            MessageBox.Show($"Discord Connection Error\n{message}", code.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
         public MainScreen(Form splashscreen) {
 
             ParseUri uri = new ParseUri(Environment.GetCommandLineArgs());
@@ -158,15 +150,15 @@ namespace GameLauncher {
 
             discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID);
 
-            discordRpcClient.OnReady += (sender, e) => {
+            discordRpcClient.OnReady += (sender, e) => 
+            {
+                Log.Debug("Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
             };
 
             discordRpcClient.OnError += (sender, e) =>
             {
-                MessageBox.Show($"Discord Connection Error\n{e.Message}", e.Code.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Discord Error\n{e.Message}", e.Code.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             };
-
-            //TODO: add more events
 
             discordRpcClient.Initialize();
 
@@ -493,83 +485,81 @@ namespace GameLauncher {
                 rememberMe.Checked = true;
             }
 
-            foreach(string serverurl in Self.serverlisturl) { 
-                try {
-                    Log.Debug("Loading serverlist");
-                    WebClientWithTimeout wc = new WebClientWithTimeout();
+            List<Task<List<ServerInfo>>> tasks = new List<Task<List<ServerInfo>>>();
 
-                    _slresponse = wc.DownloadString(serverurl);
-                    _serverlistloaded = true;
-
+            foreach(string serverurl in Self.serverlisturl) {
+                tasks.Add(Task.Run<List<ServerInfo>>(() => 
+                {
                     try
                     {
-                        var fileStream = new FileStream("ServerCache.json", FileMode.Create);
+                        Log.Debug("Loading serverlist from: " + serverurl);
+                        WebClientWithTimeout wc = new WebClientWithTimeout();
 
-                        var dEsCryptoServiceProvider = new DESCryptoServiceProvider()
-                        {
-                            Key = Encoding.ASCII.GetBytes(_serverCacheKey),
-                            IV = Encoding.ASCII.GetBytes(_serverCacheKey)
-                        };
-
-                        var cryptoStream = new CryptoStream(fileStream, dEsCryptoServiceProvider.CreateEncryptor(), CryptoStreamMode.Write);
-                        var streamWriter = new StreamWriter(cryptoStream);
-                        streamWriter.Write(_slresponse);
-                        streamWriter.Close();
-                    } catch(Exception ex) {
-                        Log.Error(ex.Message);
-                    }
-                } catch (Exception error) {
-                    //REQUIRES REWORK...
-
-                    /*Log.Error(error.Message + ". Restoring from ServerCache");
-
-                    if (File.Exists("ServerCache.json")) {
-                        var fileStream = new FileStream("ServerCache.json", FileMode.Open);
-
-                        var dEsCryptoServiceProvider = new DESCryptoServiceProvider() {
-                            Key = Encoding.ASCII.GetBytes(_serverCacheKey),
-                            IV = Encoding.ASCII.GetBytes(_serverCacheKey)
-                        };
-
-                        var cryptoStream = new CryptoStream(fileStream, dEsCryptoServiceProvider.CreateDecryptor(), CryptoStreamMode.Read);
-                        var streamReader = new StreamReader(cryptoStream);
-                        _slresponse = streamReader.ReadToEnd();
-
-                        if (string.IsNullOrWhiteSpace(_slresponse)) {
-                            _slresponse = "[]";
-                        }
-
+                        _slresponse = wc.DownloadString(serverurl);
                         _serverlistloaded = true;
-                    } else {
-                        _slresponse = JsonConvert.SerializeObject(new[] {
-                            new ServerInfo {
-                                Category = "OFFLINE",
-                                Name = "Offline Built-In Server",
-                                IpAddress = "http://localhost:4416/sbrw/Engine.svc",
-                                Id = "__offlinebuiltin__"
+
+                        //try //TODO: repair, cuz multithreaded downloading dead locks on IO.
+                        //{
+                        //    var fileStream = new FileStream("ServerCache.json", FileMode.Create);
+
+                        //    var dEsCryptoServiceProvider = new DESCryptoServiceProvider()
+                        //    {
+                        //        Key = Encoding.ASCII.GetBytes(_serverCacheKey),
+                        //        IV = Encoding.ASCII.GetBytes(_serverCacheKey)
+                        //    };
+
+                        //    var cryptoStream = new CryptoStream(fileStream, dEsCryptoServiceProvider.CreateEncryptor(), CryptoStreamMode.Write);
+                        //    var streamWriter = new StreamWriter(cryptoStream);
+                        //    streamWriter.Write(_slresponse);
+                        //    streamWriter.Close();
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    Log.Error(ex.Message);
+                        //}
+                    }
+                    catch (Exception error)
+                    {
+                        Log.Error(error.Message);
+                        //REQUIRES REWORK...
+
+                        /*Log.Error(error.Message + ". Restoring from ServerCache");
+
+                        if (File.Exists("ServerCache.json")) {
+                            var fileStream = new FileStream("ServerCache.json", FileMode.Open);
+
+                            var dEsCryptoServiceProvider = new DESCryptoServiceProvider() {
+                                Key = Encoding.ASCII.GetBytes(_serverCacheKey),
+                                IV = Encoding.ASCII.GetBytes(_serverCacheKey)
+                            };
+
+                            var cryptoStream = new CryptoStream(fileStream, dEsCryptoServiceProvider.CreateDecryptor(), CryptoStreamMode.Read);
+                            var streamReader = new StreamReader(cryptoStream);
+                            _slresponse = streamReader.ReadToEnd();
+
+                            if (string.IsNullOrWhiteSpace(_slresponse)) {
+                                _slresponse = "[]";
                             }
-                        });
-                    }*/
-                }
 
-                Log.Debug("Setting loaded serverlist");
-                serverPick.DisplayMember = "Name";
-
-                var resItems = JsonConvert.DeserializeObject<List<ServerInfo>>(_slresponse);
-
-                foreach (var serverItemGroup in resItems.GroupBy(s => s.Category))
-                {          
-                    if(finalItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1) {
-                        finalItems.Add(new ServerInfo {
-                            Id = $"__category-{serverItemGroup.Key}__",
-                            Name = $"<GROUP>{serverItemGroup.Key} Servers",
-                            IsSpecial = true
-                        });
+                            _serverlistloaded = true;
+                        } else {
+                            _slresponse = JsonConvert.SerializeObject(new[] {
+                                new ServerInfo {
+                                    Category = "OFFLINE",
+                                    Name = "Offline Built-In Server",
+                                    IpAddress = "http://localhost:4416/sbrw/Engine.svc",
+                                    Id = "__offlinebuiltin__"
+                                }
+                            });
+                        }*/
                     }
 
-                    finalItems.AddRange(serverItemGroup.ToList());
-                }
+                    Log.Debug("Done");
+                    return JsonConvert.DeserializeObject<List<ServerInfo>>(_slresponse);
+                }));
             }
+
+            serverPick.DisplayMember = "Name";
 
             if (File.Exists("servers.json"))
             {
@@ -619,6 +609,26 @@ namespace GameLauncher {
             }
 
             //Somewhere here i have to remove duplicates... 
+
+            foreach(Task<List<ServerInfo>> task in tasks)
+            {
+                task.Wait();
+                List<ServerInfo>  resItems = task.GetAwaiter().GetResult();
+                foreach (var serverItemGroup in resItems.GroupBy(s => s.Category))
+                {
+                    if (finalItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
+                    {
+                        finalItems.Add(new ServerInfo
+                        {
+                            Id = $"__category-{serverItemGroup.Key}__",
+                            Name = $"<GROUP>{serverItemGroup.Key} Servers",
+                            IsSpecial = true
+                        });
+                    }
+
+                    finalItems.AddRange(serverItemGroup.ToList());
+                }
+            }
 
             List<ServerInfo> newFinalItems = new List<ServerInfo>();
 
@@ -732,26 +742,28 @@ namespace GameLauncher {
 
             settingsQuality.DataSource = quality;
 
-            String _slresponse2 = String.Empty;
-            try
-            {
-                WebClientWithTimeout wc = new WebClientWithTimeout();
-                _slresponse2 = wc.DownloadString(Self.CDNUrlList);
-            }
-            catch
-            {
-                _slresponse2 = JsonConvert.SerializeObject(new[] {
+            Task.Run(() => {
+                String _slresponse2 = String.Empty;
+                try
+                {
+                    WebClientWithTimeout wc = new WebClientWithTimeout();
+                    _slresponse2 = wc.DownloadString(Self.CDNUrlList);
+                }
+                catch
+                {
+                    _slresponse2 = JsonConvert.SerializeObject(new[] {
                     new CDNObject {
                         name = "WorldOnlinePL Mirror",
                         url = "http://145.239.5.103/cdn/gamefiles/1614b/"
                     }
                 });
-            }
+                }
 
-            List<CDNObject> CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse2);
+                List<CDNObject> CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse2);
 
-            cdnPick.DisplayMember = "name";
-            cdnPick.DataSource = CDNList;
+                cdnPick.DisplayMember = "name";
+                cdnPick.DataSource = CDNList;
+            });
 
             if (_settingFile.KeyExists("TracksHigh"))
             {
