@@ -330,6 +330,20 @@ namespace GameLauncher {
                     _NFSW_Installation_Source = CDN.CDNUrl;
                 }
 
+                try {
+                    WebClientWithTimeout lightfx = new WebClientWithTimeout();
+                    lightfx.DownloadDataAsync(new Uri(Self.mainserver + "/files/lightfx.dll"));
+                    lightfx.DownloadDataCompleted += (sender, e) => {
+                        try {
+                            if (!e.Cancelled && e.Error == null) {
+                                File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/lightfx.dll", e.Result);
+                            }
+                        }
+                        catch { /* ignored */ }
+                    };
+                } catch { /* ignored */ }
+
+
                 var fbd = new CommonOpenFileDialog
                 {
                     EnsurePathExists = true,
@@ -384,11 +398,14 @@ namespace GameLauncher {
             ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
             Log.Debug("Checking internet connection");
-            if (Self.CheckForInternetConnection() == false && !DetectLinux.WineDetected()) {
-                if (_splashscreen != null) _splashscreen.Hide();
-                Log.Error("Failed to connect to internet. Please check if your firewall is not blocking launcher.");
-                MessageBox.Show(null, "Failed to connect to internet. Please check if your firewall is not blocking launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+
+            new Thread(() => {
+                if (Self.CheckForInternetConnection() == false && !DetectLinux.WineDetected()) {
+                    if (_splashscreen != null) _splashscreen.Hide();
+                    Log.Error("Failed to connect to internet. Please check if your firewall is not blocking launcher.");
+                    MessageBox.Show(null, "Failed to connect to internet. Please check if your firewall is not blocking launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }).Start();
 
             if(_disabledModNet == false) { 
                 Log.Debug("Loading ModManager Cache");
@@ -789,21 +806,16 @@ namespace GameLauncher {
                 Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
                 if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/lightfx.dll")) {
                     try {
-                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/lightfx.dll", new WebClientWithTimeout().DownloadData( Self.mainserver + "/files/lightfx.dll"));
-                        /*string tempNameZip = Path.GetTempFileName();
-
-                        File.WriteAllBytes(tempNameZip, ExtractResource.AsByte("GameLauncher.SoapBoxModules.lightfx.zip"));
-
-                        using (ZipArchive archive = ZipFile.OpenRead(tempNameZip)) {
-                            foreach (ZipArchiveEntry entry in archive.Entries) {
-                                string fullName = entry.FullName;
-                                entry.ExtractToFile(Path.Combine(_settingFile.Read("InstallationDirectory"), fullName));
-                            }
-                        }*/
-                    } catch(Exception ex) {
-                        Log.Error(ex.Message);
-                        MessageBox.Show(null, "Failed to fetch 'lightfx.dll' module. Freeroam might not work correctly.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                        WebClientWithTimeout lightfx = new WebClientWithTimeout();
+                        lightfx.DownloadDataAsync(new Uri(Self.mainserver + "/files/lightfx.dll"));
+                        lightfx.DownloadDataCompleted += (sender_lfx, e_lfx) => {
+                            try {
+                                if (!e_lfx.Cancelled && e_lfx.Error == null) {
+                                    File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/lightfx.dll", e_lfx.Result);
+                                }
+                            } catch { /* ignored */ }
+                        };
+                    } catch { /* ignored */ }
 
                     Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/modules");
                     File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/modules/udpcrc.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrc.soapbox.module"));

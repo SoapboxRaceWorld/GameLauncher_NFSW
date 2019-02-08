@@ -40,7 +40,16 @@ namespace GameLauncher {
 
 			if(!File.Exists("GameLauncherUpdater.exe")) {
 				try {
-					File.WriteAllBytes("GameLauncherUpdater.exe", new WebClientWithTimeout().DownloadData(Self.mainserver + "/files/GameLauncherUpdater.exe"));
+                    //Better update async
+                    WebClientWithTimeout UpdaterExecutable = new WebClientWithTimeout();
+                    UpdaterExecutable.DownloadDataAsync(new Uri(Self.mainserver + "/files/GameLauncherUpdater.exe"));
+                    UpdaterExecutable.DownloadDataCompleted += (sender, e) => {
+                        try {
+                            if (!e.Cancelled && e.Error == null) {
+                                File.WriteAllBytes("GameLauncherUpdater.exe", e.Result);
+                            }
+                        } catch { /* ignored */ }
+                    };
                 } catch { /* ignored */ }
             }
 

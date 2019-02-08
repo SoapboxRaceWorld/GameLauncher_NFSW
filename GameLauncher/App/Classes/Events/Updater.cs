@@ -66,15 +66,15 @@ namespace GameLauncher.App.Classes.Events {
                         try { 
                             if(updater.Code == 0) { 
                                 if (updater.Payload.UpdateExists == false) {
-                                    //if(updater.Payload.LatestVersion.CompareTo(updater.Payload.ClientVersion) > 0) {
+                                    if(updater.Payload.LatestVersion.CompareTo(updater.Payload.ClientVersion) >= 0) {
                                         text.Text = "Launcher Status - Updated";
                                         status.Image = Properties.Resources.ac_success;
                                         text.ForeColor = Color.FromArgb(0x9fc120);
-                                    //} else {
-                                    //    text.Text = "Launcher Status - Prerelease";
-                                    //    status.Image = Properties.Resources.ac_warning;
-                                    //    text.ForeColor = Color.Yellow;
-                                    //}
+                                    } else {
+                                        text.Text = "Launcher Status - Prerelease";
+                                        status.Image = Properties.Resources.ac_warning;
+                                        text.ForeColor = Color.Yellow;
+                                    }
 
                                     description.Text = "Version : v" + Application.ProductVersion + "build-" + SHA.HashFile(AppDomain.CurrentDomain.FriendlyName).Substring(0, 7);
                                 } else {
@@ -137,7 +137,7 @@ namespace GameLauncher.App.Classes.Events {
                                 text.ForeColor = Color.FromArgb(254, 0, 0);
                                 description.Text = "Version : v" + Application.ProductVersion + "build-" + SHA.HashFile(AppDomain.CurrentDomain.FriendlyName).Substring(0, 7);
                             }
-                        } catch(Exception ex) {
+                        } catch(Exception) {
                             if(text.InvokeRequired == true) //checks skip, because we only need to know if we can access ui from actual thread
                             {
                                 text.Invoke(new Action(delegate ()
