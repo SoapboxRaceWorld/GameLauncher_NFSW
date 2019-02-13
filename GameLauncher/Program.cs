@@ -75,15 +75,16 @@ namespace GameLauncher {
                 try {
                     if (mutex.WaitOne(0, false)) {
                         string[] files = {
-                            "SharpRaven.dll - 2.4.0",
-                            "Flurl.dll - 2.8.0",
-                            "Flurl.Http.dll - 2.4.0",
-                            "INIFileParser.dll - 2.5.2",
-                            "Microsoft.WindowsAPICodePack.dll - 1.1.0.0",
-                            "Microsoft.WindowsAPICodePack.Shell.dll - 1.1.0.0",
-                            "Nancy.dll - 1.4.4",
-                            "Nancy.Hosting.Self.dll - 1.4.1",
-                            "Newtonsoft.Json.dll - 12.0.1",
+                            "SharpRaven.dll - 9D96F7DB1F3A986A15FA6B9DA3731FECE72914A0",
+                            "Flurl.dll - 6B580E81409669BEA7FCD36627572396546D1BFD",
+                            "Flurl.Http.dll - 8C4B785A6526846D79A7C3F183E1B3E16706DE7C",
+                            "INIFileParser.dll - 18125861F0519CDF643560C0A988BF70C87D47B3",
+                            "Microsoft.WindowsAPICodePack.dll - 085DACFCD1FFA398B795D096833D16367B0D2886",
+                            "Microsoft.WindowsAPICodePack.Shell.dll - B45482A37B381DE2A0293B6BE48C4CDEF04AEBFF",
+                            "Nancy.dll - 2BF2AE9E529F6689E3D65502114C01B62E4D5568",
+                            "Nancy.Hosting.Self.dll - 5F448F8CBF12A9BE55C046351AABC146E2388BF0",
+                            "Newtonsoft.Json.dll - 26C78DAD612AFF904F216F19F49089F84CC77EB8"
+
                         };
 
                         var missingfiles = new List<string>();
@@ -95,18 +96,16 @@ namespace GameLauncher {
                                 missingfiles.Add(splitFileVersion[0] + " - Not Found");
                             } else {
                                 try { 
-                                    var versionInfo = FileVersionInfo.GetVersionInfo(splitFileVersion[0]);
-                                    string[] versionsplit = versionInfo.ProductVersion.Split('+');
-                                    string version = versionsplit[0];
+                                    var HashFile = SHA.HashFile(splitFileVersion[0]);
 
-                                    if(version == "") {
+                                    if(HashFile == "") {
                                         missingfiles.Add(splitFileVersion[0] + " - Invalid File");
                                     } else { 
                                         if(Self.CheckArchitectureFile(splitFileVersion[0]) == false) {
                                             missingfiles.Add(splitFileVersion[0] + " - Wrong Architecture");
                                         } else { 
-                                            if(version != splitFileVersion[1]) {
-                                                missingfiles.Add(splitFileVersion[0] + " - Invalid Version (" + splitFileVersion[1] + " != " + version + ")");
+                                            if(HashFile != splitFileVersion[1]) {
+                                                missingfiles.Add(splitFileVersion[0] + " - Invalid Hash");
                                             }
                                         }
                                     }
