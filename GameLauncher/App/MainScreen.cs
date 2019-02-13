@@ -462,6 +462,22 @@ namespace GameLauncher {
         private void mainScreen_Load(object sender, EventArgs e) {
             Log.Debug("Entering mainScreen_Load");
 
+            //INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
+            if (!File.Exists("LZMA.dll"))
+            {
+                Log.Debug("Starting LZMA downloader");
+                playProgressText.Text = "Downloading LZMA.dll...";
+                using (WebClient wc = new WebClient())
+                {
+                    wc.DownloadFileAsync(
+                        // Param1 = Link of file
+                        new Uri("http://launcher.worldunited.gg/files/LZMA.dll"),
+                        // Param2 = Path to save
+                        "LZMA.dll"
+                    );
+                }
+            }
+
             Log.Debug("Setting WindowName");
             Text = "GameLauncherReborn v" + Application.ProductVersion;
 

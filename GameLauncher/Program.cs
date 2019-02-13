@@ -81,7 +81,7 @@ namespace GameLauncher {
                             "INIFileParser.dll - 2.5.2",
                             "Microsoft.WindowsAPICodePack.dll - 1.1.0.0",
                             "Microsoft.WindowsAPICodePack.Shell.dll - 1.1.0.0",
-                            "Nancy.dll - 1.4.5",
+                            "Nancy.dll - 1.4.4",
                             "Nancy.Hosting.Self.dll - 1.4.1",
                             "Newtonsoft.Json.dll - 12.0.1",
                         };
