@@ -77,13 +77,13 @@ namespace GameLauncher {
                         string[] files = {
                             "SharpRaven.dll - 2.4.0",
                             "Flurl.dll - 2.8.0",
-                            "Flurl.Http.dll - 2.4.0",
+                            "Flurl.Http.dll - 2.3.2",
                             "INIFileParser.dll - 2.5.2",
                             "Microsoft.WindowsAPICodePack.dll - 1.1.0.0",
                             "Microsoft.WindowsAPICodePack.Shell.dll - 1.1.0.0",
                             "Nancy.dll - 1.4.4",
                             "Nancy.Hosting.Self.dll - 1.4.1",
-                            "Newtonsoft.Json.dll - 12.0.1",
+                            "Newtonsoft.Json.dll - 11.0.2",
                         };
 
                         var missingfiles = new List<string>();
