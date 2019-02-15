@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("GameLauncher")]
 [assembly: AssemblyDescription("GameLauncher for Need For Speed(TM): World")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("MTNTR")]
+[assembly: AssemblyCompany("WorldUnited.gg")]
 [assembly: AssemblyProduct("GameLauncher")]
 [assembly: AssemblyCopyright("WorldUnited")]
 [assembly: AssemblyTrademark("")]

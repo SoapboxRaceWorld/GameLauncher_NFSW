@@ -39,18 +39,14 @@ namespace GameLauncher {
             }
 
 			if(!File.Exists("GameLauncherUpdater.exe")) {
-				try {
-                    //Better update async
-                    WebClientWithTimeout UpdaterExecutable = new WebClientWithTimeout();
-                    UpdaterExecutable.DownloadDataAsync(new Uri(Self.mainserver + "/files/GameLauncherUpdater.exe"));
-                    UpdaterExecutable.DownloadDataCompleted += (sender, e) => {
-                        try {
-                            if (!e.Cancelled && e.Error == null) {
-                                File.WriteAllBytes("GameLauncherUpdater.exe", e.Result);
-                            }
-                        } catch { /* ignored */ }
-                    };
-                } catch { /* ignored */ }
+                Log.Debug("Starting GameLauncherUpdater downloader");
+                try {
+                    using (WebClientWithTimeout wc = new WebClientWithTimeout()) {
+                        wc.DownloadFileAsync(new Uri(Self.mainserver + "/files/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
+                    }
+                } catch(Exception ex) {
+                    Log.Debug("Failed to download updater. " + ex.Message);
+                }
             }
 
             if (!File.Exists("servers.json")) {
