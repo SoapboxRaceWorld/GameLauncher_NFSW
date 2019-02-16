@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -42,6 +43,11 @@ namespace GameLauncher {
                 Log.Debug("Starting GameLauncherUpdater downloader");
                 try {
                     using (WebClientWithTimeout wc = new WebClientWithTimeout()) {
+                        wc.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) => {
+                            if (new FileInfo("GameLauncherUpdater.exe").Length == 0) {
+                                File.Delete("GameLauncherUpdater.exe");
+                            }
+                        };
                         wc.DownloadFileAsync(new Uri(Self.mainserver + "/files/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
                     }
                 } catch(Exception ex) {
