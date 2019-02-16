@@ -32,6 +32,8 @@ namespace GameLauncherReborn {
         public static int ProxyPort = new Random().Next(6260, 6269);
         public static Boolean sendRequest = true;
 
+        public static string rememberjson = "";
+
         public static void runAsAdmin() {
             string[] args = Environment.GetCommandLineArgs();
 

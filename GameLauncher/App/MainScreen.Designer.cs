@@ -75,9 +75,10 @@
             this.cdnText = new System.Windows.Forms.Label();
             this.cdnPick = new System.Windows.Forms.ComboBox();
             this.modNetCheckbox = new System.Windows.Forms.CheckBox();
+            this.randomServer = new System.Windows.Forms.Button();
+            this.srvinfo = new System.Windows.Forms.Button();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
-            this.randomServer = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
@@ -634,6 +635,26 @@
             this.modNetCheckbox.Text = "DISABLE MODNET";
             this.modNetCheckbox.UseVisualStyleBackColor = false;
             // 
+            // randomServer
+            // 
+            this.randomServer.Location = new System.Drawing.Point(811, 64);
+            this.randomServer.Name = "randomServer";
+            this.randomServer.Size = new System.Drawing.Size(23, 23);
+            this.randomServer.TabIndex = 90;
+            this.randomServer.Text = "?";
+            this.randomServer.UseVisualStyleBackColor = true;
+            this.randomServer.Click += new System.EventHandler(this.randomServer_Click);
+            // 
+            // srvinfo
+            // 
+            this.srvinfo.Location = new System.Drawing.Point(892, 448);
+            this.srvinfo.Name = "srvinfo";
+            this.srvinfo.Size = new System.Drawing.Size(75, 23);
+            this.srvinfo.TabIndex = 93;
+            this.srvinfo.Text = "SRVINFO";
+            this.srvinfo.UseVisualStyleBackColor = true;
+            this.srvinfo.Click += new System.EventHandler(this.srvinfo_Click);
+            // 
             // extractingProgress
             // 
             this.extractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -667,22 +688,13 @@
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
             // 
-            // randomServer
-            // 
-            this.randomServer.Location = new System.Drawing.Point(811, 64);
-            this.randomServer.Name = "randomServer";
-            this.randomServer.Size = new System.Drawing.Size(23, 23);
-            this.randomServer.TabIndex = 90;
-            this.randomServer.Text = "?";
-            this.randomServer.UseVisualStyleBackColor = true;
-            this.randomServer.Click += new System.EventHandler(this.randomServer_Click);
-            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.srvinfo);
             this.Controls.Add(this.randomServer);
             this.Controls.Add(this.modNetCheckbox);
             this.Controls.Add(this.cdnPick);
@@ -798,5 +810,6 @@
         private System.Windows.Forms.ComboBox cdnPick;
         private System.Windows.Forms.CheckBox modNetCheckbox;
         private System.Windows.Forms.Button randomServer;
+        private System.Windows.Forms.Button srvinfo;
     }
 }

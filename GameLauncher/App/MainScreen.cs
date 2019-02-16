@@ -90,6 +90,8 @@ namespace GameLauncher {
         private Point _endPoint = new Point(562, 144);
 
         ServerInfo _serverInfo = null;
+        GetServerInformation json = new GetServerInformation();
+        String purejson = String.Empty;
 
         public static DiscordRpcClient discordRpcClient;
         private Random rnd;
@@ -1210,7 +1212,9 @@ namespace GameLauncher {
                             serverStatusDictionary[_serverInfo.Id] = 1;
                         }
 
-                        var json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
+                        purejson = e2.Result;
+                        json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
+                        Self.rememberjson = e2.Result;
                         try {
                             _realServernameBanner = json.serverName;
                             if (!string.IsNullOrEmpty(json.bannerUrl)) {
@@ -2553,6 +2557,10 @@ namespace GameLauncher {
 
             serverPick.SelectedIndex = randomizer;
             rememberit = randomizer;
+        }
+
+        private void srvinfo_Click(object sender, EventArgs e) {
+            new SrvInfo().Show();
         }
     }
 }
