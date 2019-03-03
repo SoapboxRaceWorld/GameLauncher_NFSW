@@ -141,7 +141,7 @@ namespace GameLauncher.App.Classes.RPC {
                 PersonaAvatarId = (SBRW_XML.SelectSingleNode("ProfileData/IconIndex").InnerText == "26") ? "nfsw" : "avatar_" + SBRW_XML.SelectSingleNode("ProfileData/IconIndex").InnerText;
                 PersonaId = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
             }
-            if (uri == "/matchmaking/leavelobby") {
+            if (uri == "/matchmaking/leavelobby" || uri == "/matchmaking/declineinvite") {
                 _presence.Details = "Driving " + PersonaCarName;
                 _presence.State = serverName;
                 _presence.Assets = new Assets
@@ -175,6 +175,23 @@ namespace GameLauncher.App.Classes.RPC {
 
                 eventTerminatedManually = false;
             }
+
+            if(uri == "/matchmaking/joinqueueracenow") {
+                _presence.Details = "Searching for event...";
+                _presence.State = serverName;
+                _presence.Assets = new Assets {
+                    LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                    LargeImageKey = PersonaAvatarId,
+                    SmallImageText = "In-Freeroam",
+                    SmallImageKey = "gamemode_freeroam"
+                };
+                _presence.Timestamps = GetCurrentTimestamp();
+                MainScreen.discordRpcClient.SetPresence(_presence);
+
+                eventTerminatedManually = true;
+            }
+
+            Console.WriteLine(uri);
 
             //IN SAFEHOUSE/FREEROAM
             if (uri == "/DriverPersona/UpdatePersonaPresence") {

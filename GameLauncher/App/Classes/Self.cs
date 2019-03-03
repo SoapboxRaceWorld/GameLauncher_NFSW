@@ -15,7 +15,7 @@ namespace GameLauncherReborn {
         public static string[] serverlisturl = new string[] {
             mainserver + "/serverlist.json",
 	        "https://launchpad.soapboxrace.world/servers",
-            "http://api.nightriderz.world/servers.json"
+            //"http://api.nightriderz.world/servers.json"
         }; 
 
         //public static string serverlisturl = mainserver + "/servers";
