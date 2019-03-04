@@ -2546,17 +2546,21 @@ namespace GameLauncher {
 
         int rememberit;
         private void randomServer_Click(object sender, EventArgs e) {
-            int total = (finalItems.Count)-(finalItems.FindAll(i => string.Equals(i.IsSpecial, true)).Count); //Prevent summing GROUPS
-            int randomizer = random.Next(total);
+            try {
+                int total = (finalItems.Count)-(finalItems.FindAll(i => string.Equals(i.IsSpecial, true)).Count); //Prevent summing GROUPS
+                int randomizer = random.Next(total);
 
-            if (finalItems[total].IsSpecial == true) //Prevent picking GROUP as random server
-                randomizer = random.Next(total);
+                if (finalItems[total].IsSpecial == true) //Prevent picking GROUP as random server
+                    randomizer = random.Next(total);
 
-            if (rememberit == randomizer) //Prevent picking same ID as current one
-                randomizer = random.Next(total);
+                if (rememberit == randomizer) //Prevent picking same ID as current one
+                    randomizer = random.Next(total);
 
-            serverPick.SelectedIndex = randomizer;
-            rememberit = randomizer;
+                serverPick.SelectedIndex = randomizer;
+                rememberit = randomizer;
+            } catch {
+                serverPick.SelectedIndex = 2;
+            }
         }
 
         private void srvinfo_Click(object sender, EventArgs e) {

@@ -131,7 +131,7 @@
             this.serverPick.FormattingEnabled = true;
             this.serverPick.Location = new System.Drawing.Point(601, 65);
             this.serverPick.Name = "serverPick";
-            this.serverPick.Size = new System.Drawing.Size(204, 21);
+            this.serverPick.Size = new System.Drawing.Size(175, 21);
             this.serverPick.TabIndex = 5;
             // 
             // currentWindowInfo
@@ -647,9 +647,9 @@
             // 
             // srvinfo
             // 
-            this.srvinfo.Location = new System.Drawing.Point(892, 448);
+            this.srvinfo.Location = new System.Drawing.Point(782, 64);
             this.srvinfo.Name = "srvinfo";
-            this.srvinfo.Size = new System.Drawing.Size(75, 23);
+            this.srvinfo.Size = new System.Drawing.Size(23, 23);
             this.srvinfo.TabIndex = 93;
             this.srvinfo.Text = "SRVINFO";
             this.srvinfo.UseVisualStyleBackColor = true;
