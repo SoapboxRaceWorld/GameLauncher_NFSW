@@ -49,7 +49,7 @@ namespace GameLauncher.App.Classes.Proxy
             powerups.Add("1113720384", "TEAM SLINGSHOT");
             powerups.Add("125509666", "TRAFFIC MAGNET");
 
-            if (Regex.Match(context.Request.Path, "/powerups/activated/", RegexOptions.IgnoreCase).Success) {
+            /*if (Regex.Match(context.Request.Path, "/powerups/activated/", RegexOptions.IgnoreCase).Success) {
                 String activatedHash = context.Request.Path.Split('/').Last();
 
                 try { 
@@ -111,7 +111,7 @@ namespace GameLauncher.App.Classes.Proxy
                     poweruptimer.Interval = 1000;
                     poweruptimer.Enabled = true;
                 }
-            }
+            }*/
 
             var serverUrl = ServerProxy.Instance.GetServerUrl();
 
