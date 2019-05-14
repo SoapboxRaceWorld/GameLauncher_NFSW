@@ -198,12 +198,6 @@
       <DependentUpon>MainScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\JsonScheme.cs" />
-    <Compile Include="App\SrvInfo.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="App\SrvInfo.Designer.cs">
-      <DependentUpon>SrvInfo.cs</DependentUpon>
-    </Compile>
     <Compile Include="App\WelcomeScreen.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -76,7 +76,6 @@
             this.cdnPick = new System.Windows.Forms.ComboBox();
             this.modNetCheckbox = new System.Windows.Forms.CheckBox();
             this.randomServer = new System.Windows.Forms.Button();
-            this.srvinfo = new System.Windows.Forms.Button();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
@@ -131,7 +130,7 @@
             this.serverPick.FormattingEnabled = true;
             this.serverPick.Location = new System.Drawing.Point(601, 65);
             this.serverPick.Name = "serverPick";
-            this.serverPick.Size = new System.Drawing.Size(175, 21);
+            this.serverPick.Size = new System.Drawing.Size(204, 21);
             this.serverPick.TabIndex = 5;
             // 
             // currentWindowInfo
@@ -645,16 +644,6 @@
             this.randomServer.UseVisualStyleBackColor = true;
             this.randomServer.Click += new System.EventHandler(this.randomServer_Click);
             // 
-            // srvinfo
-            // 
-            this.srvinfo.Location = new System.Drawing.Point(782, 64);
-            this.srvinfo.Name = "srvinfo";
-            this.srvinfo.Size = new System.Drawing.Size(23, 23);
-            this.srvinfo.TabIndex = 93;
-            this.srvinfo.Text = "SRVINFO";
-            this.srvinfo.UseVisualStyleBackColor = true;
-            this.srvinfo.Click += new System.EventHandler(this.srvinfo_Click);
-            // 
             // extractingProgress
             // 
             this.extractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -694,7 +683,6 @@
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
-            this.Controls.Add(this.srvinfo);
             this.Controls.Add(this.randomServer);
             this.Controls.Add(this.modNetCheckbox);
             this.Controls.Add(this.cdnPick);
@@ -810,6 +798,5 @@
         private System.Windows.Forms.ComboBox cdnPick;
         private System.Windows.Forms.CheckBox modNetCheckbox;
         private System.Windows.Forms.Button randomServer;
-        private System.Windows.Forms.Button srvinfo;
     }
 }

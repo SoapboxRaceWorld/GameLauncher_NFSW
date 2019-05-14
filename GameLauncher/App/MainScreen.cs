@@ -2564,7 +2564,7 @@ namespace GameLauncher {
         }
 
         private void srvinfo_Click(object sender, EventArgs e) {
-            new SrvInfo().Show();
+            //new SrvInfo().Show();
         }
     }
 }
