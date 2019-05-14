@@ -31,8 +31,8 @@ namespace GameLauncher.App {
             } catch {
                 _slresponse = JsonConvert.SerializeObject(new[] {
                     new CDNObject {
-                        name = "WorldOnlinePL Mirror",
-                        url = "http://145.239.5.103/cdn/gamefiles/1614b/"
+                        name = "[PL] WorldUnited.GG Mirror",
+                        url = "http://cdn.worldunited.gg/nfsw/"
                     }
                 });
             }
