@@ -40,26 +40,6 @@ namespace GameLauncher.App.Classes.RPC {
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');
 
-            /*if(uri == "/DriverPersona/GetPersonaBaseFromList" && POST != String.Empty) {
-                SBRW_XML.LoadXml(serverreply);
-                String PersonaFriend = SBRW_XML.SelectSingleNode("ArrayOfPersonaBase/PersonaBase/Name").InnerText;
-
-                if(PersonaFriend != PersonaName) { 
-                    var notification = new NotifyIcon()  {
-                        Visible = true,
-                        Icon = System.Drawing.SystemIcons.Information,
-                        BalloonTipIcon = ToolTipIcon.Info,
-                        BalloonTipTitle = "Friend Request - " + serverName,
-                        BalloonTipText = PersonaFriend + " wants to be your friend. Go ingame to accept or decline",
-                    };
-
-                    notification.ShowBalloonTip(5000);
-                    notification.Dispose();
-                }
-            }*/
-
-
-
             if (uri == "/events/gettreasurehunteventsession") {
                 PersonaTreasure = 0;
                 TotalTreasure = 15;
@@ -200,15 +180,16 @@ namespace GameLauncher.App.Classes.RPC {
                 if(UpdatePersonaPresenceParam == "1") {
                     _presence.Details = "Driving " + PersonaCarName;
                     _presence.Assets.SmallImageText = "In-Freeroam";
+                    _presence.Assets.SmallImageKey = "gamemode_freeroam";
                 } else {
                     _presence.Details = "In Safehouse";
                     _presence.Assets.SmallImageText = "In-Safehouse";
+                    _presence.Assets.SmallImageKey = "gamemode_safehouse";
                 }
 
                 _presence.State = serverName;
                 _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
                 _presence.Assets.LargeImageKey = PersonaAvatarId;
-                _presence.Assets.SmallImageKey = "gamemode_freeroam";
 
                 _presence.Timestamps = GetCurrentTimestamp();
 
