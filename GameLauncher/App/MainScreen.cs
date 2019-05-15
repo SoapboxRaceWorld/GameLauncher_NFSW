@@ -464,6 +464,9 @@ namespace GameLauncher {
         private void mainScreen_Load(object sender, EventArgs e) {
             Log.Debug("Entering mainScreen_Load");
 
+            Log.Debug("Updating server list");
+            ServerListUpdater.UpdateList();
+
             //INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
             if (!File.Exists("LZMA.dll")) {
                 Log.Debug("Starting LZMA downloader");
@@ -517,163 +520,13 @@ namespace GameLauncher {
                 rememberMe.Checked = true;
             }
 
-            List<Task<List<ServerInfo>>> tasks = new List<Task<List<ServerInfo>>>();
-
-            foreach(string serverurl in Self.serverlisturl) {
-                tasks.Add(Task.Run<List<ServerInfo>>(() => 
-                {
-                    try
-                    {
-                        Log.Debug("Loading serverlist from: " + serverurl);
-                        WebClientWithTimeout wc = new WebClientWithTimeout();
-
-                        _slresponse = wc.DownloadString(serverurl);
-                        _serverlistloaded = true;
-
-                        //try //TODO: repair, cuz multithreaded downloading dead locks on IO.
-                        //{
-                        //    var fileStream = new FileStream("ServerCache.json", FileMode.Create);
-
-                        //    var dEsCryptoServiceProvider = new DESCryptoServiceProvider()
-                        //    {
-                        //        Key = Encoding.ASCII.GetBytes(_serverCacheKey),
-                        //        IV = Encoding.ASCII.GetBytes(_serverCacheKey)
-                        //    };
-
-                        //    var cryptoStream = new CryptoStream(fileStream, dEsCryptoServiceProvider.CreateEncryptor(), CryptoStreamMode.Write);
-                        //    var streamWriter = new StreamWriter(cryptoStream);
-                        //    streamWriter.Write(_slresponse);
-                        //    streamWriter.Close();
-                        //}
-                        //catch (Exception ex)
-                        //{
-                        //    Log.Error(ex.Message);
-                        //}
-                    }
-                    catch (Exception error)
-                    {
-                        Log.Error(error.Message);
-                        //REQUIRES REWORK...
-
-                        /*Log.Error(error.Message + ". Restoring from ServerCache");
-
-                        if (File.Exists("ServerCache.json")) {
-                            var fileStream = new FileStream("ServerCache.json", FileMode.Open);
-
-                            var dEsCryptoServiceProvider = new DESCryptoServiceProvider() {
-                                Key = Encoding.ASCII.GetBytes(_serverCacheKey),
-                                IV = Encoding.ASCII.GetBytes(_serverCacheKey)
-                            };
-
-                            var cryptoStream = new CryptoStream(fileStream, dEsCryptoServiceProvider.CreateDecryptor(), CryptoStreamMode.Read);
-                            var streamReader = new StreamReader(cryptoStream);
-                            _slresponse = streamReader.ReadToEnd();
-
-                            if (string.IsNullOrWhiteSpace(_slresponse)) {
-                                _slresponse = "[]";
-                            }
-
-                            _serverlistloaded = true;
-                        } else {
-                            _slresponse = JsonConvert.SerializeObject(new[] {
-                                new ServerInfo {
-                                    Category = "OFFLINE",
-                                    Name = "Offline Built-In Server",
-                                    IpAddress = "http://localhost:4416/sbrw/Engine.svc",
-                                    Id = "__offlinebuiltin__"
-                                }
-                            });
-                        }*/
-                    }
-
-                    Log.Debug("Done");
-                    return JsonConvert.DeserializeObject<List<ServerInfo>>(_slresponse);
-                }));
-            }
-
             serverPick.DisplayMember = "Name";
 
-            if (File.Exists("servers.json"))
-            {
-                var fileItems = JsonConvert.DeserializeObject<List<ServerInfo>>(File.ReadAllText("servers.json")) ?? new List<ServerInfo>();
-
-                if (fileItems.Count > 0)
-                {
-                    finalItems.Add(new ServerInfo
-                    {
-                        Id = "__category-CUSTOMCUSTOM__",
-                        Name = "<GROUP>Custom Servers",
-                        IsSpecial = true
-                    });
-
-                    finalItems.AddRange(fileItems.Select(si =>
-                    {
-                        si.DistributionUrl = "";
-                        si.DiscordPresenceKey = "";
-                        si.Id = SHA.HashPassword($"{si.Name}:{si.Id}:{si.IpAddress}");
-                        si.IsSpecial = false;
-                        si.Category = "CUSTOMCUSTOM";
-
-                        return si;
-                    }));
-                }
-            }
-
-            if (File.Exists("libOfflineServer.dll"))
-            {
-                finalItems.Add(new ServerInfo
-                {
-                    Id = "__category-OFFLINEOFFLINE__",
-                    Name = "<GROUP>Offline Server",
-                    IsSpecial = true
-                });
-
-                finalItems.Add(new ServerInfo
-                {
-                    Name = "Offline Built-In Server",
-                    Category = "OFFLINEOFFLINE",
-                    DiscordPresenceKey = "",
-                    IsSpecial = false,
-                    DistributionUrl = "",
-                    IpAddress = "http://localhost:4416/sbrw/Engine.svc",
-                    Id = "OFFLINE"
-                });
-            }
-
-            //Somewhere here i have to remove duplicates... 
-
-            foreach(Task<List<ServerInfo>> task in tasks)
-            {
-                task.Wait();
-                List<ServerInfo>  resItems = task.GetAwaiter().GetResult();
-                foreach (var serverItemGroup in resItems.GroupBy(s => s.Category))
-                {
-                    if (finalItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
-                    {
-                        finalItems.Add(new ServerInfo
-                        {
-                            Id = $"__category-{serverItemGroup.Key}__",
-                            Name = $"<GROUP>{serverItemGroup.Key} Servers",
-                            IsSpecial = true
-                        });
-                    }
-
-                    finalItems.AddRange(serverItemGroup.ToList());
-                }
-            }
-
-            List<ServerInfo> newFinalItems = new List<ServerInfo>();
-
-            foreach(ServerInfo xServ in finalItems) {
-                if(newFinalItems.FindIndex(i => string.Equals(i.Name, xServ.Name)) == -1) {
-                    newFinalItems.Add(xServ);
-                }
-            }
-
-            serverPick.DataSource = newFinalItems;
+            Log.Debug("Setting server list");
+            finalItems = ServerListUpdater.GetList();
+            serverPick.DataSource = finalItems;
 
             Log.Debug("SERVERLIST: Checking...");
-            if (_serverlistloaded) {
                 Log.Debug("SERVERLIST: Setting first server in list");
                 try {
                     serverPick.SelectedIndex = 1;
@@ -717,7 +570,7 @@ namespace GameLauncher {
                     }
                     Log.Debug("SERVERLIST: All done");
                 }
-            }
+            
 
             Log.Debug("Checking for password");
             if (_settingFile.KeyExists("Password"))
@@ -820,18 +673,6 @@ namespace GameLauncher {
             try {
                 Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
                 if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/lightfx.dll")) {
-                    try {
-                        WebClientWithTimeout lightfx = new WebClientWithTimeout();
-                        lightfx.DownloadDataAsync(new Uri(Self.mainserver + "/files/lightfx.dll"));
-                        lightfx.DownloadDataCompleted += (sender_lfx, e_lfx) => {
-                            try {
-                                if (!e_lfx.Cancelled && e_lfx.Error == null) {
-                                    File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/lightfx.dll", e_lfx.Result);
-                                }
-                            } catch { /* ignored */ }
-                        };
-                    } catch { /* ignored */ }
-
                     Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/modules");
                     File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/modules/udpcrc.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrc.soapbox.module"));
                     File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/modules/udpcrypt1.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrypt1.soapbox.module"));
