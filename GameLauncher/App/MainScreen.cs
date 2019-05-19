@@ -31,6 +31,7 @@ using DiscordRPC;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using System.Management;
 
 namespace GameLauncher {
     public sealed partial class MainScreen : Form {
@@ -172,7 +173,8 @@ namespace GameLauncher {
             if (DetectLinux.UnixDetected()) {
                 _OS = DetectLinux.Distro();
             } else {
-                _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
+                _OS = (from x in new ManagementObjectSearcher("SELECT Caption FROM Win32_OperatingSystem").Get().Cast<ManagementObject>()
+                       select x.GetPropertyValue("Caption")).FirstOrDefault().ToString();
             }
 
             Log.Debug("Detected OS: " + _OS);
@@ -1936,11 +1938,11 @@ namespace GameLauncher {
 
             try
             {
-                if (
+                /*if (
                     SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
                     SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
                     SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "E69890D31919DE1649D319956560269DB88B8F22"
-                ) {
+                ) {*/
                     ServerProxy.Instance.SetServerUrl(_serverIp);
                     ServerProxy.Instance.SetServerName(_realServername);
 
@@ -1983,11 +1985,9 @@ namespace GameLauncher {
 
                         Notification.ContextMenu = ContextMenu;
                     }
-                }
-                else
-                {
-                    MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                //} else {
+                //    MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //}
             }
             catch (Exception ex)
             {
