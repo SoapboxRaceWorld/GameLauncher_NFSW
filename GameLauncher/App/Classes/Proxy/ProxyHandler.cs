@@ -195,7 +195,7 @@ namespace GameLauncher.App.Classes.Proxy
 
                 }
 
-                Log.Debug($@"{context.Request.Method} {fixedPath} -> {POSTContent} -> {GETContent} -> {replyToServer}");
+                Log.Debug($@"{context.Request.Method} {fixedPath}"); // -> {POSTContent} -> {GETContent} -> {replyToServer}");
 
                 DiscordGamePresence.handleGameState(fixedPath, replyToServer, POSTContent, GETContent);
 
