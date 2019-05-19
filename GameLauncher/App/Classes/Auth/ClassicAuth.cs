@@ -1,14 +1,11 @@
 ﻿using GameLauncherReborn;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
-namespace GameLauncher.App.Classes.Auth {
+namespace GameLauncher.App.Classes.Auth
+{
     class ClassicAuth {
         private static int _errorcode;
         private static String serverLoginResponse;
@@ -58,12 +55,17 @@ namespace GameLauncher.App.Classes.Auth {
                     }
 
                     if (!string.IsNullOrEmpty(extraNode.InnerText)) {
-                        if (extraNode.SelectSingleNode("Reason") != null) {
+                        if (extraNode.SelectSingleNode("Expires") != null || extraNode.SelectSingleNode("Reason") != null) {
                             msgBoxInfo = string.Format("You got banned on {0}.", Tokens.ServerName) + "\n";
-                            msgBoxInfo += string.Format("Reason: {0}", extraNode.SelectSingleNode("Reason").InnerText);
+
+                            if(extraNode.SelectSingleNode("Reason") != null){
+                                msgBoxInfo += string.Format("Reason: {0}", extraNode.SelectSingleNode("Reason").InnerText);
+                            } else {
+                                msgBoxInfo += "Reason: unknown";
+                            }
 
                             if (extraNode.SelectSingleNode("Expires") != null) {
-                                msgBoxInfo += "\n" + string.Format("Ban expires {0}", extraNode.SelectSingleNode("Expires").InnerText);
+                                msgBoxInfo += "\n" + string.Format("Ban expires: {0}", extraNode.SelectSingleNode("Expires").InnerText);
                             } else {
                                 msgBoxInfo += "\n" + "Banned forever.";
                             }
@@ -74,7 +76,7 @@ namespace GameLauncher.App.Classes.Auth {
                                 if (sbrwXml.SelectSingleNode("html/body") == null) {
                                     if (extraNode.InnerText == "LOGIN ERROR") {
                                         msgBoxInfo = "Invalid e-mail or password.";
-                                    } else {
+                                    } else if (string.IsNullOrEmpty(msgBoxInfo)) {
                                         msgBoxInfo = extraNode.InnerText;
                                     }
                                 } else {
