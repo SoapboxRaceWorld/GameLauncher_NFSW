@@ -153,20 +153,20 @@ namespace GameLauncher.App.Classes
                 foreach (Task task in tasks)
                 {
                     task.Wait();
-                    foreach (var serverItemGroup in serverInfos.GroupBy(s => s.Category))
-                    {
-                        if (finalItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
-                        {
-                            finalItems.Add(new ServerInfo
-                            {
-                                Id = $"__category-{serverItemGroup.Key}__",
-                                Name = $"<GROUP>{serverItemGroup.Key} Servers",
-                                IsSpecial = true
-                            });
-                        }
+                }
 
-                        finalItems.AddRange(serverItemGroup.ToList());
+                foreach (var serverItemGroup in serverInfos.Reverse().GroupBy(s => s.Category))
+                {
+                    if (finalItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
+                    {
+                        finalItems.Add(new ServerInfo
+                        {
+                            Id = $"__category-{serverItemGroup.Key}__",
+                            Name = $"<GROUP>{serverItemGroup.Key} Servers",
+                            IsSpecial = true
+                        });
                     }
+                    finalItems.AddRange(serverItemGroup.ToList());
                 }
             }));
 
