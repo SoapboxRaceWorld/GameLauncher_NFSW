@@ -90,34 +90,35 @@ namespace GameLauncher {
 
                         var missingfiles = new List<string>();
 
-                        foreach (var file in files) {
-                            var splitFileVersion = file.Split(new string[] { " - " }, StringSplitOptions.None);
+                        if(!DetectLinux.LinuxDetected()) { //MONO Hates that...
+                            foreach (var file in files) {
+                                var splitFileVersion = file.Split(new string[] { " - " }, StringSplitOptions.None);
 
-                            if (!File.Exists(Directory.GetCurrentDirectory() + "\\" + splitFileVersion[0])) {
-                                missingfiles.Add(splitFileVersion[0] + " - Not Found");
-                            } else {
-                                try { 
-                                    var versionInfo = FileVersionInfo.GetVersionInfo(splitFileVersion[0]);
-                                    string[] versionsplit = versionInfo.ProductVersion.Split('+');
-                                    string version = versionsplit[0];
+                                if (!File.Exists(Directory.GetCurrentDirectory() + "\\" + splitFileVersion[0])) {
+                                    missingfiles.Add(splitFileVersion[0] + " - Not Found");
+                                } else {
+                                    try { 
+                                        var versionInfo = FileVersionInfo.GetVersionInfo(splitFileVersion[0]);
+                                        string[] versionsplit = versionInfo.ProductVersion.Split('+');
+                                        string version = versionsplit[0];
 
-                                    if(version == "") {
-                                        missingfiles.Add(splitFileVersion[0] + " - Invalid File");
-                                    } else { 
-                                        if(Self.CheckArchitectureFile(splitFileVersion[0]) == false) {
-                                            missingfiles.Add(splitFileVersion[0] + " - Wrong Architecture");
+                                        if(version == "") {
+                                            missingfiles.Add(splitFileVersion[0] + " - Invalid File");
                                         } else { 
-                                            if(version != splitFileVersion[1]) {
-                                                missingfiles.Add(splitFileVersion[0] + " - Invalid Version (" + splitFileVersion[1] + " != " + version + ")");
+                                            if(Self.CheckArchitectureFile(splitFileVersion[0]) == false) {
+                                                missingfiles.Add(splitFileVersion[0] + " - Wrong Architecture");
+                                            } else { 
+                                                if(version != splitFileVersion[1]) {
+                                                    missingfiles.Add(splitFileVersion[0] + " - Invalid Version (" + splitFileVersion[1] + " != " + version + ")");
+                                                }
                                             }
                                         }
+                                    } catch {
+                                        missingfiles.Add(splitFileVersion[0] + " - Invalid File");
                                     }
-                                } catch {
-                                    missingfiles.Add(splitFileVersion[0] + " - Invalid File");
                                 }
                             }
                         }
-
                         if (missingfiles.Count != 0) {
                             var message = "Cannot launch GameLauncher. The following files are invalid:\n\n";
 

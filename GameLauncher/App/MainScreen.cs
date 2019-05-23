@@ -2059,7 +2059,7 @@ namespace GameLauncher {
             {
                 playProgressText.Text = "Loading list of files to download...".ToUpper();
 
-                if(!DetectLinux.UnixDetected()) {
+                //if(!DetectLinux.UnixDetected()) {
                     Kernel32.GetDiskFreeSpaceEx(_settingFile.Read("InstallationDirectory"), out var lpFreeBytesAvailable, out _, out _);
                     if (lpFreeBytesAvailable <= 4000000000) {
 
@@ -2075,10 +2075,10 @@ namespace GameLauncher {
                     } else {
                         DownloadCoreFiles();
                     }
-                } else {
+                //} else {
                     //TODO: Linux check for free disk space
-                    DownloadCoreFiles();
-                }
+                //    DownloadCoreFiles();
+                //}
             } else {
 				OnDownloadFinished();
 			}
