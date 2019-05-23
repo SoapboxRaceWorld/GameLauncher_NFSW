@@ -2055,30 +2055,28 @@ namespace GameLauncher {
                 speechFile = "en";
             }
 
-            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/Sound/Speech/copspeechhdr_" + speechFile + ".big"))
-            {
+            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/Sound/Speech/copspeechhdr_" + speechFile + ".big")) {
                 playProgressText.Text = "Loading list of files to download...".ToUpper();
 
-                //if(!DetectLinux.UnixDetected()) {
-                    Kernel32.GetDiskFreeSpaceEx(_settingFile.Read("InstallationDirectory"), out var lpFreeBytesAvailable, out _, out _);
-                    if (lpFreeBytesAvailable <= 4000000000) {
+                DriveInfo[] allDrives = DriveInfo.GetDrives();
+                foreach (DriveInfo d in allDrives) {
+                    if (d.Name == Path.GetPathRoot(_settingFile.Read("InstallationDirectory"))) {
+                        if (d.TotalFreeSpace <= 4000000000)  {
 
-                        extractingProgress.Value = 100;
-                        extractingProgress.Width = 519;
-                        extractingProgress.Image = Properties.Resources.warningprogress;
-                        extractingProgress.ProgressColor = Color.Orange;
+                            extractingProgress.Value = 100;
+                            extractingProgress.Width = 519;
+                            extractingProgress.Image = Properties.Resources.warningprogress;
+                            extractingProgress.ProgressColor = Color.Orange;
 
-                        playProgressText.Text = "Please make sure you have at least 4GB free space on hard drive.".ToUpper();
+                            playProgressText.Text = "Please make sure you have at least 4GB free space on hard drive.".ToUpper();
 
-                        TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
-                        TaskbarProgress.SetValue(Handle, 100, 100);
-                    } else {
-                        DownloadCoreFiles();
+                            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
+                            TaskbarProgress.SetValue(Handle, 100, 100);
+                        } else {
+                            DownloadCoreFiles();
+                        }
                     }
-                //} else {
-                    //TODO: Linux check for free disk space
-                //    DownloadCoreFiles();
-                //}
+                }
             } else {
 				OnDownloadFinished();
 			}
