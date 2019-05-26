@@ -35,61 +35,10 @@ namespace GameLauncher.App.Classes
                             WebClientWithTimeout wc = new WebClientWithTimeout();
 
                             response = wc.DownloadString(serverurl);
-
-                            //try //TODO: repair, cuz multithreaded downloading dead locks on IO.
-                            //{
-                            //    var fileStream = new FileStream("ServerCache.json", FileMode.Create);
-
-                            //    var dEsCryptoServiceProvider = new DESCryptoServiceProvider()
-                            //    {
-                            //        Key = Encoding.ASCII.GetBytes(_serverCacheKey),
-                            //        IV = Encoding.ASCII.GetBytes(_serverCacheKey)
-                            //    };
-
-                            //    var cryptoStream = new CryptoStream(fileStream, dEsCryptoServiceProvider.CreateEncryptor(), CryptoStreamMode.Write);
-                            //    var streamWriter = new StreamWriter(cryptoStream);
-                            //    streamWriter.Write(_slresponse);
-                            //    streamWriter.Close();
-                            //}
-                            //catch (Exception ex)
-                            //{
-                            //    Log.Error(ex.Message);
-                            //}
                         }
                         catch (Exception error)
                         {
                             Log.Error(error.Message);
-                            //REQUIRES REWORK...
-
-                            /*Log.Error(error.Message + ". Restoring from ServerCache");
-
-                            if (File.Exists("ServerCache.json")) {
-                                var fileStream = new FileStream("ServerCache.json", FileMode.Open);
-
-                                var dEsCryptoServiceProvider = new DESCryptoServiceProvider() {
-                                    Key = Encoding.ASCII.GetBytes(_serverCacheKey),
-                                    IV = Encoding.ASCII.GetBytes(_serverCacheKey)
-                                };
-
-                                var cryptoStream = new CryptoStream(fileStream, dEsCryptoServiceProvider.CreateDecryptor(), CryptoStreamMode.Read);
-                                var streamReader = new StreamReader(cryptoStream);
-                                _slresponse = streamReader.ReadToEnd();
-
-                                if (string.IsNullOrWhiteSpace(_slresponse)) {
-                                    _slresponse = "[]";
-                                }
-
-                                _serverlistloaded = true;
-                            } else {
-                                _slresponse = JsonConvert.SerializeObject(new[] {
-                                    new ServerInfo {
-                                        Category = "OFFLINE",
-                                        Name = "Offline Built-In Server",
-                                        IpAddress = "http://localhost:4416/sbrw/Engine.svc",
-                                        Id = "__offlinebuiltin__"
-                                    }
-                                });
-                            }*/
                         }
                         if (response != null)
                         {
