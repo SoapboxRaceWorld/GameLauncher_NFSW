@@ -34,6 +34,8 @@ namespace GameLauncherReborn {
 
         public static string rememberjson = "";
 
+        public static string DiscordID = String.Empty;
+
         public static void runAsAdmin() {
             string[] args = Environment.GetCommandLineArgs();
 
