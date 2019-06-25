@@ -135,10 +135,13 @@ namespace GameLauncher.App.Classes.RPC {
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = true;
+                Self.CanDisableGame = true;
             }
 
             //IN LOBBY
             if (uri == "/matchmaking/acceptinvite") {
+                Self.CanDisableGame = false;
+
                 SBRW_XML.LoadXml(serverreply);
                 EventID = Convert.ToInt32(SBRW_XML.SelectSingleNode("LobbyInfo/EventId").InnerText);
 
@@ -181,10 +184,13 @@ namespace GameLauncher.App.Classes.RPC {
                     _presence.Details = "Driving " + PersonaCarName;
                     _presence.Assets.SmallImageText = "In-Freeroam";
                     _presence.Assets.SmallImageKey = "gamemode_freeroam";
+
+                    Self.CanDisableGame = true;
                 } else {
                     _presence.Details = "In Safehouse";
                     _presence.Assets.SmallImageText = "In-Safehouse";
                     _presence.Assets.SmallImageKey = "gamemode_safehouse";
+                    Self.CanDisableGame = false;
                 }
 
                 _presence.State = serverName;
@@ -198,6 +204,8 @@ namespace GameLauncher.App.Classes.RPC {
 
             //IN EVENT
             if (Regex.Match(uri, "/matchmaking/launchevent").Success) {
+                Self.CanDisableGame = false;
+
                 EventID = Convert.ToInt32(splitted_uri[3]);
 
                 _presence.Details = "In Event: " + EventList.getEventName(EventID);

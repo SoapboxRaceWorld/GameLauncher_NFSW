@@ -20,10 +20,10 @@ namespace SoapBox.JsonScheme {
         public string serverVersion { get; set; }
         public int maxUsersAllowed { get; set; }
         public string allowedCountries { get; set; }
-
         public string freeroamMapSocket { get; set; }
         public List<string> freeroamServers { get; set; }
         public string modernAuthSupport { get; set; }
+        public int secondsToShutDown { get; set; }
     }
 
     public class FreeroamObject {

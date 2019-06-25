@@ -50,6 +50,7 @@ namespace GameLauncher {
         private bool _allowRegistration;
         private bool _isDownloading = true;
         private bool _modernAuthSupport = false;
+        private bool _gameKilledBySpeedBugCheck = false;
 
         private bool _disabledModNet;
 
@@ -134,16 +135,12 @@ namespace GameLauncher {
             ParseUri uri = new ParseUri(Environment.GetCommandLineArgs());
 
             if (uri.IsDiscordPresent()) {
-                var notification = new NotifyIcon() {
-                    Visible = true,
-                    Icon = System.Drawing.SystemIcons.Information,
-                    BalloonTipIcon = ToolTipIcon.Info,
-                    BalloonTipTitle = "GameLauncherReborn",
-                    BalloonTipText = "Discord features are not yet completed.",
-                };
-
-                notification.ShowBalloonTip(5000);
-                notification.Dispose();
+                Notification.Visible = true;
+                Notification.BalloonTipIcon = ToolTipIcon.Info;
+                Notification.BalloonTipTitle = "GameLauncherReborn";
+                Notification.BalloonTipText = "Discord features are not yet completed.";
+                Notification.ShowBalloonTip(5000);
+                Notification.Dispose();
             }
 
             Log.Debug("Entered mainScreen");
@@ -1841,6 +1838,56 @@ namespace GameLauncher {
             }
 
             var nfswProcess = Process.Start(psi);
+
+            //TIMER HERE
+            int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2*60*60;
+            System.Timers.Timer shutdowntimer = new System.Timers.Timer();
+            shutdowntimer.Elapsed += (x2, y2) => {
+                if(secondsToShutDown == 300) {
+                    Notification.Visible = true;
+                    Notification.BalloonTipIcon = ToolTipIcon.Info;
+                    Notification.BalloonTipTitle = "SpeedBug Fix - " + _realServername;
+                    Notification.BalloonTipText = "Game is going to shut down in 5 minutes. Please restart it manually before the launcher does it.";
+                    Notification.ShowBalloonTip(5000);
+                    Notification.Dispose();
+                }
+
+                if(secondsToShutDown <= 0) {
+                    if (Self.CanDisableGame == true) {
+                        Process[] allOfThem2 = Process.GetProcessesByName("nfsw");
+                        foreach (var oneProcess in allOfThem2)
+                        {
+                            _gameKilledBySpeedBugCheck = true;
+                            Process.GetProcessById(oneProcess.Id).Kill();
+                        }
+                    } else {
+                        secondsToShutDown = 0;
+                    }
+                }
+
+                //change title
+
+                Process[] allOfThem = Process.GetProcessesByName("nfsw");
+                foreach (var oneProcess in allOfThem) {
+                    if (oneProcess.ProcessName == "nfsw") {
+                        long p = oneProcess.MainWindowHandle.ToInt64();
+                        TimeSpan t = TimeSpan.FromSeconds(secondsToShutDown);
+                        string secondsToShutDownNamed = string.Format("{0:D2}:{1:D2}:{2:D2}", t.Hours, t.Minutes, t.Seconds);
+
+                        if (secondsToShutDown == 0) {
+                            secondsToShutDownNamed = "Waiting for event to finish.";
+                        }
+
+                        User32.SetWindowText((IntPtr)p, _realServername + " - Time Remaining: " + secondsToShutDownNamed);
+                    }
+                }
+
+                --secondsToShutDown;
+            };
+
+            shutdowntimer.Interval = 1000;
+            shutdowntimer.Enabled = true;
+
             if (nfswProcess != null) {
                 nfswProcess.EnableRaisingEvents = true;
                 _nfswPid = nfswProcess.Id;
@@ -1848,6 +1895,8 @@ namespace GameLauncher {
                 nfswProcess.Exited += (sender2, e2) => {
                     _nfswPid = 0;
                     var exitCode = nfswProcess.ExitCode;
+
+                    if (_gameKilledBySpeedBugCheck == true) exitCode = 2137;
 
                     if (exitCode == 0) {
                         closebtn_Click(null, null);
@@ -1864,6 +1913,7 @@ namespace GameLauncher {
                             if (exitCode == -805306369)     errorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")";
 
                             if (exitCode == 1)              errorMsg = "You just killed nfsw.exe via Task Manager";
+                            if (exitCode == 2137)           errorMsg = "Launcher killed your game to prevent SpeedBugging.";
 
                             if (exitCode == -3)             errorMsg = "Server were unable to resolve your request";
                             if (exitCode == -4)             errorMsg = "Another instance is already executed";

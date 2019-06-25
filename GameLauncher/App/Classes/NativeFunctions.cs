@@ -27,5 +27,8 @@ namespace GameLauncher.App.Classes {
 
         [DllImport("user32.dll")]
         public static extern bool SetProcessDPIAware();
+
+        [DllImport("user32.dll")]
+        public static extern bool SetWindowText(IntPtr hWnd, string text);
     }
 }

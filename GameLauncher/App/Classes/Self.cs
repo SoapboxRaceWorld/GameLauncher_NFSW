@@ -32,6 +32,8 @@ namespace GameLauncherReborn {
         public static int ProxyPort = new Random().Next(6260, 6269);
         public static Boolean sendRequest = true;
 
+        public static Boolean CanDisableGame = true;
+
         public static string rememberjson = "";
         public static string discordid = String.Empty;
 
