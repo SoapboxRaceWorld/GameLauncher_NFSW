@@ -332,20 +332,6 @@ namespace GameLauncher {
                     _NFSW_Installation_Source = CDN.CDNUrl;
                 }
 
-                try {
-                    WebClientWithTimeout lightfx = new WebClientWithTimeout();
-                    lightfx.DownloadDataAsync(new Uri(Self.mainserver + "/files/lightfx.dll"));
-                    lightfx.DownloadDataCompleted += (sender, e) => {
-                        try {
-                            if (!e.Cancelled && e.Error == null) {
-                                File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/lightfx.dll", e.Result);
-                            }
-                        }
-                        catch { /* ignored */ }
-                    };
-                } catch { /* ignored */ }
-
-
                 var fbd = new CommonOpenFileDialog
                 {
                     EnsurePathExists = true,
@@ -1804,7 +1790,14 @@ namespace GameLauncher {
         }
 
         private void LaunchGame(string userId, string loginToken, string serverIp, Form x) {
-			var oldfilename = _settingFile.Read("InstallationDirectory") + "/nfsw.exe";
+            if (!File.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), "lightfx.dll"))) {
+                try {
+                    WebClientWithTimeout lightfx = new WebClientWithTimeout();
+                    lightfx.DownloadFile(new Uri(Self.mainserver + "/files/lightfx.dll"), Path.Combine(_settingFile.Read("InstallationDirectory"), "lightfx.dll"));
+                } catch { /* ignored */ }
+            }
+
+            var oldfilename = _settingFile.Read("InstallationDirectory") + "/nfsw.exe";
 
             var args = _serverInfo.Id.ToUpper() + " " + serverIp + " " + loginToken + " " + userId + " -advancedLaunch";
             var psi = new ProcessStartInfo();
