@@ -614,7 +614,7 @@ namespace GameLauncher {
             settingsQuality.DataSource = quality;
 
             Task.Run(() => {
-                String _slresponse2 = String.Empty;
+                String _slresponse2 = string.Empty;
                 try
                 {
                     WebClientWithTimeout wc = new WebClientWithTimeout();
@@ -632,13 +632,26 @@ namespace GameLauncher {
 
                 List<CDNObject> CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse2);
 
-                cdnPick.DisplayMember = "name";
-                cdnPick.DataSource = CDNList;
+                cdnPick.Invoke(new Action(() => 
+                {
+                    cdnPick.DisplayMember = "name";
+                    cdnPick.DataSource = CDNList;
+                }));
             });
 
             if (_settingFile.KeyExists("TracksHigh"))
             {
-                settingsQuality.SelectedValue = _settingFile.Read("TracksHigh");
+                string selectedTracksHigh = _settingFile.Read("TracksHigh");
+                if(!string.IsNullOrEmpty(selectedTracksHigh))
+                {
+                    settingsQuality.SelectedValue = selectedTracksHigh;
+                } else
+                {
+                    settingsQuality.SelectedIndex = 0;
+                }
+            } else
+            {
+                settingsQuality.SelectedIndex = 0;
             }
 
             Log.Debug("Re-checking InstallationDirectory");
@@ -1646,6 +1659,8 @@ namespace GameLauncher {
         }
 
         private void settingsSave_Click(object sender, EventArgs e) {
+
+            //TODO null check
             _settingFile.Write("Language", settingsLanguage.SelectedValue.ToString());
             _settingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString());
             _settingFile.Write("CDN", ((CDNObject)cdnPick.SelectedItem).url);
