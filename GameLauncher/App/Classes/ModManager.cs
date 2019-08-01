@@ -150,6 +150,8 @@ namespace GameLauncher.App.Classes
                             ComputeSha256Hash(File.ReadAllBytes(Path.Combine(serverModsDirectory, file.Path)));
                         if (computedHash != file.Hash)
                         {
+                            /* TODO: Redownload file! */
+
                             MessageBox.Show($"Hash mismatch! Expected {file.Hash}, got {computedHash}",
                                 "ModNet Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Environment.Exit(1);
@@ -180,6 +182,7 @@ namespace GameLauncher.App.Classes
                             var computedHash = ComputeSha256Hash(fileData);
                             if (computedHash != file.Hash)
                             {
+                                /* TODO: Redownload file! */
                                 MessageBox.Show($"Hash mismatch! Expected {file.Hash}, got {computedHash}",
                                     "ModNet Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 Environment.Exit(1);

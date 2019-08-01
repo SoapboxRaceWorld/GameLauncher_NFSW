@@ -14,7 +14,7 @@ namespace GameLauncherReborn {
 
         public static string[] serverlisturl = new string[] {
             mainserver + "/serverlist.json",
-            "https://launchpad.soapboxrace.world/servers", // removed due to innactivity from leo (TWIO is down for more than 2 weeks and still present)
+            //"https://launchpad.soapboxrace.world/servers", // removed due to innactivity from leo (TWIO is down for more than 2 weeks and still present)
             //"http://api.nightriderz.world/servers.json",
         }; 
 

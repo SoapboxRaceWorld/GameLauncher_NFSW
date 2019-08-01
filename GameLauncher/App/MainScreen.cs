@@ -948,6 +948,8 @@ namespace GameLauncher {
             _realServernameBanner = _serverInfo.Name;
             _modernAuthSupport = false;
 
+            MessageBox.Show("DistributionUrl: " + _serverInfo.DistributionUrl);
+
             if (_serverInfo.IsSpecial) {
                 serverPick.SelectedIndex = _lastSelectedServerId;
                 return;
@@ -1833,7 +1835,7 @@ namespace GameLauncher {
             var nfswProcess = Process.Start(psi);
 
             //TIMER HERE
-            int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2*60*60;
+            int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 20;
             System.Timers.Timer shutdowntimer = new System.Timers.Timer();
             shutdowntimer.Elapsed += (x2, y2) => {
                 if(secondsToShutDown == 300) {
@@ -2035,7 +2037,7 @@ namespace GameLauncher {
             }
             catch (Exception ex)
             {
-                MessageBox.Show(null, "Failed to find NFSW.exe. Make sure you have \"Need for Speed™: World\" installed on your PC." + "\n\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(null, ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2240,6 +2242,8 @@ namespace GameLauncher {
 
         public bool DownloadMods(string serverKey)
         {
+            MessageBox.Show("Downloading mods for: " + serverKey);
+
             try
             {
                 playProgress.Width = 1;
@@ -2248,7 +2252,7 @@ namespace GameLauncher {
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                MessageBox.Show(e.Message);
                 ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
                 return false;
             }

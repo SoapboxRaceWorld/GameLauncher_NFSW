@@ -42,6 +42,8 @@ namespace GameLauncher.App.Classes
                         }
                         if (response != null)
                         {
+                            Log.Debug("Loaded serverlist from: " + serverurl);
+
                             foreach (ServerInfo si in JsonConvert.DeserializeObject<List<ServerInfo>>(response))
                             {
                                 serverInfos.Add(si);
