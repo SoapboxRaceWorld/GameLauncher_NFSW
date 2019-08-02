@@ -141,27 +141,29 @@ namespace GameLauncher.App.Classes
             foreach (var mod in mods)
             {
                 int totalModsCount = mod.Files.Count;
+                var url = new Uri(serverInfo.DistributionUrl + "/" + mod.Id + "/");
 
-                if (ModCache.Contains($"{serverKey}::{mod.Id}"))
-                {
-                    foreach (var file in mod.Files)
-                    {
-                        var computedHash =
-                            ComputeSha256Hash(File.ReadAllBytes(Path.Combine(serverModsDirectory, file.Path)));
-                        if (computedHash != file.Hash)
-                        {
-                            /* TODO: Redownload file! */
+                if (ModCache.Contains($"{serverKey}::{mod.Id}")) {
+                    foreach (var file in mod.Files) {
+                        if(!File.Exists(Path.Combine(serverModsDirectory, file.Path))) {
+                            Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(serverModsDirectory, file.Path)));
+                            File.Create(Path.Combine(serverModsDirectory, file.Path)).Dispose();
+                        }
 
-                            MessageBox.Show($"Hash mismatch! Expected {file.Hash}, got {computedHash}",
-                                "ModNet Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            Environment.Exit(1);
+                        var computedHash = ComputeSha256Hash(File.ReadAllBytes(Path.Combine(serverModsDirectory, file.Path)));
+                        if (computedHash != file.Hash) {
+                            var wc = new WebClient();
+                            playProgress.Text = ("Downloading " + serverKey + " files: " + file.Path).ToUpper();
+                            var fileData = wc.DownloadData(url + file.Path);
+                            using (var fs = File.OpenWrite(Path.Combine(serverModsDirectory, file.Path)))
+                            using (var bw = new BinaryWriter(fs)) {
+                                bw.Write(fileData);
+                            }
                         }
                     }
 
                     continue;
                 }
-
-                var url = new Uri(serverInfo.DistributionUrl + "/" + mod.Id + "/");
 
                 using (var wc = new WebClient())
                 {
@@ -179,13 +181,15 @@ namespace GameLauncher.App.Classes
 
                             var fileData = wc.DownloadData(url + file.Path);
 
+                            if (!File.Exists(Path.Combine(serverModsDirectory, file.Path))) {
+                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(serverModsDirectory, file.Path)));
+                                File.Create(Path.Combine(serverModsDirectory, file.Path)).Dispose();
+                            }
+
                             var computedHash = ComputeSha256Hash(fileData);
                             if (computedHash != file.Hash)
                             {
                                 /* TODO: Redownload file! */
-                                MessageBox.Show($"Hash mismatch! Expected {file.Hash}, got {computedHash}",
-                                    "ModNet Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                Environment.Exit(1);
                             }
 
                             if (file.Path.Contains("/"))

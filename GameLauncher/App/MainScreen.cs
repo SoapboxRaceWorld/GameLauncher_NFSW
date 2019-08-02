@@ -961,8 +961,6 @@ namespace GameLauncher {
             _realServernameBanner = _serverInfo.Name;
             _modernAuthSupport = false;
 
-            MessageBox.Show("DistributionUrl: " + _serverInfo.DistributionUrl);
-
             if (_serverInfo.IsSpecial) {
                 serverPick.SelectedIndex = _lastSelectedServerId;
                 return;
@@ -1850,7 +1848,7 @@ namespace GameLauncher {
             var nfswProcess = Process.Start(psi);
 
             //TIMER HERE
-            int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 20;
+            int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2*60*60;
             System.Timers.Timer shutdowntimer = new System.Timers.Timer();
             shutdowntimer.Elapsed += (x2, y2) => {
                 if(secondsToShutDown == 300) {
@@ -1999,11 +1997,11 @@ namespace GameLauncher {
 
             try
             {
-                /*if (
+                if (
                     SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
                     SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
                     SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "E69890D31919DE1649D319956560269DB88B8F22"
-                ) {*/
+                ) {
                     ServerProxy.Instance.SetServerUrl(_serverIp);
                     ServerProxy.Instance.SetServerName(_realServername);
 
@@ -2046,9 +2044,9 @@ namespace GameLauncher {
 
                         Notification.ContextMenu = ContextMenu;
                     }
-                //} else {
-                //    MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //}
+                } else {
+                    MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
@@ -2257,8 +2255,6 @@ namespace GameLauncher {
 
         public bool DownloadMods(string serverKey)
         {
-            MessageBox.Show("Downloading mods for: " + serverKey);
-
             try
             {
                 playProgress.Width = 1;
@@ -2267,7 +2263,7 @@ namespace GameLauncher {
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message + e.StackTrace);
                 ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
                 return false;
             }
