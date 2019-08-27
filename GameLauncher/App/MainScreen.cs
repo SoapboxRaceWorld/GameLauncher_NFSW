@@ -1919,7 +1919,7 @@ namespace GameLauncher {
                             if (exitCode == -1073740940)    errorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")";
                             if (exitCode == -1073740791)    errorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")";
                             if (exitCode == -805306369)     errorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")";
-			    if (exitCode == -1073741515)    errorMsg - "Game Crash: Missing dependency files (0x" + exitCode.ToString("X") + ")";
+			    if (exitCode == -1073741515)    errorMsg = "Game Crash: Missing dependency files (0x" + exitCode.ToString("X") + ")";
 				
                             if (exitCode == 1)              errorMsg = "You just killed nfsw.exe via Task Manager";
                             if (exitCode == 2137)           errorMsg = "Launcher killed your game to prevent SpeedBugging.";

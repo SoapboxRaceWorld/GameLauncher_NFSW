@@ -78,7 +78,7 @@ namespace GameLauncher {
                     if (mutex.WaitOne(0, false)) {
                         string[] files = {
                             "SharpRaven.dll - 2.4.0",
-                            "Flurl.dll - 2.8.0",
+                            "Flurl.dll - 2.8.2",
                             "Flurl.Http.dll - 2.3.2",
                             "INIFileParser.dll - 2.5.2",
                             "Microsoft.WindowsAPICodePack.dll - 1.1.0.0",
