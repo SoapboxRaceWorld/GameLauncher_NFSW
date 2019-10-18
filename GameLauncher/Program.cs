@@ -64,7 +64,7 @@ namespace GameLauncher {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             if (Debugger.IsAttached) {
                 Log.Debug("Checking Proxy");
-                //ServerProxy.Instance.Start();
+                ServerProxy.Instance.Start();
                 Log.Debug("Starting MainScreen");
                 Application.Run(new MainScreen(SplashScreen2));
             } else {

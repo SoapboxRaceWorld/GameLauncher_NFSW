@@ -2006,8 +2006,8 @@ namespace GameLauncher {
                     SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
                     SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "E69890D31919DE1649D319956560269DB88B8F22"
                 ) {
-                    //ServerProxy.Instance.SetServerUrl(_serverIp);
-                    //ServerProxy.Instance.SetServerName(_realServername);
+                    ServerProxy.Instance.SetServerUrl(_serverIp);
+                    ServerProxy.Instance.SetServerName(_realServername);
 
                     StartGame(_userId, _loginToken, _serverIp, this);
 
