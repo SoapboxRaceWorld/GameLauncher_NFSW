@@ -889,6 +889,8 @@ namespace GameLauncher {
             Tokens.IPAddress = _serverInfo.IpAddress;
             Tokens.ServerName = _serverInfo.Name;
 
+            Self.userAgent = (_serverInfo.forceUserAgent == null) ? null : _serverInfo.forceUserAgent;
+
             if (_modernAuthSupport == false) {
                 //ClassicAuth sends password in SHA1
                 realpass = (_useSavedPassword) ? _settingFile.Read("Password") : SHA.HashPassword(password.Text.ToString()).ToLower();
@@ -1793,7 +1795,7 @@ namespace GameLauncher {
 
             _presenceImageKey = _serverInfo.DiscordPresenceKey;
             _presence.State = _realServername;
-            _presence.Details = "Loading game...";
+            _presence.Details = "In-Game";
             _presence.Assets = new Assets
             {
                 LargeImageText = "Need for Speed: World",
@@ -1895,6 +1897,7 @@ namespace GameLauncher {
 
             shutdowntimer.Interval = 1000;
             shutdowntimer.Enabled = true;
+            
 
             if (nfswProcess != null) {
                 nfswProcess.EnableRaisingEvents = true;
@@ -2003,8 +2006,8 @@ namespace GameLauncher {
                     SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
                     SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "E69890D31919DE1649D319956560269DB88B8F22"
                 ) {
-                    ServerProxy.Instance.SetServerUrl(_serverIp);
-                    ServerProxy.Instance.SetServerName(_realServername);
+                    //ServerProxy.Instance.SetServerUrl(_serverIp);
+                    //ServerProxy.Instance.SetServerName(_realServername);
 
                     StartGame(_userId, _loginToken, _serverIp, this);
 

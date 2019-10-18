@@ -30,7 +30,10 @@ namespace GameLauncher.App.Classes
 
         [JsonProperty("discord_presence_key")]
         public string DiscordPresenceKey { get; set; }
-        
+
+        [JsonProperty("forceUserAgent")]
+        public string forceUserAgent { get; set; }
+
         [JsonIgnore]
         public bool IsSpecial { get; set; }
     }
