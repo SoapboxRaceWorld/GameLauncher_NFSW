@@ -67,6 +67,9 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageText = "Treasure Hunt - Day: " + TEDay,
                     SmallImageKey = "gamemode_treasure"
                 };
+
+                AntiCheat.persona_name = PersonaName;
+
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
                 Console.WriteLine(serverreply);
@@ -131,6 +134,10 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageText = "In-Freeroam",
                     SmallImageKey = "gamemode_freeroam"
                 };
+
+                AntiCheat.persona_name = PersonaName;
+                AntiCheat.disableChecks();
+
                 _presence.Timestamps = GetCurrentTimestamp();
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
@@ -199,6 +206,8 @@ namespace GameLauncher.App.Classes.RPC {
 
                 _presence.Timestamps = GetCurrentTimestamp();
 
+                AntiCheat.persona_name = PersonaName;
+
                 MainScreen.discordRpcClient.SetPresence(_presence);
             }
 
@@ -218,6 +227,8 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageKey = EventList.getEventType(EventID)
                 };
 
+                AntiCheat.persona_name = PersonaName;
+
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = false;
@@ -232,6 +243,9 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageText = EventList.getEventName(EventID),
                     SmallImageKey = EventList.getEventType(EventID)
                 };
+
+                AntiCheat.persona_name = PersonaName;
+                AntiCheat.disableChecks();
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = false;
@@ -246,6 +260,10 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageText = EventList.getEventName(EventID),
                     SmallImageKey = EventList.getEventType(EventID)
                 };
+
+                AntiCheat.persona_name = PersonaName;
+                AntiCheat.event_id = EventID;
+                AntiCheat.enableChecks();
 
                 _presence.Timestamps = GetCurrentTimestamp();
 

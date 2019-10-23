@@ -1848,6 +1848,7 @@ namespace GameLauncher {
             }
 
             var nfswProcess = Process.Start(psi);
+            AntiCheat.process_id = nfswProcess.Id;
 
             //TIMER HERE
             int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2*60*60;
@@ -1888,7 +1889,7 @@ namespace GameLauncher {
                             secondsToShutDownNamed = "Waiting for event to finish.";
                         }
 
-                        User32.SetWindowText((IntPtr)p, _realServername + " - Time Remaining: " + secondsToShutDownNamed);
+                        //User32.SetWindowText((IntPtr)p, _realServername + " - Time Remaining: " + secondsToShutDownNamed);
                     }
                 }
 
@@ -2008,6 +2009,9 @@ namespace GameLauncher {
                 ) {
                     ServerProxy.Instance.SetServerUrl(_serverIp);
                     ServerProxy.Instance.SetServerName(_realServername);
+
+                    AntiCheat.user_id = _userId;
+                    AntiCheat.serverip = new Uri(_serverIp).Host;
 
                     StartGame(_userId, _loginToken, _serverIp, this);
 

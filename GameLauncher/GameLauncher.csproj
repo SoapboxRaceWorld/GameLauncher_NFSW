@@ -136,6 +136,7 @@
     <Compile Include="App\AddServer.Designer.cs">
       <DependentUpon>AddServer.cs</DependentUpon>
     </Compile>
+    <Compile Include="App\Classes\AntiCheat.cs" />
     <Compile Include="App\Classes\Auth\ClassicAuth.cs" />
     <Compile Include="App\Classes\Auth\ModernAuth.cs" />
     <Compile Include="App\Classes\Auth\Tokens.cs" />
