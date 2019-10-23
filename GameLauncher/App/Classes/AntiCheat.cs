@@ -35,14 +35,14 @@ namespace GameLauncher.App.Classes
             int baseAddress = process.MainModule.BaseAddress.ToInt32();
 
             var thread = new Thread(() => {
-                while (true) {
-                    List<int> addresses = new List<int>();
-                    addresses.Add(418534);
-                    addresses.Add(3788216); //FAST_POWERUPS
-                    addresses.Add(4552702); //SPEEDHACK
-                    addresses.Add(4476396); //SMOOTH_WALLS
-                    addresses.Add(4506534);
+                List<int> addresses = new List<int>();
+                addresses.Add(418534);
+                addresses.Add(3788216); //FAST_POWERUPS
+                addresses.Add(4552702); //SPEEDHACK
+                addresses.Add(4476396); //SMOOTH_WALLS
+                addresses.Add(4506534);
 
+                while (true) { 
                     foreach (var oneAddress in addresses) {
                         int bytesRead = 0;
                         byte[] buffer = new byte[4];
