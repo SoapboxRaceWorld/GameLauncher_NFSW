@@ -77,6 +77,7 @@ namespace GameLauncher.App.Classes.RPC {
             if (uri == "/User/SecureLoginPersona") {
                 canUpdateProfileField = true;
             }
+
             if (uri == "/User/SecureLogoutPersona") {
                 PersonaId = String.Empty;
                 PersonaName = String.Empty;
@@ -178,8 +179,6 @@ namespace GameLauncher.App.Classes.RPC {
 
                 eventTerminatedManually = true;
             }
-
-            Console.WriteLine(uri);
 
             //IN SAFEHOUSE/FREEROAM
             if (uri == "/DriverPersona/UpdatePersonaPresence") {

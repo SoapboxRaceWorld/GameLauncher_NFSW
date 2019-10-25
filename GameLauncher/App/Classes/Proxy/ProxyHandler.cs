@@ -180,7 +180,6 @@ namespace GameLauncher.App.Classes.Proxy
 
                 if (fixedPath == "/User/GetPermanentSession") {
                     replyToServer = Self.CleanFromUnknownChars(replyToServer);
-
                     var SBRW_XML = new XmlDocument();
                     SBRW_XML.LoadXml(replyToServer);
                     XmlNode UserInfo = SBRW_XML.SelectSingleNode("UserInfo");
@@ -189,13 +188,11 @@ namespace GameLauncher.App.Classes.Proxy
                     if(personas.Count == 0) {
                         replyToServer = replyToServer.Replace("false", "true");
                     }
+
+                    Console.WriteLine(replyToServer);
                 }
 
-                if(fixedPath == "") {
-
-                }
-
-                Log.Debug($@"{context.Request.Method} {fixedPath}"); // -> {POSTContent} -> {GETContent} -> {replyToServer}");
+                Log.Debug($@"{context.Request.Method} {fixedPath} {POSTContent} -> {GETContent} -> {replyToServer}");
 
                 DiscordGamePresence.handleGameState(fixedPath, replyToServer, POSTContent, GETContent);
 
