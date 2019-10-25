@@ -206,8 +206,6 @@ namespace GameLauncher.App.Classes.RPC {
 
                 _presence.Timestamps = GetCurrentTimestamp();
 
-                AntiCheat.persona_name = PersonaName;
-
                 MainScreen.discordRpcClient.SetPresence(_presence);
             }
 
