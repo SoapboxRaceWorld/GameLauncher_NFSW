@@ -61,8 +61,8 @@ namespace GameLauncher.App.Classes
                         if (oneAddress == 4506534 && checkInt != "0x74170F57" && detect_TANK_MODE == false)         detect_TANK_MODE = true;
                         if (oneAddress == 4587060 && checkInt != "0x74228B16" && detect_WALLHACK == false)          detect_WALLHACK = true;
                         if (oneAddress == 4486168 && checkInt != "0xF30F1086") {
-                            if (checkInt == "0xE8E38BE5" && detect_MULTIHACK == false)  detect_MULTIHACK = true;
-                            if (checkInt == "0xE9E38B81" && detect_DRIFTMOD == false)   detect_DRIFTMOD = true;
+                            if (checkInt.Substring(0, 4) == "0xE8" && detect_MULTIHACK == false)  detect_MULTIHACK = true;
+                            if (checkInt.Substring(0, 4) == "0xE9" && detect_DRIFTMOD == false)   detect_DRIFTMOD = true;
                         }
                     }
                     Thread.Sleep(500);
