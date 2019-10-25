@@ -93,7 +93,6 @@ namespace GameLauncher.App.Classes.Auth {
                 httpWebRequest.Method = "POST";
 
                 using (StreamWriter streamWriter = new StreamWriter(httpWebRequest.GetRequestStream())) {
-                    object serializedPOST;
                     String json = new JavaScriptSerializer().Serialize(new { email = email, password = password, ticket = token });
                     streamWriter.Write(json);
                 }

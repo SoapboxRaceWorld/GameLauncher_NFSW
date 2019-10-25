@@ -42,7 +42,7 @@ namespace GameLauncher {
         private bool _useSavedPassword;
         private bool _skipServerTrigger;
         private bool _ticketRequired;
-        private bool _serverlistloaded;
+        private bool _serverlistloaded = false;
         private bool _windowMoved;
         private bool _playenabled;
         private bool _loggedIn;
@@ -57,10 +57,7 @@ namespace GameLauncher {
         private int _lastSelectedServerId;
         private int _nfswPid;
         private Thread _nfswstarted;
-        private string _passwordHash;
-        private string _slresponse = "";
 
-        private int _errorcode;
 
         private DateTime _downloadStartTime;
         private readonly Downloader _downloader;
@@ -68,7 +65,6 @@ namespace GameLauncher {
         private string _loginToken = "";
         private string _userId = "";
         private string _serverIp = "";
-        private readonly string _serverCacheKey = "02032019"; // Try to guess that now :)
         private string _langInfo;
         private string _newGameFilesPath;
         private readonly float _dpiDefaultScale = 96f;

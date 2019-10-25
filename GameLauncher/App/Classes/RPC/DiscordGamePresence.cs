@@ -68,8 +68,6 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageKey = "gamemode_treasure"
                 };
 
-                AntiCheat.persona_name = PersonaName;
-
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
                 Console.WriteLine(serverreply);
@@ -123,7 +121,10 @@ namespace GameLauncher.App.Classes.RPC {
                 PersonaLevel = SBRW_XML.SelectSingleNode("ProfileData/Level").InnerText;
                 PersonaAvatarId = (SBRW_XML.SelectSingleNode("ProfileData/IconIndex").InnerText == "26") ? "nfsw" : "avatar_" + SBRW_XML.SelectSingleNode("ProfileData/IconIndex").InnerText;
                 PersonaId = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
+
+                AntiCheat.persona_name = PersonaName;
             }
+
             if (uri == "/matchmaking/leavelobby" || uri == "/matchmaking/declineinvite") {
                 _presence.Details = "Driving " + PersonaCarName;
                 _presence.State = serverName;
@@ -134,9 +135,6 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageText = "In-Freeroam",
                     SmallImageKey = "gamemode_freeroam"
                 };
-
-                AntiCheat.persona_name = PersonaName;
-                AntiCheat.disableChecks();
 
                 _presence.Timestamps = GetCurrentTimestamp();
                 MainScreen.discordRpcClient.SetPresence(_presence);

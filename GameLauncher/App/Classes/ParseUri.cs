@@ -8,8 +8,6 @@ namespace GameLauncher.App.Classes {
     class ParseUri {
         String[] Uri;
 
-        public static bool IsDiscord;
-
         public ParseUri(String[] CommandLineUri) {
             Uri = CommandLineUri;
         }
