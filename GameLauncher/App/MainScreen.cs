@@ -730,6 +730,8 @@ namespace GameLauncher {
             this.BringToFront();
             Log.Debug("Checking for update");
             new LauncherUpdateCheck(launcherIconStatus, launcherStatusText, launcherStatusDesc).checkAvailability();
+
+            Self.gamedir = _settingFile.Read("InstallationDirectory");
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
@@ -1947,7 +1949,8 @@ namespace GameLauncher {
                             if (errorReply == DialogResult.No) {
                                 closebtn_Click(null, null);
                             } else {
-                                Self.Restart();
+                                Form x22 = new CrashDumpUpload();
+                                x22.ShowDialog();
                             }
                         }));
                     }

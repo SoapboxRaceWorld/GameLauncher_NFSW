@@ -35,6 +35,7 @@ namespace GameLauncherReborn {
         public static String userAgent = null;
 
         public static Boolean CanDisableGame = true;
+        public static String gamedir = null;
 
         public static string rememberjson = "";
         public static string discordid = String.Empty;

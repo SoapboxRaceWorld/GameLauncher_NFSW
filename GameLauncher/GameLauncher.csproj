@@ -187,6 +187,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="App\Classes\XMPP\MITM_XMPP.cs" />
+    <Compile Include="App\CrashDumpUpload.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\CrashDumpUpload.Designer.cs">
+      <DependentUpon>CrashDumpUpload.cs</DependentUpon>
+    </Compile>
     <Compile Include="App\Debug.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -225,6 +231,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="App\Classes\WebRequest.resx">
       <DependentUpon>WebRequest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\CrashDumpUpload.resx">
+      <DependentUpon>CrashDumpUpload.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\Debug.resx">
       <DependentUpon>Debug.cs</DependentUpon>
