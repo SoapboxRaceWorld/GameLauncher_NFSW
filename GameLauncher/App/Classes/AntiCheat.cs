@@ -23,7 +23,7 @@ namespace GameLauncher.App.Classes
 
 
         //INTERNAL//
-        public static bool detect_GMZ_MULTIHACK = false;
+        public static bool detect_MULTIHACK     = false;
         public static bool detect_FAST_POWERUPS = false;
         public static bool detect_SPEEDHACK     = false;
         public static bool detect_SMOOTH_WALLS  = false;
@@ -44,7 +44,7 @@ namespace GameLauncher.App.Classes
                 addresses.Add(4476396); // SMOOTH_WALLS
                 addresses.Add(4506534); // TANK
                 addresses.Add(4587060); // WALLHACK
-                addresses.Add(4486168); // DRIFTMOD
+                addresses.Add(4486168); // DRIFTMOD/MULTIHACK
 
                 while (true) { 
                     foreach (var oneAddress in addresses) {
@@ -54,13 +54,16 @@ namespace GameLauncher.App.Classes
 
                         String checkInt = "0x"+BitConverter.ToString(buffer).Replace("-", String.Empty);
 
-                        if (oneAddress == 418534  && checkInt != "0x3B010F84" && detect_GMZ_MULTIHACK == false)     detect_GMZ_MULTIHACK = true;
+                        if (oneAddress == 418534  && checkInt != "0x3B010F84" && detect_MULTIHACK == false)         detect_MULTIHACK = true;
                         if (oneAddress == 3788216 && checkInt != "0x807DFB00" && detect_FAST_POWERUPS == false)     detect_FAST_POWERUPS = true;
                         if (oneAddress == 4552702 && checkInt != "0x76390F2E" && detect_SPEEDHACK == false)         detect_SPEEDHACK = true;
                         if (oneAddress == 4476396 && checkInt != "0x84C00F84" && detect_SMOOTH_WALLS == false)      detect_SMOOTH_WALLS = true;
                         if (oneAddress == 4506534 && checkInt != "0x74170F57" && detect_TANK_MODE == false)         detect_TANK_MODE = true;
                         if (oneAddress == 4587060 && checkInt != "0x74228B16" && detect_WALLHACK == false)          detect_WALLHACK = true;
-                        if (oneAddress == 4486168 && checkInt != "0xF30F1086" && detect_DRIFTMOD == false)          detect_DRIFTMOD = true;
+                        if (oneAddress == 4486168 && checkInt != "0xF30F1086") {
+                            if (checkInt == "0xE8E38BE5" && detect_MULTIHACK == false)  detect_MULTIHACK = true;
+                            if (checkInt == "0xE9E38B81" && detect_DRIFTMOD == false)   detect_DRIFTMOD = true;
+                        }
                     }
                     Thread.Sleep(500);
                 }
@@ -69,7 +72,7 @@ namespace GameLauncher.App.Classes
         }
 
         public static void disableChecks() {
-            if (detect_GMZ_MULTIHACK == true)   AntiCheat.cheats_detected |= 1;
+            if (detect_MULTIHACK == true)       AntiCheat.cheats_detected |= 1;
             if (detect_FAST_POWERUPS == true)   AntiCheat.cheats_detected |= 2;
             if (detect_SPEEDHACK == true)       AntiCheat.cheats_detected |= 4;
             if (detect_SMOOTH_WALLS == true)    AntiCheat.cheats_detected |= 8;
@@ -102,7 +105,7 @@ namespace GameLauncher.App.Classes
                 } catch { }
             }
 
-            detect_GMZ_MULTIHACK = detect_FAST_POWERUPS = detect_SPEEDHACK = detect_SMOOTH_WALLS = detect_TANK_MODE = detect_WALLHACK = detect_DRIFTMOD = false;
+            detect_MULTIHACK = detect_FAST_POWERUPS = detect_SPEEDHACK = detect_SMOOTH_WALLS = detect_TANK_MODE = detect_WALLHACK = detect_DRIFTMOD = false;
             AntiCheat.cheats_detected = 0;
         }
     }
