@@ -1944,7 +1944,7 @@ namespace GameLauncher {
                             _nfswstarted.Abort();
 
                             var errorReply = MessageBox.Show(null,
-                                errorMsg + "\nWould you like to restart the game?",
+                                errorMsg + "\nWould you like to upload dump file to analyze?",
                                 "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                             if (errorReply == DialogResult.No) {
                                 closebtn_Click(null, null);

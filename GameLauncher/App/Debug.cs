@@ -46,10 +46,6 @@ namespace GameLauncher.App
             return virusCheckerName;
         }
 
-        [DllImport("kernel32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
-
         private void DebugWindow_Load(object sender, EventArgs e)
         {
             data.AutoGenerateColumns = true;
@@ -115,7 +111,7 @@ namespace GameLauncher.App
             string Win32_Processor = "";
             if (!DetectLinux.UnixDetected())
             {
-                GetPhysicallyInstalledSystemMemory(out memKb);
+                Kernel32.GetPhysicallyInstalledSystemMemory(out memKb);
 
                 ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT Name FROM Win32_VideoController");
                 string graphicsCard = string.Empty;

@@ -88,7 +88,7 @@ namespace GameLauncher.App.Classes
                     Uri sendReport = new Uri("http://launcher.worldunited.gg/report");
 
                     var request = (HttpWebRequest)WebRequest.Create(sendReport);
-                    var postData = "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected;
+                    var postData = "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + Security.FingerPrint.Value();
                     var data = Encoding.ASCII.GetBytes(postData);
                     request.Method = "POST";
                     request.ContentType = "application/x-www-form-urlencoded";

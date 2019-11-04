@@ -19,7 +19,6 @@ namespace GameLauncher {
     internal static class Program {
         [STAThread]
         internal static void Main() {
-
             File.Delete("log.txt");
 
             Log.StartLogging();
