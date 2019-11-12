@@ -222,7 +222,6 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageKey = EventList.getEventType(EventID)
                 };
 
-                AntiCheat.persona_name = PersonaName;
 
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
@@ -239,7 +238,6 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageKey = EventList.getEventType(EventID)
                 };
 
-                AntiCheat.persona_name = PersonaName;
                 AntiCheat.disableChecks();
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
@@ -256,7 +254,6 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageKey = EventList.getEventType(EventID)
                 };
 
-                AntiCheat.persona_name = PersonaName;
                 AntiCheat.event_id = EventID;
                 AntiCheat.enableChecks();
 
