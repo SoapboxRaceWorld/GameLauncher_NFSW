@@ -21,7 +21,6 @@ namespace GameLauncher.App.Classes.Proxy
     public class ProxyHandler : IApplicationStartup
     {
         public void Initialize(IPipelines pipelines) {
-            Console.WriteLine(pipelines);
             pipelines.BeforeRequest += ProxyRequest;
         }
 
@@ -110,11 +109,9 @@ namespace GameLauncher.App.Classes.Proxy
                     if(personas.Count == 0) {
                         replyToServer = replyToServer.Replace("false", "true");
                     }
-
-                    Console.WriteLine(replyToServer);
                 }
 
-                Log.Debug($@"{context.Request.Method} {fixedPath} {POSTContent} -> {GETContent} -> {replyToServer}");
+                Log.Debug($@"{context.Request.Method} {fixedPath} {POSTContent} -> {GETContent}");
 
                 DiscordGamePresence.handleGameState(fixedPath, replyToServer, POSTContent, GETContent);
 
