@@ -15,6 +15,7 @@ using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Extensions;
 using Nancy.Responses;
+using static Nancy.Responses.RedirectResponse;
 
 namespace GameLauncher.App.Classes.Proxy
 {
@@ -28,6 +29,8 @@ namespace GameLauncher.App.Classes.Proxy
         public static Dictionary<string, bool> executedPowerups = new Dictionary<string, bool>();
         public static bool activated;
 
+        
+
         private static Response ProxyRequest(NancyContext context) {
             string POSTContent = String.Empty;
             string GETContent = String.Empty;
@@ -37,7 +40,7 @@ namespace GameLauncher.App.Classes.Proxy
             var serverUrl = ServerProxy.Instance.GetServerUrl();
 
             if (string.IsNullOrEmpty(serverUrl)) {
-                return new TextResponse(HttpStatusCode.BadGateway, "Not open for business");
+                return new RedirectResponse("http://sbrw.io/", RedirectType.Permanent);
             }
 
             var queryParams = new Dictionary<string, object>();
@@ -54,8 +57,17 @@ namespace GameLauncher.App.Classes.Proxy
             GETContent = string.Join(";", queryParams.Select(x => x.Key + "=" + x.Value).ToArray());
 
             foreach (var header in context.Request.Headers) {
+                Console.WriteLine(header.Key + " - " + header.Value.First());
                 headers[header.Key] = (header.Key == "Host") ? fullUrl.Host : header.Value.First();
             }
+
+            try { 
+                if(headers["Accept"] != String.Empty) return new RedirectResponse("http://sbrw.io/", RedirectType.Permanent);
+            } catch { }
+
+
+
+
 
             var url = new Flurl.Url(fullUrl.ToString()).SetQueryParams(queryParams).WithHeaders(headers);
             HttpResponseMessage response;

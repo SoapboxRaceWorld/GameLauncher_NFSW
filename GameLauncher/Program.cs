@@ -11,6 +11,7 @@ using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.HashPassword;
 using GameLauncherReborn;
+using Nancy;
 using SharpRaven;
 using SharpRaven.Data;
 //using Memes;
@@ -22,6 +23,8 @@ namespace GameLauncher {
             File.Delete("log.txt");
 
             Log.StartLogging();
+
+            StaticConfiguration.DisableErrorTraces = false;
 
             Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
