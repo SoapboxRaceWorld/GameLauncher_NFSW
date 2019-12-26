@@ -377,16 +377,6 @@ namespace GameLauncher {
             Log.Debug("Setting ServerStatusBar");
             ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
-            Log.Debug("Checking internet connection");
-
-            new Thread(() => {
-                if (Self.CheckForInternetConnection() == false && !DetectLinux.WineDetected()) {
-                    if (_splashscreen != null) _splashscreen.Hide();
-                    Log.Error("Failed to connect to internet. Please check if your firewall is not blocking launcher.");
-                    MessageBox.Show(null, "Failed to connect to internet. Please check if your firewall is not blocking launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }).Start();
-
             Log.Debug("Loading ModManager Cache");
             ModManager.LoadModCache();
         }
@@ -1751,7 +1741,7 @@ namespace GameLauncher {
             settingsGamePathText.Visible = hideElements;
         }
 
-        private void StartGame(string userId, string loginToken, string serverIp, Form x) {
+        private void StartGame(string userId, string loginToken) {
             if(DetectLinux.UnixDetected()) { 
                 if (File.Exists("wine.tar.gz") && !Directory.Exists("wine")) {
                     Directory.CreateDirectory("wine");
@@ -2067,7 +2057,7 @@ namespace GameLauncher {
                     AntiCheat.user_id = _userId;
                     AntiCheat.serverip = new Uri(_serverIp).Host;
 
-                    StartGame(_userId, _loginToken, _serverIp, this);
+                    StartGame(_userId, _loginToken);
 
                     if (_builtinserver) {
                         playProgressText.Text = "Soapbox server launched. Waiting for queries.".ToUpper();
