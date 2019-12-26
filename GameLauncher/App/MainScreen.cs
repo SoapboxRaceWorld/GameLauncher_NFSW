@@ -2016,7 +2016,7 @@ namespace GameLauncher {
                     MessageBox.Show(ex.Message);
                 }
             } else { 
-                if(json.modsUrl != String.Empty) {
+                if(json.modsUrl != null) {
                     //ElectronModNet!
                     ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
 
