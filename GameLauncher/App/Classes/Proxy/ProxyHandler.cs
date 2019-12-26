@@ -62,12 +62,8 @@ namespace GameLauncher.App.Classes.Proxy
             }
 
             try { 
-                if(headers["Accept"] != String.Empty) return new RedirectResponse("http://sbrw.io/", RedirectType.Permanent);
+                if(headers.ContainsKey("Accept")) return new RedirectResponse("http://sbrw.io/", RedirectType.Permanent);
             } catch { }
-
-
-
-
 
             var url = new Flurl.Url(fullUrl.ToString()).SetQueryParams(queryParams).WithHeaders(headers);
             HttpResponseMessage response;

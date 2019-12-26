@@ -1946,83 +1946,149 @@ namespace GameLauncher {
 
             playButton.BackgroundImage = Properties.Resources.playbutton;
 
-                Log.Debug("Installing ModNet");
-                playProgressText.Text = ("Detecting ModNetSupport for " + _realServernameBanner).ToUpper();
-                String jsonModNet = ModNetReloaded.ModNetSupported(_serverIp);
+            Log.Debug("Installing ModNet");
+            playProgressText.Text = ("Detecting ModNetSupport for " + _realServernameBanner).ToUpper();
+            String jsonModNet = ModNetReloaded.ModNetSupported(_serverIp);
 
-                if (jsonModNet != String.Empty) {
-                    String[] newFiles = new string[] { "7z", "PocoFoundation", "PocoNet", "dinput8" };
+            if (jsonModNet != String.Empty) {
+                String[] newFiles = new string[] { "7z", "PocoFoundation", "PocoNet", "dinput8" };
 
-                    try {
-                        try { 
-                            if(File.Exists(_settingFile.Read("InstallationDirectory") + "/lightfx.dll"))
-                                File.Delete(_settingFile.Read("InstallationDirectory") + "/lightfx.dll");
-                        } catch { }
+                try {
+                    try { 
+                        if(File.Exists(_settingFile.Read("InstallationDirectory") + "/lightfx.dll"))
+                            File.Delete(_settingFile.Read("InstallationDirectory") + "/lightfx.dll");
+                    } catch { }
 
-                        WebClientWithTimeout newModNetFilesDownload = new WebClientWithTimeout();
-                        foreach(string file in newFiles) {
-                            playProgressText.Text = ("Fetching ModNetReloaded Files: " + file).ToUpper();
-                            Application.DoEvents();
-                            newModNetFilesDownload.DownloadFile(
-                                "https://cdn.soapboxrace.world/modules/" + file + ".dll",
-                                _settingFile.Read("InstallationDirectory") + "/" + file + ".dll"
-                            );
-                        }
+                    WebClientWithTimeout newModNetFilesDownload = new WebClientWithTimeout();
+                    foreach(string file in newFiles) {
+                        playProgressText.Text = ("Fetching ModNetReloaded Files: " + file).ToUpper();
+                        Application.DoEvents();
+                        newModNetFilesDownload.DownloadFile(
+                            "https://cdn.soapboxrace.world/modules/" + file + ".dll",
+                            _settingFile.Read("InstallationDirectory") + "/" + file + ".dll"
+                        );
+                    }
 
-                        //get files now
-                        MainJson json2 = JsonConvert.DeserializeObject<MainJson>(jsonModNet);
+                    //get files now
+                    MainJson json2 = JsonConvert.DeserializeObject<MainJson>(jsonModNet);
 
-                        //get new index
-                        Uri newIndexFile = new Uri(json2.basePath + "/index.json");
-                        String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
+                    //get new index
+                    Uri newIndexFile = new Uri(json2.basePath + "/index.json");
+                    String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
 
-                        IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
+                    IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
 
-                        int CountFiles = 0;
-                        int CountFilesTotal = json3.entries.Count;
+                    int CountFiles = 0;
+                    int CountFilesTotal = json3.entries.Count;
 
-                        String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", MDFive.HashPassword(json2.serverID).ToLower());
-                        if(!Directory.Exists(path)) Directory.CreateDirectory(path);
+                    String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", MDFive.HashPassword(json2.serverID).ToLower());
+                    if(!Directory.Exists(path)) Directory.CreateDirectory(path);
 
-                        foreach (IndexJsonEntry modfile in json3.entries) {
-                            if (SHA.HashFile(path + "/" + modfile.Name).ToLower() != modfile.Checksum) {
-                                WebClientWithTimeout client2 = new WebClientWithTimeout();
-                                client2.DownloadFileAsync(new Uri(json2.basePath + "/" + modfile.Name), path + "/" + modfile.Name);
+                    foreach (IndexJsonEntry modfile in json3.entries) {
+                        if (SHA.HashFile(path + "/" + modfile.Name).ToLower() != modfile.Checksum) {
+                            WebClientWithTimeout client2 = new WebClientWithTimeout();
+                            client2.DownloadFileAsync(new Uri(json2.basePath + "/" + modfile.Name), path + "/" + modfile.Name);
 
-                                client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
-                                client2.DownloadFileCompleted += (test, stuff) => { 
-                                    if(SHA.HashFile(path + "/" + modfile.Name).ToLower() == modfile.Checksum) {
-                                        CountFiles++;
+                            client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+                            client2.DownloadFileCompleted += (test, stuff) => { 
+                                if(SHA.HashFile(path + "/" + modfile.Name).ToLower() == modfile.Checksum) {
+                                    CountFiles++;
 
-                                        if(CountFiles == CountFilesTotal) {
-                                            LaunchGame();
-                                        }
-                                    } else {
-                                        MessageBox.Show("Corrupted file! Please restart your launcher.\n" +
-                                            "Got: " + SHA.HashFile(path + "/" + modfile.Name).ToLower() + "\n" +
-                                            "Expected: " + modfile.Checksum);
-                                        File.Delete(path + "/" + modfile.Name);
+                                    if(CountFiles == CountFilesTotal) {
+                                        LaunchGame();
                                     }
-                                };
-                            } else {
-                                CountFiles++;
-
-                                if (CountFiles == CountFilesTotal) {
-                                    LaunchGame();
+                                } else {
+                                    MessageBox.Show("Corrupted file! Please restart your launcher.\n" +
+                                        "Got: " + SHA.HashFile(path + "/" + modfile.Name).ToLower() + "\n" +
+                                        "Expected: " + modfile.Checksum);
+                                    File.Delete(path + "/" + modfile.Name);
                                 }
+                            };
+                        } else {
+                            CountFiles++;
+
+                            if (CountFiles == CountFilesTotal) {
+                                LaunchGame();
                             }
                         }
-                    } catch(Exception ex) {
-                        MessageBox.Show(ex.Message);
                     }
-                } else { 
+                } catch(Exception ex) {
+                    MessageBox.Show(ex.Message);
+                }
+            } else { 
+                if(json.modsUrl != String.Empty) {
+                    //ElectronModNet!
+                    ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
+
+                    Uri newIndexFile = new Uri(json.modsUrl + "/index.json");
+                    String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
+                    List<ElectronIndex> json3 = JsonConvert.DeserializeObject<List<ElectronIndex>>(jsonindex);
+
+                    int CountFiles = 0;
+                    int CountFilesTotal = json3.Count;
+
+                    String electronpath = (new Uri(_serverIp).Host).Replace(".", "-");
+                    String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", electronpath);
+                    if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+
+                    File.WriteAllText(path + ".json", jsonindex);
+
+                    //Lets save modmanager.dat file first.
+
+                    using (var fs = new FileStream(Path.Combine(_settingFile.Read("InstallationDirectory"), "ModManager.dat"), FileMode.Create))
+                    using (var bw = new BinaryWriter(fs)) {
+                        bw.Write(json3.Count);
+
+                        foreach (ElectronIndex file in json3) {
+                            var originalPath = Path.Combine(_settingFile.Read("InstallationDirectory"), file.file).Replace("/", "\\").ToUpper();
+                            var modPath = Path.Combine(path, file.file).Replace("/", "\\").ToUpper();
+
+                            bw.Write(originalPath.Length);
+                            bw.Write(originalPath.ToCharArray());
+                            bw.Write(modPath.Length);
+                            bw.Write(modPath.ToCharArray());
+                        }
+                    }
+
+                    foreach (ElectronIndex modfile in json3) {
+                        Directory.CreateDirectory(Path.GetDirectoryName(path + "/" + modfile.file));
+                        if (ElectronModNet.calculateHash(path + "/" + modfile.file) != modfile.hash) {
+                            WebClientWithTimeout client2 = new WebClientWithTimeout();
+                            client2.DownloadFileAsync(new Uri(json.modsUrl + "/" + modfile.file), path + "/" + modfile.file);
+
+                            client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+                            client2.DownloadFileCompleted += (test, stuff) => {
+                                if (ElectronModNet.calculateHash(path + "/" + modfile.file) == modfile.hash) {
+                                    CountFiles++;
+
+                                    if (CountFiles == CountFilesTotal) {
+                                        LaunchGame();
+                                    }
+                                } else {
+                                    MessageBox.Show("Corrupted file! Please restart your launcher.\n" +
+                                        "Got: " + ElectronModNet.calculateHash(path + "/" + modfile.file) + "\n" +
+                                        "Expected: " + modfile.hash);
+                                    File.Delete(path + "/" + modfile.file);
+                                }
+                            };
+                        } else {
+                            CountFiles++;
+
+                            if (CountFiles == CountFilesTotal) {
+                                LaunchGame();
+                            }
+                        }
+                    }
+
+                } else {
                     try {
                         Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
                         File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/dinput8.dll", ExtractResource.AsByte("GameLauncher.SoapBoxModules.dinput8.dll"));
                         Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/scripts");
                         File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/scripts/global.ini", ExtractResource.AsString("GameLauncher.SoapBoxModules.global.ini"));
                         File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/ModManager.asi", ExtractResource.AsByte("GameLauncher.SoapBoxModules.ModManager.dll"));
-                    } catch (Exception) { }
+                    }
+                    catch (Exception) { }
 
                     if (_serverInfo.DistributionUrl != "" && _serverInfo.Id != "nfsw") {
                         DownloadMods(_serverInfo.Id);
@@ -2031,7 +2097,8 @@ namespace GameLauncher {
                     }
 
                     LaunchGame();
-                }         
+                }
+            }         
         }
 
         void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {

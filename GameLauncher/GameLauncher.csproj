@@ -164,6 +164,7 @@
     <Compile Include="App\Classes\Language.cs" />
     <Compile Include="App\Classes\Logger\LogToFile.cs" />
     <Compile Include="App\Classes\ModManager.cs" />
+    <Compile Include="App\Classes\ModNetReloaded\ElectronModNet.cs" />
     <Compile Include="App\Classes\ModNetReloaded\ModNetReloaded.cs" />
     <Compile Include="App\Classes\NativeFunctions.cs" />
     <Compile Include="App\Classes\Events\Updater.cs" />
