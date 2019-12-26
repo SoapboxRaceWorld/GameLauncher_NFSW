@@ -85,6 +85,10 @@ namespace GameLauncher.App.Classes.Proxy
 
             String replyToServer = response.Content.ReadAsStringAsync().Result;
 
+            if (fixedPath == "/User/GetPermanentSession") {
+                replyToServer = Self.CleanFromUnknownChars(replyToServer);
+            }
+
             Log.Debug($@"{context.Request.Method} {fixedPath} {POSTContent} -> {GETContent}");
             DiscordGamePresence.handleGameState(fixedPath, replyToServer, POSTContent, GETContent);
             return new TextResponse(replyToServer, response.Content.Headers.ContentType.ToString()) { StatusCode = (HttpStatusCode)(int)response.StatusCode };

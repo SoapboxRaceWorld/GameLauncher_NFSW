@@ -34,6 +34,7 @@ using System.Collections.Concurrent;
 using System.Management;
 using GameLauncher.App.Classes.ModNetReloaded;
 using GameLauncher.App.Classes.HashPassword;
+using System.Security;
 
 namespace GameLauncher {
     public sealed partial class MainScreen : Form {
@@ -1953,8 +1954,10 @@ namespace GameLauncher {
                     String[] newFiles = new string[] { "7z", "PocoFoundation", "PocoNet", "dinput8" };
 
                     try {
-                        if(File.Exists(_settingFile.Read("InstallationDirectory") + "/lightfx.dll"))
-                            File.Delete(_settingFile.Read("InstallationDirectory") + "/lightfx.dll");
+                        try { 
+                            if(File.Exists(_settingFile.Read("InstallationDirectory") + "/lightfx.dll"))
+                                File.Delete(_settingFile.Read("InstallationDirectory") + "/lightfx.dll");
+                        } catch { }
 
                         WebClientWithTimeout newModNetFilesDownload = new WebClientWithTimeout();
                         foreach(string file in newFiles) {
@@ -2009,8 +2012,8 @@ namespace GameLauncher {
                                 }
                             }
                         }
-                    } catch {
-                        MessageBox.Show("Failed to download new modnet files.");
+                    } catch(Exception ex) {
+                        MessageBox.Show(ex.Message);
                     }
                 } else { 
                     try {
