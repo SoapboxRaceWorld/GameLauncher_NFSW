@@ -1,4 +1,4 @@
-﻿using DiscordRPC;
+using DiscordRPC;
 using GameLauncherReborn;
 using System;
 using System.Collections.Generic;
