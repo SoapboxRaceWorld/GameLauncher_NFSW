@@ -133,6 +133,7 @@ namespace GameLauncher.App
 
             var settings = new List<ListType> {
                 new ListType{ Name = "InstallationDirectory", Value = SettingFile.Read("InstallationDirectory")},
+                new ListType{ Name = "HWID", Value = Security.FingerPrint.Value()},
                 new ListType{ Name = "Server Address", Value = ServerIP},
                 new ListType{ Name = "Server Name", Value = ServerName},
                 new ListType{ Name = "Credentials Saved", Value = Password},

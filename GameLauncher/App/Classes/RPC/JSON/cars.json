@@ -168,5 +168,7 @@
 	{"carid": "z4", "carname": "BMW Z4 M Coupe"},
 	{"carid": "zl1world100", "carname": "Chevrolet Camaro ZL1 Elite"},
 	{"carid": "zonda", "carname": "Pagani Zonda F"},
-	{"carid": "zondaroadster", "carname": "Pagani Zonda F Roadster"}
+  {"carid": "zondaroadster", "carname": "Pagani Zonda F Roadster"},
+
+  {"carid": "bmwm3gtre46", "carname": "BMW M3 E46 GTR"}
 ]
