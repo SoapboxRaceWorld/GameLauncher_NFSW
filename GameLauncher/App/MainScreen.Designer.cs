@@ -74,7 +74,6 @@
             this.registerText = new System.Windows.Forms.Button();
             this.cdnText = new System.Windows.Forms.Label();
             this.cdnPick = new System.Windows.Forms.ComboBox();
-            this.modNetCheckbox = new System.Windows.Forms.CheckBox();
             this.randomServer = new System.Windows.Forms.Button();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
@@ -621,19 +620,6 @@
             this.cdnPick.Size = new System.Drawing.Size(210, 21);
             this.cdnPick.TabIndex = 84;
             // 
-            // modNetCheckbox
-            // 
-            this.modNetCheckbox.AutoSize = true;
-            this.modNetCheckbox.BackColor = System.Drawing.Color.Transparent;
-            this.modNetCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.modNetCheckbox.ForeColor = System.Drawing.Color.White;
-            this.modNetCheckbox.Location = new System.Drawing.Point(46, 275);
-            this.modNetCheckbox.Name = "modNetCheckbox";
-            this.modNetCheckbox.Size = new System.Drawing.Size(132, 19);
-            this.modNetCheckbox.TabIndex = 87;
-            this.modNetCheckbox.Text = "DISABLE MODNET";
-            this.modNetCheckbox.UseVisualStyleBackColor = false;
-            // 
             // randomServer
             // 
             this.randomServer.Location = new System.Drawing.Point(811, 64);
@@ -684,7 +670,6 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.randomServer);
-            this.Controls.Add(this.modNetCheckbox);
             this.Controls.Add(this.cdnPick);
             this.Controls.Add(this.cdnText);
             this.Controls.Add(this.ServerStatusIcon);
@@ -796,7 +781,6 @@
         private System.Windows.Forms.Button registerText;
         private System.Windows.Forms.Label cdnText;
         private System.Windows.Forms.ComboBox cdnPick;
-        private System.Windows.Forms.CheckBox modNetCheckbox;
         private System.Windows.Forms.Button randomServer;
     }
 }
