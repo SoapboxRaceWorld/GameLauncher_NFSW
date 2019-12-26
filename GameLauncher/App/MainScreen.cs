@@ -32,6 +32,8 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Management;
+using GameLauncher.App.Classes.ModNetReloaded;
+using GameLauncher.App.Classes.HashPassword;
 
 namespace GameLauncher {
     public sealed partial class MainScreen : Form {
@@ -1805,16 +1807,9 @@ namespace GameLauncher {
         }
 
         private void LaunchGame(string userId, string loginToken, string serverIp, Form x) {
-            if (!File.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), "lightfx.dll"))) {
-                try {
-                    WebClientWithTimeout lightfx = new WebClientWithTimeout();
-                    lightfx.DownloadFile(new Uri(Self.mainserver + "/files/lightfx.dll"), Path.Combine(_settingFile.Read("InstallationDirectory"), "lightfx.dll"));
-                } catch { /* ignored */ }
-            }
-
             var oldfilename = _settingFile.Read("InstallationDirectory") + "/nfsw.exe";
 
-            var args = _serverInfo.Id.ToUpper() + " " + serverIp + " " + loginToken + " " + userId + " -advancedLaunch";
+            var args = _serverInfo.Id.ToUpper() + " " + serverIp + " " + loginToken + " " + userId;
             var psi = new ProcessStartInfo();
 
             if(DetectLinux.UnixDetected()) { 
@@ -1822,6 +1817,7 @@ namespace GameLauncher {
             }
             
             if (!DetectLinux.UnixDetected()) {
+                psi.WorkingDirectory = _settingFile.Read("InstallationDirectory");
                 psi.FileName = oldfilename;
                 psi.Arguments = args;
             } else {
@@ -1968,27 +1964,100 @@ namespace GameLauncher {
                 return;
             }
 
+            if (!File.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), "lightfx.dll"))) {
+                try {
+                    WebClientWithTimeout lightfx = new WebClientWithTimeout();
+                    lightfx.DownloadFile(new Uri(Self.mainserver + "/files/lightfx.dll"), Path.Combine(_settingFile.Read("InstallationDirectory"), "lightfx.dll"));
+                }
+                catch { /* ignored */ }
+            }
+
             playButton.BackgroundImage = Properties.Resources.playbutton;
 
             if (_disabledModNet == false) {
                 Log.Debug("Installing ModNet");
-                try {
-                    Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
-                    if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/dinput8.dll")) {
-                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/dinput8.dll",
-                            ExtractResource.AsByte("GameLauncher.SoapBoxModules.dinput8.dll"));
-                        Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/scripts");
-                        File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/scripts/global.ini",
-                            ExtractResource.AsString("GameLauncher.SoapBoxModules.global.ini"));
-                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/ModManager.asi",
-                            ExtractResource.AsByte("GameLauncher.SoapBoxModules.ModManager.dll"));
-                    }
-                } catch (Exception) { }
+                playProgressText.Text = ("Detecting ModNetSupport for " + _realServernameBanner).ToUpper();
+                String jsonModNet = ModNetReloaded.ModNetSupported(_serverIp);
 
-                if (_serverInfo.DistributionUrl != "" && _serverInfo.Id != "nfsw") {
-                    DownloadMods(_serverInfo.Id);
-                } else {
-                    ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
+                if (jsonModNet != String.Empty) {
+                    String[] newFiles = new string[] { "7z", "PocoFoundation", "PocoNet", "dinput8" };
+
+                    try {
+                        if(File.Exists(_settingFile.Read("InstallationDirectory") + "/lightfx.dll"))
+                            File.Delete(_settingFile.Read("InstallationDirectory") + "/lightfx.dll");
+
+                        WebClientWithTimeout newModNetFilesDownload = new WebClientWithTimeout();
+                        foreach(string file in newFiles) {
+                            playProgressText.Text = ("Fetching ModNetReloaded Files: " + file).ToUpper();
+                            Application.DoEvents();
+                            newModNetFilesDownload.DownloadFile(
+                                "https://cdn.soapboxrace.world/modules/" + file + ".dll",
+                                _settingFile.Read("InstallationDirectory") + "/" + file + ".dll"
+                            );
+                        }
+
+                        //get files now
+                        MainJson json2 = JsonConvert.DeserializeObject<MainJson>(jsonModNet);
+
+                        //get new index
+                        Uri newIndexFile = new Uri(json2.basePath + "/index.json");
+                        String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
+
+                        IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
+
+                        int CountFiles = 0;
+                        int CountFilesTotal = json3.entries.Count;
+
+                        String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", MDFive.HashPassword(json2.serverID).ToLower());
+                        if(!Directory.Exists(path)) Directory.CreateDirectory(path);
+
+                        foreach (IndexJsonEntry modfile in json3.entries) {
+                            if (SHA.HashFile(path + "/" + modfile.Name).ToLower() != modfile.Checksum) {
+                                WebClientWithTimeout client2 = new WebClientWithTimeout();
+                                client2.DownloadFileAsync(new Uri(json2.basePath + "/" + modfile.Name), path + "/" + modfile.Name);
+
+                                client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+                                client2.DownloadFileCompleted += (test, stuff) => { 
+                                    if(SHA.HashFile(path + "/" + modfile.Name).ToLower() == modfile.Checksum) {
+                                        CountFiles++;
+
+                                        if(CountFiles == CountFilesTotal) {
+                                            LaunchGame();
+                                        }
+                                    } else {
+                                        MessageBox.Show("Corrupted file! Please restart your launcher.\n" +
+                                            "Got: " + SHA.HashFile(path + "/" + modfile.Name).ToLower() + "\n" +
+                                            "Expected: " + modfile.Checksum);
+                                        File.Delete(path + "/" + modfile.Name);
+                                    }
+                                };
+                            } else {
+                                CountFiles++;
+
+                                if (CountFiles == CountFilesTotal) {
+                                    LaunchGame();
+                                }
+                            }
+                        }
+                    } catch {
+                        MessageBox.Show("Failed to download new modnet files.");
+                    }
+                } else { 
+                    try {
+                        Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
+                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/dinput8.dll", ExtractResource.AsByte("GameLauncher.SoapBoxModules.dinput8.dll"));
+                        Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/scripts");
+                        File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/scripts/global.ini", ExtractResource.AsString("GameLauncher.SoapBoxModules.global.ini"));
+                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/ModManager.asi", ExtractResource.AsByte("GameLauncher.SoapBoxModules.ModManager.dll"));
+                    } catch (Exception) { }
+
+                    if (_serverInfo.DistributionUrl != "" && _serverInfo.Id != "nfsw") {
+                        DownloadMods(_serverInfo.Id);
+                    } else {
+                        ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
+                    }
+
+                    LaunchGame();
                 }
             } else {
                 try {
@@ -1997,10 +2066,26 @@ namespace GameLauncher {
                     File.Delete(_settingFile.Read("InstallationDirectory") + "/scripts/global.ini");
                 }
                 catch (Exception) { }
-            }
 
-            try
-            {
+                LaunchGame();
+            }           
+        }
+
+        void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
+            this.BeginInvoke((MethodInvoker)delegate {
+                double bytesIn = double.Parse(e.BytesReceived.ToString());
+                double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+                double percentage = bytesIn / totalBytes * 100;
+                playProgressText.Text = ("Downloaded " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
+
+                extractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
+                extractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
+            });
+        }
+
+        //Launch game
+        public void LaunchGame() {
+            try {
                 if (
                     SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
                     SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
@@ -2014,16 +2099,12 @@ namespace GameLauncher {
 
                     StartGame(_userId, _loginToken, _serverIp, this);
 
-                    if (_builtinserver)
-                    {
+                    if (_builtinserver) {
                         playProgressText.Text = "Soapbox server launched. Waiting for queries.".ToUpper();
-                    }
-                    else if (!DetectLinux.UnixDetected())
-                    {
+                    } else if (!DetectLinux.UnixDetected()) {
                         var secondsToCloseLauncher = 5;
 
-                        while (secondsToCloseLauncher > 0)
-                        {
+                        while (secondsToCloseLauncher > 0) {
                             playProgressText.Text = string.Format("Loading game. Launcher will minimize in {0} seconds.", secondsToCloseLauncher).ToUpper(); //"LOADING GAME. LAUNCHER WILL MINIMIZE ITSELF IN " + secondsToCloseLauncher + " SECONDS";
                             Delay.WaitSeconds(1);
                             secondsToCloseLauncher--;
@@ -2054,9 +2135,7 @@ namespace GameLauncher {
                 } else {
                     MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 MessageBox.Show(null, ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

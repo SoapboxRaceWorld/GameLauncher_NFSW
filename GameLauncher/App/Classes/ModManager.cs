@@ -146,6 +146,8 @@ namespace GameLauncher.App.Classes
                 int totalModsCount = mod.Files.Count;
                 var url = new Uri(serverInfo.DistributionUrl + "/" + mod.Id + "/");
 
+                int moddownloaded = 0;
+
                 if (ModCache.Contains($"{serverKey}::{mod.Id}")) {
                     foreach (var file in mod.Files) {
                         if(!File.Exists(Path.Combine(serverModsDirectory, file.Path))) {
@@ -155,8 +157,9 @@ namespace GameLauncher.App.Classes
 
                         var computedHash = ComputeSha256Hash(File.ReadAllBytes(Path.Combine(serverModsDirectory, file.Path)));
                         if (computedHash != file.Hash) {
+                            moddownloaded++;
                             var wc = new WebClient();
-                            playProgress.Text = ("Downloading " + serverKey + " files: " + file.Path).ToUpper();
+                            playProgress.Text = ("Downloading " + serverKey + " files: " + file.Path + " (" + moddownloaded + "/" + totalModsCount + ")").ToUpper();
                             var fileData = wc.DownloadData(url + file.Path);
                             using (var fs = File.OpenWrite(Path.Combine(serverModsDirectory, file.Path)))
                             using (var bw = new BinaryWriter(fs)) {
@@ -176,7 +179,7 @@ namespace GameLauncher.App.Classes
                         {
                             currentModCount++;
 
-                            playProgress.Text = ("Downloading " + serverKey + " files: " + file.Path).ToUpper();
+                            playProgress.Text = ("Downloading " + serverKey + " files: " + file.Path + " (" + currentModCount + "/" + totalModsCount + ") ").ToUpper();
                             progress.Value = Convert.ToInt32(Decimal.Divide(currentModCount, totalModsCount) * 100);
                             progress.Width = Convert.ToInt32(Decimal.Divide(currentModCount, totalModsCount) * 519);
 
