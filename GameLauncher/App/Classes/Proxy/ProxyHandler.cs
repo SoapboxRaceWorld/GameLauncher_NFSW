@@ -60,7 +60,7 @@ namespace GameLauncher.App.Classes.Proxy
                 headers[header.Key] = (header.Key == "Host") ? fullUrl.Host : header.Value.First();
             }
 
-            var url = new Flurl.Url(fullUrl.ToString()).SetQueryParams(queryParams).WithHeaders(headers);
+            var url = new Flurl.Url(fullUrl.ToString()).SetQueryParams(queryParams).WithHeaders(headers).AllowAnyHttpStatus();
             HttpResponseMessage response;
 
             switch (context.Request.Method) {
@@ -70,7 +70,7 @@ namespace GameLauncher.App.Classes.Proxy
                 }
                 case "POST":  {
                     POSTContent = context.Request.Body.AsString();
-                    response = url.PostAsync(new CapturedStringContent(POSTContent)).Result;
+                    response = url?.PostAsync(new CapturedStringContent(POSTContent)).Result;
                     break;
                 }
                 case "PUT":  {
