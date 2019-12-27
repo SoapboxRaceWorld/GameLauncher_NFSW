@@ -17,7 +17,12 @@ namespace GameLauncher.App.Classes.ModNetReloaded {
             if (!File.Exists(file)) return String.Empty;
 
             SHA256 sha256 = new SHA256CryptoServiceProvider();
-            byte[] retVal = sha256.ComputeHash(File.OpenRead(file));
+            byte[] retVal = new byte[] { };
+
+            using (var test = File.OpenRead(file)) {
+                retVal = sha256.ComputeHash(test);
+            }
+
             return Convert.ToBase64String(retVal);
         }
     }

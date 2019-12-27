@@ -1951,6 +1951,8 @@ namespace GameLauncher {
             String jsonModNet = ModNetReloaded.ModNetSupported(_serverIp);
 
             if (jsonModNet != String.Empty) {
+                playProgressText.Text = "ModNetReloaded support detected, downloading required files...".ToUpper();
+
                 String[] newFiles = new string[] { "7z", "PocoFoundation", "PocoNet", "dinput8" };
 
                 try {
@@ -1998,10 +2000,9 @@ namespace GameLauncher {
                                         LaunchGame();
                                     }
                                 } else {
-                                    MessageBox.Show("Corrupted file! Please restart your launcher.\n" +
-                                        "Got: " + SHA.HashFile(path + "/" + modfile.Name).ToLower() + "\n" +
-                                        "Expected: " + modfile.Checksum);
                                     File.Delete(path + "/" + modfile.Name);
+                                    Console.WriteLine(modfile.Name + " must be removed.");
+                                    playButton_Click(sender, e);
                                 }
                             };
                         } else {
@@ -2017,6 +2018,16 @@ namespace GameLauncher {
                 }
             } else { 
                 if(json.modsUrl != null) {
+                    playProgressText.Text = "Electron support detected, checking mods...".ToUpper();
+                    try {
+                        Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
+                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/dinput8.dll", ExtractResource.AsByte("GameLauncher.SoapBoxModules.dinput8.dll"));
+                        Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/scripts");
+                        File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/scripts/global.ini", ExtractResource.AsString("GameLauncher.SoapBoxModules.global.ini"));
+                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/ModManager.asi", ExtractResource.AsByte("GameLauncher.SoapBoxModules.ModManager.dll"));
+                    }
+                    catch (Exception) { }
+
                     //ElectronModNet!
                     ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
 
@@ -2051,7 +2062,10 @@ namespace GameLauncher {
                     }
 
                     foreach (ElectronIndex modfile in json3) {
-                        Directory.CreateDirectory(Path.GetDirectoryName(path + "/" + modfile.file));
+                        String directorycreate = Path.GetDirectoryName(path + "/" + modfile.file);
+                        Directory.CreateDirectory(directorycreate);
+                        
+
                         if (ElectronModNet.calculateHash(path + "/" + modfile.file) != modfile.hash) {
                             WebClientWithTimeout client2 = new WebClientWithTimeout();
                             client2.DownloadFileAsync(new Uri(json.modsUrl + "/" + modfile.file), path + "/" + modfile.file);
@@ -2065,10 +2079,8 @@ namespace GameLauncher {
                                         LaunchGame();
                                     }
                                 } else {
-                                    MessageBox.Show("Corrupted file! Please restart your launcher.\n" +
-                                        "Got: " + ElectronModNet.calculateHash(path + "/" + modfile.file) + "\n" +
-                                        "Expected: " + modfile.hash);
                                     File.Delete(path + "/" + modfile.file);
+                                    playButton_Click(sender, e);
                                 }
                             };
                         } else {
@@ -2081,6 +2093,8 @@ namespace GameLauncher {
                     }
 
                 } else {
+                    playProgressText.Text = "LegacyModNet support detected, checking mods...".ToUpper();
+
                     try {
                         Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
                         File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/dinput8.dll", ExtractResource.AsByte("GameLauncher.SoapBoxModules.dinput8.dll"));

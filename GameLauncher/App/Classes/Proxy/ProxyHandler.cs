@@ -57,13 +57,8 @@ namespace GameLauncher.App.Classes.Proxy
             GETContent = string.Join(";", queryParams.Select(x => x.Key + "=" + x.Value).ToArray());
 
             foreach (var header in context.Request.Headers) {
-                Console.WriteLine(header.Key + " - " + header.Value.First());
                 headers[header.Key] = (header.Key == "Host") ? fullUrl.Host : header.Value.First();
             }
-
-            try { 
-                if(headers.ContainsKey("Accept")) return new RedirectResponse("http://sbrw.io/", RedirectType.Permanent);
-            } catch { }
 
             var url = new Flurl.Url(fullUrl.ToString()).SetQueryParams(queryParams).WithHeaders(headers);
             HttpResponseMessage response;
