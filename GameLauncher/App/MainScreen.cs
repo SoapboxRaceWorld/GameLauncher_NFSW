@@ -85,6 +85,9 @@ namespace GameLauncher {
         private string _realServernameBanner;
         private string _OS;
 
+        int CountFiles = 0;
+        int CountFilesTotal = 0;
+
         private Point _startPoint = new Point(38, 144);
         private Point _endPoint = new Point(562, 144);
 
@@ -1855,7 +1858,7 @@ namespace GameLauncher {
                             secondsToShutDownNamed = "Waiting for event to finish.";
                         }
 
-                        //User32.SetWindowText((IntPtr)p, _realServername + " - Time Remaining: " + secondsToShutDownNamed);
+                        User32.SetWindowText((IntPtr)p, "[" + secondsToShutDownNamed + "] " + _realServername);
                     }
                 }
 
@@ -1980,8 +1983,7 @@ namespace GameLauncher {
 
                     IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
 
-                    int CountFiles = 0;
-                    int CountFilesTotal = json3.entries.Count;
+                    CountFilesTotal = json3.entries.Count;
 
                     String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", MDFive.HashPassword(json2.serverID).ToLower());
                     if(!Directory.Exists(path)) Directory.CreateDirectory(path);
@@ -2035,8 +2037,7 @@ namespace GameLauncher {
                     String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
                     List<ElectronIndex> json3 = JsonConvert.DeserializeObject<List<ElectronIndex>>(jsonindex);
 
-                    int CountFiles = 0;
-                    int CountFilesTotal = json3.Count;
+                    CountFilesTotal = json3.Count;
 
                     String electronpath = (new Uri(_serverIp).Host).Replace(".", "-");
                     String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", electronpath);
@@ -2064,7 +2065,6 @@ namespace GameLauncher {
                     foreach (ElectronIndex modfile in json3) {
                         String directorycreate = Path.GetDirectoryName(path + "/" + modfile.file);
                         Directory.CreateDirectory(directorycreate);
-                        
 
                         if (ElectronModNet.calculateHash(path + "/" + modfile.file) != modfile.hash) {
                             WebClientWithTimeout client2 = new WebClientWithTimeout();
@@ -2092,7 +2092,102 @@ namespace GameLauncher {
                         }
                     }
 
-                } else {
+                } else if(json.rwacallow == true) {
+                    ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
+
+                    playProgressText.Text = "RWAC support detected, checking mods...".ToUpper();
+
+                    try {
+                        Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
+                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/dinput8.dll", ExtractResource.AsByte("GameLauncher.SoapBoxModules.dinput8.dll"));
+                        Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/scripts");
+                        File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/scripts/global.ini", ExtractResource.AsString("GameLauncher.SoapBoxModules.global.ini"));
+                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/ModManager.asi", ExtractResource.AsByte("GameLauncher.SoapBoxModules.ModManager.dll"));
+                    }
+                    catch (Exception) { }
+
+                    //First lets assume new path for RWAC Mods
+                    String rwacpath = MDFive.HashPassword(new Uri(_serverIp).Host);
+                    String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", rwacpath);
+
+                    //Then, lets fetch its XML File
+                    Uri rwac_wev2 = new Uri(json.homePageUrl + "/rwac/fileschecker_sbrw.xml");
+                    String getcontent = new WebClient().DownloadString(rwac_wev2);
+
+                    playProgressText.Text = "Got files for RWAC... downloading...".ToUpper();
+
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(getcontent);
+                    var nodes = xmlDoc.SelectNodes("rwac/files/file");
+
+                    CountFilesTotal = nodes.Count;
+
+                    //ModManager.dat
+                    using (var fs = new FileStream(Path.Combine(_settingFile.Read("InstallationDirectory"), "ModManager.dat"), FileMode.Create))
+                    using (var bw = new BinaryWriter(fs)) {
+                        bw.Write(nodes.Count);
+
+                        foreach (XmlNode files in nodes) {
+                            //if(!(files.Attributes["name"].Value).Contains(".dll") && !(files.Attributes["name"].Value).Contains(".exe")) {
+                                string realfilepath = Path.Combine(files.Attributes["path"].Value, files.Attributes["name"].Value);
+                                String directorycreate = Path.GetDirectoryName(path + "/" + realfilepath);
+
+                                var originalPath = Path.Combine(_settingFile.Read("InstallationDirectory"), realfilepath).Replace("/", "\\").ToUpper();
+                                var modPath = Path.Combine(path, realfilepath).Replace("/", "\\").ToUpper();
+
+                                bw.Write(originalPath.Length);
+                                bw.Write(originalPath.ToCharArray());
+                                bw.Write(modPath.Length);
+                                bw.Write(modPath.ToCharArray());
+
+                                Directory.CreateDirectory(directorycreate);
+                                if(files.Attributes["download"].Value != String.Empty) { 
+                                    if (MDFive.HashFile(path + "/" + realfilepath).ToLower() != files.InnerText) {
+                                        WebClientWithTimeout client2 = new WebClientWithTimeout();
+                                        client2.DownloadFileAsync(new Uri(files.Attributes["download"].Value), path + "/" + realfilepath);
+
+                                        client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+                                        client2.DownloadFileCompleted += (test, stuff) => {
+                                            if (MDFive.HashFile(path + "/" + realfilepath).ToLower() == files.InnerText) {
+                                                CountFiles++;
+
+                                                if (CountFiles == CountFilesTotal) {
+                                                    LaunchGame(); 
+                                                }
+                                            } else {
+                                                String xddd = "Corrupted file found: " + realfilepath;
+                                                xddd += "\nGot: " + MDFive.HashFile(path + "/" + realfilepath);
+                                                xddd += "\nExpected: " + files.InnerText;
+
+                                                MessageBox.Show(xddd);
+                                                File.Delete(path + "/" + realfilepath);
+                                                playButton_Click(sender, e);
+                                            }
+                                        };
+                                    } else {
+                                        CountFiles++;
+
+                                        if (CountFiles == CountFilesTotal) {
+                                            LaunchGame();
+                                        }
+                                    }
+                                } else {
+                                    CountFiles++;
+
+                                    if (CountFiles == CountFilesTotal) {
+                                        LaunchGame();
+                                    }
+                                }
+                            //} else {
+                            //    CountFiles++;
+
+                            //    if (CountFiles == CountFilesTotal) {
+                            //        LaunchGame();
+                            //    }
+                            //}
+                        }
+                    }
+                } else { 
                     playProgressText.Text = "LegacyModNet support detected, checking mods...".ToUpper();
 
                     try {
@@ -2122,8 +2217,8 @@ namespace GameLauncher {
                 double percentage = bytesIn / totalBytes * 100;
                 playProgressText.Text = ("Downloaded " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
 
-                extractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
-                extractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
+                extractingProgress.Value = Convert.ToInt32(Decimal.Divide(CountFiles, CountFilesTotal) * 100);
+                extractingProgress.Width = Convert.ToInt32(Decimal.Divide(CountFiles, CountFilesTotal) * 519);
             });
         }
 

@@ -23,7 +23,11 @@ namespace GameLauncher.App.Classes.HashPassword
             if (!File.Exists(filename)) return String.Empty;
 
             MD5 md5 = new MD5CryptoServiceProvider();
-            byte[] retVal = md5.ComputeHash(File.OpenRead(filename));
+            byte[] retVal = new byte[] { };
+
+            using (var test = File.OpenRead(filename)) {
+                retVal = md5.ComputeHash(test);
+            }
 
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < retVal.Length; i++) {
