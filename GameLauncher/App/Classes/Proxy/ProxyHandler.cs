@@ -1,11 +1,14 @@
 ﻿using Flurl;
 using Flurl.Http;
 using Flurl.Http.Content;
+using GameLauncher.App.Classes.RPC;
+using GameLauncherReborn;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Extensions;
 using Nancy.Responses;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -74,13 +77,23 @@ namespace GameLauncher.App.Classes.Proxy
 
             HttpResponseMessage responseMessage;
 
-            switch (method)
-            {
+            string POSTContent = String.Empty;
+
+            var queryParams = new Dictionary<string, object>();
+
+            foreach (var param in context.Request.Query) {
+                var value = context.Request.Query[param];
+                queryParams[param] = value; 
+            }
+            string GETContent = string.Join(";", queryParams.Select(x => x.Key + "=" + x.Value).ToArray());
+
+            switch (method) {
                 case "GET":
                     responseMessage = await request.GetAsync(cancellationToken);
                     break;
                 case "POST":
                     responseMessage = await request.PostAsync(new CapturedStringContent(requestBody, Encoding.UTF8), cancellationToken);
+                    POSTContent = context.Request.Body.AsString();
                     break;
                 case "PUT":
                     responseMessage = await request.PutAsync(new CapturedStringContent(requestBody, Encoding.UTF8), cancellationToken);
@@ -93,6 +106,13 @@ namespace GameLauncher.App.Classes.Proxy
             }
 
             var responseBody = await responseMessage.Content.ReadAsStringAsync();
+
+            if (path == "/User/GetPermanentSession") {
+                responseBody = Self.CleanFromUnknownChars(responseBody);
+            }
+
+            DiscordGamePresence.handleGameState(path, responseBody, POSTContent, GETContent);
+
             TextResponse textResponse = new TextResponse(responseBody,
                 responseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
             {
