@@ -1,100 +1,108 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml;
+﻿using Flurl;
 using Flurl.Http;
 using Flurl.Http.Content;
-using GameLauncher.App.Classes.Logger;
-using GameLauncher.App.Classes.RPC;
-using GameLauncherReborn;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Extensions;
 using Nancy.Responses;
-using static Nancy.Responses.RedirectResponse;
+using System;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Url = Flurl.Url;
 
 namespace GameLauncher.App.Classes.Proxy
 {
     public class ProxyHandler : IApplicationStartup
     {
-        public void Initialize(IPipelines pipelines) {
+        public void Initialize(IPipelines pipelines)
+        {
             pipelines.BeforeRequest += ProxyRequest;
+            pipelines.OnError += OnError;
         }
 
-        public static Dictionary<string, int> executedPowerupsRemainingSecs = new Dictionary<string, int>();
-        public static Dictionary<string, bool> executedPowerups = new Dictionary<string, bool>();
-        public static bool activated;
+        private object OnError(NancyContext context, Exception exception)
+        {
+            if (exception is ProxyException proxyException)
+            {
+                CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY",
+                    CommunicationLogEntryType.Error,
+                    new CommunicationLogLauncherError(proxyException.Message, context.Request.Path,
+                        context.Request.Method));
 
-        
-
-        private static Response ProxyRequest(NancyContext context) {
-            string POSTContent = String.Empty;
-            string GETContent = String.Empty;
-
-            Self.sendRequest = true;
-         
-            var serverUrl = ServerProxy.Instance.GetServerUrl();
-
-            if (string.IsNullOrEmpty(serverUrl)) {
-                return new RedirectResponse("http://sbrw.io/", RedirectType.Permanent);
+                return new TextResponse(HttpStatusCode.BadRequest, proxyException.Message);
             }
 
-            var queryParams = new Dictionary<string, object>();
-            var headers = new Dictionary<string, object>();
+            return null;
+        }
 
-            var fixedPath = context.Request.Path.Replace("/nfsw/Engine.svc", "");
-            var fullUrl = new Uri(serverUrl).Append(fixedPath);
+        private async Task<Response> ProxyRequest(NancyContext context, CancellationToken cancellationToken)
+        {
+            string path = context.Request.Path;
+            string method = context.Request.Method.ToUpperInvariant();
 
-            foreach (var param in context.Request.Query) {
-                var value = context.Request.Query[param];
-                queryParams[param] = value;
+            if (!path.StartsWith("/nfsw/Engine.svc"))
+            {
+                throw new ProxyException("Invalid request path: " + path);
             }
 
-            GETContent = string.Join(";", queryParams.Select(x => x.Key + "=" + x.Value).ToArray());
+            path = path.Substring("/nfsw/Engine.svc".Length);
 
-            foreach (var header in context.Request.Headers) {
-                headers[header.Key] = (header.Key == "Host") ? fullUrl.Host : header.Value.First();
+            Url resolvedUrl = new Url(ServerProxy.Instance.GetServerUrl()).AppendPathSegment(path);
+
+            foreach (var queryParamName in context.Request.Query)
+            {
+                resolvedUrl = resolvedUrl.SetQueryParam(queryParamName, context.Request.Query[queryParamName],
+                    NullValueHandling.Ignore);
             }
 
-            var url = new Flurl.Url(fullUrl.ToString()).SetQueryParams(queryParams).WithHeaders(headers).AllowAnyHttpStatus();
-            HttpResponseMessage response;
+            IFlurlRequest request = resolvedUrl.WithTimeout(TimeSpan.FromSeconds(30));
 
-            switch (context.Request.Method) {
-                case "GET": {
-                    response = url.GetAsync().Result;
+            foreach (var header in context.Request.Headers)
+            {
+                request = request.WithHeader(header.Key, header.Key == "Host" ? resolvedUrl.ToUri().Host : header.Value.First());
+            }
+
+            request = request.AllowAnyHttpStatus();
+
+            var requestBody = context.Request.Method != "GET" ? context.Request.Body.AsString(Encoding.UTF8) : "";
+
+            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
+                CommunicationLogEntryType.Request, new CommunicationLogRequest(requestBody, resolvedUrl.ToString(), method));
+
+            HttpResponseMessage responseMessage;
+
+            switch (method)
+            {
+                case "GET":
+                    responseMessage = await request.GetAsync(cancellationToken);
                     break;
-                }
-                case "POST":  {
-                    POSTContent = context.Request.Body.AsString();
-                    response = url?.PostAsync(new CapturedStringContent(POSTContent)).Result;
+                case "POST":
+                    responseMessage = await request.PostAsync(new CapturedStringContent(requestBody, Encoding.UTF8), cancellationToken);
                     break;
-                }
-                case "PUT":  {
-                    response = url.PutAsync(new CapturedStringContent(context.Request.Body.AsString())).Result;
+                case "PUT":
+                    responseMessage = await request.PutAsync(new CapturedStringContent(requestBody, Encoding.UTF8), cancellationToken);
                     break;
-                }
-                case "DELETE": {
-                    response = url.DeleteAsync().Result;
+                case "DELETE":
+                    responseMessage = await request.DeleteAsync(cancellationToken);
                     break;
-                }
-                default: {
-                    throw new Exception($"unsupported method: {context.Request.Method}");
-                }
+                default:
+                    throw new ProxyException("Cannot handle request method: " + method);
             }
 
-            String replyToServer = response.Content.ReadAsStringAsync().Result;
+            var responseBody = await responseMessage.Content.ReadAsStringAsync();
+            TextResponse textResponse = new TextResponse(responseBody,
+                responseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
+            {
+                StatusCode = (HttpStatusCode)(int)responseMessage.StatusCode
+            };
 
-            if (fixedPath == "/User/GetPermanentSession") {
-                replyToServer = Self.CleanFromUnknownChars(replyToServer);
-            }
+            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER", CommunicationLogEntryType.Response, new CommunicationLogResponse(
+                responseBody, resolvedUrl.ToString(), method));
 
-            Log.Debug($@"{context.Request.Method} {fixedPath} {POSTContent} -> {GETContent}");
-            DiscordGamePresence.handleGameState(fixedPath, replyToServer, POSTContent, GETContent);
-            return new TextResponse(replyToServer, response.Content.Headers.ContentType.ToString()) { StatusCode = (HttpStatusCode)(int)response.StatusCode };
+            return textResponse;
         }
     }
 }
