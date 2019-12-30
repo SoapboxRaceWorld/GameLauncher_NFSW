@@ -253,7 +253,6 @@ namespace GameLauncher {
 
             addServer.Click += new EventHandler(addServer_Click);
             launcherStatusDesc.Click += new EventHandler(OpenDebugWindow);
-            showmap.Click += new EventHandler(OpenMapHandler);
 
             email.KeyUp += new KeyEventHandler(Loginbuttonenabler);
             email.KeyDown += new KeyEventHandler(LoginEnter);
@@ -1353,7 +1352,6 @@ namespace GameLauncher {
             extractingProgress.Visible = hideElements;
             addServer.Visible = hideElements;
             //allowedCountriesLabel.Visible = hideElements;
-            showmap.Visible = hideElements;
             serverPick.Enabled = true;
             randomServer.Visible = hideElements;
             randomServer.Enabled = true;
@@ -1372,7 +1370,6 @@ namespace GameLauncher {
             extractingProgress.Visible = hideElements;
             playProgress.Visible = hideElements;
             playProgressText.Visible = hideElements;
-            showmap.Visible = hideElements;
 
             ServerStatusText.Visible = hideElements;
             ServerStatusIcon.Visible = hideElements;
@@ -2027,8 +2024,7 @@ namespace GameLauncher {
                         Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/scripts");
                         File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/scripts/global.ini", ExtractResource.AsString("GameLauncher.SoapBoxModules.global.ini"));
                         File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/ModManager.asi", ExtractResource.AsByte("GameLauncher.SoapBoxModules.ModManager.dll"));
-                    }
-                    catch (Exception) { }
+                    } catch (Exception) { MessageBox.Show("There was an issue installing ElectronModNet files. Please restart this application as admin."); Application.Exit(); }
 
                     //ElectronModNet!
                     ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
@@ -2103,11 +2099,10 @@ namespace GameLauncher {
                         Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/scripts");
                         File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/scripts/global.ini", ExtractResource.AsString("GameLauncher.SoapBoxModules.global.ini"));
                         File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/ModManager.asi", ExtractResource.AsByte("GameLauncher.SoapBoxModules.ModManager.dll"));
-                    }
-                    catch (Exception) { }
+                    } catch (Exception) { MessageBox.Show("There was an issue installing RWAC files. Please restart this application as admin."); Application.Exit(); }
 
-                    //First lets assume new path for RWAC Mods
-                    String rwacpath = MDFive.HashPassword(new Uri(_serverIp).Host);
+                //First lets assume new path for RWAC Mods
+                String rwacpath = MDFive.HashPassword(new Uri(_serverIp).Host);
                     String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", rwacpath);
 
                     //Then, lets fetch its XML File

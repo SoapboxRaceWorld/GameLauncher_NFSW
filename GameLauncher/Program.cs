@@ -14,12 +14,31 @@ using GameLauncherReborn;
 using Nancy;
 using SharpRaven;
 using SharpRaven.Data;
+using IniParser;
 //using Memes;
 
 namespace GameLauncher {
     internal static class Program {
         [STAThread]
         internal static void Main() {
+            Console.WriteLine("Application path: " + Path.GetDirectoryName(Application.ExecutablePath));
+
+            if(!Self.hasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath))) {
+                MessageBox.Show("This application requires admin priviledge. Restarting...");
+                Self.runAsAdmin();
+            }
+
+            IniFile _settingFile = new IniFile("Settings.ini");
+
+            if(!string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory"))) {
+                Console.WriteLine("Game path: " + _settingFile.Read("InstallationDirectory"));
+
+                if (!Self.hasWriteAccessToFolder(_settingFile.Read("InstallationDirectory"))) {
+                    MessageBox.Show("This application requires admin priviledge. Restarting...");
+                    Self.runAsAdmin();
+                }
+            }
+
             File.Delete("log.txt");
 
             Log.StartLogging();

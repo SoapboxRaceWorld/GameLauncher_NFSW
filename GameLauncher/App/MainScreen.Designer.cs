@@ -65,7 +65,6 @@
             this.settingsGameFilesCurrent = new System.Windows.Forms.LinkLabel();
             this.settingsGamePathText = new System.Windows.Forms.Label();
             this.addServer = new System.Windows.Forms.Button();
-            this.showmap = new System.Windows.Forms.Label();
             this.launcherIconStatus = new System.Windows.Forms.PictureBox();
             this.launcherStatusText = new System.Windows.Forms.Label();
             this.ServerStatusDesc = new System.Windows.Forms.Label();
@@ -514,17 +513,6 @@
             this.addServer.Text = "+";
             this.addServer.UseVisualStyleBackColor = true;
             // 
-            // showmap
-            // 
-            this.showmap.BackColor = System.Drawing.Color.Transparent;
-            this.showmap.ForeColor = System.Drawing.Color.White;
-            this.showmap.Location = new System.Drawing.Point(483, 126);
-            this.showmap.Name = "showmap";
-            this.showmap.Size = new System.Drawing.Size(79, 15);
-            this.showmap.TabIndex = 70;
-            this.showmap.Text = "[ SHOW MAP ]";
-            this.showmap.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            // 
             // launcherIconStatus
             // 
             this.launcherIconStatus.BackColor = System.Drawing.Color.Transparent;
@@ -677,7 +665,6 @@
             this.Controls.Add(this.ServerStatusDesc);
             this.Controls.Add(this.launcherStatusText);
             this.Controls.Add(this.launcherIconStatus);
-            this.Controls.Add(this.showmap);
             this.Controls.Add(this.addServer);
             this.Controls.Add(this.settingsGameFilesCurrent);
             this.Controls.Add(this.translatedBy);
@@ -771,7 +758,6 @@
         private System.Windows.Forms.LinkLabel settingsGameFilesCurrent;
         private System.Windows.Forms.Label settingsGamePathText;
         private System.Windows.Forms.Button addServer;
-        private System.Windows.Forms.Label showmap;
         private GameLauncherReborn.ProgressBarEx extractingProgress;
         private System.Windows.Forms.PictureBox launcherIconStatus;
         private System.Windows.Forms.Label launcherStatusText;
