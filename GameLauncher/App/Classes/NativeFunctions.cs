@@ -17,10 +17,6 @@ namespace GameLauncher.App.Classes {
         public static extern int GetDiskFreeSpaceEx(string lpDirectoryName, out ulong lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool AllocConsole();
-
-        [DllImport("kernel32.dll")]
         public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
 
         [DllImport("kernel32.dll")]
@@ -34,9 +30,6 @@ namespace GameLauncher.App.Classes {
     internal static class User32 {
         [DllImport("user32.dll")]
         public static extern IntPtr LoadCursorFromFile(string filename);
-
-        [DllImport("user32.dll")]
-        public static extern bool SetProcessDPIAware();
 
         [DllImport("user32.dll")]
         public static extern bool SetWindowText(IntPtr hWnd, string text);

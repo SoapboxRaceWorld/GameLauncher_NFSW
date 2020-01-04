@@ -2219,6 +2219,13 @@ namespace GameLauncher {
 
         //Launch game
         public void LaunchGame() {
+            if (_serverInfo.DiscordAppId != null) {
+                discordRpcClient.Dispose();
+                discordRpcClient = null;
+                discordRpcClient = new DiscordRpcClient(_serverInfo.DiscordAppId);
+                discordRpcClient.Initialize();
+            }
+
             try {
                 if (
                     SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||

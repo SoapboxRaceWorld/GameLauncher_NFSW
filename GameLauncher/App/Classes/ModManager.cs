@@ -34,6 +34,9 @@ namespace GameLauncher.App.Classes
         [JsonProperty("forceUserAgent")]
         public string forceUserAgent { get; set; }
 
+        [JsonProperty("discord_application_id")]
+        public string DiscordAppId { get; set; }
+
         [JsonIgnore]
         public bool IsSpecial { get; set; }
     }

@@ -78,14 +78,17 @@ namespace GameLauncher.App.Classes.Proxy
             HttpResponseMessage responseMessage;
 
             string POSTContent = String.Empty;
+            string GETContent = String.Empty;
 
             var queryParams = new Dictionary<string, object>();
 
             foreach (var param in context.Request.Query) {
                 var value = context.Request.Query[param];
-                queryParams[param] = value; 
+                queryParams[param] = value;
             }
-            string GETContent = string.Join(";", queryParams.Select(x => x.Key + "=" + x.Value).ToArray());
+
+            GETContent = string.Join(";", queryParams.Select(x => x.Key + "=" + x.Value).ToArray());
+
 
             switch (method) {
                 case "GET":
@@ -118,6 +121,8 @@ namespace GameLauncher.App.Classes.Proxy
             {
                 StatusCode = (HttpStatusCode)(int)responseMessage.StatusCode
             };
+
+            queryParams.Clear();
 
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER", CommunicationLogEntryType.Response, new CommunicationLogResponse(
                 responseBody, resolvedUrl.ToString(), method));
