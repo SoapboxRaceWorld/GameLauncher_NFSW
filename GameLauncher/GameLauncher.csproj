@@ -157,6 +157,10 @@
     <Compile Include="App\Classes\Downloader\VerifyCommand.cs" />
     <Compile Include="App\Classes\Events\UpdaterSchema.cs" />
     <Compile Include="App\Classes\ExtractResource.cs" />
+    <Compile Include="App\Classes\GPU\AMD.cs" />
+    <Compile Include="App\Classes\GPU\init.cs" />
+    <Compile Include="App\Classes\GPU\INTEL.cs" />
+    <Compile Include="App\Classes\GPU\NVIDIA.cs" />
     <Compile Include="App\Classes\HashPassword\MD5.cs" />
     <Compile Include="App\Classes\HashPassword\SHA.cs" />
     <Compile Include="App\Classes\HWID.cs" />

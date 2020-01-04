@@ -15,6 +15,7 @@ using Nancy;
 using SharpRaven;
 using SharpRaven.Data;
 using IniParser;
+using GameLauncher.App.Classes.GPU;
 //using Memes;
 
 namespace GameLauncher {
@@ -23,7 +24,26 @@ namespace GameLauncher {
         internal static void Main() {
             Console.WriteLine("Application path: " + Path.GetDirectoryName(Application.ExecutablePath));
 
-            if(!Self.hasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath))) {
+            GPU getinfo = null;
+            
+            switch(GPUHelper.getManufacturer()) {
+                case GPUHelper.GPUManufacturer.NVIDIA:
+                    getinfo = new NVIDIA();
+                    break;
+                case GPUHelper.GPUManufacturer.AMD:
+                    getinfo = new AMD();
+                    break;
+                case GPUHelper.GPUManufacturer.INTEL:
+                    getinfo = new INTEL();
+                    break;
+                default:
+                    getinfo = null;
+                    break;
+            }
+            
+            MessageBox.Show(getinfo.DriverVersion());
+
+            if (!Self.hasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath))) {
                 MessageBox.Show("This application requires admin priviledge. Restarting...");
                 Self.runAsAdmin();
             }
