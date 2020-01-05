@@ -1919,10 +1919,12 @@ namespace GameLauncher {
                 return;
             }
 
-            String[] GlobalFiles            = new string[] { "dinput8.dll" };
+            if (!Directory.Exists("modules")) Directory.CreateDirectory("modules");
+            if (!Directory.Exists("scripts")) Directory.CreateDirectory("scripts");
+            String[] GlobalFiles            = new string[] { "dinput8.dll", "global.ini" };
             String[] ModNetReloadedFiles    = new string[] { "7z.dll", "PocoFoundation.dll", "PocoNet.dll", "ModLoader.asi" };
             String[] ModNetLegacyFiles = new string[] { "modules/udpcrc.soapbox.module", "modules/udpcrypt1.soapbox.module", "modules/udpcrypt2.soapbox.module", "modules/xmppsubject.soapbox.module",
-                    "scripts/global.ini", "lightfx.dll", "ModManager.asi" };
+                    "scripts/global.ini", "lightfx.dll", "ModManager.asi", "global.ini" };
 
             String[] RemoveAllFiles = GlobalFiles.Concat(ModNetReloadedFiles).Concat(ModNetLegacyFiles).ToArray();
 
@@ -1953,6 +1955,10 @@ namespace GameLauncher {
                         Application.DoEvents();
                         newModNetFilesDownload.DownloadFile("https://cdn.soapboxrace.world/modules/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
                     }
+
+                    try  {
+                        newModNetFilesDownload.DownloadFile("https://launcher.worldunited.gg/legacy/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
+                    } catch { }
 
                     //get files now
                     MainJson json2 = JsonConvert.DeserializeObject<MainJson>(jsonModNet);
@@ -1999,8 +2005,6 @@ namespace GameLauncher {
                     MessageBox.Show(ex.Message);
                 }
             } else {
-                if (!Directory.Exists("modules")) Directory.CreateDirectory("modules");
-                if (!Directory.Exists("scripts")) Directory.CreateDirectory("scripts");
                 string[] newFiles = GlobalFiles.Concat(ModNetLegacyFiles).ToArray();
                 WebClientWithTimeout newModNetFilesDownload = new WebClientWithTimeout();
                 foreach (string file in newFiles) {
