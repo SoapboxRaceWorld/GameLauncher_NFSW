@@ -1919,6 +1919,8 @@ namespace GameLauncher {
                 return;
             }
 
+            ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
+
             if (!Directory.Exists("modules")) Directory.CreateDirectory("modules");
             if (!Directory.Exists("scripts")) Directory.CreateDirectory("scripts");
             String[] GlobalFiles            = new string[] { "dinput8.dll", "global.ini" };
@@ -2012,8 +2014,6 @@ namespace GameLauncher {
                     Application.DoEvents();
                     newModNetFilesDownload.DownloadFile("http://launcher.worldunited.gg/legacy/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
                 }
-
-                ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
 
                 if (json.modsUrl != null) {
                     playProgressText.Text = "Electron support detected, checking mods...".ToUpper();
@@ -2166,8 +2166,6 @@ namespace GameLauncher {
 
                     if (_serverInfo.DistributionUrl != "" && _serverInfo.Id != "nfsw") {
                         DownloadMods(_serverInfo.Id);
-                    } else {
-                        ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
                     }
 
                     LaunchGame();
