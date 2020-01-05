@@ -1921,8 +1921,8 @@ namespace GameLauncher {
 
             ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
 
-            if (!Directory.Exists("modules")) Directory.CreateDirectory("modules");
-            if (!Directory.Exists("scripts")) Directory.CreateDirectory("scripts");
+            if (!Directory.Exists(_settingFile.Read("InstallationDirectory") + "/modules")) Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "modules");
+            if (!Directory.Exists(_settingFile.Read("InstallationDirectory") + "/scripts")) Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "scripts");
             String[] GlobalFiles            = new string[] { "dinput8.dll", "global.ini" };
             String[] ModNetReloadedFiles    = new string[] { "7z.dll", "PocoFoundation.dll", "PocoNet.dll", "ModLoader.asi" };
             String[] ModNetLegacyFiles = new string[] { "modules/udpcrc.soapbox.module", "modules/udpcrypt1.soapbox.module", "modules/udpcrypt2.soapbox.module", "modules/xmppsubject.soapbox.module",
@@ -1931,9 +1931,9 @@ namespace GameLauncher {
             String[] RemoveAllFiles = GlobalFiles.Concat(ModNetReloadedFiles).Concat(ModNetLegacyFiles).ToArray();
 
             foreach (string file in RemoveAllFiles) {
-                if(File.Exists(file)) { 
+                if(File.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), file))) { 
                     try {
-                        File.Delete(file);
+                        File.Delete(Path.Combine(_settingFile.Read("InstallationDirectory"), file));
                     } catch {
                         MessageBox.Show($"File {file} cannot be deleted.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
