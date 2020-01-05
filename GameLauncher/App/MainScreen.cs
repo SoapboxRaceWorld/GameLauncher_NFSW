@@ -648,23 +648,6 @@ namespace GameLauncher {
                 }
             }
 
-            //Soapbox Modules (without them Freeroam might fail)
-            Log.Debug("Installing modules");
-            try {
-                Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
-                if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/lightfx.dll")) {
-                    Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/modules");
-                    File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/modules/udpcrc.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrc.soapbox.module"));
-                    File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/modules/udpcrypt1.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrypt1.soapbox.module"));
-                    File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/modules/udpcrypt2.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.udpcrypt2.soapbox.module"));
-                    File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/modules/xmppsubject.soapbox.module", ExtractResource.AsString("GameLauncher.SoapBoxModules.xmppsubject.soapbox.module"));
-                }
-            } catch (Exception ex) {
-                Log.Error(ex.Message);
-                MessageBox.Show(null, ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                closebtn_Click(null, null);
-            }
-
             Log.Debug("Hiding RegisterFormElements"); RegisterFormElements(false);
             Log.Debug("Hiding SettingsFormElements"); SettingsFormElements(false);
             Log.Debug("Hiding LoggedInFormElements"); LoggedInFormElements(false);
@@ -1936,24 +1919,21 @@ namespace GameLauncher {
                 return;
             }
 
-            String[] newFiles = new string[] { "7z", "PocoFoundation", "PocoNet", "dinput8" };
-            foreach (string file in newFiles) {
-                if(File.Exists(file + ".dll")) { 
+            String[] GlobalFiles            = new string[] { "dinput8.dll" };
+            String[] ModNetReloadedFiles    = new string[] { "7z.dll", "PocoFoundation.dll", "PocoNet.dll", "ModLoader.asi" };
+            String[] ModNetLegacyFiles = new string[] { "modules/udpcrc.soapbox.module", "modules/udpcrypt1.soapbox.module", "modules/udpcrypt2.soapbox.module", "modules/xmppsubject.soapbox.module",
+                    "scripts/global.ini", "lightfx.dll", "ModManager.asi" };
+
+            String[] RemoveAllFiles = GlobalFiles.Concat(ModNetReloadedFiles).Concat(ModNetLegacyFiles).ToArray();
+
+            foreach (string file in RemoveAllFiles) {
+                if(File.Exists(file)) { 
                     try {
-                        File.Delete(file + ".dll");
+                        File.Delete(file);
                     } catch {
-                        MessageBox.Show($"File {file} cannot be deleted.", "ModLoader", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show($"File {file} cannot be deleted.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
-            }
-
-
-            if (!File.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), "lightfx.dll"))) {
-                try {
-                    WebClientWithTimeout lightfx = new WebClientWithTimeout();
-                    lightfx.DownloadFile(new Uri(Self.mainserver + "/files/lightfx.dll"), Path.Combine(_settingFile.Read("InstallationDirectory"), "lightfx.dll"));
-                }
-                catch { /* ignored */ }
             }
 
             playButton.BackgroundImage = Properties.Resources.playbutton;
@@ -1966,19 +1946,12 @@ namespace GameLauncher {
                 playProgressText.Text = "ModNetReloaded support detected, downloading required files...".ToUpper();
 
                 try {
-                    try { 
-                        if(File.Exists(_settingFile.Read("InstallationDirectory") + "/lightfx.dll"))
-                            File.Delete(_settingFile.Read("InstallationDirectory") + "/lightfx.dll");
-                    } catch { }
-
+                    string[] newFiles = GlobalFiles.Concat(ModNetReloadedFiles).ToArray();
                     WebClientWithTimeout newModNetFilesDownload = new WebClientWithTimeout();
                     foreach(string file in newFiles) {
                         playProgressText.Text = ("Fetching ModNetReloaded Files: " + file).ToUpper();
                         Application.DoEvents();
-                        newModNetFilesDownload.DownloadFile(
-                            "https://cdn.soapboxrace.world/modules/" + file + ".dll",
-                            _settingFile.Read("InstallationDirectory") + "/" + file + ".dll"
-                        );
+                        newModNetFilesDownload.DownloadFile("https://cdn.soapboxrace.world/modules/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
                     }
 
                     //get files now
@@ -2025,19 +1998,21 @@ namespace GameLauncher {
                 } catch(Exception ex) {
                     MessageBox.Show(ex.Message);
                 }
-            } else { 
-                if(json.modsUrl != null) {
-                    playProgressText.Text = "Electron support detected, checking mods...".ToUpper();
-                    try {
-                        Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
-                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/dinput8.dll", ExtractResource.AsByte("GameLauncher.SoapBoxModules.dinput8.dll"));
-                        Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/scripts");
-                        File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/scripts/global.ini", ExtractResource.AsString("GameLauncher.SoapBoxModules.global.ini"));
-                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/ModManager.asi", ExtractResource.AsByte("GameLauncher.SoapBoxModules.ModManager.dll"));
-                    } catch (Exception) { MessageBox.Show("There was an issue installing ElectronModNet files. Please restart this application as admin."); Application.Exit(); }
+            } else {
+                if (!Directory.Exists("modules")) Directory.CreateDirectory("modules");
+                if (!Directory.Exists("scripts")) Directory.CreateDirectory("scripts");
+                string[] newFiles = GlobalFiles.Concat(ModNetLegacyFiles).ToArray();
+                WebClientWithTimeout newModNetFilesDownload = new WebClientWithTimeout();
+                foreach (string file in newFiles) {
+                    playProgressText.Text = ("Fetching ModNetReloaded Files: " + file).ToUpper();
+                    Application.DoEvents();
+                    newModNetFilesDownload.DownloadFile("http://launcher.worldunited.gg/legacy/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                }
 
-                    //ElectronModNet!
-                    ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
+                ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
+
+                if (json.modsUrl != null) {
+                    playProgressText.Text = "Electron support detected, checking mods...".ToUpper();
 
                     Uri newIndexFile = new Uri(json.modsUrl + "/index.json");
                     String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
@@ -2099,20 +2074,10 @@ namespace GameLauncher {
                     }
 
                 } else if(json.rwacallow == true) {
-                    ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
-
                     playProgressText.Text = "RWAC support detected, checking mods...".ToUpper();
 
-                    try {
-                        Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
-                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/dinput8.dll", ExtractResource.AsByte("GameLauncher.SoapBoxModules.dinput8.dll"));
-                        Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/scripts");
-                        File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/scripts/global.ini", ExtractResource.AsString("GameLauncher.SoapBoxModules.global.ini"));
-                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/ModManager.asi", ExtractResource.AsByte("GameLauncher.SoapBoxModules.ModManager.dll"));
-                    } catch (Exception) { MessageBox.Show("There was an issue installing RWAC files. Please restart this application as admin."); Application.Exit(); }
-
-                //First lets assume new path for RWAC Mods
-                String rwacpath = MDFive.HashPassword(new Uri(_serverIp).Host);
+                    //First lets assume new path for RWAC Mods
+                    String rwacpath = MDFive.HashPassword(new Uri(_serverIp).Host);
                     String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", rwacpath);
 
                     //Then, lets fetch its XML File
@@ -2194,15 +2159,6 @@ namespace GameLauncher {
                     }
                 } else { 
                     playProgressText.Text = "LegacyModNet support detected, checking mods...".ToUpper();
-
-                    try {
-                        Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
-                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/dinput8.dll", ExtractResource.AsByte("GameLauncher.SoapBoxModules.dinput8.dll"));
-                        Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/scripts");
-                        File.WriteAllText(_settingFile.Read("InstallationDirectory") + "/scripts/global.ini", ExtractResource.AsString("GameLauncher.SoapBoxModules.global.ini"));
-                        File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/ModManager.asi", ExtractResource.AsByte("GameLauncher.SoapBoxModules.ModManager.dll"));
-                    }
-                    catch (Exception) { }
 
                     if (_serverInfo.DistributionUrl != "" && _serverInfo.Id != "nfsw") {
                         DownloadMods(_serverInfo.Id);

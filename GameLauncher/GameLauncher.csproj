@@ -286,14 +286,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="SoapBoxModules\udpcrc.soapbox.module" />
-    <EmbeddedResource Include="SoapBoxModules\udpcrypt1.soapbox.module" />
-    <EmbeddedResource Include="SoapBoxModules\udpcrypt2.soapbox.module" />
-    <EmbeddedResource Include="SoapBoxModules\xmppsubject.soapbox.module" />
-    <EmbeddedResource Include="SoapBoxModules\BootFlow.gfx" />
     <Compile Include="App\Classes\WineManager.cs" />
-    <EmbeddedResource Include="SoapBoxModules\global.ini" />
     <EmbeddedResource Include="wine_opts.reg" />
+    <EmbeddedResource Include="SoapBoxModules\BootFlow.gfx" />
     <EmbeddedResource Include="SoapBoxModules\cursor.ani" />
   </ItemGroup>
   <ItemGroup>
@@ -308,7 +303,6 @@
     <None Include="Resources\buttons_info.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SoapBoxModules\ModManager.dll" />
     <None Include="Resources\playbutton_hover.png" />
     <None Include="Resources\playbutton_click.png" />
     <None Include="Resources\playbutton.png" />
@@ -339,7 +333,6 @@
     <None Include="Resources\close_click.png" />
     <None Include="Resources\close.png" />
     <None Include="Resources\close_hover.png" />
-    <EmbeddedResource Include="SoapBoxModules\dinput8.dll" />
     <None Include="Resources\tick.png" />
     <None Include="Resources\map.png" />
     <Content Include="original_icon.ico" />
