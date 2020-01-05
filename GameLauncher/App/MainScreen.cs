@@ -2008,7 +2008,7 @@ namespace GameLauncher {
                 string[] newFiles = GlobalFiles.Concat(ModNetLegacyFiles).ToArray();
                 WebClientWithTimeout newModNetFilesDownload = new WebClientWithTimeout();
                 foreach (string file in newFiles) {
-                    playProgressText.Text = ("Fetching ModNetReloaded Files: " + file).ToUpper();
+                    playProgressText.Text = ("Fetching ModNetLegacy Files: " + file).ToUpper();
                     Application.DoEvents();
                     newModNetFilesDownload.DownloadFile("http://launcher.worldunited.gg/legacy/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
                 }
