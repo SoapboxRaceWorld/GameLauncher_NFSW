@@ -1938,10 +1938,12 @@ namespace GameLauncher {
 
             String[] newFiles = new string[] { "7z", "PocoFoundation", "PocoNet", "dinput8" };
             foreach (string file in newFiles) {
-                try {
-                    File.Delete(file + ".dll");
-                } catch {
-                    MessageBox.Show($"File {file} cannot be deleted.", "ModLoader", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if(File.Exists(file + ".dll")) { 
+                    try {
+                        File.Delete(file + ".dll");
+                    } catch {
+                        MessageBox.Show($"File {file} cannot be deleted.", "ModLoader", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
             }
 
