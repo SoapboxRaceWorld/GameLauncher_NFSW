@@ -21,7 +21,8 @@ using GameLauncher.App.Classes.GPU;
 namespace GameLauncher {
     internal static class Program {
         [STAThread]
-        internal static void Main() {
+        internal static void Main()
+        {
             Console.WriteLine("Application path: " + Path.GetDirectoryName(Application.ExecutablePath));
 
             GPU getinfo = null;
@@ -50,7 +51,7 @@ namespace GameLauncher {
 
             IniFile _settingFile = new IniFile("Settings.ini");
 
-            if(!string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory"))) {
+            if (!string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory"))) {
                 Console.WriteLine("Game path: " + _settingFile.Read("InstallationDirectory"));
 
                 if (!Self.hasWriteAccessToFolder(_settingFile.Read("InstallationDirectory"))) {
@@ -95,6 +96,9 @@ namespace GameLauncher {
                     Log.Debug("Failed to download updater. " + ex.Message);
                 }
             }
+
+            HashChecker.CheckLauncher(Application.ExecutablePath);
+            //HashChecker.CheckLauncherFolder(Path.GetDirectoryName(Application.ExecutablePath));
 
             if (!File.Exists("servers.json")) {
                 try {

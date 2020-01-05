@@ -1812,6 +1812,7 @@ namespace GameLauncher {
 
                 psi.Arguments = oldfilename + " " + args;
             }
+            HashChecker.CheckGame(_settingFile.Read("InstallationDirectory") + "/nfsw.exe");
 
             var nfswProcess = Process.Start(psi);
             AntiCheat.process_id = nfswProcess.Id;
@@ -2227,11 +2228,7 @@ namespace GameLauncher {
             }
 
             try {
-                if (
-                    SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
-                    SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
-                    SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "E69890D31919DE1649D319956560269DB88B8F22"
-                ) {
+                 //{
                     ServerProxy.Instance.SetServerUrl(_serverIp);
                     ServerProxy.Instance.SetServerName(_realServername);
 
@@ -2273,9 +2270,9 @@ namespace GameLauncher {
 
                         Notification.ContextMenu = ContextMenu;
                     }
-                } else {
-                    MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                //} else {
+                //    MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //}
             } catch (Exception ex) {
                 MessageBox.Show(null, ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

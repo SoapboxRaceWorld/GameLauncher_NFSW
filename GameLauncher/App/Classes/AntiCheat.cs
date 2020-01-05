@@ -1,16 +1,87 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.Logger;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace GameLauncher.App.Classes
 {
+    class HashChecker
+    {
+        public static string HAName = "SHA1";
+        //private static byte[] HashDirectory(DirectoryInfo directoryInfo)
+        //{
+        //    using (var hashAlgorithm = HashAlgorithm.Create(HAName))
+        //    {
+        //        using (var cryptoStream = new CryptoStream(Stream.Null, hashAlgorithm, CryptoStreamMode.Write))
+        //        using (var binaryWriter = new BinaryWriter(cryptoStream))
+        //        {
+        //            FileSystemInfo[] infos = directoryInfo.GetFileSystemInfos();
+        //            Array.Sort(infos, (a, b) => string.Compare(a.Name, b.Name, StringComparison.Ordinal));
+        //            foreach (FileSystemInfo info in infos)
+        //            {
+        //                if ((info.Attributes & FileAttributes.Directory) == 0 && (info.Name.ToLower().Contains("dll") || info.Name.ToLower().Contains("exe")))
+        //                {
+        //                    binaryWriter.Write(info.Name);
+        //                    binaryWriter.Write((byte)'F');
+        //                    binaryWriter.Write(HashFile((FileInfo)info));
+        //                }
+        //            }
+        //        }
+        //        return hashAlgorithm.Hash;
+        //    }
+        //}
+
+        private static byte[] HashFile(FileInfo fileInfo)
+        {
+            using (var hashAlgorithm = HashAlgorithm.Create(HAName))
+            using (var inputStream = fileInfo.OpenRead())
+            {
+                return hashAlgorithm.ComputeHash(inputStream);
+            }
+        }
+
+        private static byte[] GetGameHash(string gamePath) => HashFile(new FileInfo(gamePath));
+        private static byte[] GetLauncherHash(string launcherPath) => HashFile(new FileInfo(launcherPath));
+        //private static byte[] GetLauncherFolderHash(string launcherFolderPath) => HashDirectory(new DirectoryInfo(launcherFolderPath));
+
+        private static bool CheckHash(string target, byte[] localHash)
+        {
+            string remoteHash;
+            using (var wc = new WebClient()) remoteHash = wc.DownloadString($"https://damp-forest-50246.herokuapp.com/sha_knower?target={target}");
+            return (target.ToLower().Contains("folder") ? BitConverter.ToString(localHash).Replace(" - ", "") : Convert.ToBase64String(localHash)) == remoteHash.TrimEnd(Environment.NewLine.ToCharArray());
+        }
+
+        public static void CheckGame(string gamePath)
+        {
+            if (!CheckHash("game", GetGameHash(gamePath)))
+            {
+                throw new Exception("Game complexity exception");
+            }
+        }
+
+        public static void CheckLauncher(string launcherPath)
+        {
+            if (!CheckHash("launcher", GetLauncherHash(launcherPath)))
+            {
+                throw new Exception("Launcher complexity exception");
+            }
+        }
+
+        //public static void CheckLauncherFolder(string launcherFolderPath)
+        //{
+        //    if (!CheckHash("sbrw_folder", GetLauncherFolderHash(launcherFolderPath)))
+        //    {
+        //        throw new Exception("SBRW complexity exception");
+        //    }
+        //}
+    }
     class AntiCheat
     {
         public static int process_id = 0;
@@ -46,23 +117,26 @@ namespace GameLauncher.App.Classes
                 addresses.Add(4587060); // WALLHACK
                 addresses.Add(4486168); // DRIFTMOD/MULTIHACK
 
-                while (true) { 
-                    foreach (var oneAddress in addresses) {
+                while (true)
+                {
+                    foreach (var oneAddress in addresses)
+                    {
                         int bytesRead = 0;
                         byte[] buffer = new byte[4];
                         Kernel32.ReadProcessMemory((int)processHandle, baseAddress + oneAddress, buffer, buffer.Length, ref bytesRead);
 
-                        String checkInt = "0x"+BitConverter.ToString(buffer).Replace("-", String.Empty);
+                        String checkInt = "0x" + BitConverter.ToString(buffer).Replace("-", String.Empty);
 
-                        if (oneAddress == 418534  && checkInt != "0x3B010F84" && detect_MULTIHACK == false)         detect_MULTIHACK = true;
-                        if (oneAddress == 3788216 && checkInt != "0x807DFB00" && detect_FAST_POWERUPS == false)     detect_FAST_POWERUPS = true;
-                        if (oneAddress == 4552702 && checkInt != "0x76390F2E" && detect_SPEEDHACK == false)         detect_SPEEDHACK = true;
-                        if (oneAddress == 4476396 && checkInt != "0x84C00F84" && detect_SMOOTH_WALLS == false)      detect_SMOOTH_WALLS = true;
-                        if (oneAddress == 4506534 && checkInt != "0x74170F57" && detect_TANK_MODE == false)         detect_TANK_MODE = true;
-                        if (oneAddress == 4587060 && checkInt != "0x74228B16" && detect_WALLHACK == false)          detect_WALLHACK = true;
-                        if (oneAddress == 4486168 && checkInt != "0xF30F1086") {
-                            if (checkInt.Substring(0, 4) == "0xE8" && detect_MULTIHACK == false)  detect_MULTIHACK = true;
-                            if (checkInt.Substring(0, 4) == "0xE9" && detect_DRIFTMOD == false)   detect_DRIFTMOD = true;
+                        if (oneAddress == 418534 && checkInt != "0x3B010F84" && detect_MULTIHACK == false) detect_MULTIHACK = true;
+                        if (oneAddress == 3788216 && checkInt != "0x807DFB00" && detect_FAST_POWERUPS == false) detect_FAST_POWERUPS = true;
+                        if (oneAddress == 4552702 && checkInt != "0x76390F2E" && detect_SPEEDHACK == false) detect_SPEEDHACK = true;
+                        if (oneAddress == 4476396 && checkInt != "0x84C00F84" && detect_SMOOTH_WALLS == false) detect_SMOOTH_WALLS = true;
+                        if (oneAddress == 4506534 && checkInt != "0x74170F57" && detect_TANK_MODE == false) detect_TANK_MODE = true;
+                        if (oneAddress == 4587060 && checkInt != "0x74228B16" && detect_WALLHACK == false) detect_WALLHACK = true;
+                        if (oneAddress == 4486168 && checkInt != "0xF30F1086")
+                        {
+                            if (checkInt.Substring(0, 4) == "0xE8" && detect_MULTIHACK == false) detect_MULTIHACK = true;
+                            if (checkInt.Substring(0, 4) == "0xE9" && detect_DRIFTMOD == false) detect_DRIFTMOD = true;
                         }
                     }
                     Thread.Sleep(500);
