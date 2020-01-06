@@ -1953,6 +1953,17 @@ namespace GameLauncher {
                 }
             }
 
+            try { 
+                if(!File.Exists(_settingFile.Read("InstallationDirectory") + "/GLOBAL/gc.vaults/openraces.dat")) { 
+                    String[] openraces = new WebClientWithTimeout().DownloadString("http://launcher.worldunited.gg/openraces/openraces.php").Split('\n');
+                    foreach (string file in openraces)  {
+                        playProgressText.Text = ("Fetching OpenRaces Files: " + file).ToUpper();
+                        Application.DoEvents();
+                        new WebClientWithTimeout().DownloadFile("http://launcher.worldunited.gg/openraces/" + file, _settingFile.Read("InstallationDirectory") + "/GLOBAL/gc.vaults/" + file);
+                    }
+                }
+            } catch { }
+
             playButton.BackgroundImage = Properties.Resources.playbutton;
 
             Log.Debug("Installing ModNet");
