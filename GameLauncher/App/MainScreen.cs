@@ -1872,8 +1872,9 @@ namespace GameLauncher {
                             if (exitCode == -1073740940)    errorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")";
                             if (exitCode == -1073740791)    errorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")";
                             if (exitCode == -805306369)     errorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")";
-			                if (exitCode == -1073741515)    errorMsg = "Game Crash: Missing dependency files (0x" + exitCode.ToString("X") + ")";
-				
+                            if (exitCode == -1073741515) errorMsg = "Game Crash: Missing dependency files (0x" + exitCode.ToString("X") + ")";
+                            if (exitCode == -1073740972) errorMsg = "Game Crash: Debugger crash (0x" + exitCode.ToString("X") + ")";
+
                             if (exitCode == 1)              errorMsg = "You just killed nfsw.exe via Task Manager";
                             if (exitCode == 2137)           errorMsg = "Launcher killed your game to prevent SpeedBugging.";
 
@@ -1894,15 +1895,7 @@ namespace GameLauncher {
 
                             _nfswstarted.Abort();
 
-                            var errorReply = MessageBox.Show(null,
-                                errorMsg + "\nWould you like to upload dump file to analyze?",
-                                "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                            if (errorReply == DialogResult.No) {
-                                closebtn_Click(null, null);
-                            } else {
-                                Form x22 = new CrashDumpUpload();
-                                x22.ShowDialog();
-                            }
+                            MessageBox.Show(null, errorMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }));
                     }
                 };
