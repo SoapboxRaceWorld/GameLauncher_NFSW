@@ -76,6 +76,7 @@
             this.randomServer = new System.Windows.Forms.Button();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.wordFilterCheck = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
@@ -651,12 +652,26 @@
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
             // 
+            // wordFilterCheck
+            // 
+            this.wordFilterCheck.AutoSize = true;
+            this.wordFilterCheck.BackColor = System.Drawing.Color.Transparent;
+            this.wordFilterCheck.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.wordFilterCheck.ForeColor = System.Drawing.SystemColors.Control;
+            this.wordFilterCheck.Location = new System.Drawing.Point(47, 270);
+            this.wordFilterCheck.Name = "wordFilterCheck";
+            this.wordFilterCheck.Size = new System.Drawing.Size(235, 17);
+            this.wordFilterCheck.TabIndex = 93;
+            this.wordFilterCheck.Text = "Disable Word Filtering on Game Chat";
+            this.wordFilterCheck.UseVisualStyleBackColor = false;
+            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.wordFilterCheck);
             this.Controls.Add(this.randomServer);
             this.Controls.Add(this.cdnPick);
             this.Controls.Add(this.cdnText);
@@ -768,5 +783,6 @@
         private System.Windows.Forms.Label cdnText;
         private System.Windows.Forms.ComboBox cdnPick;
         private System.Windows.Forms.Button randomServer;
+        private System.Windows.Forms.CheckBox wordFilterCheck;
     }
 }
