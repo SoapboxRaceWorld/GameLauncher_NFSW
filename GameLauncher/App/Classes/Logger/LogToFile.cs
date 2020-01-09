@@ -48,7 +48,7 @@ namespace GameLauncher.App.Classes.Logger
             {
                 if(buffer.Count > 0 && buffer.TryDequeue(out string merged))
                 {
-                    File.AppendAllText("log.txt", merged + Environment.NewLine);
+                    File.AppendAllText("launcher.log", merged + Environment.NewLine);
                     Console.WriteLine(merged);
                 } else
                 {

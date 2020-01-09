@@ -115,6 +115,7 @@ namespace GameLauncher.App.Classes.Proxy
             }
 
             DiscordGamePresence.handleGameState(path, responseBody, POSTContent, GETContent);
+            OfflineSaveFile.SaveContent(path, responseBody);
 
             TextResponse textResponse = new TextResponse(responseBody,
                 responseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")

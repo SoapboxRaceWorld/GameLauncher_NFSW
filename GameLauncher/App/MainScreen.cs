@@ -103,6 +103,14 @@ namespace GameLauncher {
 
         Form _splashscreen;
 
+        //VerifyHash
+        string[][] scannedHashes;
+        public int filesToScan;
+        public int badFiles;
+        public int totalFilesScanned;
+        public int redownloadedCount;
+        public List<string> invalidFileList = new List<string>();
+
         private static Random random = new Random();
 		public static string RandomString(int length) {
 			const string chars = "qwertyuiopasdfghjklzxcvbnm1234567890_";
@@ -744,6 +752,8 @@ namespace GameLauncher {
             discordRpcClient.Dispose();
 
             ServerProxy.Instance.Stop();
+
+            File.WriteAllLines("invalidfiles.dat", invalidFileList);
 
             //Dirty way to terminate application (sometimes Application.Exit() didn't really quitted, was still running in background)
             if (DetectLinux.WineDetected())
@@ -1901,7 +1911,7 @@ namespace GameLauncher {
                             if (exitCode == -3)             errorMsg = "Server were unable to resolve your request";
                             if (exitCode == -4)             errorMsg = "Another instance is already executed";
                             if (exitCode == -5)             errorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
-                            if (exitCode == -6)             errorMsg = "Server was unable to login via 'GetPermanentSession'";
+                            if (exitCode == -6)             errorMsg = "Server was unable to resolve your request";
 
                             playProgressText.Text = errorMsg.ToUpper();
                             playProgress.Value = 100;
@@ -1916,6 +1926,7 @@ namespace GameLauncher {
                             _nfswstarted.Abort();
 
                             MessageBox.Show(null, errorMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            this.closebtn_Click(null, null);
                         }));
                     }
                 };
@@ -1953,17 +1964,6 @@ namespace GameLauncher {
                 }
             }
 
-            try { 
-                if(!File.Exists(_settingFile.Read("InstallationDirectory") + "/GLOBAL/gc.vaults/openraces.dat")) { 
-                    String[] openraces = new WebClientWithTimeout().DownloadString("http://launcher.worldunited.gg/openraces/openraces.php").Split('\n');
-                    foreach (string file in openraces)  {
-                        playProgressText.Text = ("Fetching OpenRaces Files: " + file).ToUpper();
-                        Application.DoEvents();
-                        new WebClientWithTimeout().DownloadFile("http://launcher.worldunited.gg/openraces/" + file, _settingFile.Read("InstallationDirectory") + "/GLOBAL/gc.vaults/" + file);
-                    }
-                }
-            } catch { }
-
             playButton.BackgroundImage = Properties.Resources.playbutton;
 
             Log.Debug("Installing ModNet");
@@ -1983,7 +1983,7 @@ namespace GameLauncher {
                     }
 
                     try  {
-                        newModNetFilesDownload.DownloadFile("https://launcher.worldunited.gg/legacy/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
+                        newModNetFilesDownload.DownloadFile("https://l.mtntr.pl/legacy/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
                     } catch { }
 
                     //get files now
@@ -2036,7 +2036,7 @@ namespace GameLauncher {
                 foreach (string file in newFiles) {
                     playProgressText.Text = ("Fetching ModNetLegacy Files: " + file).ToUpper();
                     Application.DoEvents();
-                    newModNetFilesDownload.DownloadFile("http://launcher.worldunited.gg/legacy/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                    newModNetFilesDownload.DownloadFile("http://l.mtntr.pl/legacy/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
                 }
 
                 if (json.modsUrl != null) {
@@ -2573,6 +2573,7 @@ namespace GameLauncher {
                     return;
                 }
             });
+
         }
 
         private void OnDownloadFinished() {
@@ -2596,12 +2597,71 @@ namespace GameLauncher {
                 }
             }
 
+            if(File.Exists("invalidfiles.dat")) {
+                playProgressText.Text = "RE-DOWNLOADING INVALID FILES".ToUpper();
+
+                string[] files = File.ReadAllLines("invalidfiles.dat");
+
+                foreach(string text in files) {
+                    try { 
+                        string text2 = _settingFile.Read("InstallationDirectory") + text;
+
+                        string address = "http://cdn.mtntr.pl/gamefiles/unpacked" + text.Replace("\\", "/");
+
+                        if (File.Exists(text2 + ".vhbak")) {
+                            File.Delete(text2 + ".vhbak");
+                        }
+                        File.Move(text2, text2 + ".vhbak");
+                        new WebClient().DownloadFile(address, text2);
+                    } catch { }
+                }                
+            }
+
             EnablePlayButton();
 
             extractingProgress.Width = 519;
 
             TaskbarProgress.SetValue(Handle, 100, 100);
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
+
+            //Threaded CheckFiles
+            var thread = new Thread(() => {
+                String[] getFilesToCheck = null;
+                try { 
+                    getFilesToCheck = new WebClientWithTimeout().DownloadString("http://cdn.mtntr.pl/gamefiles/checksums.dat").Split('\n');
+
+                    scannedHashes = new string[getFilesToCheck.Length][];
+                    for (var i = 0; i < getFilesToCheck.Length; i++) {
+                        scannedHashes[i] = getFilesToCheck[i].Split(' ');
+                    }
+
+                    filesToScan = scannedHashes.Length;
+                    totalFilesScanned = 0;
+                    redownloadedCount = 0;
+
+                    Directory.EnumerateFiles(_settingFile.Read("InstallationDirectory"), "*.*", SearchOption.AllDirectories).AsParallel().ForAll((file) => {
+                        for (var i = 0; i < scannedHashes.Length; i++) {
+                            if (scannedHashes[i][1].Trim() == file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim()) {
+                                if (scannedHashes[i][0].Trim() != SHA.HashFile(file).Trim()) {
+                                    invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
+
+                                    Notification.Visible = true;
+                                    Notification.BalloonTipIcon = ToolTipIcon.Info;
+                                    Notification.BalloonTipTitle = "GameLauncherReborn";
+                                    Notification.BalloonTipText = "Invalid file found: [GAMEDIR]" + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim();
+                                    Notification.ShowBalloonTip(5000);
+                                    Notification.Dispose();
+                                }
+                            }
+                        }
+
+                    totalFilesScanned++;
+                });
+                } catch(Exception) { }
+            }){ IsBackground = true };
+
+            thread.Start();
+            //End CheckFiles
         }
 
         private void EnablePlayButton() {
@@ -2613,7 +2673,7 @@ namespace GameLauncher {
 
             playButton.BackgroundImage = Properties.Resources.playbutton;
             playButton.ForeColor = Color.White;
-            playProgressText.Text = "Download completed.".ToUpper();
+            playProgressText.Text = "Validating files on background.".ToUpper();
         }
 
         private void OnDownloadFailed(Exception ex)

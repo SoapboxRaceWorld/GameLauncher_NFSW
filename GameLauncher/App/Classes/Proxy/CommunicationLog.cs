@@ -76,7 +76,7 @@ namespace GameLauncher.App.Classes.Proxy
 
         static CommunicationLog()
         {
-            LogFileName = $"communication_log_{DateTimeOffset.Now.ToUnixTimeMilliseconds()}.log";
+            LogFileName = "communication.log";
         }
 
         public static void RecordEntry(string serverId, string category, CommunicationLogEntryType type,
