@@ -614,7 +614,7 @@ namespace GameLauncher {
                     _slresponse2 = JsonConvert.SerializeObject(new[] {
                     new CDNObject {
                         name = "[PL] WorldUnited.GG Mirror",
-                        url = "http://cdn.worldunited.gg/nfsw/"
+                        url = "http://cdn.worldunited.gg/gamefiles/packed/"
                     }
                 });
                 }
@@ -1834,6 +1834,7 @@ namespace GameLauncher {
             }
 
             var nfswProcess = Process.Start(psi);
+            nfswProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
             AntiCheat.process_id = nfswProcess.Id;
 
             //TIMER HERE
@@ -1909,8 +1910,9 @@ namespace GameLauncher {
                             if (exitCode == -1073740940)    errorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")";
                             if (exitCode == -1073740791)    errorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")";
                             if (exitCode == -805306369)     errorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073741515) errorMsg = "Game Crash: Missing dependency files (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073740972) errorMsg = "Game Crash: Debugger crash (0x" + exitCode.ToString("X") + ")";
+                            if (exitCode == -1073741515)    errorMsg = "Game Crash: Missing dependency files (0x" + exitCode.ToString("X") + ")";
+                            if (exitCode == -1073740972)    errorMsg = "Game Crash: Debugger crash (0x" + exitCode.ToString("X") + ")";
+                            if (exitCode == -1073741676)    errorMsg = "Game Crash: Division by Zero (0x" + exitCode.ToString("X") + ")";
 
                             if (exitCode == 1)              errorMsg = "You just killed nfsw.exe via Task Manager";
                             if (exitCode == 2137)           errorMsg = "Launcher killed your game to prevent SpeedBugging.";
@@ -1990,7 +1992,7 @@ namespace GameLauncher {
                     }
 
                     try  {
-                        newModNetFilesDownload.DownloadFile("https://l.mtntr.pl/legacy/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
+                        newModNetFilesDownload.DownloadFile("https://cdn.worldunited.gg/legacy_modnet/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
                     } catch { }
 
                     //get files now
@@ -2043,7 +2045,7 @@ namespace GameLauncher {
                 foreach (string file in newFiles) {
                     playProgressText.Text = ("Fetching ModNetLegacy Files: " + file).ToUpper();
                     Application.DoEvents();
-                    newModNetFilesDownload.DownloadFile("http://l.mtntr.pl/legacy/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                    newModNetFilesDownload.DownloadFile("http://cdn.worldunited.gg/legacy_modnet/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
                 }
 
                 if (json.modsUrl != null) {
@@ -2133,17 +2135,22 @@ namespace GameLauncher {
                         bw.Write(nodes.Count);
 
                         foreach (XmlNode files in nodes) {
+                            string realfilepath = Path.Combine(files.Attributes["path"].Value, files.Attributes["name"].Value);
+
+                            var originalPath = Path.Combine(_settingFile.Read("InstallationDirectory"), realfilepath).Replace("/", "\\").ToUpper();
+                            var modPath = Path.Combine(path, realfilepath).Replace("/", "\\").ToUpper();
+
+                            bw.Write(originalPath.Length);
+                            bw.Write(originalPath.ToCharArray());
+                            bw.Write(modPath.Length);
+                            bw.Write(modPath.ToCharArray());
+                        }
+                    }
+
+                        foreach (XmlNode files in nodes) {
                             //if(!(files.Attributes["name"].Value).Contains(".dll") && !(files.Attributes["name"].Value).Contains(".exe")) {
                                 string realfilepath = Path.Combine(files.Attributes["path"].Value, files.Attributes["name"].Value);
                                 String directorycreate = Path.GetDirectoryName(path + "/" + realfilepath);
-
-                                var originalPath = Path.Combine(_settingFile.Read("InstallationDirectory"), realfilepath).Replace("/", "\\").ToUpper();
-                                var modPath = Path.Combine(path, realfilepath).Replace("/", "\\").ToUpper();
-
-                                bw.Write(originalPath.Length);
-                                bw.Write(originalPath.ToCharArray());
-                                bw.Write(modPath.Length);
-                                bw.Write(modPath.ToCharArray());
 
                                 Directory.CreateDirectory(directorycreate);
                                 if(files.Attributes["download"].Value != String.Empty) { 
@@ -2190,7 +2197,6 @@ namespace GameLauncher {
                             //        LaunchGame();
                             //    }
                             //}
-                        }
                     }
                 } else { 
                     playProgressText.Text = "LegacyModNet support detected, checking mods...".ToUpper();
@@ -2603,7 +2609,7 @@ namespace GameLauncher {
                         try { 
                             string text2 = _settingFile.Read("InstallationDirectory") + text;
 
-                            string address = "http://cdn.mtntr.pl/gamefiles/unpacked" + text.Replace("\\", "/");
+                            string address = "http://cdn.worldunited.gg/gamefiles/unpacked" + text.Replace("\\", "/");
 
                             if (File.Exists(text2 + ".vhbak")) {
                                 File.Delete(text2 + ".vhbak");
@@ -2631,7 +2637,7 @@ namespace GameLauncher {
                     var thread = new Thread(() => {
                     String[] getFilesToCheck = null;
                     try { 
-                        getFilesToCheck = new WebClientWithTimeout().DownloadString("http://cdn.mtntr.pl/gamefiles/checksums.dat").Split('\n');
+                        getFilesToCheck = new WebClientWithTimeout().DownloadString("http://cdn.worldunited.gg/gamefiles/checksums.dat").Split('\n');
 
                         scannedHashes = new string[getFilesToCheck.Length][];
                         for (var i = 0; i < getFilesToCheck.Length; i++) {

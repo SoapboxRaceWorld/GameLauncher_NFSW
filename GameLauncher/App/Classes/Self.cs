@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace GameLauncherReborn {
     class Self {
-        public static string mainserver = "http://l.mtntr.pl";
+        public static string mainserver = "http://launcher.worldunited.gg";
 
         public static string[] serverlisturl = new string[] {
             mainserver + "/serverlist.json",
@@ -25,7 +25,7 @@ namespace GameLauncherReborn {
 
         public static string DiscordRPCID = "540651192179752970";
 
-        public static int ProxyPort = new Random().Next(6260, 6269);
+        public static int ProxyPort = new Random().Next(6260, 8269);
         public static Boolean sendRequest = true;
 
         public static String userAgent = null;

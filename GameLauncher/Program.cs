@@ -22,6 +22,8 @@ namespace GameLauncher {
     internal static class Program {
         [STAThread]
         internal static void Main() {
+            Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.Idle;
+
             Console.WriteLine("Application path: " + Path.GetDirectoryName(Application.ExecutablePath));
 
             /*GPU getinfo = null;
