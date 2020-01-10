@@ -2497,12 +2497,12 @@ namespace GameLauncher {
             }
         }
 
-        private string FormatFileSize(long byteCount, bool si = false) {
+        private string FormatFileSize(long byteCount, bool si = true) {
             int unit = si ? 1000 : 1024;
             if (byteCount < unit) return byteCount + " B";
             int exp = (int)(Math.Log(byteCount) / Math.Log(unit));
             String pre = (si ? "kMGTPE" : "KMGTPE")[exp - 1] + (si ? "" : "i");
-            return String.Format("{0}{1}B", Convert.ToDouble(byteCount / Math.Pow(unit, exp)), pre);
+            return String.Format("{0}{1}B", Convert.ToDecimal(byteCount / Math.Pow(unit, exp)).ToString("0.##"), pre);
         }
 
         private string EstimateFinishTime(long current, long total)
