@@ -77,6 +77,7 @@
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             this.wordFilterCheck = new System.Windows.Forms.CheckBox();
+            this.vfilesCheck = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
@@ -665,12 +666,26 @@
             this.wordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.wordFilterCheck.UseVisualStyleBackColor = false;
             // 
+            // vfilesCheck
+            // 
+            this.vfilesCheck.AutoSize = true;
+            this.vfilesCheck.BackColor = System.Drawing.Color.Transparent;
+            this.vfilesCheck.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.vfilesCheck.ForeColor = System.Drawing.SystemColors.Control;
+            this.vfilesCheck.Location = new System.Drawing.Point(47, 288);
+            this.vfilesCheck.Name = "vfilesCheck";
+            this.vfilesCheck.Size = new System.Drawing.Size(218, 17);
+            this.vfilesCheck.TabIndex = 96;
+            this.vfilesCheck.Text = "Disable process that validate files";
+            this.vfilesCheck.UseVisualStyleBackColor = false;
+            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.vfilesCheck);
             this.Controls.Add(this.wordFilterCheck);
             this.Controls.Add(this.randomServer);
             this.Controls.Add(this.cdnPick);
@@ -784,5 +799,6 @@
         private System.Windows.Forms.ComboBox cdnPick;
         private System.Windows.Forms.Button randomServer;
         private System.Windows.Forms.CheckBox wordFilterCheck;
+        private System.Windows.Forms.CheckBox vfilesCheck;
     }
 }

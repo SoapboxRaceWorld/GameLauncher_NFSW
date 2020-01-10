@@ -55,6 +55,8 @@ namespace GameLauncher {
         private bool _modernAuthSupport = false;
         private bool _gameKilledBySpeedBugCheck = false;
 
+        private bool _disableChecks;
+
         private int _lastSelectedServerId;
         private int _nfswPid;
         private Thread _nfswstarted;
@@ -199,6 +201,8 @@ namespace GameLauncher {
                 Log.Debug("Applying Fonts");
                 ApplyEmbeddedFonts();
             }
+
+            _disableChecks = (_settingFile.KeyExists("DisableVerifyHash") && _settingFile.Read("DisableVerifyHash") == "1") ? true : false;
 
             Log.Debug("Setting launcher location");
             if (_settingFile.KeyExists("LauncherPosX") || _settingFile.KeyExists("LauncherPosY")) {
@@ -473,10 +477,6 @@ namespace GameLauncher {
             translatedBy.Text = "";
             ContextMenu = new ContextMenu();
 
-            ContextMenu.MenuItems.Add(new MenuItem("About", (x,y) => {
-                About a = new About();
-                a.Show();
-            }));
             ContextMenu.MenuItems.Add(new MenuItem("Settings", settingsButton_Click));
             ContextMenu.MenuItems.Add(new MenuItem("Add Server", addServer_Click));
             ContextMenu.MenuItems.Add("-");
@@ -656,6 +656,8 @@ namespace GameLauncher {
                 }
             }
 
+            vfilesCheck.Checked = _disableChecks;
+
             Log.Debug("Hiding RegisterFormElements"); RegisterFormElements(false);
             Log.Debug("Hiding SettingsFormElements"); SettingsFormElements(false);
             Log.Debug("Hiding LoggedInFormElements"); LoggedInFormElements(false);
@@ -755,19 +757,14 @@ namespace GameLauncher {
 
             File.WriteAllLines("invalidfiles.dat", invalidFileList);
 
-            //Dirty way to terminate application (sometimes Application.Exit() didn't really quitted, was still running in background)
-            if (DetectLinux.WineDetected())
-            {
-                Close();
-                _downloader.Stop();
-                Application.Exit();
-                Application.ExitThread();
-                Environment.Exit(Environment.ExitCode);
+            Notification.Dispose();
+
+            Process[] allOfThem2 = Process.GetProcessesByName("GameLauncher");
+            foreach (var oneProcess in allOfThem2) {
+                Process.GetProcessById(oneProcess.Id).Kill();
             }
-            else
-            {
-                Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-            }
+
+            Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
         }
 
         private void addServer_Click(object sender, EventArgs e)
@@ -1249,6 +1246,7 @@ namespace GameLauncher {
 
             Log.Debug("Applying AkrobatSemiBold mainScreen to settingsGamePathText");       settingsGamePathText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             Log.Debug("Applying AkrobatSemiBold mainScreen to wordFilterCheck");            wordFilterCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            Log.Debug("Applying AkrobatSemiBold mainScreen to vFilesCheck");                vfilesCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             Log.Debug("Applying AkrobatSemiBold mainScreen to settingsGameFilesCurrent");   settingsGameFilesCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             Log.Debug("Applying AkrobatSemiBold mainScreen to logoutButton");               logoutButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
@@ -1697,6 +1695,14 @@ namespace GameLauncher {
                 _restartRequired = true;
             }
 
+            String disableCheck = (vfilesCheck.Checked == true) ? "1" : "0";
+
+            if (_settingFile.Read("DisableVerifyHash") != disableCheck) {
+                _settingFile.Write("DisableVerifyHash", (vfilesCheck.Checked == true) ? "1" : "0");
+                _restartRequired = true;
+            }
+
+
             if (_restartRequired) {
                 MessageBox.Show(null, "In order to see settings changes, you need to restart launcher manually.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -1753,6 +1759,7 @@ namespace GameLauncher {
             settingsGameFilesCurrent.Visible = hideElements;
             settingsGamePathText.Visible = hideElements;
             wordFilterCheck.Visible = hideElements;
+            vfilesCheck.Visible = hideElements;
         }
 
         private void StartGame(string userId, string loginToken) {
@@ -2249,10 +2256,6 @@ namespace GameLauncher {
                         ShowInTaskbar = false;
 
                         ContextMenu = new ContextMenu();
-                        ContextMenu.MenuItems.Add(new MenuItem("About", (x, y) => {
-                            About a = new About();
-                            a.Show();
-                        }));
                         ContextMenu.MenuItems.Add(new MenuItem("Add Server", addServer_Click));
                         ContextMenu.MenuItems.Add("-");
                         ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", (sender2, e2) =>
@@ -2488,19 +2491,12 @@ namespace GameLauncher {
             }
         }
 
-        private string FormatFileSize(long byteCount)
-        {
-            var numArray = new double[] { 1000000000, 1000000, 1000, 0 };
-            var strArrays = new[] { "GB", "MB", "KB", "Bytes" };
-            for (var i = 0; i < numArray.Length; i++)
-            {
-                if (byteCount >= numArray[i])
-                {
-                    return string.Concat($"{byteCount / numArray[i]:0.00} ", strArrays[i]);
-                }
-            }
-
-            return "0 Bytes";
+        private string FormatFileSize(long byteCount, bool si = false) {
+            int unit = si ? 1000 : 1024;
+            if (byteCount < unit) return byteCount + " B";
+            int exp = (int)(Math.Log(byteCount) / Math.Log(unit));
+            String pre = (si ? "kMGTPE" : "KMGTPE")[exp - 1] + (si ? "" : "i");
+            return String.Format("{0}{1}B", Convert.ToDouble(byteCount / Math.Pow(unit, exp)), pre);
         }
 
         private string EstimateFinishTime(long current, long total)
@@ -2597,24 +2593,28 @@ namespace GameLauncher {
                 }
             }
 
-            if(File.Exists("invalidfiles.dat")) {
-                playProgressText.Text = "RE-DOWNLOADING INVALID FILES".ToUpper();
+            if(_disableChecks != true) { 
+                if(File.Exists("invalidfiles.dat")) {
+                    playProgressText.Text = "RE-DOWNLOADING INVALID FILES".ToUpper();
 
-                string[] files = File.ReadAllLines("invalidfiles.dat");
+                    string[] files = File.ReadAllLines("invalidfiles.dat");
 
-                foreach(string text in files) {
-                    try { 
-                        string text2 = _settingFile.Read("InstallationDirectory") + text;
+                    foreach(string text in files) {
+                        try { 
+                            string text2 = _settingFile.Read("InstallationDirectory") + text;
 
-                        string address = "http://cdn.mtntr.pl/gamefiles/unpacked" + text.Replace("\\", "/");
+                            string address = "http://cdn.mtntr.pl/gamefiles/unpacked" + text.Replace("\\", "/");
 
-                        if (File.Exists(text2 + ".vhbak")) {
-                            File.Delete(text2 + ".vhbak");
-                        }
-                        File.Move(text2, text2 + ".vhbak");
-                        new WebClient().DownloadFile(address, text2);
-                    } catch { }
-                }                
+                            if (File.Exists(text2 + ".vhbak")) {
+                                File.Delete(text2 + ".vhbak");
+                            }
+                            File.Move(text2, text2 + ".vhbak");
+                            new WebClient().DownloadFile(address, text2);
+                        } catch { }
+                    }                
+                }
+            } else {
+                playProgressText.Text = "Download Completed".ToUpper();
             }
 
             EnablePlayButton();
@@ -2624,43 +2624,49 @@ namespace GameLauncher {
             TaskbarProgress.SetValue(Handle, 100, 100);
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
 
-            //Threaded CheckFiles
-            var thread = new Thread(() => {
-                String[] getFilesToCheck = null;
-                try { 
-                    getFilesToCheck = new WebClientWithTimeout().DownloadString("http://cdn.mtntr.pl/gamefiles/checksums.dat").Split('\n');
+            if(_disableChecks != true) {
+                    playProgressText.Text = "Validating files on background.".ToUpper();
 
-                    scannedHashes = new string[getFilesToCheck.Length][];
-                    for (var i = 0; i < getFilesToCheck.Length; i++) {
-                        scannedHashes[i] = getFilesToCheck[i].Split(' ');
-                    }
+                    //Threaded CheckFiles
+                    var thread = new Thread(() => {
+                    String[] getFilesToCheck = null;
+                    try { 
+                        getFilesToCheck = new WebClientWithTimeout().DownloadString("http://cdn.mtntr.pl/gamefiles/checksums.dat").Split('\n');
 
-                    filesToScan = scannedHashes.Length;
-                    totalFilesScanned = 0;
-                    redownloadedCount = 0;
-
-                    Directory.EnumerateFiles(_settingFile.Read("InstallationDirectory"), "*.*", SearchOption.AllDirectories).AsParallel().ForAll((file) => {
-                        for (var i = 0; i < scannedHashes.Length; i++) {
-                            if (scannedHashes[i][1].Trim() == file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim()) {
-                                if (scannedHashes[i][0].Trim() != SHA.HashFile(file).Trim()) {
-                                    invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-
-                                    Notification.Visible = true;
-                                    Notification.BalloonTipIcon = ToolTipIcon.Info;
-                                    Notification.BalloonTipTitle = "GameLauncherReborn";
-                                    Notification.BalloonTipText = "Invalid file found: [GAMEDIR]" + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim();
-                                    Notification.ShowBalloonTip(5000);
-                                    Notification.Dispose();
-                                }
-                            }
+                        scannedHashes = new string[getFilesToCheck.Length][];
+                        for (var i = 0; i < getFilesToCheck.Length; i++) {
+                            scannedHashes[i] = getFilesToCheck[i].Split(' ');
                         }
 
-                    totalFilesScanned++;
-                });
-                } catch(Exception) { }
-            }){ IsBackground = true };
+                        filesToScan = scannedHashes.Length;
+                        totalFilesScanned = 0;
+                        redownloadedCount = 0;
 
-            thread.Start();
+                        Directory.EnumerateFiles(_settingFile.Read("InstallationDirectory"), "*.*", SearchOption.AllDirectories).AsParallel().ForAll((file) => {
+                            for (var i = 0; i < scannedHashes.Length; i++) {
+                                if (scannedHashes[i][1].Trim() == file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim()) {
+                                    if (scannedHashes[i][0].Trim() != SHA.HashFile(file).Trim()) {
+                                        invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
+
+                                        Notification.Visible = true;
+                                        Notification.BalloonTipIcon = ToolTipIcon.Info;
+                                        Notification.BalloonTipTitle = "GameLauncherReborn";
+                                        Notification.BalloonTipText = "Invalid file found: [GAMEDIR]" + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim();
+                                        Notification.ShowBalloonTip(5000);
+                                        Notification.Dispose();
+                                    }
+                                }
+                            }
+
+                        totalFilesScanned++;
+                    });
+                    } catch(Exception) { }
+                }){ IsBackground = true };
+
+                thread.Start();
+            } else {
+                playProgressText.Text = "Download Completed.".ToUpper();
+            }
             //End CheckFiles
         }
 
@@ -2673,7 +2679,6 @@ namespace GameLauncher {
 
             playButton.BackgroundImage = Properties.Resources.playbutton;
             playButton.ForeColor = Color.White;
-            playProgressText.Text = "Validating files on background.".ToUpper();
         }
 
         private void OnDownloadFailed(Exception ex)

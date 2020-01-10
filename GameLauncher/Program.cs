@@ -179,7 +179,7 @@ namespace GameLauncher {
                             Application.Run(new MainScreen(SplashScreen2));
                         }
                     } else {
-                        MessageBox.Show(null, "An instance of the application is already running.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(null, "An instance of Launcher is already running.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 } finally {
                     mutex.Close();
