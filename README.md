@@ -3,7 +3,7 @@ A Rewrite of GameLauncher taken from Need For Speed: World
 
 ## Todo
 - [X] Downloader?
-- [ ] Validate files (sha1?)
+- [X] Validate files
 - [X] Complete UI
 - [X] Original fonts
 
