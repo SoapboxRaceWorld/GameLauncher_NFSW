@@ -121,15 +121,19 @@ namespace GameLauncher {
                 try {
                     if (mutex.WaitOne(0, false)) {
                         string[] files = {
-                            "SharpRaven.dll - 2.4.0",
-                            "Flurl.dll - 2.8.0",
-                            "Flurl.Http.dll - 2.3.2",
+                            "DiscordRPC.dll - 1.0.0.0",
+                            "Flurl.dll - 2.8.2",
+                            "Flurl.Http.dll - 2.4.2",
                             "INIFileParser.dll - 2.5.2",
+                            "LZMA.dll - 9.10 beta",
                             "Microsoft.WindowsAPICodePack.dll - 1.1.0.0",
                             "Microsoft.WindowsAPICodePack.Shell.dll - 1.1.0.0",
-                            "Nancy.dll - 1.4.4",
-                            "Nancy.Hosting.Self.dll - 1.4.1",
-                            "Newtonsoft.Json.dll - 11.0.2",
+                            "Microsoft.WindowsAPICodePack.ShellExtensions.dll - 1.1.0.0",
+                            "Nancy.dll - 2.0.0",
+                            "Nancy.Hosting.Self.dll - 2.0.0",
+                            "Newtonsoft.Json.dll - 12.0.3",
+                            "SharpRaven.dll - 2.4.0",
+                            "System.Runtime.InteropServices.RuntimeInformation.dll - 4.6.24705.01. Commit Hash: 4d1af962ca0fede10beb01d197367c2f90e92c97"
                         };
 
                         var missingfiles = new List<string>();
@@ -170,7 +174,7 @@ namespace GameLauncher {
                                 message += "• " + file + "\n";
                             }
 
-                            MeTonaTOR.MessageBox.Show(null, message, "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Error);
+                            MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         } else {
                             Log.Debug("Checking Proxy");
                             ServerProxy.Instance.Start();

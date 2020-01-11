@@ -36,7 +36,16 @@ namespace MeTonaTOR
         }
 
         public static TaskDialogResult Show(IWin32Window owner, string text, string caption, _MessageBoxButtons buttons, _MessageBoxIcon icon) {
-            return Show(text, caption, buttons, icon);
+            TaskDialog td = new TaskDialog {
+                StandardButtons = (TaskDialogStandardButtons)buttons,
+                Icon = (TaskDialogStandardIcon)icon,
+                Caption = caption,
+                InstructionText = ((TaskDialogStandardIcon)icon).ToString(),
+                DetailsExpanded = true,
+                Text = text,
+            };
+
+            return td.Show();
         }
 
         public static TaskDialogResult Show(IWin32Window owner, string text, string caption, string instruction, _MessageBoxButtons buttons, _MessageBoxIcon icon) {
@@ -53,7 +62,16 @@ namespace MeTonaTOR
         }
 
         public static TaskDialogResult Show(string text, string caption) {
-            return Show(text, caption, _MessageBoxButtons.OK, _MessageBoxIcon.None);
+            TaskDialog td = new TaskDialog {
+                StandardButtons = TaskDialogStandardButtons.Ok,
+                Icon = TaskDialogStandardIcon.None,
+                Caption = caption,
+                InstructionText = (TaskDialogStandardIcon.None).ToString(),
+                DetailsExpanded = true,
+                Text = text,
+            };
+
+            return td.Show();
         }
 
         public static TaskDialogResult Show(IWin32Window owner, string text, string caption, _MessageBoxButtons buttons) {
