@@ -53,7 +53,11 @@ namespace GameLauncher {
 
             IniFile _settingFile = new IniFile("Settings.ini");
 
-            if(!string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory"))) {
+            if (!string.IsNullOrEmpty(_settingFile.Read("DisableVerifyHash"))) {
+                _settingFile.Write("DisableVerifyHash", "1");
+            }
+
+            if (!string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory"))) {
                 Console.WriteLine("Game path: " + _settingFile.Read("InstallationDirectory"));
 
                 if (!Self.hasWriteAccessToFolder(_settingFile.Read("InstallationDirectory"))) {
