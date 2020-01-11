@@ -66,7 +66,7 @@ namespace GameLauncher {
 
             Log.StartLogging();
 
-            StaticConfiguration.DisableErrorTraces = false;
+            //StaticConfiguration.DisableErrorTraces = false;
 
             Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
