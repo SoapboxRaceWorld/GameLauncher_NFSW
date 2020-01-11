@@ -89,7 +89,7 @@ namespace GameLauncher.App.Classes.Events {
                                             Caption = "Update",
                                             InstructionText = "An update is available!",
                                             DetailsExpanded = true,
-                                            Icon = TaskDialogStandardIcon.Information,
+                                            Icon = TaskDialogStandardIcon.Warning,
                                             DetailsCollapsedLabel = "Show Changelog",
                                             Text = "An update is available. Do you want to download it?\nYour version: " +
                                                    Application.ProductVersion + "\nUpdated version: " + updater.Payload.LatestVersion,

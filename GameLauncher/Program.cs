@@ -16,6 +16,7 @@ using SharpRaven;
 using SharpRaven.Data;
 using IniParser;
 using GameLauncher.App.Classes.GPU;
+using static MeTonaTOR.MessageBox;
 //using Memes;
 
 namespace GameLauncher {
@@ -43,10 +44,10 @@ namespace GameLauncher {
                     break;
             }
             
-            MessageBox.Show(getinfo.DriverVersion());*/
+            MeTonaTOR.MessageBox.Show(getinfo.DriverVersion());*/
 
             if (!Self.hasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath))) {
-                MessageBox.Show("This application requires admin priviledge. Restarting...");
+                MeTonaTOR.MessageBox.Show("This application requires admin priviledge. Restarting...");
                 Self.runAsAdmin();
             }
 
@@ -56,7 +57,7 @@ namespace GameLauncher {
                 Console.WriteLine("Game path: " + _settingFile.Read("InstallationDirectory"));
 
                 if (!Self.hasWriteAccessToFolder(_settingFile.Read("InstallationDirectory"))) {
-                    MessageBox.Show("This application requires admin priviledge. Restarting...");
+                    MeTonaTOR.MessageBox.Show("This application requires admin priviledge. Restarting...");
                     Self.runAsAdmin();
                 }
             }
@@ -78,7 +79,7 @@ namespace GameLauncher {
             Log.Debug("Checking current directory");
 
             if (Self.isTempFolder(Directory.GetCurrentDirectory())) {
-                MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MeTonaTOR.MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Stop);
                 Environment.Exit(0);
             }
 
@@ -112,7 +113,7 @@ namespace GameLauncher {
                 Application.Run(new MainScreen(SplashScreen2));
             } else {
                 if (NFSW.isNFSWRunning()) {
-                    MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MeTonaTOR.MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Exclamation);
                     Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                 }
 
@@ -169,7 +170,7 @@ namespace GameLauncher {
                                 message += "• " + file + "\n";
                             }
 
-                            MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MeTonaTOR.MessageBox.Show(null, message, "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Error);
                         } else {
                             Log.Debug("Checking Proxy");
                             ServerProxy.Instance.Start();
@@ -181,7 +182,7 @@ namespace GameLauncher {
                             Application.Run(new MainScreen(SplashScreen2));
                         }
                     } else {
-                        MessageBox.Show(null, "An instance of Launcher is already running.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MeTonaTOR.MessageBox.Show(null, "An instance of Launcher is already running.", "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Error);
                     }
                 } finally {
                     mutex.Close();
