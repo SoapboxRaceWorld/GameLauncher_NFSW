@@ -104,8 +104,6 @@ namespace GameLauncher {
         List<ServerInfo> finalItems = new List<ServerInfo>();
         Dictionary<string, int> serverStatusDictionary = new Dictionary<string, int>();
 
-        Form _splashscreen;
-
         //VerifyHash
         string[][] scannedHashes;
         public int filesToScan;
@@ -141,7 +139,7 @@ namespace GameLauncher {
             Opacity = 0.9;
         }
 
-        public MainScreen(Form splashscreen) {
+        public MainScreen() {
 
             ParseUri uri = new ParseUri(Environment.GetCommandLineArgs());
 
@@ -155,7 +153,6 @@ namespace GameLauncher {
             }
 
             Log.Debug("Entered mainScreen");
-            _splashscreen = splashscreen;
 
             rnd = new Random(Environment.TickCount);
 
@@ -318,14 +315,12 @@ namespace GameLauncher {
 
             Log.Debug("Checking permissions");
             if (!Self.hasWriteAccessToFolder(Directory.GetCurrentDirectory())) {
-                if (_splashscreen != null) _splashscreen.Hide();
                 Log.Error("Check Permission Failed.");
                 MeTonaTOR.MessageBox.Show(null, "Failed to write the test file. Make sure you're running the launcher with administrative privileges.", "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Error);
             }
 
             Log.Debug("Checking InstallationDirectory");
             if (string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory"))) {
-                if(_splashscreen != null) _splashscreen.Hide();
                 Log.Debug("First run!");
 
                 Form welcome = new WelcomeScreen();
@@ -614,8 +609,8 @@ namespace GameLauncher {
                 {
                     _slresponse2 = JsonConvert.SerializeObject(new[] {
                     new CDNObject {
-                        name = "[PL] WorldUnited.GG Mirror",
-                        url = "http://cdn.worldunited.gg/gamefiles/packed/"
+                        name = "[PL] MeTonaTOR's Mirror",
+                        url = "http://cdn.mtntr.pl/gamefiles/packed/"
                     }
                 });
                 }
@@ -699,10 +694,6 @@ namespace GameLauncher {
                 Log.Debug("Initialize Downloading Process");
                 LaunchNfsw();
             });
-
-            Log.Debug("Hiding splashScreen");
-            if (_splashscreen != null)
-                _splashscreen.Hide();
 
             this.BringToFront();
             Log.Debug("Checking for update");
@@ -1993,7 +1984,7 @@ namespace GameLauncher {
                     }
 
                     try  {
-                        newModNetFilesDownload.DownloadFile("https://cdn.worldunited.gg/legacy_modnet/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
+                        newModNetFilesDownload.DownloadFile("https://cdn.mtntr.pl/legacy_modnet/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
                     } catch { }
 
                     //get files now
@@ -2046,7 +2037,7 @@ namespace GameLauncher {
                 foreach (string file in newFiles) {
                     playProgressText.Text = ("Fetching ModNetLegacy Files: " + file).ToUpper();
                     Application.DoEvents();
-                    newModNetFilesDownload.DownloadFile("http://cdn.worldunited.gg/legacy_modnet/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                    newModNetFilesDownload.DownloadFile("http://cdn.mtntr.pl/legacy_modnet/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
                 }
 
                 if (json.modsUrl != null) {
@@ -2610,13 +2601,14 @@ namespace GameLauncher {
                         try { 
                             string text2 = _settingFile.Read("InstallationDirectory") + text;
 
-                            string address = "http://cdn.worldunited.gg/gamefiles/unpacked" + text.Replace("\\", "/");
+                            string address = "http://cdn.mtntr.pl/gamefiles/unpacked" + text.Replace("\\", "/");
 
                             if (File.Exists(text2 + ".vhbak")) {
                                 File.Delete(text2 + ".vhbak");
                             }
                             File.Move(text2, text2 + ".vhbak");
                             new WebClient().DownloadFile(address, text2);
+                            Application.DoEvents();
                         } catch { }
                     }                
                 }
@@ -2638,7 +2630,7 @@ namespace GameLauncher {
                     var thread = new Thread(() => {
                     String[] getFilesToCheck = null;
                     try { 
-                        getFilesToCheck = new WebClientWithTimeout().DownloadString("http://cdn.worldunited.gg/gamefiles/checksums.dat").Split('\n');
+                        getFilesToCheck = new WebClientWithTimeout().DownloadString("http://cdn.mtntr.pl/gamefiles/checksums.dat").Split('\n');
 
                         scannedHashes = new string[getFilesToCheck.Length][];
                         for (var i = 0; i < getFilesToCheck.Length; i++) {

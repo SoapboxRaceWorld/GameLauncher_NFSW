@@ -10,16 +10,16 @@ using System.Windows.Forms;
 
 namespace GameLauncherReborn {
     class Self {
-        public static string mainserver = "http://launcher.worldunited.gg";
+        public static string mainserver = "http://l.mtntr.pl";
 
         public static string[] serverlisturl = new string[] {
             mainserver + "/serverlist.json",
-            //"https://launchpad.soapboxrace.world/servers", // removed due to innactivity from leo (TWIO is down for more than 2 weeks and still present)
+            //"https://launchpad.soapboxrace.world/servers",
             //"http://api.nightriderz.world/servers.json",
         }; 
 
 		public static string statsurl = mainserver + "/stats";
-        public static string CDNUrlList = mainserver + "/cdn_list.json"; //hosted on WOPL, coz why not.
+        public static string CDNUrlList = mainserver + "/cdn_list.json";
 
 		private static IniFile SettingFile = new IniFile("Settings.ini");
 

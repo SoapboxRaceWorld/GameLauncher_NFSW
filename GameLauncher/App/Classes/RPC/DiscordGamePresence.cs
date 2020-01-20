@@ -1,4 +1,5 @@
 using DiscordRPC;
+using GameLauncher.App.Classes.Proxy;
 using GameLauncherReborn;
 using System;
 using System.Collections.Generic;
@@ -76,6 +77,7 @@ namespace GameLauncher.App.Classes.RPC {
             if (uri == "/User/SecureLoginPersona") {
                 LoggedPersonaId = GET.Split(';').Last().Split('=').Last();
                 canUpdateProfileField = true;
+                Helper.personaid = LoggedPersonaId;
             }
 
             if (uri == "/User/SecureLogoutPersona") {

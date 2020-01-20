@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Url = Flurl.Url;
@@ -89,6 +90,7 @@ namespace GameLauncher.App.Classes.Proxy
 
             GETContent = string.Join(";", queryParams.Select(x => x.Key + "=" + x.Value).ToArray());
 
+            Console.WriteLine("[LOG] ["+method+"] ProxyHandler: " + path);
 
             switch (method) {
                 case "GET":
@@ -114,13 +116,15 @@ namespace GameLauncher.App.Classes.Proxy
                 responseBody = Self.CleanFromUnknownChars(responseBody);
             }
 
+            int statusCode = (int)responseMessage.StatusCode;
+
             DiscordGamePresence.handleGameState(path, responseBody, POSTContent, GETContent);
-            //OfflineSaveFile.SaveContent(path, responseBody);
+            OfflineSaveFile.SaveContent(path, responseBody);
 
             TextResponse textResponse = new TextResponse(responseBody,
                 responseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
             {
-                StatusCode = (HttpStatusCode)(int)responseMessage.StatusCode
+                StatusCode = (HttpStatusCode)(int)statusCode
             };
 
             queryParams.Clear();
@@ -130,5 +134,10 @@ namespace GameLauncher.App.Classes.Proxy
 
             return textResponse;
         }
+    }
+
+    public class Helper {
+        public static int session = 0;
+        public static String personaid = String.Empty;
     }
 }
