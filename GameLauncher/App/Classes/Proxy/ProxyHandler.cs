@@ -119,7 +119,7 @@ namespace GameLauncher.App.Classes.Proxy
             int statusCode = (int)responseMessage.StatusCode;
 
             DiscordGamePresence.handleGameState(path, responseBody, POSTContent, GETContent);
-            OfflineSaveFile.SaveContent(path, responseBody);
+            //OfflineSaveFile.SaveContent(path, responseBody);
 
             TextResponse textResponse = new TextResponse(responseBody,
                 responseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")

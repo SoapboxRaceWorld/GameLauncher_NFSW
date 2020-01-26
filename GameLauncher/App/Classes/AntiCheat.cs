@@ -85,7 +85,7 @@ namespace GameLauncher.App.Classes
 
                 String responseString;
                 try {
-                    Uri sendReport = new Uri("http://launcher.worldunited.gg/report");
+                    Uri sendReport = new Uri("http://l.mtntr.pl/report");
 
                     var request = (HttpWebRequest)WebRequest.Create(sendReport);
                     var postData = "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + Security.FingerPrint.Value();

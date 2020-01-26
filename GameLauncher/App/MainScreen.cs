@@ -36,6 +36,7 @@ using GameLauncher.App.Classes.ModNetReloaded;
 using GameLauncher.App.Classes.HashPassword;
 using System.Security;
 using static MeTonaTOR.MessageBox;
+using FPSCounterClass;
 
 namespace GameLauncher {
     public sealed partial class MainScreen : Form {
@@ -1827,7 +1828,14 @@ namespace GameLauncher {
 
             var nfswProcess = Process.Start(psi);
             nfswProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
+
+            if (Environment.ProcessorCount >= 4) {
+                nfswProcess.ProcessorAffinity = (IntPtr)0x000F;
+            }
+
             AntiCheat.process_id = nfswProcess.Id;
+
+            CountHelp.StartMe();
 
             //TIMER HERE
             int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2*60*60;
@@ -1868,7 +1876,7 @@ namespace GameLauncher {
                             secondsToShutDownNamed = "Waiting for event to finish.";
                         }
 
-                        User32.SetWindowText((IntPtr)p, "[" + secondsToShutDownNamed + "] " + _realServername);
+                        User32.SetWindowText((IntPtr)p, "[" + secondsToShutDownNamed + "] [" + FPSCount.getFPS() + "FPS] " + _realServername);
                     }
                 }
 

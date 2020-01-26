@@ -29,7 +29,7 @@ namespace GameLauncher.App.Classes.ModNetReloaded {
                 Uri newModNetUri = new Uri(_serverIp + "/Modding/GetModInfo");
                 WebClientWithTimeout x = new WebClientWithTimeout();
                 return x.DownloadString(newModNetUri);
-            } catch {
+            } catch(Exception) {
                 return String.Empty;
             }
         }
