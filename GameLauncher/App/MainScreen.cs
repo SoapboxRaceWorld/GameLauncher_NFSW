@@ -467,7 +467,7 @@ namespace GameLauncher {
                 _windowMoved = true;
             }
 
-            _NFSW_Installation_Source = _settingFile.KeyExists("CDN") ? _settingFile.Read("CDN") : "http://145.239.5.103/cdn/gamefiles/1614b/";
+            _NFSW_Installation_Source = !string.IsNullOrEmpty(_settingFile.Read("CDN")) ? _settingFile.Read("CDN") : "http://cdn.worldunited.gg/gamefiles/packed/";
             Log.Debug("_NFSW_Installation_Source is now " + _NFSW_Installation_Source);
 
             Log.Debug("Applyinng ContextMenu");
@@ -601,19 +601,14 @@ namespace GameLauncher {
 
             Task.Run(() => {
                 String _slresponse2 = string.Empty;
-                try
-                {
+                try {
                     WebClientWithTimeout wc = new WebClientWithTimeout();
                     _slresponse2 = wc.DownloadString(Self.CDNUrlList);
-                }
-                catch
-                {
+                } catch(Exception error) {
+                    MeTonaTOR.MessageBox.Show(error.Message, "An error occurred while loading CDN List");
                     _slresponse2 = JsonConvert.SerializeObject(new[] {
-                    new CDNObject {
-                        name = "[PL] MeTonaTOR's Mirror",
-                        url = "http://cdn.mtntr.pl/gamefiles/packed/"
-                    }
-                });
+                        new CDNObject { name = "[CF] WorldUnited.gg Mirror", url = "http://cdn.worldunited.gg/gamefiles/packed/" }
+                    });
                 }
 
                 List<CDNObject> CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse2);
