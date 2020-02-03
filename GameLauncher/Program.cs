@@ -12,8 +12,6 @@ using GameLauncher.App.Classes.Logger;
 using GameLauncher.HashPassword;
 using GameLauncherReborn;
 using Nancy;
-using SharpRaven;
-using SharpRaven.Data;
 using IniParser;
 using GameLauncher.App.Classes.GPU;
 using static MeTonaTOR.MessageBox;
@@ -135,7 +133,6 @@ namespace GameLauncher {
                             "Nancy.dll - 2.0.0",
                             "Nancy.Hosting.Self.dll - 2.0.0",
                             "Newtonsoft.Json.dll - 12.0.3",
-                            "SharpRaven.dll - 2.4.0",
                             "System.Runtime.InteropServices.RuntimeInformation.dll - 4.6.24705.01. Commit Hash: 4d1af962ca0fede10beb01d197367c2f90e92c97"
                         };
 
@@ -200,10 +197,6 @@ namespace GameLauncher {
 
         static void UnhandledExceptionEventHandler(object sender, UnhandledExceptionEventArgs e) {
             Exception exception = (Exception)e.ExceptionObject;
-            exception.Data.Add("BuildHash", SHA.HashFile(AppDomain.CurrentDomain.FriendlyName));
-
-            var ravenClient = new RavenClient("https://12973f6fa1054f51a8e3a840e7dc021c@sentry.io/1325472");
-            ravenClient.Capture(new SentryEvent(exception));
 
             using (ThreadExceptionDialog dialog = new ThreadExceptionDialog(exception)) {
                 dialog.ShowDialog();
@@ -215,10 +208,6 @@ namespace GameLauncher {
 
         static void ThreadExceptionEventHandler(object sender, ThreadExceptionEventArgs e) {
             Exception exception = (Exception)e.Exception;
-            exception.Data.Add("BuildHash", SHA.HashFile(AppDomain.CurrentDomain.FriendlyName));
-
-            var ravenClient = new RavenClient("https://12973f6fa1054f51a8e3a840e7dc021c@sentry.io/1325472");
-            ravenClient.Capture(new SentryEvent(exception));
 
             using (ThreadExceptionDialog dialog = new ThreadExceptionDialog(exception)) {
                 dialog.ShowDialog();

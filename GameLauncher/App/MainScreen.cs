@@ -36,7 +36,6 @@ using GameLauncher.App.Classes.ModNetReloaded;
 using GameLauncher.App.Classes.HashPassword;
 using System.Security;
 using static MeTonaTOR.MessageBox;
-using FPSCounterClass;
 
 namespace GameLauncher {
     public sealed partial class MainScreen : Form {
@@ -1830,8 +1829,6 @@ namespace GameLauncher {
 
             AntiCheat.process_id = nfswProcess.Id;
 
-            CountHelp.StartMe();
-
             //TIMER HERE
             int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2*60*60;
             System.Timers.Timer shutdowntimer = new System.Timers.Timer();
@@ -1845,11 +1842,11 @@ namespace GameLauncher {
                     Notification.Dispose();
                 }
 
-                if(secondsToShutDown <= 0) {
+                Process[] allOfThem = Process.GetProcessesByName("nfsw");
+
+                if (secondsToShutDown <= 0) {
                     if (Self.CanDisableGame == true) {
-                        Process[] allOfThem2 = Process.GetProcessesByName("nfsw");
-                        foreach (var oneProcess in allOfThem2)
-                        {
+                        foreach (var oneProcess in allOfThem) {
                             _gameKilledBySpeedBugCheck = true;
                             Process.GetProcessById(oneProcess.Id).Kill();
                         }
@@ -1860,9 +1857,8 @@ namespace GameLauncher {
 
                 //change title
 
-                Process[] allOfThem = Process.GetProcessesByName("nfsw");
                 foreach (var oneProcess in allOfThem) {
-                    if (oneProcess.ProcessName == "nfsw") {
+                    //if (oneProcess.ProcessName == "nfsw") {
                         long p = oneProcess.MainWindowHandle.ToInt64();
                         TimeSpan t = TimeSpan.FromSeconds(secondsToShutDown);
                         string secondsToShutDownNamed = string.Format("{0:D2}:{1:D2}:{2:D2}", t.Hours, t.Minutes, t.Seconds);
@@ -1871,8 +1867,8 @@ namespace GameLauncher {
                             secondsToShutDownNamed = "Waiting for event to finish.";
                         }
 
-                        User32.SetWindowText((IntPtr)p, "[" + secondsToShutDownNamed + "] [" + FPSCount.getFPS() + "FPS] " + _realServername);
-                    }
+                        User32.SetWindowText((IntPtr)p, "NEED FOR SPEED™ WORLD | Server: " + _realServername + " | Time Remaining: " + secondsToShutDownNamed);
+                    //}
                 }
 
                 --secondsToShutDown;
