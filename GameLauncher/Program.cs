@@ -24,6 +24,12 @@ namespace GameLauncher {
         internal static void Main() {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.Idle;
 
+            try {
+                new WebClient().DownloadData("http://l.mtntr.pl/generate_204.php");
+            } catch(Exception) {
+                MessageBox.Show("There's no internet connection, launcher might crash");
+            }
+
             Console.WriteLine("Application path: " + Path.GetDirectoryName(Application.ExecutablePath));
 
             /*GPU getinfo = null;

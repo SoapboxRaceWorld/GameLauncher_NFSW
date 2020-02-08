@@ -92,8 +92,7 @@ namespace GameLauncher.App
             }
             else
             {
-                OS = (from x in new ManagementObjectSearcher("SELECT Caption FROM Win32_OperatingSystem").Get().Cast<ManagementObject>()
-                      select x.GetPropertyValue("Caption")).FirstOrDefault().ToString();
+                OS = Environment.OSVersion.VersionString;
             }
 
             if (SettingFile.Read("LauncherPosX") + "x" + SettingFile.Read("LauncherPosY") == "x")

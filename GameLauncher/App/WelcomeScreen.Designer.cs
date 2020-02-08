@@ -34,8 +34,6 @@
             this.QualityDownload = new System.Windows.Forms.ComboBox();
             this.CDNSource = new System.Windows.Forms.ComboBox();
             this.Save = new System.Windows.Forms.Button();
-            this.QuitWithoutSaving = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // WelcomeText
@@ -96,32 +94,11 @@
             this.Save.UseVisualStyleBackColor = true;
             this.Save.Click += new System.EventHandler(this.Save_Click);
             // 
-            // QuitWithoutSaving
-            // 
-            this.QuitWithoutSaving.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.QuitWithoutSaving.Location = new System.Drawing.Point(15, 209);
-            this.QuitWithoutSaving.Name = "QuitWithoutSaving";
-            this.QuitWithoutSaving.Size = new System.Drawing.Size(354, 37);
-            this.QuitWithoutSaving.TabIndex = 6;
-            this.QuitWithoutSaving.Text = "I have already downloaded NFSW Files";
-            this.QuitWithoutSaving.UseVisualStyleBackColor = true;
-            this.QuitWithoutSaving.Click += new System.EventHandler(this.QuitWithoutSaving_Click);
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.panel1.Location = new System.Drawing.Point(15, 201);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(354, 2);
-            this.panel1.TabIndex = 7;
-            // 
             // WelcomeScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(381, 261);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.QuitWithoutSaving);
+            this.ClientSize = new System.Drawing.Size(381, 206);
             this.Controls.Add(this.Save);
             this.Controls.Add(this.CDNSource);
             this.Controls.Add(this.QualityDownload);
@@ -150,7 +127,5 @@
         private System.Windows.Forms.ComboBox QualityDownload;
         private System.Windows.Forms.ComboBox CDNSource;
         private System.Windows.Forms.Button Save;
-        private System.Windows.Forms.Button QuitWithoutSaving;
-        private System.Windows.Forms.Panel panel1;
     }
 }

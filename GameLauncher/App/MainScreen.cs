@@ -46,7 +46,6 @@ namespace GameLauncher {
         private bool _useSavedPassword;
         private bool _skipServerTrigger;
         private bool _ticketRequired;
-        private bool _serverlistloaded = false;
         private bool _windowMoved;
         private bool _playenabled;
         private bool _loggedIn;
@@ -179,8 +178,7 @@ namespace GameLauncher {
             if (DetectLinux.UnixDetected()) {
                 _OS = DetectLinux.Distro();
             } else {
-                _OS = (from x in new ManagementObjectSearcher("SELECT Caption FROM Win32_OperatingSystem").Get().Cast<ManagementObject>()
-                       select x.GetPropertyValue("Caption")).FirstOrDefault().ToString();
+                _OS = Environment.OSVersion.VersionString;
             }
 
             Log.Debug("Detected OS: " + _OS);
@@ -507,9 +505,14 @@ namespace GameLauncher {
                 }
 
                 Log.Debug("SERVERLIST: Checking if server is set on INI File");
-                if (!_settingFile.KeyExists("Server")) {
-                    Log.Debug("SERVERLIST: Failed to find anything... assuming " + ((ServerInfo)serverPick.SelectedItem).IpAddress);
-                    _settingFile.Write("Server", ((ServerInfo)serverPick.SelectedItem).IpAddress);
+                try { 
+                    if (string.IsNullOrEmpty(_settingFile.Read("Server"))) {
+                        Log.Debug("SERVERLIST: Failed to find anything... assuming " + ((ServerInfo)serverPick.SelectedItem).IpAddress);
+                        _settingFile.Write("Server", ((ServerInfo)serverPick.SelectedItem).IpAddress);
+                    }
+                } catch {
+                    Log.Debug("SERVERLIST: Failed to write anything...");
+                    _settingFile.Write("Server", "");
                 }
 
                 Log.Debug("SERVERLIST: Re-Checking if server is set on INI File");
@@ -710,14 +713,11 @@ namespace GameLauncher {
         private void closebtn_Click(object sender, EventArgs e) {
             closebtn.BackgroundImage = Properties.Resources.close_click;
 
-            if (_serverlistloaded)
-            {
-				try {
-                    if (!(serverPick.SelectedItem is ServerInfo server)) return;
-                    _settingFile.Write("Server", server.IpAddress); 
-                } catch {
+		    try {
+                if (!(serverPick.SelectedItem is ServerInfo server)) return;
+                _settingFile.Write("Server", server.IpAddress); 
+            } catch {
                     
-                }
             }
 
             if (_windowMoved)
@@ -2007,17 +2007,17 @@ namespace GameLauncher {
 
                             client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
                             client2.DownloadFileCompleted += (test, stuff) => { 
-                                if(SHA.HashFile(path + "/" + modfile.Name).ToLower() == modfile.Checksum) {
+                                //if(SHA.HashFile(path + "/" + modfile.Name).ToLower() == modfile.Checksum) {
                                     CountFiles++;
 
                                     if(CountFiles == CountFilesTotal) {
                                         LaunchGame();
                                     }
-                                } else {
-                                    File.Delete(path + "/" + modfile.Name);
-                                    Console.WriteLine(modfile.Name + " must be removed.");
-                                    playButton_Click(sender, e);
-                                }
+                                //} else {
+                                //    File.Delete(path + "/" + modfile.Name);
+                                //    Console.WriteLine(modfile.Name + " must be removed.");
+                                //    playButton_Click(sender, e);
+                                //}
                             };
                         } else {
                             CountFiles++;

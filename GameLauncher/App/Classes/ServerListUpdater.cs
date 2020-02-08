@@ -60,7 +60,7 @@ namespace GameLauncher.App.Classes
                     {
                         serverInfos.Add(new ServerInfo
                         {
-                            Id = "__category-CUSTOMCUSTOM__",
+                            Id = "__category-CUSTOM__",
                             Name = "<GROUP>Custom Servers",
                             IsSpecial = true
                         });
@@ -71,7 +71,7 @@ namespace GameLauncher.App.Classes
                             si.DiscordPresenceKey = "";
                             si.Id = SHA.HashPassword($"{si.Name}:{si.Id}:{si.IpAddress}");
                             si.IsSpecial = false;
-                            si.Category = "CUSTOMCUSTOM";
+                            si.Category = "CUSTOM";
 
                             return si;
                         }).ToList().ForEach(si => serverInfos.Add(si));
@@ -82,7 +82,7 @@ namespace GameLauncher.App.Classes
                 {
                     serverInfos.Add(new ServerInfo
                     {
-                        Id = "__category-OFFLINEOFFLINE__",
+                        Id = "__category-OFFLINE__",
                         Name = "<GROUP>Offline Server",
                         IsSpecial = true
                     });
@@ -90,7 +90,7 @@ namespace GameLauncher.App.Classes
                     serverInfos.Add(new ServerInfo
                     {
                         Name = "Offline Built-In Server",
-                        Category = "OFFLINEOFFLINE",
+                        Category = "OFFLINE",
                         DiscordPresenceKey = "",
                         IsSpecial = false,
                         DistributionUrl = "",
