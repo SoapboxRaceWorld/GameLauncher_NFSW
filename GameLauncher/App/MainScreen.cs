@@ -1159,7 +1159,7 @@ namespace GameLauncher {
 
                     //onlineCount.Text += ". ";
 
-                    if (!DetectLinux.WineDetected() && !DetectLinux.UnixDetected()) {
+                    /*if (!DetectLinux.WineDetected() && !DetectLinux.UnixDetected()) {
                         var pingSender = new Ping();
                         pingSender.SendAsync(stringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
                         pingSender.PingCompleted += (sender3, e3) => {
@@ -1197,7 +1197,7 @@ namespace GameLauncher {
                     } else {
                         ServerStatusBar(_colorIssues, _startPoint, _endPoint);
                         //onlineCount.Text += "Ping is disabled on non-Windows platform.";
-                    }
+                    }*/
                 }
             };
         }

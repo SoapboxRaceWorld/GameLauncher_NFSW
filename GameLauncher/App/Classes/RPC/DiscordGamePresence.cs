@@ -92,6 +92,8 @@ namespace GameLauncher.App.Classes.RPC {
 
             //FIRST PERSONA EVER LOCALIZED IN CODE
             if (uri == "/User/GetPermanentSession") {
+                //try { Statuses.getToken(); } catch { }
+
                 try {
                     SBRW_XML.LoadXml(serverreply);
 

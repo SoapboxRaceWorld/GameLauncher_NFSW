@@ -186,6 +186,7 @@
     <Compile Include="App\Classes\ServerListUpdater.cs" />
     <Compile Include="App\Classes\ServerProxy.cs" />
     <Compile Include="App\Classes\Singleton.cs" />
+    <Compile Include="App\Classes\Statuses.cs" />
     <Compile Include="App\Classes\TaskBar.cs" />
     <Compile Include="App\Classes\UriExtensions.cs" />
     <Compile Include="App\Classes\WebRequest.cs">
