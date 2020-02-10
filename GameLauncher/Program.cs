@@ -58,7 +58,7 @@ namespace GameLauncher {
 
             IniFile _settingFile = new IniFile("Settings.ini");
 
-            if (!string.IsNullOrEmpty(_settingFile.Read("DisableVerifyHash"))) {
+            if (!_settingFile.KeyExists("DisableVerifyHash")) {
                 _settingFile.Write("DisableVerifyHash", "1");
             }
 

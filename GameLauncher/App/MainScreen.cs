@@ -1558,7 +1558,7 @@ namespace GameLauncher {
                         _loginToken = Tokens.LoginToken;
                         _serverIp = Tokens.IPAddress;
 
-                        MeTonaTOR.MessageBox.Show(null, Tokens.Success, "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Warning);
+                        MeTonaTOR.MessageBox.Show(null, Tokens.Success, "GameLauncher", "Registration:", _MessageBoxButtons.OK, _MessageBoxIcon.Warning);
 
                         BackgroundImage = Properties.Resources.loginbg;
 
@@ -2656,9 +2656,12 @@ namespace GameLauncher {
                                 }
                             }
 
-                        totalFilesScanned++;
-                    });
-                    } catch(Exception) { }
+                            totalFilesScanned++;
+                        });
+
+                        playProgressText.Text = "Download Completed.".ToUpper();
+
+                    } catch (Exception) { }
                 }){ IsBackground = true };
 
                 thread.Start();
