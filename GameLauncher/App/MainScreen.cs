@@ -471,6 +471,8 @@ namespace GameLauncher {
             translatedBy.Text = "";
             ContextMenu = new ContextMenu();
 
+            ContextMenu.MenuItems.Add(new MenuItem("Donate", (b,n) => { Process.Start("http://paypal.me/metonator95"); }));
+            ContextMenu.MenuItems.Add("-");
             ContextMenu.MenuItems.Add(new MenuItem("Settings", settingsButton_Click));
             ContextMenu.MenuItems.Add(new MenuItem("Add Server", addServer_Click));
             ContextMenu.MenuItems.Add("-");
@@ -2253,6 +2255,8 @@ namespace GameLauncher {
                         ShowInTaskbar = false;
 
                         ContextMenu = new ContextMenu();
+                        ContextMenu.MenuItems.Add(new MenuItem("Donate", (b, n) => { Process.Start("http://paypal.me/metonator95"); }));
+                        ContextMenu.MenuItems.Add("-");
                         ContextMenu.MenuItems.Add(new MenuItem("Add Server", addServer_Click));
                         ContextMenu.MenuItems.Add("-");
                         ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", (sender2, e2) =>
