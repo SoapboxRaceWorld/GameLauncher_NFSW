@@ -1804,20 +1804,20 @@ namespace GameLauncher {
 
             psi.WorkingDirectory = _settingFile.Read("InstallationDirectory");
 
-            if (!DetectLinux.LinuxDetected()) {
+            //if (!DetectLinux.LinuxDetected()) {
                 psi.FileName = oldfilename;
                 psi.Arguments = args;
-            } else {
-                psi.EnvironmentVariables.Add("WINEDEBUG", "-d3d_shader,-d3d");
-
-                psi.FileName = "/bin/wine";
-                psi.Arguments = oldfilename + " " + args;
-            }
+            //} else {
+            //    psi.EnvironmentVariables.Add("WINEDEBUG", "-d3d_shader,-d3d");
+            //
+            //    psi.FileName = "wine";
+            //    psi.Arguments = oldfilename + " " + args;
+            //}
 
             var nfswProcess = Process.Start(psi);
             nfswProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
 
-            if(!DetectLinux.LinuxDetected()) { 
+            //if(!DetectLinux.LinuxDetected()) { 
                 if (Environment.ProcessorCount >= 4) {
                     nfswProcess.ProcessorAffinity = (IntPtr)0x000F;
                 }
@@ -1926,7 +1926,7 @@ namespace GameLauncher {
                         }
                     };
                 }
-            }
+            //}
         }
 
         private void playButton_Click(object sender, EventArgs e) {
@@ -1939,11 +1939,11 @@ namespace GameLauncher {
                 return;
             }
 
-            if (DetectLinux.LinuxDetected()) {
+            //if (DetectLinux.LinuxDetected()) {
                 //Temporarely disable any modnet for linux.
-                LaunchGame();
-                return;
-            }
+                //LaunchGame();
+                //return;
+            //}
 
             ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
 
@@ -1978,20 +1978,30 @@ namespace GameLauncher {
                 try {
                     string[] newFiles = GlobalFiles.Concat(ModNetReloadedFiles).ToArray();
                     WebClientWithTimeout newModNetFilesDownload = new WebClientWithTimeout();
-                    foreach(string file in newFiles) {
+                    foreach (string file in newFiles) {
                         playProgressText.Text = ("Fetching ModNetReloaded Files: " + file).ToUpper();
                         Application.DoEvents();
-                        newModNetFilesDownload.DownloadFile("https://cdn.soapboxrace.world/modules/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+
+                        if(DetectLinux.LinuxDetected()) {
+                            newModNetFilesDownload.DownloadFile("http://cdn.soapboxrace.world/modules/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                        } else {
+                            newModNetFilesDownload.DownloadFile("https://cdn.soapboxrace.world/modules/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                        }
                     }
 
                     try  {
-                        newModNetFilesDownload.DownloadFile("https://cdn.mtntr.pl/legacy_modnet/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
+                        if (DetectLinux.LinuxDetected()) {
+                            newModNetFilesDownload.DownloadFile("http://cdn.mtntr.pl/legacy_modnet/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
+                        } else {
+                            newModNetFilesDownload.DownloadFile("https://cdn.mtntr.pl/legacy_modnet/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
+                        }
                     } catch { }
 
                     //get files now
                     MainJson json2 = JsonConvert.DeserializeObject<MainJson>(jsonModNet);
 
                     //get new index
+                    if(DetectLinux.LinuxDetected()) json2.basePath = json2.basePath.Replace("https://", "http://");
                     Uri newIndexFile = new Uri(json2.basePath + "/index.json");
                     String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
 
@@ -2038,12 +2048,17 @@ namespace GameLauncher {
                 foreach (string file in newFiles) {
                     playProgressText.Text = ("Fetching ModNetLegacy Files: " + file).ToUpper();
                     Application.DoEvents();
-                    newModNetFilesDownload.DownloadFile("http://cdn.mtntr.pl/legacy_modnet/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                    if (DetectLinux.LinuxDetected()) {
+                        newModNetFilesDownload.DownloadFile("http://cdn.mtntr.pl/legacy_modnet/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                    } else {
+                        newModNetFilesDownload.DownloadFile("https://cdn.mtntr.pl/legacy_modnet/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                    }
                 }
 
                 if (json.modsUrl != null) {
                     playProgressText.Text = "Electron support detected, checking mods...".ToUpper();
 
+                    if (DetectLinux.LinuxDetected()) json.modsUrl = json.modsUrl.Replace("https://", "http://");
                     Uri newIndexFile = new Uri(json.modsUrl + "/index.json");
                     String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
                     List<ElectronIndex> json3 = JsonConvert.DeserializeObject<List<ElectronIndex>>(jsonindex);
@@ -2108,6 +2123,8 @@ namespace GameLauncher {
 
                     //First lets assume new path for RWAC Mods
                     String rwacpath = MDFive.HashPassword(new Uri(_serverIp).Host);
+                    if (DetectLinux.LinuxDetected()) json.homePageUrl = json.homePageUrl.Replace("https://", "http://");
+
                     String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", rwacpath);
 
                     //Then, lets fetch its XML File

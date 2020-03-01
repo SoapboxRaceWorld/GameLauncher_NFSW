@@ -20,10 +20,10 @@ namespace GameLauncher.App.Classes {
         }
 
         private static string LinuxDistroInternal() {
-            if (!File.Exists("/etc/os-release"))
-            {
-                return "Linux";
+            if (!File.Exists("/etc/os-release")) {
+                return "UNIX-Like System";
             }
+
             using (var stream = new StreamReader("/etc/os-release"))
             {
                 string line;
