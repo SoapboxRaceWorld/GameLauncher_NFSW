@@ -275,8 +275,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="App\Classes\WineManager.cs" />
-    <EmbeddedResource Include="wine_opts.reg" />
     <EmbeddedResource Include="SoapBoxModules\BootFlow.gfx" />
     <EmbeddedResource Include="SoapBoxModules\cursor.ani" />
   </ItemGroup>

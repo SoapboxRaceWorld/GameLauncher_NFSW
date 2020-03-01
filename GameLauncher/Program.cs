@@ -22,8 +22,6 @@ namespace GameLauncher {
     internal static class Program {
         [STAThread]
         internal static void Main() {
-            Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.Idle;
-
             try {
                 new WebClient().DownloadData("http://l.mtntr.pl/generate_204.php");
             } catch(Exception) {
@@ -57,6 +55,12 @@ namespace GameLauncher {
             }
 
             IniFile _settingFile = new IniFile("Settings.ini");
+
+            if (DetectLinux.LinuxDetected()) {
+                if(!_settingFile.KeyExists("InstallationDirectory")) {
+                    _settingFile.Write("InstallationDirectory", "GameFiles");
+                }
+            }
 
             if (!_settingFile.KeyExists("DisableVerifyHash")) {
                 _settingFile.Write("DisableVerifyHash", "1");

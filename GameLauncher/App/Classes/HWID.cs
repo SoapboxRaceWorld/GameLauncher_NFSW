@@ -15,18 +15,11 @@ namespace Security {
         private static string fingerPrint = string.Empty;
         public static string Value() {
             if (string.IsNullOrEmpty(fingerPrint)) {
-                if (!DetectLinux.UnixDetected())
-                {
+                if (!DetectLinux.LinuxDetected()) {
                     fingerPrint = WindowsValue();
-                }
-                else if (DetectLinux.LinuxDetected())
-                {
+                } else if (DetectLinux.LinuxDetected()) {
                     fingerPrint = LinuxValue();
-                }
-                else
-                {
-                    fingerPrint = "hwid-not-impl";
-                }
+                } 
             }
 
             return fingerPrint;

@@ -80,7 +80,7 @@ namespace GameLauncher {
         private readonly Pen _colorIssues = new Pen(Color.FromArgb(255, 145, 0));
 
         private readonly IniFile _settingFile = new IniFile("Settings.ini");
-        private readonly string _userSettings = WineManager.GetUserSettingsPath();
+        private readonly string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
         private string _presenceImageKey;
         private string _NFSW_Installation_Source;
         private string _realServername;
@@ -175,7 +175,7 @@ namespace GameLauncher {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             Log.Debug("Detecting OS");
-            if (DetectLinux.UnixDetected()) {
+            if (DetectLinux.LinuxDetected()) {
                 _OS = DetectLinux.Distro();
             } else {
                 _OS = Environment.OSVersion.VersionString;
@@ -193,10 +193,10 @@ namespace GameLauncher {
             Log.Debug("InitializeComponent");
             InitializeComponent();
 
-            if (!DetectLinux.UnixDetected()) {
+            //if (!DetectLinux.LinuxDetected()) {
                 Log.Debug("Applying Fonts");
                 ApplyEmbeddedFonts();
-            }
+            //}
 
             _disableChecks = (_settingFile.KeyExists("DisableVerifyHash") && _settingFile.Read("DisableVerifyHash") == "1") ? true : false;
 
@@ -365,7 +365,7 @@ namespace GameLauncher {
                 fbd.Dispose();
             }
 
-            if (!DetectLinux.UnixDetected()) {
+            /*if (!DetectLinux.UnixDetected()) {
                 Log.Debug("Setting cursor.");
                 string temporaryFile = Path.GetTempFileName();
                 File.WriteAllBytes(temporaryFile, ExtractResource.AsByte("GameLauncher.SoapBoxModules.cursor.ani"));
@@ -374,7 +374,7 @@ namespace GameLauncher {
                 mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
                 Cursor = mycursor;
                 File.Delete(temporaryFile);
-            }
+            }*/
 
             Log.Debug("Doing magic with imageServerName");
             var pos = PointToScreen(imageServerName.Location);
@@ -682,7 +682,7 @@ namespace GameLauncher {
             Log.Debug("Initializing DiscordRPC");
 
             _presence.State = _OS;
-            _presence.Details = "In-Launcher: " +  (Debugger.IsAttached ? "2.1.3.7" : Application.ProductVersion);
+            _presence.Details = "In-Launcher: " + Application.ProductVersion;
             _presence.Assets = new Assets
             {
                 LargeImageText = "SBRW",
@@ -696,8 +696,16 @@ namespace GameLauncher {
             });
 
             this.BringToFront();
-            Log.Debug("Checking for update");
-            new LauncherUpdateCheck(launcherIconStatus, launcherStatusText, launcherStatusDesc).checkAvailability();
+
+            if(!DetectLinux.LinuxDetected()) {
+                Log.Debug("Checking for update");
+                new LauncherUpdateCheck(launcherIconStatus, launcherStatusText, launcherStatusDesc).checkAvailability();
+            } else {
+                launcherIconStatus.Image = Properties.Resources.ac_success;
+                launcherStatusText.ForeColor = Color.FromArgb(0x9fc120);
+                launcherStatusText.Text = "Launcher Status - Linux Fix";
+                launcherStatusDesc.Text = "APLHA STAGE. VERSION " + Application.ProductVersion;
+            }
 
             Self.gamedir = _settingFile.Read("InstallationDirectory");
 
@@ -1752,26 +1760,10 @@ namespace GameLauncher {
         }
 
         private void StartGame(string userId, string loginToken) {
-            if(DetectLinux.UnixDetected()) { 
-                if (File.Exists("wine.tar.gz") && !Directory.Exists("wine")) {
-                    Directory.CreateDirectory("wine");
-                    playProgressText.Text = "EXTRACTING WINE";
-
-                    if (DetectLinux.MacOSDetected()) {
-                        Process.Start("tar", "xf wine.tar.gz -C wine --strip-components=1")?.WaitForExit();
-                    } else {
-                        Process.Start("tar", "xf wine.tar.gz -C wine")?.WaitForExit();
-                    }
-                }
-            }
-
-            _nfswstarted = new Thread(() =>
-            {
+            _nfswstarted = new Thread(() => {
                 LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this);
-            })
-            {
-                IsBackground = true
-            };
+            }) { IsBackground = true };
+
             _nfswstarted.Start();
 
             _presenceImageKey = _serverInfo.DiscordPresenceKey;
@@ -1793,32 +1785,16 @@ namespace GameLauncher {
             var args = _serverInfo.Id.ToUpper() + " " + serverIp + " " + loginToken + " " + userId;
             var psi = new ProcessStartInfo();
 
-            if(DetectLinux.UnixDetected()) { 
+            if(DetectLinux.LinuxDetected()) { 
                 psi.UseShellExecute = false;
             }
             
-            if (!DetectLinux.UnixDetected()) {
+            if (!DetectLinux.LinuxDetected()) {
                 psi.WorkingDirectory = _settingFile.Read("InstallationDirectory");
                 psi.FileName = oldfilename;
                 psi.Arguments = args;
             } else {
-                WineManager.InitWinePrefix();
-                psi.EnvironmentVariables.Add("WINEDEBUG", "-d3d_shader,-d3d");
-                psi.EnvironmentVariables.Add("WINEPREFIX", WineManager.GetWinePrefix());
-                var wine = WineManager.GetWineDirectory();
-
-                if (Directory.Exists(wine)) {
-                    Console.WriteLine("Embedded wine found");
-                    psi.EnvironmentVariables.Add("WINEVERPATH", wine);
-                    psi.EnvironmentVariables.Add("WINESERVER", wine + "/bin/wineserver");
-                    psi.EnvironmentVariables.Add("WINELOADER", wine + "/bin/wine");
-                    psi.EnvironmentVariables.Add("WINEDLLPATH", wine + "/lib/wine/fakedlls");
-                    psi.EnvironmentVariables.Add("LD_LIBRARY_PATH", wine + "/lib");
-                    psi.FileName = wine + "/bin/wine";
-                } else {
-                    psi.FileName = "wine";
-                }
-
+                psi.FileName = "wine";
                 psi.Arguments = oldfilename + " " + args;
             }
 
@@ -2240,7 +2216,7 @@ namespace GameLauncher {
 
                     if (_builtinserver) {
                         playProgressText.Text = "Soapbox server launched. Waiting for queries.".ToUpper();
-                    } else if (!DetectLinux.UnixDetected()) {
+                    } else {
                         var secondsToCloseLauncher = 5;
 
                         while (secondsToCloseLauncher > 0) {
@@ -2541,57 +2517,11 @@ namespace GameLauncher {
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
         }
 
-        private void WineDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
-            BeginInvoke((MethodInvoker)delegate {
-                OnDownloadProgress(e.TotalBytesToReceive, e.BytesReceived, e.TotalBytesToReceive + 1, "wine.tar.gz", 1);
-            });
-        }
-
-        private void WineDownloadCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            BeginInvoke((MethodInvoker)delegate
-            {
-                if (File.Exists("wine.tar.gz") && !Directory.Exists("wine"))
-                {
-                    var thread = new Thread(() =>
-                    {
-                        Directory.CreateDirectory("wine");
-                        playProgressText.Text = "EXTRACTING WINE";
-                        if (DetectLinux.MacOSDetected()) {
-                            Process.Start("tar", "xf wine.tar.gz -C wine --strip-components=1")?.WaitForExit();
-                        } else {
-                            Process.Start("tar", "xf wine.tar.gz -C wine")?.WaitForExit();
-                        }
-                        EnablePlayButton();
-                    })
-                    { IsBackground = true };
-
-                    thread.Start();
-                    return;
-                }
-            });
-
-        }
-
         private void OnDownloadFinished() {
             try {
                 File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
             } catch {
                 // ignored
-            }
-
-            if (DetectLinux.UnixDetected()) {
-                if (WineManager.NeedEmbeddedWine() && !File.Exists("wine.tar.gz") && !Directory.Exists("wine")) {
-                    WebClientWithTimeout wineDownload = new WebClientWithTimeout();
-
-                    wineDownload.DownloadProgressChanged += WineDownloadProgressChanged;
-                    wineDownload.DownloadFileCompleted += WineDownloadCompleted;
-                    if (DetectLinux.MacOSDetected()) {
-                        wineDownload.DownloadFileAsync(new Uri("http://launcher.soapboxrace.world/winebuild/wine_macos.tar.gz"), "wine.tar.gz");
-                    } else {
-                        wineDownload.DownloadFileAsync(new Uri("http://launcher.soapboxrace.world/winebuild/wine_linux.tar.gz"), "wine.tar.gz");
-                    }
-                }
             }
 
             if(_disableChecks != true) { 
