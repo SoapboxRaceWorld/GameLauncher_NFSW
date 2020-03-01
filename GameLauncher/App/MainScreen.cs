@@ -28,6 +28,7 @@ using GameLauncher.App.Classes.Logger;
 using System.IO.Compression;
 using GameLauncher.App.Classes.Auth;
 using DiscordRPC;
+using DiscordRPC.Logging;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
@@ -155,7 +156,9 @@ namespace GameLauncher {
 
             rnd = new Random(Environment.TickCount);
 
-            discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID);
+            discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID, pipe: 0) {
+                Logger = new DiscordRPC.Logging.ConsoleLogger(DiscordRPC.Logging.LogLevel.Trace, true)
+            };
 
             discordRpcClient.OnReady += (sender, e) => {
                 Log.Debug("Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
@@ -169,9 +172,14 @@ namespace GameLauncher {
 
             discordRpcClient.Initialize();
 
+            
             Log.Debug("Setting SSL Protocol");
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            
+            if (DetectLinux.LinuxDetected()) {
+                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            }
 
             Log.Debug("Detecting OS");
             if (DetectLinux.LinuxDetected()) {
@@ -1787,126 +1795,131 @@ namespace GameLauncher {
             if(DetectLinux.LinuxDetected()) { 
                 psi.UseShellExecute = false;
             }
-            
+
+            psi.WorkingDirectory = _settingFile.Read("InstallationDirectory");
+
             if (!DetectLinux.LinuxDetected()) {
-                psi.WorkingDirectory = _settingFile.Read("InstallationDirectory");
                 psi.FileName = oldfilename;
                 psi.Arguments = args;
             } else {
-                psi.FileName = "wine";
+                psi.EnvironmentVariables.Add("WINEDEBUG", "-d3d_shader,-d3d");
+
+                psi.FileName = "/bin/wine";
                 psi.Arguments = oldfilename + " " + args;
             }
 
             var nfswProcess = Process.Start(psi);
             nfswProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
 
-            if (Environment.ProcessorCount >= 4) {
-                nfswProcess.ProcessorAffinity = (IntPtr)0x000F;
-            }
-
-            AntiCheat.process_id = nfswProcess.Id;
-
-            //TIMER HERE
-            int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2*60*60;
-            System.Timers.Timer shutdowntimer = new System.Timers.Timer();
-            shutdowntimer.Elapsed += (x2, y2) => {
-                if(secondsToShutDown == 300) {
-                    Notification.Visible = true;
-                    Notification.BalloonTipIcon = ToolTipIcon.Info;
-                    Notification.BalloonTipTitle = "SpeedBug Fix - " + _realServername;
-                    Notification.BalloonTipText = "Game is going to shut down in 5 minutes. Please restart it manually before the launcher does it.";
-                    Notification.ShowBalloonTip(5000);
-                    Notification.Dispose();
+            if(!DetectLinux.LinuxDetected()) { 
+                if (Environment.ProcessorCount >= 4) {
+                    nfswProcess.ProcessorAffinity = (IntPtr)0x000F;
                 }
 
-                Process[] allOfThem = Process.GetProcessesByName("nfsw");
+                AntiCheat.process_id = nfswProcess.Id;
 
-                if (secondsToShutDown <= 0) {
-                    if (Self.CanDisableGame == true) {
-                        foreach (var oneProcess in allOfThem) {
-                            _gameKilledBySpeedBugCheck = true;
-                            Process.GetProcessById(oneProcess.Id).Kill();
-                        }
-                    } else {
-                        secondsToShutDown = 0;
+                //TIMER HERE
+                int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2*60*60;
+                System.Timers.Timer shutdowntimer = new System.Timers.Timer();
+                shutdowntimer.Elapsed += (x2, y2) => {
+                    if(secondsToShutDown == 300) {
+                        Notification.Visible = true;
+                        Notification.BalloonTipIcon = ToolTipIcon.Info;
+                        Notification.BalloonTipTitle = "SpeedBug Fix - " + _realServername;
+                        Notification.BalloonTipText = "Game is going to shut down in 5 minutes. Please restart it manually before the launcher does it.";
+                        Notification.ShowBalloonTip(5000);
+                        Notification.Dispose();
                     }
-                }
 
-                //change title
+                    Process[] allOfThem = Process.GetProcessesByName("nfsw");
 
-                foreach (var oneProcess in allOfThem) {
-                    //if (oneProcess.ProcessName == "nfsw") {
-                        long p = oneProcess.MainWindowHandle.ToInt64();
-                        TimeSpan t = TimeSpan.FromSeconds(secondsToShutDown);
-                        string secondsToShutDownNamed = string.Format("{0:D2}:{1:D2}:{2:D2}", t.Hours, t.Minutes, t.Seconds);
-
-                        if (secondsToShutDown == 0) {
-                            secondsToShutDownNamed = "Waiting for event to finish.";
+                    if (secondsToShutDown <= 0) {
+                        if (Self.CanDisableGame == true) {
+                            foreach (var oneProcess in allOfThem) {
+                                _gameKilledBySpeedBugCheck = true;
+                                Process.GetProcessById(oneProcess.Id).Kill();
+                            }
+                        } else {
+                            secondsToShutDown = 0;
                         }
+                    }
 
-                        User32.SetWindowText((IntPtr)p, "NEED FOR SPEED™ WORLD | Server: " + _realServername + " | Time Remaining: " + secondsToShutDownNamed);
-                    //}
-                }
+                    //change title
 
-                --secondsToShutDown;
-            };
+                    foreach (var oneProcess in allOfThem) {
+                        //if (oneProcess.ProcessName == "nfsw") {
+                            long p = oneProcess.MainWindowHandle.ToInt64();
+                            TimeSpan t = TimeSpan.FromSeconds(secondsToShutDown);
+                            string secondsToShutDownNamed = string.Format("{0:D2}:{1:D2}:{2:D2}", t.Hours, t.Minutes, t.Seconds);
 
-            shutdowntimer.Interval = 1000;
-            shutdowntimer.Enabled = true;
-            
-
-            if (nfswProcess != null) {
-                nfswProcess.EnableRaisingEvents = true;
-                _nfswPid = nfswProcess.Id;
-
-                nfswProcess.Exited += (sender2, e2) => {
-                    _nfswPid = 0;
-                    var exitCode = nfswProcess.ExitCode;
-
-                    if (_gameKilledBySpeedBugCheck == true) exitCode = 2137;
-
-                    if (exitCode == 0) {
-                        closebtn_Click(null, null);
-                    } else {
-                        x.BeginInvoke(new Action(() => {
-                            x.WindowState = FormWindowState.Normal;
-                            x.Opacity = 1;
-                            x.ShowInTaskbar = true;
-
-                            String errorMsg = "Game Crash with exitcode: " + exitCode.ToString() + " (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073741819)    errorMsg = "Game Crash: Access Violation (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073740940)    errorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073740791)    errorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -805306369)     errorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073741515)    errorMsg = "Game Crash: Missing dependency files (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073740972)    errorMsg = "Game Crash: Debugger crash (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073741676)    errorMsg = "Game Crash: Division by Zero (0x" + exitCode.ToString("X") + ")";
-
-                            if (exitCode == 1)              errorMsg = "You just killed nfsw.exe via Task Manager";
-                            if (exitCode == 2137)           errorMsg = "Launcher killed your game to prevent SpeedBugging.";
-
-                            if (exitCode == -3)             errorMsg = "Server were unable to resolve your request";
-                            if (exitCode == -4)             errorMsg = "Another instance is already executed";
-                            if (exitCode == -5)             errorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
-                            if (exitCode == -6)             errorMsg = "Server was unable to resolve your request";
-
-                            playProgressText.Text = errorMsg.ToUpper();
-                            playProgress.Value = 100;
-                            playProgress.ForeColor = Color.Red;
-
-                            if (_nfswPid != 0) {
-                                try {
-                                    Process.GetProcessById(_nfswPid).Kill();
-                                } catch { /* ignored */ }
+                            if (secondsToShutDown == 0) {
+                                secondsToShutDownNamed = "Waiting for event to finish.";
                             }
 
-                            _nfswstarted.Abort();
-
-                            MeTonaTOR.MessageBox.Show(null, errorMsg, "GameLauncher", "An error occurred with NFSW Executable", _MessageBoxButtons.OK, _MessageBoxIcon.Warning);
-                            this.closebtn_Click(null, null);
-                        }));
+                            User32.SetWindowText((IntPtr)p, "NEED FOR SPEED™ WORLD | Server: " + _realServername + " | Time Remaining: " + secondsToShutDownNamed);
+                        //}
                     }
+
+                    --secondsToShutDown;
                 };
+
+                shutdowntimer.Interval = 1000;
+                shutdowntimer.Enabled = true;
+            
+
+                if (nfswProcess != null) {
+                    nfswProcess.EnableRaisingEvents = true;
+                    _nfswPid = nfswProcess.Id;
+
+                    nfswProcess.Exited += (sender2, e2) => {
+                        _nfswPid = 0;
+                        var exitCode = nfswProcess.ExitCode;
+
+                        if (_gameKilledBySpeedBugCheck == true) exitCode = 2137;
+
+                        if (exitCode == 0) {
+                            closebtn_Click(null, null);
+                        } else {
+                            x.BeginInvoke(new Action(() => {
+                                x.WindowState = FormWindowState.Normal;
+                                x.Opacity = 1;
+                                x.ShowInTaskbar = true;
+
+                                String errorMsg = "Game Crash with exitcode: " + exitCode.ToString() + " (0x" + exitCode.ToString("X") + ")";
+                                if (exitCode == -1073741819)    errorMsg = "Game Crash: Access Violation (0x" + exitCode.ToString("X") + ")";
+                                if (exitCode == -1073740940)    errorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")";
+                                if (exitCode == -1073740791)    errorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")";
+                                if (exitCode == -805306369)     errorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")";
+                                if (exitCode == -1073741515)    errorMsg = "Game Crash: Missing dependency files (0x" + exitCode.ToString("X") + ")";
+                                if (exitCode == -1073740972)    errorMsg = "Game Crash: Debugger crash (0x" + exitCode.ToString("X") + ")";
+                                if (exitCode == -1073741676)    errorMsg = "Game Crash: Division by Zero (0x" + exitCode.ToString("X") + ")";
+
+                                if (exitCode == 1)              errorMsg = "You just killed nfsw.exe via Task Manager";
+                                if (exitCode == 2137)           errorMsg = "Launcher killed your game to prevent SpeedBugging.";
+
+                                if (exitCode == -3)             errorMsg = "Server were unable to resolve your request";
+                                if (exitCode == -4)             errorMsg = "Another instance is already executed";
+                                if (exitCode == -5)             errorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
+                                if (exitCode == -6)             errorMsg = "Server was unable to resolve your request";
+
+                                playProgressText.Text = errorMsg.ToUpper();
+                                playProgress.Value = 100;
+                                playProgress.ForeColor = Color.Red;
+
+                                if (_nfswPid != 0) {
+                                    try {
+                                        Process.GetProcessById(_nfswPid).Kill();
+                                    } catch { /* ignored */ }
+                                }
+
+                                _nfswstarted.Abort();
+
+                                MeTonaTOR.MessageBox.Show(null, errorMsg, "GameLauncher", "An error occurred with NFSW Executable", _MessageBoxButtons.OK, _MessageBoxIcon.Warning);
+                                this.closebtn_Click(null, null);
+                            }));
+                        }
+                    };
+                }
             }
         }
 
@@ -1917,6 +1930,12 @@ namespace GameLauncher {
             }
 
             if (_playenabled == false) {
+                return;
+            }
+
+            if (DetectLinux.LinuxDetected()) {
+                //Temporarely disable any modnet for linux.
+                LaunchGame();
                 return;
             }
 
