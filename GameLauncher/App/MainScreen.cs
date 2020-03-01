@@ -157,8 +157,7 @@ namespace GameLauncher {
 
             discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID);
 
-            discordRpcClient.OnReady += (sender, e) => 
-            {
+            discordRpcClient.OnReady += (sender, e) => {
                 Log.Debug("Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
                 Self.discordid = e.User.ID.ToString();
             };

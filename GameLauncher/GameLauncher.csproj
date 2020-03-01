@@ -77,9 +77,8 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DiscordRPC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\DiscordRPC.dll</HintPath>
+    <Reference Include="DiscordRPC, Version=1.0.150.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DiscordRichPresence.1.0.150\lib\net35\DiscordRPC.dll</HintPath>
     </Reference>
     <Reference Include="Flurl, Version=2.8.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Flurl.2.8.2\lib\net40\Flurl.dll</HintPath>
@@ -322,7 +321,6 @@
     <None Include="Resources\close_hover.png" />
     <None Include="Resources\tick.png" />
     <None Include="Resources\map.png" />
-    <Content Include="Discord\DiscordRPC.dll" />
     <Content Include="original_icon.ico" />
   </ItemGroup>
   <ItemGroup>
