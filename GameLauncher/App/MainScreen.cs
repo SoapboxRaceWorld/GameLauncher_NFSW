@@ -200,10 +200,8 @@ namespace GameLauncher {
             Log.Debug("InitializeComponent");
             InitializeComponent();
 
-            //if (!DetectLinux.LinuxDetected()) {
-                Log.Debug("Applying Fonts");
-                ApplyEmbeddedFonts();
-            //}
+            Log.Debug("Applying Fonts");
+            ApplyEmbeddedFonts();
 
             _disableChecks = (_settingFile.KeyExists("DisableVerifyHash") && _settingFile.Read("DisableVerifyHash") == "1") ? true : false;
 
@@ -1662,24 +1660,32 @@ namespace GameLauncher {
                         File.Delete(_userSettings);
 
                         var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
-                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
-                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
                         var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
 
-                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue + "</DefaultChatGroup>";
+                        //Disable chat for linux users.
+                        if(!DetectLinux.LinuxDetected()) {
+                            var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
+                            var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
+                            chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue + "</DefaultChatGroup>";
+                        }
+
                         ui.InnerXml = "<Language Type=\"string\">" + settingsLanguage.SelectedValue + "</Language>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
                     }
                 } else {
-                    try { 
+                    try {
                         var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
-                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
-                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
                         var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
 
-                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue.ToString() + "</DefaultChatGroup>";
-                        ui.InnerXml = "<Language Type=\"string\">" + settingsLanguage.SelectedValue.ToString() + "</Language>";
+                        //Disable chat for linux users.
+                        if (!DetectLinux.LinuxDetected()) {
+                            var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
+                            var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
+                            chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue + "</DefaultChatGroup>";
+                        }
+
+                        ui.InnerXml = "<Language Type=\"string\">" + settingsLanguage.SelectedValue + "</Language>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
                     } catch (Exception ex) {
