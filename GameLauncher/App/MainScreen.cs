@@ -326,16 +326,23 @@ namespace GameLauncher {
             if (string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory"))) {
                 Log.Debug("First run!");
 
-                Form welcome = new WelcomeScreen();
-                DialogResult welcomereply = welcome.ShowDialog();
+                try { 
+                    Form welcome = new WelcomeScreen();
+                    DialogResult welcomereply = welcome.ShowDialog();
 
-                if(welcomereply != DialogResult.OK) {
-                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                } else {
-                    _settingFile.Write("CDN", CDN.CDNUrl);
-                    _settingFile.Write("TracksHigh", CDN.TrackHigh);
+                    if(welcomereply != DialogResult.OK) {
+                        Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                    } else {
+                        _settingFile.Write("CDN", CDN.CDNUrl);
+                        _settingFile.Write("TracksHigh", CDN.TrackHigh);
 
-                    _NFSW_Installation_Source = CDN.CDNUrl;
+                        _NFSW_Installation_Source = CDN.CDNUrl;
+                    }
+                } catch {
+                    _settingFile.Write("CDN", "http://cdn.worldunited.gg/gamefiles/packed/");
+                    _settingFile.Write("TracksHigh", "1");
+
+                    _NFSW_Installation_Source = "http://cdn.worldunited.gg/gamefiles/packed/";
                 }
 
                 var fbd = new CommonOpenFileDialog
@@ -1171,48 +1178,6 @@ namespace GameLauncher {
                             }
                         };
                     }
-
-                    //onlineCount.Text += ". ";
-
-                    /*if (!DetectLinux.WineDetected() && !DetectLinux.UnixDetected()) {
-                        var pingSender = new Ping();
-                        pingSender.SendAsync(stringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
-                        pingSender.PingCompleted += (sender3, e3) => {
-                            var reply = e3.Reply;
-
-                            if (reply.Status == IPStatus.Success && _realServername != "Offline Built-In Server") {
-                                //onlineCount.Text += string.Format("Server ping is {0}ms.", reply.RoundtripTime);
-                            } else {
-                                var hostEntry = Dns.GetHostEntry(stringToUri.Host);
-
-                                if (hostEntry.AddressList.Length > 0) {
-                                    var ip = hostEntry.AddressList[0];
-
-                                    var pingSender2 = new Ping();
-                                    pingSender2.SendAsync(ip.ToString(), 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
-
-                                    pingSender2.PingCompleted += (sender4, e4) => {
-                                        var reply2 = e4.Reply;
-
-                                        if (reply.Status == IPStatus.Success && _realServername != "Offline Built-In Server") {
-                                            //onlineCount.Text += string.Format("Server ping is {0}ms.", reply.RoundtripTime);
-                                        } else {
-                                            ServerStatusBar(_colorIssues, _startPoint, _endPoint);
-
-                                            //onlineCount.Text += string.Format("Server ping is {0}ms.", (artificialPingEnd - artificialPingStart).ToString());
-                                            //onlineCount.Text += " (HTTP)";
-                                        }
-                                    };
-                                } else {
-                                    ServerStatusBar(_colorIssues, _startPoint, _endPoint);
-                                    //onlineCount.Text += "Server doesn't allow pinging.";
-                                }
-                            }
-                        };
-                    } else {
-                        ServerStatusBar(_colorIssues, _startPoint, _endPoint);
-                        //onlineCount.Text += "Ping is disabled on non-Windows platform.";
-                    }*/
                 }
             };
         }
@@ -1803,16 +1768,8 @@ namespace GameLauncher {
             }
 
             psi.WorkingDirectory = _settingFile.Read("InstallationDirectory");
-
-            //if (!DetectLinux.LinuxDetected()) {
-                psi.FileName = oldfilename;
-                psi.Arguments = args;
-            //} else {
-            //    psi.EnvironmentVariables.Add("WINEDEBUG", "-d3d_shader,-d3d");
-            //
-            //    psi.FileName = "wine";
-            //    psi.Arguments = oldfilename + " " + args;
-            //}
+            psi.FileName = oldfilename;
+            psi.Arguments = args;
 
             var nfswProcess = Process.Start(psi);
             nfswProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
@@ -2517,25 +2474,28 @@ namespace GameLauncher {
             return String.Format("{0}{1}B", Convert.ToDecimal(byteCount / Math.Pow(unit, exp)).ToString("0.##"), pre);
         }
 
-        private string EstimateFinishTime(long current, long total)
-        {
-            var num = current / (double)total;
-            if (num < 0.00185484899838312) {
-                return "Calculating";
+        private string EstimateFinishTime(long current, long total) {
+            try { 
+                var num = current / (double)total;
+                if (num < 0.00185484899838312) {
+                    return "Calculating";
+                }
+
+                var now = DateTime.Now - _downloadStartTime;
+                var timeSpan = TimeSpan.FromTicks((long)(now.Ticks / num)) - now;
+
+                int rHours = Convert.ToInt32(timeSpan.Hours.ToString()) + 1;
+                int rMinutes = Convert.ToInt32(timeSpan.Minutes.ToString()) + 1;
+                int rSeconds = Convert.ToInt32(timeSpan.Seconds.ToString()) + 1;
+
+                if (rHours > 1) return rHours.ToString() + " hours remaining";
+                if (rMinutes > 1) return rMinutes.ToString() + " minutes remaining";
+                if (rSeconds > 1) return rSeconds.ToString() + " seconds remaining";
+
+                return "Just now";
+            } catch {
+                return "N/A";
             }
-
-            var now = DateTime.Now - _downloadStartTime;
-            var timeSpan = TimeSpan.FromTicks((long)(now.Ticks / num)) - now;
-
-            int rHours = Convert.ToInt32(timeSpan.Hours.ToString()) + 1;
-            int rMinutes = Convert.ToInt32(timeSpan.Minutes.ToString()) + 1;
-            int rSeconds = Convert.ToInt32(timeSpan.Seconds.ToString()) + 1;
-
-            if (rHours > 1) return rHours.ToString() + " hours remaining";
-            if (rMinutes > 1) return rMinutes.ToString() + " minutes remaining";
-            if (rSeconds > 1) return rSeconds.ToString() + " seconds remaining";
-
-            return "Just now";
         }
 
         private void OnDownloadProgress(long downloadLength, long downloadCurrent, long compressedLength, string filename, int skiptime = 0)
@@ -2565,7 +2525,7 @@ namespace GameLauncher {
                 // ignored
             }
 
-            if(_disableChecks != true) { 
+            if (_disableChecks != true) { 
                 if(File.Exists("invalidfiles.dat")) {
                     playProgressText.Text = "RE-DOWNLOADING INVALID FILES".ToUpper();
 

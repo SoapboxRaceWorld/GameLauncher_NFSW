@@ -80,7 +80,7 @@ namespace GameLauncher.App
             string OS = "";
 
             if (DetectLinux.LinuxDetected()) {
-                OS = "Linux";
+                OS = DetectLinux.Distro();
             } else {
                 OS = Environment.OSVersion.VersionString;
             }

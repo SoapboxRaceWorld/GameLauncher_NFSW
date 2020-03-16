@@ -16,6 +16,8 @@ using IniParser;
 using GameLauncher.App.Classes.GPU;
 using static MeTonaTOR.MessageBox;
 using System.Reflection;
+using Newtonsoft.Json;
+using System.Linq;
 //using Memes;
 
 namespace GameLauncher {
@@ -57,8 +59,20 @@ namespace GameLauncher {
             IniFile _settingFile = new IniFile("Settings.ini");
 
             if (DetectLinux.LinuxDetected()) {
-                if(!_settingFile.KeyExists("InstallationDirectory")) {
+                if (!_settingFile.KeyExists("InstallationDirectory")) {
                     _settingFile.Write("InstallationDirectory", "GameFiles");
+                }
+
+                if (!_settingFile.KeyExists("CDN")) {
+                    try {
+                        List<CDNObject> CDNList = new List<CDNObject>();
+                        WebClientWithTimeout wc3 = new WebClientWithTimeout();
+                        String _slresponse = wc3.DownloadString(Self.CDNUrlList);
+                        CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
+                        _settingFile.Write("CDN", CDNList.First().url);
+                    } catch {
+                        _settingFile.Write("CDN", "http://cdn.worldunited.gg/gamefiles/packed/");
+                    }
                 }
             }
 

@@ -32,7 +32,7 @@ namespace GameLauncher.App {
                 _slresponse = JsonConvert.SerializeObject(new[] {
                     new CDNObject {
                         name = "[PL] WorldUnited.GG Mirror",
-                        url = "http://cdn.worldunited.gg/nfsw/"
+                        url = "http://cdn.worldunited.gg/gamefiles/packed/"
                     }
                 });
             }
