@@ -1943,6 +1943,19 @@ namespace GameLauncher {
                         return;
                     }
                 }
+
+                var installDir = _settingFile.Read("InstallationDirectory");
+                DriveInfo driveInfo = new DriveInfo(installDir);
+
+                if (!string.Equals(driveInfo.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    MessageBox.Show(
+                        $"Playing the game on a non-NTFS-formatted drive is not supported.\nDrive '{driveInfo.Name}' is formatted with: {driveInfo.DriveFormat}", 
+                        "Compatibility",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
             }
 
             //if (DetectLinux.LinuxDetected()) {
