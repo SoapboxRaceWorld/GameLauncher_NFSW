@@ -768,6 +768,12 @@ namespace GameLauncher {
 
             Notification.Dispose();
 
+            var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
+            if (File.Exists(linksPath))
+            {
+                CleanLinks(linksPath);
+            }
+
             Process[] allOfThem2 = Process.GetProcessesByName("GameLauncher");
             foreach (var oneProcess in allOfThem2) {
                 Process.GetProcessById(oneProcess.Id).Kill();
@@ -1896,22 +1902,90 @@ namespace GameLauncher {
                 return;
             }
 
+            if (!DetectLinux.LinuxDetected())
+            {
+                if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
+                {
+                    var result = MessageBox.Show(
+                        "You do not have the 2015-2019 VC++ Redistributable Package installed. Click OK to install it.",
+                        "Compatibility",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    if (result != DialogResult.OK)
+                    {
+                        MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    var wc = new WebClientWithTimeout();
+                    wc.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x86.exe", "VC_redist.x86.exe");
+                    var proc = Process.Start(new ProcessStartInfo
+                    {
+                        Verb = "runas",
+                        FileName = "VC_redist.x86.exe"
+                    });
+
+                    if (proc == null)
+                    {
+                        MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    proc.EnableRaisingEvents = true;
+                    proc.WaitForExit();
+                    if (proc.ExitCode != 0)
+                    {
+                        MessageBox.Show("Package installation failed. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+            }
+
             //if (DetectLinux.LinuxDetected()) {
-                //Temporarely disable any modnet for linux.
-                //LaunchGame();
-                //return;
+            //Temporarely disable any modnet for linux.
+            //LaunchGame();
+            //return;
             //}
+
+            var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
+            if (File.Exists(linksPath))
+            {
+                CleanLinks(linksPath);
+            }
 
             ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
 
             if (!Directory.Exists(_settingFile.Read("InstallationDirectory") + "/modules")) Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/modules");
             if (!Directory.Exists(_settingFile.Read("InstallationDirectory") + "/scripts")) Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/scripts");
             String[] GlobalFiles            = new string[] { "dinput8.dll", "global.ini" };
-            String[] ModNetReloadedFiles    = new string[] { "7z.dll", "PocoFoundation.dll", "PocoNet.dll", "ModLoader.asi" };
-            String[] ModNetLegacyFiles = new string[] { "modules/udpcrc.soapbox.module", "modules/udpcrypt1.soapbox.module", "modules/udpcrypt2.soapbox.module", "modules/xmppsubject.soapbox.module",
-                    "scripts/global.ini", "lightfx.dll", "ModManager.asi", "global.ini" };
+            String[] ModNetReloadedFiles = new string[]
+            {
+                "7z.dll", 
+                "fmt.dll", 
+                "libcurl.dll", 
+                "zlib1.dll", 
+                "ModLoader.asi"
+            };
+            String[] ModNetLegacyFiles = new string[] { 
+                "modules/udpcrc.soapbox.module", 
+                "modules/udpcrypt1.soapbox.module", 
+                "modules/udpcrypt2.soapbox.module", 
+                "modules/xmppsubject.soapbox.module",
+                "scripts/global.ini", 
+                "lightfx.dll", 
+                "ModManager.asi", 
+                "global.ini",
+            };
 
-            String[] RemoveAllFiles = GlobalFiles.Concat(ModNetReloadedFiles).Concat(ModNetLegacyFiles).ToArray();
+            String[] RemoveAllFiles = GlobalFiles.Concat(ModNetReloadedFiles).Concat(ModNetLegacyFiles).Concat(new[]
+            {
+                "PocoFoundation.dll",
+                "PocoNet.dll",
+            }).ToArray();
 
             foreach (string file in RemoveAllFiles) {
                 if(File.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), file))) { 
@@ -1930,7 +2004,7 @@ namespace GameLauncher {
             String jsonModNet = ModNetReloaded.ModNetSupported(_serverIp);
 
             if (jsonModNet != String.Empty) {
-                playProgressText.Text = "ModNetReloaded support detected, downloading required files...".ToUpper();
+                playProgressText.Text = "ModNetReloaded support detected, setting up...".ToUpper();
 
                 try {
                     string[] newFiles = GlobalFiles.Concat(ModNetReloadedFiles).ToArray();
@@ -1940,9 +2014,9 @@ namespace GameLauncher {
                         Application.DoEvents();
 
                         if(DetectLinux.LinuxDetected()) {
-                            newModNetFilesDownload.DownloadFile("http://cdn.soapboxrace.world/modules/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                            newModNetFilesDownload.DownloadFile("http://cdn.soapboxrace.world/modules-v2/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
                         } else {
-                            newModNetFilesDownload.DownloadFile("https://cdn.soapboxrace.world/modules/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                            newModNetFilesDownload.DownloadFile("https://cdn.soapboxrace.world/modules-v2/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
                         }
                     }
 
@@ -2175,6 +2249,52 @@ namespace GameLauncher {
                     LaunchGame();
                 }
             }         
+        }
+
+        private void CleanLinks(string linksPath)
+        {
+            string dir = _settingFile.Read("InstallationDirectory");
+            foreach (var readLine in File.ReadLines(linksPath))
+            {
+                var parts = readLine.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (parts.Length != 2)
+                {
+                    throw new Exception("Malformed .links file");
+                }
+
+                string loc = parts[0];
+                int type = int.Parse(parts[1]);
+                string realLoc = Path.Combine(dir, loc);
+                if (type == 0)
+                {
+                    if (!File.Exists(realLoc))
+                    {
+                        throw new Exception(".links file includes nonexistent file: " + realLoc);
+                    }
+
+                    string origPath = realLoc + ".orig";
+
+                    if (!File.Exists(origPath))
+                    {
+                        File.Delete(realLoc);
+                        continue;
+                    }
+
+                    File.Delete(realLoc);
+                    File.Move(origPath, realLoc);
+                }
+                else
+                {
+                    if (!Directory.Exists(realLoc))
+                    {
+                        throw new Exception(".links file includes nonexistent directory: " + realLoc);
+                    }
+                    Directory.Delete(realLoc, true);
+                }
+            }
+
+            File.Delete(linksPath);
         }
 
         void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
