@@ -77,6 +77,8 @@ namespace GameLauncher.App.Classes.Proxy
         static CommunicationLog()
         {
             LogFileName = "communication.log";
+            if (File.Exists(LogFileName))
+                File.Delete(LogFileName);
         }
 
         public static void RecordEntry(string serverId, string category, CommunicationLogEntryType type,
