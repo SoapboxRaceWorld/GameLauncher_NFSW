@@ -2273,7 +2273,7 @@ namespace GameLauncher {
 
                 if (parts.Length != 2)
                 {
-                    throw new Exception("Malformed .links file");
+                    continue;
                 }
 
                 string loc = parts[0];
