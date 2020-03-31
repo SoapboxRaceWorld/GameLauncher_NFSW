@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using GameLauncherReborn;
 
 namespace GameLauncher.App.Classes
 {
@@ -85,7 +86,7 @@ namespace GameLauncher.App.Classes
 
                 String responseString;
                 try {
-                    Uri sendReport = new Uri("http://l.mtntr.pl/report");
+                    Uri sendReport = new Uri(Self.mainserver + "/report");
 
                     var request = (HttpWebRequest)WebRequest.Create(sendReport);
                     var postData = "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + Security.FingerPrint.Value();
