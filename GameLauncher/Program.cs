@@ -117,7 +117,7 @@ namespace GameLauncher {
                                 File.Delete("GameLauncherUpdater.exe");
                             }
                         };
-                        wc.DownloadFileAsync(new Uri(Self.mainserver + "/files/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
+                        wc.DownloadFileAsync(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
                     }
                 } catch(Exception ex) {
                     Log.Debug("Failed to download updater. " + ex.Message);
