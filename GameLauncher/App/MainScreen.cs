@@ -458,7 +458,7 @@ namespace GameLauncher {
                 try {
                     playProgressText.Text = "Downloading LZMA.dll...";
                     using (WebClient wc = new WebClient()) {
-                        wc.DownloadFileAsync(new Uri(Self.mainserver + "/files/LZMA.dll"), "LZMA.dll");
+                        wc.DownloadFileAsync(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
                     }
                 } catch (Exception ex) {
                     Log.Debug("Failed to download LZMA. " + ex.Message);

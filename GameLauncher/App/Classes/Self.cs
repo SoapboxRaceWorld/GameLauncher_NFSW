@@ -10,7 +10,8 @@ using System.Windows.Forms;
 
 namespace GameLauncherReborn {
     class Self {
-        public static string mainserver = "https://launcher.worldunited.gg";
+        public static string mainserver = "https://api.worldunited.gg";
+        public static string fileserver = "https://files.worldunited.gg";
 
         public static string[] serverlisturl = new string[] {
             mainserver + "/serverlist.json",
