@@ -10,8 +10,22 @@ using System.Windows.Forms;
 
 namespace GameLauncherReborn {
     class Self {
-        public static string mainserver = "https://api.worldunited.gg";
-        public static string fileserver = "https://files.worldunited.gg";
+        public static string getMainServer()
+        {
+            if (DetectLinux.LinuxDetected())
+                return "http://api.worldunited.gg";
+            else
+                return "https://api.worldunited.gg";
+        }
+        public static string getFileServer()
+        {
+            if (DetectLinux.LinuxDetected())
+                return "http://files.worldunited.gg";
+            else
+                return "https://files.worldunited.gg";
+        }
+        public static string mainserver = getMainServer();
+        public static string fileserver = getFileServer();
 
         public static string[] serverlisturl = new string[] {
             mainserver + "/serverlist.json",
