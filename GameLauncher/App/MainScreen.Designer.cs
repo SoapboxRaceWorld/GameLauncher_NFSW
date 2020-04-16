@@ -158,7 +158,7 @@
             this.rememberMe.Name = "rememberMe";
             this.rememberMe.Size = new System.Drawing.Size(219, 19);
             this.rememberMe.TabIndex = 5;
-            this.rememberMe.Text = "REMEMBER ME";
+            this.rememberMe.Text = "REMEMBER LOGIN";
             this.rememberMe.UseVisualStyleBackColor = false;
             // 
             // Timeout
