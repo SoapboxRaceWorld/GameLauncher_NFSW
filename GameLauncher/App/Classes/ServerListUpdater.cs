@@ -44,9 +44,17 @@ namespace GameLauncher.App.Classes
                         {
                             Log.Debug("Loaded serverlist from: " + serverurl);
 
-                            foreach (ServerInfo si in JsonConvert.DeserializeObject<List<ServerInfo>>(response))
+                            try
                             {
-                                serverInfos.Add(si);
+                                foreach (ServerInfo si in JsonConvert.DeserializeObject<List<ServerInfo>>(response))
+                                {
+                                    serverInfos.Add(si);
+                                }
+                            }
+                            catch (Exception error)
+                            {
+                                Log.Debug(response);
+                                throw new Exception("Error occurred while loading: " + serverurl, error);
                             }
                         }
                     }));
