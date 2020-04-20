@@ -3,135 +3,115 @@ using GameLauncher.HashPassword;
 using GameLauncherReborn;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace GameLauncher.App.Classes
 {
     public class ServerListUpdater
     {
         private static List<ServerInfo> finalItems = new List<ServerInfo>();
-        private static Thread thread;
 
         public static void UpdateList()
         {
-            thread = new Thread(new ThreadStart(() =>
+            List<ServerInfo> serverInfos = new List<ServerInfo>();
+
+            foreach (var serverListURL in Self.serverlisturl)
             {
-                List<Task> tasks = new List<Task>();
-                ConcurrentBag<ServerInfo> serverInfos = new ConcurrentBag<ServerInfo>();
-
-                foreach (string serverurl in Self.serverlisturl)
+                try
                 {
-                    tasks.Add(Task.Run(() =>
+                    Log.Debug("Loading serverlist from: " + serverListURL);
+                    var wc = new WebClientWithTimeout();
+
+                    var response = wc.DownloadString(serverListURL);
+
+                    Log.Debug("Loaded serverlist from: " + serverListURL);
+
+                    try
                     {
-                        string response = null;
-                        try
-                        {
-                            Log.Debug("Loading serverlist from: " + serverurl);
-                            WebClientWithTimeout wc = new WebClientWithTimeout();
-
-                            response = wc.DownloadString(serverurl);
-                        }
-                        catch (Exception error)
-                        {
-                            Log.Error(error.Message);
-                        }
-                        if (response != null)
-                        {
-                            Log.Debug("Loaded serverlist from: " + serverurl);
-
-                            foreach (ServerInfo si in JsonConvert.DeserializeObject<List<ServerInfo>>(response))
-                            {
-                                serverInfos.Add(si);
-                            }
-                        }
-                    }));
-                }
-
-                if (File.Exists("servers.json"))
-                {
-                    var fileItems = JsonConvert.DeserializeObject<List<ServerInfo>>(File.ReadAllText("servers.json")) ?? new List<ServerInfo>();
-
-                    if (fileItems.Count > 0)
+                        serverInfos.AddRange(
+                            JsonConvert.DeserializeObject<List<ServerInfo>>(response));
+                    }
+                    catch (Exception error)
                     {
-                        serverInfos.Add(new ServerInfo
-                        {
-                            Id = "__category-CUSTOM__",
-                            Name = "<GROUP>Custom Servers",
-                            IsSpecial = true
-                        });
-
-                        fileItems.Select(si =>
-                        {
-                            si.DistributionUrl = "";
-                            si.DiscordPresenceKey = "";
-                            si.Id = SHA.HashPassword($"{si.Name}:{si.Id}:{si.IpAddress}");
-                            si.IsSpecial = false;
-                            si.Category = "CUSTOM";
-
-                            return si;
-                        }).ToList().ForEach(si => serverInfos.Add(si));
+                        Log.Debug(response);
+                        throw new Exception("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message, error);
                     }
                 }
+                catch (Exception error)
+                {
+                    Log.Error(error.Message);
 
-                if (File.Exists("libOfflineServer.dll"))
+                    throw new Exception("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message, error);
+                }
+            }
+
+            if (File.Exists("servers.json"))
+            {
+                var fileItems = JsonConvert.DeserializeObject<List<ServerInfo>>(File.ReadAllText("servers.json")) ?? new List<ServerInfo>();
+
+                if (fileItems.Count > 0)
                 {
                     serverInfos.Add(new ServerInfo
                     {
-                        Id = "__category-OFFLINE__",
-                        Name = "<GROUP>Offline Server",
+                        Id = "__category-CUSTOM__",
+                        Name = "<GROUP>Custom Servers",
                         IsSpecial = true
                     });
 
-                    serverInfos.Add(new ServerInfo
+                    fileItems.Select(si =>
                     {
-                        Name = "Offline Built-In Server",
-                        Category = "OFFLINE",
-                        DiscordPresenceKey = "",
-                        IsSpecial = false,
-                        DistributionUrl = "",
-                        IpAddress = "http://localhost:4416/sbrw/Engine.svc",
-                        Id = "OFFLINE"
+                        si.DistributionUrl = "";
+                        si.DiscordPresenceKey = "";
+                        si.Id = SHA.HashPassword($"{si.Name}:{si.Id}:{si.IpAddress}");
+                        si.IsSpecial = false;
+                        si.Category = "CUSTOM";
+
+                        return si;
+                    }).ToList().ForEach(si => serverInfos.Add(si));
+                }
+            }
+
+            if (File.Exists("libOfflineServer.dll"))
+            {
+                serverInfos.Add(new ServerInfo
+                {
+                    Id = "__category-OFFLINE__",
+                    Name = "<GROUP>Offline Server",
+                    IsSpecial = true
+                });
+
+                serverInfos.Add(new ServerInfo
+                {
+                    Name = "Offline Built-In Server",
+                    Category = "OFFLINE",
+                    DiscordPresenceKey = "",
+                    IsSpecial = false,
+                    DistributionUrl = "",
+                    IpAddress = "http://localhost:4416/sbrw/Engine.svc",
+                    Id = "OFFLINE"
+                });
+            }
+
+            foreach (var serverItemGroup in Enumerable.Reverse(serverInfos)
+                .GroupBy(s => s.Category))
+            {
+                if (finalItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
+                {
+                    finalItems.Add(new ServerInfo
+                    {
+                        Id = $"__category-{serverItemGroup.Key}__",
+                        Name = $"<GROUP>{serverItemGroup.Key} Servers",
+                        IsSpecial = true
                     });
                 }
-
-                //Somewhere here i have to remove duplicates...
-
-                foreach (Task task in tasks)
-                {
-                    task.Wait();
-                }
-
-                foreach (var serverItemGroup in serverInfos.Reverse().GroupBy(s => s.Category))
-                {
-                    if (finalItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
-                    {
-                        finalItems.Add(new ServerInfo
-                        {
-                            Id = $"__category-{serverItemGroup.Key}__",
-                            Name = $"<GROUP>{serverItemGroup.Key} Servers",
-                            IsSpecial = true
-                        });
-                    }
-                    finalItems.AddRange(serverItemGroup.ToList());
-                }
-            }));
-
-            thread.IsBackground = true;
-            thread.Start();
+                finalItems.AddRange(serverItemGroup.ToList());
+            }
         }
 
         public static List<ServerInfo> GetList()
         {
-            if (thread.IsAlive == true)
-            {
-                thread.Join();
-            }
-
             List<ServerInfo> newFinalItems = new List<ServerInfo>();
 
             foreach (ServerInfo xServ in finalItems)

@@ -34,7 +34,7 @@ namespace GameLauncherReborn {
             request.Headers["X-UserAgent"] = "GameLauncherReborn "+Application.ProductVersion+ " WinForms (+https://github.com/worldunitedgg/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = Value();
             request.Headers["X-DiscordID"] = Self.discordid;
-            request.Timeout = 30000;
+            //request.Timeout = 30000;
 
             return request;
         }

@@ -1902,6 +1902,8 @@ namespace GameLauncher {
                 return;
             }
 
+            DisablePlayButton();
+
             if (!DetectLinux.LinuxDetected())
             {
                 if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
@@ -2264,50 +2266,58 @@ namespace GameLauncher {
             }         
         }
 
+        private static readonly object LinkCleanerLock = new object();
+
         private void CleanLinks(string linksPath)
         {
-            string dir = _settingFile.Read("InstallationDirectory");
-            foreach (var readLine in File.ReadLines(linksPath))
+            lock (LinkCleanerLock)
             {
-                var parts = readLine.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
-
-                if (parts.Length != 2)
+                if (File.Exists(linksPath))
                 {
-                    continue;
-                }
-
-                string loc = parts[0];
-                int type = int.Parse(parts[1]);
-                string realLoc = Path.Combine(dir, loc);
-                if (type == 0)
-                {
-                    if (!File.Exists(realLoc))
+                    string dir = _settingFile.Read("InstallationDirectory");
+                    foreach (var readLine in File.ReadLines(linksPath))
                     {
-                        throw new Exception(".links file includes nonexistent file: " + realLoc);
+                        var parts = readLine.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        if (parts.Length != 2)
+                        {
+                            continue;
+                        }
+
+                        string loc = parts[0];
+                        int type = int.Parse(parts[1]);
+                        string realLoc = Path.Combine(dir, loc);
+                        if (type == 0)
+                        {
+                            if (!File.Exists(realLoc))
+                            {
+                                throw new Exception(".links file includes nonexistent file: " + realLoc);
+                            }
+
+                            string origPath = realLoc + ".orig";
+
+                            if (!File.Exists(origPath))
+                            {
+                                File.Delete(realLoc);
+                                continue;
+                            }
+
+                            File.Delete(realLoc);
+                            File.Move(origPath, realLoc);
+                        }
+                        else
+                        {
+                            if (!Directory.Exists(realLoc))
+                            {
+                                throw new Exception(".links file includes nonexistent directory: " + realLoc);
+                            }
+                            Directory.Delete(realLoc, true);
+                        }
                     }
 
-                    string origPath = realLoc + ".orig";
-
-                    if (!File.Exists(origPath))
-                    {
-                        File.Delete(realLoc);
-                        continue;
-                    }
-
-                    File.Delete(realLoc);
-                    File.Move(origPath, realLoc);
-                }
-                else
-                {
-                    if (!Directory.Exists(realLoc))
-                    {
-                        throw new Exception(".links file includes nonexistent directory: " + realLoc);
-                    }
-                    Directory.Delete(realLoc, true);
+                    File.Delete(linksPath);
                 }
             }
-
-            File.Delete(linksPath);
         }
 
         void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
@@ -2747,6 +2757,17 @@ namespace GameLauncher {
             extractingProgress.Width = 519;
 
             playButton.BackgroundImage = Properties.Resources.playbutton;
+            playButton.ForeColor = Color.White;
+        }
+
+        private void DisablePlayButton() {
+            _isDownloading = false;
+            _playenabled = false;
+
+            extractingProgress.Value = 100;
+            extractingProgress.Width = 519;
+
+            playButton.BackgroundImage = Properties.Resources.graybutton;
             playButton.ForeColor = Color.White;
         }
 
