@@ -12,9 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using GameLauncher.App.Classes.Logger;
 using Url = Flurl.Url;
 
 namespace GameLauncher.App.Classes.Proxy
@@ -29,17 +29,15 @@ namespace GameLauncher.App.Classes.Proxy
 
         private object OnError(NancyContext context, Exception exception)
         {
-            if (exception is ProxyException proxyException)
-            {
-                CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY",
-                    CommunicationLogEntryType.Error,
-                    new CommunicationLogLauncherError(proxyException.Message, context.Request.Path,
-                        context.Request.Method));
+            Log.Error($"PROXY ERROR [handling {context.Request.Path}]");
+            Log.Error($"\tMESSAGE: {exception.Message}");
+            Log.Error($"\t{exception.StackTrace}");
+            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY",
+                CommunicationLogEntryType.Error,
+                new CommunicationLogLauncherError(exception.Message, context.Request.Path,
+                    context.Request.Method));
 
-                return new TextResponse(HttpStatusCode.BadRequest, proxyException.Message);
-            }
-
-            return null;
+            return new TextResponse(HttpStatusCode.BadRequest, exception.Message);
         }
 
         private async Task<Response> ProxyRequest(NancyContext context, CancellationToken cancellationToken)
