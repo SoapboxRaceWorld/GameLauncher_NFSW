@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GameLauncher.App.Classes;
 using GameLauncher.HashPassword;
+using static System.String;
 
 namespace GameLauncher.App {
     public partial class AddServer : Form {
@@ -39,12 +40,12 @@ namespace GameLauncher.App {
 
             String wellFormattedURL = "";
 
-            if (String.IsNullOrEmpty(serverAddress.Text)) {
+            if (IsNullOrEmpty(serverAddress.Text)) {
                 drawErrorAroundTextBox(serverAddress);
                 success = false;
             }
 
-            if (String.IsNullOrEmpty(serverName.Text)) {
+            if (IsNullOrEmpty(serverName.Text)) {
                 drawErrorAroundTextBox(serverName);
                 success = false;
             }
@@ -56,29 +57,7 @@ namespace GameLauncher.App {
                 drawErrorAroundTextBox(serverAddress);
                 success = false;
             } else {
-                Uri parsedServerAddress = new Uri(serverAddress.Text);
-                string[] splitted = parsedServerAddress.AbsolutePath.Split('/');
-                if(splitted.Length == 3 || splitted.Length == 4) {
-                    if (String.IsNullOrEmpty(splitted[1])) {
-                        splitted[1] = "soapbox-race-core";
-                    }
-
-                    if (String.IsNullOrEmpty(splitted[2])) {
-                        splitted[2] = "Engine.svc";
-                    }
-
-                    if(parsedServerAddress.Port == 80) {
-                        wellFormattedURL = parsedServerAddress.Scheme + "://" + parsedServerAddress.Host + "/" + splitted[1] + "/" + splitted[2];
-                    } else {
-                        wellFormattedURL = parsedServerAddress.Scheme + "://" + parsedServerAddress.Host + ":" + parsedServerAddress.Port + "/" + splitted[1] + "/" + splitted[2];
-                    }
-                } else {
-                    if (parsedServerAddress.Port == 80) {
-                        wellFormattedURL = parsedServerAddress.Scheme + "://" + parsedServerAddress.Host + "/soapbox-race-core/Engine.svc";
-                    } else {
-                        wellFormattedURL = parsedServerAddress.Scheme + "://" + parsedServerAddress.Host + ":" + parsedServerAddress.Port + "/soapbox-race-core/Engine.svc";
-                    }
-                }
+                wellFormattedURL = uriResult.ToString();
             }
 
             cancelButton.Enabled = false;
@@ -89,11 +68,11 @@ namespace GameLauncher.App {
             try {
                 var client = new WebClientWithTimeout();
                 Uri StringToUri = new Uri(wellFormattedURL + "/GetServerInformation");
-                String serverLoginResponse = client.DownloadString(StringToUri);
+                var serverLoginResponse = client.DownloadString(StringToUri);
 
                 GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(serverLoginResponse);
 
-                if(String.IsNullOrEmpty(json.messageSrv)) {
+                if(IsNullOrEmpty(json.serverName)) {
                     drawErrorAroundTextBox(serverAddress);
                     success = false;
                 }
@@ -113,7 +92,7 @@ namespace GameLauncher.App {
                     String oldcontent = sr.ReadToEnd();
                     sr.Close();
 
-                    if (string.IsNullOrWhiteSpace(oldcontent))
+                    if (IsNullOrWhiteSpace(oldcontent))
                     {
                         oldcontent = "[]";
                     }

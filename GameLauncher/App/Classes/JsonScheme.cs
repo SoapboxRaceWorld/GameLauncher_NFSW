@@ -8,7 +8,7 @@ namespace SoapBox.JsonScheme {
         public string discordUrl { get; set; }
         public string serverName { get; set; }
         public string country { get; set; }
-        public int timezone { get; set; }
+        public int? timezone { get; set; }
         public string bannerUrl { get; set; }
         public string adminList { get; set; }
         public string ownerList { get; set; }

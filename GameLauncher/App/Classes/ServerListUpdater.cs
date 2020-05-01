@@ -94,8 +94,7 @@ namespace GameLauncher.App.Classes
                 });
             }
 
-            foreach (var serverItemGroup in Enumerable.Reverse(serverInfos)
-                .GroupBy(s => s.Category))
+            foreach (var serverItemGroup in serverInfos.GroupBy(s => s.Category))
             {
                 if (finalItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
                 {
