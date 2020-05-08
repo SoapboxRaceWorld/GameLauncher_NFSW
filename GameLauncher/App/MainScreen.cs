@@ -1863,7 +1863,7 @@ namespace GameLauncher {
                                 if (exitCode == -1073740972)    errorMsg = "Game Crash: Debugger crash (0x" + exitCode.ToString("X") + ")";
                                 if (exitCode == -1073741676)    errorMsg = "Game Crash: Division by Zero (0x" + exitCode.ToString("X") + ")";
 
-                                if (exitCode == 1)              errorMsg = "You just killed nfsw.exe via Task Manager";
+                                if (exitCode == 1)              errorMsg = "The nfsw.exe was exited via Task Manager";
                                 if (exitCode == 2137)           errorMsg = "Launcher killed your game to prevent SpeedBugging.";
 
                                 if (exitCode == -3)             errorMsg = "The Server was unable to resolve your request";
