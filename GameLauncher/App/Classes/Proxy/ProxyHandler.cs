@@ -61,15 +61,13 @@ namespace GameLauncher.App.Classes.Proxy
                     NullValueHandling.Ignore);
             }
 
-            IFlurlRequest request = resolvedUrl.WithTimeout(TimeSpan.FromSeconds(30));
+            IFlurlRequest request = resolvedUrl.AllowAnyHttpStatus();
 
             foreach (var header in context.Request.Headers)
             {
                 request = request.WithHeader(header.Key,
                     header.Key == "Host" ? resolvedUrl.ToUri().Host : header.Value.First());
             }
-
-            request = request.AllowAnyHttpStatus();
 
             var requestBody = context.Request.Method != "GET" ? context.Request.Body.AsString(Encoding.UTF8) : "";
 
