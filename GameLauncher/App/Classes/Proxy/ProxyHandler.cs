@@ -27,7 +27,7 @@ namespace GameLauncher.App.Classes.Proxy
             pipelines.OnError += OnError;
         }
 
-        private object OnError(NancyContext context, Exception exception)
+        private async Task<TextResponse> OnError(NancyContext context, Exception exception)
         {
             Log.Error($"PROXY ERROR [handling {context.Request.Path}]");
             Log.Error($"\tMESSAGE: {exception.Message}");
@@ -36,6 +36,7 @@ namespace GameLauncher.App.Classes.Proxy
                 CommunicationLogEntryType.Error,
                 new CommunicationLogLauncherError(exception.Message, context.Request.Path,
                     context.Request.Method));
+            await Self.SubmitError(exception);
 
             return new TextResponse(HttpStatusCode.BadRequest, exception.Message);
         }
@@ -132,6 +133,7 @@ namespace GameLauncher.App.Classes.Proxy
                 Log.Error($"DISCORD RPC ERROR [handling {context.Request.Path}]");
                 Log.Error($"\tMESSAGE: {e.Message}");
                 Log.Error($"\t{e.StackTrace}");
+                await Self.SubmitError(e);
             }
 
             TextResponse textResponse = new TextResponse(responseBody,
