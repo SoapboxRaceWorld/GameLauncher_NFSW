@@ -12,9 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using GameLauncher.App.Classes.Logger;
 using Url = Flurl.Url;
 
 namespace GameLauncher.App.Classes.Proxy
@@ -27,19 +27,18 @@ namespace GameLauncher.App.Classes.Proxy
             pipelines.OnError += OnError;
         }
 
-        private object OnError(NancyContext context, Exception exception)
+        private async Task<TextResponse> OnError(NancyContext context, Exception exception)
         {
-            if (exception is ProxyException proxyException)
-            {
-                CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY",
-                    CommunicationLogEntryType.Error,
-                    new CommunicationLogLauncherError(proxyException.Message, context.Request.Path,
-                        context.Request.Method));
+            Log.Error($"PROXY ERROR [handling {context.Request.Path}]");
+            Log.Error($"\tMESSAGE: {exception.Message}");
+            Log.Error($"\t{exception.StackTrace}");
+            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY",
+                CommunicationLogEntryType.Error,
+                new CommunicationLogLauncherError(exception.Message, context.Request.Path,
+                    context.Request.Method));
+            await Self.SubmitError(exception);
 
-                return new TextResponse(HttpStatusCode.BadRequest, proxyException.Message);
-            }
-
-            return null;
+            return new TextResponse(HttpStatusCode.BadRequest, exception.Message);
         }
 
         private async Task<Response> ProxyRequest(NancyContext context, CancellationToken cancellationToken)
@@ -66,7 +65,8 @@ namespace GameLauncher.App.Classes.Proxy
 
             foreach (var header in context.Request.Headers)
             {
-                request = request.WithHeader(header.Key, header.Key == "Host" ? resolvedUrl.ToUri().Host : header.Value.First());
+                request = request.WithHeader(header.Key,
+                    header.Key == "Host" ? resolvedUrl.ToUri().Host : header.Value.First());
             }
 
             request = request.AllowAnyHttpStatus();
@@ -74,34 +74,39 @@ namespace GameLauncher.App.Classes.Proxy
             var requestBody = context.Request.Method != "GET" ? context.Request.Body.AsString(Encoding.UTF8) : "";
 
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
-                CommunicationLogEntryType.Request, new CommunicationLogRequest(requestBody, resolvedUrl.ToString(), method));
+                CommunicationLogEntryType.Request,
+                new CommunicationLogRequest(requestBody, resolvedUrl.ToString(), method));
 
             HttpResponseMessage responseMessage;
 
-            string POSTContent = String.Empty;
-            string GETContent = String.Empty;
+            var POSTContent = String.Empty;
 
             var queryParams = new Dictionary<string, object>();
 
-            foreach (var param in context.Request.Query) {
+            foreach (var param in context.Request.Query)
+            {
                 var value = context.Request.Query[param];
                 queryParams[param] = value;
             }
 
-            GETContent = string.Join(";", queryParams.Select(x => x.Key + "=" + x.Value).ToArray());
+            var GETContent = string.Join(";", queryParams.Select(x => x.Key + "=" + x.Value).ToArray());
 
-            Console.WriteLine("[LOG] ["+method+"] ProxyHandler: " + path);
+            // ReSharper disable once LocalizableElement
+            Console.WriteLine($"[LOG] [{method}] ProxyHandler: {path}");
 
-            switch (method) {
+            switch (method)
+            {
                 case "GET":
                     responseMessage = await request.GetAsync(cancellationToken);
                     break;
                 case "POST":
-                    responseMessage = await request.PostAsync(new CapturedStringContent(requestBody, Encoding.UTF8), cancellationToken);
+                    responseMessage = await request.PostAsync(new CapturedStringContent(requestBody, Encoding.UTF8),
+                        cancellationToken);
                     POSTContent = context.Request.Body.AsString();
                     break;
                 case "PUT":
-                    responseMessage = await request.PutAsync(new CapturedStringContent(requestBody, Encoding.UTF8), cancellationToken);
+                    responseMessage = await request.PutAsync(new CapturedStringContent(requestBody, Encoding.UTF8),
+                        cancellationToken);
                     break;
                 case "DELETE":
                     responseMessage = await request.DeleteAsync(cancellationToken);
@@ -112,31 +117,43 @@ namespace GameLauncher.App.Classes.Proxy
 
             var responseBody = await responseMessage.Content.ReadAsStringAsync();
 
-            if (path == "/User/GetPermanentSession") {
+            if (path == "/User/GetPermanentSession")
+            {
                 responseBody = Self.CleanFromUnknownChars(responseBody);
             }
 
             int statusCode = (int)responseMessage.StatusCode;
 
-            DiscordGamePresence.handleGameState(path, responseBody, POSTContent, GETContent);
-            //OfflineSaveFile.SaveContent(path, responseBody);
+            try
+            {
+                DiscordGamePresence.handleGameState(path, responseBody, POSTContent, GETContent);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"DISCORD RPC ERROR [handling {context.Request.Path}]");
+                Log.Error($"\tMESSAGE: {e.Message}");
+                Log.Error($"\t{e.StackTrace}");
+                await Self.SubmitError(e);
+            }
 
             TextResponse textResponse = new TextResponse(responseBody,
                 responseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
             {
-                StatusCode = (HttpStatusCode)(int)statusCode
+                StatusCode = (HttpStatusCode)statusCode
             };
 
             queryParams.Clear();
 
-            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER", CommunicationLogEntryType.Response, new CommunicationLogResponse(
-                responseBody, resolvedUrl.ToString(), method));
+            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
+                CommunicationLogEntryType.Response, new CommunicationLogResponse(
+                    responseBody, resolvedUrl.ToString(), method));
 
             return textResponse;
         }
     }
 
-    public class Helper {
+    public class Helper
+    {
         public static int session = 0;
         public static String personaid = String.Empty;
     }

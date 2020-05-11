@@ -6,7 +6,10 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Flurl;
+using Flurl.Http;
 
 namespace GameLauncherReborn {
     class Self {
@@ -112,6 +115,16 @@ namespace GameLauncherReborn {
 
 			return returnvalue;
 		}
+
+        public static async Task SubmitError(Exception exception)
+        {
+            Url url = new Url(mainserver + "/error-report");
+            await url.PostJsonAsync(new
+            {
+                message = exception.Message ?? "no message",
+                stackTrace = exception.StackTrace ?? "no stack trace"
+            });
+        }
 
         public static void centerScreen(Form form) {
             form.StartPosition = FormStartPosition.Manual;

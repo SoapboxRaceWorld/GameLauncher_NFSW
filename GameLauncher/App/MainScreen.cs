@@ -768,12 +768,6 @@ namespace GameLauncher {
 
             Notification.Dispose();
 
-            var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
-            if (File.Exists(linksPath))
-            {
-                CleanLinks(linksPath);
-            }
-
             Process[] allOfThem2 = Process.GetProcessesByName("GameLauncher");
             foreach (var oneProcess in allOfThem2) {
                 Process.GetProcessById(oneProcess.Id).Kill();
