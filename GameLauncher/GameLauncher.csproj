@@ -72,6 +72,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>false</Optimize>
+    <DefineConstants>DEBUG</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <DelaySign>false</DelaySign>
