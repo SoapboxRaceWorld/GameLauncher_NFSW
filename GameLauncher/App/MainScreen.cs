@@ -1857,10 +1857,10 @@ namespace GameLauncher {
                                 if (exitCode == -1073740972)    errorMsg = "Game Crash: Debugger crash (0x" + exitCode.ToString("X") + ")";
                                 if (exitCode == -1073741676)    errorMsg = "Game Crash: Division by Zero (0x" + exitCode.ToString("X") + ")";
 
-                                if (exitCode == 1)              errorMsg = "You just killed nfsw.exe via Task Manager";
+                                if (exitCode == 1)              errorMsg = "The process nfsw.exe was killed via Task Manager";
                                 if (exitCode == 2137)           errorMsg = "Launcher killed your game to prevent SpeedBugging.";
 
-                                if (exitCode == -3)             errorMsg = "Server were unable to resolve your request";
+                                if (exitCode == -3)             errorMsg = "The Server was unable to resolve the request";
                                 if (exitCode == -4)             errorMsg = "Another instance is already executed";
                                 if (exitCode == -5)             errorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
                                 if (exitCode == -6)             errorMsg = "Server was unable to resolve your request";
