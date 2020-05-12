@@ -118,7 +118,8 @@ namespace GameLauncherReborn {
 
         public static async Task SubmitError(Exception exception)
         {
-            Url url = new Url(mainserver + "/error-report");
+            var mainsrv = DetectLinux.LinuxDetected() ? mainserver.Replace("https", "http") : mainserver;
+            Url url = new Url(mainsrv + "/error-report");
             await url.PostJsonAsync(new
             {
                 message = exception.Message ?? "no message",
