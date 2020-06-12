@@ -2057,7 +2057,7 @@ namespace GameLauncher {
                             WebClientWithTimeout client2 = new WebClientWithTimeout();
                             client2.DownloadFileAsync(new Uri(json2.basePath + "/" + modfile.Name), path + "/" + modfile.Name);
 
-                            client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+                            client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_RELOADED);
                             client2.DownloadFileCompleted += (test, stuff) => { 
                                 //if(SHA.HashFile(path + "/" + modfile.Name).ToLower() == modfile.Checksum) {
                                     CountFiles++;
@@ -2136,7 +2136,7 @@ namespace GameLauncher {
                             WebClientWithTimeout client2 = new WebClientWithTimeout();
                             client2.DownloadFileAsync(new Uri(json.modsUrl + "/" + modfile.file), path + "/" + modfile.file);
 
-                            client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+                            client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_LEGACY);
                             client2.DownloadFileCompleted += (test, stuff) => {
                                 if (ElectronModNet.calculateHash(path + "/" + modfile.file) == modfile.hash) {
                                     CountFiles++;
@@ -2208,7 +2208,7 @@ namespace GameLauncher {
                                         WebClientWithTimeout client2 = new WebClientWithTimeout();
                                         client2.DownloadFileAsync(new Uri(files.Attributes["download"].Value), path + "/" + realfilepath);
 
-                                        client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+                                        client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_LEGACY);
                                         client2.DownloadFileCompleted += (test, stuff) => {
                                             if (MDFive.HashFile(path + "/" + realfilepath).ToLower() == files.InnerText) {
                                                 CountFiles++;
@@ -2314,7 +2314,7 @@ namespace GameLauncher {
             }
         }
 
-        void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
+        void client_DownloadProgressChanged_LEGACY(object sender, DownloadProgressChangedEventArgs e) {
             this.BeginInvoke((MethodInvoker)delegate {
                 double bytesIn = double.Parse(e.BytesReceived.ToString());
                 double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
@@ -2323,6 +2323,18 @@ namespace GameLauncher {
 
                 extractingProgress.Value = Convert.ToInt32(Decimal.Divide(CountFiles, CountFilesTotal) * 100);
                 extractingProgress.Width = Convert.ToInt32(Decimal.Divide(CountFiles, CountFilesTotal) * 519);
+            });
+        }
+
+        void client_DownloadProgressChanged_RELOADED(object sender, DownloadProgressChangedEventArgs e) {
+            this.BeginInvoke((MethodInvoker)delegate {
+                double bytesIn = double.Parse(e.BytesReceived.ToString());
+                double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+                double percentage = bytesIn / totalBytes * 100;
+                playProgressText.Text = ("Downloaded " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
+
+                extractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
+                extractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
             });
         }
 
@@ -2353,6 +2365,9 @@ namespace GameLauncher {
                         playProgressText.Text = "Soapbox server launched. Waiting for queries.".ToUpper();
                     } else {
                         var secondsToCloseLauncher = 5;
+
+                        extractingProgress.Value = 100;
+                        extractingProgress.Width = 519;
 
                         while (secondsToCloseLauncher > 0) {
                             playProgressText.Text = string.Format("Loading game. Launcher will minimize in {0} seconds.", secondsToCloseLauncher).ToUpper(); //"LOADING GAME. LAUNCHER WILL MINIMIZE ITSELF IN " + secondsToCloseLauncher + " SECONDS";

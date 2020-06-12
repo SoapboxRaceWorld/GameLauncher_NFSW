@@ -124,6 +124,7 @@ namespace GameLauncher.App.Classes.Proxy
 
             try
             {
+                //OfflineSaveFile.SaveContent(path, responseBody);
                 DiscordGamePresence.handleGameState(path, responseBody, POSTContent, GETContent);
             }
             catch (Exception e)
