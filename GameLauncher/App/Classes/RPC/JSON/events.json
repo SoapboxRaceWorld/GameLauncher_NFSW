@@ -315,7 +315,9 @@
     {"id": "391","trackname": "Precinct Escape","type": "gamemode_pursuit_mp"},
     {"id": "392","trackname": "Underground","type": "gamemode_pursuit_mp"},
     {"id": "393","trackname": "High Stakes","type": "gamemode_pursuit_mp"},
-    {"id": "394","trackname": "Fortuna Run","type": "gamemode_sprint"},
+        {"id": "394","trackname": "Palmont Tour","type": "gamemode_sprint"},
+        {"id": "395","trackname": "Sunrise","type": "gamemode_sprint"},
+        {"id": "396","trackname": "Sunset","type": "gamemode_sprint"},
     {"id": "498","trackname": "Diner Escape","type": "gamemode_pursuit_mp"},
     {"id": "499","trackname": "Backwood Split","type": "gamemode_drag"},
     {"id": "500","trackname": "Breakneck","type": "gamemode_drag"},
@@ -344,5 +346,8 @@
     {"id": "533","trackname": "Petersburg Dam Reverse","type": "gamemode_sprint"},
     {"id": "534","trackname": "Reverse Track 07","type": "gamemode_sprint"},
     {"id": "535","trackname": "Chinatown Delivery Reverse","type": "gamemode_sprint"},
-    {"id": "600","trackname": "World Loop","type": "gamemode_sprint"}
+        {"id": "600","trackname": "World Loop","type": "gamemode_sprint"},
+        {"id": "601","trackname": "Le Mans","type": "gamemode_circuit"},
+        {"id": "602","trackname": "City Perimeter","type": "gamemode_circuit"},
+        {"id": "603","trackname": "Rockport World Loop","type": "gamemode_sprint"}
 ]
