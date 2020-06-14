@@ -2399,7 +2399,7 @@ namespace GameLauncher {
 
                         Notification.ContextMenu = ContextMenu;
 
-                        Process process_ml = Process.GetProcessById(AntiCheat.process_id);
+                        /*Process process_ml = Process.GetProcessById(AntiCheat.process_id);
                         IntPtr processHandle = Kernel32.OpenProcess(0x0010, false, process_ml.Id);
                         int baseAddress = process_ml.MainModule.BaseAddress.ToInt32();
 
@@ -2447,7 +2447,9 @@ namespace GameLauncher {
                             }
                         })
                         { IsBackground = true };
-                        thread.Start();
+                        thread.Start();*/
+
+                        Self.MapZoneRPC = "GameLauncherReborn v" + Application.ProductVersion;
                     }
                 } else {
                     MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
