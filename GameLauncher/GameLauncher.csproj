@@ -166,7 +166,6 @@
     <Compile Include="App\Classes\IniFile.cs" />
     <Compile Include="App\Classes\Language.cs" />
     <Compile Include="App\Classes\Logger\LogToFile.cs" />
-    <Compile Include="App\Classes\MessageBox.cs" />
     <Compile Include="App\Classes\ModManager.cs" />
     <Compile Include="App\Classes\ModNetReloaded\ElectronModNet.cs" />
     <Compile Include="App\Classes\ModNetReloaded\ModNetReloaded.cs" />

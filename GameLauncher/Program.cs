@@ -14,7 +14,6 @@ using GameLauncherReborn;
 using Nancy;
 using IniParser;
 using GameLauncher.App.Classes.GPU;
-using static MeTonaTOR.MessageBox;
 using System.Reflection;
 using Newtonsoft.Json;
 using System.Linq;

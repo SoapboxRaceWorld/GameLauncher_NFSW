@@ -131,7 +131,7 @@ namespace GameLauncher.App.Classes.Proxy
                 String lastKnownPOSTContent = POSTContent;
                 String lastKnownGETContent = GETContent;
 
-                Thread x = new Thread(() => {
+                Thread x = new Thread((selfexplanatory) => {
                     while(true) { 
                         try { 
                             DiscordGamePresence.handleGameState(lastKnownPath, lastKnownResponse, lastKnownPOSTContent, lastKnownGETContent);
