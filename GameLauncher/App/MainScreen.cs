@@ -499,6 +499,7 @@ namespace GameLauncher {
             ContextMenu = null;
 
             email.Text = _settingFile.Read("AccountEmail");
+            password.Text = Properties.Settings.Default.PasswordDecoded;
             if (!string.IsNullOrEmpty(_settingFile.Read("AccountEmail")) && !string.IsNullOrEmpty(_settingFile.Read("Password"))) {
                 Log.Debug("Restoring last saved email and password");
                 rememberMe.Checked = true;
@@ -895,10 +896,14 @@ namespace GameLauncher {
             if (rememberMe.Checked) {
                 _settingFile.Write("AccountEmail", username);
                 _settingFile.Write("Password", realpass);
+                Properties.Settings.Default.PasswordDecoded = password.Text.ToString();
             } else {
                 _settingFile.DeleteKey("AccountEmail");
                 _settingFile.DeleteKey("Password");
+                Properties.Settings.Default.PasswordDecoded = String.Empty;
             }
+
+            Properties.Settings.Default.Save();
 
             if (String.IsNullOrEmpty(Tokens.Error)) {
                 _loggedIn = true;
@@ -971,7 +976,7 @@ namespace GameLauncher {
             ServerStatusDesc.Text = "";
 
             loginButton.ForeColor = Color.Gray;
-            password.Text = "";
+            //password.Text = "";
             var verticalImageUrl = "";
             verticalBanner.Image = null;
             verticalBanner.BackColor = Color.Transparent;
