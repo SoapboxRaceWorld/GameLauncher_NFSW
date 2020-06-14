@@ -2408,8 +2408,8 @@ namespace GameLauncher {
                         coords.Add(0x908274, "Y PLACE"); //Start point: 0 - Endpoint: 6773
 
                         Bitmap myBitmap = new Bitmap(Properties.Resources.places4);
-                        int pix_y = 0;
-                        int pix_x = 0;
+                        int pix_y = 0; int loc_y = 0;
+                        int pix_x = 0; int loc_x = 0;
 
                         var thread = new Thread(() => {
                             while (true)
@@ -2430,18 +2430,20 @@ namespace GameLauncher {
                                         if (returnableValue <= 0) returnableValue = 0;
                                         if (returnableValue >= 6773) returnableValue = 6773;
                                         pix_y = Convert.ToInt32(returnableValue / 10);
+                                        loc_y = returnableValue;
                                     } else {
                                         returnableValue = (int)checkInt;
                                         if (returnableValue <= 0) returnableValue = 0;
                                         if (returnableValue >= 11272) returnableValue = 11272;
                                         pix_x = Convert.ToInt32(returnableValue / 10);
+                                        loc_x = returnableValue;
                                     }
                                 }
 
                                 Color pixelColor = myBitmap.GetPixel(pix_x, pix_y);
                                 String colorMatch = pixelColor.R + "," + pixelColor.G + "," + pixelColor.B;
-                                Self.MapZoneRPC = MapZones.getZoneName(colorMatch);
-                                Thread.Sleep(1000);
+                                Self.MapZoneRPC = MapZones.getZoneName(colorMatch) ?? "(X: "+ loc_x + " | Y: "+ loc_y + ")";
+                                Thread.Sleep(10);
                             }
                         })
                         { IsBackground = true };

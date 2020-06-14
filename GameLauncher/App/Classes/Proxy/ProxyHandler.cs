@@ -125,7 +125,23 @@ namespace GameLauncher.App.Classes.Proxy
             try
             {
                 //OfflineSaveFile.SaveContent(path, responseBody);
-                DiscordGamePresence.handleGameState(path, responseBody, POSTContent, GETContent);
+
+                String lastKnownPath = path;
+                String lastKnownResponse = responseBody;
+                String lastKnownPOSTContent = POSTContent;
+                String lastKnownGETContent = GETContent;
+
+                Thread x = new Thread(() => {
+                    while(true) { 
+                        try { 
+                            DiscordGamePresence.handleGameState(lastKnownPath, lastKnownResponse, lastKnownPOSTContent, lastKnownGETContent);
+                        } catch(Exception ex) {
+                            Console.WriteLine(ex.Message);
+                        }
+                        Thread.Sleep(10);
+                    }
+                }) { IsBackground = true };
+                x.Start();
             }
             catch (Exception e)
             {

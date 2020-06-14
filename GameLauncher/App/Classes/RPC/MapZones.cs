@@ -17,7 +17,7 @@ namespace GameLauncher.App.Classes.RPC {
                 }
             }
 
-            return "LOCATION_UNKNOWN";
+            return null;
         }
     }
 }

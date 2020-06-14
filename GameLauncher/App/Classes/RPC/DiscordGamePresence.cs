@@ -13,7 +13,6 @@ using System.Xml;
 
 namespace GameLauncher.App.Classes.RPC {
     class DiscordGamePresence {
-        private static DateTime RPCstartTimestamp;
         public static RichPresence _presence = new RichPresence();
 
         //Some checks
@@ -37,8 +36,6 @@ namespace GameLauncher.App.Classes.RPC {
         public static List<string> PersonaIds = new List<string>();
 
         public static void handleGameState(string uri, string serverreply = "", string POST = "", string GET = "") {
-            RPCstartTimestamp = DateTime.Now;
-
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');
 
@@ -142,7 +139,6 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageKey = "gamemode_freeroam"
                 };
 
-                _presence.Timestamps = GetCurrentTimestamp();
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = true;
@@ -184,7 +180,6 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageText = "In-Freeroam",
                     SmallImageKey = "gamemode_freeroam"
                 };
-                _presence.Timestamps = GetCurrentTimestamp();
                 MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = true;
@@ -211,8 +206,6 @@ namespace GameLauncher.App.Classes.RPC {
 
                 _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
                 _presence.Assets.LargeImageKey = PersonaAvatarId;
-
-                _presence.Timestamps = GetCurrentTimestamp();
 
                 MainScreen.discordRpcClient.SetPresence(_presence);
             }
@@ -268,8 +261,6 @@ namespace GameLauncher.App.Classes.RPC {
                 AntiCheat.event_id = EventID;
                 AntiCheat.enableChecks();
 
-                _presence.Timestamps = GetCurrentTimestamp();
-
                 MainScreen.discordRpcClient.SetPresence(_presence);
             }
 
@@ -309,11 +300,6 @@ namespace GameLauncher.App.Classes.RPC {
                     }
                 }
             }
-        }
-
-        public static Timestamps GetCurrentTimestamp()
-        {
-            return Timestamps.Now;
         }
     }
 }
