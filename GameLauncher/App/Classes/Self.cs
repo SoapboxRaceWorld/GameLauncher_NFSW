@@ -39,6 +39,7 @@ namespace GameLauncherReborn {
 
         public static string rememberjson = "";
         public static string discordid = String.Empty;
+        public static string MapZoneRPC = String.Empty;
 
         public static void runAsAdmin() {
             string[] args = Environment.GetCommandLineArgs();

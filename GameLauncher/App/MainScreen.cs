@@ -36,7 +36,8 @@ using System.Management;
 using GameLauncher.App.Classes.ModNetReloaded;
 using GameLauncher.App.Classes.HashPassword;
 using System.Security;
-using static MeTonaTOR.MessageBox;
+using GameLauncher.App.Classes.RPC;
+//using System.Windows;
 
 namespace GameLauncher {
     public sealed partial class MainScreen : Form {
@@ -167,7 +168,7 @@ namespace GameLauncher {
 
             discordRpcClient.OnError += (sender, e) =>
             {
-                MeTonaTOR.MessageBox.Show($"Discord Error\n{e.Message}", e.Code.ToString(), _MessageBoxButtons.OK, _MessageBoxIcon.Error);
+                MessageBox.Show($"Discord Error\n{e.Message}", e.Code.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             };
 
             discordRpcClient.Initialize();
@@ -319,7 +320,7 @@ namespace GameLauncher {
             Log.Debug("Checking permissions");
             if (!Self.hasWriteAccessToFolder(Directory.GetCurrentDirectory())) {
                 Log.Error("Check Permission Failed.");
-                MeTonaTOR.MessageBox.Show(null, "Failed to write the test file. Make sure you're running the launcher with administrative privileges.", "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Error);
+                MessageBox.Show(null, "Failed to write the test file. Make sure you're running the launcher with administrative privileges.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             Log.Debug("Checking InstallationDirectory");
@@ -357,14 +358,14 @@ namespace GameLauncher {
                 if (fbd.ShowDialog() == CommonFileDialogResult.Ok) {
                     if (!Self.hasWriteAccessToFolder(fbd.FileName)) {
                         Log.Error("Not enough permissions. Exiting.");
-                        MeTonaTOR.MessageBox.Show(null, "You don't have enough permission to select this path as installation folder. Please select another directory.", "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Information);
+                        MessageBox.Show(null, "You don't have enough permission to select this path as installation folder. Please select another directory.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         Environment.Exit(Environment.ExitCode);
                     }
 
                     if (fbd.DefaultFileName == Environment.CurrentDirectory) {
                         Directory.CreateDirectory("GameFiles");
                         Log.Debug("Installing NFSW in same directory where the launcher resides is disadvised.");
-                        MeTonaTOR.MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. Instead, we will install it on {0}.", Environment.CurrentDirectory + "\\GameFiles"), "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Information);
+                        MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. Instead, we will install it on {0}.", Environment.CurrentDirectory + "\\GameFiles"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         _settingFile.Write("InstallationDirectory", Environment.CurrentDirectory + "\\GameFiles");
                     } else {
                         Log.Debug("Directory Set: " + fbd.FileName);
@@ -498,6 +499,7 @@ namespace GameLauncher {
             ContextMenu = null;
 
             email.Text = _settingFile.Read("AccountEmail");
+            password.Text = Properties.Settings.Default.PasswordDecoded;
             if (!string.IsNullOrEmpty(_settingFile.Read("AccountEmail")) && !string.IsNullOrEmpty(_settingFile.Read("Password"))) {
                 Log.Debug("Restoring last saved email and password");
                 rememberMe.Checked = true;
@@ -621,7 +623,7 @@ namespace GameLauncher {
                     WebClientWithTimeout wc = new WebClientWithTimeout();
                     _slresponse2 = wc.DownloadString(Self.CDNUrlList);
                 } catch(Exception error) {
-                    MeTonaTOR.MessageBox.Show(error.Message, "An error occurred while loading CDN List");
+                    MessageBox.Show(error.Message, "An error occurred while loading CDN List");
                     _slresponse2 = JsonConvert.SerializeObject(new[] {
                         new CDNObject { name = "[CF] WorldUnited.gg Mirror", url = "http://cdn.worldunited.gg/gamefiles/packed/" }
                     });
@@ -660,7 +662,7 @@ namespace GameLauncher {
                     _settingFile.Write("InstallationDirectory", newdir);
                     Log.Debug(string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir));
 
-                    MeTonaTOR.MessageBox.Show(null, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir), "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Error);
+                    MessageBox.Show(null, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
@@ -866,7 +868,7 @@ namespace GameLauncher {
             }
 
             if (_isDownloading) {
-                MeTonaTOR.MessageBox.Show(null, "Please wait while launcher is still downloading gamefiles.", "GameLauncher", _MessageBoxButtons.OK);
+                MessageBox.Show(null, "Please wait while launcher is still downloading gamefiles.", "GameLauncher", MessageBoxButtons.OK);
                 return;
             }
 
@@ -894,10 +896,14 @@ namespace GameLauncher {
             if (rememberMe.Checked) {
                 _settingFile.Write("AccountEmail", username);
                 _settingFile.Write("Password", realpass);
+                Properties.Settings.Default.PasswordDecoded = password.Text.ToString();
             } else {
                 _settingFile.DeleteKey("AccountEmail");
                 _settingFile.DeleteKey("Password");
+                Properties.Settings.Default.PasswordDecoded = String.Empty;
             }
+
+            Properties.Settings.Default.Save();
 
             if (String.IsNullOrEmpty(Tokens.Error)) {
                 _loggedIn = true;
@@ -906,14 +912,14 @@ namespace GameLauncher {
                 _serverIp = Tokens.IPAddress;
 
                 if(!String.IsNullOrEmpty(Tokens.Warning)) {
-                    MeTonaTOR.MessageBox.Show(null, Tokens.Warning, "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Warning);
+                    MessageBox.Show(null, Tokens.Warning, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 BackgroundImage = Properties.Resources.loggedbg;
                 LoginFormElements(false);
                 LoggedInFormElements(true);
             } else {
-                MeTonaTOR.MessageBox.Show(null, Tokens.Error, "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Error);
+                MessageBox.Show(null, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -970,7 +976,7 @@ namespace GameLauncher {
             ServerStatusDesc.Text = "";
 
             loginButton.ForeColor = Color.Gray;
-            password.Text = "";
+            //password.Text = "";
             var verticalImageUrl = "";
             verticalBanner.Image = null;
             verticalBanner.BackColor = Color.Transparent;
@@ -1170,7 +1176,7 @@ namespace GameLauncher {
                                     verticalBanner.Image = image;
                                     verticalBanner.BackColor = Color.Black;
 
-                                    imageServerName.Text = _realServernameBanner;
+                                    imageServerName.Text = String.Empty; //_realServernameBanner;
                                 } catch(Exception ex) {
                                     Console.WriteLine(ex.Message);
                                     verticalBanner.Image = null;
@@ -1238,7 +1244,7 @@ namespace GameLauncher {
                 LoginFormElements(false);
                 RegisterFormElements(true);
             } else {
-                MeTonaTOR.MessageBox.Show(null, "Server seems to be offline.", "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Error);
+                MessageBox.Show(null, "Server seems to be offline.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1267,7 +1273,7 @@ namespace GameLauncher {
                     responseString = "Failed to send email!";
                 }
 
-                MeTonaTOR.MessageBox.Show(null, responseString, "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Information);
+                MessageBox.Show(null, responseString, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
         }
@@ -1363,8 +1369,8 @@ namespace GameLauncher {
         }
 
         private void logoutButton_Click(object sender, EventArgs e) {
-            var reply = MeTonaTOR.MessageBox.Show(null, string.Format("Are you sure you want to log out from {0}?", serverPick.GetItemText(serverPick.SelectedItem)), "GameLauncher", _MessageBoxButtons.YesNo, _MessageBoxIcon.Warning);
-            if (reply == TaskDialogResult.Yes) {
+            //var reply = MessageBox.Show(null, string.Format("Are you sure you want to log out from {0}?", serverPick.GetItemText(serverPick.SelectedItem)), "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            //if (reply == MessageBoxResult.Yes) {
                 BackgroundImage = Properties.Resources.loginbg;
                 _loggedIn = false;
                 LoggedInFormElements(false);
@@ -1372,7 +1378,7 @@ namespace GameLauncher {
 
                 _userId = String.Empty;
                 _loginToken = String.Empty;
-            }
+            //}
         }
 
         private void logoutButton_MouseDown(object sender, EventArgs e)
@@ -1500,8 +1506,8 @@ namespace GameLauncher {
                     foreach (string hash in hashes) {
                         var splitChecks = hash.Split(':');
                         if(splitChecks[0] == verify) {
-                            var passwordCheckReply = MeTonaTOR.MessageBox.Show(null, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1])+ " times, you should consider using different one.\r\nAlternatively you can use unsafe password anyway. Use it?", "GameLauncher", _MessageBoxButtons.YesNo, _MessageBoxIcon.Warning);
-                            if(passwordCheckReply == TaskDialogResult.Yes) {
+                            var passwordCheckReply = MessageBox.Show(null, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1])+ " times, you should consider using different one.\r\nAlternatively you can use unsafe password anyway. Use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                            if(passwordCheckReply == DialogResult.Yes) {
                                 allowReg = true;
                             } else {
                                 allowReg = false;
@@ -1538,7 +1544,7 @@ namespace GameLauncher {
                         _loginToken = Tokens.LoginToken;
                         _serverIp = Tokens.IPAddress;
 
-                        MeTonaTOR.MessageBox.Show(null, Tokens.Success, "GameLauncher", "Registration:", _MessageBoxButtons.OK, _MessageBoxIcon.Warning);
+                        MessageBox.Show(null, Tokens.Success, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                         BackgroundImage = Properties.Resources.loginbg;
 
@@ -1547,7 +1553,7 @@ namespace GameLauncher {
 
                         _loggedIn = true;
                     } else {
-                        MeTonaTOR.MessageBox.Show(null, Tokens.Error, "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Error);
+                        MessageBox.Show(null, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
 
@@ -1558,7 +1564,7 @@ namespace GameLauncher {
                         message += "• " + error + "\n";
                     }
 
-                    MeTonaTOR.MessageBox.Show(null, message, "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Error);
+                    MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1654,12 +1660,12 @@ namespace GameLauncher {
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
                     } catch (Exception ex) {
-                        MeTonaTOR.MessageBox.Show(null, "There was an error saving your settings to actual file. Restoring default.\n" + ex.Message, "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Error);
+                        MessageBox.Show(null, "There was an error saving your settings to actual file. Restoring default.\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         File.Delete(_userSettings);
                     }
                 }
             } catch(Exception ex) {
-                MeTonaTOR.MessageBox.Show(null, "There was an error saving your settings to actual file. Restoring default.\n" + ex.Message, "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Error);
+                MessageBox.Show(null, "There was an error saving your settings to actual file. Restoring default.\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 File.Delete(_userSettings);
             }
 
@@ -1679,7 +1685,7 @@ namespace GameLauncher {
 
 
             if (_restartRequired) {
-                MeTonaTOR.MessageBox.Show(null, "In order to see settings changes, you need to restart launcher manually.", "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Information);
+                MessageBox.Show(null, "In order to see settings changes, you need to restart launcher manually.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             //Delete/Enable profwords filter here
@@ -1781,8 +1787,11 @@ namespace GameLauncher {
 
                 AntiCheat.process_id = nfswProcess.Id;
 
-                //TIMER HERE
-                int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2*60*60;
+                
+
+
+            //TIMER HERE
+            int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2*60*60;
                 System.Timers.Timer shutdowntimer = new System.Timers.Timer();
                 shutdowntimer.Elapsed += (x2, y2) => {
                     if(secondsToShutDown == 300) {
@@ -1877,7 +1886,7 @@ namespace GameLauncher {
 
                                 _nfswstarted.Abort();
 
-                                MeTonaTOR.MessageBox.Show(null, errorMsg, "GameLauncher", "An error occurred with NFSW Executable", _MessageBoxButtons.OK, _MessageBoxIcon.Warning);
+                                MessageBox.Show(null, errorMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 this.closebtn_Click(null, null);
                             }));
                         }
@@ -2001,7 +2010,7 @@ namespace GameLauncher {
                     try {
                         File.Delete(Path.Combine(_settingFile.Read("InstallationDirectory"), file));
                     } catch {
-                        MeTonaTOR.MessageBox.Show($"File {file} cannot be deleted.", "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Warning);
+                        MessageBox.Show($"File {file} cannot be deleted.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
             }
@@ -2080,7 +2089,7 @@ namespace GameLauncher {
                         }
                     }
                 } catch(Exception ex) {
-                    MeTonaTOR.MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message);
                 }
             } else {
                 string[] newFiles = GlobalFiles.Concat(ModNetLegacyFiles).ToArray();
@@ -2221,7 +2230,7 @@ namespace GameLauncher {
                                                 xddd += "\nGot: " + MDFive.HashFile(path + "/" + realfilepath);
                                                 xddd += "\nExpected: " + files.InnerText;
 
-                                                MeTonaTOR.MessageBox.Show(xddd);
+                                                MessageBox.Show(xddd);
                                                 File.Delete(path + "/" + realfilepath);
                                                 playButton_Click(sender, e);
                                             }
@@ -2364,7 +2373,7 @@ namespace GameLauncher {
                     if (_builtinserver) {
                         playProgressText.Text = "Soapbox server launched. Waiting for queries.".ToUpper();
                     } else {
-                        var secondsToCloseLauncher = 5;
+                        var secondsToCloseLauncher = 10;
 
                         extractingProgress.Value = 100;
                         extractingProgress.Width = 519;
@@ -2387,19 +2396,71 @@ namespace GameLauncher {
                         ContextMenu.MenuItems.Add("-");
                         ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", (sender2, e2) =>
                         {
-                            MeTonaTOR.MessageBox.Show(null, "Please close the game before closing launcher.", "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Information);
+                            MessageBox.Show(null, "Please close the game before closing launcher.", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }));
 
                         Update();
                         Refresh();
 
                         Notification.ContextMenu = ContextMenu;
+
+                        /*Process process_ml = Process.GetProcessById(AntiCheat.process_id);
+                        IntPtr processHandle = Kernel32.OpenProcess(0x0010, false, process_ml.Id);
+                        int baseAddress = process_ml.MainModule.BaseAddress.ToInt32();
+
+                        Dictionary<int, String> coords = new Dictionary<int, String>();
+                        coords.Add(0x9A7C90, "X PLACE"); //Start point: 0 - Endpoint: 11272
+                        coords.Add(0x908274, "Y PLACE"); //Start point: 0 - Endpoint: 6773
+
+                        Bitmap myBitmap = new Bitmap(Properties.Resources.places4);
+                        int pix_y = 0; int loc_y = 0;
+                        int pix_x = 0; int loc_x = 0;
+
+                        var thread = new Thread(() => {
+                            while (true)
+                            {
+                                foreach (var oneAddress in coords.Keys)
+                                {
+                                    int bytesRead = 0;
+                                    byte[] buffer = new byte[4];
+                                    Kernel32.ReadProcessMemory((int)processHandle, baseAddress + oneAddress, buffer, buffer.Length, ref bytesRead);
+
+
+
+                                    var checkInt = BitConverter.ToSingle(buffer, 0);
+                                    int returnableValue = 0;
+
+                                    if (coords[oneAddress] == "Y PLACE") {
+                                        returnableValue = (int)checkInt + 4255;
+                                        if (returnableValue <= 0) returnableValue = 0;
+                                        if (returnableValue >= 6773) returnableValue = 6773;
+                                        pix_y = Convert.ToInt32(returnableValue / 10);
+                                        loc_y = returnableValue;
+                                    } else {
+                                        returnableValue = (int)checkInt;
+                                        if (returnableValue <= 0) returnableValue = 0;
+                                        if (returnableValue >= 11272) returnableValue = 11272;
+                                        pix_x = Convert.ToInt32(returnableValue / 10);
+                                        loc_x = returnableValue;
+                                    }
+                                }
+
+                                Color pixelColor = myBitmap.GetPixel(pix_x, pix_y);
+                                String colorMatch = pixelColor.R + "," + pixelColor.G + "," + pixelColor.B;
+                                Self.MapZoneRPC = MapZones.getZoneName(colorMatch) ?? "(X: "+ loc_x + " | Y: "+ loc_y + ")";
+                                Thread.Sleep(1000);
+                            }
+                        })
+                        { IsBackground = true };
+                        thread.Start();*/
+
+                        Self.MapZoneRPC = "GameLauncherReborn v" + Application.ProductVersion;
                     }
                 } else {
-                    MeTonaTOR.MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Error);
+                    MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             } catch (Exception ex) {
-                MeTonaTOR.MessageBox.Show(null, ex.Message, "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Error);
+                MessageBox.Show(null, ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2612,7 +2673,7 @@ namespace GameLauncher {
             }
             catch (Exception e)
             {
-                MeTonaTOR.MessageBox.Show(e.Message + e.StackTrace);
+                MessageBox.Show(e.Message + e.StackTrace);
                 ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
                 return false;
             }
@@ -2783,7 +2844,7 @@ namespace GameLauncher {
         private void OnDownloadFailed(Exception ex)
         {
             string failureMessage;
-            MeTonaTOR.MessageBox.Show(null, "Failed to download gamefiles. Possible cause is that CDN went offline. Please select other CDN from Settings", "GameLauncher - Error", _MessageBoxButtons.OK, _MessageBoxIcon.Error);
+            MessageBox.Show(null, "Failed to download gamefiles. Possible cause is that CDN went offline. Please select other CDN from Settings", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             try {
                 failureMessage = ex.Message;
@@ -2812,7 +2873,7 @@ namespace GameLauncher {
 
         private void OnShowMessage(string message, string header)
         {
-            MeTonaTOR.MessageBox.Show(message, header);
+            MessageBox.Show(message, header);
         }
 
         public void ServerStatusBar(Pen color, Point startPoint, Point endPoint, int Thickness = 2) {
