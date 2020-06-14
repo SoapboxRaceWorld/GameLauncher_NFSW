@@ -1171,7 +1171,7 @@ namespace GameLauncher {
                                     verticalBanner.Image = image;
                                     verticalBanner.BackColor = Color.Black;
 
-                                    imageServerName.Text = _realServernameBanner;
+                                    imageServerName.Text = String.Empty; //_realServernameBanner;
                                 } catch(Exception ex) {
                                     Console.WriteLine(ex.Message);
                                     verticalBanner.Image = null;
@@ -2443,7 +2443,7 @@ namespace GameLauncher {
                                 Color pixelColor = myBitmap.GetPixel(pix_x, pix_y);
                                 String colorMatch = pixelColor.R + "," + pixelColor.G + "," + pixelColor.B;
                                 Self.MapZoneRPC = MapZones.getZoneName(colorMatch) ?? "(X: "+ loc_x + " | Y: "+ loc_y + ")";
-                                Thread.Sleep(10);
+                                Thread.Sleep(1000);
                             }
                         })
                         { IsBackground = true };

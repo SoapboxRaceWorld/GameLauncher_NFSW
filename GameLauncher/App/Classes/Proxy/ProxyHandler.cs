@@ -138,7 +138,7 @@ namespace GameLauncher.App.Classes.Proxy
                         } catch(Exception ex) {
                             Console.WriteLine(ex.Message);
                         }
-                        Thread.Sleep(10);
+                        Thread.Sleep(1000);
                     }
                 }) { IsBackground = true };
                 x.Start();
