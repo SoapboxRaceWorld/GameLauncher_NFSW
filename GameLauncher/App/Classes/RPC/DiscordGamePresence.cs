@@ -134,9 +134,8 @@ namespace GameLauncher.App.Classes.RPC {
 
             if (uri == "/matchmaking/leavelobby" || uri == "/matchmaking/declineinvite") {
                 _presence.Details = "Driving " + PersonaCarName;
-                _presence.State = serverName;
-                _presence.Assets = new Assets
-                {
+                _presence.State = Self.MapZoneRPC;
+                _presence.Assets = new Assets {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                     LargeImageKey = PersonaAvatarId,
                     SmallImageText = "In-Freeroam",
@@ -199,6 +198,7 @@ namespace GameLauncher.App.Classes.RPC {
                     _presence.Details = "Driving " + PersonaCarName;
                     _presence.Assets.SmallImageText = "In-Freeroam";
                     _presence.Assets.SmallImageKey = "gamemode_freeroam";
+                    _presence.State = Self.MapZoneRPC;
 
                     Self.CanDisableGame = true;
                 } else {
@@ -206,9 +206,9 @@ namespace GameLauncher.App.Classes.RPC {
                     _presence.Assets.SmallImageText = "In-Safehouse";
                     _presence.Assets.SmallImageKey = "gamemode_safehouse";
                     Self.CanDisableGame = false;
+                    _presence.State = serverName;
                 }
 
-                _presence.State = serverName;
                 _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
                 _presence.Assets.LargeImageKey = PersonaAvatarId;
 

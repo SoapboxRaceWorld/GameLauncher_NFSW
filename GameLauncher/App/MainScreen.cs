@@ -37,6 +37,7 @@ using GameLauncher.App.Classes.ModNetReloaded;
 using GameLauncher.App.Classes.HashPassword;
 using System.Security;
 using static MeTonaTOR.MessageBox;
+using GameLauncher.App.Classes.RPC;
 
 namespace GameLauncher {
     public sealed partial class MainScreen : Form {
@@ -1781,8 +1782,11 @@ namespace GameLauncher {
 
                 AntiCheat.process_id = nfswProcess.Id;
 
-                //TIMER HERE
-                int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2*60*60;
+                
+
+
+            //TIMER HERE
+            int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2*60*60;
                 System.Timers.Timer shutdowntimer = new System.Timers.Timer();
                 shutdowntimer.Elapsed += (x2, y2) => {
                     if(secondsToShutDown == 300) {
@@ -2364,7 +2368,7 @@ namespace GameLauncher {
                     if (_builtinserver) {
                         playProgressText.Text = "Soapbox server launched. Waiting for queries.".ToUpper();
                     } else {
-                        var secondsToCloseLauncher = 5;
+                        var secondsToCloseLauncher = 10;
 
                         extractingProgress.Value = 100;
                         extractingProgress.Width = 519;
@@ -2394,6 +2398,54 @@ namespace GameLauncher {
                         Refresh();
 
                         Notification.ContextMenu = ContextMenu;
+
+                        Process process_ml = Process.GetProcessById(AntiCheat.process_id);
+                        IntPtr processHandle = Kernel32.OpenProcess(0x0010, false, process_ml.Id);
+                        int baseAddress = process_ml.MainModule.BaseAddress.ToInt32();
+
+                        Dictionary<int, String> coords = new Dictionary<int, String>();
+                        coords.Add(0x9A7C90, "X PLACE"); //Start point: 0 - Endpoint: 11272
+                        coords.Add(0x908274, "Y PLACE"); //Start point: 0 - Endpoint: 6773
+
+                        Bitmap myBitmap = new Bitmap(Properties.Resources.places4);
+                        int pix_y = 0;
+                        int pix_x = 0;
+
+                        var thread = new Thread(() => {
+                            while (true)
+                            {
+                                foreach (var oneAddress in coords.Keys)
+                                {
+                                    int bytesRead = 0;
+                                    byte[] buffer = new byte[4];
+                                    Kernel32.ReadProcessMemory((int)processHandle, baseAddress + oneAddress, buffer, buffer.Length, ref bytesRead);
+
+
+
+                                    var checkInt = BitConverter.ToSingle(buffer, 0);
+                                    int returnableValue = 0;
+
+                                    if (coords[oneAddress] == "Y PLACE") {
+                                        returnableValue = (int)checkInt + 4255;
+                                        if (returnableValue <= 0) returnableValue = 0;
+                                        if (returnableValue >= 6773) returnableValue = 6773;
+                                        pix_y = Convert.ToInt32(returnableValue / 10);
+                                    } else {
+                                        returnableValue = (int)checkInt;
+                                        if (returnableValue <= 0) returnableValue = 0;
+                                        if (returnableValue >= 11272) returnableValue = 11272;
+                                        pix_x = Convert.ToInt32(returnableValue / 10);
+                                    }
+                                }
+
+                                Color pixelColor = myBitmap.GetPixel(pix_x, pix_y);
+                                String colorMatch = pixelColor.R + "," + pixelColor.G + "," + pixelColor.B;
+                                Self.MapZoneRPC = MapZones.getZoneName(colorMatch);
+                                Thread.Sleep(1000);
+                            }
+                        })
+                        { IsBackground = true };
+                        thread.Start();
                     }
                 } else {
                     MeTonaTOR.MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", _MessageBoxButtons.OK, _MessageBoxIcon.Error);

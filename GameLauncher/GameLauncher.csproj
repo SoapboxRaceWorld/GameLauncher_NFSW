@@ -187,6 +187,7 @@
     <Compile Include="App\Classes\RPC\CarList.cs" />
     <Compile Include="App\Classes\RPC\DiscordGamePresence.cs" />
     <Compile Include="App\Classes\RPC\EventList.cs" />
+    <Compile Include="App\Classes\RPC\MapZones.cs" />
     <Compile Include="App\Classes\RPC\OfflineSaveFile.cs" />
     <Compile Include="App\Classes\Self.cs" />
     <Compile Include="App\Classes\ServerListUpdater.cs" />
@@ -257,6 +258,7 @@
     <EmbeddedResource Include="Fonts\Airport-Cyr.ttf" />
     <EmbeddedResource Include="Fonts\Akrobat-Regular.ttf" />
     <EmbeddedResource Include="Fonts\Akrobat-SemiBold.ttf" />
+    <EmbeddedResource Include="App\Classes\RPC\JSON\zones.json" />
     <None Include="GameLauncher_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest">
@@ -291,6 +293,7 @@
     <None Include="Resources\buttons_info.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\places4.png" />
     <None Include="Resources\playbutton_hover.png" />
     <None Include="Resources\playbutton_click.png" />
     <None Include="Resources\playbutton.png" />
