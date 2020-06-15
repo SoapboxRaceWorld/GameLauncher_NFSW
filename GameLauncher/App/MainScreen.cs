@@ -37,6 +37,7 @@ using GameLauncher.App.Classes.ModNetReloaded;
 using GameLauncher.App.Classes.HashPassword;
 using System.Security;
 using GameLauncher.App.Classes.RPC;
+using GameLauncher.App.Classes.GPU;
 //using System.Windows;
 
 namespace GameLauncher {
@@ -185,11 +186,15 @@ namespace GameLauncher {
             Log.Debug("Detecting OS");
             if (DetectLinux.LinuxDetected()) {
                 _OS = DetectLinux.Distro();
+                Log.Debug("Detected OS: " + _OS);
             } else {
-                _OS = Environment.OSVersion.VersionString;
+                _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
+                Log.Debug("Detected OS: " + _OS);
+                Log.Debug("OS Details: " + Environment.OSVersion);
+                Log.Debug("Video Card: " + GPUHelper.CardName());
+                Log.Debug("Driver Version: " + GPUHelper.DriverVersion());
             }
 
-            Log.Debug("Detected OS: " + _OS);
             _downloader = new Downloader(this, 3, 2, 16) {
                 ProgressUpdated = new ProgressUpdated(OnDownloadProgress),
                 DownloadFinished = new DownloadFinished(DownloadTracksFiles),
@@ -323,7 +328,7 @@ namespace GameLauncher {
                 MessageBox.Show(null, "Failed to write the test file. Make sure you're running the launcher with administrative privileges.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            Log.Debug("Checking InstallationDirectory");
+            Log.Debug("Checking InstallationDirectory: " + _settingFile.Read("InstallationDirectory"));
             if (string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory"))) {
                 Log.Debug("First run!");
 
@@ -478,7 +483,7 @@ namespace GameLauncher {
             }
 
             _NFSW_Installation_Source = !string.IsNullOrEmpty(_settingFile.Read("CDN")) ? _settingFile.Read("CDN") : "http://cdn.worldunited.gg/gamefiles/packed/";
-            Log.Debug("_NFSW_Installation_Source is now " + _NFSW_Installation_Source);
+            Log.Debug("NFSW Download Source is now: " + _NFSW_Installation_Source);
 
             Log.Debug("Applyinng ContextMenu");
             translatedBy.Text = "";
@@ -653,7 +658,7 @@ namespace GameLauncher {
                 settingsQuality.SelectedIndex = 0;
             }
 
-            Log.Debug("Re-checking InstallationDirectory");
+            Log.Debug("Re-checking InstallationDirectory: " + _settingFile.Read("InstallationDirectory"));
 
             var drive = Path.GetPathRoot(_settingFile.Read("InstallationDirectory"));
             if (!Directory.Exists(drive)) {
@@ -712,7 +717,7 @@ namespace GameLauncher {
             this.BringToFront();
 
             if(!DetectLinux.LinuxDetected()) {
-                Log.Debug("Checking for update");
+                Log.Debug("Checking for update: " + Self.mainserver + "/update.php?version=" + Application.ProductVersion);
                 new LauncherUpdateCheck(launcherIconStatus, launcherStatusText, launcherStatusDesc).checkAvailability();
             } else {
                 launcherIconStatus.Image = Properties.Resources.ac_success;
@@ -1189,51 +1194,51 @@ namespace GameLauncher {
         }
 
         private void ApplyEmbeddedFonts() {
-            Log.Debug("Getting AirportCyr");            FontFamily AirportCyr = FontWrapper.Instance.GetFontFamily("Airport-Cyr.ttf");
-            Log.Debug("Getting AkrobatSemiBold");       FontFamily AkrobatSemiBold = FontWrapper.Instance.GetFontFamily("Akrobat-SemiBold.ttf");
-            Log.Debug("Getting AkrobatRegular");        FontFamily AkrobatRegular = FontWrapper.Instance.GetFontFamily("Akrobat-Regular.ttf");
+            /*Log.Debug("Getting AirportCyr");            */FontFamily AirportCyr = FontWrapper.Instance.GetFontFamily("Airport-Cyr.ttf");
+            /*Log.Debug("Getting AkrobatSemiBold");       */FontFamily AkrobatSemiBold = FontWrapper.Instance.GetFontFamily("Akrobat-SemiBold.ttf");
+            /*Log.Debug("Getting AkrobatRegular");        */FontFamily AkrobatRegular = FontWrapper.Instance.GetFontFamily("Akrobat-Regular.ttf");
                 
-            Log.Debug("Applying AkrobatRegular mainScreen to launcherStatusText");          launcherStatusText.Font = new Font(AkrobatRegular, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            Log.Debug("Applying AirportCyr mainScreen to launcherStatusText");              launcherStatusDesc.Font = new Font(AirportCyr, 7f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AkrobatRegular mainScreen to launcherStatusText");          */launcherStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AirportCyr mainScreen to launcherStatusText");              */launcherStatusDesc.Font = new Font(AirportCyr, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
 
-            Log.Debug("Applying AkrobatRegular mainScreen to ServerStatusText");            ServerStatusText.Font = new Font(AkrobatRegular, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            Log.Debug("Applying AirportCyr mainScreen to ServerStatusDesc");                ServerStatusDesc.Font = new Font(AirportCyr, 7f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to playProgressText");           playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatRegular mainScreen to ServerStatusText");            */ServerStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AirportCyr mainScreen to ServerStatusDesc");                */ServerStatusDesc.Font = new Font(AirportCyr, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to playProgressText");           */playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
-            Log.Debug("Applying AkrobatRegular mainScreen to email");                       email.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to loginButton");                loginButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Log.Debug("Applying AkrobatRegular mainScreen to password");                    password.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to rememberMe");                 rememberMe.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to forgotPassword");             forgotPassword.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to playProgressText");           playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to playButton");                 playButton.Font = new Font(AkrobatSemiBold, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to currentWindowInfo");          currentWindowInfo.Font = new Font(AkrobatSemiBold, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to imageServerName");            imageServerName.Font = new Font(AkrobatSemiBold, 25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatRegular mainScreen to email");                       */email.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to loginButton");                */loginButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatRegular mainScreen to password");                    */password.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to rememberMe");                 */rememberMe.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to forgotPassword");             */forgotPassword.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to playProgressText");           */playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to playButton");                 */playButton.Font = new Font(AkrobatSemiBold, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to currentWindowInfo");          */currentWindowInfo.Font = new Font(AkrobatSemiBold, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to imageServerName");            */imageServerName.Font = new Font(AkrobatSemiBold, 25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
-            Log.Debug("Applying AkrobatSemiBold mainScreen to registerAgree");              registerAgree.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to registerCancel");             registerCancel.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to registerAgree");              */registerAgree.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to registerCancel");             */registerCancel.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
-            Log.Debug("Applying AkrobatSemiBold mainScreen to settingsLanguageText");       settingsLanguageText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to settingsQualityText");        settingsQualityText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to settingsSave");               settingsSave.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to settingsLanguageText");       */settingsLanguageText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to settingsQualityText");        */settingsQualityText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to settingsSave");               */settingsSave.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
-            Log.Debug("Applying AkrobatSemiBold mainScreen to settingsGamePathText");       settingsGamePathText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to wordFilterCheck");            wordFilterCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to vFilesCheck");                vfilesCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to settingsGameFilesCurrent");   settingsGameFilesCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to settingsGamePathText");       */settingsGamePathText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to wordFilterCheck");            */wordFilterCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to vFilesCheck");                */vfilesCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to settingsGameFilesCurrent");   */settingsGameFilesCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
-            Log.Debug("Applying AkrobatSemiBold mainScreen to logoutButton");               logoutButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to logoutButton");               */logoutButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
-            Log.Debug("Applying AkrobatRegular mainScreen to registerEmail");               registerEmail.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            Log.Debug("Applying AkrobatRegular mainScreen to registerPassword");            registerPassword.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            Log.Debug("Applying AkrobatRegular mainScreen to registerConfirmPassword");     registerConfirmPassword.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            Log.Debug("Applying AkrobatRegular mainScreen to registerTicket");              registerTicket.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AkrobatRegular mainScreen to registerEmail");               */registerEmail.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AkrobatRegular mainScreen to registerPassword");            */registerPassword.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AkrobatRegular mainScreen to registerConfirmPassword");     */registerConfirmPassword.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AkrobatRegular mainScreen to registerTicket");              */registerTicket.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
 
-            Log.Debug("Applying AkrobatSemiBold mainScreen to registerButton");             registerButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to registerButton");             registerButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Log.Debug("Applying AkrobatSemiBold mainScreen to registerText");               registerText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to registerButton");             */registerButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to registerButton");             */registerButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to registerText");               */registerText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
-            Log.Debug("Applying cdnText mainScreen to settingsGamePathText");               cdnText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying cdnText mainScreen to settingsGamePathText");               */cdnText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
         }
 
         private void registerText_LinkClicked(object sender, EventArgs e)

@@ -91,6 +91,7 @@ namespace GameLauncher {
             File.Delete("log.txt");
 
             Log.StartLogging();
+            Log.Debug("GameLauncher " + Application.ProductVersion);
 
             //StaticConfiguration.DisableErrorTraces = false;
 
