@@ -58,7 +58,7 @@ namespace GameLauncher {
         private bool _modernAuthSupport = false;
         private bool _gameKilledBySpeedBugCheck = false;
 
-        private bool _disableChecks;
+        //private bool _disableChecks;
 
         private int _lastSelectedServerId;
         private int _nfswPid;
@@ -209,7 +209,7 @@ namespace GameLauncher {
             Log.Debug("Applying Fonts");
             ApplyEmbeddedFonts();
 
-            _disableChecks = (_settingFile.KeyExists("DisableVerifyHash") && _settingFile.Read("DisableVerifyHash") == "1") ? true : false;
+            //_disableChecks = (_settingFile.KeyExists("DisableVerifyHash") && _settingFile.Read("DisableVerifyHash") == "1") ? true : false;
 
             Log.Debug("Setting launcher location");
             if (_settingFile.KeyExists("LauncherPosX") || _settingFile.KeyExists("LauncherPosY")) {
@@ -671,7 +671,7 @@ namespace GameLauncher {
                 }
             }
 
-            vfilesCheck.Checked = _disableChecks;
+            //vfilesCheck.Checked = _disableChecks;
 
             Log.Debug("Hiding RegisterFormElements"); RegisterFormElements(false);
             Log.Debug("Hiding SettingsFormElements"); SettingsFormElements(false);
@@ -1223,8 +1223,8 @@ namespace GameLauncher {
             /*Log.Debug("Applying AkrobatSemiBold mainScreen to settingsSave");               */settingsSave.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             /*Log.Debug("Applying AkrobatSemiBold mainScreen to settingsGamePathText");       */settingsGamePathText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /*Log.Debug("Applying AkrobatSemiBold mainScreen to vFilesButton");                */vfilesButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             /*Log.Debug("Applying AkrobatSemiBold mainScreen to wordFilterCheck");            */wordFilterCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to vFilesCheck");                */vfilesCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             /*Log.Debug("Applying AkrobatSemiBold mainScreen to settingsGameFilesCurrent");   */settingsGameFilesCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             /*Log.Debug("Applying AkrobatSemiBold mainScreen to logoutButton");               */logoutButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
@@ -1681,12 +1681,12 @@ namespace GameLauncher {
                 _restartRequired = true;
             }
 
-            String disableCheck = (vfilesCheck.Checked == true) ? "1" : "0";
+            /*String disableCheck = (vfilesCheck.Checked == true) ? "1" : "0";
 
             if (_settingFile.Read("DisableVerifyHash") != disableCheck) {
                 _settingFile.Write("DisableVerifyHash", (vfilesCheck.Checked == true) ? "1" : "0");
                 _restartRequired = true;
-            }
+            }*/
 
 
             if (_restartRequired) {
@@ -1745,7 +1745,7 @@ namespace GameLauncher {
             settingsGameFilesCurrent.Visible = hideElements;
             settingsGamePathText.Visible = hideElements;
             wordFilterCheck.Visible = hideElements;
-            vfilesCheck.Visible = hideElements;
+            vfilesButton.Visible = hideElements;
         }
 
         private void StartGame(string userId, string loginToken) {
@@ -2742,7 +2742,7 @@ namespace GameLauncher {
             } catch {
                 // ignored
             }
-
+            /*
             if (_disableChecks != true) { 
                 if(File.Exists("invalidfiles.dat")) {
                     playProgressText.Text = "RE-DOWNLOADING INVALID FILES".ToUpper();
@@ -2767,14 +2767,15 @@ namespace GameLauncher {
             } else {
                 playProgressText.Text = "Download Completed".ToUpper();
             }
-
+            */
+            playProgressText.Text = "Ready!".ToUpper();
             EnablePlayButton();
 
             extractingProgress.Width = 519;
 
             TaskbarProgress.SetValue(Handle, 100, 100);
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
-
+            /*
             if(_disableChecks != true) {
                     playProgressText.Text = "Validating files on background.".ToUpper();
 
@@ -2821,7 +2822,7 @@ namespace GameLauncher {
             } else {
                 playProgressText.Text = "Download Completed.".ToUpper();
             }
-            //End CheckFiles
+            //End CheckFiles*/
         }
 
         private void EnablePlayButton() {
