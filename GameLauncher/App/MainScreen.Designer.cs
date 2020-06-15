@@ -76,8 +76,8 @@
             this.randomServer = new System.Windows.Forms.Button();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.vfilesButton = new System.Windows.Forms.Button();
             this.wordFilterCheck = new System.Windows.Forms.CheckBox();
-            this.vfilesCheck = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
@@ -659,31 +659,31 @@
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
             // 
+            // vfilesButton
+            // 
+            this.vfilesButton.AutoSize = true;
+            this.vfilesButton.BackColor = System.Drawing.Color.Transparent;
+            this.vfilesButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.vfilesButton.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.vfilesButton.Location = new System.Drawing.Point(49, 269);
+            this.vfilesButton.Name = "vfilesButton";
+            this.vfilesButton.Size = new System.Drawing.Size(207, 23);
+            this.vfilesButton.TabIndex = 96;
+            this.vfilesButton.Text = "Validate Game Files";
+            this.vfilesButton.UseVisualStyleBackColor = false;
+            // 
             // wordFilterCheck
             // 
             this.wordFilterCheck.AutoSize = true;
             this.wordFilterCheck.BackColor = System.Drawing.Color.Transparent;
             this.wordFilterCheck.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.wordFilterCheck.ForeColor = System.Drawing.SystemColors.Control;
-            this.wordFilterCheck.Location = new System.Drawing.Point(47, 270);
+            this.wordFilterCheck.Location = new System.Drawing.Point(49, 303);
             this.wordFilterCheck.Name = "wordFilterCheck";
             this.wordFilterCheck.Size = new System.Drawing.Size(234, 17);
             this.wordFilterCheck.TabIndex = 93;
             this.wordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.wordFilterCheck.UseVisualStyleBackColor = false;
-            // 
-            // vfilesCheck
-            // 
-            this.vfilesCheck.AutoSize = true;
-            this.vfilesCheck.BackColor = System.Drawing.Color.Transparent;
-            this.vfilesCheck.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.vfilesCheck.ForeColor = System.Drawing.SystemColors.Control;
-            this.vfilesCheck.Location = new System.Drawing.Point(47, 288);
-            this.vfilesCheck.Name = "vfilesCheck";
-            this.vfilesCheck.Size = new System.Drawing.Size(217, 17);
-            this.vfilesCheck.TabIndex = 96;
-            this.vfilesCheck.Text = "Disable process that validate files";
-            this.vfilesCheck.UseVisualStyleBackColor = false;
             // 
             // MainScreen
             // 
@@ -691,7 +691,7 @@
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
-            this.Controls.Add(this.vfilesCheck);
+            this.Controls.Add(this.vfilesButton);
             this.Controls.Add(this.wordFilterCheck);
             this.Controls.Add(this.randomServer);
             this.Controls.Add(this.cdnPick);
@@ -804,7 +804,7 @@
         private System.Windows.Forms.Label cdnText;
         private System.Windows.Forms.ComboBox cdnPick;
         private System.Windows.Forms.Button randomServer;
+        private System.Windows.Forms.Button vfilesButton;
         private System.Windows.Forms.CheckBox wordFilterCheck;
-        private System.Windows.Forms.CheckBox vfilesCheck;
     }
 }
