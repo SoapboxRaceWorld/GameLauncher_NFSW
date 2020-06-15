@@ -156,7 +156,7 @@
             this.rememberMe.ForeColor = System.Drawing.Color.White;
             this.rememberMe.Location = new System.Drawing.Point(615, 285);
             this.rememberMe.Name = "rememberMe";
-            this.rememberMe.Size = new System.Drawing.Size(219, 19);
+            this.rememberMe.Size = new System.Drawing.Size(218, 19);
             this.rememberMe.TabIndex = 5;
             this.rememberMe.Text = "REMEMBER MY EMAIL ADDRESS";
             this.rememberMe.UseVisualStyleBackColor = false;
@@ -393,11 +393,12 @@
             this.launcherStatusDesc.BackColor = System.Drawing.Color.Transparent;
             this.launcherStatusDesc.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.launcherStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(134)))), ((int)(((byte)(134)))), ((int)(((byte)(134)))));
-            this.launcherStatusDesc.Location = new System.Drawing.Point(65, 491);
+            this.launcherStatusDesc.Location = new System.Drawing.Point(65, 490);
             this.launcherStatusDesc.Name = "launcherStatusDesc";
             this.launcherStatusDesc.Size = new System.Drawing.Size(146, 13);
             this.launcherStatusDesc.TabIndex = 5;
             this.launcherStatusDesc.Text = "Version : 2.0.0.0-Build123456";
+            this.launcherStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // imageServerName
             // 
@@ -406,9 +407,9 @@
             this.imageServerName.ForeColor = System.Drawing.Color.White;
             this.imageServerName.Location = new System.Drawing.Point(41, 148);
             this.imageServerName.Name = "imageServerName";
-            this.imageServerName.Size = new System.Drawing.Size(519, 216);
+            this.imageServerName.Size = new System.Drawing.Size(519, 259);
             this.imageServerName.TabIndex = 19;
-            this.imageServerName.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.imageServerName.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             this.imageServerName.UseCompatibleTextRendering = true;
             this.imageServerName.UseMnemonic = false;
             // 
@@ -519,7 +520,7 @@
             // 
             this.launcherIconStatus.BackColor = System.Drawing.Color.Transparent;
             this.launcherIconStatus.Image = global::GameLauncher.Properties.Resources.ac_success;
-            this.launcherIconStatus.Location = new System.Drawing.Point(38, 476);
+            this.launcherIconStatus.Location = new System.Drawing.Point(38, 478);
             this.launcherIconStatus.Name = "launcherIconStatus";
             this.launcherIconStatus.Size = new System.Drawing.Size(21, 24);
             this.launcherIconStatus.TabIndex = 79;
@@ -530,11 +531,13 @@
             this.launcherStatusText.BackColor = System.Drawing.Color.Transparent;
             this.launcherStatusText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.launcherStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
+            this.launcherStatusText.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.launcherStatusText.Location = new System.Drawing.Point(65, 476);
             this.launcherStatusText.Name = "launcherStatusText";
-            this.launcherStatusText.Size = new System.Drawing.Size(161, 14);
+            this.launcherStatusText.Size = new System.Drawing.Size(199, 15);
             this.launcherStatusText.TabIndex = 4;
             this.launcherStatusText.Text = "Anti-Cheat System - Activated";
+            this.launcherStatusText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.launcherStatusText.UseCompatibleTextRendering = true;
             // 
             // ServerStatusDesc
@@ -543,27 +546,30 @@
             this.ServerStatusDesc.BackColor = System.Drawing.Color.Transparent;
             this.ServerStatusDesc.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.ServerStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(134)))), ((int)(((byte)(134)))), ((int)(((byte)(134)))));
-            this.ServerStatusDesc.Location = new System.Drawing.Point(258, 491);
+            this.ServerStatusDesc.Location = new System.Drawing.Point(326, 490);
             this.ServerStatusDesc.Name = "ServerStatusDesc";
             this.ServerStatusDesc.Size = new System.Drawing.Size(0, 13);
             this.ServerStatusDesc.TabIndex = 8;
+            this.ServerStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ServerStatusText
             // 
             this.ServerStatusText.BackColor = System.Drawing.Color.Transparent;
             this.ServerStatusText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.ServerStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.ServerStatusText.Location = new System.Drawing.Point(258, 476);
+            this.ServerStatusText.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.ServerStatusText.Location = new System.Drawing.Point(326, 476);
             this.ServerStatusText.Name = "ServerStatusText";
-            this.ServerStatusText.Size = new System.Drawing.Size(148, 13);
+            this.ServerStatusText.Size = new System.Drawing.Size(234, 15);
             this.ServerStatusText.TabIndex = 7;
             this.ServerStatusText.Text = "Server Status - Pinging";
+            this.ServerStatusText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // ServerStatusIcon
             // 
             this.ServerStatusIcon.BackColor = System.Drawing.Color.Transparent;
             this.ServerStatusIcon.Image = global::GameLauncher.Properties.Resources.webicon;
-            this.ServerStatusIcon.Location = new System.Drawing.Point(225, 478);
+            this.ServerStatusIcon.Location = new System.Drawing.Point(299, 478);
             this.ServerStatusIcon.Name = "ServerStatusIcon";
             this.ServerStatusIcon.Size = new System.Drawing.Size(21, 24);
             this.ServerStatusIcon.TabIndex = 6;
@@ -661,7 +667,7 @@
             this.wordFilterCheck.ForeColor = System.Drawing.SystemColors.Control;
             this.wordFilterCheck.Location = new System.Drawing.Point(47, 270);
             this.wordFilterCheck.Name = "wordFilterCheck";
-            this.wordFilterCheck.Size = new System.Drawing.Size(235, 17);
+            this.wordFilterCheck.Size = new System.Drawing.Size(234, 17);
             this.wordFilterCheck.TabIndex = 93;
             this.wordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.wordFilterCheck.UseVisualStyleBackColor = false;
@@ -674,7 +680,7 @@
             this.vfilesCheck.ForeColor = System.Drawing.SystemColors.Control;
             this.vfilesCheck.Location = new System.Drawing.Point(47, 288);
             this.vfilesCheck.Name = "vfilesCheck";
-            this.vfilesCheck.Size = new System.Drawing.Size(218, 17);
+            this.vfilesCheck.Size = new System.Drawing.Size(217, 17);
             this.vfilesCheck.TabIndex = 96;
             this.vfilesCheck.Text = "Disable process that validate files";
             this.vfilesCheck.UseVisualStyleBackColor = false;
