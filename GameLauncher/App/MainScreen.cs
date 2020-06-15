@@ -771,7 +771,7 @@ namespace GameLauncher {
 
             ServerProxy.Instance.Stop();
 
-            File.WriteAllLines("invalidfiles.dat", invalidFileList);
+            //File.WriteAllLines("invalidfiles.dat", invalidFileList);
 
             Notification.Dispose();
 
