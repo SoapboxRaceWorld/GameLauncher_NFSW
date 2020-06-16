@@ -107,12 +107,18 @@ namespace GameLauncher {
         Dictionary<string, int> serverStatusDictionary = new Dictionary<string, int>();
 
         //VerifyHash
-        string[][] scannedHashes;
         public int filesToScan;
         public int badFiles;
         public int totalFilesScanned;
         public int redownloadedCount;
         public List<string> invalidFileList = new List<string>();
+
+        //UltimateLauncherFunction: SelectServer
+        private static ServerInfo _ServerList;
+        public static ServerInfo ServerName {
+            get { return _ServerList; }
+            set { _ServerList = value; }
+        }
 
         private static Random random = new Random();
 		public static string RandomString(int length) {
@@ -212,7 +218,7 @@ namespace GameLauncher {
             //_disableChecks = (_settingFile.KeyExists("DisableVerifyHash") && _settingFile.Read("DisableVerifyHash") == "1") ? true : false;
 
             Log.Debug("Setting launcher location");
-            if (_settingFile.KeyExists("LauncherPosX") || _settingFile.KeyExists("LauncherPosY")) {
+            /*if (_settingFile.KeyExists("LauncherPosX") || _settingFile.KeyExists("LauncherPosY")) {
                 StartPosition = FormStartPosition.Manual;
                 var posX = int.Parse(_settingFile.Read("LauncherPosX"));
                 var posY = int.Parse(_settingFile.Read("LauncherPosY"));
@@ -221,7 +227,9 @@ namespace GameLauncher {
             } else {
                 Log.Debug("Launcher Location: CenterScreen");
                 Self.centerScreen(this);
-            }
+            }*/
+
+            Self.centerScreen(this);
 
             Log.Debug("Disabling MaximizeBox");
             MaximizeBox = false;
@@ -516,15 +524,20 @@ namespace GameLauncher {
             finalItems = ServerListUpdater.GetList();
             serverPick.DataSource = finalItems;
 
-            Log.Debug("SERVERLIST: Checking...");
-                Log.Debug("SERVERLIST: Setting first server in list");
-                try {
-                    serverPick.SelectedIndex = 1;
-                    Log.Debug("SERVERLIST: Selected 1");
-                } catch (Exception ex) {
-                    Log.Debug("SERVERLIST: " + ex.Message);
-                }
+            //ForceSelectServer
+            //if (string.IsNullOrEmpty(_settingFile.Read("Server"))) {
+                //SelectServerBtn_Click(null, null);
+                new SelectServer().ShowDialog();
 
+                if (ServerName != null)  {
+                    this.SelectServerBtn.Text = "[...] " + ServerName.Name;
+                    _settingFile.Write("Server", ServerName.IpAddress);
+                } else {
+                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                }
+            //} //else {
+                Log.Debug("SERVERLIST: Checking...");
+                Log.Debug("SERVERLIST: Setting first server in list");
                 Log.Debug("SERVERLIST: Checking if server is set on INI File");
                 try { 
                     if (string.IsNullOrEmpty(_settingFile.Read("Server"))) {
@@ -565,6 +578,7 @@ namespace GameLauncher {
                     }
                     Log.Debug("SERVERLIST: All done");
                 }
+            //}
             
 
             Log.Debug("Checking for password");
@@ -1199,10 +1213,10 @@ namespace GameLauncher {
             /*Log.Debug("Getting AkrobatRegular");        */FontFamily AkrobatRegular = FontWrapper.Instance.GetFontFamily("Akrobat-Regular.ttf");
                 
             /*Log.Debug("Applying AkrobatRegular mainScreen to launcherStatusText");          */launcherStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            /*Log.Debug("Applying AirportCyr mainScreen to launcherStatusText");              */launcherStatusDesc.Font = new Font(AirportCyr, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AirportCyr mainScreen to launcherStatusText");              */launcherStatusDesc.Font = new Font(AirportCyr, 7f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
 
             /*Log.Debug("Applying AkrobatRegular mainScreen to ServerStatusText");            */ServerStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            /*Log.Debug("Applying AirportCyr mainScreen to ServerStatusDesc");                */ServerStatusDesc.Font = new Font(AirportCyr, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AirportCyr mainScreen to ServerStatusDesc");                */ServerStatusDesc.Font = new Font(AirportCyr, 7f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             /*Log.Debug("Applying AkrobatSemiBold mainScreen to playProgressText");           */playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             /*Log.Debug("Applying AkrobatRegular mainScreen to email");                       */email.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
@@ -1334,8 +1348,6 @@ namespace GameLauncher {
             addServer.Visible = hideElements;
             //allowedCountriesLabel.Visible = hideElements;
             serverPick.Enabled = true;
-            randomServer.Visible = hideElements;
-            randomServer.Enabled = true;
         }
 
         private void RegisterFormElements(bool hideElements = true) {
@@ -1362,9 +1374,6 @@ namespace GameLauncher {
             addServer.Visible = hideElements;
             serverPick.Visible = hideElements;
             serverPick.Enabled = false;
-
-            randomServer.Visible = hideElements;
-            randomServer.Enabled = false;
 
             // Reset fields
             registerEmail.Text = "";
@@ -2892,27 +2901,19 @@ namespace GameLauncher {
             _formGraphics.Dispose();
         }
 
-        int rememberit;
-        private void randomServer_Click(object sender, EventArgs e) {
-            try {
-                int total = (finalItems.Count)-(finalItems.FindAll(i => string.Equals(i.IsSpecial, true)).Count); //Prevent summing GROUPS
-                int randomizer = random.Next(total);
-
-                if (finalItems[total].IsSpecial == true) //Prevent picking GROUP as random server
-                    randomizer = random.Next(total);
-
-                if (rememberit == randomizer) //Prevent picking same ID as current one
-                    randomizer = random.Next(total);
-
-                serverPick.SelectedIndex = randomizer;
-                rememberit = randomizer;
-            } catch {
-                serverPick.SelectedIndex = 2;
-            }
-        }
-
         private void srvinfo_Click(object sender, EventArgs e) {
             //new SrvInfo().Show();
+        }
+
+        private void SelectServerBtn_Click(object sender, EventArgs e) {
+            new SelectServer().ShowDialog();
+
+            if(ServerName != null) {
+                this.SelectServerBtn.Text = "[...] " + ServerName.Name;
+
+                var index = finalItems.FindIndex(i => string.Equals(i.IpAddress, ServerName.IpAddress));
+                serverPick.SelectedIndex = index;
+            }
         }
     }
 }
