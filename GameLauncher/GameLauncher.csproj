@@ -209,6 +209,12 @@
       <DependentUpon>MainScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\JsonScheme.cs" />
+    <Compile Include="App\SelectServer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\SelectServer.Designer.cs">
+      <DependentUpon>SelectServer.cs</DependentUpon>
+    </Compile>
     <Compile Include="App\WelcomeScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -236,6 +242,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="App\MainScreen.resx">
       <DependentUpon>MainScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\SelectServer.resx">
+      <DependentUpon>SelectServer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\ShowMap.resx">
       <DependentUpon>ShowMap.cs</DependentUpon>
