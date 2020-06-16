@@ -17,32 +17,22 @@ namespace GameLauncher.App.Classes
         {
             List<ServerInfo> serverInfos = new List<ServerInfo>();
 
-            foreach (var serverListURL in Self.serverlisturl)
-            {
-                try
-                {
+            foreach (var serverListURL in Self.serverlisturl) {
+                try {
                     Log.Debug("Loading serverlist from: " + serverListURL);
                     var wc = new WebClientWithTimeout();
-
                     var response = wc.DownloadString(serverListURL);
-
                     Log.Debug("Loaded serverlist from: " + serverListURL);
 
-                    try
-                    {
+                    try {
                         serverInfos.AddRange(
                             JsonConvert.DeserializeObject<List<ServerInfo>>(response));
-                    }
-                    catch (Exception error)
-                    {
+                    } catch (Exception error) {
                         Log.Debug(response);
                         throw new Exception("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message, error);
                     }
-                }
-                catch (Exception error)
-                {
+                } catch (Exception error) {
                     Log.Error(error.Message);
-
                     throw new Exception("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message, error);
                 }
             }
