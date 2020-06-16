@@ -73,11 +73,11 @@
             this.registerText = new System.Windows.Forms.Button();
             this.cdnText = new System.Windows.Forms.Label();
             this.cdnPick = new System.Windows.Forms.ComboBox();
-            this.vfilesButton = new System.Windows.Forms.Button();
-            this.wordFilterCheck = new System.Windows.Forms.CheckBox();
-            this.SelectServerBtn = new System.Windows.Forms.Button();
+            this.randomServer = new System.Windows.Forms.Button();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.vfilesButton = new System.Windows.Forms.Button();
+            this.wordFilterCheck = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
@@ -128,9 +128,9 @@
             this.serverPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.serverPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.serverPick.FormattingEnabled = true;
-            this.serverPick.Location = new System.Drawing.Point(599, 65);
+            this.serverPick.Location = new System.Drawing.Point(601, 65);
             this.serverPick.Name = "serverPick";
-            this.serverPick.Size = new System.Drawing.Size(233, 21);
+            this.serverPick.Size = new System.Drawing.Size(204, 21);
             this.serverPick.TabIndex = 5;
             // 
             // currentWindowInfo
@@ -156,7 +156,7 @@
             this.rememberMe.ForeColor = System.Drawing.Color.White;
             this.rememberMe.Location = new System.Drawing.Point(615, 285);
             this.rememberMe.Name = "rememberMe";
-            this.rememberMe.Size = new System.Drawing.Size(159, 19);
+            this.rememberMe.Size = new System.Drawing.Size(218, 19);
             this.rememberMe.TabIndex = 5;
             this.rememberMe.Text = "REMEMBER MY LOGIN";
             this.rememberMe.UseVisualStyleBackColor = false;
@@ -509,9 +509,9 @@
             // 
             // addServer
             // 
-            this.addServer.Location = new System.Drawing.Point(838, 64);
+            this.addServer.Location = new System.Drawing.Point(839, 64);
             this.addServer.Name = "addServer";
-            this.addServer.Size = new System.Drawing.Size(24, 23);
+            this.addServer.Size = new System.Drawing.Size(23, 23);
             this.addServer.TabIndex = 68;
             this.addServer.Text = "+";
             this.addServer.UseVisualStyleBackColor = true;
@@ -616,42 +616,15 @@
             this.cdnPick.Size = new System.Drawing.Size(210, 21);
             this.cdnPick.TabIndex = 84;
             // 
-            // vfilesButton
+            // randomServer
             // 
-            this.vfilesButton.AutoSize = true;
-            this.vfilesButton.BackColor = System.Drawing.Color.Transparent;
-            this.vfilesButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.vfilesButton.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.vfilesButton.Location = new System.Drawing.Point(49, 269);
-            this.vfilesButton.Name = "vfilesButton";
-            this.vfilesButton.Size = new System.Drawing.Size(207, 23);
-            this.vfilesButton.TabIndex = 96;
-            this.vfilesButton.Text = "Validate Game Files";
-            this.vfilesButton.UseVisualStyleBackColor = false;
-            // 
-            // wordFilterCheck
-            // 
-            this.wordFilterCheck.AutoSize = true;
-            this.wordFilterCheck.BackColor = System.Drawing.Color.Transparent;
-            this.wordFilterCheck.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.wordFilterCheck.ForeColor = System.Drawing.SystemColors.Control;
-            this.wordFilterCheck.Location = new System.Drawing.Point(49, 303);
-            this.wordFilterCheck.Name = "wordFilterCheck";
-            this.wordFilterCheck.Size = new System.Drawing.Size(235, 17);
-            this.wordFilterCheck.TabIndex = 93;
-            this.wordFilterCheck.Text = "Disable Word Filtering on Game Chat";
-            this.wordFilterCheck.UseVisualStyleBackColor = false;
-            // 
-            // SelectServerBtn
-            // 
-            this.SelectServerBtn.Location = new System.Drawing.Point(889, 12);
-            this.SelectServerBtn.Name = "SelectServerBtn";
-            this.SelectServerBtn.Size = new System.Drawing.Size(228, 23);
-            this.SelectServerBtn.TabIndex = 99;
-            this.SelectServerBtn.Text = "Select Server";
-            this.SelectServerBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SelectServerBtn.UseVisualStyleBackColor = true;
-            this.SelectServerBtn.Click += new System.EventHandler(this.SelectServerBtn_Click);
+            this.randomServer.Location = new System.Drawing.Point(811, 64);
+            this.randomServer.Name = "randomServer";
+            this.randomServer.Size = new System.Drawing.Size(23, 23);
+            this.randomServer.TabIndex = 90;
+            this.randomServer.Text = "?";
+            this.randomServer.UseVisualStyleBackColor = true;
+            this.randomServer.Click += new System.EventHandler(this.randomServer_Click);
             // 
             // extractingProgress
             // 
@@ -686,15 +659,41 @@
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
             // 
+            // vfilesButton
+            // 
+            this.vfilesButton.AutoSize = true;
+            this.vfilesButton.BackColor = System.Drawing.Color.Transparent;
+            this.vfilesButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.vfilesButton.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.vfilesButton.Location = new System.Drawing.Point(49, 269);
+            this.vfilesButton.Name = "vfilesButton";
+            this.vfilesButton.Size = new System.Drawing.Size(207, 23);
+            this.vfilesButton.TabIndex = 96;
+            this.vfilesButton.Text = "Validate Game Files";
+            this.vfilesButton.UseVisualStyleBackColor = false;
+            // 
+            // wordFilterCheck
+            // 
+            this.wordFilterCheck.AutoSize = true;
+            this.wordFilterCheck.BackColor = System.Drawing.Color.Transparent;
+            this.wordFilterCheck.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.wordFilterCheck.ForeColor = System.Drawing.SystemColors.Control;
+            this.wordFilterCheck.Location = new System.Drawing.Point(49, 303);
+            this.wordFilterCheck.Name = "wordFilterCheck";
+            this.wordFilterCheck.Size = new System.Drawing.Size(234, 17);
+            this.wordFilterCheck.TabIndex = 93;
+            this.wordFilterCheck.Text = "Disable Word Filtering on Game Chat";
+            this.wordFilterCheck.UseVisualStyleBackColor = false;
+            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
-            this.Controls.Add(this.SelectServerBtn);
             this.Controls.Add(this.vfilesButton);
             this.Controls.Add(this.wordFilterCheck);
+            this.Controls.Add(this.randomServer);
             this.Controls.Add(this.cdnPick);
             this.Controls.Add(this.cdnText);
             this.Controls.Add(this.ServerStatusIcon);
@@ -804,8 +803,8 @@
         private System.Windows.Forms.Button registerText;
         private System.Windows.Forms.Label cdnText;
         private System.Windows.Forms.ComboBox cdnPick;
+        private System.Windows.Forms.Button randomServer;
         private System.Windows.Forms.Button vfilesButton;
         private System.Windows.Forms.CheckBox wordFilterCheck;
-        private System.Windows.Forms.Button SelectServerBtn;
     }
 }
