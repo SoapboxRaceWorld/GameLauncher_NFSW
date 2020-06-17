@@ -1564,7 +1564,7 @@ namespace GameLauncher {
                         _loginToken = Tokens.LoginToken;
                         _serverIp = Tokens.IPAddress;
 
-                        MessageBox.Show(null, Tokens.Success, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show(null, Tokens.Success, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                         BackgroundImage = Properties.Resources.loginbg;
 
