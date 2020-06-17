@@ -525,7 +525,7 @@ namespace GameLauncher {
             serverPick.DataSource = finalItems;
 
             //ForceSelectServer
-            //if (string.IsNullOrEmpty(_settingFile.Read("Server"))) {
+            if (string.IsNullOrEmpty(_settingFile.Read("Server"))) {
                 //SelectServerBtn_Click(null, null);
                 new SelectServer().ShowDialog();
 
@@ -535,7 +535,7 @@ namespace GameLauncher {
                 } else {
                     Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                 }
-            //} //else {
+            } //else {
                 Log.Debug("SERVERLIST: Checking...");
                 Log.Debug("SERVERLIST: Setting first server in list");
                 Log.Debug("SERVERLIST: Checking if server is set on INI File");
@@ -1258,6 +1258,12 @@ namespace GameLauncher {
         private void registerText_LinkClicked(object sender, EventArgs e)
         {
             if (_allowRegistration) {
+                if(_realServername == "WorldUnited Official") {
+                    Process.Start("https://signup.worldunited.gg/?discordid=" + Self.discordid);
+                    MessageBox.Show(null, "A browser window has been opened to complete registration on WorldUnited Official", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
                 BackgroundImage = (_ticketRequired) ? Properties.Resources.register_ticket : Properties.Resources.register_noticket;
                 currentWindowInfo.Text = "REGISTER ON " + _realServername.ToUpper() + ":";
                 LoginFormElements(false);
