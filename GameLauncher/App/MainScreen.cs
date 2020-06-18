@@ -173,9 +173,8 @@ namespace GameLauncher {
                 Self.discordid = e.User.ID.ToString();
             };
 
-            discordRpcClient.OnError += (sender, e) =>
-            {
-                MessageBox.Show($"Discord Error\n{e.Message}", e.Code.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            discordRpcClient.OnError += (sender, e) => {
+                Log.Error($"Discord Error\n{e.Message}");
             };
 
             discordRpcClient.Initialize();
