@@ -54,10 +54,10 @@ namespace GameLauncher.App {
                     try {
                         serverInfos.AddRange(JsonConvert.DeserializeObject<List<ServerInfo>>(response));
                     } catch (Exception error) {
-                        throw new Exception("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message, error);
+                        //throw new Exception("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message, error);
                     }
                 } catch (Exception error) {
-                    throw new Exception("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message, error);
+                    //throw new Exception("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message, error);
                 }
             }
 
