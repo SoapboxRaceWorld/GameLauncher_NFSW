@@ -390,7 +390,7 @@ namespace GameLauncher {
                 fbd.Dispose();
             }
 
-            /*if (!DetectLinux.UnixDetected()) {
+            if (!DetectLinux.LinuxDetected()) {
                 Log.Debug("Setting cursor.");
                 string temporaryFile = Path.GetTempFileName();
                 File.WriteAllBytes(temporaryFile, ExtractResource.AsByte("GameLauncher.SoapBoxModules.cursor.ani"));
@@ -399,7 +399,7 @@ namespace GameLauncher {
                 mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
                 Cursor = mycursor;
                 File.Delete(temporaryFile);
-            }*/
+            }
 
             Log.Debug("Doing magic with imageServerName");
             var pos = PointToScreen(imageServerName.Location);
@@ -1161,12 +1161,12 @@ namespace GameLauncher {
                     {
                         ServerStatusDesc.Invoke(new Action(delegate ()
                         {
-                            ServerStatusDesc.Text = string.Format("players in game - {0}", numPlayers);
+                            ServerStatusDesc.Text = string.Format("Players in game - {0}", numPlayers);
                         }));
                     }
                     else
                     {
-                        this.ServerStatusDesc.Text = string.Format("players in game - {0}", numPlayers);
+                        this.ServerStatusDesc.Text = string.Format("Players in game - {0}", numPlayers);
                     }
 
                     _serverEnabled = true;
@@ -1212,10 +1212,10 @@ namespace GameLauncher {
             /*Log.Debug("Getting AkrobatRegular");        */FontFamily AkrobatRegular = FontWrapper.Instance.GetFontFamily("Akrobat-Regular.ttf");
                 
             /*Log.Debug("Applying AkrobatRegular mainScreen to launcherStatusText");          */launcherStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            /*Log.Debug("Applying AirportCyr mainScreen to launcherStatusText");              */launcherStatusDesc.Font = new Font(AirportCyr, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AirportCyr mainScreen to launcherStatusText");              */launcherStatusDesc.Font = new Font(AkrobatRegular, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
 
             /*Log.Debug("Applying AkrobatRegular mainScreen to ServerStatusText");            */ServerStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            /*Log.Debug("Applying AirportCyr mainScreen to ServerStatusDesc");                */ServerStatusDesc.Font = new Font(AirportCyr, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AirportCyr mainScreen to ServerStatusDesc");                */ServerStatusDesc.Font = new Font(AkrobatRegular, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             /*Log.Debug("Applying AkrobatSemiBold mainScreen to playProgressText");           */playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             /*Log.Debug("Applying AkrobatRegular mainScreen to email");                       */email.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
