@@ -1212,10 +1212,10 @@ namespace GameLauncher {
             /*Log.Debug("Getting AkrobatRegular");        */FontFamily AkrobatRegular = FontWrapper.Instance.GetFontFamily("Akrobat-Regular.ttf");
                 
             /*Log.Debug("Applying AkrobatRegular mainScreen to launcherStatusText");          */launcherStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            /*Log.Debug("Applying AirportCyr mainScreen to launcherStatusText");              */launcherStatusDesc.Font = new Font(AirportCyr, 7f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AirportCyr mainScreen to launcherStatusText");              */launcherStatusDesc.Font = new Font(AirportCyr, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
 
             /*Log.Debug("Applying AkrobatRegular mainScreen to ServerStatusText");            */ServerStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            /*Log.Debug("Applying AirportCyr mainScreen to ServerStatusDesc");                */ServerStatusDesc.Font = new Font(AirportCyr, 7f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            /*Log.Debug("Applying AirportCyr mainScreen to ServerStatusDesc");                */ServerStatusDesc.Font = new Font(AirportCyr, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             /*Log.Debug("Applying AkrobatSemiBold mainScreen to playProgressText");           */playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
 
             /*Log.Debug("Applying AkrobatRegular mainScreen to email");                       */email.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
