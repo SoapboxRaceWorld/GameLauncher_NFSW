@@ -524,7 +524,7 @@ namespace GameLauncher {
             serverPick.DataSource = finalItems;
 
             //ForceSelectServer
-            //if (string.IsNullOrEmpty(_settingFile.Read("Server"))) {
+            if (string.IsNullOrEmpty(_settingFile.Read("Server"))) {
                 //SelectServerBtn_Click(null, null);
                 new SelectServer().ShowDialog();
 
@@ -534,7 +534,7 @@ namespace GameLauncher {
                 } else {
                     Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                 }
-            //} //else {
+            } //else {
                 Log.Debug("SERVERLIST: Checking...");
                 Log.Debug("SERVERLIST: Setting first server in list");
                 Log.Debug("SERVERLIST: Checking if server is set on INI File");
