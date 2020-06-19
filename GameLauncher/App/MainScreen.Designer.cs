@@ -398,7 +398,7 @@
             this.launcherStatusDesc.Size = new System.Drawing.Size(146, 13);
             this.launcherStatusDesc.TabIndex = 5;
             this.launcherStatusDesc.Text = "Version : 2.0.0.0-Build123456";
-            this.launcherStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.launcherStatusDesc.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // imageServerName
             // 
@@ -537,7 +537,7 @@
             this.launcherStatusText.Size = new System.Drawing.Size(199, 15);
             this.launcherStatusText.TabIndex = 4;
             this.launcherStatusText.Text = "Anti-Cheat System - Activated";
-            this.launcherStatusText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.launcherStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.launcherStatusText.UseCompatibleTextRendering = true;
             // 
             // ServerStatusDesc
@@ -550,7 +550,7 @@
             this.ServerStatusDesc.Name = "ServerStatusDesc";
             this.ServerStatusDesc.Size = new System.Drawing.Size(0, 13);
             this.ServerStatusDesc.TabIndex = 8;
-            this.ServerStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ServerStatusDesc.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // ServerStatusText
             // 
@@ -563,7 +563,7 @@
             this.ServerStatusText.Size = new System.Drawing.Size(234, 15);
             this.ServerStatusText.TabIndex = 7;
             this.ServerStatusText.Text = "Server Status - Pinging";
-            this.ServerStatusText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.ServerStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ServerStatusIcon
             // 
@@ -634,10 +634,10 @@
             this.wordFilterCheck.AutoSize = true;
             this.wordFilterCheck.BackColor = System.Drawing.Color.Transparent;
             this.wordFilterCheck.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.wordFilterCheck.ForeColor = System.Drawing.SystemColors.Control;
+            this.wordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.wordFilterCheck.Location = new System.Drawing.Point(49, 303);
             this.wordFilterCheck.Name = "wordFilterCheck";
-            this.wordFilterCheck.Size = new System.Drawing.Size(235, 17);
+            this.wordFilterCheck.Size = new System.Drawing.Size(234, 17);
             this.wordFilterCheck.TabIndex = 93;
             this.wordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.wordFilterCheck.UseVisualStyleBackColor = false;
