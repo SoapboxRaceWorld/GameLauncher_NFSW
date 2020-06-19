@@ -18,9 +18,7 @@ namespace GameLauncherReborn {
 
         public static string[] serverlisturl = new string[] {
             mainserver + "/serverlist.json",
-            "http://teststuff.worldonline.pl/serverlist.json",
             "http://api-sbrw.davidcarbon.download/serverlist.json",
-            "http://api.nightriderz.world/servers.json",
         }; 
 
 		public static string statsurl = mainserver + "/stats";
