@@ -1,4 +1,5 @@
 ﻿using GameLauncher.App.Classes;
+using GameLauncher.App.Classes.Logger;
 using GameLauncherReborn;
 using Newtonsoft.Json;
 using SoapBox.JsonScheme;
@@ -54,14 +55,21 @@ namespace GameLauncher.App {
                     try {
                         serverInfos.AddRange(JsonConvert.DeserializeObject<List<ServerInfo>>(response));
                     } catch (Exception error) {
-                        //throw new Exception("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message, error);
+                        Log.Error("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message);
                     }
                 } catch (Exception error) {
-                    //throw new Exception("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message, error);
+                    Log.Error("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message);
                 }
             }
 
-            foreach (var substring in serverInfos) {
+            List<ServerInfo> newFinalItems = new List<ServerInfo>();
+            foreach (ServerInfo xServ in serverInfos) {
+                if (newFinalItems.FindIndex(i => string.Equals(i.Name, xServ.Name)) == -1) {
+                    newFinalItems.Add(xServ);
+                }
+            }
+
+            foreach (var substring in newFinalItems) {
                 try {
                     GetServerInformation content = JsonConvert.DeserializeObject<GetServerInformation>(new WebClientWithTimeout().DownloadString(substring.IpAddress + "/GetServerInformation"));
                     

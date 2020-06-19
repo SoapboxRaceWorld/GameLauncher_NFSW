@@ -28,12 +28,10 @@ namespace GameLauncher.App.Classes
                         serverInfos.AddRange(
                             JsonConvert.DeserializeObject<List<ServerInfo>>(response));
                     } catch (Exception error) {
-                        Log.Debug(response);
-                        //throw new Exception("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message, error);
+                        Log.Error("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message);
                     }
                 } catch (Exception error) {
-                    Log.Error(error.Message);
-                    //throw new Exception("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message, error);
+                    Log.Error("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message);
                 }
             }
 

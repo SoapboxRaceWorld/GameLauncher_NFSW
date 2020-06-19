@@ -390,7 +390,7 @@ namespace GameLauncher {
                 fbd.Dispose();
             }
 
-            /*if (!DetectLinux.UnixDetected()) {
+            if (!DetectLinux.LinuxDetected()) {
                 Log.Debug("Setting cursor.");
                 string temporaryFile = Path.GetTempFileName();
                 File.WriteAllBytes(temporaryFile, ExtractResource.AsByte("GameLauncher.SoapBoxModules.cursor.ani"));
@@ -399,7 +399,7 @@ namespace GameLauncher {
                 mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
                 Cursor = mycursor;
                 File.Delete(temporaryFile);
-            }*/
+            }
 
             Log.Debug("Doing magic with imageServerName");
             var pos = PointToScreen(imageServerName.Location);
@@ -524,7 +524,7 @@ namespace GameLauncher {
             serverPick.DataSource = finalItems;
 
             //ForceSelectServer
-            if (string.IsNullOrEmpty(_settingFile.Read("Server"))) {
+            //if (string.IsNullOrEmpty(_settingFile.Read("Server"))) {
                 //SelectServerBtn_Click(null, null);
                 new SelectServer().ShowDialog();
 
@@ -534,7 +534,7 @@ namespace GameLauncher {
                 } else {
                     Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                 }
-            } //else {
+            //} //else {
                 Log.Debug("SERVERLIST: Checking...");
                 Log.Debug("SERVERLIST: Setting first server in list");
                 Log.Debug("SERVERLIST: Checking if server is set on INI File");
