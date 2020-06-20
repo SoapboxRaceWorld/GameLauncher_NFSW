@@ -994,7 +994,6 @@ namespace GameLauncher {
             ServerStatusDesc.Text = "";
 
             loginButton.ForeColor = Color.Gray;
-            //password.Text = "";
             var verticalImageUrl = "";
             verticalBanner.Image = null;
             verticalBanner.BackColor = Color.Transparent;
@@ -1152,7 +1151,11 @@ namespace GameLauncher {
                     try { 
                         ServerStatusText.Text = "Server Status - Online ( ON )";
                         ServerStatusText.ForeColor = Color.FromArgb(159, 193, 32);
-                    } catch {
+
+                        loginButton.ForeColor = Color.White;
+                        _loginEnabled = true;
+                    }
+                    catch {
                         //¯\_(ツ)_/¯
                     }
 
