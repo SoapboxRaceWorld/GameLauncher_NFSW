@@ -78,6 +78,7 @@
             this.SelectServerBtn = new System.Windows.Forms.Button();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.proxyCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
@@ -637,7 +638,7 @@
             this.wordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.wordFilterCheck.Location = new System.Drawing.Point(49, 303);
             this.wordFilterCheck.Name = "wordFilterCheck";
-            this.wordFilterCheck.Size = new System.Drawing.Size(234, 17);
+            this.wordFilterCheck.Size = new System.Drawing.Size(235, 17);
             this.wordFilterCheck.TabIndex = 93;
             this.wordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.wordFilterCheck.UseVisualStyleBackColor = false;
@@ -686,12 +687,26 @@
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
             // 
+            // proxyCheckbox
+            // 
+            this.proxyCheckbox.AutoSize = true;
+            this.proxyCheckbox.BackColor = System.Drawing.Color.Transparent;
+            this.proxyCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.proxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.proxyCheckbox.Location = new System.Drawing.Point(49, 324);
+            this.proxyCheckbox.Name = "proxyCheckbox";
+            this.proxyCheckbox.Size = new System.Drawing.Size(200, 17);
+            this.proxyCheckbox.TabIndex = 102;
+            this.proxyCheckbox.Text = "Disable DiscordRPC and Proxy";
+            this.proxyCheckbox.UseVisualStyleBackColor = false;
+            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.proxyCheckbox);
             this.Controls.Add(this.SelectServerBtn);
             this.Controls.Add(this.vfilesButton);
             this.Controls.Add(this.wordFilterCheck);
@@ -807,5 +822,6 @@
         private System.Windows.Forms.Button vfilesButton;
         private System.Windows.Forms.CheckBox wordFilterCheck;
         private System.Windows.Forms.Button SelectServerBtn;
+        private System.Windows.Forms.CheckBox proxyCheckbox;
     }
 }
