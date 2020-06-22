@@ -783,7 +783,9 @@ namespace GameLauncher {
             }
 
             //Kill DiscordRPC
-            discordRpcClient.Dispose();
+            if(discordRpcClient != null) {
+                discordRpcClient.Dispose();
+            }
 
             ServerProxy.Instance.Stop();
 
