@@ -59,6 +59,7 @@ namespace GameLauncher {
         private bool _gameKilledBySpeedBugCheck = false;
 
         //private bool _disableChecks;
+        private bool _disableProxy;
 
         private int _lastSelectedServerId;
         private int _nfswPid;
@@ -215,6 +216,7 @@ namespace GameLauncher {
             ApplyEmbeddedFonts();
 
             //_disableChecks = (_settingFile.KeyExists("DisableVerifyHash") && _settingFile.Read("DisableVerifyHash") == "1") ? true : false;
+            _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1") ? true : false;
 
             Log.Debug("Setting launcher location");
             /*if (_settingFile.KeyExists("LauncherPosX") || _settingFile.KeyExists("LauncherPosY")) {
@@ -685,6 +687,7 @@ namespace GameLauncher {
             }
 
             //vfilesCheck.Checked = _disableChecks;
+            proxyCheckbox.Checked = _disableProxy;
 
             Log.Debug("Hiding RegisterFormElements"); RegisterFormElements(false);
             Log.Debug("Hiding SettingsFormElements"); SettingsFormElements(false);
@@ -780,7 +783,9 @@ namespace GameLauncher {
             }
 
             //Kill DiscordRPC
-            discordRpcClient.Dispose();
+            if(discordRpcClient != null) {
+                discordRpcClient.Dispose();
+            }
 
             ServerProxy.Instance.Stop();
 
@@ -798,8 +803,7 @@ namespace GameLauncher {
 
         private void addServer_Click(object sender, EventArgs e)
         {
-            Form x = new AddServer();
-            x.Show();
+             new AddServer().Show();
         }
 
         private void OpenDebugWindow(object sender, EventArgs e)
@@ -1210,51 +1214,42 @@ namespace GameLauncher {
         }
 
         private void ApplyEmbeddedFonts() {
-            /*Log.Debug("Getting AirportCyr");            FontFamily AirportCyr = FontWrapper.Instance.GetFontFamily("Airport-Cyr.ttf");*/
-            /*Log.Debug("Getting AkrobatSemiBold");       */FontFamily AkrobatSemiBold = FontWrapper.Instance.GetFontFamily("Akrobat-SemiBold.ttf");
-            /*Log.Debug("Getting AkrobatRegular");        */FontFamily AkrobatRegular = FontWrapper.Instance.GetFontFamily("Akrobat-Regular.ttf");
-                
-            /*Log.Debug("Applying AkrobatRegular mainScreen to launcherStatusText");          */launcherStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            /*Log.Debug("Applying AkrobatRegular mainScreen to launcherStatusText");              */launcherStatusDesc.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            FontFamily AkrobatSemiBold = FontWrapper.Instance.GetFontFamily("Akrobat-SemiBold.ttf");
+            FontFamily AkrobatRegular = FontWrapper.Instance.GetFontFamily("Akrobat-Regular.ttf");
 
-            /*Log.Debug("Applying AkrobatRegular mainScreen to ServerStatusText");            */ServerStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            /*Log.Debug("Applying AkrobatRegular mainScreen to ServerStatusDesc");                */ServerStatusDesc.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to playProgressText");           */playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-
-            /*Log.Debug("Applying AkrobatRegular mainScreen to email");                       */email.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to loginButton");                */loginButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /*Log.Debug("Applying AkrobatRegular mainScreen to password");                    */password.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to rememberMe");                 */rememberMe.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to forgotPassword");             */forgotPassword.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to playProgressText");           */playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to playButton");                 */playButton.Font = new Font(AkrobatSemiBold, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to currentWindowInfo");          */currentWindowInfo.Font = new Font(AkrobatSemiBold, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to imageServerName");            */imageServerName.Font = new Font(AkrobatSemiBold, 25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to registerAgree");              */registerAgree.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to registerCancel");             */registerCancel.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to settingsLanguageText");       */settingsLanguageText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to settingsQualityText");        */settingsQualityText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to settingsSave");               */settingsSave.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to settingsGamePathText");       */settingsGamePathText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to vFilesButton");                */vfilesButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to wordFilterCheck");            */wordFilterCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to settingsGameFilesCurrent");   */settingsGameFilesCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to logoutButton");               */logoutButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-
-            /*Log.Debug("Applying AkrobatRegular mainScreen to registerEmail");               */registerEmail.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            /*Log.Debug("Applying AkrobatRegular mainScreen to registerPassword");            */registerPassword.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            /*Log.Debug("Applying AkrobatRegular mainScreen to registerConfirmPassword");     */registerConfirmPassword.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            /*Log.Debug("Applying AkrobatRegular mainScreen to registerTicket");              */registerTicket.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to registerButton");             */registerButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to registerButton");             */registerButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /*Log.Debug("Applying AkrobatSemiBold mainScreen to registerText");               */registerText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-
-            /*Log.Debug("Applying cdnText mainScreen to settingsGamePathText");               */cdnText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            launcherStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            launcherStatusDesc.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            ServerStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            ServerStatusDesc.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            email.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            loginButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            password.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            rememberMe.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            forgotPassword.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            playButton.Font = new Font(AkrobatSemiBold, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            currentWindowInfo.Font = new Font(AkrobatSemiBold, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            imageServerName.Font = new Font(AkrobatSemiBold, 25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerAgree.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerCancel.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsLanguageText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsQualityText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsSave.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsGamePathText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            vfilesButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            proxyCheckbox.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            wordFilterCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsGameFilesCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            logoutButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerEmail.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerPassword.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerConfirmPassword.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerTicket.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            cdnText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
         }
 
         private void registerText_LinkClicked(object sender, EventArgs e)
@@ -1705,6 +1700,11 @@ namespace GameLauncher {
                 _restartRequired = true;
             }*/
 
+            String disableProxy = (proxyCheckbox.Checked == true) ? "1" : "0";
+            if (_settingFile.Read("DisableProxy") != disableProxy) {
+                _settingFile.Write("DisableProxy", (proxyCheckbox.Checked == true) ? "1" : "0");
+            }
+
 
             if (_restartRequired) {
                 MessageBox.Show(null, "In order to see settings changes, you need to restart launcher manually.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1763,11 +1763,18 @@ namespace GameLauncher {
             settingsGamePathText.Visible = hideElements;
             wordFilterCheck.Visible = hideElements;
             vfilesButton.Visible = hideElements;
+            proxyCheckbox.Visible = hideElements;
         }
 
         private void StartGame(string userId, string loginToken) {
             _nfswstarted = new Thread(() => {
-                LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this);
+                if(_disableProxy == true) {
+                    discordRpcClient.Dispose();
+                    discordRpcClient = null;
+                    LaunchGame(userId, loginToken, _serverIp, this);
+                } else {
+                    LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this);
+                }
             }) { IsBackground = true };
 
             _nfswstarted.Start();
@@ -1908,7 +1915,10 @@ namespace GameLauncher {
 
                                 _nfswstarted.Abort();
 
-                                MessageBox.Show(null, errorMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                DialogResult restartApp = MessageBox.Show(null, errorMsg + "\nWould you like to restart the launcher?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                                if(restartApp == DialogResult.Yes) {
+                                    Application.Restart();
+                                }
                                 this.closebtn_Click(null, null);
                             }));
                         }
@@ -2031,8 +2041,8 @@ namespace GameLauncher {
                 if(File.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), file))) { 
                     try {
                         File.Delete(Path.Combine(_settingFile.Read("InstallationDirectory"), file));
-                    } catch {
-                        MessageBox.Show($"File {file} cannot be deleted.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    } catch(Exception ex) {
+                        MessageBox.Show($"File {file} cannot be deleted.\n{ex.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
             }
@@ -2111,7 +2121,12 @@ namespace GameLauncher {
                         }
                     }
                 } catch(Exception ex) {
-                    MessageBox.Show(ex.Message);
+                    Log.Debug(ex.Message);
+                    DialogResult replyYes = MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{ex.Message}\n\nWould you like to try to launch game without ModNet support? This might cause gamecrashes.", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    
+                    if(replyYes == DialogResult.Yes) {
+                        LaunchGame();
+                    }
                 }
             } else {
                 string[] newFiles = GlobalFiles.Concat(ModNetLegacyFiles).ToArray();
