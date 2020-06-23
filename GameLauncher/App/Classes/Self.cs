@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using Flurl;
 using Flurl.Http;
 using System.Management;
+using System.Net;
 
 namespace GameLauncherReborn {
     class Self {
@@ -192,6 +193,12 @@ namespace GameLauncherReborn {
             }
 
             return false;
+        }
+
+        public static string HostName2IP(string hostname) {
+            IPHostEntry iphost = Dns.GetHostEntry(hostname);
+            IPAddress[] addresses = iphost.AddressList;
+            return addresses[0].ToString();
         }
     }
 }
