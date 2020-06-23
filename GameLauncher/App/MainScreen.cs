@@ -1648,13 +1648,9 @@ namespace GameLauncher {
                         var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
                         var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
 
-                        //Disable chat for linux users.
-                        if(!DetectLinux.LinuxDetected()) {
-                            var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
-                            var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
-                            chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue + "</DefaultChatGroup>";
-                        }
-
+                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
+                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
+                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue + "</DefaultChatGroup>";
                         ui.InnerXml = "<Language Type=\"string\">" + settingsLanguage.SelectedValue + "</Language>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
@@ -1664,13 +1660,9 @@ namespace GameLauncher {
                         var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
                         var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
 
-                        //Disable chat for linux users.
-                        if (!DetectLinux.LinuxDetected()) {
-                            var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
-                            var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
-                            chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue + "</DefaultChatGroup>";
-                        }
-
+                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
+                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
+                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + settingsLanguage.SelectedValue + "</DefaultChatGroup>";
                         ui.InnerXml = "<Language Type=\"string\">" + settingsLanguage.SelectedValue + "</Language>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
@@ -2010,12 +2002,6 @@ namespace GameLauncher {
                 }
             }
 
-            //if (DetectLinux.LinuxDetected()) {
-            //Temporarely disable any modnet for linux.
-            //LaunchGame();
-            //return;
-            //}
-
             var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
             if (File.Exists(linksPath))
             {
@@ -2078,26 +2064,17 @@ namespace GameLauncher {
                         playProgressText.Text = ("Fetching ModNetReloaded Files: " + file).ToUpper();
                         Application.DoEvents();
 
-                        if(DetectLinux.LinuxDetected()) {
-                            newModNetFilesDownload.DownloadFile("http://cdn.soapboxrace.world/modules-v2/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
-                        } else {
-                            newModNetFilesDownload.DownloadFile("https://cdn.soapboxrace.world/modules-v2/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
-                        }
+                        newModNetFilesDownload.DownloadFile("https://cdn.soapboxrace.world/modules-v2/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
                     }
 
                     try  {
-                        if (DetectLinux.LinuxDetected()) {
-                            newModNetFilesDownload.DownloadFile("http://cdn.mtntr.pl/legacy_modnet/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
-                        } else {
-                            newModNetFilesDownload.DownloadFile("https://cdn.mtntr.pl/legacy_modnet/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
-                        }
+                        newModNetFilesDownload.DownloadFile("https://cdn.mtntr.pl/legacy_modnet/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
                     } catch { }
 
                     //get files now
                     MainJson json2 = JsonConvert.DeserializeObject<MainJson>(jsonModNet);
 
                     //get new index
-                    if(DetectLinux.LinuxDetected()) json2.basePath = json2.basePath.Replace("https://", "http://");
                     Uri newIndexFile = new Uri(json2.basePath + "/index.json");
                     String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
 
@@ -2160,17 +2137,12 @@ namespace GameLauncher {
                 foreach (string file in newFiles) {
                     playProgressText.Text = ("Fetching ModNetLegacy Files: " + file).ToUpper();
                     Application.DoEvents();
-                    if (DetectLinux.LinuxDetected()) {
-                        newModNetFilesDownload.DownloadFile("http://cdn.mtntr.pl/legacy_modnet/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
-                    } else {
-                        newModNetFilesDownload.DownloadFile("https://cdn.mtntr.pl/legacy_modnet/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
-                    }
+                    newModNetFilesDownload.DownloadFile("https://cdn.mtntr.pl/legacy_modnet/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
                 }
 
                 if (json.modsUrl != null) {
                     playProgressText.Text = "Electron support detected, checking mods...".ToUpper();
 
-                    if (DetectLinux.LinuxDetected()) json.modsUrl = json.modsUrl.Replace("https://", "http://");
                     Uri newIndexFile = new Uri(json.modsUrl + "/index.json");
                     String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
                     List<ElectronIndex> json3 = JsonConvert.DeserializeObject<List<ElectronIndex>>(jsonindex);
@@ -2182,8 +2154,6 @@ namespace GameLauncher {
                     if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
                     File.WriteAllText(path + ".json", jsonindex);
-
-                    //Lets save modmanager.dat file first.
 
                     using (var fs = new FileStream(Path.Combine(_settingFile.Read("InstallationDirectory"), "ModManager.dat"), FileMode.Create))
                     using (var bw = new BinaryWriter(fs)) {
@@ -2235,7 +2205,6 @@ namespace GameLauncher {
 
                     //First lets assume new path for RWAC Mods
                     String rwacpath = MDFive.HashPassword(new Uri(_serverIp).Host);
-                    if (DetectLinux.LinuxDetected()) json.homePageUrl = json.homePageUrl.Replace("https://", "http://");
 
                     String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", rwacpath);
 
