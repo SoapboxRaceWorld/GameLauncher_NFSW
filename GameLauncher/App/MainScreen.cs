@@ -165,9 +165,7 @@ namespace GameLauncher {
 
             rnd = new Random(Environment.TickCount);
 
-            discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID, pipe: 0) {
-                Logger = new DiscordRPC.Logging.ConsoleLogger(DiscordRPC.Logging.LogLevel.Trace, true)
-            };
+            discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID);
 
             discordRpcClient.OnReady += (sender, e) => {
                 Log.Debug("Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
@@ -2123,6 +2121,15 @@ namespace GameLauncher {
                 } catch(Exception ex) {
                     Log.Debug(ex.Message);
                     MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{ex.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    if (Self.getInstalledHotFix("KB3020369") == false) {
+                        MessageBox.Show(null, "The required Windows HotFix is not detected. Please install KB3020369 update manually from Windows Update", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    if (Self.getInstalledHotFix("KB3125574") == false) {
+                        MessageBox.Show(null, "The required Windows HotFix is not detected. Please install KB3125574 update manually from Windows Update", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
 
                     /*DialogResult replyYes = MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{ex.Message}\n\nWould you like to try to launch game without ModNet support? This might cause gamecrashes.", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
