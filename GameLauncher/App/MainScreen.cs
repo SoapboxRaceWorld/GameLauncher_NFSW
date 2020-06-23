@@ -1765,17 +1765,29 @@ namespace GameLauncher {
         }
 
         private void StartGame(string userId, string loginToken) {
+            if(_realServername == "Freeroam Sparkserver") {
+                //Force proxy enabled.
+                Log.Info("Forcing Proxified connection for FRSS");
+                _disableProxy = false;
+            }
+
             _nfswstarted = new Thread(() => {
                 if(_disableProxy == true) {
                     discordRpcClient.Dispose();
                     discordRpcClient = null;
 
                     Uri convert = new Uri(_serverIp);
-                    _serverIp = _serverIp.Replace(convert.Host, Self.HostName2IP(convert.Host));
 
-                    LaunchGame(userId, loginToken, _serverIp, "SBRW", this);
+                    if(convert.Scheme == "http") {
+                        Match match = Regex.Match(convert.Host, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
+                        if (!match.Success) {
+                            _serverIp = _serverIp.Replace(convert.Host, Self.HostName2IP(convert.Host));
+                        }
+                    }
+
+                    LaunchGame(userId, loginToken, _serverIp, this);
                 } else {
-                    LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", _serverInfo.Id.ToUpper(), this);
+                    LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this);
                 }
             }) { IsBackground = true };
 
@@ -1791,13 +1803,14 @@ namespace GameLauncher {
                 SmallImageText = _realServername,
                 SmallImageKey = _presenceImageKey
             };
+
             discordRpcClient.SetPresence(_presence);
         }
 
-        private void LaunchGame(string userId, string loginToken, string serverIp, string ServerID, Form x) {
+        private void LaunchGame(string userId, string loginToken, string serverIp, Form x) {
             var oldfilename = _settingFile.Read("InstallationDirectory") + "/nfsw.exe";
 
-            var args = ServerID + " " + serverIp + " " + loginToken + " " + userId;
+            var args = _serverInfo.Id.ToUpper() + " " + serverIp + " " + loginToken + " " + userId;
             var psi = new ProcessStartInfo();
 
             if(DetectLinux.LinuxDetected()) { 
