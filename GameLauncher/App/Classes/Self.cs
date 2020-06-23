@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Flurl;
 using Flurl.Http;
+using System.Management;
 
 namespace GameLauncherReborn {
     class Self {
@@ -177,6 +178,20 @@ namespace GameLauncherReborn {
             int PE_HEADER_ADDR = BitConverter.ToInt32(data, PE_POINTER_OFFSET);
             int machineUint = BitConverter.ToUInt16(data, PE_HEADER_ADDR + MACHINE_OFFSET);
             return machineUint == 0x014c;
+        }
+
+        public static bool getInstalledHotFix(string identification) {
+            var search = new ManagementObjectSearcher("SELECT HotFixID FROM Win32_QuickFixEngineering");
+            var collection = search.Get();
+
+            foreach (ManagementObject quickFix in collection) {
+                Console.WriteLine("Updates installed: " + quickFix["HotFixID"].ToString());
+                if(quickFix["HotFixID"].ToString() == identification) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

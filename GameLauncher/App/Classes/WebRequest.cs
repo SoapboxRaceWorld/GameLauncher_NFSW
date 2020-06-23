@@ -21,17 +21,17 @@ namespace GameLauncherReborn {
         }
 
         protected override WebRequest GetWebRequest(Uri address) {
-            //if(DetectLinux.LinuxDetected()) {
+            if(DetectLinux.LinuxDetected()) {
                 address = new UriBuilder(address) {
                     Scheme = Uri.UriSchemeHttp,
                     Port = address.IsDefaultPort ? -1 : address.Port // -1 => default port for scheme
                 }.Uri;
-            //}
+            }
             
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
             request.UserAgent = (Self.userAgent == null) ? "GameLauncher (+https://github.com/SoapboxRaceWorld/GameLauncher_NFSW)" : Self.userAgent;
             request.Headers["X-HWID"] = Security.FingerPrint.Value();
-            request.Headers["X-UserAgent"] = "GameLauncherReborn "+Application.ProductVersion+ " WinForms (+https://github.com/worldunitedgg/GameLauncher_NFSW)";
+            request.Headers["X-UserAgent"] = "GameLauncherReborn "+Application.ProductVersion+ " WinForms (+https://github.com/SoapboxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = Value();
             request.Headers["X-DiscordID"] = Self.discordid;
             //request.Timeout = 30000;
