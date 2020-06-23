@@ -61,19 +61,6 @@ namespace GameLauncherReborn {
             }
         }
 
-        public static string CountryName(string twoLetterCountryCode) {
-            CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
-
-            foreach (CultureInfo culture in cultures) {
-                RegionInfo region = new RegionInfo(culture.LCID);
-                if (region.TwoLetterISORegionName.ToUpper() == twoLetterCountryCode.ToUpper()) {
-                    return region.EnglishName;
-                }
-            }
-
-            return String.Empty;
-        }
-
         public static long getTimestamp(bool valid = false) {
             long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
 
@@ -95,27 +82,6 @@ namespace GameLauncherReborn {
 			}
 
 			return true;
-		}
-
-		public static string getDiscordRPCImageIDFromServerName(string ServerName, string response) {
-			string returnvalue = "nfsw";
-
-			try {
-				String[] substrings = response.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-				foreach (var substring in substrings) {
-					if (!String.IsNullOrEmpty(substring)) {
-						String[] substrings2 = substring.Split(new string[] { ";" }, StringSplitOptions.None);
-
-						if(substrings2[0] == ServerName) {
-							returnvalue = substrings2[2];
-						}
-					}
-				}
-			} catch {
-				returnvalue = "nfsw";
-			}
-
-			return returnvalue;
 		}
 
         public static async Task SubmitError(Exception exception)
