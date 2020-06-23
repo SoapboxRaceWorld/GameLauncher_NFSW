@@ -39,14 +39,11 @@ namespace GameLauncher.App.Classes.Events {
                 update_data.CancelAsync();
                 update_data.DownloadStringAsync(new Uri(Self.mainserver + "/update.php?version=" + Application.ProductVersion));
                 update_data.DownloadStringCompleted += (sender, e) => {
-                    if(description.InvokeRequired == true)
-                    {
-                        description.Invoke(new Action(delegate ()
-                        {
+                    if(description.InvokeRequired == true) {
+                        description.Invoke(new Action(delegate () {
                             description.Visible = true;
                         }));
-                    } else
-                    {
+                    } else {
                         description.Visible = true;
                     }
 
@@ -83,53 +80,15 @@ namespace GameLauncher.App.Classes.Events {
                                     text.ForeColor = Color.Yellow;
                                     description.Text = "New Version : " + updater.Payload.LatestVersion;
 
-                                    var settingFile = new IniFile("Settings.ini");
-                                    if (settingFile.Read("IgnoreUpdateVersion") != updater.Payload.LatestVersion) {
-                                        var dia = new TaskDialog {
-                                            Caption = "Update",
-                                            InstructionText = "An update is available!",
-                                            DetailsExpanded = true,
-                                            Icon = TaskDialogStandardIcon.Warning,
-                                            DetailsCollapsedLabel = "Show Changelog",
-                                            Text = "An update is available. Do you want to download it?\nYour version: " +
-                                                   Application.ProductVersion + "\nUpdated version: " + updater.Payload.LatestVersion,
-                                            DetailsExpandedText =
-                                                new WebClientWithTimeout().DownloadString(Self.mainserver + "/launcher/changelog"),
-                                            ExpansionMode = TaskDialogExpandedDetailsLocation.ExpandFooter
-                                        };
+                                    DialogResult updateConfirm = new UpdatePopup(updater).ShowDialog();
 
-                                        var update = new TaskDialogCommandLink("update", "Yes", "Launcher will be updated to " + updater.Payload.LatestVersion + ".");
-                                        var cancel = new TaskDialogCommandLink("cancel", "No", "Launcher will ask you to update on the next launch.");
-                                        var skipupdate = new TaskDialogCommandLink("skipupdate", "Ignore", "This update will be skipped. A new prompt will apear as soon as a newer update is available.");
-
-                                        update.UseElevationIcon = true;
-
-                                        skipupdate.Click += (sender3, e3) => {
-                                            settingFile.Write("IgnoreUpdateVersion", updater.Payload.LatestVersion);
-                                            dia.Close();
-                                    
-                                        };
-
-                                        cancel.Click += (sender3, e3) => {
-                                            dia.Close();
-                                        };
-
-                                        update.Click += (sender3, e3) => {
-                                            if (File.Exists("GameLauncherUpdater.exe")) {
-                                                Process.Start(@"GameLauncherUpdater.exe", Process.GetCurrentProcess().Id.ToString());
-                                            } else {
-                                                Process.Start(@"https://github.com/worldunitedgg/GameLauncher_NFSW/releases/latest");
-                                            }
-
-                                            dia.Close();
-                                        };
-
-                                        dia.Controls.Add(update);
-                                        dia.Controls.Add(cancel);
-                                        dia.Controls.Add(skipupdate);
-
-                                        dia.Show();
-                                    }
+                                    if(updateConfirm == DialogResult.OK) {
+                                        if (File.Exists("GameLauncherUpdater.exe")) {
+                                            Process.Start(@"GameLauncherUpdater.exe", Process.GetCurrentProcess().Id.ToString());
+                                        } else {
+                                            Process.Start(@"https://github.com/worldunitedgg/GameLauncher_NFSW/releases/latest");
+                                        }
+                                    };
                                 }
                             } else {
                                 text.Text = "Launcher Status - GitHub Error";

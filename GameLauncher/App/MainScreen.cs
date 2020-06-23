@@ -358,8 +358,7 @@ namespace GameLauncher {
                     _NFSW_Installation_Source = "http://cdn.worldunited.gg/gamefiles/packed/";
                 }
 
-                var fbd = new CommonOpenFileDialog
-                {
+                var fbd = new CommonOpenFileDialog {
                     EnsurePathExists = true,
                     EnsureFileExists = false,
                     AllowNonFileSystemItems = false,
