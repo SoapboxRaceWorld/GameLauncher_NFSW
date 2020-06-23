@@ -183,8 +183,8 @@ namespace GameLauncher {
             
             Log.Debug("Setting SSL Protocol");
             ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
             if (DetectLinux.LinuxDetected()) {
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             }
@@ -2122,11 +2122,13 @@ namespace GameLauncher {
                     }
                 } catch(Exception ex) {
                     Log.Debug(ex.Message);
-                    DialogResult replyYes = MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{ex.Message}\n\nWould you like to try to launch game without ModNet support? This might cause gamecrashes.", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                    
+                    MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{ex.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    /*DialogResult replyYes = MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{ex.Message}\n\nWould you like to try to launch game without ModNet support? This might cause gamecrashes.", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
                     if(replyYes == DialogResult.Yes) {
                         LaunchGame();
-                    }
+                    }*/
                 }
             } else {
                 string[] newFiles = GlobalFiles.Concat(ModNetLegacyFiles).ToArray();

@@ -36,6 +36,20 @@ namespace GameLauncher {
                 Self.runAsAdmin();
             }
 
+            if(Environment.OSVersion.VersionString == "Microsoft Windows NT 6.1.7601 Service Pack 1") {
+                if (Self.getInstalledHotFix("KB3020369") == false) {
+                    MessageBox.Show(null, "The required Windows HotFix is not detected. Please install KB3020369 update manually from Windows Update", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                    Environment.Exit(0);
+                }
+
+                if (Self.getInstalledHotFix("KB3125574") == false) {
+                    MessageBox.Show(null, "The required Windows HotFix is not detected. Please install KB3125574 update manually from Windows Update", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                    Environment.Exit(0);
+                }
+            }
+
             IniFile _settingFile = new IniFile("Settings.ini");
 
             if (DetectLinux.LinuxDetected()) {
