@@ -1765,14 +1765,24 @@ namespace GameLauncher {
         }
 
         private void StartGame(string userId, string loginToken) {
+            if(_realServername == "Freeroam Sparkserver") {
+                //Force proxy enabled.
+                Log.Info("Forcing Proxified connection for FRSS");
+                _disableProxy = false;
+            }
+
             _nfswstarted = new Thread(() => {
                 if(_disableProxy == true) {
                     discordRpcClient.Dispose();
                     discordRpcClient = null;
 
-                    if ((_realServername == "NIGHTRIDERZ | HORIZON") || (_realServername == "WOPL Reborn")) {
-                        Uri convert = new Uri(_serverIp);
-                        _serverIp = _serverIp.Replace(convert.Host, Self.HostName2IP(convert.Host));
+                    Uri convert = new Uri(_serverIp);
+
+                    if(convert.Scheme == "http") {
+                        Match match = Regex.Match(convert.Host, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
+                        if (!match.Success) {
+                            _serverIp = _serverIp.Replace(convert.Host, Self.HostName2IP(convert.Host));
+                        }
                     }
 
                     LaunchGame(userId, loginToken, _serverIp, this);
@@ -1793,6 +1803,7 @@ namespace GameLauncher {
                 SmallImageText = _realServername,
                 SmallImageKey = _presenceImageKey
             };
+
             discordRpcClient.SetPresence(_presence);
         }
 
