@@ -1770,12 +1770,14 @@ namespace GameLauncher {
                     discordRpcClient.Dispose();
                     discordRpcClient = null;
 
-                    Uri convert = new Uri(_serverIp);
-                    _serverIp = _serverIp.Replace(convert.Host, Self.HostName2IP(convert.Host));
+                    if ((_realServername == "NIGHTRIDERZ | HORIZON") || (_realServername == "WOPL Reborn")) {
+                        Uri convert = new Uri(_serverIp);
+                        _serverIp = _serverIp.Replace(convert.Host, Self.HostName2IP(convert.Host));
+                    }
 
-                    LaunchGame(userId, loginToken, _serverIp, "SBRW", this);
+                    LaunchGame(userId, loginToken, _serverIp, this);
                 } else {
-                    LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", _serverInfo.Id.ToUpper(), this);
+                    LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this);
                 }
             }) { IsBackground = true };
 
@@ -1794,10 +1796,10 @@ namespace GameLauncher {
             discordRpcClient.SetPresence(_presence);
         }
 
-        private void LaunchGame(string userId, string loginToken, string serverIp, string ServerID, Form x) {
+        private void LaunchGame(string userId, string loginToken, string serverIp, Form x) {
             var oldfilename = _settingFile.Read("InstallationDirectory") + "/nfsw.exe";
 
-            var args = ServerID + " " + serverIp + " " + loginToken + " " + userId;
+            var args = _serverInfo.Id.ToUpper() + " " + serverIp + " " + loginToken + " " + userId;
             var psi = new ProcessStartInfo();
 
             if(DetectLinux.LinuxDetected()) { 
