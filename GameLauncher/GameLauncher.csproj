@@ -215,6 +215,12 @@
     <Compile Include="App\SelectServer.Designer.cs">
       <DependentUpon>SelectServer.cs</DependentUpon>
     </Compile>
+    <Compile Include="App\UpdatePopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\UpdatePopup.Designer.cs">
+      <DependentUpon>UpdatePopup.cs</DependentUpon>
+    </Compile>
     <Compile Include="App\WelcomeScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -248,6 +254,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="App\ShowMap.resx">
       <DependentUpon>ShowMap.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\UpdatePopup.resx">
+      <DependentUpon>UpdatePopup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\WelcomeScreen.resx">
       <DependentUpon>WelcomeScreen.cs</DependentUpon>
