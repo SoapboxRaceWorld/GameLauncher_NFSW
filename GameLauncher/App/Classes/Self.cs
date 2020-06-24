@@ -95,6 +95,19 @@ namespace GameLauncherReborn {
             });
         }
 
+        public static string CountryName(string twoLetterCountryCode) {
+            CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+
+            foreach (CultureInfo culture in cultures) {
+                RegionInfo region = new RegionInfo(culture.LCID);
+                if (region.TwoLetterISORegionName.ToUpper() == twoLetterCountryCode.ToUpper()) {
+                    return region.EnglishName;
+                }
+            }
+
+            return "Unknown";
+        }
+
         public static void centerScreen(Form form) {
             form.StartPosition = FormStartPosition.Manual;
             form.Top = (Screen.PrimaryScreen.Bounds.Height - form.Height) / 2;

@@ -106,6 +106,7 @@ namespace GameLauncher {
 
         List<ServerInfo> finalItems = new List<ServerInfo>();
         Dictionary<string, int> serverStatusDictionary = new Dictionary<string, int>();
+        private Konami sequence = new Konami();
 
         //VerifyHash
         public int filesToScan;
@@ -307,6 +308,7 @@ namespace GameLauncher {
             registerText.Click += new EventHandler(registerText_LinkClicked);
 
             this.Load += new EventHandler(mainScreen_Load);
+            email.KeyUp += new KeyEventHandler(Form1_KeyUp);
             this.Shown += (x,y) => {
                 new Thread(() => {
                     discordRpcClient.Invoke();
@@ -412,6 +414,12 @@ namespace GameLauncher {
 
             Log.Debug("Loading ModManager Cache");
             ModManager.LoadModCache();
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e) {
+            if (sequence.IsCompletedBy(e.KeyCode)) {
+                MessageBox.Show("KONAMI!!!");
+            }
         }
 
         private void comboBox1_DrawItem(object sender, DrawItemEventArgs e) {
