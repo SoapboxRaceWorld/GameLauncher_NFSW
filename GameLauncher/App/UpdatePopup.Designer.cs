@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.changelogText = new System.Windows.Forms.TextBox();
             this.ignore = new System.Windows.Forms.Button();
             this.update = new System.Windows.Forms.Button();
-            this.changelogText = new System.Windows.Forms.TextBox();
             this.icon = new System.Windows.Forms.PictureBox();
             this.updateLabel = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
@@ -47,6 +47,18 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Changelog:";
+            // 
+            // changelogText
+            // 
+            this.changelogText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.changelogText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.changelogText.Location = new System.Drawing.Point(6, 19);
+            this.changelogText.Multiline = true;
+            this.changelogText.Name = "changelogText";
+            this.changelogText.ReadOnly = true;
+            this.changelogText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.changelogText.Size = new System.Drawing.Size(362, 133);
+            this.changelogText.TabIndex = 0;
             // 
             // ignore
             // 
@@ -66,17 +78,6 @@
             this.update.TabIndex = 2;
             this.update.Text = "Update";
             this.update.UseVisualStyleBackColor = true;
-            // 
-            // changelogText
-            // 
-            this.changelogText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.changelogText.Location = new System.Drawing.Point(6, 19);
-            this.changelogText.Multiline = true;
-            this.changelogText.Name = "changelogText";
-            this.changelogText.ReadOnly = true;
-            this.changelogText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.changelogText.Size = new System.Drawing.Size(362, 133);
-            this.changelogText.TabIndex = 0;
             // 
             // icon
             // 
@@ -102,6 +103,7 @@
             this.AccessibleRole = System.Windows.Forms.AccessibleRole.MenuPopup;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.CancelButton = this.ignore;
             this.ClientSize = new System.Drawing.Size(398, 262);
             this.Controls.Add(this.updateLabel);

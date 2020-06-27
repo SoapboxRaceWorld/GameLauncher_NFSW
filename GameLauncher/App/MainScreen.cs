@@ -168,11 +168,19 @@ namespace GameLauncher {
             rnd = new Random(Environment.TickCount);
 
             handlers.errorCallback = (int code, string message) => {
-                MessageBox.Show($"Discord Connection Error\n{message}", code.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log.Error($"Discord Connection Error\n{message}");
             };
             handlers.disconnectedCallback = (int code, string message) => {
-                MessageBox.Show($"Disconnected from Discord\n{message}", code.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                Log.Info($"Disconnected from Discord\n{message}");
             };
+
+            /*handlers.readyCallback = (ref DiscordUser pUser) => {
+                Invoke(new Action<DiscordUser>((user) => {
+                    Log.Debug(String.Format("Connected as {0}#{1}: {2}", user.username, user.discriminator, user.userId));
+                }), pUser);
+
+                CurrentUser = pUser;
+            };*/
 
             DiscordRpc.Initialize(Self.DiscordRPCID, ref handlers, true, String.Empty);
 
@@ -212,8 +220,7 @@ namespace GameLauncher {
             Log.Debug("InitializeComponent");
             InitializeComponent();
 
-            Log.Debug("Applying Fonts");
-            ApplyEmbeddedFonts();
+            if(DetectLinux.LinuxDetected() == false) { Log.Debug("Applying Fonts"); ApplyEmbeddedFonts(); }
 
             //_disableChecks = (_settingFile.KeyExists("DisableVerifyHash") && _settingFile.Read("DisableVerifyHash") == "1") ? true : false;
             _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1") ? true : false;
