@@ -2104,17 +2104,11 @@ namespace GameLauncher {
 
                             client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_RELOADED);
                             client2.DownloadFileCompleted += (test, stuff) => { 
-                                //if(SHA.HashFile(path + "/" + modfile.Name).ToLower() == modfile.Checksum) {
-                                    CountFiles++;
+                                CountFiles++;
 
-                                    if(CountFiles == CountFilesTotal) {
-                                        LaunchGame();
-                                    }
-                                //} else {
-                                //    File.Delete(path + "/" + modfile.Name);
-                                //    Console.WriteLine(modfile.Name + " must be removed.");
-                                //    playButton_Click(sender, e);
-                                //}
+                                if(CountFiles == CountFilesTotal) {
+                                    LaunchGame();
+                                }
                             };
                         } else {
                             CountFiles++;
@@ -2122,6 +2116,15 @@ namespace GameLauncher {
                             if (CountFiles == CountFilesTotal) {
                                 LaunchGame();
                             }
+                        }
+                    }
+
+                    foreach (var file in Directory.GetFiles(path)) {
+                        var name = Path.GetFileName(file);
+
+                        if (json3.entries.All(en => en.Name != name)) {
+                            Log.Debug("removing package: " + file);
+                            File.Delete(file);
                         }
                     }
                 } catch(Exception ex) {
