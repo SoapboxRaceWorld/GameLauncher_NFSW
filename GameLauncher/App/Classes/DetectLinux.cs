@@ -19,12 +19,16 @@ namespace GameLauncher.App.Classes {
             return _linuxDistro;
         }
 
+        public static bool isValidWineMonoInstalled() {
+            return true;
+        }
+
         private static string LinuxDistroInternal() {
-            if (!File.Exists("Z:/etc/os-release")) {
+            if (!File.Exists("/etc/os-release")) {
                 return "UNIX-Like System";
             }
 
-            using (var stream = new StreamReader("Z:/etc/os-release")) {
+            using (var stream = new StreamReader("/etc/os-release")) {
                 string line;
                 while ((line = stream.ReadLine()) != null) {
                     var splits = line.Split(new[] { '=' }, 2);

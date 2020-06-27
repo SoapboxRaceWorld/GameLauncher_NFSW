@@ -28,7 +28,7 @@ using GameLauncher.App.Classes.Logger;
 using System.IO.Compression;
 using GameLauncher.App.Classes.Auth;
 using DiscordRPC;
-using DiscordRPC.Logging;
+using DiscordSDK;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
@@ -101,7 +101,8 @@ namespace GameLauncher {
         GetServerInformation json = new GetServerInformation();
         String purejson = String.Empty;
 
-        public static DiscordRpcClient discordRpcClient;
+        public EventHandlers handlers = new EventHandlers();
+        public DiscordUser CurrentUser;
         private Random rnd;
 
         List<ServerInfo> finalItems = new List<ServerInfo>();
@@ -166,7 +167,16 @@ namespace GameLauncher {
 
             rnd = new Random(Environment.TickCount);
 
-            discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID);
+            handlers.errorCallback = (int code, string message) => {
+                MessageBox.Show($"Discord Connection Error\n{message}", code.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            };
+            handlers.disconnectedCallback = (int code, string message) => {
+                MessageBox.Show($"Disconnected from Discord\n{message}", code.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            };
+
+            DiscordRpc.Initialize(Self.DiscordRPCID, ref handlers, true, String.Empty);
+
+            /*discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID);
 
             discordRpcClient.OnReady += (sender, e) => {
                 Log.Debug("Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
@@ -177,16 +187,7 @@ namespace GameLauncher {
                 Log.Error($"Discord Error\n{e.Message}");
             };
 
-            discordRpcClient.Initialize();
-
-            
-            Log.Debug("Setting SSL Protocol");
-            ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-
-            if (DetectLinux.LinuxDetected()) {
-                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-            }
+            discordRpcClient.Initialize();*/
 
             Log.Debug("Detecting OS");
             if (DetectLinux.LinuxDetected()) {
@@ -311,7 +312,8 @@ namespace GameLauncher {
             email.KeyUp += new KeyEventHandler(Form1_KeyUp);
             this.Shown += (x,y) => {
                 new Thread(() => {
-                    discordRpcClient.Invoke();
+                    //discordRpcClient.Invoke();
+                    DiscordRpc.RunCallbacks();
 
                     //Let's fetch all servers
                     List<ServerInfo> allServs = finalItems.FindAll(i => string.Equals(i.IsSpecial, false));
@@ -477,7 +479,7 @@ namespace GameLauncher {
                 Log.Debug("Starting LZMA downloader");
                 try {
                     playProgressText.Text = "Downloading LZMA.dll...";
-                    using (WebClient wc = new WebClient()) {
+                    using (WebClientWithTimeout wc = new WebClientWithTimeout()) {
                         wc.DownloadFileAsync(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
                     }
                 } catch (Exception ex) {
@@ -721,14 +723,14 @@ namespace GameLauncher {
 
             Log.Debug("Initializing DiscordRPC");
 
-            _presence.State = _OS;
-            _presence.Details = "In-Launcher: " + Application.ProductVersion;
-            _presence.Assets = new Assets
-            {
-                LargeImageText = "SBRW",
-                LargeImageKey = "nfsw"
-            };
-            discordRpcClient.SetPresence(_presence);
+            _presence.state = _OS;
+            _presence.details = "In-Launcher: " + Application.ProductVersion;
+            _presence.largeImageText = "SBRW";
+            _presence.largeImageKey = "nfsw";
+            _presence.instance = true;
+
+            DiscordRpc.UpdatePresence(_presence);
+            //discordRpcClient.SetPresence(_presence);
 
             BeginInvoke((MethodInvoker)delegate {
                 Log.Debug("Initialize Downloading Process");
@@ -737,15 +739,15 @@ namespace GameLauncher {
 
             this.BringToFront();
 
-            if(!DetectLinux.LinuxDetected()) {
+            //if(!DetectLinux.LinuxDetected()) {
                 Log.Debug("Checking for update: " + Self.mainserver + "/update.php?version=" + Application.ProductVersion);
                 new LauncherUpdateCheck(launcherIconStatus, launcherStatusText, launcherStatusDesc).checkAvailability();
-            } else {
-                launcherIconStatus.Image = Properties.Resources.ac_success;
-                launcherStatusText.ForeColor = Color.FromArgb(0x9fc120);
-                launcherStatusText.Text = "Launcher Status - Linux Fix";
-                launcherStatusDesc.Text = "APLHA STAGE. VERSION " + Application.ProductVersion;
-            }
+            //} else {
+            //    launcherIconStatus.Image = Properties.Resources.ac_success;
+            //    launcherStatusText.ForeColor = Color.FromArgb(0x9fc120);
+            //    launcherStatusText.Text = "Launcher Status - Linux Fix";
+            //    launcherStatusDesc.Text = "APLHA STAGE. VERSION " + Application.ProductVersion;
+            //}
 
             Self.gamedir = _settingFile.Read("InstallationDirectory");
 
@@ -788,9 +790,7 @@ namespace GameLauncher {
             }
 
             //Kill DiscordRPC
-            if(discordRpcClient != null) {
-                discordRpcClient.Dispose();
-            }
+            DiscordRpc.Shutdown();
 
             ServerProxy.Instance.Stop();
 
@@ -1772,8 +1772,7 @@ namespace GameLauncher {
 
             _nfswstarted = new Thread(() => {
                 if(_disableProxy == true) {
-                    discordRpcClient.Dispose();
-                    discordRpcClient = null;
+                    DiscordRpc.Shutdown();
 
                     Uri convert = new Uri(_serverIp);
 
@@ -1793,17 +1792,14 @@ namespace GameLauncher {
             _nfswstarted.Start();
 
             _presenceImageKey = _serverInfo.DiscordPresenceKey;
-            _presence.State = _realServername;
-            _presence.Details = "In-Game";
-            _presence.Assets = new Assets
-            {
-                LargeImageText = "Need for Speed: World",
-                LargeImageKey = "nfsw",
-                SmallImageText = _realServername,
-                SmallImageKey = _presenceImageKey
-            };
+            _presence.state = _realServername;
+            _presence.details = "In-Game";
+            _presence.largeImageText = "Need for Speed: World";
+            _presence.largeImageKey = "nfsw";
+            _presence.smallImageText = _realServername;
+            _presence.smallImageKey = _presenceImageKey;
 
-            discordRpcClient.SetPresence(_presence);
+            DiscordRpc.UpdatePresence(_presence);
         }
 
         private void LaunchGame(string userId, string loginToken, string serverIp, Form x) {
@@ -2217,7 +2213,7 @@ namespace GameLauncher {
 
                     //Then, lets fetch its XML File
                     Uri rwac_wev2 = new Uri(json.homePageUrl + "/rwac/fileschecker_sbrw.xml");
-                    String getcontent = new WebClient().DownloadString(rwac_wev2);
+                    String getcontent = new WebClientWithTimeout().DownloadString(rwac_wev2);
 
                     playProgressText.Text = "Got files for RWAC... downloading...".ToUpper();
 
@@ -2389,10 +2385,11 @@ namespace GameLauncher {
         //Launch game
         public void LaunchGame() {
             if (_serverInfo.DiscordAppId != null) {
-                discordRpcClient.Dispose();
-                discordRpcClient = null;
-                discordRpcClient = new DiscordRpcClient(_serverInfo.DiscordAppId);
-                discordRpcClient.Initialize();
+                DiscordRpc.Shutdown();
+                Thread.Sleep(1000);
+                DiscordRpc.Initialize(_serverInfo.DiscordAppId, ref handlers, true, String.Empty);
+                Thread.Sleep(1000);
+                DiscordRpc.RunCallbacks();
             }
 
             try {
@@ -2793,7 +2790,7 @@ namespace GameLauncher {
                                 File.Delete(text2 + ".vhbak");
                             }
                             File.Move(text2, text2 + ".vhbak");
-                            new WebClient().DownloadFile(address, text2);
+                            new WebClientWithTimeout().DownloadFile(address, text2);
                             Application.DoEvents();
                         } catch { }
                     }                
