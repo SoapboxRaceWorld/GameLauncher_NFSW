@@ -1827,13 +1827,15 @@ namespace GameLauncher {
             nfswProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
 
             //if(!DetectLinux.LinuxDetected()) { 
-                if (Environment.ProcessorCount >= 4) {
-                    nfswProcess.ProcessorAffinity = (IntPtr)0x000F;
-                }
+            var processorAffinity = 0;
+            for (var i = 0; i < Math.Min(Math.Max(1, Environment.ProcessorCount), 8); i++)
+            {
+                processorAffinity |= 1 << i;
+            }
 
-                AntiCheat.process_id = nfswProcess.Id;
+            nfswProcess.ProcessorAffinity = (IntPtr)processorAffinity;
 
-                
+            AntiCheat.process_id = nfswProcess.Id;
 
 
             //TIMER HERE
