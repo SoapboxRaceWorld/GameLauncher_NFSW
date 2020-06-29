@@ -79,7 +79,12 @@ namespace Security {
                     {
                         try
                         {
-                            result = mo[wmiProperty].ToString();
+                            var tmp = mo[wmiProperty];
+                            if (tmp != null) {
+                                result = tmp.ToString();
+                            } else {
+                                continue;
+                            }
                             break;
                         }
                         catch { }
