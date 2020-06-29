@@ -1011,7 +1011,6 @@ namespace GameLauncher {
             string numPlayers;
 
             imageServerName.Text = ((ServerInfo)serverPick.SelectedItem).Name;
-            MessageBox.Show(((ServerInfo)serverPick.SelectedItem).Name);
 
             if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server") {
                 _builtinserver = true;
