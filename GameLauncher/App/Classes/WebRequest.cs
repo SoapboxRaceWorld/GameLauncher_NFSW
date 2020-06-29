@@ -57,7 +57,7 @@ namespace GameLauncherReborn {
             Log.UrlCall("Calling URL: " + address);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
-            request.UserAgent = (Self.userAgent == null) ? "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)" : Self.userAgent;
+            request.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-HWID"] = Security.FingerPrint.Value();
             request.Headers["X-UserAgent"] = "GameLauncherReborn "+Application.ProductVersion+ " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = Value();

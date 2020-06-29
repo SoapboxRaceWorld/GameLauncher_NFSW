@@ -25,6 +25,8 @@ namespace SoapBox.JsonScheme {
         public string modernAuthSupport { get; set; }
         public int secondsToShutDown { get; set; }
         public string modsUrl { get; set; }
+        public string webSignupUrl { get; set; }
+        public string webRecoveryUrl { get; set; }
         public bool rwacallow { get; set; }
     }
 
