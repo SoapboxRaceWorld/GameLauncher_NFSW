@@ -78,9 +78,6 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DiscordRPC, Version=1.0.150.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DiscordRichPresence.1.0.150\lib\net35\DiscordRPC.dll</HintPath>
-    </Reference>
     <Reference Include="Flurl, Version=2.8.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Flurl.2.8.2\lib\net40\Flurl.dll</HintPath>
     </Reference>
@@ -142,6 +139,14 @@
     <Compile Include="App\Classes\CDN.cs" />
     <Compile Include="App\Classes\Delay.cs" />
     <Compile Include="App\Classes\DetectLinux.cs" />
+    <Compile Include="App\Classes\DiscordSDK\DiscordRpc.cs" />
+    <Compile Include="App\Classes\DiscordSDK\DiscordUser.cs" />
+    <Compile Include="App\Classes\DiscordSDK\EventHandlers.cs" />
+    <Compile Include="App\Classes\DiscordSDK\Reply.cs" />
+    <Compile Include="App\Classes\DiscordSDK\RichPresence.cs" />
+    <Compile Include="App\Classes\DiscordSDK\RichPresenceBuilder.cs" />
+    <Compile Include="App\Classes\DiscordSDK\RichPresenceStruct.cs" />
+    <Compile Include="App\Classes\DiscordSDK\SDK.cs" />
     <Compile Include="App\Classes\Downloader\Downloader.cs" />
     <Compile Include="App\Classes\Downloader\DownloaderCommand.cs" />
     <Compile Include="App\Classes\Downloader\DownloaderException.cs" />
@@ -161,6 +166,7 @@
     <Compile Include="App\Classes\HashPassword\SHA.cs" />
     <Compile Include="App\Classes\HWID.cs" />
     <Compile Include="App\Classes\IniFile.cs" />
+    <Compile Include="App\Classes\Konami.cs" />
     <Compile Include="App\Classes\Language.cs" />
     <Compile Include="App\Classes\Logger\LogToFile.cs" />
     <Compile Include="App\Classes\ModManager.cs" />

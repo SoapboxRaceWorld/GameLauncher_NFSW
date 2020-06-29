@@ -34,15 +34,18 @@ namespace GameLauncher.App {
             ServerListRenderer.Columns[0].Width = 25;
 
             ServerListRenderer.Columns.Add("Name");
-            ServerListRenderer.Columns[1].Width = 320;
+            ServerListRenderer.Columns[1].Width = 260;
+
+            ServerListRenderer.Columns.Add("Country");
+            ServerListRenderer.Columns[2].Width = 80;
 
             ServerListRenderer.Columns.Add("Players Online");
-            ServerListRenderer.Columns[2].Width = 80;
-            ServerListRenderer.Columns[2].TextAlign = HorizontalAlignment.Right;
+            ServerListRenderer.Columns[3].Width = 80;
+            ServerListRenderer.Columns[3].TextAlign = HorizontalAlignment.Right;
 
             ServerListRenderer.Columns.Add("Registered Players");
-            ServerListRenderer.Columns[3].Width = 100;
-            ServerListRenderer.Columns[3].TextAlign = HorizontalAlignment.Right;
+            ServerListRenderer.Columns[4].Width = 100;
+            ServerListRenderer.Columns[4].TextAlign = HorizontalAlignment.Right;
 
             //Actually accept JSON instead of old format//
             List<ServerInfo> serverInfos = new List<ServerInfo>();
@@ -80,6 +83,7 @@ namespace GameLauncher.App {
                             new[] {
                                 ID.ToString(),
                                 substring.Name,
+                                Self.CountryName(content.country.ToString()),
                                 content.onlineNumber.ToString(),
                                 content.numberOfRegistered.ToString(),
                             }

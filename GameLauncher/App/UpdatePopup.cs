@@ -24,7 +24,7 @@ namespace GameLauncher.App {
             Bitmap bitmap1 = Bitmap.FromHicon(SystemIcons.Information.Handle);
             icon.Image = bitmap1;
 
-            updateLabel.Text = "An update is available. Do you want to download it?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + updater.Payload.LatestVersion;
+            updateLabel.Text = "An update is available. Would you like to update?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + updater.Payload.LatestVersion;
 
             this.update.DialogResult = DialogResult.OK;
         }

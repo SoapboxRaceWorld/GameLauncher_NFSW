@@ -42,6 +42,11 @@ namespace GameLauncher.App.Classes.Logger
             _toFile(text, "ERROR");
         }
 
+        public static void UrlCall(string text)
+        {
+            _toFile(text, "URL");
+        }
+
         private static async void TaskKernel()
         {
             while (true)
