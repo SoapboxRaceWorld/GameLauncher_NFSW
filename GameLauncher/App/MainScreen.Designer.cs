@@ -745,7 +745,6 @@
             this.Controls.Add(this.extractingProgress);
             this.Controls.Add(this.playProgress);
             this.Controls.Add(this.email);
-            this.Controls.Add(this.verticalBanner);
             this.Controls.Add(this.settingsSave);
             this.Controls.Add(this.registerCancel);
             this.Controls.Add(this.loginButton);
@@ -753,6 +752,7 @@
             this.Controls.Add(this.playButton);
             this.Controls.Add(this.registerText);
             this.Controls.Add(this.imageServerName);
+            this.Controls.Add(this.verticalBanner);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
