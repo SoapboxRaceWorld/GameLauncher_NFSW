@@ -57,6 +57,7 @@ namespace GameLauncher {
         private bool _isDownloading = true;
         private bool _modernAuthSupport = false;
         private bool _gameKilledBySpeedBugCheck = false;
+        private bool _disableLogout = false;
 
         //private bool _disableChecks;
         private bool _disableProxy;
@@ -702,8 +703,8 @@ namespace GameLauncher {
 
             Log.Debug("Setting Registry Options");
             try {
-                var gameInstallDirValue = Registry.GetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", RegistryValueKind.String).ToString();
-                if (gameInstallDirValue != Path.GetFullPath(_settingFile.Read("InstallationDirectory"))) {
+                var gameInstallDirValue = Registry.GetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", RegistryValueKind.String);
+                if (gameInstallDirValue == null || gameInstallDirValue.ToString() != Path.GetFullPath(_settingFile.Read("InstallationDirectory"))) {
                     try {
                         Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", Path.GetFullPath(_settingFile.Read("InstallationDirectory")));
                         Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "LaunchInstallDir", Path.GetFullPath(Application.ExecutablePath));
@@ -1391,6 +1392,9 @@ namespace GameLauncher {
         }
 
         private void logoutButton_Click(object sender, EventArgs e) {
+            if(_disableLogout == true) {
+                return;
+            }
             //var reply = MessageBox.Show(null, string.Format("Are you sure you want to log out from {0}?", serverPick.GetItemText(serverPick.SelectedItem)), "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             //if (reply == MessageBoxResult.Yes) {
                 BackgroundImage = Properties.Resources.loginbg;
@@ -1953,6 +1957,8 @@ namespace GameLauncher {
                 return;
             }
 
+            _disableLogout = true;
+
             DisablePlayButton();
 
             if (!DetectLinux.LinuxDetected())
@@ -2121,7 +2127,11 @@ namespace GameLauncher {
 
                         if (json3.entries.All(en => en.Name != name)) {
                             Log.Debug("removing package: " + file);
-                            File.Delete(file);
+                            try { 
+                                File.Delete(file);
+                            } catch(Exception ex) {
+                                Log.Error($"Failed to remove {file}: {ex.Message}");
+                            }
                         }
                     }
                 } catch(Exception ex) {
@@ -2135,13 +2145,6 @@ namespace GameLauncher {
                     if (Self.getInstalledHotFix("KB3125574") == false) {
                         MessageBox.Show(null, "The required Windows HotFix is not detected. Please install KB3125574 update manually from Windows Update", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-
-
-                    /*DialogResult replyYes = MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{ex.Message}\n\nWould you like to try to launch game without ModNet support? This might cause gamecrashes.", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-
-                    if(replyYes == DialogResult.Yes) {
-                        LaunchGame();
-                    }*/
                 }
             }         
         }
