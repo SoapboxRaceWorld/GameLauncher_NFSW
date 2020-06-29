@@ -996,7 +996,6 @@ namespace GameLauncher {
 
             _lastSelectedServerId = serverPick.SelectedIndex;
             _allowRegistration = false;
-            imageServerName.Text = _serverInfo.Name;
             _loginEnabled = false;
 
             ServerStatusText.Text = "Server Status - Pinging";
@@ -1010,6 +1009,9 @@ namespace GameLauncher {
 
             var serverIp = _serverInfo.IpAddress;
             string numPlayers;
+
+            imageServerName.Text = ((ServerInfo)serverPick.SelectedItem).Name;
+            MessageBox.Show(((ServerInfo)serverPick.SelectedItem).Name);
 
             if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server") {
                 _builtinserver = true;
