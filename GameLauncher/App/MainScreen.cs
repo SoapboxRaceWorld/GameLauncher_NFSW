@@ -1261,6 +1261,12 @@ namespace GameLauncher {
         private void registerText_LinkClicked(object sender, EventArgs e)
         {
             if (_allowRegistration) {
+                if(!string.IsNullOrEmpty(json.webSignupUrl)) {
+                    Process.Start(json.webSignupUrl);
+                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + json.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
                 if(_realServername == "WorldUnited Official") {
                     Process.Start("https://signup.worldunited.gg/?discordid=" + Self.discordid);
                     MessageBox.Show(null, "A browser window has been opened to complete registration on WorldUnited Official", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1277,6 +1283,12 @@ namespace GameLauncher {
         }
 
         private void forgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            if (!string.IsNullOrEmpty(json.webRecoveryUrl)) {
+                Process.Start(json.webRecoveryUrl);
+                MessageBox.Show(null, "A browser window has been opened to complete password recovery on " + json.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             string send = Prompt.ShowDialog("Please specify your email address.", "GameLauncher");
 
             if(send != String.Empty) {
