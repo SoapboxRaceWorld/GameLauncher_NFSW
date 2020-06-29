@@ -28,7 +28,7 @@ using GameLauncher.App.Classes.Logger;
 using System.IO.Compression;
 using GameLauncher.App.Classes.Auth;
 using DiscordRPC;
-using DiscordSDK;
+using DiscordRPC.Logging;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
@@ -101,8 +101,7 @@ namespace GameLauncher {
         GetServerInformation json = new GetServerInformation();
         String purejson = String.Empty;
 
-        public EventHandlers handlers = new EventHandlers();
-        public DiscordUser CurrentUser;
+        public static DiscordRpcClient discordRpcClient;
         private Random rnd;
 
         List<ServerInfo> finalItems = new List<ServerInfo>();
@@ -167,24 +166,7 @@ namespace GameLauncher {
 
             rnd = new Random(Environment.TickCount);
 
-            handlers.errorCallback = (int code, string message) => {
-                Log.Error($"Discord Connection Error\n{message}");
-            };
-            handlers.disconnectedCallback = (int code, string message) => {
-                Log.Info($"Disconnected from Discord\n{message}");
-            };
-
-            /*handlers.readyCallback = (ref DiscordUser pUser) => {
-                Invoke(new Action<DiscordUser>((user) => {
-                    Log.Debug(String.Format("Connected as {0}#{1}: {2}", user.username, user.discriminator, user.userId));
-                }), pUser);
-
-                CurrentUser = pUser;
-            };*/
-
-            DiscordRpc.Initialize(Self.DiscordRPCID, ref handlers, true, String.Empty);
-
-            /*discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID);
+            discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID);
 
             discordRpcClient.OnReady += (sender, e) => {
                 Log.Debug("Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
@@ -195,7 +177,16 @@ namespace GameLauncher {
                 Log.Error($"Discord Error\n{e.Message}");
             };
 
-            discordRpcClient.Initialize();*/
+            discordRpcClient.Initialize();
+
+            
+            Log.Debug("Setting SSL Protocol");
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
+            if (DetectLinux.LinuxDetected()) {
+                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            }
 
             Log.Debug("Detecting OS");
             if (DetectLinux.LinuxDetected()) {
@@ -220,7 +211,8 @@ namespace GameLauncher {
             Log.Debug("InitializeComponent");
             InitializeComponent();
 
-            if(DetectLinux.LinuxDetected() == false) { Log.Debug("Applying Fonts"); ApplyEmbeddedFonts(); }
+            Log.Debug("Applying Fonts");
+            ApplyEmbeddedFonts();
 
             //_disableChecks = (_settingFile.KeyExists("DisableVerifyHash") && _settingFile.Read("DisableVerifyHash") == "1") ? true : false;
             _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1") ? true : false;
@@ -319,8 +311,7 @@ namespace GameLauncher {
             email.KeyUp += new KeyEventHandler(Form1_KeyUp);
             this.Shown += (x,y) => {
                 new Thread(() => {
-                    //discordRpcClient.Invoke();
-                    DiscordRpc.RunCallbacks();
+                    discordRpcClient.Invoke();
 
                     //Let's fetch all servers
                     List<ServerInfo> allServs = finalItems.FindAll(i => string.Equals(i.IsSpecial, false));
@@ -730,14 +721,14 @@ namespace GameLauncher {
 
             Log.Debug("Initializing DiscordRPC");
 
-            _presence.state = _OS;
-            _presence.details = "In-Launcher: " + Application.ProductVersion;
-            _presence.largeImageText = "SBRW";
-            _presence.largeImageKey = "nfsw";
-            _presence.instance = true;
-
-            DiscordRpc.UpdatePresence(_presence);
-            //discordRpcClient.SetPresence(_presence);
+            _presence.State = _OS;
+            _presence.Details = "In-Launcher: " + Application.ProductVersion;
+            _presence.Assets = new Assets
+            {
+                LargeImageText = "SBRW",
+                LargeImageKey = "nfsw"
+            };
+            discordRpcClient.SetPresence(_presence);
 
             BeginInvoke((MethodInvoker)delegate {
                 Log.Debug("Initialize Downloading Process");
@@ -746,15 +737,15 @@ namespace GameLauncher {
 
             this.BringToFront();
 
-            //if(!DetectLinux.LinuxDetected()) {
+            if(!DetectLinux.LinuxDetected()) {
                 Log.Debug("Checking for update: " + Self.mainserver + "/update.php?version=" + Application.ProductVersion);
                 new LauncherUpdateCheck(launcherIconStatus, launcherStatusText, launcherStatusDesc).checkAvailability();
-            //} else {
-            //    launcherIconStatus.Image = Properties.Resources.ac_success;
-            //    launcherStatusText.ForeColor = Color.FromArgb(0x9fc120);
-            //    launcherStatusText.Text = "Launcher Status - Linux Fix";
-            //    launcherStatusDesc.Text = "APLHA STAGE. VERSION " + Application.ProductVersion;
-            //}
+            } else {
+                launcherIconStatus.Image = Properties.Resources.ac_success;
+                launcherStatusText.ForeColor = Color.FromArgb(0x9fc120);
+                launcherStatusText.Text = "Launcher Status - Linux Fix";
+                launcherStatusDesc.Text = "APLHA STAGE. VERSION " + Application.ProductVersion;
+            }
 
             Self.gamedir = _settingFile.Read("InstallationDirectory");
 
@@ -797,7 +788,9 @@ namespace GameLauncher {
             }
 
             //Kill DiscordRPC
-            DiscordRpc.Shutdown();
+            if(discordRpcClient != null) {
+                discordRpcClient.Dispose();
+            }
 
             ServerProxy.Instance.Stop();
 
@@ -1779,7 +1772,8 @@ namespace GameLauncher {
 
             _nfswstarted = new Thread(() => {
                 if(_disableProxy == true) {
-                    DiscordRpc.Shutdown();
+                    discordRpcClient.Dispose();
+                    discordRpcClient = null;
 
                     Uri convert = new Uri(_serverIp);
 
@@ -1799,14 +1793,17 @@ namespace GameLauncher {
             _nfswstarted.Start();
 
             _presenceImageKey = _serverInfo.DiscordPresenceKey;
-            _presence.state = _realServername;
-            _presence.details = "In-Game";
-            _presence.largeImageText = "Need for Speed: World";
-            _presence.largeImageKey = "nfsw";
-            _presence.smallImageText = _realServername;
-            _presence.smallImageKey = _presenceImageKey;
+            _presence.State = _realServername;
+            _presence.Details = "In-Game";
+            _presence.Assets = new Assets
+            {
+                LargeImageText = "Need for Speed: World",
+                LargeImageKey = "nfsw",
+                SmallImageText = _realServername,
+                SmallImageKey = _presenceImageKey
+            };
 
-            DiscordRpc.UpdatePresence(_presence);
+            discordRpcClient.SetPresence(_presence);
         }
 
         private void LaunchGame(string userId, string loginToken, string serverIp, Form x) {
@@ -1827,15 +1824,13 @@ namespace GameLauncher {
             nfswProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
 
             //if(!DetectLinux.LinuxDetected()) { 
-            var processorAffinity = 0;
-            for (var i = 0; i < Math.Min(Math.Max(1, Environment.ProcessorCount), 20); i++)
-            {
-                processorAffinity |= 1 << i;
-            }
+                if (Environment.ProcessorCount >= 4) {
+                    nfswProcess.ProcessorAffinity = (IntPtr)0x000F;
+                }
 
-            nfswProcess.ProcessorAffinity = (IntPtr)processorAffinity;
+                AntiCheat.process_id = nfswProcess.Id;
 
-            AntiCheat.process_id = nfswProcess.Id;
+                
 
 
             //TIMER HERE
@@ -2104,11 +2099,17 @@ namespace GameLauncher {
 
                             client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_RELOADED);
                             client2.DownloadFileCompleted += (test, stuff) => { 
-                                CountFiles++;
+                                //if(SHA.HashFile(path + "/" + modfile.Name).ToLower() == modfile.Checksum) {
+                                    CountFiles++;
 
-                                if(CountFiles == CountFilesTotal) {
-                                    LaunchGame();
-                                }
+                                    if(CountFiles == CountFilesTotal) {
+                                        LaunchGame();
+                                    }
+                                //} else {
+                                //    File.Delete(path + "/" + modfile.Name);
+                                //    Console.WriteLine(modfile.Name + " must be removed.");
+                                //    playButton_Click(sender, e);
+                                //}
                             };
                         } else {
                             CountFiles++;
@@ -2116,15 +2117,6 @@ namespace GameLauncher {
                             if (CountFiles == CountFilesTotal) {
                                 LaunchGame();
                             }
-                        }
-                    }
-
-                    foreach (var file in Directory.GetFiles(path)) {
-                        var name = Path.GetFileName(file);
-
-                        if (json3.entries.All(en => en.Name != name)) {
-                            Log.Debug("removing package: " + file);
-                            File.Delete(file);
                         }
                     }
                 } catch(Exception ex) {
@@ -2145,6 +2137,173 @@ namespace GameLauncher {
                     if(replyYes == DialogResult.Yes) {
                         LaunchGame();
                     }*/
+                }
+            } else {
+                string[] newFiles = GlobalFiles.Concat(ModNetLegacyFiles).ToArray();
+                WebClientWithTimeout newModNetFilesDownload = new WebClientWithTimeout();
+                foreach (string file in newFiles) {
+                    playProgressText.Text = ("Fetching ModNetLegacy Files: " + file).ToUpper();
+                    Application.DoEvents();
+                    newModNetFilesDownload.DownloadFile("https://cdn.mtntr.pl/legacy_modnet/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                }
+
+                if (json.modsUrl != null) {
+                    playProgressText.Text = "Electron support detected, checking mods...".ToUpper();
+
+                    Uri newIndexFile = new Uri(json.modsUrl + "/index.json");
+                    String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
+                    List<ElectronIndex> json3 = JsonConvert.DeserializeObject<List<ElectronIndex>>(jsonindex);
+
+                    CountFilesTotal = json3.Count;
+
+                    String electronpath = (new Uri(_serverIp).Host).Replace(".", "-");
+                    String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", electronpath);
+                    if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+
+                    File.WriteAllText(path + ".json", jsonindex);
+
+                    using (var fs = new FileStream(Path.Combine(_settingFile.Read("InstallationDirectory"), "ModManager.dat"), FileMode.Create))
+                    using (var bw = new BinaryWriter(fs)) {
+                        bw.Write(json3.Count);
+
+                        foreach (ElectronIndex file in json3) {
+                            var originalPath = Path.Combine(_settingFile.Read("InstallationDirectory"), file.file).Replace("/", "\\").ToUpper();
+                            var modPath = Path.Combine(path, file.file).Replace("/", "\\").ToUpper();
+
+                            bw.Write(originalPath.Length);
+                            bw.Write(originalPath.ToCharArray());
+                            bw.Write(modPath.Length);
+                            bw.Write(modPath.ToCharArray());
+                        }
+                    }
+
+                    foreach (ElectronIndex modfile in json3) {
+                        String directorycreate = Path.GetDirectoryName(path + "/" + modfile.file);
+                        Directory.CreateDirectory(directorycreate);
+
+                        if (ElectronModNet.calculateHash(path + "/" + modfile.file) != modfile.hash) {
+                            WebClientWithTimeout client2 = new WebClientWithTimeout();
+                            client2.DownloadFileAsync(new Uri(json.modsUrl + "/" + modfile.file), path + "/" + modfile.file);
+
+                            client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_LEGACY);
+                            client2.DownloadFileCompleted += (test, stuff) => {
+                                if (ElectronModNet.calculateHash(path + "/" + modfile.file) == modfile.hash) {
+                                    CountFiles++;
+
+                                    if (CountFiles == CountFilesTotal) {
+                                        LaunchGame();
+                                    }
+                                } else {
+                                    File.Delete(path + "/" + modfile.file);
+                                    playButton_Click(sender, e);
+                                }
+                            };
+                        } else {
+                            CountFiles++;
+
+                            if (CountFiles == CountFilesTotal) {
+                                LaunchGame();
+                            }
+                        }
+                    }
+
+                } else if(json.rwacallow == true) {
+                    playProgressText.Text = "RWAC support detected, checking mods...".ToUpper();
+
+                    //First lets assume new path for RWAC Mods
+                    String rwacpath = MDFive.HashPassword(new Uri(_serverIp).Host);
+
+                    String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", rwacpath);
+
+                    //Then, lets fetch its XML File
+                    Uri rwac_wev2 = new Uri(json.homePageUrl + "/rwac/fileschecker_sbrw.xml");
+                    String getcontent = new WebClientWithTimeout().DownloadString(rwac_wev2);
+
+                    playProgressText.Text = "Got files for RWAC... downloading...".ToUpper();
+
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(getcontent);
+                    var nodes = xmlDoc.SelectNodes("rwac/files/file");
+
+                    CountFilesTotal = nodes.Count;
+
+                    //ModManager.dat
+                    using (var fs = new FileStream(Path.Combine(_settingFile.Read("InstallationDirectory"), "ModManager.dat"), FileMode.Create))
+                    using (var bw = new BinaryWriter(fs)) {
+                        bw.Write(nodes.Count);
+
+                        foreach (XmlNode files in nodes) {
+                            string realfilepath = Path.Combine(files.Attributes["path"].Value, files.Attributes["name"].Value);
+
+                            var originalPath = Path.Combine(_settingFile.Read("InstallationDirectory"), realfilepath).Replace("/", "\\").ToUpper();
+                            var modPath = Path.Combine(path, realfilepath).Replace("/", "\\").ToUpper();
+
+                            bw.Write(originalPath.Length);
+                            bw.Write(originalPath.ToCharArray());
+                            bw.Write(modPath.Length);
+                            bw.Write(modPath.ToCharArray());
+                        }
+                    }
+
+                        foreach (XmlNode files in nodes) {
+                            //if(!(files.Attributes["name"].Value).Contains(".dll") && !(files.Attributes["name"].Value).Contains(".exe")) {
+                                string realfilepath = Path.Combine(files.Attributes["path"].Value, files.Attributes["name"].Value);
+                                String directorycreate = Path.GetDirectoryName(path + "/" + realfilepath);
+
+                                Directory.CreateDirectory(directorycreate);
+                                if(files.Attributes["download"].Value != String.Empty) { 
+                                    if (MDFive.HashFile(path + "/" + realfilepath).ToLower() != files.InnerText) {
+                                        WebClientWithTimeout client2 = new WebClientWithTimeout();
+                                        client2.DownloadFileAsync(new Uri(files.Attributes["download"].Value), path + "/" + realfilepath);
+
+                                        client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_LEGACY);
+                                        client2.DownloadFileCompleted += (test, stuff) => {
+                                            if (MDFive.HashFile(path + "/" + realfilepath).ToLower() == files.InnerText) {
+                                                CountFiles++;
+
+                                                if (CountFiles == CountFilesTotal) {
+                                                    LaunchGame(); 
+                                                }
+                                            } else {
+                                                String xddd = "Corrupted file found: " + realfilepath;
+                                                xddd += "\nGot: " + MDFive.HashFile(path + "/" + realfilepath);
+                                                xddd += "\nExpected: " + files.InnerText;
+
+                                                MessageBox.Show(xddd);
+                                                File.Delete(path + "/" + realfilepath);
+                                                playButton_Click(sender, e);
+                                            }
+                                        };
+                                    } else {
+                                        CountFiles++;
+
+                                        if (CountFiles == CountFilesTotal) {
+                                            LaunchGame();
+                                        }
+                                    }
+                                } else {
+                                    CountFiles++;
+
+                                    if (CountFiles == CountFilesTotal) {
+                                        LaunchGame();
+                                    }
+                                }
+                            //} else {
+                            //    CountFiles++;
+
+                            //    if (CountFiles == CountFilesTotal) {
+                            //        LaunchGame();
+                            //    }
+                            //}
+                    }
+                } else { 
+                    playProgressText.Text = "LegacyModNet support detected, checking mods...".ToUpper();
+
+                    if (_serverInfo.DistributionUrl != "" && _serverInfo.Id != "nfsw") {
+                        DownloadMods(_serverInfo.Id);
+                    }
+
+                    LaunchGame();
                 }
             }         
         }
@@ -2230,11 +2389,10 @@ namespace GameLauncher {
         //Launch game
         public void LaunchGame() {
             if (_serverInfo.DiscordAppId != null) {
-                DiscordRpc.Shutdown();
-                Thread.Sleep(1000);
-                DiscordRpc.Initialize(_serverInfo.DiscordAppId, ref handlers, true, String.Empty);
-                Thread.Sleep(1000);
-                DiscordRpc.RunCallbacks();
+                discordRpcClient.Dispose();
+                discordRpcClient = null;
+                discordRpcClient = new DiscordRpcClient(_serverInfo.DiscordAppId);
+                discordRpcClient.Initialize();
             }
 
             try {
