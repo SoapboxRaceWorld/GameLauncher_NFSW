@@ -57,9 +57,9 @@ namespace GameLauncherReborn {
             Log.UrlCall("Calling URL: " + address);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
-            request.UserAgent = (Self.userAgent == null) ? "GameLauncher (+https://github.com/worldunitedgg/GameLauncher_NFSW)" : Self.userAgent;
+            request.UserAgent = (Self.userAgent == null) ? "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)" : Self.userAgent;
             request.Headers["X-HWID"] = Security.FingerPrint.Value();
-            request.Headers["X-UserAgent"] = "GameLauncherReborn "+Application.ProductVersion+ " WinForms (+https://github.com/worldunitedgg/GameLauncher_NFSW)";
+            request.Headers["X-UserAgent"] = "GameLauncherReborn "+Application.ProductVersion+ " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = Value();
             request.Headers["X-DiscordID"] = Self.discordid;
             //request.Timeout = 30000;
