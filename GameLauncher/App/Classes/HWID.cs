@@ -104,9 +104,11 @@ namespace Security {
             {
                 if (result == "")
                 {
-                    try
-                    {
-                        result = mo[wmiProperty].ToString();
+                    try {
+                        var tmp = mo[wmiProperty];
+                        if(tmp != null) {
+                            result = tmp.ToString();
+                        }
                         break;
                     }
                     catch { }
