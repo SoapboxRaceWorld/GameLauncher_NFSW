@@ -1842,9 +1842,8 @@ namespace GameLauncher {
             var nfswProcess = Process.Start(psi);
             nfswProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
 
-            //if(!DetectLinux.LinuxDetected()) { 
             var processorAffinity = 0;
-            for (var i = 0; i < Math.Min(Math.Max(1, Environment.ProcessorCount), 20); i++)
+            for (var i = 0; i < Math.Min(Math.Max(1, Environment.ProcessorCount), 8); i++)
             {
                 processorAffinity |= 1 << i;
             }
@@ -1852,7 +1851,6 @@ namespace GameLauncher {
             nfswProcess.ProcessorAffinity = (IntPtr)processorAffinity;
 
             AntiCheat.process_id = nfswProcess.Id;
-
 
             //TIMER HERE
             int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2*60*60;
