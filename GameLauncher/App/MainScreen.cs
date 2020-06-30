@@ -2192,8 +2192,7 @@ namespace GameLauncher {
 
                             string origPath = realLoc + ".orig";
 
-                            if (!File.Exists(origPath))
-                            {
+                            if (!File.Exists(origPath)) {
                                 File.Delete(realLoc);
                                 continue;
                             }
