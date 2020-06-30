@@ -212,8 +212,10 @@ namespace GameLauncher {
             Log.Debug("InitializeComponent");
             InitializeComponent();
 
-            Log.Debug("Applying Fonts");
-            ApplyEmbeddedFonts();
+            if (DetectLinux.LinuxDetected() == false) {
+                Log.Debug("Applying Fonts");
+                ApplyEmbeddedFonts();
+            }
 
             //_disableChecks = (_settingFile.KeyExists("DisableVerifyHash") && _settingFile.Read("DisableVerifyHash") == "1") ? true : false;
             _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1") ? true : false;
