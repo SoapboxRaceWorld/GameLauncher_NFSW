@@ -76,14 +76,14 @@ namespace GameLauncher.App.Classes
         }
 
         public static void disableChecks() {
-            if (detect_MULTIHACK == true)       AntiCheat.cheats_detected |= 1;
-            if (detect_FAST_POWERUPS == true)   AntiCheat.cheats_detected |= 2;
-            if (detect_SPEEDHACK == true)       AntiCheat.cheats_detected |= 4;
-            if (detect_SMOOTH_WALLS == true)    AntiCheat.cheats_detected |= 8;
-            if (detect_TANK_MODE == true)       AntiCheat.cheats_detected |= 16;
-            if (detect_WALLHACK == true)        AntiCheat.cheats_detected |= 32;
-            if (detect_DRIFTMOD == true)        AntiCheat.cheats_detected |= 64;
-            if (detect_PURSUITBOT == true)      AntiCheat.cheats_detected |= 128;
+            if (detect_MULTIHACK == true)       AntiCheat.cheats_detected |= 2 ^ 0;
+            if (detect_FAST_POWERUPS == true)   AntiCheat.cheats_detected |= 2 ^ 1;
+            if (detect_SPEEDHACK == true)       AntiCheat.cheats_detected |= 2 ^ 2;
+            if (detect_SMOOTH_WALLS == true)    AntiCheat.cheats_detected |= 2 ^ 3;
+            if (detect_TANK_MODE == true)       AntiCheat.cheats_detected |= 2 ^ 4;
+            if (detect_WALLHACK == true)        AntiCheat.cheats_detected |= 2 ^ 5;
+            if (detect_DRIFTMOD == true)        AntiCheat.cheats_detected |= 2 ^ 6;
+            if (detect_PURSUITBOT == true)      AntiCheat.cheats_detected |= 2 ^ 7;
 
             if (AntiCheat.cheats_detected != 0) {
                 //Not nice. Send to global registry of cheaters.
