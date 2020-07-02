@@ -1842,7 +1842,7 @@ namespace GameLauncher {
 
             //if(!DetectLinux.LinuxDetected()) { 
             var processorAffinity = 0;
-            for (var i = 0; i < Math.Min(Math.Max(1, Environment.ProcessorCount), 20); i++)
+            for (var i = 0; i < Math.Min(Math.Max(1, Environment.ProcessorCount), 8); i++)
             {
                 processorAffinity |= 1 << i;
             }
