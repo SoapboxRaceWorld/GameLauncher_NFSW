@@ -46,8 +46,8 @@ namespace GameLauncher.App {
             QualityDownload.DisplayMember = "Text";
             QualityDownload.ValueMember = "Value";
             var quality = new[] {
-                new { Text = "Standard", Value = "0" },
                 new { Text = "Maximum", Value = "1" },
+                new { Text = "Standard", Value = "0" },
             };
             QualityDownload.DataSource = quality;
         }

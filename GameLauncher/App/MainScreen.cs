@@ -637,8 +637,8 @@ namespace GameLauncher {
             settingsQuality.ValueMember = "Value";
 
             var quality = new[] {
-                new { Text = "Standard", Value = "0" },
                 new { Text = "Maximum", Value = "1" },
+                new { Text = "Standard", Value = "0" },
             };
 
             settingsQuality.DataSource = quality;
@@ -1850,7 +1850,6 @@ namespace GameLauncher {
             nfswProcess.ProcessorAffinity = (IntPtr)processorAffinity;
 
             AntiCheat.process_id = nfswProcess.Id;
-
 
             //TIMER HERE
             int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2*60*60;
