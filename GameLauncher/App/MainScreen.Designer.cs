@@ -76,9 +76,9 @@
             this.vfilesButton = new System.Windows.Forms.Button();
             this.wordFilterCheck = new System.Windows.Forms.CheckBox();
             this.SelectServerBtn = new System.Windows.Forms.Button();
+            this.proxyCheckbox = new System.Windows.Forms.CheckBox();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
-            this.proxyCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
@@ -654,6 +654,19 @@
             this.SelectServerBtn.UseVisualStyleBackColor = true;
             this.SelectServerBtn.Click += new System.EventHandler(this.SelectServerBtn_Click);
             // 
+            // proxyCheckbox
+            // 
+            this.proxyCheckbox.AutoSize = true;
+            this.proxyCheckbox.BackColor = System.Drawing.Color.Transparent;
+            this.proxyCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.proxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.proxyCheckbox.Location = new System.Drawing.Point(49, 324);
+            this.proxyCheckbox.Name = "proxyCheckbox";
+            this.proxyCheckbox.Size = new System.Drawing.Size(200, 17);
+            this.proxyCheckbox.TabIndex = 102;
+            this.proxyCheckbox.Text = "Disable DiscordRPC and Proxy";
+            this.proxyCheckbox.UseVisualStyleBackColor = false;
+            // 
             // extractingProgress
             // 
             this.extractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -686,19 +699,6 @@
             this.playProgress.RoundedCorners = false;
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
-            // 
-            // proxyCheckbox
-            // 
-            this.proxyCheckbox.AutoSize = true;
-            this.proxyCheckbox.BackColor = System.Drawing.Color.Transparent;
-            this.proxyCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.proxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
-            this.proxyCheckbox.Location = new System.Drawing.Point(49, 324);
-            this.proxyCheckbox.Name = "proxyCheckbox";
-            this.proxyCheckbox.Size = new System.Drawing.Size(200, 17);
-            this.proxyCheckbox.TabIndex = 102;
-            this.proxyCheckbox.Text = "Disable DiscordRPC and Proxy";
-            this.proxyCheckbox.UseVisualStyleBackColor = false;
             // 
             // MainScreen
             // 

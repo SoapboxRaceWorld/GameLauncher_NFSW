@@ -639,8 +639,8 @@ namespace GameLauncher {
             settingsQuality.ValueMember = "Value";
 
             var quality = new[] {
-                new { Text = "Standard", Value = "0" },
                 new { Text = "Maximum", Value = "1" },
+                new { Text = "Standard", Value = "0" },
             };
 
             settingsQuality.DataSource = quality;
