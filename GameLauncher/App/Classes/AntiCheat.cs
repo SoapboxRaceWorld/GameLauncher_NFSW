@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using GameLauncher.App.Classes.RPC;
 using GameLauncherReborn;
 
 namespace GameLauncher.App.Classes
@@ -22,6 +23,7 @@ namespace GameLauncher.App.Classes
         public static int event_id = 0; //
         public static int cheats_detected = 0;
 
+        private static Thread thread = new Thread(() => { });
 
         //INTERNAL//
         public static bool detect_MULTIHACK     = false;
@@ -32,13 +34,14 @@ namespace GameLauncher.App.Classes
         public static bool detect_WALLHACK      = false;
         public static bool detect_DRIFTMOD      = false;
         public static bool detect_PURSUITBOT    = false;
+        public static bool detect_PMASKER       = false;
 
         public static void enableChecks() {
             Process process = Process.GetProcessById(process_id);
             IntPtr processHandle = Kernel32.OpenProcess(0x0010, false, process.Id);
             int baseAddress = process.MainModule.BaseAddress.ToInt32();
 
-            var thread = new Thread(() => {
+            thread = new Thread(() => {
                 List<int> addresses = new List<int>();
                 addresses.Add(418534);  // GMZ_MULTIHACK
                 addresses.Add(3788216); // FAST_POWERUPS
@@ -48,8 +51,9 @@ namespace GameLauncher.App.Classes
                 addresses.Add(4587060); // WALLHACK
                 addresses.Add(4486168); // DRIFTMOD/MULTIHACK
                 addresses.Add(4820249); // PURSUITBOT (NO COPS VARIATION)
+                addresses.Add(8972152); // PROFILEMASKER!
 
-                while (true) { 
+                while (true) {
                     foreach (var oneAddress in addresses) {
                         int bytesRead = 0;
                         byte[] buffer = new byte[4];
@@ -68,6 +72,21 @@ namespace GameLauncher.App.Classes
                             if (checkInt.Substring(0, 4) == "0xE8" && detect_MULTIHACK == false) { detect_MULTIHACK = true; }
                             if (checkInt.Substring(0, 4) == "0xE9" && detect_DRIFTMOD == false)  { detect_DRIFTMOD = true; }
                         }
+
+                        //ProfileMasker
+                        if(oneAddress == 8972152) {
+                            byte[] buffer16 = new byte[16];
+
+                            Kernel32.ReadProcessMemory((int)processHandle, (int)(BitConverter.ToUInt32(buffer, 0) + 0x89), buffer16, buffer16.Length, ref bytesRead);
+                            String MemoryUsername = Encoding.UTF8.GetString(buffer16, 0, buffer16.Length);
+
+                            Console.WriteLine(MemoryUsername.Substring(0, DiscordGamePresence.PersonaName.Length));
+                            Console.WriteLine(DiscordGamePresence.PersonaName);
+
+                            if (MemoryUsername.Substring(0, DiscordGamePresence.PersonaName.Length) != DiscordGamePresence.PersonaName && detect_PMASKER == false) {
+                                detect_PMASKER = true;
+                            }
+                        }
                     }
                     Thread.Sleep(500);
                 }
@@ -76,18 +95,17 @@ namespace GameLauncher.App.Classes
         }
 
         public static void disableChecks() {
-            if (detect_MULTIHACK == true)       AntiCheat.cheats_detected |= 2 ^ 0;
-            if (detect_FAST_POWERUPS == true)   AntiCheat.cheats_detected |= 2 ^ 1;
-            if (detect_SPEEDHACK == true)       AntiCheat.cheats_detected |= 2 ^ 2;
-            if (detect_SMOOTH_WALLS == true)    AntiCheat.cheats_detected |= 2 ^ 3;
-            if (detect_TANK_MODE == true)       AntiCheat.cheats_detected |= 2 ^ 4;
-            if (detect_WALLHACK == true)        AntiCheat.cheats_detected |= 2 ^ 5;
-            if (detect_DRIFTMOD == true)        AntiCheat.cheats_detected |= 2 ^ 6;
-            if (detect_PURSUITBOT == true)      AntiCheat.cheats_detected |= 2 ^ 7;
+            if (detect_MULTIHACK == true)       AntiCheat.cheats_detected |= 1;
+            if (detect_FAST_POWERUPS == true)   AntiCheat.cheats_detected |= 2;
+            if (detect_SPEEDHACK == true)       AntiCheat.cheats_detected |= 4;
+            if (detect_SMOOTH_WALLS == true)    AntiCheat.cheats_detected |= 8;
+            if (detect_TANK_MODE == true)       AntiCheat.cheats_detected |= 16;
+            if (detect_WALLHACK == true)        AntiCheat.cheats_detected |= 32;
+            if (detect_DRIFTMOD == true)        AntiCheat.cheats_detected |= 64;
+            if (detect_PURSUITBOT == true)      AntiCheat.cheats_detected |= 128;
+            if (detect_PMASKER == true)         AntiCheat.cheats_detected |= 256;
 
             if (AntiCheat.cheats_detected != 0) {
-                //Not nice. Send to global registry of cheaters.
-
                 String responseString;
                 try {
                     Uri sendReport = new Uri(Self.mainserver + "/report");
@@ -110,8 +128,9 @@ namespace GameLauncher.App.Classes
                 } catch { }
             }
 
-            detect_MULTIHACK = detect_FAST_POWERUPS = detect_SPEEDHACK = detect_SMOOTH_WALLS = detect_TANK_MODE = detect_WALLHACK = detect_DRIFTMOD = detect_PURSUITBOT = false;
+            detect_MULTIHACK = detect_FAST_POWERUPS = detect_SPEEDHACK = detect_SMOOTH_WALLS = detect_TANK_MODE = detect_WALLHACK = detect_DRIFTMOD = detect_PURSUITBOT = detect_PMASKER = false;
             AntiCheat.cheats_detected = 0;
+            thread.Abort();
         }
     }
 }
