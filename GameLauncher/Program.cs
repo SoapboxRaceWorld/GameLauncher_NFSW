@@ -32,8 +32,7 @@ namespace GameLauncher {
             Console.WriteLine("Application path: " + Path.GetDirectoryName(Application.ExecutablePath));
 
             if (!Self.hasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath))) {
-                MessageBox.Show("This application requires admin priviledge. Restarting...");
-                Self.runAsAdmin();
+                MessageBox.Show("This application requires admin priviledge");
             }
 
             IniFile _settingFile = new IniFile("Settings.ini");
@@ -61,7 +60,6 @@ namespace GameLauncher {
 
                 if (!Self.hasWriteAccessToFolder(_settingFile.Read("InstallationDirectory"))) {
                     MessageBox.Show("This application requires admin priviledge. Restarting...");
-                    Self.runAsAdmin();
                 }
             }
 

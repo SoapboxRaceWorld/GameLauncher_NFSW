@@ -77,7 +77,7 @@ namespace GameLauncherReborn {
 			try {
 				File.Create(path + "temp.txt").Close();
 				File.Delete(path + "temp.txt");
-			} catch (UnauthorizedAccessException) {
+			} catch {
 				return false;
 			}
 
