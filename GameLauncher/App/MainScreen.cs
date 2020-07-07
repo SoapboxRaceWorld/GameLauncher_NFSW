@@ -1935,6 +1935,11 @@ namespace GameLauncher {
                                 if (exitCode == -5)             errorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
                                 if (exitCode == -6)             errorMsg = "Server was unable to resolve your request";
 
+                                //ModLoader
+                                if (exitCode == 2)              errorMsg = "ModNet: Game was launched with invalid command line parameters.";
+                                if (exitCode == 3)              errorMsg = "ModNet: .links file should not exist upon startup!";
+                                if (exitCode == 4)              errorMsg = "ModNet: An Unhandled Error Appeared";
+
                                 playProgressText.Text = errorMsg.ToUpper();
                                 playProgress.Value = 100;
                                 playProgress.ForeColor = Color.Red;
