@@ -2149,14 +2149,6 @@ namespace GameLauncher {
                 } catch(Exception ex) {
                     Log.Debug(ex.Message);
                     MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{ex.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    if (Self.getInstalledHotFix("KB3020369") == false) {
-                        MessageBox.Show(null, "The required Windows HotFix is not detected. Please install KB3020369 update manually from Windows Update", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-
-                    if (Self.getInstalledHotFix("KB3125574") == false) {
-                        MessageBox.Show(null, "The required Windows HotFix is not detected. Please install KB3125574 update manually from Windows Update", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
                 }
             }         
         }
