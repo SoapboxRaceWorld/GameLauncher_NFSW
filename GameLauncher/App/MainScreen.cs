@@ -2150,7 +2150,10 @@ namespace GameLauncher {
                     Log.Debug(ex.Message);
                     MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{ex.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }         
+            } else {
+                //Rofl
+                LaunchGame();
+            }        
         }
 
         private static readonly object LinkCleanerLock = new object();
