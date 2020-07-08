@@ -706,6 +706,7 @@
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.verticalBanner);
             this.Controls.Add(this.proxyCheckbox);
             this.Controls.Add(this.SelectServerBtn);
             this.Controls.Add(this.vfilesButton);
@@ -752,7 +753,6 @@
             this.Controls.Add(this.playButton);
             this.Controls.Add(this.registerText);
             this.Controls.Add(this.imageServerName);
-            this.Controls.Add(this.verticalBanner);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

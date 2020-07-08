@@ -78,6 +78,9 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine, Version=2.8.0.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser.2.8.0\lib\net45\CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="DiscordRPC, Version=1.0.150.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DiscordRichPresence.1.0.150\lib\net35\DiscordRPC.dll</HintPath>
     </Reference>
@@ -193,6 +196,7 @@
     <Compile Include="App\Classes\Statuses.cs" />
     <Compile Include="App\Classes\TaskBar.cs" />
     <Compile Include="App\Classes\UriExtensions.cs" />
+    <Compile Include="App\Classes\UriScheme.cs" />
     <Compile Include="App\Classes\WebRequest.cs">
       <SubType>Component</SubType>
     </Compile>

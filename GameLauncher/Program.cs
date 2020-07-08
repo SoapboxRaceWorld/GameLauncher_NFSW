@@ -18,12 +18,28 @@ using System.Reflection;
 using Newtonsoft.Json;
 using System.Linq;
 using Microsoft.Win32;
-//using Memes;
+using CommandLine;
 
 namespace GameLauncher {
     internal static class Program {
+        internal class Arguments {
+            [Option('p', "parse", Required = false, HelpText = "Parses URI")]
+            public string Parse { get; set; }
+        }
+
         [STAThread]
-        internal static void Main() {
+        internal static void Main(string[] args) {
+            Parser.Default.ParseArguments<Arguments>(args).WithParsed(Main2);
+        }
+
+        private static void Main2(Arguments args) {
+            if(UriScheme.IsCommandLineArgumentsInstalled()) {
+                UriScheme.InstallCommandLineArguments(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), AppDomain.CurrentDomain.FriendlyName));
+                if(args.Parse != null) {
+                    new UriScheme(args.Parse);
+                }
+            }
+
             try {
                 new WebClient().DownloadData("http://l.mtntr.pl/generate_204.php");
             } catch(Exception) {

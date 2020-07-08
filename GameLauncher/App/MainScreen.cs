@@ -311,6 +311,10 @@ namespace GameLauncher {
             this.Load += new EventHandler(mainScreen_Load);
             email.KeyUp += new KeyEventHandler(Form1_KeyUp);
             this.Shown += (x,y) => {
+                if(UriScheme.ForceGame == true) {
+                    playButton_Click(x, y);
+                }
+
                 new Thread(() => {
                     discordRpcClient.Invoke();
 
@@ -939,6 +943,8 @@ namespace GameLauncher {
                 _loginToken = Tokens.LoginToken;
                 _serverIp = Tokens.IPAddress;
 
+                MessageBox.Show(_userId + "__" + _loginToken + "__" + _serverIp);
+
                 if(!String.IsNullOrEmpty(Tokens.Warning)) {
                     MessageBox.Show(null, Tokens.Warning, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
@@ -1202,13 +1208,19 @@ namespace GameLauncher {
                                 return;
                             } else {
                                 try {
-                                    Image image;
-                                    var memoryStream = new MemoryStream(e4.Result);
-                                    image = Image.FromStream(memoryStream);
-                                    verticalBanner.Image = image;
-                                    verticalBanner.BackColor = Color.Black;
+                                    if(UriScheme.ForceGame != true) {
+                                        Image image;
+                                        var memoryStream = new MemoryStream(e4.Result);
+                                        image = Image.FromStream(memoryStream);
+                                        verticalBanner.Image = image;
+                                        verticalBanner.BackColor = Color.Black;
 
-                                    imageServerName.Text = String.Empty; //_realServernameBanner;
+                                        imageServerName.Text = String.Empty; //_realServernameBanner;
+                                    } else {
+                                        imageServerName.Text = "WebLogin";
+                                        verticalBanner.Image = null;
+                                        verticalBanner.BackColor = Color.Black;
+                                    }
                                 } catch(Exception ex) {
                                     Console.WriteLine(ex.Message);
                                     verticalBanner.Image = null;
@@ -1781,6 +1793,11 @@ namespace GameLauncher {
         }
 
         private void StartGame(string userId, string loginToken) {
+
+            if(UriScheme.ServerIP != String.Empty) {
+                _serverIp = UriScheme.ServerIP;
+            }
+
             if(_realServername == "Freeroam Sparkserver") {
                 //Force proxy enabled.
                 Log.Info("Forcing Proxified connection for FRSS");
@@ -1965,13 +1982,23 @@ namespace GameLauncher {
         }
 
         private void playButton_Click(object sender, EventArgs e) {
-            if (_loggedIn == false) {
-                if(_useSavedPassword == false) return;
-                loginButton_Click(sender, e);
-            }
+            if(UriScheme.ForceGame != true) { 
+                if (_loggedIn == false) {
+                    if(_useSavedPassword == false) return;
+                    loginButton_Click(sender, e);
+                }
 
-            if (_playenabled == false) {
-                return;
+                if (_playenabled == false) {
+                    return;
+                }
+            } else {
+                //set background black
+                imageServerName.Text = "WebLogin";
+                verticalBanner.Image = null;
+
+                _userId = UriScheme.UserID;
+                _loginToken = UriScheme.LoginToken;
+                _serverIp = UriScheme.ServerIP;
             }
 
             _disableLogout = true;
