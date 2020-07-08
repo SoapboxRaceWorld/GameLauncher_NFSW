@@ -26,7 +26,7 @@ namespace GameLauncher.App.Classes {
         public static bool StartMinimized = false;
 
         public UriScheme(string Parse) {
-            if (Parse.StartsWith("nfsw://")) {
+            if (Parse.StartsWith("nfswlaunch://")) {
                 Uri parseLauncherUri = new Uri(Parse);
 
                 switch(parseLauncherUri.Host) {
@@ -52,16 +52,16 @@ namespace GameLauncher.App.Classes {
         }
 
         public static void InstallCommandLineArguments(String CurrentLauncherPath) {
-            Registry.ClassesRoot.CreateSubKey(@"nfsw").SetValue(null, "URL:NFSW Protocol");
-            Registry.ClassesRoot.CreateSubKey(@"nfsw").SetValue("URL Protocol", String.Empty);
-            Registry.ClassesRoot.CreateSubKey(@"nfsw").SetValue("LauncherVersion", System.Windows.Forms.Application.ProductVersion);
-            Registry.ClassesRoot.CreateSubKey(@"nfsw\DefaultIcon").SetValue(null, CurrentLauncherPath + ",1");
-            Registry.ClassesRoot.CreateSubKey(@"nfsw\shell\open\command").SetValue(null, "\"" + CurrentLauncherPath + "\" --parse \"%1\"");
+            Registry.ClassesRoot.CreateSubKey(@"nfswlaunch").SetValue(null, "URL:NFSWLaunch Protocol");
+            Registry.ClassesRoot.CreateSubKey(@"nfswlaunch").SetValue("URL Protocol", String.Empty);
+            Registry.ClassesRoot.CreateSubKey(@"nfswlaunch").SetValue("LauncherVersion", System.Windows.Forms.Application.ProductVersion);
+            Registry.ClassesRoot.CreateSubKey(@"nfswlaunch\DefaultIcon").SetValue(null, CurrentLauncherPath + ",1");
+            Registry.ClassesRoot.CreateSubKey(@"nfswlaunch\shell\open\command").SetValue(null, "\"" + CurrentLauncherPath + "\" --parse \"%1\"");
         }
 
         public static bool IsCommandLineArgumentsInstalled() {
-            Console.WriteLine("IsCommandLineArgumentsInstalled: " + ((String)Registry.ClassesRoot.CreateSubKey(@"nfsw\shell\open\command").GetValue("LauncherVersion") != String.Empty));
-            return (String)Registry.ClassesRoot.CreateSubKey(@"nfsw\shell\open\command").GetValue("LauncherVersion") != String.Empty;
+            Console.WriteLine("IsCommandLineArgumentsInstalled: " + ((String)Registry.ClassesRoot.CreateSubKey(@"nfswlaunch\shell\open\command").GetValue("LauncherVersion") != String.Empty));
+            return (String)Registry.ClassesRoot.CreateSubKey(@"nfswlaunch\shell\open\command").GetValue("LauncherVersion") != String.Empty;
         }
     }
 }
