@@ -20,7 +20,6 @@ namespace GameLauncher.App {
             changelogText.SelectionLength = 0;
             changelogText.TabStop = false;
 
-
             Bitmap bitmap1 = Bitmap.FromHicon(SystemIcons.Information.Handle);
             icon.Image = bitmap1;
 

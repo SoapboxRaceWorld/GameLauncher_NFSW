@@ -1936,6 +1936,11 @@ namespace GameLauncher {
                                 if (exitCode == -5)             errorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
                                 if (exitCode == -6)             errorMsg = "Server was unable to resolve your request";
 
+                                //ModLoader
+                                if (exitCode == 2)              errorMsg = "ModNet: Game was launched with invalid command line parameters.";
+                                if (exitCode == 3)              errorMsg = "ModNet: .links file should not exist upon startup!";
+                                if (exitCode == 4)              errorMsg = "ModNet: An Unhandled Error Appeared";
+
                                 playProgressText.Text = errorMsg.ToUpper();
                                 playProgress.Value = 100;
                                 playProgress.ForeColor = Color.Red;
@@ -2150,16 +2155,11 @@ namespace GameLauncher {
                 } catch(Exception ex) {
                     Log.Debug(ex.Message);
                     MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{ex.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    if (Self.getInstalledHotFix("KB3020369") == false) {
-                        MessageBox.Show(null, "The required Windows HotFix is not detected. Please install KB3020369 update manually from Windows Update", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-
-                    if (Self.getInstalledHotFix("KB3125574") == false) {
-                        MessageBox.Show(null, "The required Windows HotFix is not detected. Please install KB3125574 update manually from Windows Update", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
                 }
-            }         
+            } else {
+                //Rofl
+                LaunchGame();
+            }        
         }
 
         private static readonly object LinkCleanerLock = new object();
