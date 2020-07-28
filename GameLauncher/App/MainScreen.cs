@@ -66,9 +66,10 @@ namespace GameLauncher {
         private int _nfswPid;
         private Thread _nfswstarted;
 
+        DateTime lastUpdate;
+        long lastBytes = 0;
 
         private DateTime _downloadStartTime;
-        private readonly Downloader _downloader;
 
         private string _loginToken = "";
         private string _userId = "";
@@ -200,14 +201,6 @@ namespace GameLauncher {
                 Log.Debug("Video Card: " + GPUHelper.CardName());
                 Log.Debug("Driver Version: " + GPUHelper.DriverVersion());
             }
-
-            _downloader = new Downloader(this, 3, 2, 16) {
-                ProgressUpdated = new ProgressUpdated(OnDownloadProgress),
-                DownloadFinished = new DownloadFinished(DownloadTracksFiles),
-                DownloadFailed = new DownloadFailed(OnDownloadFailed),
-                ShowMessage = new ShowMessage(OnShowMessage),
-				ShowExtract = new ShowExtract(OnShowExtract)
-            };
 
             Log.Debug("InitializeComponent");
             InitializeComponent();
@@ -2442,143 +2435,142 @@ namespace GameLauncher {
                 speechFile = "en";
             }
 
-            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/Sound/Speech/copspeechhdr_" + speechFile + ".big")) {
+            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/Tracks/STREAML5RA_98.BUN")) { //This is the last file according to zip
                 playProgressText.Text = "Loading list of files to download...".ToUpper();
 
                 DriveInfo[] allDrives = DriveInfo.GetDrives();
                 foreach (DriveInfo d in allDrives) {
                     if (d.Name == Path.GetPathRoot(_settingFile.Read("InstallationDirectory"))) {
-                        if (d.TotalFreeSpace <= 4000000000)  {
+                        if (d.TotalFreeSpace <= 10000000000)  {
 
                             extractingProgress.Value = 100;
                             extractingProgress.Width = 519;
                             extractingProgress.Image = Properties.Resources.warningprogress;
                             extractingProgress.ProgressColor = Color.Orange;
 
-                            playProgressText.Text = "Please make sure you have at least 4GB free space on hard drive.".ToUpper();
+                            playProgressText.Text = "Please make sure you have at least 10GB free space on hard drive.".ToUpper();
 
                             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
                             TaskbarProgress.SetValue(Handle, 100, 100);
                         } else {
-                            DownloadCoreFiles();
+                            //New downloader
+
+                            String filename = String.Empty;
+                            Boolean allowExtract = false;
+
+                            if(File.Exists("GameFiles.sbrw")) {
+                                filename = Path.Combine(Environment.CurrentDirectory, "GameFiles.sbrw");
+                                allowExtract = true;
+
+                                TaskbarProgress.SetValue(Handle, 100, 100);
+                                playProgress.Value = 100;
+                                playProgress.Width = 519;
+
+                                GoForUnpack(filename);
+                            } else {
+                                filename = Path.GetTempFileName();
+                                allowExtract = false;
+
+                                Thread thread = new Thread(() => {
+                                    WebClientWithTimeout client2 = new WebClientWithTimeout();
+                                    client2.Proxy = null;
+
+                                    client2.DownloadProgressChanged += (x, e) => {
+                                        this.BeginInvoke((MethodInvoker)delegate {
+                                            if (lastBytes == 0) {
+                                                lastUpdate = DateTime.Now;
+                                                lastBytes = e.BytesReceived;
+                                            } else {
+                                                double bytesIn = double.Parse(e.BytesReceived.ToString());
+                                                double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+                                                double percentage = bytesIn / totalBytes * 100;
+
+                                                playProgress.Value = (int)(100 * e.BytesReceived / e.TotalBytesToReceive);
+                                                playProgress.Width = (int)(519 * e.BytesReceived / e.TotalBytesToReceive);
+
+                                                TaskbarProgress.SetValue(Handle, (int)(100 * e.BytesReceived / e.TotalBytesToReceive), 100);
+                                                var now = DateTime.Now;
+                                                var timeSpan = now - lastUpdate;
+                                                var bytesChange = e.BytesReceived - lastBytes;
+                                                long bytesPerSecond = 0;
+
+                                                try {
+                                                    bytesPerSecond = bytesChange / timeSpan.Seconds;
+                                                } catch {
+                                                    bytesPerSecond = 0;
+                                                }
+
+                                                playProgressText.Text = ("["+ FormatFileSize(bytesPerSecond*8) + "ps] Downloading cachefiles: " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
+                                            }
+                                        });
+                                    };
+                                    client2.DownloadFileCompleted += (x, y) => { allowExtract = true; GoForUnpack(filename); };
+                                    client2.DownloadFileAsync(new Uri("http://launcher.sbrw.io/game/GameFiles.sbrw"), filename);
+                                });
+
+                                thread.Start();
+                            }
                         }
                     }
                 }
             } else {
-				OnDownloadFinished();
-			}
-		}
-
-        public void DownloadCoreFiles()
-        {
-            playProgressText.Text = "Checking core files...".ToUpper();
-            playProgress.Width = 0;
-            extractingProgress.Width = 0;
-
-            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
-
-            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/nfsw.exe"))
-            {
-                _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload(_NFSW_Installation_Source, "", _settingFile.Read("InstallationDirectory"), false, false, 1130632198);
-            }
-            else
-            {
-                DownloadTracksFiles();
+              _isDownloading = false;
+            	OnDownloadFinished();
             }
         }
 
-        public void DownloadTracksFiles()
-        {
-            playProgressText.Text = "Checking track files...".ToUpper();
-            playProgress.Width = 0;
-            extractingProgress.Width = 0;
+        public void GoForUnpack(string filename) {
+            Thread.Sleep(1);
 
-            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
+            Thread unpacker = new Thread(() => {
+                this.BeginInvoke((MethodInvoker)delegate {
+                    playProgressText.Text = ("UNPACKING " + filename).ToUpper();
 
-            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/TracksHigh/STREAML5RA_98.BUN"))
-            {
-                _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload(_NFSW_Installation_Source, "TracksHigh", _settingFile.Read("InstallationDirectory"), false, false, 278397707);
-            }
-            else
-            {
-                DownloadSpeechFiles();
-            }
-        }
+                    using (ZipArchive archive = ZipFile.OpenRead(filename)) {
+                        int numFiles = archive.Entries.Count;
+                        int current = 1;
 
-        public void DownloadSpeechFiles()
-        {
-            playProgressText.Text = "Looking for correct speech files...".ToUpper();
-            playProgress.Width = 0;
-            extractingProgress.Width = 0;
+                        foreach (ZipArchiveEntry entry in archive.Entries) {
+                            string fullName = entry.FullName;
 
-            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
+                            playProgressText.Text = ("Unpacking " + fullName).ToUpper();
 
-            string speechFile;
-            ulong speechSize;
+                            extractingProgress.Value = (int)((long)100 * current / numFiles);
+                            extractingProgress.Width = (int)((long)519 * current / numFiles);
 
-            try
-            {
-                if (string.IsNullOrEmpty(_settingFile.Read("Language")))
-                {
-                    speechFile = "en";
-                    speechSize = 141805935;
-                    _langInfo = "ENGLISH";
-                }
-                else
-                {
-                    WebClientWithTimeout wc = new WebClientWithTimeout();
-                    var response = wc.DownloadString(_NFSW_Installation_Source + "/" + _settingFile.Read("Language").ToLower() + "/index.xml");
+                            TaskbarProgress.SetValue(Handle, (int)(100 * current / numFiles), 100);
 
-                    response = response.Substring(3, response.Length - 3);
+                            if (fullName.Substring(fullName.Length - 1) == "/") {
+                                //Is a directory, create it!
+                                string folderName = fullName.Remove(fullName.Length - 1);
+                                if (Directory.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName))) {
+                                    Directory.Delete(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName), true);
+                                }
 
-                    var speechFileXml = new XmlDocument();
-                    speechFileXml.LoadXml(response);
-                    var speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
+                                Directory.CreateDirectory(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName));
+                            } else {
+                                //Is a file, extract!
+                                try { entry.ExtractToFile(Path.Combine(_settingFile.Read("InstallationDirectory"), fullName), true); } catch(Exception ex) { 
+                                    MessageBox.Show(null, "There was an error unpacking GameFiles. Please contact developer for more information:\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    return;
+                                }
+                            }
 
-                    speechFile = _settingFile.Read("Language").ToLower();
-                    speechSize = Convert.ToUInt64(speechSizeNode.InnerText);
-                    _langInfo = settingsLanguage.GetItemText(settingsLanguage.SelectedItem).ToUpper();
-                }
-            }
-            catch (Exception)
-            {
-                speechFile = "en";
-                speechSize = 141805935;
-                _langInfo = "ENGLISH";
-            }
+                            Application.DoEvents();
 
-            playProgressText.Text = string.Format("Checking for {0} speech files.", _langInfo).ToUpper();
+                            if(numFiles == current) {
+                                _isDownloading = false;
+                                OnDownloadFinished();
+                            }
 
-            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big"))
-            {
-                _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload(_NFSW_Installation_Source, speechFile, _settingFile.Read("InstallationDirectory"), false, false, speechSize);
-            }
-            else
-            {
-                DownloadTracksHighFiles();
-            }
-        }
+                            Console.WriteLine(current + " / " + numFiles + ": " + fullName);
+                            current++;
+                        }
+                    }
+                });
+            });
 
-        public void DownloadTracksHighFiles()
-        {
-            playProgressText.Text = "Checking track (high) files.".ToUpper();
-            playProgress.Width = 0;
-            extractingProgress.Width = 0;
-
-            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
-
-            if (_settingFile.Read("TracksHigh") == "1" && !File.Exists(_settingFile.Read("InstallationDirectory") + "\\Tracks\\STREAML5RA_98.BUN"))
-            {
-                _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload(_NFSW_Installation_Source, "Tracks", _settingFile.Read("InstallationDirectory"), false, false, 615494528);
-            }
-            else
-            {
-                OnDownloadFinished();
-            }
+            unpacker.Start();
         }
 
         public bool DownloadMods(string serverKey)
@@ -2598,7 +2590,7 @@ namespace GameLauncher {
         }
 
         private string FormatFileSize(long byteCount, bool si = true) {
-            int unit = si ? 1000 : 1024;
+            int unit = si ? 1024 : 1000;
             if (byteCount < unit) return byteCount + " B";
             int exp = (int)(Math.Log(byteCount) / Math.Log(unit));
             String pre = (si ? "kMGTPE" : "KMGTPE")[exp - 1] + (si ? "" : "i");

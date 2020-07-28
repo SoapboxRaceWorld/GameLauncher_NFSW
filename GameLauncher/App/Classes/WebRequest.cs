@@ -62,6 +62,7 @@ namespace GameLauncherReborn {
             request.Headers["X-UserAgent"] = "GameLauncherReborn "+Application.ProductVersion+ " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = Value();
             request.Headers["X-DiscordID"] = Self.discordid;
+            request.Proxy = null;
             //request.Timeout = 30000;
 
             return request;
