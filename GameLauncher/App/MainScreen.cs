@@ -936,8 +936,6 @@ namespace GameLauncher {
                 _loginToken = Tokens.LoginToken;
                 _serverIp = Tokens.IPAddress;
 
-                MessageBox.Show(_userId + "__" + _loginToken + "__" + _serverIp);
-
                 if(!String.IsNullOrEmpty(Tokens.Warning)) {
                     MessageBox.Show(null, Tokens.Warning, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
@@ -2442,16 +2440,7 @@ namespace GameLauncher {
                 foreach (DriveInfo d in allDrives) {
                     if (d.Name == Path.GetPathRoot(_settingFile.Read("InstallationDirectory"))) {
                         if (d.TotalFreeSpace <= 10000000000)  {
-
-                            extractingProgress.Value = 100;
-                            extractingProgress.Width = 519;
-                            extractingProgress.Image = Properties.Resources.warningprogress;
-                            extractingProgress.ProgressColor = Color.Orange;
-
-                            playProgressText.Text = "Please make sure you have at least 10GB free space on hard drive.".ToUpper();
-
-                            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
-                            TaskbarProgress.SetValue(Handle, 100, 100);
+                            triggerError("Please make sure you have at least 10GB free space on hard drive.");
                         } else {
                             //New downloader
 
@@ -2500,11 +2489,20 @@ namespace GameLauncher {
                                                     bytesPerSecond = 0;
                                                 }
 
-                                                playProgressText.Text = ("["+ FormatFileSize(bytesPerSecond*8) + "ps] Downloading cachefiles: " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
+                                                playProgressText.Text = ("["+ FormatFileSize(bytesPerSecond*8, false) + "ps] Downloading cachefiles: " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
                                             }
                                         });
                                     };
-                                    client2.DownloadFileCompleted += (x, y) => { allowExtract = true; GoForUnpack(filename); };
+                                    client2.DownloadFileCompleted += (x, y) => { 
+                                        if(y.Cancelled) {
+                                            triggerError("Download cancelled");
+                                        } else if(y.Error.Message != String.Empty) {
+                                            triggerError("Download error");
+                                        } else
+                                        {
+                                            allowExtract = true; GoForUnpack(filename);
+                                        }
+                                    };
                                     client2.DownloadFileAsync(new Uri("http://launcher.sbrw.io/game/GameFiles.sbrw"), filename);
                                 });
 
@@ -2519,13 +2517,29 @@ namespace GameLauncher {
             }
         }
 
+        public void triggerError(String error) {
+            extractingProgress.Value = 100;
+            extractingProgress.Width = 519;
+            extractingProgress.Image = Properties.Resources.warningprogress;
+            extractingProgress.ProgressColor = Color.Orange;
+
+            playProgressText.Text = error.ToUpper();
+            MessageBox.Show(null, error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
+            TaskbarProgress.SetValue(Handle, 100, 100);
+        }
+
         public void GoForUnpack(string filename) {
             Thread.Sleep(1);
+            int savedFile = 0;
+
+            if (_settingFile.KeyExists("FileCountExtract")) {
+                savedFile = Convert.ToInt32(_settingFile.Read("FileCountExtract"));
+            }
 
             Thread unpacker = new Thread(() => {
                 this.BeginInvoke((MethodInvoker)delegate {
-                    playProgressText.Text = ("UNPACKING " + filename).ToUpper();
-
                     using (ZipArchive archive = ZipFile.OpenRead(filename)) {
                         int numFiles = archive.Entries.Count;
                         int current = 1;
@@ -2533,27 +2547,31 @@ namespace GameLauncher {
                         foreach (ZipArchiveEntry entry in archive.Entries) {
                             string fullName = entry.FullName;
 
-                            playProgressText.Text = ("Unpacking " + fullName).ToUpper();
-
                             extractingProgress.Value = (int)((long)100 * current / numFiles);
                             extractingProgress.Width = (int)((long)519 * current / numFiles);
 
                             TaskbarProgress.SetValue(Handle, (int)(100 * current / numFiles), 100);
 
-                            if (fullName.Substring(fullName.Length - 1) == "/") {
-                                //Is a directory, create it!
-                                string folderName = fullName.Remove(fullName.Length - 1);
-                                if (Directory.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName))) {
-                                    Directory.Delete(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName), true);
-                                }
+                            if(savedFile <= current) {
+                                playProgressText.Text = ("Unpacking " + fullName).ToUpper();
 
-                                Directory.CreateDirectory(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName));
-                            } else {
-                                //Is a file, extract!
-                                try { entry.ExtractToFile(Path.Combine(_settingFile.Read("InstallationDirectory"), fullName), true); } catch(Exception ex) { 
-                                    MessageBox.Show(null, "There was an error unpacking GameFiles. Please contact developer for more information:\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    return;
+                                if (fullName.Substring(fullName.Length - 1) == "/") {
+                                    //Is a directory, create it!
+                                    string folderName = fullName.Remove(fullName.Length - 1);
+                                    if (Directory.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName))) {
+                                        Directory.Delete(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName), true);
+                                    }
+
+                                    Directory.CreateDirectory(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName));
+                                } else {
+                                    //Is a file, extract!
+                                    try { entry.ExtractToFile(Path.Combine(_settingFile.Read("InstallationDirectory"), fullName), true); } catch(Exception ex) { 
+                                        MessageBox.Show(null, "There was an error unpacking GameFiles. Please contact developer for more information:\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        return;
+                                    }
                                 }
+                            } else {
+                                playProgressText.Text = ("Skipping " + fullName).ToUpper();
                             }
 
                             Application.DoEvents();
@@ -2563,7 +2581,7 @@ namespace GameLauncher {
                                 OnDownloadFinished();
                             }
 
-                            Console.WriteLine(current + " / " + numFiles + ": " + fullName);
+                            _settingFile.Write("FileCountExtract", Convert.ToString(current));
                             current++;
                         }
                     }
