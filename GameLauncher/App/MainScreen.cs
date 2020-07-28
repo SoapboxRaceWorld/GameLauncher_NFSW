@@ -2478,7 +2478,7 @@ namespace GameLauncher {
                                                 playProgress.Width = (int)(519 * e.BytesReceived / e.TotalBytesToReceive);
 
                                                 TaskbarProgress.SetValue(Handle, (int)(100 * e.BytesReceived / e.TotalBytesToReceive), 100);
-                                                var now = DateTime.Now;
+                                                /*var now = DateTime.Now;
                                                 var timeSpan = now - lastUpdate;
                                                 var bytesChange = e.BytesReceived - lastBytes;
                                                 long bytesPerSecond = 0;
@@ -2487,19 +2487,22 @@ namespace GameLauncher {
                                                     bytesPerSecond = bytesChange / timeSpan.Seconds;
                                                 } catch {
                                                     bytesPerSecond = 0;
-                                                }
+                                                }*/
 
-                                                playProgressText.Text = ("["+ FormatFileSize(bytesPerSecond*8, false) + "ps] Downloading cachefiles: " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
+                                                _presence.State = "Downloading game: " + (100 * e.BytesReceived / e.TotalBytesToReceive) + "%";
+                                                discordRpcClient.SetPresence(_presence);
+
+                                                playProgressText.Text = ("Downloading cachefiles: " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
                                             }
                                         });
                                     };
-                                    client2.DownloadFileCompleted += (x, y) => { 
+                                    client2.DownloadFileCompleted += (x, y) => {
                                         if(y.Cancelled) {
                                             triggerError("Download cancelled");
-                                        } else if(y.Error.Message != String.Empty) {
-                                            triggerError("Download error");
-                                        } else
-                                        {
+                                        } else if (y.Error != null) {
+                                            triggerError(y.Error.Message);
+                                        } else {
+                                            MessageBox.Show(y.Error.Message);
                                             allowExtract = true; GoForUnpack(filename);
                                         }
                                     };
@@ -2518,16 +2521,18 @@ namespace GameLauncher {
         }
 
         public void triggerError(String error) {
-            extractingProgress.Value = 100;
-            extractingProgress.Width = 519;
-            extractingProgress.Image = Properties.Resources.warningprogress;
-            extractingProgress.ProgressColor = Color.Orange;
+            this.BeginInvoke((MethodInvoker)delegate {
+                extractingProgress.Value = 100;
+                extractingProgress.Width = 519;
+                extractingProgress.Image = Properties.Resources.warningprogress;
+                extractingProgress.ProgressColor = Color.Orange;
 
-            playProgressText.Text = error.ToUpper();
-            MessageBox.Show(null, error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                playProgressText.Text = error.ToUpper();
+                MessageBox.Show(null, error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
-            TaskbarProgress.SetValue(Handle, 100, 100);
+                TaskbarProgress.SetValue(Handle, 100, 100);
+                TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Error);
+            });
         }
 
         public void GoForUnpack(string filename) {
@@ -2565,8 +2570,8 @@ namespace GameLauncher {
                                     Directory.CreateDirectory(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName));
                                 } else {
                                     //Is a file, extract!
-                                    try { entry.ExtractToFile(Path.Combine(_settingFile.Read("InstallationDirectory"), fullName), true); } catch(Exception ex) { 
-                                        MessageBox.Show(null, "There was an error unpacking GameFiles. Please contact developer for more information:\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    try { entry.ExtractToFile(Path.Combine(_settingFile.Read("InstallationDirectory"), fullName), true); } catch(Exception ex) {
+                                        triggerError(ex.Message);
                                         return;
                                     }
                                 }
@@ -2574,11 +2579,15 @@ namespace GameLauncher {
                                 playProgressText.Text = ("Skipping " + fullName).ToUpper();
                             }
 
+                            _presence.State = "Unpacking game: " + (100 * current / numFiles) + "%";
+                            discordRpcClient.SetPresence(_presence);
+
                             Application.DoEvents();
 
                             if(numFiles == current) {
                                 _isDownloading = false;
                                 OnDownloadFinished();
+                                _settingFile.Write("FileCountExtract", "0");
                             }
 
                             _settingFile.Write("FileCountExtract", Convert.ToString(current));
@@ -2615,50 +2624,6 @@ namespace GameLauncher {
             return String.Format("{0}{1}B", Convert.ToDecimal(byteCount / Math.Pow(unit, exp)).ToString("0.##"), pre);
         }
 
-        private string EstimateFinishTime(long current, long total) {
-            try { 
-                var num = current / (double)total;
-                if (num < 0.00185484899838312) {
-                    return "Calculating";
-                }
-
-                var now = DateTime.Now - _downloadStartTime;
-                var timeSpan = TimeSpan.FromTicks((long)(now.Ticks / num)) - now;
-
-                int rHours = Convert.ToInt32(timeSpan.Hours.ToString()) + 1;
-                int rMinutes = Convert.ToInt32(timeSpan.Minutes.ToString()) + 1;
-                int rSeconds = Convert.ToInt32(timeSpan.Seconds.ToString()) + 1;
-
-                if (rHours > 1) return rHours.ToString() + " hours remaining";
-                if (rMinutes > 1) return rMinutes.ToString() + " minutes remaining";
-                if (rSeconds > 1) return rSeconds.ToString() + " seconds remaining";
-
-                return "Just now";
-            } catch {
-                return "N/A";
-            }
-        }
-
-        private void OnDownloadProgress(long downloadLength, long downloadCurrent, long compressedLength, string filename, int skiptime = 0)
-        {
-            if (downloadCurrent < compressedLength) {
-                playProgressText.Text = String.Format("Downloading — {0} of {1} ({3}%) — {2}", FormatFileSize(downloadCurrent), FormatFileSize(compressedLength), EstimateFinishTime(downloadCurrent, compressedLength), (int)(100 * downloadCurrent / compressedLength)).ToUpper();
-            }
-
-            try {
-                playProgress.Value = (int)(100 * downloadCurrent / compressedLength);
-                playProgress.Width = (int)(519 * downloadCurrent / compressedLength);
-
-                TaskbarProgress.SetValue(Handle, (int)(100 * downloadCurrent / compressedLength), 100);
-            } catch {
-                TaskbarProgress.SetValue(Handle, 0, 100);
-                playProgress.Value = 0;
-                playProgress.Width = 0;
-            }
-
-            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
-        }
-
         private void OnDownloadFinished() {
             try {
                 File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
@@ -2692,6 +2657,9 @@ namespace GameLauncher {
             }
             */
             playProgressText.Text = "Ready!".ToUpper();
+            _presence.State = "Ready!";
+            discordRpcClient.SetPresence(_presence);
+
             EnablePlayButton();
 
             extractingProgress.Width = 519;
@@ -2768,41 +2736,6 @@ namespace GameLauncher {
 
             playButton.BackgroundImage = Properties.Resources.graybutton;
             playButton.ForeColor = Color.White;
-        }
-
-        private void OnDownloadFailed(Exception ex)
-        {
-            string failureMessage;
-            MessageBox.Show(null, "Failed to download gamefiles. Possible cause is that CDN went offline. Please select other CDN from Settings", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            try {
-                failureMessage = ex.Message;
-            } catch {
-                failureMessage = "Download failed.";
-            }
-
-            extractingProgress.Value = 100;
-            extractingProgress.Width = 519;
-            extractingProgress.Image = Properties.Resources.errorprogress;
-            extractingProgress.ProgressColor = Color.FromArgb(254,0,0);
-
-            playProgressText.Text = failureMessage.ToUpper();
-
-            TaskbarProgress.SetValue(Handle, 100, 100);
-            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Error);
-        }
-
-		private void OnShowExtract(string filename, long currentCount, long allFilesCount) {
-            if(playProgress.Value == 100)
-                playProgressText.Text = String.Format("Extracting — {0} of {1} ({3}%) — {2}", FormatFileSize(currentCount), FormatFileSize(allFilesCount), EstimateFinishTime(currentCount, allFilesCount), (int)(100 * currentCount / allFilesCount)).ToUpper();
-            
-            extractingProgress.Value = (int)(100 * currentCount / allFilesCount);
-            extractingProgress.Width = (int)(519 * currentCount / allFilesCount);
-        }
-
-        private void OnShowMessage(string message, string header)
-        {
-            MessageBox.Show(message, header);
         }
 
         public void ServerStatusBar(Pen color, Point startPoint, Point endPoint, int Thickness = 2) {

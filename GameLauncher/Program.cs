@@ -120,6 +120,12 @@ namespace GameLauncher {
             Log.StartLogging();
             Log.Debug("GameLauncher " + Application.ProductVersion);
 
+            if (_settingFile.KeyExists("InstallationDirectory")) {
+                if(!File.Exists(_settingFile.Read("InstallationDirectory"))) {
+                    Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
+                }
+            }
+
             //StaticConfiguration.DisableErrorTraces = false;
 
             Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
