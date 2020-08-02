@@ -145,6 +145,7 @@
     <Compile Include="App\Classes\CDN.cs" />
     <Compile Include="App\Classes\Delay.cs" />
     <Compile Include="App\Classes\DetectLinux.cs" />
+    <Compile Include="App\Classes\Downloader.cs" />
     <Compile Include="App\Classes\Events\UpdaterSchema.cs" />
     <Compile Include="App\Classes\ExtractResource.cs" />
     <Compile Include="App\Classes\GPU\init.cs" />

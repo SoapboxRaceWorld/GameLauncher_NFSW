@@ -165,7 +165,7 @@ namespace GameLauncherReborn
                 if (value > _Maximum)
                     value = _Maximum;
                 _Value = value;
-                this.Refresh();
+                //this.Refresh();
             }
         }
 

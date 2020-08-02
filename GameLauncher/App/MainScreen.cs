@@ -40,6 +40,7 @@ using GameLauncher.App.Classes.RPC;
 using GameLauncher.App.Classes.GPU;
 using CommandLine;
 using System.Runtime.CompilerServices;
+using CodeProject.Downloader;
 //using System.Windows;
 
 namespace GameLauncher {
@@ -2418,11 +2419,17 @@ namespace GameLauncher {
                         } else {
                             //New downloader
 
-                            String filename = String.Empty;
+                            String filename = Path.Combine(Environment.CurrentDirectory, "GameFiles.sbrwpack");
                             Boolean allowExtract = false;
+                            long filesize = 0;
 
-                            if(File.Exists("GameFiles.sbrwpack")) {
-                                filename = Path.Combine(Environment.CurrentDirectory, "GameFiles.sbrwpack");
+                            if(File.Exists(filename)) {
+                                filesize = new FileInfo(filename).Length;
+                            } else {
+                                filesize = 0;
+                            }
+
+                            if(filesize == 4703505570) {
                                 allowExtract = true;
 
                                 TaskbarProgress.SetValue(Handle, 100, 100);
@@ -2431,56 +2438,32 @@ namespace GameLauncher {
 
                                 GoForUnpack(filename);
                             } else {
-                                filename = Path.GetTempFileName();
                                 allowExtract = false;
 
                                 Thread thread = new Thread(() => {
-                                    WebClientWithTimeout client2 = new WebClientWithTimeout();
-                                    client2.Proxy = null;
 
-                                    client2.DownloadProgressChanged += (x, e) => {
+                                    FileDownloader downloader = new FileDownloader();
+                                    downloader.DownloadComplete += (x, y) => {
+                                         allowExtract = true; GoForUnpack(filename);
+                                    };
+                                    downloader.ProgressChanged += (x, e) => {
                                         this.BeginInvoke((MethodInvoker)delegate {
-                                            if (lastBytes == 0) {
-                                                lastUpdate = DateTime.Now;
-                                                lastBytes = e.BytesReceived;
-                                            } else {
-                                                double bytesIn = double.Parse(e.BytesReceived.ToString());
-                                                double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-                                                double percentage = bytesIn / totalBytes * 100;
+                                            double bytesIn = double.Parse(e.CurrentFileSize.ToString());
+                                            double totalBytes = double.Parse(e.TotalFileSize.ToString());
+                                            double percentage = bytesIn / totalBytes * 100;
 
-                                                playProgress.Value = (int)(100 * e.BytesReceived / e.TotalBytesToReceive);
-                                                playProgress.Width = (int)(519 * e.BytesReceived / e.TotalBytesToReceive);
+                                            playProgress.Value = (int)(100 * e.CurrentFileSize / e.TotalFileSize);
+                                            playProgress.Width = (int)(519 * e.CurrentFileSize / e.TotalFileSize);
 
-                                                TaskbarProgress.SetValue(Handle, (int)(100 * e.BytesReceived / e.TotalBytesToReceive), 100);
-                                                /*var now = DateTime.Now;
-                                                var timeSpan = now - lastUpdate;
-                                                var bytesChange = e.BytesReceived - lastBytes;
-                                                long bytesPerSecond = 0;
+                                            TaskbarProgress.SetValue(Handle, (int)(100 * e.CurrentFileSize / e.TotalFileSize), 100);
 
-                                                try {
-                                                    bytesPerSecond = bytesChange / timeSpan.Seconds;
-                                                } catch {
-                                                    bytesPerSecond = 0;
-                                                }*/
+                                            _presence.State = "Downloading game: " + (100 * e.CurrentFileSize / e.TotalFileSize) + "%";
+                                            discordRpcClient.SetPresence(_presence);
 
-                                                _presence.State = "Downloading game: " + (100 * e.BytesReceived / e.TotalBytesToReceive) + "%";
-                                                discordRpcClient.SetPresence(_presence);
-
-                                                playProgressText.Text = ("Downloading cachefiles: " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
-                                            }
+                                            playProgressText.Text = ("Downloading cachefiles: " + FormatFileSize(e.CurrentFileSize) + " of " + FormatFileSize(e.TotalFileSize)).ToUpper();
                                         });
                                     };
-                                    client2.DownloadFileCompleted += (x, y) => {
-                                        if(y.Cancelled) {
-                                            triggerError("Download cancelled");
-                                        } else if (y.Error != null) {
-                                            triggerError(y.Error.Message);
-                                        } else {
-                                            MessageBox.Show(y.Error.Message);
-                                            allowExtract = true; GoForUnpack(filename);
-                                        }
-                                    };
-                                    client2.DownloadFileAsync(new Uri("http://launcher.sbrw.io/game/GameFiles.sbrwpack"), filename);
+                                    downloader.Download("http://launcher.sbrw.io/game/GameFiles.sbrwpack");
                                 });
 
                                 thread.Start();
