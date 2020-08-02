@@ -77,6 +77,7 @@
             this.wordFilterCheck = new System.Windows.Forms.CheckBox();
             this.SelectServerBtn = new System.Windows.Forms.Button();
             this.proxyCheckbox = new System.Windows.Forms.CheckBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
@@ -85,6 +86,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.launcherIconStatus)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ServerStatusIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // closebtn
@@ -262,6 +264,7 @@
             // 
             this.settingsQuality.BackColor = System.Drawing.Color.White;
             this.settingsQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.settingsQuality.Enabled = false;
             this.settingsQuality.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.settingsQuality.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.settingsQuality.FormattingEnabled = true;
@@ -609,6 +612,7 @@
             // 
             this.cdnPick.BackColor = System.Drawing.Color.White;
             this.cdnPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cdnPick.Enabled = false;
             this.cdnPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.cdnPick.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.cdnPick.FormattingEnabled = true;
@@ -667,6 +671,16 @@
             this.proxyCheckbox.Text = "Disable DiscordRPC and Proxy";
             this.proxyCheckbox.UseVisualStyleBackColor = false;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.Location = new System.Drawing.Point(775, 24);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(24, 24);
+            this.pictureBox1.TabIndex = 105;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
             // extractingProgress
             // 
             this.extractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -706,7 +720,7 @@
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
-            this.Controls.Add(this.verticalBanner);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.proxyCheckbox);
             this.Controls.Add(this.SelectServerBtn);
             this.Controls.Add(this.vfilesButton);
@@ -753,6 +767,7 @@
             this.Controls.Add(this.playButton);
             this.Controls.Add(this.registerText);
             this.Controls.Add(this.imageServerName);
+            this.Controls.Add(this.verticalBanner);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -767,6 +782,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.launcherIconStatus)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ServerStatusIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -823,5 +839,6 @@
         private System.Windows.Forms.CheckBox wordFilterCheck;
         private System.Windows.Forms.Button SelectServerBtn;
         private System.Windows.Forms.CheckBox proxyCheckbox;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

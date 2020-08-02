@@ -38,6 +38,8 @@ using GameLauncher.App.Classes.HashPassword;
 using System.Security;
 using GameLauncher.App.Classes.RPC;
 using GameLauncher.App.Classes.GPU;
+using CommandLine;
+using System.Runtime.CompilerServices;
 //using System.Windows;
 
 namespace GameLauncher {
@@ -58,6 +60,9 @@ namespace GameLauncher {
         private bool _modernAuthSupport = false;
         private bool _gameKilledBySpeedBugCheck = false;
         private bool _disableLogout = false;
+
+        public static String getTempNa = Path.GetTempFileName();
+        public static String ModNetFileNameInUse = String.Empty;
 
         //private bool _disableChecks;
         private bool _disableProxy;
@@ -345,17 +350,9 @@ namespace GameLauncher {
 
                     if(welcomereply != DialogResult.OK) {
                         Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                    } else {
-                        _settingFile.Write("CDN", CDN.CDNUrl);
-                        _settingFile.Write("TracksHigh", CDN.TrackHigh);
-
-                        _NFSW_Installation_Source = CDN.CDNUrl;
                     }
                 } catch {
-                    _settingFile.Write("CDN", "http://cdn.worldunited.gg/gamefiles/packed/");
-                    _settingFile.Write("TracksHigh", "1");
 
-                    _NFSW_Installation_Source = "http://cdn.worldunited.gg/gamefiles/packed/";
                 }
 
                 var fbd = new CommonOpenFileDialog {
@@ -469,19 +466,6 @@ namespace GameLauncher {
 
             Log.Debug("Updating server list");
             ServerListUpdater.UpdateList();
-
-            //INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
-            if (!File.Exists("LZMA.dll")) {
-                Log.Debug("Starting LZMA downloader");
-                try {
-                    playProgressText.Text = "Downloading LZMA.dll...";
-                    using (WebClientWithTimeout wc = new WebClientWithTimeout()) {
-                        wc.DownloadFileAsync(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
-                    }
-                } catch (Exception ex) {
-                    Log.Debug("Failed to download LZMA. " + ex.Message);
-                }
-            }
 
             Log.Debug("Setting WindowName");
             Text = "GameLauncherReborn v" + Application.ProductVersion;
@@ -2140,6 +2124,8 @@ namespace GameLauncher {
                             WebClientWithTimeout client2 = new WebClientWithTimeout();
                             client2.DownloadFileAsync(new Uri(json2.basePath + "/" + modfile.Name), path + "/" + modfile.Name);
 
+                            ModNetFileNameInUse = modfile.Name;
+
                             client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_RELOADED);
                             client2.DownloadFileCompleted += (test, stuff) => { 
                                 CountFiles++;
@@ -2232,24 +2218,12 @@ namespace GameLauncher {
             }
         }
 
-        void client_DownloadProgressChanged_LEGACY(object sender, DownloadProgressChangedEventArgs e) {
-            this.BeginInvoke((MethodInvoker)delegate {
-                double bytesIn = double.Parse(e.BytesReceived.ToString());
-                double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-                double percentage = bytesIn / totalBytes * 100;
-                playProgressText.Text = ("Downloaded " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
-
-                extractingProgress.Value = Convert.ToInt32(Decimal.Divide(CountFiles, CountFilesTotal) * 100);
-                extractingProgress.Width = Convert.ToInt32(Decimal.Divide(CountFiles, CountFilesTotal) * 519);
-            });
-        }
-
         void client_DownloadProgressChanged_RELOADED(object sender, DownloadProgressChangedEventArgs e) {
             this.BeginInvoke((MethodInvoker)delegate {
                 double bytesIn = double.Parse(e.BytesReceived.ToString());
                 double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
                 double percentage = bytesIn / totalBytes * 100;
-                playProgressText.Text = ("Downloaded " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
+                playProgressText.Text = ("Downloading "+ModNetFileNameInUse+": " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
 
                 extractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
                 extractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
@@ -2447,8 +2421,8 @@ namespace GameLauncher {
                             String filename = String.Empty;
                             Boolean allowExtract = false;
 
-                            if(File.Exists("GameFiles.sbrw")) {
-                                filename = Path.Combine(Environment.CurrentDirectory, "GameFiles.sbrw");
+                            if(File.Exists("GameFiles.sbrwpack")) {
+                                filename = Path.Combine(Environment.CurrentDirectory, "GameFiles.sbrwpack");
                                 allowExtract = true;
 
                                 TaskbarProgress.SetValue(Handle, 100, 100);
@@ -2506,7 +2480,7 @@ namespace GameLauncher {
                                             allowExtract = true; GoForUnpack(filename);
                                         }
                                     };
-                                    client2.DownloadFileAsync(new Uri("http://launcher.sbrw.io/game/GameFiles.sbrw"), filename);
+                                    client2.DownloadFileAsync(new Uri("http://launcher.sbrw.io/game/GameFiles.sbrwpack"), filename);
                                 });
 
                                 thread.Start();
@@ -2556,9 +2530,9 @@ namespace GameLauncher {
                             extractingProgress.Width = (int)((long)519 * current / numFiles);
 
                             TaskbarProgress.SetValue(Handle, (int)(100 * current / numFiles), 100);
-
-                            if(savedFile <= current) {
-                                playProgressText.Text = ("Unpacking " + fullName).ToUpper();
+                            
+                            //if(savedFile <= current) {
+                                playProgressText.Text = ("Unpacking " + fullName.Replace(".sbrw", String.Empty)).ToUpper();
 
                                 if (fullName.Substring(fullName.Length - 1) == "/") {
                                     //Is a directory, create it!
@@ -2569,15 +2543,40 @@ namespace GameLauncher {
 
                                     Directory.CreateDirectory(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName));
                                 } else {
-                                    //Is a file, extract!
-                                    try { entry.ExtractToFile(Path.Combine(_settingFile.Read("InstallationDirectory"), fullName), true); } catch(Exception ex) {
-                                        triggerError(ex.Message);
-                                        return;
+                                    String oldFileName = fullName.Replace(".sbrw", String.Empty);
+                                    String[] split = oldFileName.Split('/');
+
+                                    String newFileName = String.Empty;
+
+                                    if (split.Length >= 2) {
+                                        newFileName = Path.Combine(split[split.Length - 2], split[split.Length - 1]);
+                                    } else {
+                                        newFileName = split.Last();
+                                    }
+
+                                    String KEY = Regex.Replace(SHA.HashPassword(newFileName), "[^0-9.]", "").Substring(0, 8);
+                                    String IV = Regex.Replace(MDFive.HashPassword(newFileName), "[^0-9.]", "").Substring(0, 8);
+
+                                    entry.ExtractToFile(getTempNa, true);
+
+                                    DESCryptoServiceProvider dESCryptoServiceProvider = new DESCryptoServiceProvider() {
+                                        Key = Encoding.ASCII.GetBytes(KEY),
+                                        IV = Encoding.ASCII.GetBytes(IV)
+                                    };
+
+                                    FileStream fileStream = new FileStream(Path.Combine(_settingFile.Read("InstallationDirectory"), oldFileName), FileMode.Create);
+                                    CryptoStream cryptoStream = new CryptoStream(fileStream, dESCryptoServiceProvider.CreateDecryptor(), CryptoStreamMode.Write);
+                                    BinaryWriter binaryFile = new BinaryWriter(cryptoStream);
+
+                                    using (BinaryReader reader = new BinaryReader(File.Open(getTempNa, FileMode.Open))) {
+                                        long numBytes = new FileInfo(getTempNa).Length;
+                                        binaryFile.Write(reader.ReadBytes((int)numBytes));
+                                        binaryFile.Close();
                                     }
                                 }
-                            } else {
-                                playProgressText.Text = ("Skipping " + fullName).ToUpper();
-                            }
+                            //} else {
+                            //    playProgressText.Text = ("Skipping " + fullName).ToUpper();
+                            //}
 
                             _presence.State = "Unpacking game: " + (100 * current / numFiles) + "%";
                             discordRpcClient.SetPresence(_presence);
@@ -2587,6 +2586,14 @@ namespace GameLauncher {
                             if(numFiles == current) {
                                 _isDownloading = false;
                                 OnDownloadFinished();
+
+                                Notification.Visible = true;
+                                Notification.BalloonTipIcon = ToolTipIcon.Info;
+                                Notification.BalloonTipTitle = "GameLauncherReborn";
+                                Notification.BalloonTipText = "Your game is now ready to launch!";
+                                Notification.ShowBalloonTip(5000);
+                                Notification.Dispose();
+
                                 _settingFile.Write("FileCountExtract", "0");
                             }
 
@@ -2761,6 +2768,10 @@ namespace GameLauncher {
                 var index = finalItems.FindIndex(i => string.Equals(i.IpAddress, ServerName.IpAddress));
                 serverPick.SelectedIndex = index;
             }
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e) {
+            this.WindowState = FormWindowState.Minimized;
         }
     }
 }
