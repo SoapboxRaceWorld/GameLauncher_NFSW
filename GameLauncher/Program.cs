@@ -190,8 +190,6 @@ namespace GameLauncher {
                             "Nancy.dll - 2.0.0",
                             "Nancy.Hosting.Self.dll - 2.0.0",
                             "Newtonsoft.Json.dll - 12.0.3",
-                            "PresentationCore.dll - 4.8.4121.0",
-                            "PresentationFramework.dll - 3.0.6920.5738",
                             "System.Runtime.InteropServices.RuntimeInformation.dll - 4.6.24705.01. Commit Hash: 4d1af962ca0fede10beb01d197367c2f90e92c97"
                         };
 

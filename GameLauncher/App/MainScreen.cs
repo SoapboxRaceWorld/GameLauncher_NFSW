@@ -64,6 +64,11 @@ namespace GameLauncher {
 
         public static String getTempNa = Path.GetTempFileName();
         public static String ModNetFileNameInUse = String.Empty;
+        public static int remember_timespan = 0;
+        public static long bytesPerSecond = 0;
+
+        Queue<Uri> modFilesDownloadUrls = new Queue<Uri>();
+        bool isDownloadingModNetFiles = false;
 
         //private bool _disableChecks;
         private bool _disableProxy;
@@ -1217,12 +1222,12 @@ namespace GameLauncher {
             ServerStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             ServerStatusDesc.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            playProgressText2.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             email.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             loginButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             password.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             rememberMe.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             forgotPassword.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             playButton.Font = new Font(AkrobatSemiBold, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             currentWindowInfo.Font = new Font(AkrobatSemiBold, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             imageServerName.Font = new Font(AkrobatSemiBold, 25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
@@ -1318,6 +1323,7 @@ namespace GameLauncher {
             playProgress.Visible = hideElements;
             extractingProgress.Visible = hideElements;
             playProgressText.Visible = hideElements;
+            playProgressText2.Visible = hideElements;
             playButton.Visible = hideElements;
             settingsButton.Visible = hideElements;
             verticalBanner.Visible = hideElements;
@@ -1353,6 +1359,7 @@ namespace GameLauncher {
             settingsButton.Visible = hideElements;
             verticalBanner.Visible = hideElements;
             playProgressText.Visible = hideElements;
+            playProgressText2.Visible = hideElements;
             playProgress.Visible = hideElements;
             extractingProgress.Visible = hideElements;
             addServer.Visible = hideElements;
@@ -2122,27 +2129,13 @@ namespace GameLauncher {
 
                     foreach (IndexJsonEntry modfile in json3.entries) {
                         if (SHA.HashFile(path + "/" + modfile.Name).ToLower() != modfile.Checksum) {
-                            WebClientWithTimeout client2 = new WebClientWithTimeout();
-                            client2.DownloadFileAsync(new Uri(json2.basePath + "/" + modfile.Name), path + "/" + modfile.Name);
-
-                            ModNetFileNameInUse = modfile.Name;
-
-                            client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_RELOADED);
-                            client2.DownloadFileCompleted += (test, stuff) => { 
-                                CountFiles++;
-
-                                if (CountFiles == CountFilesTotal) {
-                                    LaunchGame();
-                                }
-                            };
-                        } else {
-                            CountFiles++;
-
-                            if (CountFiles == CountFilesTotal) {
-                                LaunchGame();
-                            }
+                            modFilesDownloadUrls.Enqueue(new Uri(json2.basePath + "/" + modfile.Name));
                         }
                     }
+
+                    bool isDownloading = false;
+
+                    this.DownloadModNetFilesRightNow(path);
 
                     foreach (var file in Directory.GetFiles(path)) {
                         var name = Path.GetFileName(file);
@@ -2164,6 +2157,27 @@ namespace GameLauncher {
                 //Rofl
                 LaunchGame();
             }        
+        }
+
+        public void DownloadModNetFilesRightNow(string path) {
+            while (isDownloadingModNetFiles == false) {
+                var url = modFilesDownloadUrls.Dequeue();
+                string FileName = url.ToString().Substring(url.ToString().LastIndexOf("/") + 1, (url.ToString().Length - url.ToString().LastIndexOf("/") - 1));
+
+                WebClientWithTimeout client2 = new WebClientWithTimeout();
+                client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_RELOADED);
+                client2.DownloadFileCompleted += (test, stuff) => {
+                    isDownloadingModNetFiles = false;
+                    if (modFilesDownloadUrls.Any() == false) {
+                        LaunchGame();
+                    } else {
+                        //Redownload other file
+                        DownloadModNetFilesRightNow(path);
+                    }
+                };
+                client2.DownloadFileAsync(url, path + "/" + FileName);
+                isDownloadingModNetFiles = true;
+            }
         }
 
         private static readonly object LinkCleanerLock = new object();
@@ -2228,6 +2242,9 @@ namespace GameLauncher {
 
                 extractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
                 extractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
+
+                playProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
+                playProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
             });
         }
 
@@ -2397,18 +2414,7 @@ namespace GameLauncher {
             playProgress.Width = 0;
             extractingProgress.Width = 0;
 
-            string speechFile;
-
-            try
-            {
-                speechFile = string.IsNullOrEmpty(_settingFile.Read("Language")) ? "en" : _settingFile.Read("Language").ToLower();
-            }
-            catch (Exception)
-            {
-                speechFile = "en";
-            }
-
-            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/Tracks/STREAML5RA_98.BUN")) { //This is the last file according to zip
+            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/nfsw.exe")) {
                 playProgressText.Text = "Loading list of files to download...".ToUpper();
 
                 DriveInfo[] allDrives = DriveInfo.GetDrives();
@@ -2417,10 +2423,7 @@ namespace GameLauncher {
                         if (d.TotalFreeSpace <= 10000000000)  {
                             triggerError("Please make sure you have at least 10GB free space on hard drive.");
                         } else {
-                            //New downloader
-
                             String filename = Path.Combine(Environment.CurrentDirectory, "GameFiles.sbrwpack");
-                            Boolean allowExtract = false;
                             long filesize = 0;
 
                             if(File.Exists(filename)) {
@@ -2430,40 +2433,53 @@ namespace GameLauncher {
                             }
 
                             if(filesize == 4703505570) {
-                                allowExtract = true;
-
                                 TaskbarProgress.SetValue(Handle, 100, 100);
                                 playProgress.Value = 100;
                                 playProgress.Width = 519;
 
                                 GoForUnpack(filename);
                             } else {
-                                allowExtract = false;
-
                                 Thread thread = new Thread(() => {
-
                                     FileDownloader downloader = new FileDownloader();
                                     downloader.DownloadComplete += (x, y) => {
-                                         allowExtract = true; GoForUnpack(filename);
+                                         GoForUnpack(filename);
                                     };
                                     downloader.ProgressChanged += (x, e) => {
                                         this.BeginInvoke((MethodInvoker)delegate {
-                                            double bytesIn = double.Parse(e.CurrentFileSize.ToString());
-                                            double totalBytes = double.Parse(e.TotalFileSize.ToString());
-                                            double percentage = bytesIn / totalBytes * 100;
+                                            if (lastBytes == 0) {
+                                                lastUpdate = DateTime.Now;
+                                                lastBytes = e.CurrentFileSize;
+                                            } else {
+                                                double bytesIn = double.Parse(e.CurrentFileSize.ToString());
+                                                double totalBytes = double.Parse(e.TotalFileSize.ToString());
+                                                double percentage = bytesIn / totalBytes * 100;
 
-                                            playProgress.Value = (int)(100 * e.CurrentFileSize / e.TotalFileSize);
-                                            playProgress.Width = (int)(519 * e.CurrentFileSize / e.TotalFileSize);
+                                                playProgress.Value = (int)(100 * e.CurrentFileSize / e.TotalFileSize);
+                                                playProgress.Width = (int)(519 * e.CurrentFileSize / e.TotalFileSize);
 
-                                            TaskbarProgress.SetValue(Handle, (int)(100 * e.CurrentFileSize / e.TotalFileSize), 100);
+                                                var now = DateTime.Now;
+                                                var timeSpan = now - lastUpdate;
+                                                var bytesChange = e.CurrentFileSize - lastBytes;
 
-                                            _presence.State = "Downloading game: " + (100 * e.CurrentFileSize / e.TotalFileSize) + "%";
-                                            discordRpcClient.SetPresence(_presence);
+                                                try {
+                                                    if(remember_timespan != timeSpan.Seconds) {
+                                                        bytesPerSecond = bytesChange / timeSpan.Seconds;
 
-                                            playProgressText.Text = ("Downloading cachefiles: " + FormatFileSize(e.CurrentFileSize) + " of " + FormatFileSize(e.TotalFileSize)).ToUpper();
+                                                        _presence.State = "Downloading game: " + e.PercentDone + "%";
+                                                        discordRpcClient.SetPresence(_presence);
+
+                                                        remember_timespan = timeSpan.Seconds;
+                                                    }
+                                                } catch { }
+
+                                                TaskbarProgress.SetValue(Handle, (int)(100 * e.CurrentFileSize / e.TotalFileSize), 100);
+
+                                                playProgressText2.Text = "[" + e.PercentDone + "% / " + FormatFileSize(bytesPerSecond * 8) + "ps]".ToUpper();
+                                                playProgressText.Text = ("Downloading SBRWPACK File: " + FormatFileSize(e.CurrentFileSize) + " of " + FormatFileSize(e.TotalFileSize)).ToUpper();
+                                            }
                                         });
                                     };
-                                    downloader.Download("http://launcher.sbrw.io/game/GameFiles.sbrwpack");
+                                    downloader.Download("http://launcherr.sbrw.io/game/GameFiles.sbrwpack");
                                 });
 
                                 thread.Start();
@@ -2516,6 +2532,8 @@ namespace GameLauncher {
                             
                             //if(savedFile <= current) {
                                 playProgressText.Text = ("Unpacking " + fullName.Replace(".sbrw", String.Empty)).ToUpper();
+                                playProgressText2.Text = "[" + current + " / "+ archive.Entries.Count + "]";
+
 
                                 if (fullName.Substring(fullName.Length - 1) == "/") {
                                     //Is a directory, create it!
@@ -2615,7 +2633,12 @@ namespace GameLauncher {
         }
 
         private void OnDownloadFinished() {
-            try {
+            playProgressText2.Text = "";
+            extractingProgress.Value = 100;
+            extractingProgress.Width = 519;
+
+            try
+            {
                 File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
             } catch {
                 // ignored

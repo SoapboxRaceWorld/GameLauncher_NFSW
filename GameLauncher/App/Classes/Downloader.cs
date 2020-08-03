@@ -7,7 +7,7 @@ namespace CodeProject.Downloader
 {
     public class FileDownloader
     {
-        private const int downloadBlockSize = 1024;
+        private const int downloadBlockSize = 10240*5;
         private bool canceled = false;
         private string downloadingTo;
 

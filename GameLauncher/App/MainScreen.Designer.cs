@@ -80,6 +80,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.playProgressText2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
@@ -714,12 +715,25 @@
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
             // 
+            // playProgressText2
+            // 
+            this.playProgressText2.BackColor = System.Drawing.Color.Transparent;
+            this.playProgressText2.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
+            this.playProgressText2.ForeColor = System.Drawing.Color.White;
+            this.playProgressText2.Location = new System.Drawing.Point(442, 422);
+            this.playProgressText2.Name = "playProgressText2";
+            this.playProgressText2.Size = new System.Drawing.Size(120, 19);
+            this.playProgressText2.TabIndex = 108;
+            this.playProgressText2.Text = "...";
+            this.playProgressText2.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.playProgressText2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.proxyCheckbox);
             this.Controls.Add(this.SelectServerBtn);
@@ -840,5 +854,6 @@
         private System.Windows.Forms.Button SelectServerBtn;
         private System.Windows.Forms.CheckBox proxyCheckbox;
         private System.Windows.Forms.PictureBox pictureBox1;
+        internal System.Windows.Forms.Label playProgressText2;
     }
 }
