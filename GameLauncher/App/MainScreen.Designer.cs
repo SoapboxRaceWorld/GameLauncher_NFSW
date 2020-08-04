@@ -77,14 +77,17 @@
             this.wordFilterCheck = new System.Windows.Forms.CheckBox();
             this.SelectServerBtn = new System.Windows.Forms.Button();
             this.proxyCheckbox = new System.Windows.Forms.CheckBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.playProgressText2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.launcherIconStatus)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ServerStatusIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // closebtn
@@ -262,6 +265,7 @@
             // 
             this.settingsQuality.BackColor = System.Drawing.Color.White;
             this.settingsQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.settingsQuality.Enabled = false;
             this.settingsQuality.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.settingsQuality.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.settingsQuality.FormattingEnabled = true;
@@ -609,6 +613,7 @@
             // 
             this.cdnPick.BackColor = System.Drawing.Color.White;
             this.cdnPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cdnPick.Enabled = false;
             this.cdnPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.cdnPick.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.cdnPick.FormattingEnabled = true;
@@ -667,6 +672,16 @@
             this.proxyCheckbox.Text = "Disable DiscordRPC and Proxy";
             this.proxyCheckbox.UseVisualStyleBackColor = false;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.Location = new System.Drawing.Point(775, 24);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(24, 24);
+            this.pictureBox1.TabIndex = 105;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
             // extractingProgress
             // 
             this.extractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -700,12 +715,26 @@
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
             // 
+            // playProgressText2
+            // 
+            this.playProgressText2.BackColor = System.Drawing.Color.Transparent;
+            this.playProgressText2.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
+            this.playProgressText2.ForeColor = System.Drawing.Color.White;
+            this.playProgressText2.Location = new System.Drawing.Point(442, 422);
+            this.playProgressText2.Name = "playProgressText2";
+            this.playProgressText2.Size = new System.Drawing.Size(120, 19);
+            this.playProgressText2.TabIndex = 108;
+            this.playProgressText2.Text = "...";
+            this.playProgressText2.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.playProgressText2);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.proxyCheckbox);
             this.Controls.Add(this.SelectServerBtn);
             this.Controls.Add(this.vfilesButton);
@@ -767,6 +796,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.launcherIconStatus)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ServerStatusIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -823,5 +853,7 @@
         private System.Windows.Forms.CheckBox wordFilterCheck;
         private System.Windows.Forms.Button SelectServerBtn;
         private System.Windows.Forms.CheckBox proxyCheckbox;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        internal System.Windows.Forms.Label playProgressText2;
     }
 }

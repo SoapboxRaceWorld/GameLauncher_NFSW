@@ -18,12 +18,32 @@ using System.Reflection;
 using Newtonsoft.Json;
 using System.Linq;
 using Microsoft.Win32;
-//using Memes;
+using CommandLine;
+using System.Globalization;
 
 namespace GameLauncher {
     internal static class Program {
+        internal class Arguments {
+            [Option('p', "parse", Required = false, HelpText = "Parses URI")]
+            public string Parse { get; set; }
+        }
+
         [STAThread]
-        internal static void Main() {
+        internal static void Main(string[] args) {
+            Parser.Default.ParseArguments<Arguments>(args).WithParsed(Main2);
+        }
+
+        private static void Main2(Arguments args) {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
+
+            if (UriScheme.IsCommandLineArgumentsInstalled()) {
+                UriScheme.InstallCommandLineArguments(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), AppDomain.CurrentDomain.FriendlyName));
+                if(args.Parse != null) {
+                    new UriScheme(args.Parse);
+                }
+            }
+
             try {
                 new WebClient().DownloadData("http://l.mtntr.pl/generate_204.php");
             } catch(Exception) {
@@ -32,13 +52,12 @@ namespace GameLauncher {
 
             IniFile _settingFile = new IniFile("Settings.ini");
 
-            //Windows 7 Fix
-            if (_settingFile.Read("PatchesApplied") != "1") { 
+            if (_settingFile.KeyExists("PatchesApplied") || _settingFile.ReadInt("PatchesApplied") != 1) {
                 String _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
-                if(_OS.Contains("Windows 7")) {
+                if (_OS.Contains("Windows 7")) {
                     if (Self.getInstalledHotFix("KB3125574") == false || Self.getInstalledHotFix("KB3125574") == false) {
                         String messageBoxPopupKB = String.Empty;
-                        messageBoxPopupKB  = "Hey Windows 7 User, in order to play on this server, we need to make additional tweaks to your system.\n";
+                        messageBoxPopupKB = "Hey Windows 7 User, in order to play on this server, we need to make additional tweaks to your system.\n";
                         messageBoxPopupKB += "We must make sure you have those Windows Update packages installed:\n\n";
 
                         if (Self.getInstalledHotFix("KB3020369") == false) messageBoxPopupKB += "- Update KB3020369\n";
@@ -52,7 +71,7 @@ namespace GameLauncher {
                         messageBoxPopupKB += "Would you like to add those values?";
                         DialogResult replyPatchWin7 = MessageBox.Show(null, messageBoxPopupKB, "GameLauncherReborn", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                        if(replyPatchWin7 == DialogResult.Yes) {
+                        if (replyPatchWin7 == DialogResult.Yes) {
                             RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
                             key.SetValue("DisabledByDefault", 0x0);
 
@@ -104,6 +123,12 @@ namespace GameLauncher {
             Log.StartLogging();
             Log.Debug("GameLauncher " + Application.ProductVersion);
 
+            if (_settingFile.KeyExists("InstallationDirectory")) {
+                if(!File.Exists(_settingFile.Read("InstallationDirectory"))) {
+                    Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
+                }
+            }
+
             //StaticConfiguration.DisableErrorTraces = false;
 
             Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
@@ -141,6 +166,12 @@ namespace GameLauncher {
                 } catch { /* ignored */ }
             }
 
+            if (Properties.Settings.Default.IsRestarting) {
+                Properties.Settings.Default.IsRestarting = false;
+                Properties.Settings.Default.Save();
+                Thread.Sleep(3000);
+            }
+
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             if (Debugger.IsAttached) {
                 Log.Debug("Checking Proxy");
@@ -157,11 +188,11 @@ namespace GameLauncher {
                 try {
                     if (mutex.WaitOne(0, false)) {
                         string[] files = {
+                            "CommandLine.dll - 2.8.0",
                             "DiscordRPC.dll - 1.0.150.0",
                             "Flurl.dll - 2.8.2",
                             "Flurl.Http.dll - 2.4.2",
                             "INIFileParser.dll - 2.5.2",
-                            "LZMA.dll - 9.10 beta",
                             "Microsoft.WindowsAPICodePack.dll - 1.1.0.0",
                             "Microsoft.WindowsAPICodePack.Shell.dll - 1.1.0.0",
                             "Microsoft.WindowsAPICodePack.ShellExtensions.dll - 1.1.0.0",

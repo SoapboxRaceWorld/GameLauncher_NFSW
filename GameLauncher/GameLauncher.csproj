@@ -43,10 +43,11 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>28DF1A9418EC50FB78CA63E739C201300503F1E0</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>FFBE7FCB82EC0ECA321C4178759DF231AB1CB712</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>GameLauncher_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -78,6 +79,9 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine, Version=2.8.0.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser.2.8.0\lib\net45\CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="DiscordRPC, Version=1.0.150.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DiscordRichPresence.1.0.150\lib\net35\DiscordRPC.dll</HintPath>
     </Reference>
@@ -142,18 +146,7 @@
     <Compile Include="App\Classes\CDN.cs" />
     <Compile Include="App\Classes\Delay.cs" />
     <Compile Include="App\Classes\DetectLinux.cs" />
-    <Compile Include="App\Classes\Downloader\Downloader.cs" />
-    <Compile Include="App\Classes\Downloader\DownloaderCommand.cs" />
-    <Compile Include="App\Classes\Downloader\DownloaderException.cs" />
-    <Compile Include="App\Classes\Downloader\DownloadFailed.cs" />
-    <Compile Include="App\Classes\Downloader\DownloadFinished.cs" />
-    <Compile Include="App\Classes\Downloader\DownloadManager.cs" />
-    <Compile Include="App\Classes\Downloader\HashManager.cs" />
-    <Compile Include="App\Classes\Downloader\ProgressUpdated.cs" />
-    <Compile Include="App\Classes\Downloader\ShowExtract.cs" />
-    <Compile Include="App\Classes\Downloader\ShowMessage.cs" />
-    <Compile Include="App\Classes\Downloader\UncompressionException.cs" />
-    <Compile Include="App\Classes\Downloader\VerifyCommand.cs" />
+    <Compile Include="App\Classes\Downloader.cs" />
     <Compile Include="App\Classes\Events\UpdaterSchema.cs" />
     <Compile Include="App\Classes\ExtractResource.cs" />
     <Compile Include="App\Classes\GPU\init.cs" />
@@ -180,6 +173,7 @@
     <Compile Include="App\Classes\Proxy\NancyGzipCompression.cs" />
     <Compile Include="App\Classes\Proxy\ProxyException.cs" />
     <Compile Include="App\Classes\Proxy\ProxyHandler.cs" />
+    <Compile Include="App\Classes\QueueDownload.cs" />
     <Compile Include="App\Classes\RedistributablePackage.cs" />
     <Compile Include="App\Classes\RPC\CarList.cs" />
     <Compile Include="App\Classes\RPC\DiscordGamePresence.cs" />
@@ -193,6 +187,7 @@
     <Compile Include="App\Classes\Statuses.cs" />
     <Compile Include="App\Classes\TaskBar.cs" />
     <Compile Include="App\Classes\UriExtensions.cs" />
+    <Compile Include="App\Classes\UriScheme.cs" />
     <Compile Include="App\Classes\WebRequest.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -274,6 +269,7 @@
     <EmbeddedResource Include="Fonts\Akrobat-Regular.ttf" />
     <EmbeddedResource Include="Fonts\Akrobat-SemiBold.ttf" />
     <EmbeddedResource Include="App\Classes\RPC\JSON\zones.json" />
+    <None Include="GameLauncher_1_TemporaryKey.pfx" />
     <None Include="GameLauncher_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest">
