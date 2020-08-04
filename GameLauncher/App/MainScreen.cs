@@ -1954,7 +1954,10 @@ namespace GameLauncher {
 
                                 DialogResult restartApp = MessageBox.Show(null, errorMsg + "\nWould you like to restart the launcher?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                                 if(restartApp == DialogResult.Yes) {
+                                    Properties.Settings.Default.IsRestarting = true;
+                                    Properties.Settings.Default.Save();
                                     Application.Restart();
+                                    Application.ExitThread();
                                 }
                                 this.closebtn_Click(null, null);
                             }));
@@ -2135,7 +2138,11 @@ namespace GameLauncher {
 
                     bool isDownloading = false;
 
-                    this.DownloadModNetFilesRightNow(path);
+                    if(modFilesDownloadUrls.Count != 0) {
+                        this.DownloadModNetFilesRightNow(path);
+                    } else {
+                        LaunchGame();
+                    }
 
                     foreach (var file in Directory.GetFiles(path)) {
                         var name = Path.GetFileName(file);

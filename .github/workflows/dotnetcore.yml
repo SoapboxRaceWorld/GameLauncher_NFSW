@@ -14,4 +14,9 @@ jobs:
     - name: Setup MSBuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
     - name: Build with MSBuild
-      run: msbuild GameLauncher.sln -p:Configuration=Release
+      run: msbuild GameLauncher.sln -p:Configuration=Debug
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ArtifactBuild
+        path: ${{ github.workspace }}/GameLauncher/bin/Debug

@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using System.Linq;
 using Microsoft.Win32;
 using CommandLine;
+using System.Globalization;
 
 namespace GameLauncher {
     internal static class Program {
@@ -33,7 +34,10 @@ namespace GameLauncher {
         }
 
         private static void Main2(Arguments args) {
-            if(UriScheme.IsCommandLineArgumentsInstalled()) {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
+
+            if (UriScheme.IsCommandLineArgumentsInstalled()) {
                 UriScheme.InstallCommandLineArguments(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), AppDomain.CurrentDomain.FriendlyName));
                 if(args.Parse != null) {
                     new UriScheme(args.Parse);
@@ -48,13 +52,12 @@ namespace GameLauncher {
 
             IniFile _settingFile = new IniFile("Settings.ini");
 
-            //Windows 7 Fix
-            if (_settingFile.Read("PatchesApplied") != "1") { 
+            if (_settingFile.KeyExists("PatchesApplied") || _settingFile.ReadInt("PatchesApplied") != 1) {
                 String _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
-                if(_OS.Contains("Windows 7")) {
+                if (_OS.Contains("Windows 7")) {
                     if (Self.getInstalledHotFix("KB3125574") == false || Self.getInstalledHotFix("KB3125574") == false) {
                         String messageBoxPopupKB = String.Empty;
-                        messageBoxPopupKB  = "Hey Windows 7 User, in order to play on this server, we need to make additional tweaks to your system.\n";
+                        messageBoxPopupKB = "Hey Windows 7 User, in order to play on this server, we need to make additional tweaks to your system.\n";
                         messageBoxPopupKB += "We must make sure you have those Windows Update packages installed:\n\n";
 
                         if (Self.getInstalledHotFix("KB3020369") == false) messageBoxPopupKB += "- Update KB3020369\n";
@@ -68,7 +71,7 @@ namespace GameLauncher {
                         messageBoxPopupKB += "Would you like to add those values?";
                         DialogResult replyPatchWin7 = MessageBox.Show(null, messageBoxPopupKB, "GameLauncherReborn", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                        if(replyPatchWin7 == DialogResult.Yes) {
+                        if (replyPatchWin7 == DialogResult.Yes) {
                             RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
                             key.SetValue("DisabledByDefault", 0x0);
 
@@ -161,6 +164,12 @@ namespace GameLauncher {
                 try {
                     File.WriteAllText("servers.json", "[]");
                 } catch { /* ignored */ }
+            }
+
+            if (Properties.Settings.Default.IsRestarting) {
+                Properties.Settings.Default.IsRestarting = false;
+                Properties.Settings.Default.Save();
+                Thread.Sleep(3000);
             }
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
