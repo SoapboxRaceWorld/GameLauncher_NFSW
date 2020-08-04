@@ -19,4 +19,6 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: ArtifactBuild
-        path: ${{ github.workspace }}/GameLauncher/bin/Debug
+        path: |
+          ${{ github.workspace }}/GameLauncher/bin/Debug/GameLauncher.exe
+          ${{ github.workspace }}/GameLauncher/bin/Debug/*.dll
