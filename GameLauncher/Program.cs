@@ -52,10 +52,10 @@ namespace GameLauncher {
 
             IniFile _settingFile = new IniFile("Settings.ini");
 
-            if (_settingFile.KeyExists("PatchesApplied") || _settingFile.ReadInt("PatchesApplied") != 1) {
+            if (!(_settingFile.KeyExists("PatchesApplied"))) {
                 String _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
                 if (_OS.Contains("Windows 7")) {
-                    if (Self.getInstalledHotFix("KB3125574") == false || Self.getInstalledHotFix("KB3125574") == false) {
+                    if (Self.getInstalledHotFix("KB3020369") == false || Self.getInstalledHotFix("KB3125574") == false) {
                         String messageBoxPopupKB = String.Empty;
                         messageBoxPopupKB = "Hey Windows 7 User, in order to play on this server, we need to make additional tweaks to your system.\n";
                         messageBoxPopupKB += "We must make sure you have those Windows Update packages installed:\n\n";
@@ -75,12 +75,12 @@ namespace GameLauncher {
                             RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
                             key.SetValue("DisabledByDefault", 0x0);
 
-                            _settingFile.Write("PatchesApplied", "1");
-
                             MessageBox.Show(null, "Registry option set, Remember that the following patch might work after a system reboot", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         } else {
                             MessageBox.Show(null, "Roger that, There will be some issues connecting to the servers.", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
+
+                        _settingFile.Write("PatchesApplied", "1");
                     }
                 }
             }
