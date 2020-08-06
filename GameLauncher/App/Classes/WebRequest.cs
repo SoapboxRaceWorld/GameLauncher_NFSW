@@ -16,6 +16,7 @@ namespace GameLauncherReborn {
     public class WebClientWithTimeout : WebClient {
         private static string GameLauncherHash = string.Empty;
         private static long addrange = 0;
+        private static int timeout = 3000;
         public static string Value() {
             if (string.IsNullOrEmpty(GameLauncherHash)) {
                 GameLauncherHash = SHA.HashFile(AppDomain.CurrentDomain.FriendlyName);
@@ -69,13 +70,17 @@ namespace GameLauncherReborn {
             }
 
             request.Proxy = null;
-            //request.Timeout = 30000;
+            request.Timeout = timeout;
 
             return request;
         }
 
         internal void AddRange(long filesize) {
             addrange = filesize;
+        }
+
+        internal void Timeout(int time) {
+            timeout = time;
         }
     }
 }

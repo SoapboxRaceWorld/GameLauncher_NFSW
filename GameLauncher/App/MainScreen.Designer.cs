@@ -78,9 +78,9 @@
             this.SelectServerBtn = new System.Windows.Forms.Button();
             this.proxyCheckbox = new System.Windows.Forms.CheckBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.playProgressText2 = new System.Windows.Forms.Label();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
-            this.playProgressText2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
@@ -94,7 +94,7 @@
             // 
             this.closebtn.BackColor = System.Drawing.Color.Transparent;
             this.closebtn.BackgroundImage = global::GameLauncher.Properties.Resources.close;
-            this.closebtn.Location = new System.Drawing.Point(838, 24);
+            this.closebtn.Location = new System.Drawing.Point(837, 24);
             this.closebtn.Name = "closebtn";
             this.closebtn.Size = new System.Drawing.Size(24, 24);
             this.closebtn.TabIndex = 0;
@@ -132,7 +132,7 @@
             this.serverPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.serverPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.serverPick.FormattingEnabled = true;
-            this.serverPick.Location = new System.Drawing.Point(599, 65);
+            this.serverPick.Location = new System.Drawing.Point(899, 66);
             this.serverPick.Name = "serverPick";
             this.serverPick.Size = new System.Drawing.Size(233, 21);
             this.serverPick.TabIndex = 5;
@@ -205,7 +205,7 @@
             // 
             this.settingsButton.BackColor = System.Drawing.Color.Transparent;
             this.settingsButton.BackgroundImage = global::GameLauncher.Properties.Resources.settingsbtn1;
-            this.settingsButton.Location = new System.Drawing.Point(805, 24);
+            this.settingsButton.Location = new System.Drawing.Point(804, 24);
             this.settingsButton.Name = "settingsButton";
             this.settingsButton.Size = new System.Drawing.Size(24, 24);
             this.settingsButton.TabIndex = 21;
@@ -514,7 +514,7 @@
             // 
             // addServer
             // 
-            this.addServer.Location = new System.Drawing.Point(838, 64);
+            this.addServer.Location = new System.Drawing.Point(1187, 65);
             this.addServer.Name = "addServer";
             this.addServer.Size = new System.Drawing.Size(24, 23);
             this.addServer.TabIndex = 68;
@@ -650,9 +650,9 @@
             // 
             // SelectServerBtn
             // 
-            this.SelectServerBtn.Location = new System.Drawing.Point(889, 12);
+            this.SelectServerBtn.Location = new System.Drawing.Point(598, 64);
             this.SelectServerBtn.Name = "SelectServerBtn";
-            this.SelectServerBtn.Size = new System.Drawing.Size(228, 23);
+            this.SelectServerBtn.Size = new System.Drawing.Size(263, 23);
             this.SelectServerBtn.TabIndex = 99;
             this.SelectServerBtn.Text = "Select Server";
             this.SelectServerBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -675,12 +675,24 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Location = new System.Drawing.Point(775, 24);
+            this.pictureBox1.Location = new System.Drawing.Point(774, 24);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(24, 24);
             this.pictureBox1.TabIndex = 105;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
+            // playProgressText2
+            // 
+            this.playProgressText2.BackColor = System.Drawing.Color.Transparent;
+            this.playProgressText2.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
+            this.playProgressText2.ForeColor = System.Drawing.Color.White;
+            this.playProgressText2.Location = new System.Drawing.Point(442, 422);
+            this.playProgressText2.Name = "playProgressText2";
+            this.playProgressText2.Size = new System.Drawing.Size(120, 19);
+            this.playProgressText2.TabIndex = 108;
+            this.playProgressText2.Text = "...";
+            this.playProgressText2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // extractingProgress
             // 
@@ -714,18 +726,6 @@
             this.playProgress.RoundedCorners = false;
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
-            // 
-            // playProgressText2
-            // 
-            this.playProgressText2.BackColor = System.Drawing.Color.Transparent;
-            this.playProgressText2.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
-            this.playProgressText2.ForeColor = System.Drawing.Color.White;
-            this.playProgressText2.Location = new System.Drawing.Point(442, 422);
-            this.playProgressText2.Name = "playProgressText2";
-            this.playProgressText2.Size = new System.Drawing.Size(120, 19);
-            this.playProgressText2.TabIndex = 108;
-            this.playProgressText2.Text = "...";
-            this.playProgressText2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // MainScreen
             // 

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Collections.Generic;
+using System.Windows;
 
 namespace CodeProject.Downloader
 {
@@ -42,7 +43,7 @@ namespace CodeProject.Downloader
             Download(url, "");
         }
 
-        public void Download(string url, string destFolder)
+        public void Download(string url, string destFolder, string filename = "")
         {
             DownloadData data = null;
             this.canceled = false;
@@ -53,7 +54,8 @@ namespace CodeProject.Downloader
                 string destFileName = Path.GetFileName(data.Response.ResponseUri.ToString());
 
                 destFolder = destFolder.Replace("file:///", "").Replace("file://", "");
-                this.downloadingTo = Path.Combine(destFolder, destFileName);
+
+                this.downloadingTo = (filename == "") ? Path.Combine(destFolder, destFileName) : Path.Combine(destFolder, filename);
 
                 if (!File.Exists(downloadingTo))
                 {
@@ -206,18 +208,13 @@ namespace CodeProject.Downloader
         {
             FileStream f = null;
 
-            try
-            {
+            try {
                 f = File.Open(fileName, FileMode.Append, FileAccess.Write);
                 f.Write(buffer, 0, count);
-            }
-            catch (ArgumentException e)
-            {
+            } catch (ArgumentException e) {
                 throw new ArgumentException(
                     String.Format("Error trying to save file \"{0}\": {1}", fileName, e.Message), e);
-            }
-            finally
-            {
+            } finally {
                 if (f != null)
                     f.Close();
             }

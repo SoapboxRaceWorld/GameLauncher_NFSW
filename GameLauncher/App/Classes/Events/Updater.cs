@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CodeProject.Downloader;
 using GameLauncher.HashPassword;
 using GameLauncherReborn;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -21,11 +22,15 @@ namespace GameLauncher.App.Classes.Events {
         PictureBox status;
         Label text;
         Label description;
+        Label progress;
+        ProgressBarEx progressBar;
 
-        public LauncherUpdateCheck(PictureBox statusImage, Label statusText, Label statusDescription)  {
+        public LauncherUpdateCheck(PictureBox statusImage, Label statusText, Label statusDescription, Label progressText, ProgressBarEx extractingProgress)  {
             status = statusImage;
             text = statusText;
             description = statusDescription;
+            progress = progressText;
+            progressBar = extractingProgress;
         }
 
         public void checkAvailability() {
@@ -80,14 +85,36 @@ namespace GameLauncher.App.Classes.Events {
                                     text.ForeColor = Color.Yellow;
                                     description.Text = "New Version : " + updater.Payload.LatestVersion;
 
+                                    Application.DoEvents();
+                                    Thread.Sleep(3000);
+
                                     DialogResult updateConfirm = new UpdatePopup(updater).ShowDialog();
 
                                     if(updateConfirm == DialogResult.OK) {
-                                        if (File.Exists("GameLauncherUpdater.exe")) {
-                                            Process.Start(@"GameLauncherUpdater.exe", Process.GetCurrentProcess().Id.ToString());
-                                        } else {
-                                            Process.Start(@"https://github.com/worldunitedgg/GameLauncher_NFSW/releases/latest");
-                                        }
+                                        progress.Text = "DOWNLOADING GAMELAUNCHERUPDATER.EXE";
+                                        new WebClientWithTimeout().DownloadFile(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
+                                        Process.Start(@"GameLauncherUpdater.exe", Process.GetCurrentProcess().Id.ToString());
+                                        //Let's fetch new downloader
+                                        /*Properties.Settings.Default.IsRestarting = false;
+                                        Properties.Settings.Default.Save();
+
+                                        WebClientWithTimeout updateDownload = new WebClientWithTimeout();
+                                        updateDownload.DownloadFileAsync(new Uri(updater.Payload.Update.DownloadUrl), "update.sbrw");
+                                        updateDownload.DownloadProgressChanged += (x, y) => {
+                                            progress.Text = "DOWNLOADING UPDATE: " + y.ProgressPercentage + "%";
+                                        };
+
+                                        updateDownload.DownloadFileCompleted += (x, y) => {
+                                            progress.Text = "READY!";
+
+                                            if (File.Exists("Update.exe")) {
+                                                Process.Start(@"Update.exe");
+                                            } else {
+                                                Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
+                                            }
+
+                                            Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                                        };*/
                                     };
                                 }
                             } else {
@@ -96,7 +123,9 @@ namespace GameLauncher.App.Classes.Events {
                                 text.ForeColor = Color.FromArgb(254, 0, 0);
                                 description.Text = "Version : v" + Application.ProductVersion;
                             }
-                        } catch(Exception) {
+                        } catch(Exception ex) {
+                            MessageBox.Show(ex.Message);
+
                             if(text.InvokeRequired == true) //checks skip, because we only need to know if we can access ui from actual thread
                             {
                                 text.Invoke(new Action(delegate ()

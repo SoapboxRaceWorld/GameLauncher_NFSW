@@ -144,20 +144,15 @@ namespace GameLauncher {
                 Environment.Exit(0);
             }
 
-			if(!File.Exists("GameLauncherUpdater.exe")) {
-                Log.Debug("Starting GameLauncherUpdater downloader");
-                try {
-                    using (WebClientWithTimeout wc = new WebClientWithTimeout()) {
-                        wc.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) => {
-                            if (new FileInfo("GameLauncherUpdater.exe").Length == 0) {
-                                File.Delete("GameLauncherUpdater.exe");
-                            }
-                        };
-                        wc.DownloadFileAsync(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
-                    }
-                } catch(Exception ex) {
-                    Log.Debug("Failed to download updater. " + ex.Message);
-                }
+            String[] removeFiles = new String[] { "GameLauncherUpdater.exe", "Update.exe", "update.sbrw" };
+
+            foreach (string file in removeFiles) {
+                if (File.Exists(file)) File.Delete(file);
+            }
+
+            //Also remove new one on next launch.
+            if(File.Exists("Update.exe")) {
+                File.Delete("GameLauncherUpdater.exe");
             }
 
             if (!File.Exists("servers.json")) {
