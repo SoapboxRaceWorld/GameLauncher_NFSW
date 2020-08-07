@@ -1,5 +1,7 @@
-﻿using GameLauncher.App.Classes;
+﻿using Flurl;
+using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Logger;
+using GameLauncher.HashPassword;
 using GameLauncherReborn;
 using Newtonsoft.Json;
 using SoapBox.JsonScheme;
@@ -8,7 +10,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,44 +39,70 @@ namespace GameLauncher.App {
             ServerListRenderer.View = View.Details;
             ServerListRenderer.FullRowSelect = true;
 
+            ServerListRenderer.Columns.Add("");
+            ServerListRenderer.Columns[0].Width = 1;
+
             ServerListRenderer.Columns.Add("Name");
-            ServerListRenderer.Columns[0].Width = 285;
+            ServerListRenderer.Columns[1].Width = 220;
 
             ServerListRenderer.Columns.Add("Country");
-            ServerListRenderer.Columns[1].Width = 80;
+            ServerListRenderer.Columns[2].Width = 80;
 
             ServerListRenderer.Columns.Add("Players Online");
-            ServerListRenderer.Columns[2].Width = 80;
-            ServerListRenderer.Columns[2].TextAlign = HorizontalAlignment.Right;
+            ServerListRenderer.Columns[3].Width = 80;
+            ServerListRenderer.Columns[3].TextAlign = HorizontalAlignment.Right;
 
             ServerListRenderer.Columns.Add("Registered Players");
-            ServerListRenderer.Columns[3].Width = 100;
-            ServerListRenderer.Columns[3].TextAlign = HorizontalAlignment.Right;
+            ServerListRenderer.Columns[4].Width = 100;
+            ServerListRenderer.Columns[4].TextAlign = HorizontalAlignment.Right;
+
+            ServerListRenderer.Columns.Add("Ping");
+            ServerListRenderer.Columns[5].Width = 55;
+            ServerListRenderer.Columns[5].TextAlign = HorizontalAlignment.Right;
 
             //Actually accept JSON instead of old format//
             List<ServerInfo> serverInfos = new List<ServerInfo>();
 
-            foreach (var serverListURL in Self.serverlisturl) {
+            //foreach (var serverListURL in Self.serverlisturl) {
                 try {
                     var wc = new WebClientWithTimeout();
-                    var response = wc.DownloadString(serverListURL);
+                    var response = wc.DownloadString(Self.serverlisturl[0]);
 
                     try {
                         serverInfos.AddRange(JsonConvert.DeserializeObject<List<ServerInfo>>(response));
                     } catch (Exception error) {
-                        Log.Error("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message);
+                        Log.Error("Error occurred while deserializing server list from [" + Self.serverlisturl[0] + "]: " + error.Message);
                     }
                 } catch (Exception error) {
-                    Log.Error("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message);
+                    Log.Error("Error occurred while loading server list from [" + Self.serverlisturl[0] + "]: " + error.Message);
+                }
+            //}
+
+            if (File.Exists("servers.json")) {
+                var fileItems = JsonConvert.DeserializeObject<List<ServerInfo>>(File.ReadAllText("servers.json"));
+
+                if (fileItems.Count > 0) {
+                    fileItems.Select(si => {
+                        si.DistributionUrl = "";
+                        si.DiscordPresenceKey = "";
+                        si.Id = SHA.HashPassword($"{si.Name}:{si.Id}:{si.IpAddress}");
+                        si.IsSpecial = false;
+                        si.Category = "CUSTOM";
+
+                        return si;
+                    }).ToList().ForEach(si => serverInfos.Add(si));
                 }
             }
 
             List<ServerInfo> newFinalItems = new List<ServerInfo>();
-            foreach (ServerInfo xServ in serverInfos) {
-                if (newFinalItems.FindIndex(i => string.Equals(i.Name, xServ.Name)) == -1) {
+            foreach (ServerInfo xServ in serverInfos)
+            {
+                if (newFinalItems.FindIndex(i => string.Equals(i.Name, xServ.Name)) == -1)
+                {
                     newFinalItems.Add(xServ);
                 }
             }
+
 
             foreach (var substring in newFinalItems) {
                 try {
@@ -80,7 +110,7 @@ namespace GameLauncher.App {
 
                         ServerListRenderer.Items.Add(new ListViewItem(
                             new[] {
-                                "", "", "", "", ""
+                                ID.ToString(), substring.Name, "", "", "", "", ""
                             }
                         ));
 
@@ -110,23 +140,43 @@ namespace GameLauncher.App {
                             GetServerInformation content = JsonConvert.DeserializeObject<GetServerInformation>(getdata.DownloadString(serverurl));
 
                             if (content == null) {
-                                ServerListRenderer.Items[serverid].SubItems[0].Text = servername;
+                                ServerListRenderer.Items[serverid].SubItems[1].Text = servername;
                                 ServerListRenderer.Items[serverid].SubItems[2].Text = "N/A";
                                 ServerListRenderer.Items[serverid].SubItems[3].Text = "N/A";
+                                ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
                             } else {
-                                ServerListRenderer.Items[serverid].SubItems[0].Text = servername;
-                                ServerListRenderer.Items[serverid].SubItems[1].Text = Self.CountryName(content.country.ToString());
-                                ServerListRenderer.Items[serverid].SubItems[2].Text = content.onlineNumber.ToString();
-                                ServerListRenderer.Items[serverid].SubItems[3].Text = content.numberOfRegistered.ToString();
+                                ServerListRenderer.Items[serverid].SubItems[1].Text = servername;
+                                ServerListRenderer.Items[serverid].SubItems[2].Text = Self.CountryName(content.country.ToString());
+                                ServerListRenderer.Items[serverid].SubItems[3].Text = content.onlineNumber.ToString();
+                                ServerListRenderer.Items[serverid].SubItems[4].Text = content.numberOfRegistered.ToString();
+
+                                //PING
+                                if(!DetectLinux.LinuxDetected()) {
+                                    Ping pingSender = new Ping();
+                                    Uri StringToUri = new Uri(serverurl);
+                                    pingSender.SendAsync(StringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
+                                    pingSender.PingCompleted += (sender3, e3) => {
+                                        PingReply reply = e3.Reply;
+
+                                        if (reply.Status == IPStatus.Success && servername != "Offline Built-In Server") {
+                                            ServerListRenderer.Items[serverid].SubItems[5].Text = reply.RoundtripTime + "ms";
+                                        } else {
+                                            ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                                        }
+                                    };
+                                } else {
+                                    ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                                }
                             }
                         } catch {
-                            ServerListRenderer.Items[serverid].SubItems[0].Text = servername;
-                            ServerListRenderer.Items[serverid].SubItems[2].Text = "N/A";
+                            ServerListRenderer.Items[serverid].SubItems[1].Text = servername;
                             ServerListRenderer.Items[serverid].SubItems[3].Text = "N/A";
+                            ServerListRenderer.Items[serverid].SubItems[4].Text = "N/A";
+                            ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
                         }
 
 
-                        if(servers.Count == 0) {
+                        if (servers.Count == 0) {
                             loading.Text = "";
                         }
 

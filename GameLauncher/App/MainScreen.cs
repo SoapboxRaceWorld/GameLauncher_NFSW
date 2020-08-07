@@ -976,6 +976,7 @@ namespace GameLauncher {
             string numPlayers;
 
             imageServerName.Text = ((ServerInfo)serverPick.SelectedItem).Name;
+            Application.DoEvents();
 
             if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server") {
                 _builtinserver = true;
@@ -1135,20 +1136,42 @@ namespace GameLauncher {
                         //¯\_(ツ)_/¯
                     }
 
-                    //for thread safety
-                    if (this.ServerStatusDesc.InvokeRequired)
-                    {
-                        ServerStatusDesc.Invoke(new Action(delegate ()
-                        {
-                            ServerStatusDesc.Text = string.Format("Players in Game - {0}", numPlayers);
-                        }));
-                    }
-                    else
-                    {
-                        this.ServerStatusDesc.Text = string.Format("Players in Game - {0}", numPlayers);
+                    if (!DetectLinux.LinuxDetected()) {
+                        Ping pingSender = new Ping();
+                        pingSender.SendAsync(stringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
+                        pingSender.PingCompleted += (sender3, e3) => {
+                            PingReply reply = e3.Reply;
+
+                            if (reply.Status == IPStatus.Success && _realServername != "Offline Built-In Server") {
+                                if (this.ServerStatusDesc.InvokeRequired) {
+                                    ServerStatusDesc.Invoke(new Action(delegate () {
+                                        ServerStatusDesc.Text = string.Format("Players in Game - {0} | {1}", numPlayers, reply.RoundtripTime + "ms");
+                                    }));
+                                } else {
+                                    this.ServerStatusDesc.Text = string.Format("Players in Game - {0} | {1}", numPlayers, reply.RoundtripTime + "ms");
+                                }
+                            } else {
+                                if (this.ServerStatusDesc.InvokeRequired) {
+                                    ServerStatusDesc.Invoke(new Action(delegate () {
+                                        ServerStatusDesc.Text = string.Format("Players in Game - {0}", numPlayers);
+                                    }));
+                                } else {
+                                    this.ServerStatusDesc.Text = string.Format("Players in Game - {0}", numPlayers);
+                                }
+                            }
+                        };
+                    } else {
+                        if (this.ServerStatusDesc.InvokeRequired) {
+                            ServerStatusDesc.Invoke(new Action(delegate () {
+                                ServerStatusDesc.Text = string.Format("Players in Game - {0}", numPlayers);
+                            }));
+                        } else {
+                            this.ServerStatusDesc.Text = string.Format("Players in Game - {0}", numPlayers);
+                        }
                     }
 
                     _serverEnabled = true;
+                    imageServerName.Text = ((ServerInfo)serverPick.SelectedItem).Name;
 
                     if (!string.IsNullOrEmpty(verticalImageUrl)) {
                         WebClientWithTimeout client2 = new WebClientWithTimeout();
@@ -1173,8 +1196,7 @@ namespace GameLauncher {
                                         image = Image.FromStream(memoryStream);
                                         verticalBanner.Image = image;
                                         verticalBanner.BackColor = Color.Black;
-
-                                        imageServerName.Text = String.Empty; //_realServernameBanner;
+                                        imageServerName.Text = "";
                                     } else {
                                         imageServerName.Text = "WebLogin";
                                         verticalBanner.Image = null;
@@ -1343,6 +1365,7 @@ namespace GameLauncher {
             addServer.Visible = hideElements;
             //allowedCountriesLabel.Visible = hideElements;
             serverPick.Enabled = true;
+            SelectServerBtn.Visible = hideElements;
         }
 
         private void RegisterFormElements(bool hideElements = true) {
@@ -1797,7 +1820,7 @@ namespace GameLauncher {
                 SmallImageKey = _presenceImageKey
             };
 
-            discordRpcClient.SetPresence(_presence);
+            if(discordRpcClient != null) discordRpcClient.SetPresence(_presence);
         }
 
         private void LaunchGame(string userId, string loginToken, string serverIp, Form x) {
@@ -2420,7 +2443,7 @@ namespace GameLauncher {
                         } else {
                             String filename = Path.Combine(Environment.CurrentDirectory, "GameFiles.sbrwpack");
 
-                            if(File.Exists(filename)) {
+                            if(SHA.HashFile("GameFiles.sbrwpack") == "B42E00939DC656C14BF5A05644080AD015522C8C") {
                                 TaskbarProgress.SetValue(Handle, 100, 100);
                                 playProgress.Value = 100;
                                 playProgress.Width = 519;

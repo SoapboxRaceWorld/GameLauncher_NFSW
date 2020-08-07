@@ -31,6 +31,16 @@ namespace GameLauncher {
         [STAThread]
         internal static void Main(string[] args) {
             Parser.Default.ParseArguments<Arguments>(args).WithParsed(Main2);
+
+            AppDomain.CurrentDomain.UnhandledException += (x, y) => {
+                Exception e = (Exception)y.ExceptionObject;
+                MessageBox.Show(null, e.Message, "GameLauncherReborn - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            };
+
+            Application.ThreadException += (x, y) => {
+                Exception e = y.Exception;
+                MessageBox.Show(null, e.Message, "GameLauncherReborn - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            };
         }
 
         private static void Main2(Arguments args) {
