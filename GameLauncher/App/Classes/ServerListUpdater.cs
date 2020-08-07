@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
 
 namespace GameLauncher.App.Classes
 {
@@ -35,21 +36,11 @@ namespace GameLauncher.App.Classes
                 }
             }
 
-            if (File.Exists("servers.json"))
-            {
+            if (File.Exists("servers.json")) {
                 var fileItems = JsonConvert.DeserializeObject<List<ServerInfo>>(File.ReadAllText("servers.json")) ?? new List<ServerInfo>();
 
-                if (fileItems.Count > 0)
-                {
-                    serverInfos.Add(new ServerInfo
-                    {
-                        Id = "__category-CUSTOM__",
-                        Name = "<GROUP>Custom Servers",
-                        IsSpecial = true
-                    });
-
-                    fileItems.Select(si =>
-                    {
+                if (fileItems.Count > 0) {
+                    fileItems.Select(si => {
                         si.DistributionUrl = "";
                         si.DiscordPresenceKey = "";
                         si.Id = SHA.HashPassword($"{si.Name}:{si.Id}:{si.IpAddress}");
