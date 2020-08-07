@@ -69,6 +69,8 @@ namespace GameLauncher {
 
         Queue<Uri> modFilesDownloadUrls = new Queue<Uri>();
         bool isDownloadingModNetFiles = false;
+        int CurrentModFileCount = 0;
+        int TotalModFileCount = 0;
 
         //private bool _disableChecks;
         private bool _disableProxy;
@@ -80,12 +82,9 @@ namespace GameLauncher {
         DateTime lastUpdate;
         long lastBytes = 0;
 
-        private DateTime _downloadStartTime;
-
         private string _loginToken = "";
         private string _userId = "";
         private string _serverIp = "";
-        private string _langInfo;
         private string _newGameFilesPath;
         private readonly float _dpiDefaultScale = 96f;
 
@@ -94,7 +93,6 @@ namespace GameLauncher {
         private readonly Pen _colorOffline = new Pen(Color.FromArgb(128, 0, 0));
         private readonly Pen _colorOnline = new Pen(Color.FromArgb(0, 128, 0));
         private readonly Pen _colorLoading = new Pen(Color.FromArgb(0, 0, 0));
-        private readonly Pen _colorIssues = new Pen(Color.FromArgb(255, 145, 0));
 
         private readonly IniFile _settingFile = new IniFile("Settings.ini");
         private readonly string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
@@ -103,9 +101,6 @@ namespace GameLauncher {
         private string _realServername;
         private string _realServernameBanner;
         private string _OS;
-
-        int CountFiles = 0;
-        int CountFilesTotal = 0;
 
         private Point _startPoint = new Point(38, 144);
         private Point _endPoint = new Point(562, 144);
@@ -632,27 +627,6 @@ namespace GameLauncher {
 
             settingsQuality.DataSource = quality;
 
-            Task.Run(() => {
-                String _slresponse2 = string.Empty;
-                try {
-                    WebClientWithTimeout wc = new WebClientWithTimeout();
-                    _slresponse2 = wc.DownloadString(Self.CDNUrlList);
-                } catch(Exception error) {
-                    MessageBox.Show(error.Message, "An error occurred while loading CDN List");
-                    _slresponse2 = JsonConvert.SerializeObject(new[] {
-                        new CDNObject { name = "[CF] WorldUnited.gg Mirror", url = "http://cdn.worldunited.gg/gamefiles/packed/" }
-                    });
-                }
-
-                List<CDNObject> CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse2);
-
-                cdnPick.Invoke(new Action(() => 
-                {
-                    cdnPick.DisplayMember = "name";
-                    cdnPick.DataSource = CDNList;
-                }));
-            });
-
             if (_settingFile.KeyExists("TracksHigh"))
             {
                 string selectedTracksHigh = _settingFile.Read("TracksHigh");
@@ -729,7 +703,7 @@ namespace GameLauncher {
 
             if(!DetectLinux.LinuxDetected()) {
                 Log.Debug("Checking for update: " + Self.mainserver + "/update.php?version=" + Application.ProductVersion);
-                new LauncherUpdateCheck(launcherIconStatus, launcherStatusText, launcherStatusDesc).checkAvailability();
+                new LauncherUpdateCheck(launcherIconStatus, launcherStatusText, launcherStatusDesc, playProgressText, extractingProgress).checkAvailability();
             } else {
                 launcherIconStatus.Image = Properties.Resources.ac_success;
                 launcherStatusText.ForeColor = Color.FromArgb(0x9fc120);
@@ -748,6 +722,8 @@ namespace GameLauncher {
             } else {
                 wordFilterCheck.Enabled = false;
             }
+
+            this.SelectServerBtn.Text = "[...] " + ((ServerInfo)serverPick.SelectedItem).Name;
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
@@ -1653,7 +1629,6 @@ namespace GameLauncher {
             //TODO null check
             _settingFile.Write("Language", settingsLanguage.SelectedValue.ToString());
             _settingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString());
-            _settingFile.Write("CDN", ((CDNObject)cdnPick.SelectedItem).url);
 
             var userSettingsXml = new XmlDocument();
 
@@ -2126,18 +2101,15 @@ namespace GameLauncher {
 
                     IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
 
-                    CountFilesTotal = json3.entries.Count;
-
                     String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", MDFive.HashPassword(json2.serverID).ToLower());
                     if(!Directory.Exists(path)) Directory.CreateDirectory(path);
 
                     foreach (IndexJsonEntry modfile in json3.entries) {
                         if (SHA.HashFile(path + "/" + modfile.Name).ToLower() != modfile.Checksum) {
                             modFilesDownloadUrls.Enqueue(new Uri(json2.basePath + "/" + modfile.Name));
+                            TotalModFileCount++;
                         }
                     }
-
-                    bool isDownloading = false;
 
                     if(modFilesDownloadUrls.Count != 0) {
                         this.DownloadModNetFilesRightNow(path);
@@ -2169,12 +2141,16 @@ namespace GameLauncher {
 
         public void DownloadModNetFilesRightNow(string path) {
             while (isDownloadingModNetFiles == false) {
+                CurrentModFileCount++;
                 var url = modFilesDownloadUrls.Dequeue();
                 string FileName = url.ToString().Substring(url.ToString().LastIndexOf("/") + 1, (url.ToString().Length - url.ToString().LastIndexOf("/") - 1));
 
-                WebClientWithTimeout client2 = new WebClientWithTimeout();
-                client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_RELOADED);
-                client2.DownloadFileCompleted += (test, stuff) => {
+                ModNetFileNameInUse = FileName;
+
+                FileDownloader client2 = new FileDownloader();
+
+                client2.ProgressChanged += new DownloadProgressHandler(client_DownloadProgressChanged_RELOADED);
+                client2.DownloadComplete += (test, stuff) => {
                     isDownloadingModNetFiles = false;
                     if (modFilesDownloadUrls.Any() == false) {
                         LaunchGame();
@@ -2183,7 +2159,7 @@ namespace GameLauncher {
                         DownloadModNetFilesRightNow(path);
                     }
                 };
-                client2.DownloadFileAsync(url, path + "/" + FileName);
+                client2.Download(url.ToString(), path);
                 isDownloadingModNetFiles = true;
             }
         }
@@ -2241,28 +2217,39 @@ namespace GameLauncher {
             }
         }
 
-        void client_DownloadProgressChanged_RELOADED(object sender, DownloadProgressChangedEventArgs e) {
-            this.BeginInvoke((MethodInvoker)delegate {
-                double bytesIn = double.Parse(e.BytesReceived.ToString());
-                double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+        void client_DownloadProgressChanged_RELOADED(object sender, DownloadEventArgs e) {
+            //this.BeginInvoke((MethodInvoker)delegate {
+                double bytesIn = double.Parse(e.CurrentFileSize.ToString());
+                double totalBytes = double.Parse(e.TotalFileSize.ToString());
                 double percentage = bytesIn / totalBytes * 100;
-                playProgressText.Text = ("Downloading "+ModNetFileNameInUse+": " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
 
-                extractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
-                extractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
+                playProgressText.Text = ("Downloading " + ModNetFileNameInUse + ": " + FormatFileSize(e.CurrentFileSize) + " of " + FormatFileSize(e.TotalFileSize)).ToUpper();
+                playProgressText2.Text = "[ "+CurrentModFileCount+" / "+TotalModFileCount+" ]";
 
-                playProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
-                playProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
-            });
+                extractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.CurrentFileSize, e.TotalFileSize) * 100);
+                extractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.CurrentFileSize, e.TotalFileSize) * 519);
+
+                playProgress.Value = Convert.ToInt32(Decimal.Divide(e.CurrentFileSize, e.TotalFileSize) * 100);
+                playProgress.Width = Convert.ToInt32(Decimal.Divide(e.CurrentFileSize, e.TotalFileSize) * 519);
+
+                Application.DoEvents();
+            //});
         }
 
         //Launch game
         public void LaunchGame() {
+            playProgressText2.Text = String.Empty;
+
             if (_serverInfo.DiscordAppId != null) {
                 discordRpcClient.Dispose();
                 discordRpcClient = null;
                 discordRpcClient = new DiscordRpcClient(_serverInfo.DiscordAppId);
                 discordRpcClient.Initialize();
+            }
+
+            if(((ServerInfo)serverPick.SelectedItem).Category == "DEV") {
+                discordRpcClient.Dispose();
+                discordRpcClient = null;
             }
 
             try {
@@ -2432,15 +2419,8 @@ namespace GameLauncher {
                             triggerError("Please make sure you have at least 10GB free space on hard drive.");
                         } else {
                             String filename = Path.Combine(Environment.CurrentDirectory, "GameFiles.sbrwpack");
-                            long filesize = 0;
 
                             if(File.Exists(filename)) {
-                                filesize = new FileInfo(filename).Length;
-                            } else {
-                                filesize = 0;
-                            }
-
-                            if(filesize == 4703505570) {
                                 TaskbarProgress.SetValue(Handle, 100, 100);
                                 playProgress.Value = 100;
                                 playProgress.Width = 519;
@@ -2616,22 +2596,6 @@ namespace GameLauncher {
             unpacker.Start();
         }
 
-        public bool DownloadMods(string serverKey)
-        {
-            try
-            {
-                playProgress.Width = 1;
-                ModManager.Download(ModManager.GetMods(serverKey), _settingFile.Read("InstallationDirectory"), serverKey, playProgressText, extractingProgress);
-                return true;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message + e.StackTrace);
-                ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
-                return false;
-            }
-        }
-
         private string FormatFileSize(long byteCount, bool si = true) {
             int unit = si ? 1024 : 1000;
             if (byteCount < unit) return byteCount + " B";
@@ -2769,12 +2733,8 @@ namespace GameLauncher {
             _formGraphics.Dispose();
         }
 
-        private void srvinfo_Click(object sender, EventArgs e) {
-            //new SrvInfo().Show();
-        }
-
         private void SelectServerBtn_Click(object sender, EventArgs e) {
-            new SelectServer().ShowDialog();
+            new SelectServer("Pick Server...").ShowDialog();
 
             if(ServerName != null) {
                 this.SelectServerBtn.Text = "[...] " + ServerName.Name;

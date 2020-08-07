@@ -10,6 +10,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -19,10 +20,14 @@ namespace GameLauncher.App {
         Dictionary<int, GetServerInformation> rememberServerInformationID = new Dictionary<int, GetServerInformation>();
         private GetServerInformation ServerInfo;
 
+        public Queue<string> servers = new Queue<string>();
+
         private readonly IniFile _settingFile = new IniFile("Settings.ini");
 
-        public SelectServer() {
+        public SelectServer(String windowName = "") {
             InitializeComponent();
+
+            if(windowName != "") this.Text = windowName;
 
             //And one for keeping data about server, IP tbh
             Dictionary<int, ServerInfo> data = new Dictionary<int, ServerInfo>();
@@ -30,22 +35,19 @@ namespace GameLauncher.App {
             ServerListRenderer.View = View.Details;
             ServerListRenderer.FullRowSelect = true;
 
-            ServerListRenderer.Columns.Add("ID");
-            ServerListRenderer.Columns[0].Width = 25;
-
             ServerListRenderer.Columns.Add("Name");
-            ServerListRenderer.Columns[1].Width = 260;
+            ServerListRenderer.Columns[0].Width = 285;
 
             ServerListRenderer.Columns.Add("Country");
-            ServerListRenderer.Columns[2].Width = 80;
+            ServerListRenderer.Columns[1].Width = 80;
 
             ServerListRenderer.Columns.Add("Players Online");
-            ServerListRenderer.Columns[3].Width = 80;
-            ServerListRenderer.Columns[3].TextAlign = HorizontalAlignment.Right;
+            ServerListRenderer.Columns[2].Width = 80;
+            ServerListRenderer.Columns[2].TextAlign = HorizontalAlignment.Right;
 
             ServerListRenderer.Columns.Add("Registered Players");
-            ServerListRenderer.Columns[4].Width = 100;
-            ServerListRenderer.Columns[4].TextAlign = HorizontalAlignment.Right;
+            ServerListRenderer.Columns[3].Width = 100;
+            ServerListRenderer.Columns[3].TextAlign = HorizontalAlignment.Right;
 
             //Actually accept JSON instead of old format//
             List<ServerInfo> serverInfos = new List<ServerInfo>();
@@ -74,30 +76,66 @@ namespace GameLauncher.App {
 
             foreach (var substring in newFinalItems) {
                 try {
-                    GetServerInformation content = JsonConvert.DeserializeObject<GetServerInformation>(new WebClientWithTimeout().DownloadString(substring.IpAddress + "/GetServerInformation"));
-                    
-                    Console.Write(content);
+                        servers.Enqueue(ID + "_|||_" + substring.IpAddress + "_|||_" + substring.Name);
 
-                    if (content != null) {
                         ServerListRenderer.Items.Add(new ListViewItem(
                             new[] {
-                                ID.ToString(),
-                                substring.Name,
-                                Self.CountryName(content.country.ToString()),
-                                content.onlineNumber.ToString(),
-                                content.numberOfRegistered.ToString(),
+                                "", "", "", "", ""
                             }
                         ));
 
                         data.Add(ID, substring);
-                    }
-
-                    rememberServerInformationID.Add(ID, content);
                     ID++;
                 } catch {
 
                 }
             }
+
+            Thread newList = new Thread(() => {
+                Thread.Sleep(200);
+                this.BeginInvoke((MethodInvoker)delegate {
+                    while(servers.Count != 0) {
+                        string QueueContent = servers.Dequeue();
+                        string[] QueueContent2 = QueueContent.Split(new string[] { "_|||_" }, StringSplitOptions.None);
+
+                        int serverid = Convert.ToInt32(QueueContent2[0])-1;
+                        string serverurl = QueueContent2[1] + "/GetServerInformation";
+                        string servername = QueueContent2[2];
+
+                        try {
+
+                            WebClientWithTimeout getdata = new WebClientWithTimeout();
+                            getdata.Timeout(1000);
+
+                            GetServerInformation content = JsonConvert.DeserializeObject<GetServerInformation>(getdata.DownloadString(serverurl));
+
+                            if (content == null) {
+                                ServerListRenderer.Items[serverid].SubItems[0].Text = servername;
+                                ServerListRenderer.Items[serverid].SubItems[2].Text = "N/A";
+                                ServerListRenderer.Items[serverid].SubItems[3].Text = "N/A";
+                            } else {
+                                ServerListRenderer.Items[serverid].SubItems[0].Text = servername;
+                                ServerListRenderer.Items[serverid].SubItems[1].Text = Self.CountryName(content.country.ToString());
+                                ServerListRenderer.Items[serverid].SubItems[2].Text = content.onlineNumber.ToString();
+                                ServerListRenderer.Items[serverid].SubItems[3].Text = content.numberOfRegistered.ToString();
+                            }
+                        } catch {
+                            ServerListRenderer.Items[serverid].SubItems[0].Text = servername;
+                            ServerListRenderer.Items[serverid].SubItems[2].Text = "N/A";
+                            ServerListRenderer.Items[serverid].SubItems[3].Text = "N/A";
+                        }
+
+
+                        if(servers.Count == 0) {
+                            loading.Text = "";
+                        }
+
+                        Application.DoEvents();
+                    }
+                });
+            });
+            newList.IsBackground = true;
+            newList.Start();
 
             ServerListRenderer.AllowColumnReorder = false;
             ServerListRenderer.ColumnWidthChanging += (handler, args) => {
@@ -114,6 +152,16 @@ namespace GameLauncher.App {
                     this.Close();
                 }
             });
+        }
+
+        private void btnAddServer_Click(object sender, EventArgs e)
+        {
+            new AddServer().Show();
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
