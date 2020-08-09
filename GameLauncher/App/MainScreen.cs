@@ -211,10 +211,10 @@ namespace GameLauncher {
             Log.Debug("InitializeComponent");
             InitializeComponent();
 
-            if (DetectLinux.LinuxDetected() == false) {
+            //if (DetectLinux.LinuxDetected() == false) {
                 Log.Debug("Applying Fonts");
                 ApplyEmbeddedFonts();
-            }
+            //}
 
             //_disableChecks = (_settingFile.KeyExists("DisableVerifyHash") && _settingFile.Read("DisableVerifyHash") == "1") ? true : false;
             _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1") ? true : false;
@@ -2170,19 +2170,18 @@ namespace GameLauncher {
 
                 ModNetFileNameInUse = FileName;
 
-                FileDownloader client2 = new FileDownloader();
+                WebClientWithTimeout client2 = new WebClientWithTimeout();
 
-                client2.ProgressChanged += new DownloadProgressHandler(client_DownloadProgressChanged_RELOADED);
-                client2.DownloadComplete += (test, stuff) => {
+                client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_RELOADED);
+                client2.DownloadFileCompleted += (test, stuff) => {
                     isDownloadingModNetFiles = false;
                     if (modFilesDownloadUrls.Any() == false) {
                         LaunchGame();
                     } else {
-                        //Redownload other file
                         DownloadModNetFilesRightNow(path);
                     }
                 };
-                client2.Download(url.ToString(), path);
+                client2.DownloadFileAsync(url, path);
                 isDownloadingModNetFiles = true;
             }
         }
@@ -2240,23 +2239,23 @@ namespace GameLauncher {
             }
         }
 
-        void client_DownloadProgressChanged_RELOADED(object sender, DownloadEventArgs e) {
-            //this.BeginInvoke((MethodInvoker)delegate {
-                double bytesIn = double.Parse(e.CurrentFileSize.ToString());
-                double totalBytes = double.Parse(e.TotalFileSize.ToString());
+        void client_DownloadProgressChanged_RELOADED(object sender, DownloadProgressChangedEventArgs e) {
+            this.BeginInvoke((MethodInvoker)delegate {
+                double bytesIn = double.Parse(e.BytesReceived.ToString());
+                double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
                 double percentage = bytesIn / totalBytes * 100;
 
-                playProgressText.Text = ("Downloading " + ModNetFileNameInUse + ": " + FormatFileSize(e.CurrentFileSize) + " of " + FormatFileSize(e.TotalFileSize)).ToUpper();
+                playProgressText.Text = ("Downloading " + ModNetFileNameInUse + ": " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
                 playProgressText2.Text = "[ "+CurrentModFileCount+" / "+TotalModFileCount+" ]";
 
-                extractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.CurrentFileSize, e.TotalFileSize) * 100);
-                extractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.CurrentFileSize, e.TotalFileSize) * 519);
+                extractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
+                extractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
 
-                playProgress.Value = Convert.ToInt32(Decimal.Divide(e.CurrentFileSize, e.TotalFileSize) * 100);
-                playProgress.Width = Convert.ToInt32(Decimal.Divide(e.CurrentFileSize, e.TotalFileSize) * 519);
+                playProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
+                playProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
 
                 Application.DoEvents();
-            //});
+            });
         }
 
         //Launch game
@@ -2521,11 +2520,6 @@ namespace GameLauncher {
 
         public void GoForUnpack(string filename) {
             Thread.Sleep(1);
-            int savedFile = 0;
-
-            if (_settingFile.KeyExists("FileCountExtract")) {
-                savedFile = Convert.ToInt32(_settingFile.Read("FileCountExtract"));
-            }
 
             Thread unpacker = new Thread(() => {
                 this.BeginInvoke((MethodInvoker)delegate {
@@ -2541,7 +2535,7 @@ namespace GameLauncher {
 
                             TaskbarProgress.SetValue(Handle, (int)(100 * current / numFiles), 100);
                             
-                            //if(savedFile <= current) {
+                            if(!File.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), fullName.Replace(".sbrw", String.Empty)))) {
                                 playProgressText.Text = ("Unpacking " + fullName.Replace(".sbrw", String.Empty)).ToUpper();
                                 playProgressText2.Text = "[" + current + " / "+ archive.Entries.Count + "]";
 
@@ -2586,9 +2580,9 @@ namespace GameLauncher {
                                         binaryFile.Close();
                                     }
                                 }
-                            //} else {
-                            //    playProgressText.Text = ("Skipping " + fullName).ToUpper();
-                            //}
+                            } else {
+                                playProgressText.Text = ("Skipping " + fullName).ToUpper();
+                            }
 
                             _presence.State = "Unpacking game: " + (100 * current / numFiles) + "%";
                             discordRpcClient.SetPresence(_presence);
@@ -2605,11 +2599,8 @@ namespace GameLauncher {
                                 Notification.BalloonTipText = "Your game is now ready to launch!";
                                 Notification.ShowBalloonTip(5000);
                                 Notification.Dispose();
-
-                                _settingFile.Write("FileCountExtract", "0");
                             }
 
-                            _settingFile.Write("FileCountExtract", Convert.ToString(current));
                             current++;
                         }
                     }
@@ -2769,6 +2760,12 @@ namespace GameLauncher {
 
         private void pictureBox1_Click(object sender, EventArgs e) {
             this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            imageServerName.Text = "test";
+            imageServerName.Visible = true;
         }
     }
 }
