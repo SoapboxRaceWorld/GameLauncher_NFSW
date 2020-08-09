@@ -211,10 +211,10 @@ namespace GameLauncher {
             Log.Debug("InitializeComponent");
             InitializeComponent();
 
-            if (DetectLinux.LinuxDetected() == false) {
+            //if (DetectLinux.LinuxDetected() == false) {
                 Log.Debug("Applying Fonts");
                 ApplyEmbeddedFonts();
-            }
+            //}
 
             //_disableChecks = (_settingFile.KeyExists("DisableVerifyHash") && _settingFile.Read("DisableVerifyHash") == "1") ? true : false;
             _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1") ? true : false;
@@ -2521,11 +2521,6 @@ namespace GameLauncher {
 
         public void GoForUnpack(string filename) {
             Thread.Sleep(1);
-            int savedFile = 0;
-
-            if (_settingFile.KeyExists("FileCountExtract")) {
-                savedFile = Convert.ToInt32(_settingFile.Read("FileCountExtract"));
-            }
 
             Thread unpacker = new Thread(() => {
                 this.BeginInvoke((MethodInvoker)delegate {
@@ -2541,7 +2536,7 @@ namespace GameLauncher {
 
                             TaskbarProgress.SetValue(Handle, (int)(100 * current / numFiles), 100);
                             
-                            //if(savedFile <= current) {
+                            if(!File.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), fullName.Replace(".sbrw", String.Empty)))) {
                                 playProgressText.Text = ("Unpacking " + fullName.Replace(".sbrw", String.Empty)).ToUpper();
                                 playProgressText2.Text = "[" + current + " / "+ archive.Entries.Count + "]";
 
@@ -2586,9 +2581,9 @@ namespace GameLauncher {
                                         binaryFile.Close();
                                     }
                                 }
-                            //} else {
-                            //    playProgressText.Text = ("Skipping " + fullName).ToUpper();
-                            //}
+                            } else {
+                                playProgressText.Text = ("Skipping " + fullName).ToUpper();
+                            }
 
                             _presence.State = "Unpacking game: " + (100 * current / numFiles) + "%";
                             discordRpcClient.SetPresence(_presence);
@@ -2605,11 +2600,8 @@ namespace GameLauncher {
                                 Notification.BalloonTipText = "Your game is now ready to launch!";
                                 Notification.ShowBalloonTip(5000);
                                 Notification.Dispose();
-
-                                _settingFile.Write("FileCountExtract", "0");
                             }
 
-                            _settingFile.Write("FileCountExtract", Convert.ToString(current));
                             current++;
                         }
                     }
@@ -2769,6 +2761,12 @@ namespace GameLauncher {
 
         private void pictureBox1_Click(object sender, EventArgs e) {
             this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            imageServerName.Text = "test";
+            imageServerName.Visible = true;
         }
     }
 }

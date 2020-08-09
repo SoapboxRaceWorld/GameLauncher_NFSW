@@ -412,9 +412,9 @@
             this.imageServerName.ForeColor = System.Drawing.Color.White;
             this.imageServerName.Location = new System.Drawing.Point(41, 148);
             this.imageServerName.Name = "imageServerName";
-            this.imageServerName.Size = new System.Drawing.Size(519, 259);
+            this.imageServerName.Size = new System.Drawing.Size(519, 219);
             this.imageServerName.TabIndex = 19;
-            this.imageServerName.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.imageServerName.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.imageServerName.UseCompatibleTextRendering = true;
             this.imageServerName.UseMnemonic = false;
             // 
