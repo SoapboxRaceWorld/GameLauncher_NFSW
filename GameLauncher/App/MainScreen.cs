@@ -2170,19 +2170,18 @@ namespace GameLauncher {
 
                 ModNetFileNameInUse = FileName;
 
-                FileDownloader client2 = new FileDownloader();
+                WebClientWithTimeout client2 = new WebClientWithTimeout();
 
-                client2.ProgressChanged += new DownloadProgressHandler(client_DownloadProgressChanged_RELOADED);
-                client2.DownloadComplete += (test, stuff) => {
+                client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_RELOADED);
+                client2.DownloadFileCompleted += (test, stuff) => {
                     isDownloadingModNetFiles = false;
                     if (modFilesDownloadUrls.Any() == false) {
                         LaunchGame();
                     } else {
-                        //Redownload other file
                         DownloadModNetFilesRightNow(path);
                     }
                 };
-                client2.Download(url.ToString(), path);
+                client2.DownloadFileAsync(url, path);
                 isDownloadingModNetFiles = true;
             }
         }
@@ -2240,23 +2239,23 @@ namespace GameLauncher {
             }
         }
 
-        void client_DownloadProgressChanged_RELOADED(object sender, DownloadEventArgs e) {
-            //this.BeginInvoke((MethodInvoker)delegate {
-                double bytesIn = double.Parse(e.CurrentFileSize.ToString());
-                double totalBytes = double.Parse(e.TotalFileSize.ToString());
+        void client_DownloadProgressChanged_RELOADED(object sender, DownloadProgressChangedEventArgs e) {
+            this.BeginInvoke((MethodInvoker)delegate {
+                double bytesIn = double.Parse(e.BytesReceived.ToString());
+                double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
                 double percentage = bytesIn / totalBytes * 100;
 
-                playProgressText.Text = ("Downloading " + ModNetFileNameInUse + ": " + FormatFileSize(e.CurrentFileSize) + " of " + FormatFileSize(e.TotalFileSize)).ToUpper();
+                playProgressText.Text = ("Downloading " + ModNetFileNameInUse + ": " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
                 playProgressText2.Text = "[ "+CurrentModFileCount+" / "+TotalModFileCount+" ]";
 
-                extractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.CurrentFileSize, e.TotalFileSize) * 100);
-                extractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.CurrentFileSize, e.TotalFileSize) * 519);
+                extractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
+                extractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
 
-                playProgress.Value = Convert.ToInt32(Decimal.Divide(e.CurrentFileSize, e.TotalFileSize) * 100);
-                playProgress.Width = Convert.ToInt32(Decimal.Divide(e.CurrentFileSize, e.TotalFileSize) * 519);
+                playProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
+                playProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
 
                 Application.DoEvents();
-            //});
+            });
         }
 
         //Launch game

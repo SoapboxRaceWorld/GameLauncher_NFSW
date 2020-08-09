@@ -56,7 +56,7 @@ namespace GameLauncherReborn {
                 return isOk;
             };
 
-            Log.UrlCall("Calling URL: " + address);
+            if(!address.AbsolutePath.Contains("auth")) Log.UrlCall("Calling URL: " + address);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
             request.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
