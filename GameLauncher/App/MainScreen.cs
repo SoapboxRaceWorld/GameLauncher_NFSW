@@ -702,7 +702,7 @@ namespace GameLauncher {
             this.BringToFront();
 
             if(!DetectLinux.LinuxDetected()) {
-                Log.Debug("Checking for update: " + Self.mainserver + "/update.php?version=" + Application.ProductVersion);
+                Log.Debug("Checking for update");// + Self.mainserver + "/update.php?version=" + Application.ProductVersion);
                 new LauncherUpdateCheck(launcherIconStatus, launcherStatusText, launcherStatusDesc, playProgressText, extractingProgress).checkAvailability();
             } else {
                 launcherIconStatus.Image = Properties.Resources.ac_success;
@@ -2174,7 +2174,7 @@ namespace GameLauncher {
 
                 client2.ProgressChanged += new DownloadProgressHandler(client_DownloadProgressChanged_RELOADED);
                 client2.DownloadComplete += (test, stuff) => {
-					Log.Debug("Downloaded: " + ModNetFileNameInUse);
+                    Log.Debug("Downloaded: " + FileName);
                     isDownloadingModNetFiles = false;
                     if (modFilesDownloadUrls.Any() == false) {
                         LaunchGame();
