@@ -8,7 +8,7 @@ namespace CodeProject.Downloader
 {
     public class FileDownloader
     {
-        private const int downloadBlockSize = 10240*10;
+        private const int downloadBlockSize = 60000;
         private bool canceled = false;
         private string downloadingTo;
 
@@ -79,6 +79,7 @@ namespace CodeProject.Downloader
                     }
 
                     totalDownloaded += readCount;
+
                     SaveToFile(buffer, readCount, this.downloadingTo);
 
                     if (data.IsProgressKnown) RaiseProgressChanged(totalDownloaded, data.FileSize);
@@ -302,6 +303,7 @@ namespace CodeProject.Downloader
                         downloadData.response.Close();
                         req = downloadData.GetRequest(url);
                         ((HttpWebRequest)req).AddRange((int)downloadData.start);
+                        ((HttpWebRequest)req).Headers["X-MTNTR-HEADER-VAL"] = (downloadData.start).ToString();
                         downloadData.response = req.GetResponse();
 
                         if (((HttpWebResponse)downloadData.Response).StatusCode != HttpStatusCode.PartialContent)
