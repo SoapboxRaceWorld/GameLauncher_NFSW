@@ -20,7 +20,7 @@ namespace GameLauncher.App.Classes
 
             foreach (var serverListURL in Self.serverlisturl) {
                 try {
-                    Log.Debug("Loading serverlist from: " + serverListURL);
+                    //Log.Debug("Loading serverlist from: " + serverListURL);
                     var wc = new WebClientWithTimeout();
                     var response = wc.DownloadString(serverListURL);
                     Log.Debug("Loaded serverlist from: " + serverListURL);
