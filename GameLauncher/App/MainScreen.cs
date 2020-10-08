@@ -92,6 +92,12 @@ namespace GameLauncher {
         private string _realServernameBanner;
         private string _OS;
 
+        public static String ModNetFileNameInUse = String.Empty;
+        Queue<Uri> modFilesDownloadUrls = new Queue<Uri>();
+        bool isDownloadingModNetFiles = false;
+        int CurrentModFileCount = 0;
+        int TotalModFileCount = 0;
+
         int CountFiles = 0;
         int CountFilesTotal = 0;
 
@@ -423,7 +429,7 @@ namespace GameLauncher {
 
         private void Form1_KeyUp(object sender, KeyEventArgs e) {
             if (sequence.IsCompletedBy(e.KeyCode)) {
-                MessageBox.Show("KONAMI!!!");
+                Process.Start("https://www.youtube.com/watch?v=OQi6r0q2pnA");
             }
         }
 
@@ -942,8 +948,6 @@ namespace GameLauncher {
                 _userId = Tokens.UserId;
                 _loginToken = Tokens.LoginToken;
                 _serverIp = Tokens.IPAddress;
-
-                MessageBox.Show(_userId + "__" + _loginToken + "__" + _serverIp);
 
                 if(!String.IsNullOrEmpty(Tokens.Warning)) {
                     MessageBox.Show(null, Tokens.Warning, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1981,6 +1985,37 @@ namespace GameLauncher {
             //}
         }
 
+        public void DownloadModNetFilesRightNow(string path)
+        {
+            while (isDownloadingModNetFiles == false)
+            {
+                CurrentModFileCount++;
+                var url = modFilesDownloadUrls.Dequeue();
+                string FileName = url.ToString().Substring(url.ToString().LastIndexOf("/") + 1, (url.ToString().Length - url.ToString().LastIndexOf("/") - 1));
+
+                ModNetFileNameInUse = FileName;
+
+                WebClientWithTimeout client2 = new WebClientWithTimeout();
+
+                client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_RELOADED);
+                client2.DownloadFileCompleted += (test, stuff) => {
+                    Log.Debug("Downloaded: " + FileName);
+                    isDownloadingModNetFiles = false;
+                    if (modFilesDownloadUrls.Any() == false)
+                    {
+                        LaunchGame();
+                    }
+                    else
+                    {
+                        //Redownload other file
+                        DownloadModNetFilesRightNow(path);
+                    }
+                };
+                client2.DownloadFileAsync(url, path + "/" + FileName);
+                isDownloadingModNetFiles = true;
+            }
+        }
+
         private void playButton_Click(object sender, EventArgs e) {
             if(UriScheme.ForceGame != true) { 
                 if (_loggedIn == false) {
@@ -2146,24 +2181,15 @@ namespace GameLauncher {
 
                     foreach (IndexJsonEntry modfile in json3.entries) {
                         if (SHA.HashFile(path + "/" + modfile.Name).ToLower() != modfile.Checksum) {
-                            WebClientWithTimeout client2 = new WebClientWithTimeout();
-                            client2.DownloadFileAsync(new Uri(json2.basePath + "/" + modfile.Name), path + "/" + modfile.Name);
-
-                            client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_RELOADED);
-                            client2.DownloadFileCompleted += (test, stuff) => { 
-                                CountFiles++;
-
-                                if (CountFiles == CountFilesTotal) {
-                                    LaunchGame();
-                                }
-                            };
-                        } else {
-                            CountFiles++;
-
-                            if (CountFiles == CountFilesTotal) {
-                                LaunchGame();
-                            }
+                            modFilesDownloadUrls.Enqueue(new Uri(json2.basePath + "/" + modfile.Name));
+                            TotalModFileCount++;
                         }
+                    }
+
+                    if (modFilesDownloadUrls.Count != 0) {
+                        this.DownloadModNetFilesRightNow(path);
+                    } else {
+                        LaunchGame();
                     }
 
                     foreach (var file in Directory.GetFiles(path)) {
@@ -2258,7 +2284,7 @@ namespace GameLauncher {
                 double bytesIn = double.Parse(e.BytesReceived.ToString());
                 double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
                 double percentage = bytesIn / totalBytes * 100;
-                playProgressText.Text = ("Downloaded " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
+                playProgressText.Text = ("["+CurrentModFileCount+" / "+TotalModFileCount+"] Downloading " + ModNetFileNameInUse + ": " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
 
                 extractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
                 extractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);

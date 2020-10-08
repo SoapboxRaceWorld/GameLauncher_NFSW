@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using System.Linq;
 using Microsoft.Win32;
 using CommandLine;
+using System.Globalization;
 
 namespace GameLauncher {
     internal static class Program {
@@ -33,17 +34,14 @@ namespace GameLauncher {
         }
 
         private static void Main2(Arguments args) {
-            if(UriScheme.IsCommandLineArgumentsInstalled()) {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
+
+            if (UriScheme.IsCommandLineArgumentsInstalled()) {
                 UriScheme.InstallCommandLineArguments(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), AppDomain.CurrentDomain.FriendlyName));
                 if(args.Parse != null) {
                     new UriScheme(args.Parse);
                 }
-            }
-
-            try {
-                new WebClient().DownloadData("http://l.mtntr.pl/generate_204.php");
-            } catch(Exception) {
-                MessageBox.Show("There's no internet connection, launcher might crash");
             }
 
             IniFile _settingFile = new IniFile("Settings.ini");

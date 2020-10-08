@@ -4,11 +4,10 @@ using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes {
     public class Konami {
-        List<Keys> Keys = new List<Keys>{System.Windows.Forms.Keys.Up, System.Windows.Forms.Keys.Up,
-                                       System.Windows.Forms.Keys.Down, System.Windows.Forms.Keys.Down,
-                                       System.Windows.Forms.Keys.Left, System.Windows.Forms.Keys.Right,
-                                       System.Windows.Forms.Keys.Left, System.Windows.Forms.Keys.Right,
-                                       System.Windows.Forms.Keys.Up, System.Windows.Forms.Keys.Down};
+        List<Keys> Keys = new List<Keys>{System.Windows.Forms.Keys.M, System.Windows.Forms.Keys.A,
+                                       System.Windows.Forms.Keys.D, System.Windows.Forms.Keys.H,
+                                       System.Windows.Forms.Keys.O, System.Windows.Forms.Keys.U,
+                                       System.Windows.Forms.Keys.S, System.Windows.Forms.Keys.E};
         private int mPosition = -1;
 
         public int Position
