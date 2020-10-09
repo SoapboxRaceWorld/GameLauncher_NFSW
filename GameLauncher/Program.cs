@@ -50,7 +50,7 @@ namespace GameLauncher {
             if (_settingFile.Read("PatchesApplied") != "1") { 
                 String _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
                 if(_OS.Contains("Windows 7")) {
-                    if (Self.getInstalledHotFix("KB3125574") == false || Self.getInstalledHotFix("KB3125574") == false) {
+                    if (Self.getInstalledHotFix("KB3125574") == false || Self.getInstalledHotFix("KB3020369") == false) {
                         String messageBoxPopupKB = String.Empty;
                         messageBoxPopupKB  = "Hey Windows 7 User, in order to play on this server, we need to make additional tweaks to your system.\n";
                         messageBoxPopupKB += "We must make sure you have those Windows Update packages installed:\n\n";

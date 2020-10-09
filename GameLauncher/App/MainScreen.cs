@@ -429,7 +429,13 @@ namespace GameLauncher {
 
         private void Form1_KeyUp(object sender, KeyEventArgs e) {
             if (sequence.IsCompletedBy(e.KeyCode)) {
-                Process.Start("https://www.youtube.com/watch?v=OQi6r0q2pnA");
+                try {
+                    WMPLib.WindowsMediaPlayer wplayer = new WMPLib.WindowsMediaPlayer();
+                    wplayer.URL = "http://connect.worldonline.pl/easteregg/MadHouseRemix.mp3";
+                    wplayer.controls.play();
+                } catch(Exception ex) {
+                    MessageBox.Show(null, "There was an error showing easteregg.\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -1738,6 +1744,11 @@ namespace GameLauncher {
 
             if (_restartRequired) {
                 MessageBox.Show(null, "In order to see settings changes, you need to restart launcher manually.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            //Actually lets check those 2 files
+            if(File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords") && File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords_dis")) {
+                File.Delete(_settingFile.Read("InstallationDirectory") + "/profwords_dis");
             }
 
             //Delete/Enable profwords filter here
