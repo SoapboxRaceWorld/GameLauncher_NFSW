@@ -17,16 +17,19 @@ namespace GameLauncherReborn {
     class Self {
         public static string mainserver = "https://api.worldunited.gg";
         public static string fileserver = "https://files.worldunited.gg";
+        public static string staticapiserver = "http://api-sbrw.davidcarbon.download";
 
         public static string[] serverlisturl = new string[] {
             mainserver + "/serverlist.json",
-            "http://api-sbrw.davidcarbon.download/serverlist.json",
+            staticapiserver + "/serverlist.json"
         }; 
 
 		public static string statsurl = mainserver + "/stats";
         public static string CDNUrlList = mainserver + "/cdn_list.json";
+        public static string CDNUrlStaticList = staticapiserver + "/cdn_list.json";
 
-		private static IniFile SettingFile = new IniFile("Settings.ini");
+
+        private static IniFile SettingFile = new IniFile("Settings.ini");
 
         public static string DiscordRPCID = "540651192179752970";
 

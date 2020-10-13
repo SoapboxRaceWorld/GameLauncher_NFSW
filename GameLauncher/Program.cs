@@ -98,8 +98,19 @@ namespace GameLauncher {
                         String _slresponse = wc3.DownloadString(Self.CDNUrlList);
                         CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
                         _settingFile.Write("CDN", CDNList.First().url);
-                    } catch {
-                        _settingFile.Write("CDN", "http://cdn.worldunited.gg/gamefiles/packed/");
+                    }
+                    catch {
+                        try {
+                            List<CDNObject> CDNList = new List<CDNObject>();
+                            WebClientWithTimeout wc3 = new WebClientWithTimeout();
+                            String _slresponse = wc3.DownloadString(Self.CDNUrlStaticList);
+                            CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
+                            _settingFile.Write("CDN", CDNList.First().url);
+                        }
+                        catch
+                        {
+                            _settingFile.Write("CDN", "http://cdn.worldunited.gg/gamefiles/packed/");
+                        }
                     }
                 }
             }

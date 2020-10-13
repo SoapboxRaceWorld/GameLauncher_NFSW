@@ -663,11 +663,17 @@ namespace GameLauncher {
                 String _slresponse2 = string.Empty;
                 try {
                     WebClientWithTimeout wc = new WebClientWithTimeout();
-                    _slresponse2 = wc.DownloadString(Self.CDNUrlList);
+                    try {
+                       _slresponse2 = wc.DownloadString(Self.CDNUrlList);
+                    }
+                    catch {
+                       _slresponse2 = wc.DownloadString(Self.CDNUrlStaticList);
+                    }
+
                 } catch(Exception error) {
-                    MessageBox.Show(error.Message, "An error occurred while loading CDN List");
+                    MessageBox.Show(error.Message, "An error occurred while loading CDN Lists");
                     _slresponse2 = JsonConvert.SerializeObject(new[] {
-                        new CDNObject { name = "[CF] WorldUnited.gg Mirror", url = "http://cdn.worldunited.gg/gamefiles/packed/" }
+                        new CDNObject { name = "[PL] WorldUnited.gg Mirror", url = "http://cdn.worldunited.gg/gamefiles/packed/" }
                     });
                 }
 
