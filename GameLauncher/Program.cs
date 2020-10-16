@@ -169,6 +169,12 @@ namespace GameLauncher {
                 } catch { /* ignored */ }
             }
 
+            if (Properties.Settings.Default.IsRestarting) {
+                Properties.Settings.Default.IsRestarting = false;
+                Properties.Settings.Default.Save();
+                Thread.Sleep(3000);
+            }
+
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             if (Debugger.IsAttached) {
                 Log.Debug("Checking Proxy");

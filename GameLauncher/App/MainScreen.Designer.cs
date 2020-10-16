@@ -262,6 +262,7 @@
             // 
             this.settingsQuality.BackColor = System.Drawing.Color.White;
             this.settingsQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.settingsQuality.Enabled = false;
             this.settingsQuality.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.settingsQuality.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.settingsQuality.FormattingEnabled = true;

@@ -36,7 +36,9 @@ namespace GameLauncher.App.Classes {
 			try {
 				Data[EXE][Key] = Value;
 				Parser.WriteFile(Path, Data);
-			} catch { }
+			} catch(Exception ex) {
+                MessageBox.Show( String.Format("Failed to write {0} = {1} to {2}\n{3}", Key, Value, Path, ex.Message));
+            }
         }
 
         public void DeleteKey(string Key) {
