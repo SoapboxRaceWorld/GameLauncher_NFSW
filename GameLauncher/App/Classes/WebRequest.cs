@@ -15,6 +15,8 @@ using System.Net.Security;
 namespace GameLauncherReborn {
     public class WebClientWithTimeout : WebClient {
         private static string GameLauncherHash = string.Empty;
+        private static long addrange = 0;
+        private static int timeout = 3000;
         public static string Value() {
             if (string.IsNullOrEmpty(GameLauncherHash)) {
                 GameLauncherHash = SHA.HashFile(AppDomain.CurrentDomain.FriendlyName);
@@ -54,7 +56,7 @@ namespace GameLauncherReborn {
                 return isOk;
             };
 
-            Log.UrlCall("Calling URL: " + address);
+            if(!address.AbsolutePath.Contains("auth")) Log.UrlCall("Calling URL: " + address);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
             request.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
@@ -62,9 +64,23 @@ namespace GameLauncherReborn {
             request.Headers["X-UserAgent"] = "GameLauncherReborn "+Application.ProductVersion+ " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = Value();
             request.Headers["X-DiscordID"] = Self.discordid;
-            //request.Timeout = 30000;
+            
+            if(addrange != 0) {
+                request.AddRange(addrange);
+            }
+
+            request.Proxy = null;
+            request.Timeout = timeout;
 
             return request;
+        }
+
+        internal void AddRange(long filesize) {
+            addrange = filesize;
+        }
+
+        internal void Timeout(int time) {
+            timeout = time;
         }
     }
 }

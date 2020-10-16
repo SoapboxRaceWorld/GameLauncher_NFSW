@@ -47,10 +47,10 @@ namespace GameLauncher {
             IniFile _settingFile = new IniFile("Settings.ini");
 
             //Windows 7 Fix
-            if (_settingFile.Read("PatchesApplied") != "1") { 
+            if (!(_settingFile.KeyExists("PatchesApplied"))) {
                 String _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
                 if(_OS.Contains("Windows 7")) {
-                    if (Self.getInstalledHotFix("KB3125574") == false || Self.getInstalledHotFix("KB3020369") == false) {
+                    if (Self.getInstalledHotFix("KB3020369") == false || Self.getInstalledHotFix("KB3125574") == false) {
                         String messageBoxPopupKB = String.Empty;
                         messageBoxPopupKB  = "Hey Windows 7 User, in order to play on this server, we need to make additional tweaks to your system.\n";
                         messageBoxPopupKB += "We must make sure you have those Windows Update packages installed:\n\n";
@@ -70,12 +70,12 @@ namespace GameLauncher {
                             RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
                             key.SetValue("DisabledByDefault", 0x0);
 
-                            _settingFile.Write("PatchesApplied", "1");
-
                             MessageBox.Show(null, "Registry option set, Remember that the following patch might work after a system reboot", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         } else {
                             MessageBox.Show(null, "Roger that, There will be some issues connecting to the servers.", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
+
+                        _settingFile.Write("PatchesApplied", "1");
                     }
                 }
             }
@@ -99,7 +99,15 @@ namespace GameLauncher {
                         CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
                         _settingFile.Write("CDN", CDNList.First().url);
                     } catch {
-                        _settingFile.Write("CDN", "http://cdn.worldunited.gg/gamefiles/packed/");
+                        try {
+                            List<CDNObject> CDNList = new List<CDNObject>();
+                            WebClientWithTimeout wc3 = new WebClientWithTimeout();
+                            String _slresponse = wc3.DownloadString(Self.CDNUrlStaticList);
+                            CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
+                            _settingFile.Write("CDN", CDNList.First().url);
+                        } catch {
+                            _settingFile.Write("CDN", "http://cdn.worldunited.gg/gamefiles/packed/");
+                        }
                     }
                 }
             }
@@ -117,6 +125,12 @@ namespace GameLauncher {
 
             Log.StartLogging();
             Log.Debug("GameLauncher " + Application.ProductVersion);
+
+            if (_settingFile.KeyExists("InstallationDirectory")) {
+                if(!File.Exists(_settingFile.Read("InstallationDirectory"))) {
+                    Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
+                }
+            }
 
             //StaticConfiguration.DisableErrorTraces = false;
 
@@ -171,6 +185,7 @@ namespace GameLauncher {
                 try {
                     if (mutex.WaitOne(0, false)) {
                         string[] files = {
+                            "CommandLine.dll - 2.8.0",
                             "DiscordRPC.dll - 1.0.150.0",
                             "Flurl.dll - 2.8.2",
                             "Flurl.Http.dll - 2.4.2",

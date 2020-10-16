@@ -27,11 +27,15 @@ namespace GameLauncher.App {
             String _slresponse = String.Empty;
             try {
                 WebClientWithTimeout wc = new WebClientWithTimeout();
-                _slresponse = wc.DownloadString(Self.CDNUrlList);
+                try {
+                    _slresponse = wc.DownloadString(Self.CDNUrlList);
+                } catch {
+                    _slresponse = wc.DownloadString(Self.CDNUrlStaticList);
+                }
             } catch {
                 _slresponse = JsonConvert.SerializeObject(new[] {
                     new CDNObject {
-                        name = "[PL] WorldUnited.GG Mirror",
+                        name = "[CF] WorldUnited.GG Mirror",
                         url = "http://cdn.worldunited.gg/gamefiles/packed/"
                     }
                 });

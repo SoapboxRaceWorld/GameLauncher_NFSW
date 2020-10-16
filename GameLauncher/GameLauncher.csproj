@@ -78,9 +78,6 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AxInterop.WMPLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WMPLib.1.0.0\lib\AxInterop.WMPLib.dll</HintPath>
-    </Reference>
     <Reference Include="CommandLine, Version=2.8.0.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
       <HintPath>..\packages\CommandLineParser.2.8.0\lib\net45\CommandLine.dll</HintPath>
     </Reference>
@@ -92,10 +89,6 @@
     </Reference>
     <Reference Include="Flurl.Http, Version=2.4.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Flurl.Http.2.4.2\lib\net46\Flurl.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="Interop.WMPLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WMPLib.1.0.0\lib\Interop.WMPLib.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -171,7 +164,6 @@
     <Compile Include="App\Classes\HashPassword\SHA.cs" />
     <Compile Include="App\Classes\HWID.cs" />
     <Compile Include="App\Classes\IniFile.cs" />
-    <Compile Include="App\Classes\Konami.cs" />
     <Compile Include="App\Classes\Language.cs" />
     <Compile Include="App\Classes\Logger\LogToFile.cs" />
     <Compile Include="App\Classes\ModManager.cs" />
@@ -194,8 +186,6 @@
     <Compile Include="App\Classes\RPC\CarList.cs" />
     <Compile Include="App\Classes\RPC\DiscordGamePresence.cs" />
     <Compile Include="App\Classes\RPC\EventList.cs" />
-    <Compile Include="App\Classes\RPC\MapZones.cs" />
-    <Compile Include="App\Classes\RPC\OfflineSaveFile.cs" />
     <Compile Include="App\Classes\Self.cs" />
     <Compile Include="App\Classes\ServerListUpdater.cs" />
     <Compile Include="App\Classes\ServerProxy.cs" />
@@ -284,7 +274,6 @@
     <EmbeddedResource Include="Fonts\Airport-Cyr.ttf" />
     <EmbeddedResource Include="Fonts\Akrobat-Regular.ttf" />
     <EmbeddedResource Include="Fonts\Akrobat-SemiBold.ttf" />
-    <EmbeddedResource Include="App\Classes\RPC\JSON\zones.json" />
     <None Include="GameLauncher_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest">
@@ -319,7 +308,6 @@
     <None Include="Resources\buttons_info.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\places4.png" />
     <None Include="Resources\playbutton_hover.png" />
     <None Include="Resources\playbutton_click.png" />
     <None Include="Resources\playbutton.png" />
