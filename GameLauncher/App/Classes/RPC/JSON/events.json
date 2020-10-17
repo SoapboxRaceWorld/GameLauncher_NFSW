@@ -81,7 +81,7 @@
     {"id": "97","trackname": "Riverfront & Green","type": "gamemode_circuit"},
     {"id": "98","trackname": "Seaside Interchange","type": "gamemode_sprint"},
     {"id": "99","trackname": "Beacon & Petersburg","type": "gamemode_sprint"},
-    {"id": "100","trackname": "Rosewood Tour","type": "gamemode_sprint"},
+    {"id": "100","trackname": "Petersburg & Bond","type": "gamemode_sprint"},
     {"id": "101","trackname": "Bond & Beacon Bridge","type": "gamemode_sprint"},
     {"id": "102","trackname": "Lennox & Camden","type": "gamemode_sprint"},
     {"id": "103","trackname": "Camden & Seaside","type": "gamemode_drag"},
