@@ -2330,6 +2330,12 @@ namespace GameLauncher {
                     } else {
                         var secondsToCloseLauncher = 10;
 
+                        try {
+                            //Cached content goes here
+                            EventList.remoteEvent = new WebClientWithTimeout().DownloadString(json.homePageUrl + "/api/events.json");
+                            CarList.remoteCarList = new WebClientWithTimeout().DownloadString(json.homePageUrl + "/api/cars.json");
+                        } catch { }
+
                         extractingProgress.Value = 100;
                         extractingProgress.Width = 519;
 
