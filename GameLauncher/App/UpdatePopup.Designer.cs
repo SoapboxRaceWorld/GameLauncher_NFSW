@@ -34,6 +34,7 @@
             this.update = new System.Windows.Forms.Button();
             this.icon = new System.Windows.Forms.PictureBox();
             this.updateLabel = new System.Windows.Forms.Label();
+            this.skip = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.icon)).BeginInit();
             this.SuspendLayout();
@@ -63,7 +64,7 @@
             // ignore
             // 
             this.ignore.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.ignore.Location = new System.Drawing.Point(311, 230);
+            this.ignore.Location = new System.Drawing.Point(230, 230);
             this.ignore.Name = "ignore";
             this.ignore.Size = new System.Drawing.Size(75, 23);
             this.ignore.TabIndex = 1;
@@ -72,7 +73,7 @@
             // 
             // update
             // 
-            this.update.Location = new System.Drawing.Point(230, 230);
+            this.update.Location = new System.Drawing.Point(149, 230);
             this.update.Name = "update";
             this.update.Size = new System.Drawing.Size(75, 23);
             this.update.TabIndex = 2;
@@ -97,6 +98,16 @@
             this.updateLabel.TabIndex = 4;
             this.updateLabel.Text = "label1";
             // 
+            // skip
+            // 
+            this.skip.DialogResult = System.Windows.Forms.DialogResult.No;
+            this.skip.Location = new System.Drawing.Point(311, 230);
+            this.skip.Name = "skip";
+            this.skip.Size = new System.Drawing.Size(75, 23);
+            this.skip.TabIndex = 6;
+            this.skip.Text = "Skip";
+            this.skip.UseVisualStyleBackColor = true;
+            // 
             // UpdatePopup
             // 
             this.AcceptButton = this.update;
@@ -106,6 +117,7 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.CancelButton = this.ignore;
             this.ClientSize = new System.Drawing.Size(398, 262);
+            this.Controls.Add(this.skip);
             this.Controls.Add(this.updateLabel);
             this.Controls.Add(this.icon);
             this.Controls.Add(this.update);
@@ -135,5 +147,6 @@
         private System.Windows.Forms.TextBox changelogText;
         private System.Windows.Forms.PictureBox icon;
         private System.Windows.Forms.Label updateLabel;
+        private System.Windows.Forms.Button skip;
     }
 }
