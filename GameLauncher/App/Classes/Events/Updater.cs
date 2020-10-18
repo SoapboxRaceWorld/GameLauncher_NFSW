@@ -87,10 +87,6 @@ namespace GameLauncher.App.Classes.Events {
                                     {
                                         //No Update Popup
                                         //Blame DavidCarbon if this Breaks (to some degree), not Zacam...
-                                        if (updater.Payload.LatestVersion.CompareTo(updater.Payload.ClientVersion) >= 0)
-                                        {
-                                            Settings.Default.IgnoreUpdateVersion = String.Empty;
-                                        }
                                     }
                                     else
                                     {
