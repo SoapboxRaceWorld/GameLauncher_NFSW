@@ -804,7 +804,15 @@ namespace GameLauncher {
             {
                 if (_settingFile.Read("IgnoreUpdateVersion") != String.Empty)
                 {
-                    Log.Debug("IGNOREUPDATEVERSION: Manually Skipping Update " + _settingFile.Read("IgnoreUpdateVersion") + " !");
+                    if (_settingFile.Read("IgnoreUpdateVersion") == Application.ProductVersion)
+                    {
+                        _settingFile.Write("IgnoreUpdateVersion", String.Empty);
+                        Log.Debug("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. You're now on the Latest Game Launcher!");
+                    }
+                    else
+                    {
+                        Log.Debug("IGNOREUPDATEVERSION: Manually Skipping Update " + _settingFile.Read("IgnoreUpdateVersion") + " !");
+                    }
                 }
                 else
                 {

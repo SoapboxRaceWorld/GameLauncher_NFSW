@@ -135,6 +135,11 @@ namespace GameLauncher {
                 }
             }
 
+            if (!_settingFile.KeyExists("IgnoreUpdateVersion"))
+            {
+                _settingFile.Write("IgnoreUpdateVersion", String.Empty);
+            }
+
             //StaticConfiguration.DisableErrorTraces = false;
 
             Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
