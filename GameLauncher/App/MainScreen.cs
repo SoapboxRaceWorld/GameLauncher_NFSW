@@ -2174,6 +2174,16 @@ namespace GameLauncher {
                     //get files now
                     MainJson json2 = JsonConvert.DeserializeObject<MainJson>(jsonModNet);
 
+
+                    //metonator was here!
+                    try
+                    {
+                        //Cached content goes here
+                        EventList.remoteEvent = new WebClientWithTimeout().DownloadString(json2.basePath + "/events.json");
+                        CarList.remoteCarList = new WebClientWithTimeout().DownloadString(json2.basePath + "/cars.json");
+                    }
+                    catch { }
+
                     //get new index
                     Uri newIndexFile = new Uri(json2.basePath + "/index.json");
                     String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
@@ -2329,12 +2339,6 @@ namespace GameLauncher {
                         playProgressText.Text = "Soapbox server launched. Waiting for queries.".ToUpper();
                     } else {
                         var secondsToCloseLauncher = 10;
-
-                        try {
-                            //Cached content goes here
-                            EventList.remoteEvent = new WebClientWithTimeout().DownloadString(json.homePageUrl + "/api/events.json");
-                            CarList.remoteCarList = new WebClientWithTimeout().DownloadString(json.homePageUrl + "/api/cars.json");
-                        } catch { }
 
                         extractingProgress.Value = 100;
                         extractingProgress.Width = 519;
