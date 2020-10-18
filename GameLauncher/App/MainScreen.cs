@@ -797,21 +797,19 @@ namespace GameLauncher {
             //This Saves the update the was skipped or to remind the user at next launch
             if (Settings.Default.IgnoreUpdateVersion != String.Empty)
             {
-                if (_settingFile.Read("IgnoreUpdateVersion") == Application.ProductVersion)
-                {
-                    //Display a Different Debug Log Message
-                    _settingFile.Write("IgnoreUpdateVersion", Settings.Default.IgnoreUpdateVersion);
-                    Log.Debug("IGNOREUPDATEVERSION: Remind Me to Update to " + Settings.Default.IgnoreUpdateVersion + " at next Launch!");
-                }
-                else
-                {
-                    _settingFile.Write("IgnoreUpdateVersion", Settings.Default.IgnoreUpdateVersion);
-                    Log.Debug("IGNOREUPDATEVERSION: Skipping Update " + Settings.Default.IgnoreUpdateVersion + " !");
-                }
+                _settingFile.Write("IgnoreUpdateVersion", Settings.Default.IgnoreUpdateVersion);
+                Log.Debug("IGNOREUPDATEVERSION: Skipping Update " + Settings.Default.IgnoreUpdateVersion + " !");
             }
             else
             {
-                Log.Debug("IGNOREUPDATEVERSION: Latest Game Launcher!");
+                if (_settingFile.Read("IgnoreUpdateVersion") != String.Empty)
+                {
+                    Log.Debug("IGNOREUPDATEVERSION: Manually Skipping Update " + _settingFile.Read("IgnoreUpdateVersion") + " !");
+                }
+                else
+                {
+                    Log.Debug("IGNOREUPDATEVERSION: Latest Game Launcher!");
+                }
             }
 
             Process[] allOfThem = Process.GetProcessesByName("nfsw");

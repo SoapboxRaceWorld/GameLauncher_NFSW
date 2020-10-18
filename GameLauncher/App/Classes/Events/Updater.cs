@@ -87,6 +87,10 @@ namespace GameLauncher.App.Classes.Events {
                                     {
                                         //No Update Popup
                                         //Blame DavidCarbon if this Breaks (to some degree), not Zacam...
+                                        if (updater.Payload.LatestVersion.CompareTo(updater.Payload.ClientVersion) >= 0)
+                                        {
+                                            Settings.Default.IgnoreUpdateVersion = String.Empty;
+                                        }
                                     }
                                     else
                                     {
@@ -107,7 +111,7 @@ namespace GameLauncher.App.Classes.Events {
                                         //Check if User clicked Ignore so it doesn't update "IgnoreUpdateVersion"
                                         if (updateConfirm == DialogResult.Cancel)
                                         {
-                                            Settings.Default.IgnoreUpdateVersion = Application.ProductVersion;
+                                            Settings.Default.IgnoreUpdateVersion = String.Empty;
                                         };
 
                                         //Write to Settings.ini to Skip Update
