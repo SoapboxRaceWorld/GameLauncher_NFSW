@@ -86,6 +86,8 @@ namespace GameLauncher {
                 MessageBox.Show("This application requires admin priviledge");
             }
 
+            Log.StartLogging();
+
             if (DetectLinux.LinuxDetected()) {
                 if (!_settingFile.KeyExists("InstallationDirectory")) {
                     _settingFile.Write("InstallationDirectory", "GameFiles");
@@ -98,14 +100,16 @@ namespace GameLauncher {
                         String _slresponse = wc3.DownloadString(Self.CDNUrlList);
                         CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
                         _settingFile.Write("CDN", CDNList.First().url);
-                    } catch {
+                    }
+                    catch {
                         try {
                             List<CDNObject> CDNList = new List<CDNObject>();
                             WebClientWithTimeout wc3 = new WebClientWithTimeout();
                             String _slresponse = wc3.DownloadString(Self.CDNUrlStaticList);
                             CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
                             _settingFile.Write("CDN", CDNList.First().url);
-                        } catch {
+                        }
+                        catch {
                             _settingFile.Write("CDN", "http://cdn.worldunited.gg/gamefiles/packed/");
                         }
                     }
@@ -123,7 +127,6 @@ namespace GameLauncher {
             File.Delete("communication.log");
             File.Delete("launcher.log");
 
-            Log.StartLogging();
             Log.Debug("GameLauncher " + Application.ProductVersion);
 
             if (_settingFile.KeyExists("InstallationDirectory")) {

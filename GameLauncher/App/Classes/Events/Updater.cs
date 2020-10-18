@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GameLauncher.HashPassword;
+using GameLauncher.Properties;
 using GameLauncherReborn;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
@@ -85,7 +86,7 @@ namespace GameLauncher.App.Classes.Events {
                                     if (_settingFile.Read("IgnoreUpdateVersion") == updater.Payload.LatestVersion)
                                     {
                                         //No Update Popup
-                                        //Blame DavidCarbon if this Breaks (to some degree) not Zacam...
+                                        //Blame DavidCarbon if this Breaks (to some degree), not Zacam...
                                     }
                                     else
                                     {
@@ -102,7 +103,20 @@ namespace GameLauncher.App.Classes.Events {
                                                 Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
                                             }
                                         };
+
+                                        //Check if User clicked Ignore so it doesn't update "IgnoreUpdateVersion"
+                                        if (updateConfirm == DialogResult.Cancel)
+                                        {
+                                            Settings.Default.IgnoreUpdateVersion = Application.ProductVersion;
+                                        };
+
+                                        //Write to Settings.ini to Skip Update
+                                        if (updateConfirm == DialogResult.Ignore)
+                                        {
+                                            Settings.Default.IgnoreUpdateVersion = updater.Payload.LatestVersion;
+                                        };
                                     }
+                                    Settings.Default.Save();
                                 }
                             } else {
                                 text.Text = "Launcher Status - GitHub Error";

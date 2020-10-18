@@ -40,6 +40,7 @@ using GameLauncher.App.Classes.RPC;
 using GameLauncher.App.Classes.GPU;
 using CommandLine;
 using System.Runtime.CompilerServices;
+using GameLauncher.Properties;
 //using System.Windows;
 
 namespace GameLauncher {
@@ -790,6 +791,27 @@ namespace GameLauncher {
                 _settingFile.Write("InstallationDirectory", Path.GetFullPath(_settingFile.Read("InstallationDirectory")));
             } catch {
                 _settingFile.Write("InstallationDirectory", _settingFile.Read("InstallationDirectory"));
+            }
+
+            //DavidCarbon
+            //This Saves the update the was skipped or to remind the user at next launch
+            if (Settings.Default.IgnoreUpdateVersion != String.Empty)
+            {
+                if (_settingFile.Read("IgnoreUpdateVersion") == Application.ProductVersion)
+                {
+                    //Display a Different Debug Log Message
+                    _settingFile.Write("IgnoreUpdateVersion", Settings.Default.IgnoreUpdateVersion);
+                    Log.Debug("IGNOREUPDATEVERSION: Remind Me to Update to " + Settings.Default.IgnoreUpdateVersion + " at next Launch!");
+                }
+                else
+                {
+                    _settingFile.Write("IgnoreUpdateVersion", Settings.Default.IgnoreUpdateVersion);
+                    Log.Debug("IGNOREUPDATEVERSION: Skipping Update " + Settings.Default.IgnoreUpdateVersion + " !");
+                }
+            }
+            else
+            {
+                Log.Debug("IGNOREUPDATEVERSION: Latest Game Launcher!");
             }
 
             Process[] allOfThem = Process.GetProcessesByName("nfsw");

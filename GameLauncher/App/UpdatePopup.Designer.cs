@@ -30,11 +30,11 @@
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.changelogText = new System.Windows.Forms.TextBox();
-            this.ignore = new System.Windows.Forms.Button();
             this.update = new System.Windows.Forms.Button();
             this.icon = new System.Windows.Forms.PictureBox();
             this.updateLabel = new System.Windows.Forms.Label();
             this.skip = new System.Windows.Forms.Button();
+            this.ignore = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.icon)).BeginInit();
             this.SuspendLayout();
@@ -60,16 +60,6 @@
             this.changelogText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.changelogText.Size = new System.Drawing.Size(362, 133);
             this.changelogText.TabIndex = 0;
-            // 
-            // ignore
-            // 
-            this.ignore.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.ignore.Location = new System.Drawing.Point(230, 230);
-            this.ignore.Name = "ignore";
-            this.ignore.Size = new System.Drawing.Size(75, 23);
-            this.ignore.TabIndex = 1;
-            this.ignore.Text = "Ignore";
-            this.ignore.UseVisualStyleBackColor = true;
             // 
             // update
             // 
@@ -100,13 +90,21 @@
             // 
             // skip
             // 
-            this.skip.DialogResult = System.Windows.Forms.DialogResult.No;
             this.skip.Location = new System.Drawing.Point(311, 230);
             this.skip.Name = "skip";
             this.skip.Size = new System.Drawing.Size(75, 23);
             this.skip.TabIndex = 6;
             this.skip.Text = "Skip";
             this.skip.UseVisualStyleBackColor = true;
+            // 
+            // ignore
+            // 
+            this.ignore.Location = new System.Drawing.Point(230, 230);
+            this.ignore.Name = "ignore";
+            this.ignore.Size = new System.Drawing.Size(75, 23);
+            this.ignore.TabIndex = 1;
+            this.ignore.Text = "Ignore";
+            this.ignore.UseVisualStyleBackColor = true;
             // 
             // UpdatePopup
             // 
@@ -142,11 +140,11 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button ignore;
         private System.Windows.Forms.Button update;
         private System.Windows.Forms.TextBox changelogText;
         private System.Windows.Forms.PictureBox icon;
         private System.Windows.Forms.Label updateLabel;
         private System.Windows.Forms.Button skip;
+        private System.Windows.Forms.Button ignore;
     }
 }
