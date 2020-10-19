@@ -11,52 +11,56 @@ namespace GameLauncher.App.Classes.RPC {
         public static String remoteEvent = String.Empty;
 
         public static string getEventName(int id) {
-            dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.events.json"));
+            // Let's load the "Cached From Server" version first
+            if (remoteEvent != String.Empty) {
+                dynamic dynJson = JsonConvert.DeserializeObject(remoteEvent);
 
-            foreach (var item in dynJson) {
-                if (item.id == id) {
-                    return item.trackname;
+                foreach (var item in dynJson) {
+                    if (item.id == id) {
+                        return item.trackname;
+                    }
                 }
             }
 
-            //Let's load all the content from cached thing
-            if(remoteEvent != String.Empty) {
-                try { 
-                    dynamic dynJson2 = JsonConvert.DeserializeObject(remoteEvent);
+            // If we don't have a Server version, load "default" version
+            if (remoteEvent == String.Empty) {
+                dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.events.json"));
 
-                    foreach (var item in dynJson2) {
-                        if (item.id == id) {
-                            return item.trackname;
-                        }
+                foreach (var item in dynJson) {
+                    if (item.id == id) {
+                        return item.trackname;
                     }
-                } catch { }
+                }
             }
 
+            // And if it's not found, do this instead
             return "EVENT:"+id;
         }
 
         public static string getEventType(int id) {
-            dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.events.json"));
+            // Let's load the "Cached From Server" version first
+            if (remoteEvent != String.Empty) {
+                dynamic dynJson = JsonConvert.DeserializeObject(remoteEvent);
 
-            foreach (var item in dynJson) {
-                if (item.id == id) {
-                    return item.type;
+                foreach (var item in dynJson) {
+                    if (item.id == id) {
+                        return item.type;
+                    }
                 }
             }
 
-            //Let's load all the content from cached thing
+            // If we don't have a Server version, load "default" version
             if (remoteEvent != String.Empty) {
-                try {
-                    dynamic dynJson2 = JsonConvert.DeserializeObject(remoteEvent);
+                dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.events.json"));
 
-                    foreach (var item in dynJson2) {
-                        if (item.id == id) {
-                            return item.type;
-                        }
+                foreach (var item in dynJson) {
+                    if (item.id == id) {
+                        return item.type;
                     }
-                } catch { }
+                }
             }
 
+            // And if it's not found, do this instead
             return "gamemode_freeroam";
         }
     }

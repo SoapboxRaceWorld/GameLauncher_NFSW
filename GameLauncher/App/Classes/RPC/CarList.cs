@@ -10,26 +10,29 @@ namespace GameLauncher.App.Classes.RPC {
         public static String remoteCarList = String.Empty;
 
         public static string getCarName(string id) {
-            dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.cars.json"));
+            // Let's load the "Cached From Server" version first
+            if (remoteCarList != String.Empty) {
+                dynamic dynJson = JsonConvert.DeserializeObject(remoteCarList);
 
-            foreach (var item in dynJson) {
-                if (item.carid == id) {
-                    return item.carname;
+                foreach (var item in dynJson) {
+                    if (item.carid == id) {
+                        return item.carname;
+                    }
                 }
             }
 
-            if (remoteCarList != String.Empty) {
-                try {
-                    dynamic dynJson2 = JsonConvert.DeserializeObject(remoteCarList);
+            // If we don't have a Server version, load "default" version            
+            if (remoteCarList == String.Empty) {
+                dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.cars.json"));
 
-                    foreach (var item in dynJson2) {
-                        if (item.id == id) {
-                            return item.carname;
-                        }
+                foreach (var item in dynJson) {
+                    if (item.carid == id) {
+                        return item.carname;
                     }
-                } catch { }
+                }
             }
 
+            // And if it's not found, do this instead
             return "Traffic Car ("+id+")";
         }
     }
