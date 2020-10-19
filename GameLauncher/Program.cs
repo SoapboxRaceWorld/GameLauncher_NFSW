@@ -140,6 +140,45 @@ namespace GameLauncher {
                 _settingFile.Write("IgnoreUpdateVersion", String.Empty);
             }
 
+            //INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
+            //Updated RedTheKitsune Code so it downloads the file if its missing. It also restarts the launcher if the user click on yes on Prompt. - DavidCarbon
+            if (!File.Exists("LZMA.dll"))
+            {
+                try
+                {
+                    Log.Debug("Starting LZMA downloader");
+                    using (WebClientWithTimeout wc = new WebClientWithTimeout())
+                    {
+                        wc.DownloadFileAsync(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
+                    }
+
+                    DialogResult restartApp = MessageBox.Show(null, "Downloaded Missing LZMA.ddl File. \nPlease Restart Launcher, Thanks!", "GameLauncher Restart Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                    Process[] allOfThemThree = Process.GetProcessesByName("GameLauncher Restart Required");
+                    foreach (var oneProcess in allOfThemThree)
+                    {
+                        Process.GetProcessById(oneProcess.Id).Kill();
+                    }
+
+                    if (restartApp == DialogResult.Yes)
+                    {
+                        Properties.Settings.Default.IsRestarting = true;
+                        Properties.Settings.Default.Save();
+                        Application.Restart();
+                        Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+
+                    }
+                    if (restartApp == DialogResult.No)
+                    {
+                        Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug("Failed to download LZMA. " + ex.Message);
+                }
+            }
+
             //StaticConfiguration.DisableErrorTraces = false;
 
             Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));

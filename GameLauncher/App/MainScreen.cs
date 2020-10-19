@@ -479,19 +479,6 @@ namespace GameLauncher {
             Log.Debug("Updating server list");
             ServerListUpdater.UpdateList();
 
-            //INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
-            if (!File.Exists("LZMA.dll")) {
-                Log.Debug("Starting LZMA downloader");
-                try {
-                    playProgressText.Text = "Downloading LZMA.dll...";
-                    using (WebClientWithTimeout wc = new WebClientWithTimeout()) {
-                        wc.DownloadFileAsync(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
-                    }
-                } catch (Exception ex) {
-                    Log.Debug("Failed to download LZMA. " + ex.Message);
-                }
-            }
-
             Log.Debug("Setting WindowName");
             Text = "GameLauncherReborn v" + Application.ProductVersion;
 
@@ -2881,6 +2868,12 @@ namespace GameLauncher {
 
         private void srvinfo_Click(object sender, EventArgs e) {
             //new SrvInfo().Show();
+        }
+
+        //VerifyHash
+        private void vfilesButton_Click(object sender, EventArgs e)
+        {
+            //In Development (Zacam got this)
         }
 
         private void SelectServerBtn_Click(object sender, EventArgs e) {
