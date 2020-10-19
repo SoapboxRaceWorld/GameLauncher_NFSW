@@ -21,7 +21,7 @@ namespace GameLauncher.App.Classes.RPC {
                 }
             }
 
-            // If we don't have a Server version, load "default" version            
+            // If we don't have a Server version, load "default" version
             if (remoteCarList == String.Empty) {
                 dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.cars.json"));
 
