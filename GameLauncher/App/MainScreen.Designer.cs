@@ -630,6 +630,7 @@
             this.vfilesButton.TabIndex = 96;
             this.vfilesButton.Text = "Validate Game Files";
             this.vfilesButton.UseVisualStyleBackColor = false;
+            this.vfilesButton.Click += new System.EventHandler(this.vfilesButton_Click);
             // 
             // wordFilterCheck
             // 

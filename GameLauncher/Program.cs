@@ -86,6 +86,8 @@ namespace GameLauncher {
                 MessageBox.Show("This application requires admin priviledge");
             }
 
+            Log.StartLogging();
+
             if (DetectLinux.LinuxDetected()) {
                 if (!_settingFile.KeyExists("InstallationDirectory")) {
                     _settingFile.Write("InstallationDirectory", "GameFiles");
@@ -98,14 +100,16 @@ namespace GameLauncher {
                         String _slresponse = wc3.DownloadString(Self.CDNUrlList);
                         CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
                         _settingFile.Write("CDN", CDNList.First().url);
-                    } catch {
+                    }
+                    catch {
                         try {
                             List<CDNObject> CDNList = new List<CDNObject>();
                             WebClientWithTimeout wc3 = new WebClientWithTimeout();
                             String _slresponse = wc3.DownloadString(Self.CDNUrlStaticList);
                             CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
                             _settingFile.Write("CDN", CDNList.First().url);
-                        } catch {
+                        }
+                        catch {
                             _settingFile.Write("CDN", "http://cdn.worldunited.gg/gamefiles/packed/");
                         }
                     }
@@ -123,12 +127,55 @@ namespace GameLauncher {
             File.Delete("communication.log");
             File.Delete("launcher.log");
 
-            Log.StartLogging();
             Log.Debug("GameLauncher " + Application.ProductVersion);
 
             if (_settingFile.KeyExists("InstallationDirectory")) {
                 if(!File.Exists(_settingFile.Read("InstallationDirectory"))) {
                     Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
+                }
+            }
+
+            if (!_settingFile.KeyExists("IgnoreUpdateVersion"))
+            {
+                _settingFile.Write("IgnoreUpdateVersion", String.Empty);
+            }
+
+            //INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
+            //Updated RedTheKitsune Code so it downloads the file if its missing. It also restarts the launcher if the user click on yes on Prompt. - DavidCarbon
+            if (!File.Exists("LZMA.dll"))
+            {
+                try
+                {
+                    Log.Debug("Starting LZMA downloader");
+                    using (WebClientWithTimeout wc = new WebClientWithTimeout())
+                    {
+                        wc.DownloadFileAsync(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
+                    }
+
+                    DialogResult restartApp = MessageBox.Show(null, "Downloaded Missing LZMA.ddl File. \nPlease Restart Launcher, Thanks!", "GameLauncher Restart Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                    Process[] allOfThemThree = Process.GetProcessesByName("GameLauncher Restart Required");
+                    foreach (var oneProcess in allOfThemThree)
+                    {
+                        Process.GetProcessById(oneProcess.Id).Kill();
+                    }
+
+                    if (restartApp == DialogResult.Yes)
+                    {
+                        Properties.Settings.Default.IsRestarting = true;
+                        Properties.Settings.Default.Save();
+                        Application.Restart();
+                        Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+
+                    }
+                    if (restartApp == DialogResult.No)
+                    {
+                        Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug("Failed to download LZMA. " + ex.Message);
                 }
             }
 
