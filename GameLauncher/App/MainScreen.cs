@@ -117,12 +117,8 @@ namespace GameLauncher {
         List<ServerInfo> finalItems = new List<ServerInfo>();
         Dictionary<string, int> serverStatusDictionary = new Dictionary<string, int>();
 
-        //VerifyHash
-        public int filesToScan;
-        public int badFiles;
-        public int totalFilesScanned;
-        public int redownloadedCount;
-        public List<string> invalidFileList = new List<string>();
+        /* Moved Validate Game Code to Gist */
+        /* https://gist.githubusercontent.com/DavidCarbon/c5b3ea2e0736c2b381a84d40024e0a0d/raw/efca939d6eb28ae5a0e387e690adbff4d289761b/ValidateGlobal_Int.cs */
 
         //UltimateLauncherFunction: SelectServer
         private static ServerInfo _ServerList;
@@ -223,20 +219,11 @@ namespace GameLauncher {
             Log.Debug("Applying Fonts");
             ApplyEmbeddedFonts();
 
-            //_disableChecks = (_settingFile.KeyExists("DisableVerifyHash") && _settingFile.Read("DisableVerifyHash") == "1") ? true : false;
             _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1") ? true : false;
 
-            Log.Debug("Setting launcher location");
-            /*if (_settingFile.KeyExists("LauncherPosX") || _settingFile.KeyExists("LauncherPosY")) {
-                StartPosition = FormStartPosition.Manual;
-                var posX = int.Parse(_settingFile.Read("LauncherPosX"));
-                var posY = int.Parse(_settingFile.Read("LauncherPosY"));
-                Location = new Point(posX, posY);
-                Log.Debug("Launcher Location: " + posX + "x" + posY);
-            } else {
-                Log.Debug("Launcher Location: CenterScreen");
-                Self.centerScreen(this);
-            }*/
+            /* Moved Unused Settings File Read Code to Gist */
+            /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/94c3ac9e7ed30a741a5966545335751f6adad080/SettingsFileRead.cs */
+
 
             Self.centerScreen(this);
 
@@ -1156,21 +1143,8 @@ namespace GameLauncher {
                             _modernAuthSupport = false;
                         }
 
-                        /*if (!string.IsNullOrEmpty(json.allowedCountries)) {
-                            var countries = new List<object>();
-                            var splitted = json.allowedCountries.Split(';');
-
-                            foreach (var splitter in splitted)
-                            {
-                                countries.Add(Self.CountryName(splitter));
-                            }
-
-                            var allowed = string.Join(", ", countries);
-
-                            allowedCountriesLabel.Text = string.Format("Warning, this server only accepts players from: {0}", allowed);
-                        } else {
-                            allowedCountriesLabel.Text = "";
-                        }*/
+                        /* Moved "json.allowedCountries" to Gist */
+                        /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/f53e0aea49ce3b027628e2777e9a9eebafe61e1f/json.allowedCountries.cs */
 
                         if (json.maxUsersAllowed == 0) {
                             numPlayers = string.Format("{0}/{1}", json.onlineNumber, json.numberOfRegistered);
@@ -1737,12 +1711,8 @@ namespace GameLauncher {
                 _restartRequired = true;
             }
 
-            /*String disableCheck = (vfilesCheck.Checked == true) ? "1" : "0";
-
-            if (_settingFile.Read("DisableVerifyHash") != disableCheck) {
-                _settingFile.Write("DisableVerifyHash", (vfilesCheck.Checked == true) ? "1" : "0");
-                _restartRequired = true;
-            }*/
+            /* Moved "DisableVerifyHash" Settings Check Code To Gist */
+            /* https://gist.githubusercontent.com/DavidCarbon/c5b3ea2e0736c2b381a84d40024e0a0d/raw/c322d8eba79ddee71cb19eee2ff4a6b53265c5f1/settingsSave_Click.cs */
 
             String disableProxy = (proxyCheckbox.Checked == true) ? "1" : "0";
             if (_settingFile.Read("DisableProxy") != disableProxy) {
@@ -2183,7 +2153,7 @@ namespace GameLauncher {
                     }
 
                     try  {
-                        newModNetFilesDownload.DownloadFile("https://cdn.mtntr.pl/legacy_modnet/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
+                        newModNetFilesDownload.DownloadFile("http://cdn.worldunited.gg/legacy_modnet/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
                     } catch { }
 
                     //get files now
@@ -2380,55 +2350,8 @@ namespace GameLauncher {
 
                         Notification.ContextMenu = ContextMenu;
 
-                        /*Process process_ml = Process.GetProcessById(AntiCheat.process_id);
-                        IntPtr processHandle = Kernel32.OpenProcess(0x0010, false, process_ml.Id);
-                        int baseAddress = process_ml.MainModule.BaseAddress.ToInt32();
-
-                        Dictionary<int, String> coords = new Dictionary<int, String>();
-                        coords.Add(0x9A7C90, "X PLACE"); //Start point: 0 - Endpoint: 11272
-                        coords.Add(0x908274, "Y PLACE"); //Start point: 0 - Endpoint: 6773
-
-                        Bitmap myBitmap = new Bitmap(Properties.Resources.places4);
-                        int pix_y = 0; int loc_y = 0;
-                        int pix_x = 0; int loc_x = 0;
-
-                        var thread = new Thread(() => {
-                            while (true)
-                            {
-                                foreach (var oneAddress in coords.Keys)
-                                {
-                                    int bytesRead = 0;
-                                    byte[] buffer = new byte[4];
-                                    Kernel32.ReadProcessMemory((int)processHandle, baseAddress + oneAddress, buffer, buffer.Length, ref bytesRead);
-
-
-
-                                    var checkInt = BitConverter.ToSingle(buffer, 0);
-                                    int returnableValue = 0;
-
-                                    if (coords[oneAddress] == "Y PLACE") {
-                                        returnableValue = (int)checkInt + 4255;
-                                        if (returnableValue <= 0) returnableValue = 0;
-                                        if (returnableValue >= 6773) returnableValue = 6773;
-                                        pix_y = Convert.ToInt32(returnableValue / 10);
-                                        loc_y = returnableValue;
-                                    } else {
-                                        returnableValue = (int)checkInt;
-                                        if (returnableValue <= 0) returnableValue = 0;
-                                        if (returnableValue >= 11272) returnableValue = 11272;
-                                        pix_x = Convert.ToInt32(returnableValue / 10);
-                                        loc_x = returnableValue;
-                                    }
-                                }
-
-                                Color pixelColor = myBitmap.GetPixel(pix_x, pix_y);
-                                String colorMatch = pixelColor.R + "," + pixelColor.G + "," + pixelColor.B;
-                                Self.MapZoneRPC = MapZones.getZoneName(colorMatch) ?? "(X: "+ loc_x + " | Y: "+ loc_y + ")";
-                                Thread.Sleep(1000);
-                            }
-                        })
-                        { IsBackground = true };
-                        thread.Start();*/
+                        /* Moved "Unkown" Code to Gist */
+                        /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/7d1a7fa23aea0f0d25989dc1adb01d418cec734b/Launch_game.cs */
 
                         Self.MapZoneRPC = "GameLauncherReborn v" + Application.ProductVersion;
                     }
@@ -2713,32 +2636,10 @@ namespace GameLauncher {
             } catch {
                 // ignored
             }
-            /*
-            if (_disableChecks != true) { 
-                if(File.Exists("invalidfiles.dat")) {
-                    playProgressText.Text = "RE-DOWNLOADING INVALID FILES".ToUpper();
 
-                    string[] files = File.ReadAllLines("invalidfiles.dat");
+            /* Moved Validate Game Code to Gist */
+            /* https://gist.githubusercontent.com/DavidCarbon/c5b3ea2e0736c2b381a84d40024e0a0d/raw/efca939d6eb28ae5a0e387e690adbff4d289761b/InvalidFilesDownload.cs */
 
-                    foreach(string text in files) {
-                        try { 
-                            string text2 = _settingFile.Read("InstallationDirectory") + text;
-
-                            string address = "http://cdn.mtntr.pl/gamefiles/unpacked" + text.Replace("\\", "/");
-
-                            if (File.Exists(text2 + ".vhbak")) {
-                                File.Delete(text2 + ".vhbak");
-                            }
-                            File.Move(text2, text2 + ".vhbak");
-                            new WebClientWithTimeout().DownloadFile(address, text2);
-                            Application.DoEvents();
-                        } catch { }
-                    }                
-                }
-            } else {
-                playProgressText.Text = "Download Completed".ToUpper();
-            }
-            */
             playProgressText.Text = "Ready!".ToUpper();
             _presence.State = "Ready!";
             discordRpcClient.SetPresence(_presence);
@@ -2749,54 +2650,9 @@ namespace GameLauncher {
 
             TaskbarProgress.SetValue(Handle, 100, 100);
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
-            /*
-            if(_disableChecks != true) {
-                    playProgressText.Text = "Validating files on background.".ToUpper();
 
-                    //Threaded CheckFiles
-                    var thread = new Thread(() => {
-                    String[] getFilesToCheck = null;
-                    try { 
-                        getFilesToCheck = new WebClientWithTimeout().DownloadString("http://cdn.mtntr.pl/gamefiles/checksums.dat").Split('\n');
-
-                        scannedHashes = new string[getFilesToCheck.Length][];
-                        for (var i = 0; i < getFilesToCheck.Length; i++) {
-                            scannedHashes[i] = getFilesToCheck[i].Split(' ');
-                        }
-
-                        filesToScan = scannedHashes.Length;
-                        totalFilesScanned = 0;
-                        redownloadedCount = 0;
-
-                        Directory.EnumerateFiles(_settingFile.Read("InstallationDirectory"), "*.*", SearchOption.AllDirectories).AsParallel().ForAll((file) => {
-                            for (var i = 0; i < scannedHashes.Length; i++) {
-                                if (scannedHashes[i][1].Trim() == file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim()) {
-                                    if (scannedHashes[i][0].Trim() != SHA.HashFile(file).Trim()) {
-                                        invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-
-                                        Notification.Visible = true;
-                                        Notification.BalloonTipIcon = ToolTipIcon.Info;
-                                        Notification.BalloonTipTitle = "GameLauncherReborn";
-                                        Notification.BalloonTipText = "Invalid file found: [GAMEDIR]" + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim();
-                                        Notification.ShowBalloonTip(5000);
-                                        Notification.Dispose();
-                                    }
-                                }
-                            }
-
-                            totalFilesScanned++;
-                        });
-
-                        playProgressText.Text = "Download Completed.".ToUpper();
-
-                    } catch (Exception) { }
-                }){ IsBackground = true };
-
-                thread.Start();
-            } else {
-                playProgressText.Text = "Download Completed.".ToUpper();
-            }
-            //End CheckFiles*/
+            /* Moved Validate Game Code to Gist */
+            /* https://gist.githubusercontent.com/DavidCarbon/c5b3ea2e0736c2b381a84d40024e0a0d/raw/efca939d6eb28ae5a0e387e690adbff4d289761b/ScanGameFiles.cs */
         }
 
         private void EnablePlayButton() {
