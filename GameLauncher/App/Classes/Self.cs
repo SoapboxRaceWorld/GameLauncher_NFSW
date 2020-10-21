@@ -18,7 +18,7 @@ namespace GameLauncherReborn {
         public static string mainserver = "https://api.worldunited.gg";
         public static string fileserver = "https://files.worldunited.gg";
         public static string staticapiserver = "http://api-sbrw.davidcarbon.download";
-        public static string changelogserver = "http://cl-sbrw.davidcarbon.download";
+        //public static string changelogserver = "http://cl-sbrw.davidcarbon.download";
 
         public static string[] serverlisturl = new string[] {
             mainserver + "/serverlist.json",
