@@ -179,6 +179,7 @@
     <Compile Include="App\Classes\Prompt.cs" />
     <Compile Include="App\Classes\Proxy\CommunicationLog.cs" />
     <Compile Include="App\Classes\Proxy\NancyBootstrapper.cs" />
+    <Compile Include="App\Classes\Proxy\NancyGzipCompression.cs" />
     <Compile Include="App\Classes\Proxy\ProxyException.cs" />
     <Compile Include="App\Classes\Proxy\ProxyHandler.cs" />
     <Compile Include="App\Classes\RedistributablePackage.cs" />

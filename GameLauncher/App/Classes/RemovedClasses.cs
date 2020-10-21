@@ -12,10 +12,6 @@
 - Removed MITM_XMPP.cs
     - XMPP
         - https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/a54a0d1e69b6a065a036ce51186dd4d9907e0fe8/MITM_XMPP.cs
- 
-- Removed NancyGzipCompression.cs
-    - Proxy
-        - https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/c152d964d21699f51a294a94b48d566389225d72/NancyGzipCompression.cs
 
 - Removed ElectronModNet.cs
     - ModNetReloaded
