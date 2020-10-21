@@ -90,7 +90,8 @@ namespace GameLauncher.App.Classes.RPC {
             //FIRST PERSONA EVER LOCALIZED IN CODE
             if (uri == "/User/GetPermanentSession") {
 
-                /* Moved Statuses.cs Code to Gist | Check RemovedClasses.cs for Link */
+                /* Moved Statuses.cs Code to Gist  */
+                /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/bb0e18035551c82d712a2d1a03af99b16a88be37/Statuses.cs */
                 //try { Statuses.getToken(); } catch { }
 
                 try

@@ -155,8 +155,9 @@ namespace Security {
             return identifier("Win32_VideoController", "PNPDeviceId");
         }
 
-        /* Moved 1 Private function Code to Gist */
-        /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/dfefd74204f2675cc34a4614fb09a74a23ed6e0e/HWID.cs */
-
+        private static string macId()
+        {
+            return identifier("Win32_NetworkAdapterConfiguration", "MACAddress", "IPEnabled");
+        }
     }
 }

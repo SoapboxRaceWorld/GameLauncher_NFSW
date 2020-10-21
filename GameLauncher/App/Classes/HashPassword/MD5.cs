@@ -19,7 +19,22 @@ namespace GameLauncher.App.Classes.HashPassword
             return sb.ToString();
         }
 
-        /* Moved MD5 HashFile to Gist */
-        /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/72c6c655b0e56481a17f730099cddd1f5d427a94/MD5.cs */
+        public static string HashFile(string filename) {
+            if (!File.Exists(filename)) return String.Empty;
+
+            MD5 md5 = new MD5CryptoServiceProvider();
+            byte[] retVal = new byte[] { };
+
+            using (var test = File.OpenRead(filename)) {
+                retVal = md5.ComputeHash(test);
+            }
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < retVal.Length; i++) {
+                sb.Append(retVal[i].ToString("x2"));
+            }
+
+            return sb.ToString().ToUpper();
+        }
     }
 }
