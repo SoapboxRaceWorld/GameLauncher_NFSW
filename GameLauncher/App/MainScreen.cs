@@ -117,9 +117,6 @@ namespace GameLauncher {
         List<ServerInfo> finalItems = new List<ServerInfo>();
         Dictionary<string, int> serverStatusDictionary = new Dictionary<string, int>();
 
-        /* Moved Validate Game Code to Gist */
-        /* https://gist.githubusercontent.com/DavidCarbon/c5b3ea2e0736c2b381a84d40024e0a0d/raw/efca939d6eb28ae5a0e387e690adbff4d289761b/ValidateGlobal_Int.cs */
-
         //UltimateLauncherFunction: SelectServer
         private static ServerInfo _ServerList;
         public static ServerInfo ServerName {
@@ -220,10 +217,6 @@ namespace GameLauncher {
             ApplyEmbeddedFonts();
 
             _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1") ? true : false;
-
-            /* Moved Unused Settings File Read Code to Gist */
-            /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/94c3ac9e7ed30a741a5966545335751f6adad080/SettingsFileRead.cs */
-
 
             Self.centerScreen(this);
 
@@ -1143,9 +1136,6 @@ namespace GameLauncher {
                             _modernAuthSupport = false;
                         }
 
-                        /* Moved "json.allowedCountries" to Gist */
-                        /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/f53e0aea49ce3b027628e2777e9a9eebafe61e1f/json.allowedCountries.cs */
-
                         if (json.maxUsersAllowed == 0) {
                             numPlayers = string.Format("{0}/{1}", json.onlineNumber, json.numberOfRegistered);
                         } else {
@@ -1710,9 +1700,6 @@ namespace GameLauncher {
                 _settingFile.Write("InstallationDirectory", _newGameFilesPath);
                 _restartRequired = true;
             }
-
-            /* Moved "DisableVerifyHash" Settings Check Code To Gist */
-            /* https://gist.githubusercontent.com/DavidCarbon/c5b3ea2e0736c2b381a84d40024e0a0d/raw/c322d8eba79ddee71cb19eee2ff4a6b53265c5f1/settingsSave_Click.cs */
 
             String disableProxy = (proxyCheckbox.Checked == true) ? "1" : "0";
             if (_settingFile.Read("DisableProxy") != disableProxy) {
@@ -2354,9 +2341,6 @@ namespace GameLauncher {
 
                         Notification.ContextMenu = ContextMenu;
 
-                        /* Moved "Unkown" Code to Gist */
-                        /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/7d1a7fa23aea0f0d25989dc1adb01d418cec734b/Launch_game.cs */
-
                         Self.MapZoneRPC = "GameLauncherReborn v" + Application.ProductVersion;
                     }
                 } else {
@@ -2641,9 +2625,6 @@ namespace GameLauncher {
                 // ignored
             }
 
-            /* Moved Validate Game Code to Gist */
-            /* https://gist.githubusercontent.com/DavidCarbon/c5b3ea2e0736c2b381a84d40024e0a0d/raw/efca939d6eb28ae5a0e387e690adbff4d289761b/InvalidFilesDownload.cs */
-
             playProgressText.Text = "Ready!".ToUpper();
             _presence.State = "Ready!";
             discordRpcClient.SetPresence(_presence);
@@ -2655,8 +2636,6 @@ namespace GameLauncher {
             TaskbarProgress.SetValue(Handle, 100, 100);
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
 
-            /* Moved Validate Game Code to Gist */
-            /* https://gist.githubusercontent.com/DavidCarbon/c5b3ea2e0736c2b381a84d40024e0a0d/raw/efca939d6eb28ae5a0e387e690adbff4d289761b/ScanGameFiles.cs */
         }
 
         private void EnablePlayButton() {
@@ -2747,4 +2726,6 @@ namespace GameLauncher {
             }
         }
     }
+    /* Moved 7 Unused Code to Gist */
+    /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/00de505302fbf9f8cfea9b163a707d9f8f122552/MainScreen.cs */
 }

@@ -2,17 +2,6 @@
 using System.Management;
 
 namespace GameLauncher.App.Classes.GPU {
-    class GPU {
-        public GPU() {
-            
-        }
-        virtual public string CardName() {
-            return "";
-        }
-        virtual public string DriverVersion() {
-            return "";
-        }
-    }
 
     public class GPUHelper
     {
@@ -29,4 +18,7 @@ namespace GameLauncher.App.Classes.GPU {
             return _driverVersion;
         }
     }
+
+    /* Moved "GPU" Class File to Gist */
+    /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/7fea53ad29b233ed35711870c90c78a06b82e090/init.cs */
 }
