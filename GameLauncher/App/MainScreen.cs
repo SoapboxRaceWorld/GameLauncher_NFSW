@@ -2139,10 +2139,6 @@ namespace GameLauncher {
                         newModNetFilesDownload.DownloadFile("https://cdn.soapboxrace.world/modules-v2/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
                     }
 
-                    try  {
-                        newModNetFilesDownload.DownloadFile("http://cdn.worldunited.gg/legacy_modnet/global.ini", _settingFile.Read("InstallationDirectory") + "/global.ini");
-                    } catch { }
-
                     //get files now
                     MainJson json2 = JsonConvert.DeserializeObject<MainJson>(jsonModNet);
 
