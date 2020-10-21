@@ -23,7 +23,8 @@ namespace GameLauncher.App {
             {
                 InitializeComponent();
 
-                changelogText.Text = new WebClientWithTimeout().DownloadString(Self.mainserver + "/launcher/changelog");
+                /* Manually Update at https://github.com/DavidCarbon-SBRW/SBRW_Launcher_Changelog */
+                changelogText.Text = new WebClientWithTimeout().DownloadString(Self.changelogserver + "/changelog");
                 changelogText.Select(0, 0);
                 changelogText.SelectionLength = 0;
                 changelogText.TabStop = false;
