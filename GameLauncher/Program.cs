@@ -46,7 +46,7 @@ namespace GameLauncher {
 
             try
             {
-                new WebClient().DownloadData("http://api-sbrw.davidcarbon.download/generate_204/");
+                new WebClient().DownloadData(Self.staticapiserver +"/generate_204/");
             }
             catch (Exception)
             {
