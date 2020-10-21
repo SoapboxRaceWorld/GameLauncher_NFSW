@@ -44,6 +44,26 @@ namespace GameLauncher {
                 }
             }
 
+            try
+            {
+                new WebClient().DownloadData("http://api-sbrw.davidcarbon.download/generate_204/");
+            }
+            catch (Exception)
+            {
+                DialogResult restartAppNoApis = MessageBox.Show(null, "There's no internet connection, Launcher might crash \n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (restartAppNoApis == DialogResult.No)
+                {
+                    MessageBox.Show("Good Luck... \n No Really \n ...Good Luck", "GameLauncher Will Continue, When It Failed To Connect To API");
+                }
+
+                if (restartAppNoApis == DialogResult.Yes)
+                {
+                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                }
+
+            }
+
             IniFile _settingFile = new IniFile("Settings.ini");
 
             //Windows 7 Fix
@@ -153,12 +173,6 @@ namespace GameLauncher {
                     }
 
                     DialogResult restartApp = MessageBox.Show(null, "Downloaded Missing LZMA.ddl File. \nPlease Restart Launcher, Thanks!", "GameLauncher Restart Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                    Process[] allOfThemThree = Process.GetProcessesByName("GameLauncher Restart Required");
-                    foreach (var oneProcess in allOfThemThree)
-                    {
-                        Process.GetProcessById(oneProcess.Id).Kill();
-                    }
 
                     if (restartApp == DialogResult.Yes)
                     {
