@@ -67,7 +67,7 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageKey = "gamemode_treasure"
                 };
 
-                MainScreen.discordRpcClient.SetPresence(_presence);
+                if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
             }
 
 
@@ -142,7 +142,7 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageKey = "gamemode_freeroam"
                 };
 
-                MainScreen.discordRpcClient.SetPresence(_presence);
+                if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = true;
                 Self.CanDisableGame = true;
@@ -168,7 +168,7 @@ namespace GameLauncher.App.Classes.RPC {
                         SmallImageText = EventList.getEventName(Convert.ToInt32(EventID)),
                         SmallImageKey = EventList.getEventType(Convert.ToInt32(EventID))
                     };
-                    MainScreen.discordRpcClient.SetPresence(_presence);
+                    if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
                     eventTerminatedManually = false;
                 }
@@ -183,7 +183,7 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageText = "In-Freeroam",
                     SmallImageKey = "gamemode_freeroam"
                 };
-                MainScreen.discordRpcClient.SetPresence(_presence);
+                if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = true;
             }
@@ -210,7 +210,7 @@ namespace GameLauncher.App.Classes.RPC {
                 _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
                 _presence.Assets.LargeImageKey = PersonaAvatarId;
 
-                MainScreen.discordRpcClient.SetPresence(_presence);
+                if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
             }
 
             //IN EVENT
@@ -229,8 +229,7 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageKey = EventList.getEventType(EventID)
                 };
 
-
-                MainScreen.discordRpcClient.SetPresence(_presence);
+                if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = false;
             }
@@ -246,7 +245,7 @@ namespace GameLauncher.App.Classes.RPC {
                 };
 
                 AntiCheat.disableChecks();
-                MainScreen.discordRpcClient.SetPresence(_presence);
+                if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = false;
             }
@@ -264,7 +263,7 @@ namespace GameLauncher.App.Classes.RPC {
                 AntiCheat.event_id = EventID;
                 AntiCheat.enableChecks();
 
-                MainScreen.discordRpcClient.SetPresence(_presence);
+                if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
             }
 
             //CARS RELATED

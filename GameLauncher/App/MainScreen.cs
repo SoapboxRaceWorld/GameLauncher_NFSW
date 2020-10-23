@@ -706,7 +706,7 @@ namespace GameLauncher {
                 LargeImageText = "SBRW",
                 LargeImageKey = "nfsw"
             };
-            discordRpcClient.SetPresence(_presence);
+            if(discordRpcClient != null) discordRpcClient.SetPresence(_presence);
 
             BeginInvoke((MethodInvoker)delegate {
                 Log.Debug("Initialize Downloading Process");
@@ -2623,7 +2623,7 @@ namespace GameLauncher {
 
             playProgressText.Text = "Ready!".ToUpper();
             _presence.State = "Ready!";
-            discordRpcClient.SetPresence(_presence);
+            if(discordRpcClient != null) discordRpcClient.SetPresence(_presence);
 
             EnablePlayButton();
 
