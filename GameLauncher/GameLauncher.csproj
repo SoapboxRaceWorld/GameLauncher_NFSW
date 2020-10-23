@@ -166,10 +166,8 @@
     <Compile Include="App\Classes\HashPassword\SHA.cs" />
     <Compile Include="App\Classes\HWID.cs" />
     <Compile Include="App\Classes\IniFile.cs" />
-    <Compile Include="App\Classes\Language.cs" />
     <Compile Include="App\Classes\Logger\LogToFile.cs" />
     <Compile Include="App\Classes\ModManager.cs" />
-    <Compile Include="App\Classes\ModNetReloaded\ElectronModNet.cs" />
     <Compile Include="App\Classes\ModNetReloaded\ModNetReloaded.cs" />
     <Compile Include="App\Classes\NativeFunctions.cs" />
     <Compile Include="App\Classes\Events\Updater.cs" />
@@ -185,6 +183,7 @@
     <Compile Include="App\Classes\Proxy\ProxyException.cs" />
     <Compile Include="App\Classes\Proxy\ProxyHandler.cs" />
     <Compile Include="App\Classes\RedistributablePackage.cs" />
+    <Compile Include="App\Classes\RemovedClasses.cs" />
     <Compile Include="App\Classes\RPC\CarList.cs" />
     <Compile Include="App\Classes\RPC\DiscordGamePresence.cs" />
     <Compile Include="App\Classes\RPC\EventList.cs" />
@@ -192,14 +191,11 @@
     <Compile Include="App\Classes\ServerListUpdater.cs" />
     <Compile Include="App\Classes\ServerProxy.cs" />
     <Compile Include="App\Classes\Singleton.cs" />
-    <Compile Include="App\Classes\Statuses.cs" />
     <Compile Include="App\Classes\TaskBar.cs" />
-    <Compile Include="App\Classes\UriExtensions.cs" />
     <Compile Include="App\Classes\UriScheme.cs" />
     <Compile Include="App\Classes\WebRequest.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="App\Classes\XMPP\MITM_XMPP.cs" />
     <Compile Include="App\Debug.cs">
       <SubType>Form</SubType>
     </Compile>

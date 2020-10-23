@@ -18,6 +18,7 @@ namespace GameLauncherReborn {
         public static string mainserver = "https://api.worldunited.gg";
         public static string fileserver = "https://files.worldunited.gg";
         public static string staticapiserver = "http://api-sbrw.davidcarbon.download";
+        //public static string changelogserver = "http://cl-sbrw.davidcarbon.download";
 
         public static string[] serverlisturl = new string[] {
             mainserver + "/serverlist.json",
@@ -43,25 +44,6 @@ namespace GameLauncherReborn {
         public static string rememberjson = "";
         public static string discordid = String.Empty;
         public static string MapZoneRPC = String.Empty;
-
-        public static void runAsAdmin() {
-            string[] args = Environment.GetCommandLineArgs();
-
-            ProcessStartInfo processStartInfo = new ProcessStartInfo() {
-                Verb = "runas",
-                FileName = Application.ExecutablePath
-            };
-
-            if ((int)args.Length > 0) {
-                processStartInfo.Arguments = args[0];
-            }
-
-            try {
-                Process.Start(processStartInfo);
-            } catch (Exception exception1) {
-                MessageBox.Show("Failed to self-run as admin: " + exception1.Message);
-            }
-        }
 
         public static long getTimestamp(bool valid = false) {
             long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
@@ -181,5 +163,9 @@ namespace GameLauncherReborn {
             IPAddress[] addresses = iphost.AddressList;
             return addresses[0].ToString();
         }
+
+        /* Moved "runAsAdmin" Code to Gist */
+        /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/eec2f9f80aa4b350ab98d32383e1ee1f2e1c26fd/Self.cs */
+
     }
 }

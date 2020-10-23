@@ -30,8 +30,7 @@ namespace SoapBox.JsonScheme {
         public bool rwacallow { get; set; }
     }
 
-    public class FreeroamObject {
-        public int[] position { get; set; }
-        public string username { get; set; }
-    }
+    /* Moved "FreeroamObject" to Gist */
+    /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/0fc7275667c051cebd2e2b1bdab2dc64bca568f7/JsonScheme.cs */
+
 }

@@ -89,9 +89,12 @@ namespace GameLauncher.App.Classes.RPC {
 
             //FIRST PERSONA EVER LOCALIZED IN CODE
             if (uri == "/User/GetPermanentSession") {
+
+                /* Moved Statuses.cs Code to Gist | Check RemovedClasses.cs for Link */
                 //try { Statuses.getToken(); } catch { }
 
-                try {
+                try
+                {
                     SBRW_XML.LoadXml(serverreply);
 
                     PersonaName = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/Name").InnerText.Replace("¤", "[S]");
