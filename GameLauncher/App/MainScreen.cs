@@ -2019,47 +2019,7 @@ namespace GameLauncher {
             DisablePlayButton();
 
             if (!DetectLinux.LinuxDetected())
-            {/*
-                if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
-                {
-                    var result = MessageBox.Show(
-                        "You do not have the 2015-2019 VC++ Redistributable Package installed. Click OK to install it.",
-                        "Compatibility",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-
-                    if (result != DialogResult.OK)
-                    {
-                        MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    var wc = new WebClientWithTimeout();
-                    wc.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x86.exe", "VC_redist.x86.exe");
-                    var proc = Process.Start(new ProcessStartInfo
-                    {
-                        Verb = "runas",
-                        FileName = "VC_redist.x86.exe"
-                    });
-
-                    if (proc == null)
-                    {
-                        MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    proc.EnableRaisingEvents = true;
-                    proc.WaitForExit();
-                    if (proc.ExitCode != 0)
-                    {
-                        MessageBox.Show("Package installation failed. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
-                        return;
-                    }
-                }*/
-
+            {
                 var installDir = _settingFile.Read("InstallationDirectory");
                 DriveInfo driveInfo = new DriveInfo(installDir);
 
