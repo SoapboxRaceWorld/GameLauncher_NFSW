@@ -32,6 +32,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.CDNSource = new System.Windows.Forms.ComboBox();
             this.Save = new System.Windows.Forms.Button();
+            this.ServerStatusText = new System.Windows.Forms.Label();
+            this.CDNStatusText = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // WelcomeText
@@ -48,11 +50,12 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 117);
+            this.label2.Location = new System.Drawing.Point(12, 117);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(95, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "Download Source:";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CDNSource
             // 
@@ -74,11 +77,31 @@
             this.Save.UseVisualStyleBackColor = true;
             this.Save.Click += new System.EventHandler(this.Save_Click);
             // 
+            // ServerStatusText
+            // 
+            this.ServerStatusText.Location = new System.Drawing.Point(12, 78);
+            this.ServerStatusText.Name = "ServerStatusText";
+            this.ServerStatusText.Size = new System.Drawing.Size(164, 13);
+            this.ServerStatusText.TabIndex = 6;
+            this.ServerStatusText.Text = "Server API Status - Pinging";
+            this.ServerStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // CDNStatusText
+            // 
+            this.CDNStatusText.Location = new System.Drawing.Point(205, 78);
+            this.CDNStatusText.Name = "CDNStatusText";
+            this.CDNStatusText.Size = new System.Drawing.Size(164, 13);
+            this.CDNStatusText.TabIndex = 7;
+            this.CDNStatusText.Text = "CDN API Status - Pinging";
+            this.CDNStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // WelcomeScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(381, 206);
+            this.Controls.Add(this.CDNStatusText);
+            this.Controls.Add(this.ServerStatusText);
             this.Controls.Add(this.Save);
             this.Controls.Add(this.CDNSource);
             this.Controls.Add(this.label2);
@@ -103,5 +126,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox CDNSource;
         private System.Windows.Forms.Button Save;
+        private System.Windows.Forms.Label ServerStatusText;
+        private System.Windows.Forms.Label CDNStatusText;
     }
 }
