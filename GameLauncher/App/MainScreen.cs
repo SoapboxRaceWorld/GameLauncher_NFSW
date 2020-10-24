@@ -2019,7 +2019,7 @@ namespace GameLauncher {
             DisablePlayButton();
 
             if (!DetectLinux.LinuxDetected())
-            {
+            {/*
                 if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
                 {
                     var result = MessageBox.Show(
@@ -2058,7 +2058,7 @@ namespace GameLauncher {
                             MessageBoxIcon.Error);
                         return;
                     }
-                }
+                }*/
 
                 var installDir = _settingFile.Read("InstallationDirectory");
                 DriveInfo driveInfo = new DriveInfo(installDir);
