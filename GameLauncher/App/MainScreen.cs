@@ -1917,10 +1917,10 @@ namespace GameLauncher {
             HttpWebRequest requestMainServerList = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/serverlist.json");
             requestMainServerList.AllowAutoRedirect = false; // Find out if this site is up and don't follow a redirector
             requestMainServerList.Method = "HEAD";
-            requestMainServerList.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            WebResponse mainServerListResponse = requestMainServerList.GetResponse();
+            requestMainServerList.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             try
             {
+                HttpWebResponse mainServerListResponse = (HttpWebResponse)requestMainServerList.GetResponse();
                 mainServerListResponse.Close();
                 settingsMainSrvText.Text = "Main Server List API: ONLINE";
                 settingsMainSrvText.ForeColor = Color.FromArgb(159, 193, 32);
@@ -1928,7 +1928,6 @@ namespace GameLauncher {
             }
             catch (WebException)
             {
-                mainServerListResponse.Close();
                 settingsMainSrvText.Text = "Main Server List API: ERROR";
                 settingsMainSrvText.ForeColor = Color.FromArgb(254, 0, 0);
                 //Set flag if there was a timeout or some other issues
@@ -1938,17 +1937,16 @@ namespace GameLauncher {
             HttpWebRequest requestBkupServerList = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/serverlist.json");
             requestBkupServerList.AllowAutoRedirect = false;
             requestBkupServerList.Method = "HEAD";
-            requestBkupServerList.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            WebResponse bkupServerListResponse = requestBkupServerList.GetResponse();
+            requestBkupServerList.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             try
             {
+                HttpWebResponse bkupServerListResponse = (HttpWebResponse)requestBkupServerList.GetResponse();
                 bkupServerListResponse.Close();
                 settingsBkupSrvText.Text = "Backup Server List API: ONLINE";
                 settingsBkupSrvText.ForeColor = Color.FromArgb(159, 193, 32);
             }
             catch (WebException)
             {
-                bkupServerListResponse.Close();
                 settingsBkupSrvText.Text = "Backup Server List API: ERROR";
                 settingsBkupSrvText.ForeColor = Color.FromArgb(254, 0, 0);
             }
@@ -1957,17 +1955,16 @@ namespace GameLauncher {
             HttpWebRequest requestMainCDNList = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/cdn_list.json");
             requestMainCDNList.AllowAutoRedirect = false;
             requestMainCDNList.Method = "HEAD";
-            requestMainCDNList.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            WebResponse mainCDNListResponse = requestMainCDNList.GetResponse();
+            requestMainCDNList.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             try
             {
+                HttpWebResponse mainCDNListResponse = (HttpWebResponse)requestMainCDNList.GetResponse();
                 mainCDNListResponse.Close();
                 settingsMainCDNText.Text = "Main CDN List API: ONLINE";
                 settingsMainCDNText.ForeColor = Color.FromArgb(159, 193, 32);
             }
             catch (WebException)
             {
-                mainCDNListResponse.Close();
                 settingsMainCDNText.Text = "Main CDN List API: ERROR";
                 settingsMainCDNText.ForeColor = Color.FromArgb(254, 0, 0);
             }
@@ -1976,7 +1973,7 @@ namespace GameLauncher {
             HttpWebRequest requestBkupCDNList = (HttpWebRequest)HttpWebRequest.Create("http://localhost/cdn_list.json");
             requestBkupCDNList.AllowAutoRedirect = false; // find out if this site is up and don't follow a redirector
             requestBkupCDNList.Method = "HEAD";
-            requestBkupCDNList.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+            requestBkupCDNList.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             try
             {
                 HttpWebResponse bkupCDNListResponse = (HttpWebResponse)requestBkupCDNList.GetResponse();
@@ -1985,7 +1982,7 @@ namespace GameLauncher {
                 settingsBkupCDNText.ForeColor = Color.FromArgb(159, 193, 32);
                 // do something with response.Headers to find out information about the request
             }
-            catch
+            catch (WebException)
             {
                 settingsBkupCDNText.Text = "Backup CDN List API: ERROR";
                 settingsBkupCDNText.ForeColor = Color.FromArgb(254, 0, 0);
@@ -1997,13 +1994,13 @@ namespace GameLauncher {
         //Check Serverlist API Status Upon Main Screen load - DavidCarbon
         private async void PingServerListAPIStatus()
         {
-            HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/serverlist.json");
+            HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create("http://localhost/serverlist.json");
             requestMainServerListAPI.AllowAutoRedirect = false; // Find out if this site is up and don't follow a redirector
             requestMainServerListAPI.Method = "HEAD";
-            requestMainServerListAPI.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            WebResponse mainServerListResponseAPI = requestMainServerListAPI.GetResponse();
+            requestMainServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             try
             {
+                HttpWebResponse mainServerListResponseAPI = (HttpWebResponse)requestMainServerListAPI.GetResponse();
                 mainServerListResponseAPI.Close();
                 APIStatusText.Text = "Main API - Online";
                 APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
@@ -2013,7 +2010,6 @@ namespace GameLauncher {
             }
             catch (WebException)
             {
-                mainServerListResponseAPI.Close();
                 APIStatusText.Text = "Main API - Offline";
                 APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                 APIStatusDesc.Text = "Checking to Backup API";
@@ -2029,25 +2025,24 @@ namespace GameLauncher {
                     HttpWebRequest requestBkupServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/serverlist.json");
                     requestBkupServerListAPI.AllowAutoRedirect = false; // Find out if this site is up and don't follow a redirector
                     requestBkupServerListAPI.Method = "HEAD";
-                    requestBkupServerListAPI.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-                    WebResponse bkupServerListResponseAPI = requestBkupServerListAPI.GetResponse();
+                    requestBkupServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
                     try
                     {
+                        HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestBkupServerListAPI.GetResponse();
                         bkupServerListResponseAPI.Close();
                         APIStatusText.Text = "Backup API - Online";
                         APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
-                        APIStatusDesc.Text = "Connected to Backuo API";
+                        APIStatusDesc.Text = "Connected to Backup API";
                         //APIStatusIcon.Image = Properties.Resources.api_success;
                         //Do something with response.Headers to find out information about the request
                     }
                     catch (WebException)
                     {
-                        bkupServerListResponseAPI.Close();
                         APIStatusText.Text = "Connection API - Error";
                         APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                         APIStatusDesc.Text = "Failed to Connect to APIs";
                         //APIStatusIcon.Image = Properties.Resources.api_error;
-                        //Check Using Backup API
+                        Log.Debug("Failed to Connect to API");
                     }
                 }
                 catch { }
