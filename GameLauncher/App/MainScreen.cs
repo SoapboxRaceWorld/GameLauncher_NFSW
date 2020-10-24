@@ -1970,8 +1970,8 @@ namespace GameLauncher {
             }
 
             await Task.Delay(2000);
-            HttpWebRequest requestBkupCDNList = (HttpWebRequest)HttpWebRequest.Create("http://localhost/cdn_list.json");
-            requestBkupCDNList.AllowAutoRedirect = false; // find out if this site is up and don't follow a redirector
+            HttpWebRequest requestBkupCDNList = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/cdn_list.json");
+            requestBkupCDNList.AllowAutoRedirect = false;
             requestBkupCDNList.Method = "HEAD";
             requestBkupCDNList.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             try
@@ -1980,13 +1980,11 @@ namespace GameLauncher {
                 bkupCDNListResponse.Close();
                 settingsBkupCDNText.Text = "Backup CDN List API: ONLINE";
                 settingsBkupCDNText.ForeColor = Color.FromArgb(159, 193, 32);
-                // do something with response.Headers to find out information about the request
             }
             catch (WebException)
             {
                 settingsBkupCDNText.Text = "Backup CDN List API: ERROR";
                 settingsBkupCDNText.ForeColor = Color.FromArgb(254, 0, 0);
-                //set flag if there was a timeout or some other issues
             }
 
         }
@@ -1994,8 +1992,8 @@ namespace GameLauncher {
         //Check Serverlist API Status Upon Main Screen load - DavidCarbon
         private async void PingServerListAPIStatus()
         {
-            HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create("http://localhost/serverlist.json");
-            requestMainServerListAPI.AllowAutoRedirect = false; // Find out if this site is up and don't follow a redirector
+            HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/serverlist.json");
+            requestMainServerListAPI.AllowAutoRedirect = false;
             requestMainServerListAPI.Method = "HEAD";
             requestMainServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             try
@@ -2006,7 +2004,6 @@ namespace GameLauncher {
                 APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
                 APIStatusDesc.Text = "Connected to Main API";
                 //APIStatusIcon.Image = Properties.Resources.api_success;
-                //Do something with response.Headers to find out information about the request
             }
             catch (WebException)
             {
@@ -2014,16 +2011,18 @@ namespace GameLauncher {
                 APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                 APIStatusDesc.Text = "Checking to Backup API";
                 //APIStatusIcon.Image = Properties.Resources.api_error;
+                
                 await Task.Delay(1500);
                 APIStatusText.Text = "Backup API - Pinging";
                 APIStatusText.ForeColor = Color.FromArgb(66, 179, 189);
                 //APIStatusIcon.Image = Properties.Resources.api_checking;
                 //Check Using Backup API
+                
                 await Task.Delay(1500);
                 try
                 {
                     HttpWebRequest requestBkupServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/serverlist.json");
-                    requestBkupServerListAPI.AllowAutoRedirect = false; // Find out if this site is up and don't follow a redirector
+                    requestBkupServerListAPI.AllowAutoRedirect = false;
                     requestBkupServerListAPI.Method = "HEAD";
                     requestBkupServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
                     try
@@ -2034,7 +2033,6 @@ namespace GameLauncher {
                         APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
                         APIStatusDesc.Text = "Connected to Backup API";
                         //APIStatusIcon.Image = Properties.Resources.api_success;
-                        //Do something with response.Headers to find out information about the request
                     }
                     catch (WebException)
                     {
