@@ -301,12 +301,12 @@
       <ProductName>Microsoft .NET Framework 4.6 %28x86 and x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Visual.C++.14.0.x64">
+    <BootstrapperPackage Include="Microsoft.Visual.C++.14.2.x64">
       <Visible>False</Visible>
       <ProductName>Visual C++ "14.2" Runtime Libraries %28x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Visual.C++.14.0.x86">
+    <BootstrapperPackage Include="Microsoft.Visual.C++.14.2.x86">
       <Visible>False</Visible>
       <ProductName>Visual C++ "14.2" Runtime Libraries %28x86%29</ProductName>
       <Install>true</Install>
