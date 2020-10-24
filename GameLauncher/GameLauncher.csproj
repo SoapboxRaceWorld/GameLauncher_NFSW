@@ -306,6 +306,10 @@
     <None Include="Resources\buttons_info.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\api_checking.png" />
+    <None Include="Resources\api_unkown.png" />
+    <None Include="Resources\api_success.png" />
+    <None Include="Resources\api_error.png" />
     <None Include="Resources\playbutton_hover.png" />
     <None Include="Resources\playbutton_click.png" />
     <None Include="Resources\playbutton.png" />

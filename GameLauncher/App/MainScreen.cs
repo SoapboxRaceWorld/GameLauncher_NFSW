@@ -2003,24 +2003,24 @@ namespace GameLauncher {
                 APIStatusText.Text = "Main API - Online";
                 APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
                 APIStatusDesc.Text = "Connected to Main API";
-                //APIStatusIcon.Image = Properties.Resources.api_success;
+                APIStatusIcon.Image = Properties.Resources.api_success;
             }
             catch (WebException)
             {
                 APIStatusText.Text = "Main API - Offline";
                 APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                 APIStatusDesc.Text = "Checking to Backup API";
-                //APIStatusIcon.Image = Properties.Resources.api_error;
+                APIStatusIcon.Image = Properties.Resources.api_error;
                 
                 await Task.Delay(1500);
                 APIStatusText.Text = "Backup API - Pinging";
                 APIStatusText.ForeColor = Color.FromArgb(66, 179, 189);
-                //APIStatusIcon.Image = Properties.Resources.api_checking;
-                //Check Using Backup API
+                APIStatusIcon.Image = Properties.Resources.api_checking;
                 
                 await Task.Delay(1500);
                 try
                 {
+                    //Check Using Backup API
                     HttpWebRequest requestBkupServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/serverlist.json");
                     requestBkupServerListAPI.AllowAutoRedirect = false;
                     requestBkupServerListAPI.Method = "HEAD";
@@ -2032,14 +2032,14 @@ namespace GameLauncher {
                         APIStatusText.Text = "Backup API - Online";
                         APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
                         APIStatusDesc.Text = "Connected to Backup API";
-                        //APIStatusIcon.Image = Properties.Resources.api_success;
+                        APIStatusIcon.Image = Properties.Resources.api_success;
                     }
                     catch (WebException)
                     {
                         APIStatusText.Text = "Connection API - Error";
                         APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                         APIStatusDesc.Text = "Failed to Connect to APIs";
-                        //APIStatusIcon.Image = Properties.Resources.api_error;
+                        APIStatusIcon.Image = Properties.Resources.api_error;
                         Log.Debug("Failed to Connect to API");
                     }
                 }

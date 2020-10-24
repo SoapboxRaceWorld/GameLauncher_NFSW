@@ -217,4 +217,16 @@
   <data name="playbutton_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\playbutton_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="api_checking" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\api_checking.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="api_error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\api_error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="api_success" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\api_success.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="api_unkown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\api_unkown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

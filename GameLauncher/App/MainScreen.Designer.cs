@@ -728,7 +728,7 @@
             // APIStatusIcon
             // 
             this.APIStatusIcon.BackColor = System.Drawing.Color.Transparent;
-            this.APIStatusIcon.Image = global::GameLauncher.Properties.Resources.webicon;
+            this.APIStatusIcon.Image = global::GameLauncher.Properties.Resources.api_checking;
             this.APIStatusIcon.Location = new System.Drawing.Point(428, 478);
             this.APIStatusIcon.Name = "APIStatusIcon";
             this.APIStatusIcon.Size = new System.Drawing.Size(21, 24);
