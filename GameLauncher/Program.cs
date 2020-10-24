@@ -46,9 +46,31 @@ namespace GameLauncher {
 
             try
             {
-                new WebClient().DownloadData(Self.staticapiserver +"/generate_204/");
+                //Check Using Backup API
+                HttpWebRequest requestBkupServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/generate_204/");
+                requestBkupServerListAPI.AllowAutoRedirect = false;
+                requestBkupServerListAPI.Method = "HEAD";
+                requestBkupServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+                try
+                {
+                    HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestBkupServerListAPI.GetResponse();
+                    bkupServerListResponseAPI.Close();
+                }
+                catch (WebException)
+                {
+                    HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/cdn_list.json");
+                    requestMainServerListAPI.AllowAutoRedirect = false;
+                    requestMainServerListAPI.Method = "HEAD";
+                    requestMainServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+                    try
+                    {
+                        HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestMainServerListAPI.GetResponse();
+                        bkupServerListResponseAPI.Close();
+                    }
+                    catch { }
+                }
             }
-            catch (Exception)
+            catch
             {
                 DialogResult restartAppNoApis = MessageBox.Show(null, "There's no internet connection, Launcher might crash \n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.WelcomeText = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.downloadSourceText = new System.Windows.Forms.Label();
             this.CDNSource = new System.Windows.Forms.ComboBox();
             this.Save = new System.Windows.Forms.Button();
             this.ServerStatusText = new System.Windows.Forms.Label();
@@ -47,15 +47,15 @@
     "ere you want to download all required game files ";
             this.WelcomeText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // label2
+            // downloadSourceText
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 117);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(95, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Download Source:";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.downloadSourceText.AutoSize = true;
+            this.downloadSourceText.Location = new System.Drawing.Point(12, 117);
+            this.downloadSourceText.Name = "downloadSourceText";
+            this.downloadSourceText.Size = new System.Drawing.Size(95, 13);
+            this.downloadSourceText.TabIndex = 2;
+            this.downloadSourceText.Text = "Download Source:";
+            this.downloadSourceText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CDNSource
             // 
@@ -104,7 +104,7 @@
             this.Controls.Add(this.ServerStatusText);
             this.Controls.Add(this.Save);
             this.Controls.Add(this.CDNSource);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.downloadSourceText);
             this.Controls.Add(this.WelcomeText);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -123,7 +123,7 @@
         #endregion
 
         private System.Windows.Forms.Label WelcomeText;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label downloadSourceText;
         private System.Windows.Forms.ComboBox CDNSource;
         private System.Windows.Forms.Button Save;
         private System.Windows.Forms.Label ServerStatusText;

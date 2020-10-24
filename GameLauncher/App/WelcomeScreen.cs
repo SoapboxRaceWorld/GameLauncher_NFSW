@@ -17,19 +17,17 @@ namespace GameLauncher.App {
     public partial class WelcomeScreen : Form {
         private readonly IniFile _settingFile = new IniFile("Settings.ini");
         List<CDNObject> CDNList = new List<CDNObject>();
-        private bool ServerStatusCheck = false;
         private bool CDNStatusCheck = false;
+        private bool ServerStatusCheck = false;
 
         public WelcomeScreen() {
             InitializeComponent();
-
-
         }
 
         //Check Serverlist API Status Upon Main Screen load - DavidCarbon
         private async void PingServerListStatus()
         {
-            HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/serverlists.json");
+            HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/serverlist.json");
             requestMainServerListAPI.AllowAutoRedirect = false;
             requestMainServerListAPI.Method = "HEAD";
             requestMainServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
@@ -116,63 +114,23 @@ namespace GameLauncher.App {
         }
 
         private void WelcomeScreen_Load(object sender, EventArgs e) {
+            SettingsFormElements(false);
             PingServerListStatus();
             PingCDNListStatus();
 
-            Task.Delay(2000);
-            if (ServerStatusCheck == true && CDNStatusCheck == true)
+            if (ServerStatusCheck == true || CDNStatusCheck == true)
             {
-                ShowCDNSources();
+                Task.Delay(2000);
+                SettingsFormElements(true);
             }
-            
-            Task.Delay(2000);
-            if (ServerStatusCheck == false && CDNStatusCheck == true)
-            {
-                DialogResult noAPINoLaunch = MessageBox.Show(null, "Failed to Get Server List \n \nClick Yes to Continue with Issue \nor \nClick No Close Game Launcher", "GameLauncher Unable to Get Server Lists", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+        }
 
-                if (noAPINoLaunch == DialogResult.No)
-                {
-                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                }
-
-                if (noAPINoLaunch == DialogResult.Yes)
-                {
-                    ShowCDNSources();
-                }
-            }
-
-            Task.Delay(2000);
-            if (ServerStatusCheck == true && CDNStatusCheck == false)
-            {
-                DialogResult noAPINoLaunch = MessageBox.Show(null, "Failed to Get CDN List \n \nClick Yes to Continue with Issue \nor \nClick No Close Game Launcher", "GameLauncher Unable to Get CDN Lists", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (noAPINoLaunch == DialogResult.No)
-                {
-                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                }
-
-                if (noAPINoLaunch == DialogResult.Yes)
-                {
-                    ShowCDNSources();
-                }
-            }
-
-            Task.Delay(2000);
-            if (ServerStatusCheck == false && CDNStatusCheck == false)
-            {
-                DialogResult noAPINoLaunch = MessageBox.Show(null, "Failed to Connect to APIs \n \nClick Yes to Continue with Issue \nor \nClick No Close Game Launcher", "GameLauncher Unable to Connect to APIs", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (noAPINoLaunch == DialogResult.No)
-                {
-                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                }
-
-                if (noAPINoLaunch == DialogResult.Yes)
-                {
-                    ShowCDNSources();
-                }
-            }
-
+        private void SettingsFormElements(bool hideElements = true)
+        {
+            ShowCDNSources();
+            downloadSourceText.Visible = hideElements;
+            CDNSource.Visible = hideElements;
+            Save.Visible = hideElements;
         }
 
         private void ShowCDNSources()
