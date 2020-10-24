@@ -125,7 +125,8 @@ namespace GameLauncher {
         }
 
         private static Random random = new Random();
-		public static string RandomString(int length) {
+
+        public static string RandomString(int length) {
 			const string chars = "qwertyuiopasdfghjklzxcvbnm1234567890_";
 			return new string(Enumerable.Repeat(chars, length)
 			  .Select(s => s[random.Next(s.Length)]).ToArray());
@@ -559,7 +560,6 @@ namespace GameLauncher {
                     Log.Debug("SERVERLIST: All done");
                 }
             //}
-            
 
             Log.Debug("Checking for password");
             if (_settingFile.KeyExists("Password"))
@@ -604,6 +604,9 @@ namespace GameLauncher {
             {
                 settingsLanguage.SelectedValue = _settingFile.Read("Language");
             }
+
+            //Removing Download Size Not Needed Anymore - DavidCarbon
+            /* 
             Log.Debug("Setting texture quality");
 
             settingsQuality.DisplayMember = "Text";
@@ -613,8 +616,11 @@ namespace GameLauncher {
                 new { Text = "Maximum", Value = "1" },
                 new { Text = "Standard", Value = "0" },
             };
+            
 
             settingsQuality.DataSource = quality;
+
+            */
 
             Task.Run(() => {
                 String _slresponse2 = string.Empty;
@@ -634,27 +640,30 @@ namespace GameLauncher {
 
                 List<CDNObject> CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse2);
 
-                cdnPick.Invoke(new Action(() => 
+                settingsCDNPick.Invoke(new Action(() => 
                 {
-                    cdnPick.DisplayMember = "name";
-                    cdnPick.DataSource = CDNList;
+                    settingsCDNPick.DisplayMember = "name";
+                    settingsCDNPick.DataSource = CDNList;
                 }));
             });
 
+            //DavidCarbon
+            /*
             if (_settingFile.KeyExists("TracksHigh"))
             {
                 string selectedTracksHigh = _settingFile.Read("TracksHigh");
                 if(!string.IsNullOrEmpty(selectedTracksHigh))
                 {
-                    settingsQuality.SelectedValue = selectedTracksHigh;
+                    settingsQuality.SelectedValue = 1;
                 } else
                 {
-                    settingsQuality.SelectedIndex = 0;
+                    settingsQuality.SelectedIndex = 1;
                 }
             } else
             {
-                settingsQuality.SelectedIndex = 0;
+                settingsQuality.SelectedIndex = 1;
             }
+            */
 
             Log.Debug("Re-checking InstallationDirectory: " + _settingFile.Read("InstallationDirectory"));
 
@@ -670,7 +679,7 @@ namespace GameLauncher {
             }
 
             //vfilesCheck.Checked = _disableChecks;
-            proxyCheckbox.Checked = _disableProxy;
+            settingsProxyCheckbox.Checked = _disableProxy;
 
             Log.Debug("Hiding RegisterFormElements"); RegisterFormElements(false);
             Log.Debug("Hiding SettingsFormElements"); SettingsFormElements(false);
@@ -696,6 +705,8 @@ namespace GameLauncher {
             Log.Debug("Setting configurations");
             _newGameFilesPath = Path.GetFullPath(_settingFile.Read("InstallationDirectory"));
             settingsGameFilesCurrent.Text = "CURRENT DIRECTORY: " + _newGameFilesPath;
+            //DavidCarbon
+            settingsCDNCurrent.Text = "CURRENT CDN URL: " + _settingFile.Read("CDN");
 
             Log.Debug("Initializing DiscordRPC");
 
@@ -729,13 +740,49 @@ namespace GameLauncher {
 
             if(File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords") || File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords_dis")) { 
                 try { 
-                    wordFilterCheck.Checked = File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords") ? false : true;
+                    settingsWordFilterCheck.Checked = File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords") ? false : true;
                 } catch {
-                    wordFilterCheck.Checked = false;
+                    settingsWordFilterCheck.Checked = false;
                 }
             } else {
-                wordFilterCheck.Enabled = false;
+                settingsWordFilterCheck.Enabled = false;
             }
+
+            /* Load Settings API Connection Status */
+            try
+            {
+                /* https://api.worldunited.gg */
+
+
+
+                /* 
+                new WebClient().DownloadData(Self.mainserver + "/cdn_list.json");
+                if (Self.mainserver + "/cdn_list.json" != null)
+                {
+                    mainserverCDN = true;
+                }
+                new WebClient().DownloadData(Self.staticapiserver + "/serverlist.json");
+                if (Self.staticapiserver + "/serverlist.json" != null)
+                {
+                    bkupserverList = true;
+                }
+                new WebClient().DownloadData(Self.staticapiserver + "/cdn_list.json");
+                if (Self.staticapiserver + "/cdn_list.json" != null)
+                {
+                    bkupserverCDN = true;
+                }
+
+                */
+            }
+            catch
+            {
+                //mainserverList = false;
+                //mainserverCDN = false;
+                //bkupserverList = false;
+                //bkupserverCDN = false;
+            }
+            Task.Delay(800);
+            PingServerListAPIStatus();
         }
 
         private void closebtn_Click(object sender, EventArgs e) {
@@ -1218,10 +1265,13 @@ namespace GameLauncher {
             FontFamily AkrobatSemiBold = FontWrapper.Instance.GetFontFamily("Akrobat-SemiBold.ttf");
             FontFamily AkrobatRegular = FontWrapper.Instance.GetFontFamily("Akrobat-Regular.ttf");
 
+            /* Front Screen */
             launcherStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             launcherStatusDesc.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             ServerStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             ServerStatusDesc.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            APIStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            APIStatusDesc.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             email.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             loginButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
@@ -1232,17 +1282,26 @@ namespace GameLauncher {
             playButton.Font = new Font(AkrobatSemiBold, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             currentWindowInfo.Font = new Font(AkrobatSemiBold, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             imageServerName.Font = new Font(AkrobatSemiBold, 25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerAgree.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerCancel.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            logoutButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /* Settings */
             settingsLanguageText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsQualityText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            //settingsQualityText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsNetworkText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsMainSrvText.Font = new Font(AkrobatSemiBold, 10.5f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsMainCDNText.Font = new Font(AkrobatSemiBold, 10.5f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsBkupSrvText.Font = new Font(AkrobatSemiBold, 10.5f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsBkupCDNText.Font = new Font(AkrobatSemiBold, 10.5f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsCDNCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsCDNText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsSave.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsGamePathText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            vfilesButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            proxyCheckbox.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            wordFilterCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsVFilesButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsProxyCheckbox.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsWordFilterCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsGameFilesCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            logoutButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            /* Registering Screen */
+            registerAgree.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerCancel.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             registerEmail.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             registerPassword.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             registerConfirmPassword.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
@@ -1250,7 +1309,6 @@ namespace GameLauncher {
             registerButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             registerButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             registerText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            cdnText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
         }
 
         private void registerText_LinkClicked(object sender, EventArgs e)
@@ -1313,6 +1371,7 @@ namespace GameLauncher {
 
         }
 
+        /*  After Successful Login, Hide Login Forms */
         private void LoggedInFormElements(bool hideElements)
         {
             if (hideElements)
@@ -1334,6 +1393,9 @@ namespace GameLauncher {
             launcherStatusDesc.Visible = hideElements;
             launcherStatusText.Visible = hideElements;
             //allowedCountriesLabel.Visible = hideElements;
+            APIStatusText.Visible = hideElements;
+            APIStatusDesc.Visible = hideElements;
+            APIStatusIcon.Visible = hideElements;
         }
 
         private void LoginFormElements(bool hideElements = false)
@@ -1351,6 +1413,11 @@ namespace GameLauncher {
             launcherIconStatus.Visible = hideElements;
             launcherStatusDesc.Visible = hideElements;
             launcherStatusText.Visible = hideElements;
+
+            APIStatusText.Visible = hideElements;
+            APIStatusDesc.Visible = hideElements;
+            APIStatusIcon.Visible = hideElements;
+
             registerText.Visible = hideElements;
             serverPick.Visible = hideElements;
             email.Visible = hideElements;
@@ -1386,6 +1453,10 @@ namespace GameLauncher {
             launcherIconStatus.Visible = hideElements;
             launcherStatusDesc.Visible = hideElements;
             launcherStatusText.Visible = hideElements;
+
+            APIStatusText.Visible = hideElements;
+            APIStatusDesc.Visible = hideElements;
+            APIStatusIcon.Visible = hideElements;
 
             addServer.Visible = hideElements;
             serverPick.Visible = hideElements;
@@ -1619,6 +1690,7 @@ namespace GameLauncher {
             RegisterFormElements(false);
             LoggedInFormElements(false);
             LoginFormElements(false);
+            PingAPIStatus();
         }
 
         private void settingsButton_MouseEnter(object sender, EventArgs e) {
@@ -1649,8 +1721,8 @@ namespace GameLauncher {
 
             //TODO null check
             _settingFile.Write("Language", settingsLanguage.SelectedValue.ToString());
-            _settingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString());
-            _settingFile.Write("CDN", ((CDNObject)cdnPick.SelectedItem).url);
+            //_settingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString());
+            _settingFile.Write("CDN", ((CDNObject)settingsCDNPick.SelectedItem).url);
 
             var userSettingsXml = new XmlDocument();
 
@@ -1701,9 +1773,9 @@ namespace GameLauncher {
                 _restartRequired = true;
             }
 
-            String disableProxy = (proxyCheckbox.Checked == true) ? "1" : "0";
+            String disableProxy = (settingsProxyCheckbox.Checked == true) ? "1" : "0";
             if (_settingFile.Read("DisableProxy") != disableProxy) {
-                _settingFile.Write("DisableProxy", (proxyCheckbox.Checked == true) ? "1" : "0");
+                _settingFile.Write("DisableProxy", (settingsProxyCheckbox.Checked == true) ? "1" : "0");
             }
 
 
@@ -1717,7 +1789,7 @@ namespace GameLauncher {
             }
 
             //Delete/Enable profwords filter here
-            if (wordFilterCheck.Checked) {
+            if (settingsWordFilterCheck.Checked) {
                 if (File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords")) File.Move(_settingFile.Read("InstallationDirectory") + "/profwords", _settingFile.Read("InstallationDirectory") + "/profwords_dis");
             } else {
                 if (File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords_dis")) File.Move(_settingFile.Read("InstallationDirectory") + "/profwords_dis", _settingFile.Read("InstallationDirectory") + "/profwords");
@@ -1734,6 +1806,16 @@ namespace GameLauncher {
                 LoggedInFormElements(false);
                 LoginFormElements(true);
             }
+
+            //Reset Connection Status Labels - DavidCarbon
+            settingsMainSrvText.Text = "Main Server List API: PINGING";
+            settingsMainSrvText.ForeColor = Color.FromArgb(66, 179, 189);
+            settingsMainCDNText.Text = "Main CDN List API: PINGING";
+            settingsMainCDNText.ForeColor = Color.FromArgb(66, 179, 189);
+            settingsBkupSrvText.Text = "Backup Server List API: PINGING";
+            settingsBkupSrvText.ForeColor = Color.FromArgb(66, 179, 189);
+            settingsBkupCDNText.Text = "Backup CDN List API: PINGING";
+            settingsBkupCDNText.ForeColor = Color.FromArgb(66, 179, 189);
         }
 
         private void settingsGameFiles_Click(object sender, EventArgs e)
@@ -1760,16 +1842,24 @@ namespace GameLauncher {
             settingsSave.Visible = hideElements;
             settingsLanguage.Visible = hideElements;
             settingsLanguageText.Visible = hideElements;
-            settingsQuality.Visible = hideElements;
-            settingsQualityText.Visible = hideElements;
-            cdnPick.Visible = hideElements;
-            cdnText.Visible = hideElements;
+            //settingsQuality.Visible = hideElements;
+            //settingsQualityText.Visible = hideElements;
+            settingsCDNPick.Visible = hideElements;
+            settingsCDNText.Visible = hideElements;
             settingsGameFiles.Visible = hideElements;
             settingsGameFilesCurrent.Visible = hideElements;
             settingsGamePathText.Visible = hideElements;
-            wordFilterCheck.Visible = hideElements;
-            vfilesButton.Visible = hideElements;
-            proxyCheckbox.Visible = hideElements;
+            settingsWordFilterCheck.Visible = hideElements;
+            settingsVFilesButton.Visible = hideElements;
+            settingsProxyCheckbox.Visible = hideElements;
+            //Connection Status - DavidCarbon
+            settingsNetworkText.Visible = hideElements;
+            settingsMainSrvText.Visible = hideElements;
+            settingsMainCDNText.Visible = hideElements;
+            settingsBkupSrvText.Visible = hideElements;
+            settingsBkupCDNText.Visible = hideElements;
+            settingsCDNCurrent.Visible = hideElements;
+
         }
 
         private void StartGame(string userId, string loginToken) {
@@ -1818,6 +1908,150 @@ namespace GameLauncher {
             };
 
             if(discordRpcClient != null) discordRpcClient.SetPresence(_presence);
+        }
+
+        //DavidCarbon
+        private async void PingAPIStatus ()
+        {
+            await Task.Delay(500);
+            HttpWebRequest requestMainServerList = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/serverlist.json");
+            requestMainServerList.AllowAutoRedirect = false; // Find out if this site is up and don't follow a redirector
+            requestMainServerList.Method = "HEAD";
+            requestMainServerList.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+            WebResponse mainServerListResponse = requestMainServerList.GetResponse();
+            try
+            {
+                mainServerListResponse.Close();
+                settingsMainSrvText.Text = "Main Server List API: ONLINE";
+                settingsMainSrvText.ForeColor = Color.FromArgb(159, 193, 32);
+                //Do something with response.Headers to find out information about the request
+            }
+            catch (WebException)
+            {
+                mainServerListResponse.Close();
+                settingsMainSrvText.Text = "Main Server List API: ERROR";
+                settingsMainSrvText.ForeColor = Color.FromArgb(254, 0, 0);
+                //Set flag if there was a timeout or some other issues
+            }
+
+            await Task.Delay(1000);
+            HttpWebRequest requestBkupServerList = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/serverlist.json");
+            requestBkupServerList.AllowAutoRedirect = false;
+            requestBkupServerList.Method = "HEAD";
+            requestBkupServerList.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+            WebResponse bkupServerListResponse = requestBkupServerList.GetResponse();
+            try
+            {
+                bkupServerListResponse.Close();
+                settingsBkupSrvText.Text = "Backup Server List API: ONLINE";
+                settingsBkupSrvText.ForeColor = Color.FromArgb(159, 193, 32);
+            }
+            catch (WebException)
+            {
+                bkupServerListResponse.Close();
+                settingsBkupSrvText.Text = "Backup Server List API: ERROR";
+                settingsBkupSrvText.ForeColor = Color.FromArgb(254, 0, 0);
+            }
+
+            await Task.Delay(1500);
+            HttpWebRequest requestMainCDNList = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/cdn_list.json");
+            requestMainCDNList.AllowAutoRedirect = false;
+            requestMainCDNList.Method = "HEAD";
+            requestMainCDNList.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+            WebResponse mainCDNListResponse = requestMainCDNList.GetResponse();
+            try
+            {
+                mainCDNListResponse.Close();
+                settingsMainCDNText.Text = "Main CDN List API: ONLINE";
+                settingsMainCDNText.ForeColor = Color.FromArgb(159, 193, 32);
+            }
+            catch (WebException)
+            {
+                mainCDNListResponse.Close();
+                settingsMainCDNText.Text = "Main CDN List API: ERROR";
+                settingsMainCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+            }
+
+            await Task.Delay(2000);
+            HttpWebRequest requestBkupCDNList = (HttpWebRequest)HttpWebRequest.Create("http://localhost/cdn_list.json");
+            requestBkupCDNList.AllowAutoRedirect = false; // find out if this site is up and don't follow a redirector
+            requestBkupCDNList.Method = "HEAD";
+            requestBkupCDNList.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+            try
+            {
+                HttpWebResponse bkupCDNListResponse = (HttpWebResponse)requestBkupCDNList.GetResponse();
+                bkupCDNListResponse.Close();
+                settingsBkupCDNText.Text = "Backup CDN List API: ONLINE";
+                settingsBkupCDNText.ForeColor = Color.FromArgb(159, 193, 32);
+                // do something with response.Headers to find out information about the request
+            }
+            catch
+            {
+                settingsBkupCDNText.Text = "Backup CDN List API: ERROR";
+                settingsBkupCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                //set flag if there was a timeout or some other issues
+            }
+
+        }
+
+        //Check Serverlist API Status Upon Main Screen load - DavidCarbon
+        private async void PingServerListAPIStatus()
+        {
+            HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/serverlist.json");
+            requestMainServerListAPI.AllowAutoRedirect = false; // Find out if this site is up and don't follow a redirector
+            requestMainServerListAPI.Method = "HEAD";
+            requestMainServerListAPI.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+            WebResponse mainServerListResponseAPI = requestMainServerListAPI.GetResponse();
+            try
+            {
+                mainServerListResponseAPI.Close();
+                APIStatusText.Text = "Main API - Online";
+                APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+                APIStatusDesc.Text = "Connected to Main API";
+                //APIStatusIcon.Image = Properties.Resources.api_success;
+                //Do something with response.Headers to find out information about the request
+            }
+            catch (WebException)
+            {
+                mainServerListResponseAPI.Close();
+                APIStatusText.Text = "Main API - Offline";
+                APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
+                APIStatusDesc.Text = "Checking to Backup API";
+                //APIStatusIcon.Image = Properties.Resources.api_error;
+                await Task.Delay(1500);
+                APIStatusText.Text = "Backup API - Pinging";
+                APIStatusText.ForeColor = Color.FromArgb(66, 179, 189);
+                //APIStatusIcon.Image = Properties.Resources.api_checking;
+                //Check Using Backup API
+                await Task.Delay(1500);
+                try
+                {
+                    HttpWebRequest requestBkupServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/serverlist.json");
+                    requestBkupServerListAPI.AllowAutoRedirect = false; // Find out if this site is up and don't follow a redirector
+                    requestBkupServerListAPI.Method = "HEAD";
+                    requestBkupServerListAPI.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+                    WebResponse bkupServerListResponseAPI = requestBkupServerListAPI.GetResponse();
+                    try
+                    {
+                        bkupServerListResponseAPI.Close();
+                        APIStatusText.Text = "Backup API - Online";
+                        APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+                        APIStatusDesc.Text = "Connected to Backuo API";
+                        //APIStatusIcon.Image = Properties.Resources.api_success;
+                        //Do something with response.Headers to find out information about the request
+                    }
+                    catch (WebException)
+                    {
+                        bkupServerListResponseAPI.Close();
+                        APIStatusText.Text = "Connection API - Error";
+                        APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
+                        APIStatusDesc.Text = "Failed to Connect to APIs";
+                        //APIStatusIcon.Image = Properties.Resources.api_error;
+                        //Check Using Backup API
+                    }
+                }
+                catch { }
+            }
         }
 
         private void LaunchGame(string userId, string loginToken, string serverIp, Form x) {
