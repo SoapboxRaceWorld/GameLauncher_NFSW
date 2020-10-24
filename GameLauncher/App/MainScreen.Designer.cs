@@ -86,6 +86,7 @@
             this.APIStatusDesc = new System.Windows.Forms.Label();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.settingsDiscordRPCCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
@@ -638,9 +639,9 @@
             this.settingsProxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsProxyCheckbox.Location = new System.Drawing.Point(49, 340);
             this.settingsProxyCheckbox.Name = "settingsProxyCheckbox";
-            this.settingsProxyCheckbox.Size = new System.Drawing.Size(200, 17);
+            this.settingsProxyCheckbox.Size = new System.Drawing.Size(103, 17);
             this.settingsProxyCheckbox.TabIndex = 102;
-            this.settingsProxyCheckbox.Text = "Disable DiscordRPC and Proxy";
+            this.settingsProxyCheckbox.Text = "Disable Proxy";
             this.settingsProxyCheckbox.UseVisualStyleBackColor = false;
             // 
             // verticalBanner
@@ -728,7 +729,7 @@
             // APIStatusIcon
             // 
             this.APIStatusIcon.BackColor = System.Drawing.Color.Transparent;
-            this.APIStatusIcon.Image = global::GameLauncher.Properties.Resources.api_checking;
+            this.APIStatusIcon.Image = ((System.Drawing.Image)(resources.GetObject("APIStatusIcon.Image")));
             this.APIStatusIcon.Location = new System.Drawing.Point(428, 478);
             this.APIStatusIcon.Name = "APIStatusIcon";
             this.APIStatusIcon.Size = new System.Drawing.Size(21, 24);
@@ -794,12 +795,26 @@
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
             // 
+            // settingsDiscordRPCCheckbox
+            // 
+            this.settingsDiscordRPCCheckbox.AutoSize = true;
+            this.settingsDiscordRPCCheckbox.BackColor = System.Drawing.Color.Transparent;
+            this.settingsDiscordRPCCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.settingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.settingsDiscordRPCCheckbox.Location = new System.Drawing.Point(49, 363);
+            this.settingsDiscordRPCCheckbox.Name = "settingsDiscordRPCCheckbox";
+            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(140, 17);
+            this.settingsDiscordRPCCheckbox.TabIndex = 123;
+            this.settingsDiscordRPCCheckbox.Text = "Disable DiscordRPC";
+            this.settingsDiscordRPCCheckbox.UseVisualStyleBackColor = false;
+            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.settingsDiscordRPCCheckbox);
             this.Controls.Add(this.APIStatusText);
             this.Controls.Add(this.APIStatusDesc);
             this.Controls.Add(this.APIStatusIcon);
@@ -932,5 +947,6 @@
         private System.Windows.Forms.PictureBox APIStatusIcon;
         private System.Windows.Forms.Label APIStatusText;
         private System.Windows.Forms.Label APIStatusDesc;
+        private System.Windows.Forms.CheckBox settingsDiscordRPCCheckbox;
     }
 }

@@ -64,6 +64,7 @@ namespace GameLauncher {
 
         //private bool _disableChecks;
         private bool _disableProxy;
+        private bool _disableDiscordRPC;
 
         private int _lastSelectedServerId;
         private int _nfswPid;
@@ -218,6 +219,7 @@ namespace GameLauncher {
             ApplyEmbeddedFonts();
 
             _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1") ? true : false;
+            _disableDiscordRPC = (_settingFile.KeyExists("DisableRPC") && _settingFile.Read("DisableRPC") == "1") ? true : false;
 
             Self.centerScreen(this);
 
@@ -680,6 +682,7 @@ namespace GameLauncher {
 
             //vfilesCheck.Checked = _disableChecks;
             settingsProxyCheckbox.Checked = _disableProxy;
+            settingsDiscordRPCCheckbox.Checked = _disableDiscordRPC;
 
             Log.Debug("Hiding RegisterFormElements"); RegisterFormElements(false);
             Log.Debug("Hiding SettingsFormElements"); SettingsFormElements(false);
@@ -1297,6 +1300,7 @@ namespace GameLauncher {
             settingsGamePathText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsVFilesButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsProxyCheckbox.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsDiscordRPCCheckbox.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsWordFilterCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsGameFilesCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             /* Registering Screen */
@@ -1776,6 +1780,14 @@ namespace GameLauncher {
             String disableProxy = (settingsProxyCheckbox.Checked == true) ? "1" : "0";
             if (_settingFile.Read("DisableProxy") != disableProxy) {
                 _settingFile.Write("DisableProxy", (settingsProxyCheckbox.Checked == true) ? "1" : "0");
+                _restartRequired = true;
+            }
+
+            String disableRPC = (settingsDiscordRPCCheckbox.Checked == true) ? "1" : "0";
+            if (_settingFile.Read("DisableRPC") != disableRPC)
+            {
+                _settingFile.Write("DisableRPC", (settingsDiscordRPCCheckbox.Checked == true) ? "1" : "0");
+                _restartRequired = true;
             }
 
 
@@ -1852,6 +1864,7 @@ namespace GameLauncher {
             settingsWordFilterCheck.Visible = hideElements;
             settingsVFilesButton.Visible = hideElements;
             settingsProxyCheckbox.Visible = hideElements;
+            settingsDiscordRPCCheckbox.Visible = hideElements;
             //Connection Status - DavidCarbon
             settingsNetworkText.Visible = hideElements;
             settingsMainSrvText.Visible = hideElements;
@@ -1876,8 +1889,11 @@ namespace GameLauncher {
 
             _nfswstarted = new Thread(() => {
                 if(_disableProxy == true) {
-                    discordRpcClient.Dispose();
-                    discordRpcClient = null;
+                    if (_disableDiscordRPC == true)
+                    {
+                        discordRpcClient.Dispose();
+                        discordRpcClient = null;
+                    }
 
                     Uri convert = new Uri(_serverIp);
 
@@ -1890,24 +1906,33 @@ namespace GameLauncher {
 
                     LaunchGame(userId, loginToken, _serverIp, this);
                 } else {
+                    if (_disableDiscordRPC == true)
+                    {
+                        discordRpcClient.Dispose();
+                        discordRpcClient = null;
+                    }
                     LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this);
                 }
             }) { IsBackground = true };
 
             _nfswstarted.Start();
 
-            _presenceImageKey = _serverInfo.DiscordPresenceKey;
-            _presence.State = _realServername;
-            _presence.Details = "In-Game";
-            _presence.Assets = new Assets
+            if (_disableDiscordRPC == false)
             {
-                LargeImageText = "Need for Speed: World",
-                LargeImageKey = "nfsw",
-                SmallImageText = _realServername,
-                SmallImageKey = _presenceImageKey
-            };
+                _presenceImageKey = _serverInfo.DiscordPresenceKey;
+                _presence.State = _realServername;
+                _presence.Details = "In-Game";
+                _presence.Assets = new Assets
+                {
+                    LargeImageText = "Need for Speed: World",
+                    LargeImageKey = "nfsw",
+                    SmallImageText = _realServername,
+                    SmallImageKey = _presenceImageKey
+                };
 
-            if(discordRpcClient != null) discordRpcClient.SetPresence(_presence);
+                if (discordRpcClient != null) discordRpcClient.SetPresence(_presence);
+            }
+
         }
 
         //DavidCarbon
