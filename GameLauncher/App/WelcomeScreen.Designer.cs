@@ -34,6 +34,7 @@
             this.Save = new System.Windows.Forms.Button();
             this.ServerStatusText = new System.Windows.Forms.Label();
             this.CDNStatusText = new System.Windows.Forms.Label();
+            this.apiErrorButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // WelcomeText
@@ -95,11 +96,23 @@
             this.CDNStatusText.Text = "CDN API Status - Pinging";
             this.CDNStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // apiErrorButton
+            // 
+            this.apiErrorButton.AutoSize = true;
+            this.apiErrorButton.Location = new System.Drawing.Point(152, 141);
+            this.apiErrorButton.Name = "apiErrorButton";
+            this.apiErrorButton.Size = new System.Drawing.Size(89, 23);
+            this.apiErrorButton.TabIndex = 8;
+            this.apiErrorButton.Text = "Manual Bypass";
+            this.apiErrorButton.UseVisualStyleBackColor = true;
+            this.apiErrorButton.Click += new System.EventHandler(this.apiErrorButton_Click);
+            // 
             // WelcomeScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(381, 206);
+            this.Controls.Add(this.apiErrorButton);
             this.Controls.Add(this.CDNStatusText);
             this.Controls.Add(this.ServerStatusText);
             this.Controls.Add(this.Save);
@@ -128,5 +141,6 @@
         private System.Windows.Forms.Button Save;
         private System.Windows.Forms.Label ServerStatusText;
         private System.Windows.Forms.Label CDNStatusText;
+        private System.Windows.Forms.Button apiErrorButton;
     }
 }

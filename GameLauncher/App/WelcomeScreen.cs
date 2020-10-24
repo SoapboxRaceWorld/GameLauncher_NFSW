@@ -93,7 +93,7 @@ namespace GameLauncher.App {
                 try
                 {
                     //Check Using Backup API
-                    HttpWebRequest requestBkupServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/cdn_lists.json");
+                    HttpWebRequest requestBkupServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/cdn_list.json");
                     requestBkupServerListAPI.AllowAutoRedirect = false;
                     requestBkupServerListAPI.Method = "HEAD";
                     requestBkupServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
@@ -118,16 +118,28 @@ namespace GameLauncher.App {
             PingServerListStatus();
             PingCDNListStatus();
 
-            if (ServerStatusCheck == true || CDNStatusCheck == true)
+            if (ServerStatusCheck == true && CDNStatusCheck == true)
             {
-                Task.Delay(2000);
+                APIErrorFormElements(false);
                 SettingsFormElements(true);
             }
+
+            if (ServerStatusCheck == false || CDNStatusCheck == false)
+            {
+                WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
+                APIErrorFormElements();
+            }
+        }
+
+        private void APIErrorFormElements(bool hideElements = true)
+        {
+            apiErrorButton.Visible = hideElements;
         }
 
         private void SettingsFormElements(bool hideElements = true)
         {
             ShowCDNSources();
+            WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
             downloadSourceText.Visible = hideElements;
             CDNSource.Visible = hideElements;
             Save.Visible = hideElements;
@@ -178,6 +190,12 @@ namespace GameLauncher.App {
 
         private void QuitWithoutSaving_Click(object sender, EventArgs e) {
             this.Close();
+        }
+
+        private void apiErrorButton_Click(object sender, EventArgs e)
+        {
+            APIErrorFormElements(false);
+            SettingsFormElements();
         }
     }
 }
