@@ -42,10 +42,10 @@ namespace GameLauncher.App {
             {
                 ServerStatusText.Text = "Main Server List - Offline";
 
-                await Task.Delay(1500);
+                await Task.Delay(500);
                 ServerStatusText.Text = "Checking Backup API - Pinging";
 
-                await Task.Delay(1500);
+                await Task.Delay(1000);
                 try
                 {
                     //Check Using Backup API
@@ -86,10 +86,10 @@ namespace GameLauncher.App {
             {
                 CDNStatusText.Text = "Main CDN List - Offline";
 
-                await Task.Delay(1500);
+                await Task.Delay(500);
                 CDNStatusText.Text = "Checking Backup API - Pinging";
 
-                await Task.Delay(1500);
+                await Task.Delay(1000);
                 try
                 {
                     //Check Using Backup API
@@ -115,34 +115,10 @@ namespace GameLauncher.App {
 
         private void WelcomeScreen_Load(object sender, EventArgs e) {
             SettingsFormElements(false);
+            APIErrorFormElements(false);
             PingServerListStatus();
             PingCDNListStatus();
-
-            if (ServerStatusCheck == true && CDNStatusCheck == true)
-            {
-                APIErrorFormElements(false);
-                SettingsFormElements(true);
-            }
-
-            if (ServerStatusCheck == false || CDNStatusCheck == false)
-            {
-                WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
-                APIErrorFormElements();
-            }
-        }
-
-        private void APIErrorFormElements(bool hideElements = true)
-        {
-            apiErrorButton.Visible = hideElements;
-        }
-
-        private void SettingsFormElements(bool hideElements = true)
-        {
-            ShowCDNSources();
-            WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
-            downloadSourceText.Visible = hideElements;
-            CDNSource.Visible = hideElements;
-            Save.Visible = hideElements;
+            CheckFinalAPIStatus();
         }
 
         private void ShowCDNSources()
@@ -196,6 +172,52 @@ namespace GameLauncher.App {
         {
             APIErrorFormElements(false);
             SettingsFormElements();
+            WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
+        }
+
+        private async void CheckFinalAPIStatus()
+        {
+            await Task.Delay(2000);
+            if (ServerStatusCheck == true && CDNStatusCheck == false)
+            {
+                WelcomeText.Text = "Looks like the Game Launcher failed to Reach CDN APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
+                APIErrorFormElements();
+            }
+
+            await Task.Delay(2000);
+            if (ServerStatusCheck == false && CDNStatusCheck == true)
+            {
+                WelcomeText.Text = "Looks like the Game Launcher failed to Reach Server Lists APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
+                APIErrorFormElements();
+            }
+
+            await Task.Delay(1000);
+            if (ServerStatusCheck == false && CDNStatusCheck == false)
+            {
+                WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
+                APIErrorFormElements();
+            }
+
+            await Task.Delay(1000);
+            if (ServerStatusCheck == true && CDNStatusCheck == true)
+            {
+                APIErrorFormElements(false);
+                SettingsFormElements(true);
+                WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
+            }
+        }
+
+        private void APIErrorFormElements(bool hideElements = true)
+        {
+            apiErrorButton.Visible = hideElements;
+        }
+
+        private void SettingsFormElements(bool hideElements = true)
+        {
+            ShowCDNSources();
+            downloadSourceText.Visible = hideElements;
+            CDNSource.Visible = hideElements;
+            Save.Visible = hideElements;
         }
     }
 }

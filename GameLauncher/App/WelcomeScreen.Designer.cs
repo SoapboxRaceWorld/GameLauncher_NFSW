@@ -44,8 +44,7 @@
             this.WelcomeText.Name = "WelcomeText";
             this.WelcomeText.Size = new System.Drawing.Size(357, 69);
             this.WelcomeText.TabIndex = 0;
-            this.WelcomeText.Text = "Howdy! Looks like it\'s the first time this launcher is started. Please specify wh" +
-    "ere you want to download all required game files ";
+            this.WelcomeText.Text = "Checking API Status";
             this.WelcomeText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // downloadSourceText
