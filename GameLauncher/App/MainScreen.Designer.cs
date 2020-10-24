@@ -867,8 +867,8 @@
             this.Controls.Add(this.registerButton);
             this.Controls.Add(this.playButton);
             this.Controls.Add(this.registerText);
-            this.Controls.Add(this.verticalBanner);
             this.Controls.Add(this.imageServerName);
+            this.Controls.Add(this.verticalBanner);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

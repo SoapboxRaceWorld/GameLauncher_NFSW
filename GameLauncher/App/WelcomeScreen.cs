@@ -35,29 +35,22 @@ namespace GameLauncher.App {
             } catch {
                 _slresponse = JsonConvert.SerializeObject(new[] {
                     new CDNObject {
-                        name = "[CF] WorldUnited.GG Mirror",
+                        name = "[CF] WorldUnited.gg Mirror",
                         url = "http://cdn.worldunited.gg/gamefiles/packed/"
+                    },
+                    new CDNObject {
+                        name = "[CF] DavidCarbon Mirror",
+                        url = "http://g-sbrw.davidcarbon.download/"
                     }
                 });
             }
 
             CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
 
-            CDNSource.DisplayMember = "name";
-            CDNSource.DataSource = CDNList;
-
-            //TracksHigh
-            QualityDownload.DisplayMember = "Text";
-            QualityDownload.ValueMember = "Value";
-            var quality = new[] {
-                new { Text = "Maximum", Value = "1" },
-                new { Text = "Standard", Value = "0" },
-            };
-            QualityDownload.DataSource = quality;
         }
 
         private void Save_Click(object sender, EventArgs e) {
-            CDN.TrackHigh = QualityDownload.SelectedValue.ToString();
+            CDN.TrackHigh = "1";
             CDN.CDNUrl = ((CDNObject)CDNSource.SelectedItem).url;
 
             QuitWithoutSaving_Click(sender, e);
