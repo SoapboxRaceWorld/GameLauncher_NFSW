@@ -88,37 +88,97 @@ namespace GameLauncher {
 
             IniFile _settingFile = new IniFile("Settings.ini");
 
-            //Windows 7 Fix
-            if (!(_settingFile.KeyExists("PatchesApplied"))) {
-                String _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
-                if(_OS.Contains("Windows 7")) {
-                    if (Self.getInstalledHotFix("KB3020369") == false || Self.getInstalledHotFix("KB3125574") == false) {
-                        String messageBoxPopupKB = String.Empty;
-                        messageBoxPopupKB  = "Hey Windows 7 User, in order to play on this server, we need to make additional tweaks to your system.\n";
-                        messageBoxPopupKB += "We must make sure you have those Windows Update packages installed:\n\n";
+            if (!DetectLinux.LinuxDetected()) {
+                //Windows 7 Fix
+                if (!(_settingFile.KeyExists("PatchesApplied"))) {
+                    String _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
+                    if (_OS.Contains("Windows 7")) {
+                        if (Self.getInstalledHotFix("KB3020369") == false || Self.getInstalledHotFix("KB3125574") == false) {
+                            String messageBoxPopupKB = String.Empty;
+                            messageBoxPopupKB = "Hey Windows 7 User, in order to play on this server, we need to make additional tweaks to your system.\n";
+                            messageBoxPopupKB += "We must make sure you have those Windows Update packages installed:\n\n";
 
-                        if (Self.getInstalledHotFix("KB3020369") == false) messageBoxPopupKB += "- Update KB3020369\n";
-                        if (Self.getInstalledHotFix("KB3125574") == false) messageBoxPopupKB += "- Update KB3125574\n";
+                            if (Self.getInstalledHotFix("KB3020369") == false) messageBoxPopupKB += "- Update KB3020369\n";
+                            if (Self.getInstalledHotFix("KB3125574") == false) messageBoxPopupKB += "- Update KB3125574\n";
 
-                        messageBoxPopupKB += "\nAditionally, we must add a value to the registry:\n";
+                            messageBoxPopupKB += "\nAditionally, we must add a value to the registry:\n";
 
-                        messageBoxPopupKB += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n/SCHANNEL/Protocols/TLS 1.2/Client\n";
-                        messageBoxPopupKB += "- Value: DisabledByDefault -> 0\n\n";
+                            messageBoxPopupKB += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n/SCHANNEL/Protocols/TLS 1.2/Client\n";
+                            messageBoxPopupKB += "- Value: DisabledByDefault -> 0\n\n";
 
-                        messageBoxPopupKB += "Would you like to add those values?";
-                        DialogResult replyPatchWin7 = MessageBox.Show(null, messageBoxPopupKB, "GameLauncherReborn", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                            messageBoxPopupKB += "Would you like to add those values?";
+                            DialogResult replyPatchWin7 = MessageBox.Show(null, messageBoxPopupKB, "GameLauncherReborn", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                        if(replyPatchWin7 == DialogResult.Yes) {
-                            RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
-                            key.SetValue("DisabledByDefault", 0x0);
+                            if (replyPatchWin7 == DialogResult.Yes) {
+                                RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
+                                key.SetValue("DisabledByDefault", 0x0);
 
-                            MessageBox.Show(null, "Registry option set, Remember that the following patch might work after a system reboot", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        } else {
-                            MessageBox.Show(null, "Roger that, There will be some issues connecting to the servers.", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBox.Show(null, "Registry option set, Remember that the following patch might work after a system reboot", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            } else {
+                                MessageBox.Show(null, "Roger that, There will be some issues connecting to the servers.", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+
+                            _settingFile.Write("PatchesApplied", "1");
+                        }
+                    }
+                }
+
+                if (Environment.Is64BitOperatingSystem == true) {
+                    if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x64)) {
+                        var result = MessageBox.Show(
+                            "You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed. Click OK to install it.",
+                            "Compatibility",
+                            MessageBoxButtons.OKCancel,
+                            MessageBoxIcon.Warning);
+
+                        if (result != DialogResult.OK) {
+                            MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                            return;
                         }
 
-                        _settingFile.Write("PatchesApplied", "1");
+                        var wc = new WebClientWithTimeout();
+                        wc.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x64.exe", "VC_redist.x64.exe");
+                        var proc = Process.Start(new ProcessStartInfo {
+                            Verb = "runas",
+                            FileName = "VC_redist.x64.exe"
+                        });
+
+                        if (proc == null) {
+                            MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                            return;
+                        }
+                        Thread.Sleep(4000);
                     }
+                }
+
+                if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86)) {
+                    var result = MessageBox.Show(
+                        "You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed. Click OK to install it.",
+                        "Compatibility",
+                        MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Warning);
+
+                    if (result != DialogResult.OK) {
+                        MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    var wc = new WebClientWithTimeout();
+                    wc.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x86.exe", "VC_redist.x86.exe");
+                    var proc = Process.Start(new ProcessStartInfo {
+                        Verb = "runas",
+                        FileName = "VC_redist.x86.exe"
+                    });
+
+                    if (proc == null) {
+                        MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                        return;
+                    }
+                    Thread.Sleep(5000);
                 }
             }
 

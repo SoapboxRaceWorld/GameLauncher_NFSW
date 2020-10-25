@@ -199,6 +199,9 @@ namespace GameLauncher {
             } else {
                 _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
                 Log.Debug("Detected OS: " + _OS);
+                if (Environment.Is64BitOperatingSystem == true) {
+                    Log.Debug("Os Type: 64 Bit");
+                }
                 Log.Debug("OS Details: " + Environment.OSVersion);
                 Log.Debug("Video Card: " + GPUHelper.CardName());
                 Log.Debug("Driver Version: " + GPUHelper.DriverVersion());
@@ -1259,7 +1262,7 @@ namespace GameLauncher {
 
                 if(_realServername == "WorldUnited Official" || _realServername == "WorldUnited OFFICIAL") {
                     Process.Start("https://signup.worldunited.gg/?discordid=" + Self.discordid);
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on WorldUnited Official", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(null, "A browser window has been opened to complete registration on WorldUnited OFFICIAL", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
