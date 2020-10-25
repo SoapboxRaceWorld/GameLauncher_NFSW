@@ -607,23 +607,6 @@ namespace GameLauncher {
                 settingsLanguage.SelectedValue = _settingFile.Read("Language");
             }
 
-            //Removing Download Size Not Needed Anymore - DavidCarbon
-            /* 
-            Log.Debug("Setting texture quality");
-
-            settingsQuality.DisplayMember = "Text";
-            settingsQuality.ValueMember = "Value";
-
-            var quality = new[] {
-                new { Text = "Maximum", Value = "1" },
-                new { Text = "Standard", Value = "0" },
-            };
-            
-
-            settingsQuality.DataSource = quality;
-
-            */
-
             Task.Run(() => {
                 String _slresponse2 = string.Empty;
                 try {
@@ -648,24 +631,6 @@ namespace GameLauncher {
                     settingsCDNPick.DataSource = CDNList;
                 }));
             });
-
-            //DavidCarbon
-            /*
-            if (_settingFile.KeyExists("TracksHigh"))
-            {
-                string selectedTracksHigh = _settingFile.Read("TracksHigh");
-                if(!string.IsNullOrEmpty(selectedTracksHigh))
-                {
-                    settingsQuality.SelectedValue = 1;
-                } else
-                {
-                    settingsQuality.SelectedIndex = 1;
-                }
-            } else
-            {
-                settingsQuality.SelectedIndex = 1;
-            }
-            */
 
             Log.Debug("Re-checking InstallationDirectory: " + _settingFile.Read("InstallationDirectory"));
 
@@ -752,38 +717,6 @@ namespace GameLauncher {
             }
 
             /* Load Settings API Connection Status */
-            try
-            {
-                /* https://api.worldunited.gg */
-
-
-
-                /* 
-                new WebClient().DownloadData(Self.mainserver + "/cdn_list.json");
-                if (Self.mainserver + "/cdn_list.json" != null)
-                {
-                    mainserverCDN = true;
-                }
-                new WebClient().DownloadData(Self.staticapiserver + "/serverlist.json");
-                if (Self.staticapiserver + "/serverlist.json" != null)
-                {
-                    bkupserverList = true;
-                }
-                new WebClient().DownloadData(Self.staticapiserver + "/cdn_list.json");
-                if (Self.staticapiserver + "/cdn_list.json" != null)
-                {
-                    bkupserverCDN = true;
-                }
-
-                */
-            }
-            catch
-            {
-                //mainserverList = false;
-                //mainserverCDN = false;
-                //bkupserverList = false;
-                //bkupserverCDN = false;
-            }
             Task.Delay(800);
             PingServerListAPIStatus();
         }
@@ -1324,7 +1257,7 @@ namespace GameLauncher {
                     return;
                 }
 
-                if(_realServername == "WorldUnited Official") {
+                if(_realServername == "WorldUnited Official" || _realServername == "WorldUnited OFFICIAL") {
                     Process.Start("https://signup.worldunited.gg/?discordid=" + Self.discordid);
                     MessageBox.Show(null, "A browser window has been opened to complete registration on WorldUnited Official", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
@@ -1725,7 +1658,6 @@ namespace GameLauncher {
 
             //TODO null check
             _settingFile.Write("Language", settingsLanguage.SelectedValue.ToString());
-            //_settingFile.Write("TracksHigh", settingsQuality.SelectedValue.ToString());
             _settingFile.Write("CDN", ((CDNObject)settingsCDNPick.SelectedItem).url);
 
             var userSettingsXml = new XmlDocument();
@@ -1854,8 +1786,6 @@ namespace GameLauncher {
             settingsSave.Visible = hideElements;
             settingsLanguage.Visible = hideElements;
             settingsLanguageText.Visible = hideElements;
-            //settingsQuality.Visible = hideElements;
-            //settingsQualityText.Visible = hideElements;
             settingsCDNPick.Visible = hideElements;
             settingsCDNText.Visible = hideElements;
             settingsGameFiles.Visible = hideElements;
