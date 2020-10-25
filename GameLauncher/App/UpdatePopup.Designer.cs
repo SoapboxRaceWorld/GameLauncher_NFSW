@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdatePopup));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.changelogText = new System.Windows.Forms.TextBox();
             this.update = new System.Windows.Forms.Button();
@@ -99,6 +100,7 @@
             // 
             // ignore
             // 
+            this.ignore.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ignore.Location = new System.Drawing.Point(230, 230);
             this.ignore.Name = "ignore";
             this.ignore.Size = new System.Drawing.Size(75, 23);
@@ -122,6 +124,7 @@
             this.Controls.Add(this.ignore);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "UpdatePopup";

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WelcomeScreen));
             this.WelcomeText = new System.Windows.Forms.Label();
             this.downloadSourceText = new System.Windows.Forms.Label();
             this.CDNSource = new System.Windows.Forms.ComboBox();
@@ -118,11 +119,11 @@
             this.Controls.Add(this.CDNSource);
             this.Controls.Add(this.downloadSourceText);
             this.Controls.Add(this.WelcomeText);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "WelcomeScreen";
             this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GameLauncher";
             this.TopMost = true;

@@ -355,7 +355,6 @@ namespace GameLauncher {
                 } catch {
                     _settingFile.Write("CDN", "http://cdn.worldunited.gg/gamefiles/packed/");
                     _settingFile.Write("TracksHigh", "1");
-
                     _NFSW_Installation_Source = "http://cdn.worldunited.gg/gamefiles/packed/";
                 }
 

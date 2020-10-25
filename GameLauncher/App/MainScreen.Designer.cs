@@ -87,6 +87,7 @@
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             this.settingsDiscordRPCCheckbox = new System.Windows.Forms.CheckBox();
+            this.settingsPingCDNText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
@@ -808,12 +809,26 @@
             this.settingsDiscordRPCCheckbox.Text = "Disable DiscordRPC";
             this.settingsDiscordRPCCheckbox.UseVisualStyleBackColor = false;
             // 
+            // settingsPingCDNText
+            // 
+            this.settingsPingCDNText.AutoSize = true;
+            this.settingsPingCDNText.BackColor = System.Drawing.Color.Transparent;
+            this.settingsPingCDNText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
+            this.settingsPingCDNText.ForeColor = System.Drawing.Color.White;
+            this.settingsPingCDNText.Location = new System.Drawing.Point(377, 130);
+            this.settingsPingCDNText.Name = "settingsPingCDNText";
+            this.settingsPingCDNText.Size = new System.Drawing.Size(162, 18);
+            this.settingsPingCDNText.TabIndex = 126;
+            this.settingsPingCDNText.Text = "CDN Status - PINGING";
+            this.settingsPingCDNText.Visible = false;
+            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.settingsPingCDNText);
             this.Controls.Add(this.settingsDiscordRPCCheckbox);
             this.Controls.Add(this.APIStatusText);
             this.Controls.Add(this.APIStatusDesc);
@@ -948,5 +963,6 @@
         private System.Windows.Forms.Label APIStatusText;
         private System.Windows.Forms.Label APIStatusDesc;
         private System.Windows.Forms.CheckBox settingsDiscordRPCCheckbox;
+        private System.Windows.Forms.Label settingsPingCDNText;
     }
 }
