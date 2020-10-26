@@ -94,7 +94,7 @@
             this.Name = "SelectServer";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Please select the server before continuing...";
+            this.Text = "Please select a server before continuing...";
             this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();

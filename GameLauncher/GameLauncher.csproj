@@ -16,7 +16,8 @@
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <PublishUrl></PublishUrl>
+    <PublishUrl>
+    </PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -301,6 +302,10 @@
     <None Include="Resources\buttons_info.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\server_unknown.png" />
+    <None Include="Resources\server_online.png" />
+    <None Include="Resources\server_offline.png" />
+    <None Include="Resources\server_checking.png" />
     <None Include="Resources\api_checking.png" />
     <None Include="Resources\api_unkown.png" />
     <None Include="Resources\api_success.png" />

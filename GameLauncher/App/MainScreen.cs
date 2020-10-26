@@ -270,6 +270,12 @@ namespace GameLauncher {
             settingsSave.MouseDown += new MouseEventHandler(settingsSave_MouseDown);
             settingsSave.Click += new EventHandler(settingsSave_Click);
 
+            settingsCancel.MouseEnter += new EventHandler(settingsCancel_MouseEnter);
+            settingsCancel.MouseLeave += new EventHandler(settingsCancel_MouseLeave);
+            settingsCancel.MouseUp += new MouseEventHandler(settingsCancel_MouseUp);
+            settingsCancel.MouseDown += new MouseEventHandler(settingsCancel_MouseDown);
+            settingsCancel.Click += new EventHandler(settingsCancel_Click);
+
             settingsGameFiles.Click += new EventHandler(settingsGameFiles_Click);
             settingsGameFilesCurrent.Click += new EventHandler(settingsGameFilesCurrent_Click);
 
@@ -674,9 +680,10 @@ namespace GameLauncher {
 
             Log.Debug("Setting configurations");
             _newGameFilesPath = Path.GetFullPath(_settingFile.Read("InstallationDirectory"));
-            settingsGameFilesCurrent.Text = "CURRENT DIRECTORY: " + _newGameFilesPath;
+            settingsGameFilesCurrentText.Text = "CURRENT DIRECTORY";
+            settingsGameFilesCurrent.Text = _newGameFilesPath;
             //DavidCarbon
-            settingsCDNCurrent.Text = "CURRENT CDN URL: " + _settingFile.Read("CDN");
+            settingsCDNCurrent.Text = _settingFile.Read("CDN");
 
             Log.Debug("Initializing DiscordRPC");
 
@@ -783,17 +790,10 @@ namespace GameLauncher {
             }
 
             ServerProxy.Instance.Stop();
-
-            //File.WriteAllLines("invalidfiles.dat", invalidFileList);
-
             Notification.Dispose();
 
-            Process[] allOfThem2 = Process.GetProcessesByName("GameLauncher");
-            foreach (var oneProcess in allOfThem2) {
-                Process.GetProcessById(oneProcess.Id).Kill();
-            }
-
-            Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+            //Leave this here. Its to properly close the launcher from Visual Studio (And Close the Launcher a well)
+            this.Close();
         }
 
         private void addServer_Click(object sender, EventArgs e)
@@ -806,15 +806,6 @@ namespace GameLauncher {
             if (!(serverPick.SelectedItem is ServerInfo server)) return;
 
             var form = new DebugWindow(server.IpAddress, server.Name);
-            form.Show();
-        }
-
-        private void OpenMapHandler(object sender, EventArgs e)
-        {
-            if (!(serverPick.SelectedItem is ServerInfo server)) return;
-
-            var form = new ShowMap(server.IpAddress, _realServername);
-
             form.Show();
         }
 
@@ -990,6 +981,7 @@ namespace GameLauncher {
             ServerStatusText.Text = "Server Status - Pinging";
             ServerStatusText.ForeColor = Color.FromArgb(66, 179, 189);
             ServerStatusDesc.Text = "";
+            ServerStatusIcon.Image = Properties.Resources.server_checking;
 
             loginButton.ForeColor = Color.Gray;
             var verticalImageUrl = "";
@@ -1035,6 +1027,7 @@ namespace GameLauncher {
                     ServerStatusText.Text = "Server Status - Offline ( OFF )";
                     ServerStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                     ServerStatusDesc.Text = "Failed to connect to server.";
+                    ServerStatusIcon.Image = Properties.Resources.server_offline;
                     _serverEnabled = false;
                     _allowRegistration = false;
 
@@ -1049,6 +1042,7 @@ namespace GameLauncher {
                     ServerStatusText.Text = "Server Status - Offline ( OFF )";
                     ServerStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                     ServerStatusDesc.Text = "Server seems to be offline.";
+                    ServerStatusIcon.Image = Properties.Resources.server_offline;
                     _serverEnabled = false;
                     _allowRegistration = false;
 
@@ -1135,7 +1129,7 @@ namespace GameLauncher {
                     try { 
                         ServerStatusText.Text = "Server Status - Online ( ON )";
                         ServerStatusText.ForeColor = Color.FromArgb(159, 193, 32);
-
+                        ServerStatusIcon.Image = Properties.Resources.server_online;
                         loginButton.ForeColor = Color.White;
                         _loginEnabled = true;
                     }
@@ -1229,15 +1223,18 @@ namespace GameLauncher {
             settingsMainCDNText.Font = new Font(AkrobatSemiBold, 10.5f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             settingsBkupSrvText.Font = new Font(AkrobatSemiBold, 10.5f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             settingsBkupCDNText.Font = new Font(AkrobatSemiBold, 10.5f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsCDNCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsCDNCurrentText.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsCDNCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             settingsCDNText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsCancel.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsSave.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsGamePathText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsVFilesButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsProxyCheckbox.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsDiscordRPCCheckbox.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsWordFilterCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsGameFilesCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsGameFilesCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsGameFilesCurrentText.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             /* Registering Screen */
             registerAgree.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             registerCancel.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
@@ -1656,6 +1653,55 @@ namespace GameLauncher {
             settingsSave.Image = Properties.Resources.greenbutton_click;
         }
 
+        //
+        private void settingsCancel_MouseEnter(object sender, EventArgs e)
+        {
+            settingsCancel.Image = Properties.Resources.graybutton_hover;
+        }
+
+        private void settingsCancel_MouseLeave(object sender, EventArgs e)
+        {
+            settingsCancel.Image = Properties.Resources.graybutton;
+        }
+
+        private void settingsCancel_MouseUp(object sender, EventArgs e)
+        {
+            settingsCancel.Image = Properties.Resources.graybutton_hover;
+        }
+
+        private void settingsCancel_MouseDown(object sender, EventArgs e)
+        {
+            settingsCancel.Image = Properties.Resources.graybutton_click;
+        }
+
+        private void settingsCancel_Click(object sender, EventArgs e)
+        {
+            SettingsFormElements(false);
+
+            if (_loggedIn)
+            {
+                BackgroundImage = Properties.Resources.loggedbg;
+                LoginFormElements();
+                LoggedInFormElements(true);
+            }
+            else
+            {
+                BackgroundImage = Properties.Resources.loginbg;
+                LoggedInFormElements(false);
+                LoginFormElements(true);
+            }
+
+            //Reset Connection Status Labels - DavidCarbon
+            settingsMainSrvText.Text = "Main Server List API: PINGING";
+            settingsMainSrvText.ForeColor = Color.FromArgb(66, 179, 189);
+            settingsMainCDNText.Text = "Main CDN List API: PINGING";
+            settingsMainCDNText.ForeColor = Color.FromArgb(66, 179, 189);
+            settingsBkupSrvText.Text = "Backup Server List API: PINGING";
+            settingsBkupSrvText.ForeColor = Color.FromArgb(66, 179, 189);
+            settingsBkupCDNText.Text = "Backup CDN List API: PINGING";
+            settingsBkupCDNText.ForeColor = Color.FromArgb(66, 179, 189);
+        }
+
         private void settingsSave_Click(object sender, EventArgs e) {
 
             //TODO null check
@@ -1772,7 +1818,8 @@ namespace GameLauncher {
             if (result2 == DialogResult.OK)
             {
                 _newGameFilesPath = Path.GetFullPath(fbd2.SelectedPath);
-                settingsGameFilesCurrent.Text = "NEW DIRECTORY: " + _newGameFilesPath;
+                settingsGameFilesCurrentText.Text = "NEW DIRECTORY";
+                settingsGameFilesCurrent.Text = _newGameFilesPath;
             }
         }
 
@@ -1785,16 +1832,18 @@ namespace GameLauncher {
                 currentWindowInfo.Text = "";
             }
 
+            settingsCancel.Visible = hideElements;
             settingsSave.Visible = hideElements;
             settingsLanguage.Visible = hideElements;
             settingsLanguageText.Visible = hideElements;
             settingsCDNPick.Visible = hideElements;
             settingsCDNText.Visible = hideElements;
             settingsGameFiles.Visible = hideElements;
+            settingsGameFilesCurrentText.Visible = hideElements;
             settingsGameFilesCurrent.Visible = hideElements;
             settingsGamePathText.Visible = hideElements;
             settingsWordFilterCheck.Visible = hideElements;
-            settingsVFilesButton.Visible = hideElements;
+            //settingsVFilesButton.Visible = hideElements;
             settingsProxyCheckbox.Visible = hideElements;
             settingsDiscordRPCCheckbox.Visible = hideElements;
             //Connection Status - DavidCarbon
@@ -1803,6 +1852,7 @@ namespace GameLauncher {
             settingsMainCDNText.Visible = hideElements;
             settingsBkupSrvText.Visible = hideElements;
             settingsBkupCDNText.Visible = hideElements;
+            settingsCDNCurrentText.Visible = hideElements;
             settingsCDNCurrent.Visible = hideElements;
 
         }
@@ -2473,7 +2523,7 @@ namespace GameLauncher {
                         ContextMenu.MenuItems.Add("-");
                         ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", (sender2, e2) =>
                         {
-                            MessageBox.Show(null, "Please close the game before closing launcher.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(null, "Please close the game before closing launcher.", "Please close the game before closing launcher.", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }));
 
                         Update();
@@ -2865,6 +2915,7 @@ namespace GameLauncher {
                 serverPick.SelectedIndex = index;
             }
         }
+
     }
     /* Moved 7 Unused Code to Gist */
     /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/00de505302fbf9f8cfea9b163a707d9f8f122552/MainScreen.cs */

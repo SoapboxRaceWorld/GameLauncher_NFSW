@@ -40,7 +40,6 @@
             this.loginButton = new System.Windows.Forms.Button();
             this.registerButton = new System.Windows.Forms.Button();
             this.settingsButton = new System.Windows.Forms.PictureBox();
-            this.settingsSave = new System.Windows.Forms.Button();
             this.settingsLanguage = new System.Windows.Forms.ComboBox();
             this.settingsLanguageText = new System.Windows.Forms.Label();
             this.registerEmail = new System.Windows.Forms.TextBox();
@@ -84,10 +83,13 @@
             this.APIStatusIcon = new System.Windows.Forms.PictureBox();
             this.APIStatusText = new System.Windows.Forms.Label();
             this.APIStatusDesc = new System.Windows.Forms.Label();
+            this.settingsDiscordRPCCheckbox = new System.Windows.Forms.CheckBox();
+            this.settingsGameFilesCurrentText = new System.Windows.Forms.Label();
+            this.settingsCDNCurrentText = new System.Windows.Forms.Label();
+            this.settingsCancel = new System.Windows.Forms.Button();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
-            this.settingsDiscordRPCCheckbox = new System.Windows.Forms.CheckBox();
-            this.settingsPingCDNText = new System.Windows.Forms.Label();
+            this.settingsSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
@@ -218,22 +220,6 @@
             this.settingsButton.TabIndex = 21;
             this.settingsButton.TabStop = false;
             // 
-            // settingsSave
-            // 
-            this.settingsSave.BackColor = System.Drawing.Color.Transparent;
-            this.settingsSave.FlatAppearance.BorderSize = 0;
-            this.settingsSave.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.settingsSave.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.settingsSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.settingsSave.ForeColor = System.Drawing.Color.White;
-            this.settingsSave.Image = global::GameLauncher.Properties.Resources.greenbutton;
-            this.settingsSave.Location = new System.Drawing.Point(720, 437);
-            this.settingsSave.Name = "settingsSave";
-            this.settingsSave.Size = new System.Drawing.Size(130, 50);
-            this.settingsSave.TabIndex = 23;
-            this.settingsSave.Text = "SAVE";
-            this.settingsSave.UseVisualStyleBackColor = false;
-            // 
             // settingsLanguage
             // 
             this.settingsLanguage.BackColor = System.Drawing.Color.White;
@@ -241,7 +227,7 @@
             this.settingsLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.settingsLanguage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.settingsLanguage.FormattingEnabled = true;
-            this.settingsLanguage.Location = new System.Drawing.Point(46, 222);
+            this.settingsLanguage.Location = new System.Drawing.Point(46, 245);
             this.settingsLanguage.Name = "settingsLanguage";
             this.settingsLanguage.Size = new System.Drawing.Size(210, 21);
             this.settingsLanguage.TabIndex = 24;
@@ -252,7 +238,7 @@
             this.settingsLanguageText.BackColor = System.Drawing.Color.Transparent;
             this.settingsLanguageText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
             this.settingsLanguageText.ForeColor = System.Drawing.Color.White;
-            this.settingsLanguageText.Location = new System.Drawing.Point(46, 198);
+            this.settingsLanguageText.Location = new System.Drawing.Point(46, 221);
             this.settingsLanguageText.Name = "settingsLanguageText";
             this.settingsLanguageText.Size = new System.Drawing.Size(142, 18);
             this.settingsLanguageText.TabIndex = 25;
@@ -460,15 +446,16 @@
             this.settingsGameFilesCurrent.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.settingsGameFilesCurrent.AutoSize = true;
             this.settingsGameFilesCurrent.BackColor = System.Drawing.Color.Transparent;
-            this.settingsGameFilesCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.settingsGameFilesCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.settingsGameFilesCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.settingsGameFilesCurrent.LinkColor = System.Drawing.Color.White;
-            this.settingsGameFilesCurrent.Location = new System.Drawing.Point(46, 178);
+            this.settingsGameFilesCurrent.Location = new System.Drawing.Point(46, 195);
             this.settingsGameFilesCurrent.Name = "settingsGameFilesCurrent";
-            this.settingsGameFilesCurrent.Size = new System.Drawing.Size(86, 13);
+            this.settingsGameFilesCurrent.Size = new System.Drawing.Size(181, 13);
             this.settingsGameFilesCurrent.TabIndex = 58;
             this.settingsGameFilesCurrent.TabStop = true;
-            this.settingsGameFilesCurrent.Text = "Current Path: ";
+            this.settingsGameFilesCurrent.Text = "C:\\Soapbox Race World\\Game Files";
+            this.settingsGameFilesCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.settingsGameFilesCurrent.VisitedLinkColor = System.Drawing.Color.White;
             // 
             // settingsGamePathText
@@ -546,10 +533,10 @@
             // ServerStatusIcon
             // 
             this.ServerStatusIcon.BackColor = System.Drawing.Color.Transparent;
-            this.ServerStatusIcon.Image = global::GameLauncher.Properties.Resources.webicon;
-            this.ServerStatusIcon.Location = new System.Drawing.Point(233, 478);
+            this.ServerStatusIcon.Image = ((System.Drawing.Image)(resources.GetObject("ServerStatusIcon.Image")));
+            this.ServerStatusIcon.Location = new System.Drawing.Point(229, 478);
             this.ServerStatusIcon.Name = "ServerStatusIcon";
-            this.ServerStatusIcon.Size = new System.Drawing.Size(21, 24);
+            this.ServerStatusIcon.Size = new System.Drawing.Size(24, 24);
             this.ServerStatusIcon.TabIndex = 6;
             this.ServerStatusIcon.TabStop = false;
             // 
@@ -575,7 +562,7 @@
             this.settingsCDNText.BackColor = System.Drawing.Color.Transparent;
             this.settingsCDNText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.settingsCDNText.ForeColor = System.Drawing.Color.White;
-            this.settingsCDNText.Location = new System.Drawing.Point(326, 130);
+            this.settingsCDNText.Location = new System.Drawing.Point(404, 130);
             this.settingsCDNText.Name = "settingsCDNText";
             this.settingsCDNText.Size = new System.Drawing.Size(45, 18);
             this.settingsCDNText.TabIndex = 83;
@@ -589,7 +576,7 @@
             this.settingsCDNPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.settingsCDNPick.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.settingsCDNPick.FormattingEnabled = true;
-            this.settingsCDNPick.Location = new System.Drawing.Point(329, 154);
+            this.settingsCDNPick.Location = new System.Drawing.Point(407, 154);
             this.settingsCDNPick.Name = "settingsCDNPick";
             this.settingsCDNPick.Size = new System.Drawing.Size(210, 21);
             this.settingsCDNPick.TabIndex = 84;
@@ -600,12 +587,13 @@
             this.settingsVFilesButton.BackColor = System.Drawing.Color.Transparent;
             this.settingsVFilesButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.settingsVFilesButton.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.settingsVFilesButton.Location = new System.Drawing.Point(46, 272);
+            this.settingsVFilesButton.Location = new System.Drawing.Point(46, 358);
             this.settingsVFilesButton.Name = "settingsVFilesButton";
             this.settingsVFilesButton.Size = new System.Drawing.Size(207, 23);
             this.settingsVFilesButton.TabIndex = 96;
             this.settingsVFilesButton.Text = "Validate Game Files";
             this.settingsVFilesButton.UseVisualStyleBackColor = false;
+            this.settingsVFilesButton.Visible = false;
             this.settingsVFilesButton.Click += new System.EventHandler(this.vfilesButton_Click);
             // 
             // settingsWordFilterCheck
@@ -614,7 +602,7 @@
             this.settingsWordFilterCheck.BackColor = System.Drawing.Color.Transparent;
             this.settingsWordFilterCheck.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.settingsWordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
-            this.settingsWordFilterCheck.Location = new System.Drawing.Point(49, 319);
+            this.settingsWordFilterCheck.Location = new System.Drawing.Point(46, 282);
             this.settingsWordFilterCheck.Name = "settingsWordFilterCheck";
             this.settingsWordFilterCheck.Size = new System.Drawing.Size(235, 17);
             this.settingsWordFilterCheck.TabIndex = 93;
@@ -638,7 +626,7 @@
             this.settingsProxyCheckbox.BackColor = System.Drawing.Color.Transparent;
             this.settingsProxyCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.settingsProxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
-            this.settingsProxyCheckbox.Location = new System.Drawing.Point(49, 340);
+            this.settingsProxyCheckbox.Location = new System.Drawing.Point(46, 303);
             this.settingsProxyCheckbox.Name = "settingsProxyCheckbox";
             this.settingsProxyCheckbox.Size = new System.Drawing.Size(103, 17);
             this.settingsProxyCheckbox.TabIndex = 102;
@@ -661,7 +649,7 @@
             this.settingsNetworkText.BackColor = System.Drawing.Color.Transparent;
             this.settingsNetworkText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
             this.settingsNetworkText.ForeColor = System.Drawing.Color.White;
-            this.settingsNetworkText.Location = new System.Drawing.Point(326, 199);
+            this.settingsNetworkText.Location = new System.Drawing.Point(404, 221);
             this.settingsNetworkText.Name = "settingsNetworkText";
             this.settingsNetworkText.Size = new System.Drawing.Size(175, 18);
             this.settingsNetworkText.TabIndex = 105;
@@ -673,7 +661,7 @@
             this.settingsMainSrvText.BackColor = System.Drawing.Color.Transparent;
             this.settingsMainSrvText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.settingsMainSrvText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.settingsMainSrvText.Location = new System.Drawing.Point(326, 221);
+            this.settingsMainSrvText.Location = new System.Drawing.Point(404, 243);
             this.settingsMainSrvText.Name = "settingsMainSrvText";
             this.settingsMainSrvText.Size = new System.Drawing.Size(154, 13);
             this.settingsMainSrvText.TabIndex = 106;
@@ -685,7 +673,7 @@
             this.settingsBkupSrvText.BackColor = System.Drawing.Color.Transparent;
             this.settingsBkupSrvText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.settingsBkupSrvText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.settingsBkupSrvText.Location = new System.Drawing.Point(326, 259);
+            this.settingsBkupSrvText.Location = new System.Drawing.Point(404, 281);
             this.settingsBkupSrvText.Name = "settingsBkupSrvText";
             this.settingsBkupSrvText.Size = new System.Drawing.Size(168, 13);
             this.settingsBkupSrvText.TabIndex = 107;
@@ -697,7 +685,7 @@
             this.settingsBkupCDNText.BackColor = System.Drawing.Color.Transparent;
             this.settingsBkupCDNText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.settingsBkupCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.settingsBkupCDNText.Location = new System.Drawing.Point(326, 279);
+            this.settingsBkupCDNText.Location = new System.Drawing.Point(404, 301);
             this.settingsBkupCDNText.Name = "settingsBkupCDNText";
             this.settingsBkupCDNText.Size = new System.Drawing.Size(160, 13);
             this.settingsBkupCDNText.TabIndex = 108;
@@ -709,7 +697,7 @@
             this.settingsMainCDNText.BackColor = System.Drawing.Color.Transparent;
             this.settingsMainCDNText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.settingsMainCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.settingsMainCDNText.Location = new System.Drawing.Point(326, 240);
+            this.settingsMainCDNText.Location = new System.Drawing.Point(404, 262);
             this.settingsMainCDNText.Name = "settingsMainCDNText";
             this.settingsMainCDNText.Size = new System.Drawing.Size(146, 13);
             this.settingsMainCDNText.TabIndex = 109;
@@ -719,13 +707,14 @@
             // 
             this.settingsCDNCurrent.AutoSize = true;
             this.settingsCDNCurrent.BackColor = System.Drawing.Color.Transparent;
-            this.settingsCDNCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.settingsCDNCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.settingsCDNCurrent.ForeColor = System.Drawing.Color.Transparent;
-            this.settingsCDNCurrent.Location = new System.Drawing.Point(326, 178);
+            this.settingsCDNCurrent.Location = new System.Drawing.Point(404, 195);
             this.settingsCDNCurrent.Name = "settingsCDNCurrent";
-            this.settingsCDNCurrent.Size = new System.Drawing.Size(82, 13);
+            this.settingsCDNCurrent.Size = new System.Drawing.Size(80, 13);
             this.settingsCDNCurrent.TabIndex = 110;
-            this.settingsCDNCurrent.Text = "Current CDN:";
+            this.settingsCDNCurrent.Text = "http://localhost";
+            this.settingsCDNCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // APIStatusIcon
             // 
@@ -733,7 +722,8 @@
             this.APIStatusIcon.Image = ((System.Drawing.Image)(resources.GetObject("APIStatusIcon.Image")));
             this.APIStatusIcon.Location = new System.Drawing.Point(428, 478);
             this.APIStatusIcon.Name = "APIStatusIcon";
-            this.APIStatusIcon.Size = new System.Drawing.Size(21, 24);
+            this.APIStatusIcon.Size = new System.Drawing.Size(24, 24);
+            this.APIStatusIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.APIStatusIcon.TabIndex = 113;
             this.APIStatusIcon.TabStop = false;
             // 
@@ -762,6 +752,62 @@
             this.APIStatusDesc.TabIndex = 120;
             this.APIStatusDesc.Text = "Checking Status";
             this.APIStatusDesc.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // settingsDiscordRPCCheckbox
+            // 
+            this.settingsDiscordRPCCheckbox.AutoSize = true;
+            this.settingsDiscordRPCCheckbox.BackColor = System.Drawing.Color.Transparent;
+            this.settingsDiscordRPCCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.settingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.settingsDiscordRPCCheckbox.Location = new System.Drawing.Point(46, 326);
+            this.settingsDiscordRPCCheckbox.Name = "settingsDiscordRPCCheckbox";
+            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(144, 17);
+            this.settingsDiscordRPCCheckbox.TabIndex = 123;
+            this.settingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
+            this.settingsDiscordRPCCheckbox.UseVisualStyleBackColor = false;
+            // 
+            // settingsGameFilesCurrentText
+            // 
+            this.settingsGameFilesCurrentText.AutoSize = true;
+            this.settingsGameFilesCurrentText.BackColor = System.Drawing.Color.Transparent;
+            this.settingsGameFilesCurrentText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.settingsGameFilesCurrentText.ForeColor = System.Drawing.Color.White;
+            this.settingsGameFilesCurrentText.Location = new System.Drawing.Point(46, 178);
+            this.settingsGameFilesCurrentText.Name = "settingsGameFilesCurrentText";
+            this.settingsGameFilesCurrentText.Size = new System.Drawing.Size(78, 13);
+            this.settingsGameFilesCurrentText.TabIndex = 126;
+            this.settingsGameFilesCurrentText.Text = "Current Path";
+            this.settingsGameFilesCurrentText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // settingsCDNCurrentText
+            // 
+            this.settingsCDNCurrentText.AutoSize = true;
+            this.settingsCDNCurrentText.BackColor = System.Drawing.Color.Transparent;
+            this.settingsCDNCurrentText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.settingsCDNCurrentText.ForeColor = System.Drawing.Color.Transparent;
+            this.settingsCDNCurrentText.Location = new System.Drawing.Point(404, 178);
+            this.settingsCDNCurrentText.Name = "settingsCDNCurrentText";
+            this.settingsCDNCurrentText.Size = new System.Drawing.Size(97, 13);
+            this.settingsCDNCurrentText.TabIndex = 129;
+            this.settingsCDNCurrentText.Text = "CURRENT CDN";
+            this.settingsCDNCurrentText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // settingsCancel
+            // 
+            this.settingsCancel.BackColor = System.Drawing.Color.Transparent;
+            this.settingsCancel.FlatAppearance.BorderSize = 0;
+            this.settingsCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.settingsCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.settingsCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.settingsCancel.ForeColor = System.Drawing.Color.White;
+            this.settingsCancel.Image = global::GameLauncher.Properties.Resources.graybutton;
+            this.settingsCancel.Location = new System.Drawing.Point(720, 436);
+            this.settingsCancel.Name = "settingsCancel";
+            this.settingsCancel.Size = new System.Drawing.Size(130, 50);
+            this.settingsCancel.TabIndex = 132;
+            this.settingsCancel.Text = "CANCEL";
+            this.settingsCancel.UseVisualStyleBackColor = false;
+            this.settingsCancel.Click += new System.EventHandler(this.settingsCancel_Click);
             // 
             // extractingProgress
             // 
@@ -796,31 +842,21 @@
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
             // 
-            // settingsDiscordRPCCheckbox
+            // settingsSave
             // 
-            this.settingsDiscordRPCCheckbox.AutoSize = true;
-            this.settingsDiscordRPCCheckbox.BackColor = System.Drawing.Color.Transparent;
-            this.settingsDiscordRPCCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.settingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
-            this.settingsDiscordRPCCheckbox.Location = new System.Drawing.Point(49, 363);
-            this.settingsDiscordRPCCheckbox.Name = "settingsDiscordRPCCheckbox";
-            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(140, 17);
-            this.settingsDiscordRPCCheckbox.TabIndex = 123;
-            this.settingsDiscordRPCCheckbox.Text = "Disable DiscordRPC";
-            this.settingsDiscordRPCCheckbox.UseVisualStyleBackColor = false;
-            // 
-            // settingsPingCDNText
-            // 
-            this.settingsPingCDNText.AutoSize = true;
-            this.settingsPingCDNText.BackColor = System.Drawing.Color.Transparent;
-            this.settingsPingCDNText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
-            this.settingsPingCDNText.ForeColor = System.Drawing.Color.White;
-            this.settingsPingCDNText.Location = new System.Drawing.Point(377, 130);
-            this.settingsPingCDNText.Name = "settingsPingCDNText";
-            this.settingsPingCDNText.Size = new System.Drawing.Size(162, 18);
-            this.settingsPingCDNText.TabIndex = 126;
-            this.settingsPingCDNText.Text = "CDN Status - PINGING";
-            this.settingsPingCDNText.Visible = false;
+            this.settingsSave.BackColor = System.Drawing.Color.Transparent;
+            this.settingsSave.FlatAppearance.BorderSize = 0;
+            this.settingsSave.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.settingsSave.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.settingsSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.settingsSave.ForeColor = System.Drawing.Color.White;
+            this.settingsSave.Image = global::GameLauncher.Properties.Resources.greenbutton;
+            this.settingsSave.Location = new System.Drawing.Point(584, 436);
+            this.settingsSave.Name = "settingsSave";
+            this.settingsSave.Size = new System.Drawing.Size(130, 50);
+            this.settingsSave.TabIndex = 23;
+            this.settingsSave.Text = "SAVE";
+            this.settingsSave.UseVisualStyleBackColor = false;
             // 
             // MainScreen
             // 
@@ -828,7 +864,9 @@
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
-            this.Controls.Add(this.settingsPingCDNText);
+            this.Controls.Add(this.settingsCancel);
+            this.Controls.Add(this.settingsCDNCurrentText);
+            this.Controls.Add(this.settingsGameFilesCurrentText);
             this.Controls.Add(this.settingsDiscordRPCCheckbox);
             this.Controls.Add(this.APIStatusText);
             this.Controls.Add(this.APIStatusDesc);
@@ -916,7 +954,6 @@
         private System.Windows.Forms.Button loginButton;
         private System.Windows.Forms.Button registerButton;
         private System.Windows.Forms.PictureBox settingsButton;
-        private System.Windows.Forms.Button settingsSave;
         private System.Windows.Forms.ComboBox settingsLanguage;
         private System.Windows.Forms.Label settingsLanguageText;
         private System.Windows.Forms.TextBox registerEmail;
@@ -963,6 +1000,9 @@
         private System.Windows.Forms.Label APIStatusText;
         private System.Windows.Forms.Label APIStatusDesc;
         private System.Windows.Forms.CheckBox settingsDiscordRPCCheckbox;
-        private System.Windows.Forms.Label settingsPingCDNText;
+        private System.Windows.Forms.Label settingsGameFilesCurrentText;
+        private System.Windows.Forms.Label settingsCDNCurrentText;
+        private System.Windows.Forms.Button settingsCancel;
+        private System.Windows.Forms.Button settingsSave;
     }
 }
