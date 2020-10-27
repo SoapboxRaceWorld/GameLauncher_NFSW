@@ -87,9 +87,9 @@
             this.settingsGameFilesCurrentText = new System.Windows.Forms.Label();
             this.settingsCDNCurrentText = new System.Windows.Forms.Label();
             this.settingsCancel = new System.Windows.Forms.Button();
+            this.settingsSave = new System.Windows.Forms.Button();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
-            this.settingsSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
@@ -169,7 +169,7 @@
             this.rememberMe.ForeColor = System.Drawing.Color.White;
             this.rememberMe.Location = new System.Drawing.Point(615, 285);
             this.rememberMe.Name = "rememberMe";
-            this.rememberMe.Size = new System.Drawing.Size(159, 19);
+            this.rememberMe.Size = new System.Drawing.Size(158, 19);
             this.rememberMe.TabIndex = 5;
             this.rememberMe.Text = "REMEMBER MY LOGIN";
             this.rememberMe.UseVisualStyleBackColor = false;
@@ -356,7 +356,7 @@
             this.launcherStatusDesc.BackColor = System.Drawing.Color.Transparent;
             this.launcherStatusDesc.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.launcherStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(134)))), ((int)(((byte)(134)))), ((int)(((byte)(134)))));
-            this.launcherStatusDesc.Location = new System.Drawing.Point(65, 486);
+            this.launcherStatusDesc.Location = new System.Drawing.Point(65, 489);
             this.launcherStatusDesc.Name = "launcherStatusDesc";
             this.launcherStatusDesc.Size = new System.Drawing.Size(146, 13);
             this.launcherStatusDesc.TabIndex = 5;
@@ -510,7 +510,7 @@
             this.ServerStatusDesc.BackColor = System.Drawing.Color.Transparent;
             this.ServerStatusDesc.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.ServerStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(134)))), ((int)(((byte)(134)))), ((int)(((byte)(134)))));
-            this.ServerStatusDesc.Location = new System.Drawing.Point(260, 486);
+            this.ServerStatusDesc.Location = new System.Drawing.Point(260, 489);
             this.ServerStatusDesc.Name = "ServerStatusDesc";
             this.ServerStatusDesc.Size = new System.Drawing.Size(85, 13);
             this.ServerStatusDesc.TabIndex = 8;
@@ -534,7 +534,7 @@
             // 
             this.ServerStatusIcon.BackColor = System.Drawing.Color.Transparent;
             this.ServerStatusIcon.Image = ((System.Drawing.Image)(resources.GetObject("ServerStatusIcon.Image")));
-            this.ServerStatusIcon.Location = new System.Drawing.Point(229, 478);
+            this.ServerStatusIcon.Location = new System.Drawing.Point(232, 478);
             this.ServerStatusIcon.Name = "ServerStatusIcon";
             this.ServerStatusIcon.Size = new System.Drawing.Size(24, 24);
             this.ServerStatusIcon.TabIndex = 6;
@@ -604,7 +604,7 @@
             this.settingsWordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsWordFilterCheck.Location = new System.Drawing.Point(46, 282);
             this.settingsWordFilterCheck.Name = "settingsWordFilterCheck";
-            this.settingsWordFilterCheck.Size = new System.Drawing.Size(235, 17);
+            this.settingsWordFilterCheck.Size = new System.Drawing.Size(234, 17);
             this.settingsWordFilterCheck.TabIndex = 93;
             this.settingsWordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.settingsWordFilterCheck.UseVisualStyleBackColor = false;
@@ -628,7 +628,7 @@
             this.settingsProxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsProxyCheckbox.Location = new System.Drawing.Point(46, 303);
             this.settingsProxyCheckbox.Name = "settingsProxyCheckbox";
-            this.settingsProxyCheckbox.Size = new System.Drawing.Size(103, 17);
+            this.settingsProxyCheckbox.Size = new System.Drawing.Size(102, 17);
             this.settingsProxyCheckbox.TabIndex = 102;
             this.settingsProxyCheckbox.Text = "Disable Proxy";
             this.settingsProxyCheckbox.UseVisualStyleBackColor = false;
@@ -746,7 +746,7 @@
             this.APIStatusDesc.BackColor = System.Drawing.Color.Transparent;
             this.APIStatusDesc.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.APIStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(134)))), ((int)(((byte)(134)))), ((int)(((byte)(134)))));
-            this.APIStatusDesc.Location = new System.Drawing.Point(455, 487);
+            this.APIStatusDesc.Location = new System.Drawing.Point(455, 489);
             this.APIStatusDesc.Name = "APIStatusDesc";
             this.APIStatusDesc.Size = new System.Drawing.Size(85, 13);
             this.APIStatusDesc.TabIndex = 120;
@@ -761,7 +761,7 @@
             this.settingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsDiscordRPCCheckbox.Location = new System.Drawing.Point(46, 326);
             this.settingsDiscordRPCCheckbox.Name = "settingsDiscordRPCCheckbox";
-            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(144, 17);
+            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(143, 17);
             this.settingsDiscordRPCCheckbox.TabIndex = 123;
             this.settingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
             this.settingsDiscordRPCCheckbox.UseVisualStyleBackColor = false;
@@ -809,6 +809,22 @@
             this.settingsCancel.UseVisualStyleBackColor = false;
             this.settingsCancel.Click += new System.EventHandler(this.settingsCancel_Click);
             // 
+            // settingsSave
+            // 
+            this.settingsSave.BackColor = System.Drawing.Color.Transparent;
+            this.settingsSave.FlatAppearance.BorderSize = 0;
+            this.settingsSave.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.settingsSave.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.settingsSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.settingsSave.ForeColor = System.Drawing.Color.White;
+            this.settingsSave.Image = global::GameLauncher.Properties.Resources.greenbutton;
+            this.settingsSave.Location = new System.Drawing.Point(584, 436);
+            this.settingsSave.Name = "settingsSave";
+            this.settingsSave.Size = new System.Drawing.Size(130, 50);
+            this.settingsSave.TabIndex = 23;
+            this.settingsSave.Text = "SAVE";
+            this.settingsSave.UseVisualStyleBackColor = false;
+            // 
             // extractingProgress
             // 
             this.extractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -841,22 +857,6 @@
             this.playProgress.RoundedCorners = false;
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
-            // 
-            // settingsSave
-            // 
-            this.settingsSave.BackColor = System.Drawing.Color.Transparent;
-            this.settingsSave.FlatAppearance.BorderSize = 0;
-            this.settingsSave.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.settingsSave.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.settingsSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.settingsSave.ForeColor = System.Drawing.Color.White;
-            this.settingsSave.Image = global::GameLauncher.Properties.Resources.greenbutton;
-            this.settingsSave.Location = new System.Drawing.Point(584, 436);
-            this.settingsSave.Name = "settingsSave";
-            this.settingsSave.Size = new System.Drawing.Size(130, 50);
-            this.settingsSave.TabIndex = 23;
-            this.settingsSave.Text = "SAVE";
-            this.settingsSave.UseVisualStyleBackColor = false;
             // 
             // MainScreen
             // 
