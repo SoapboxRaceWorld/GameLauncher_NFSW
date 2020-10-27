@@ -166,25 +166,25 @@ namespace GameLauncher {
                 Notification.Dispose();
             }
 
-            Log.Debug("Entered mainScreen");
+            Log.Debug("CORE: Entered mainScreen");
 
             rnd = new Random(Environment.TickCount);
 
             discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID);
 
             discordRpcClient.OnReady += (sender, e) => {
-                Log.Debug("Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
+                Log.Debug("DISCORD: Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
                 Self.discordid = e.User.ID.ToString();
             };
 
             discordRpcClient.OnError += (sender, e) => {
-                Log.Error($"Discord Error\n{e.Message}");
+                Log.Error($"DISCORD: Discord Error\n{e.Message}");
             };
 
             discordRpcClient.Initialize();
 
             
-            Log.Debug("Setting SSL Protocol");
+            Log.Debug("CORE: Setting SSL Protocol");
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
@@ -192,19 +192,19 @@ namespace GameLauncher {
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             }
 
-            Log.Debug("Detecting OS");
+            Log.Debug("LAUNCHER: Detecting OS");
             if (DetectLinux.LinuxDetected()) {
                 _OS = DetectLinux.Distro();
-                Log.Debug("Detected OS: " + _OS);
+                Log.Debug("SYSTEM: Detected OS: " + _OS);
             } else {
                 _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
-                Log.Debug("Detected OS: " + _OS);
+                Log.Debug("SYSTEM: Detected OS: " + _OS);
                 if (Environment.Is64BitOperatingSystem == true) {
-                    Log.Debug("Os Type: 64 Bit");
+                    Log.Debug("SYSTEM: OS Type: 64 Bit");
                 }
-                Log.Debug("OS Details: " + Environment.OSVersion);
-                Log.Debug("Video Card: " + GPUHelper.CardName());
-                Log.Debug("Driver Version: " + GPUHelper.DriverVersion());
+                Log.Debug("SYSTEM: OS Details: " + Environment.OSVersion);
+                Log.Debug("SYSTEM: Video Card: " + GPUHelper.CardName());
+                Log.Debug("SYSTEM: Driver Version: " + GPUHelper.DriverVersion());
             }
 
             _downloader = new Downloader(this, 3, 2, 16) {
@@ -215,10 +215,10 @@ namespace GameLauncher {
 				ShowExtract = new ShowExtract(OnShowExtract)
             };
 
-            Log.Debug("InitializeComponent");
+            Log.Debug("CORE: InitializeComponent");
             InitializeComponent();
 
-            Log.Debug("Applying Fonts");
+            Log.Debug("CORE: Applying Fonts");
             ApplyEmbeddedFonts();
 
             _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1") ? true : false;
@@ -226,12 +226,12 @@ namespace GameLauncher {
 
             Self.centerScreen(this);
 
-            Log.Debug("Disabling MaximizeBox");
+            Log.Debug("CORE: Disabling MaximizeBox");
             MaximizeBox = false;
-            Log.Debug("Setting Styles");
+            Log.Debug("CORE: Setting Styles");
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
 
-            Log.Debug("Applying EventHandlers");
+            Log.Debug("CORE: Applying EventHandlers");
             closebtn.MouseEnter += new EventHandler(closebtn_MouseEnter);
             closebtn.MouseLeave += new EventHandler(closebtn_MouseLeave);
             closebtn.Click += new EventHandler(closebtn_Click);
@@ -269,6 +269,12 @@ namespace GameLauncher {
             settingsSave.MouseUp += new MouseEventHandler(settingsSave_MouseUp);
             settingsSave.MouseDown += new MouseEventHandler(settingsSave_MouseDown);
             settingsSave.Click += new EventHandler(settingsSave_Click);
+
+            settingsCancel.MouseEnter += new EventHandler(settingsCancel_MouseEnter);
+            settingsCancel.MouseLeave += new EventHandler(settingsCancel_MouseLeave);
+            settingsCancel.MouseUp += new MouseEventHandler(settingsCancel_MouseUp);
+            settingsCancel.MouseDown += new MouseEventHandler(settingsCancel_MouseDown);
+            settingsCancel.Click += new EventHandler(settingsCancel_Click);
 
             settingsGameFiles.Click += new EventHandler(settingsGameFiles_Click);
             settingsGameFilesCurrent.Click += new EventHandler(settingsGameFilesCurrent_Click);
@@ -330,15 +336,15 @@ namespace GameLauncher {
             };
 
 
-            Log.Debug("Checking permissions");
+            Log.Debug("CORE: Checking permissions");
             if (!Self.hasWriteAccessToFolder(Directory.GetCurrentDirectory())) {
-                Log.Error("Check Permission Failed.");
+                Log.Error("CORE: Check Permission Failed.");
                 MessageBox.Show(null, "Failed to write the test file. Make sure you're running the launcher with administrative privileges.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            Log.Debug("Checking InstallationDirectory: " + _settingFile.Read("InstallationDirectory"));
+            Log.Debug("LAUNCHER: Checking InstallationDirectory: " + _settingFile.Read("InstallationDirectory"));
             if (string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory"))) {
-                Log.Debug("First run!");
+                Log.Debug("LAUNCHER: First run!");
 
                 try { 
                     Form welcome = new WelcomeScreen();
@@ -355,7 +361,6 @@ namespace GameLauncher {
                 } catch {
                     _settingFile.Write("CDN", "http://cdn.worldunited.gg/gamefiles/packed/");
                     _settingFile.Write("TracksHigh", "1");
-
                     _NFSW_Installation_Source = "http://cdn.worldunited.gg/gamefiles/packed/";
                 }
 
@@ -369,29 +374,29 @@ namespace GameLauncher {
 
                 if (fbd.ShowDialog() == CommonFileDialogResult.Ok) {
                     if (!Self.hasWriteAccessToFolder(fbd.FileName)) {
-                        Log.Error("Not enough permissions. Exiting.");
+                        Log.Error("LAUNCHER: Not enough permissions. Exiting.");
                         MessageBox.Show(null, "You don't have enough permission to select this path as installation folder. Please select another directory.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         Environment.Exit(Environment.ExitCode);
                     }
 
                     if (fbd.DefaultFileName == Environment.CurrentDirectory) {
                         Directory.CreateDirectory("GameFiles");
-                        Log.Debug("Installing NFSW in same directory where the launcher resides is disadvised.");
+                        Log.Debug("LAUNCHER: Installing NFSW in same directory where the launcher resides is disadvised.");
                         MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. Instead, we will install it on {0}.", Environment.CurrentDirectory + "\\GameFiles"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         _settingFile.Write("InstallationDirectory", Environment.CurrentDirectory + "\\GameFiles");
                     } else {
-                        Log.Debug("Directory Set: " + fbd.FileName);
+                        Log.Debug("LAUNCHER: Directory Set: " + fbd.FileName);
                         _settingFile.Write("InstallationDirectory", fbd.FileName);
                     }
                 } else {
-                    Log.Debug("Exiting");
+                    Log.Debug("LAUNCHER: Exiting");
                     Environment.Exit(Environment.ExitCode);
                 }
                 fbd.Dispose();
             }
 
             if (!DetectLinux.LinuxDetected()) {
-                Log.Debug("Setting cursor.");
+                Log.Debug("CORE: Setting cursor.");
                 string temporaryFile = Path.GetTempFileName();
                 File.WriteAllBytes(temporaryFile, ExtractResource.AsByte("GameLauncher.SoapBoxModules.cursor.ani"));
                 Cursor mycursor = new Cursor(Cursor.Current.Handle);
@@ -401,17 +406,17 @@ namespace GameLauncher {
                 File.Delete(temporaryFile);
             }
 
-            Log.Debug("Doing magic with imageServerName");
+            Log.Debug("CORE: Doing magic with imageServerName");
             var pos = PointToScreen(imageServerName.Location);
             pos = verticalBanner.PointToClient(pos);
             imageServerName.Parent = verticalBanner;
             imageServerName.Location = pos;
             imageServerName.BackColor = Color.Transparent;
 
-            Log.Debug("Setting ServerStatusBar");
+            Log.Debug("CORE: Setting ServerStatusBar");
             ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
-            Log.Debug("Loading ModManager Cache");
+            Log.Debug("CORE: Loading ModManager Cache");
             ModManager.LoadModCache();
         }
 
@@ -460,26 +465,26 @@ namespace GameLauncher {
         }
 
         private void mainScreen_Load(object sender, EventArgs e) {
-            Log.Debug("Entering mainScreen_Load");
+            Log.Debug("CORE: Entering mainScreen_Load");
 
-            Log.Debug("Updating server list");
+            Log.Debug("LAUNCHER: Updating server list");
             ServerListUpdater.UpdateList();
 
-            Log.Debug("Setting WindowName");
+            Log.Debug("CORE: Setting WindowName");
             Text = "GameLauncherReborn v" + Application.ProductVersion;
 
-            Log.Debug("Checking window location");
+            Log.Debug("CORE: Checking window location");
             if (Location.X >= Screen.PrimaryScreen.Bounds.Width || Location.Y >= Screen.PrimaryScreen.Bounds.Height || Location.X <= 0 || Location.Y <= 0) {
-                Log.Debug("Window location restored to centerScreen");
+                Log.Debug("CORE: Window location restored to centerScreen");
 
                 Self.centerScreen(this);
                 _windowMoved = true;
             }
 
             _NFSW_Installation_Source = !string.IsNullOrEmpty(_settingFile.Read("CDN")) ? _settingFile.Read("CDN") : "http://cdn.worldunited.gg/gamefiles/packed/";
-            Log.Debug("NFSW Download Source is now: " + _NFSW_Installation_Source);
+            Log.Debug("LAUNCHER: NFSW Download Source is now: " + _NFSW_Installation_Source);
 
-            Log.Debug("Applyinng ContextMenu");
+            Log.Debug("CORE: Applyinng ContextMenu");
             translatedBy.Text = "";
             ContextMenu = new ContextMenu();
 
@@ -500,13 +505,13 @@ namespace GameLauncher {
             email.Text = _settingFile.Read("AccountEmail");
             password.Text = Properties.Settings.Default.PasswordDecoded;
             if (!string.IsNullOrEmpty(_settingFile.Read("AccountEmail")) && !string.IsNullOrEmpty(_settingFile.Read("Password"))) {
-                Log.Debug("Restoring last saved email and password");
+                Log.Debug("LAUNCHER: Restoring last saved email and password");
                 rememberMe.Checked = true;
             }
 
             serverPick.DisplayMember = "Name";
 
-            Log.Debug("Setting server list");
+            Log.Debug("LAUNCHER: Setting server list");
             finalItems = ServerListUpdater.GetList();
             serverPick.DataSource = finalItems;
 
@@ -566,7 +571,7 @@ namespace GameLauncher {
                 }
             //}
 
-            Log.Debug("Checking for password");
+            Log.Debug("LAUNCHER: Checking for password");
             if (_settingFile.KeyExists("Password"))
             {
                 _loginEnabled = true;
@@ -584,7 +589,7 @@ namespace GameLauncher {
                 loginButton.ForeColor = Color.Gray;
             }
 
-            Log.Debug("Setting game language");
+            Log.Debug("LAUNCHER: Setting game language");
 
             settingsLanguage.DisplayMember = "Text";
             settingsLanguage.ValueMember = "Value";
@@ -635,14 +640,14 @@ namespace GameLauncher {
                 }));
             });
 
-            Log.Debug("Re-checking InstallationDirectory: " + _settingFile.Read("InstallationDirectory"));
+            Log.Debug("LAUNCHER: Re-checking InstallationDirectory: " + _settingFile.Read("InstallationDirectory"));
 
             var drive = Path.GetPathRoot(_settingFile.Read("InstallationDirectory"));
             if (!Directory.Exists(drive)) {
                 if (!string.IsNullOrEmpty(drive)) {
                     var newdir = Directory.GetCurrentDirectory() + "\\GameFiles";
                     _settingFile.Write("InstallationDirectory", newdir);
-                    Log.Debug(string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir));
+                    Log.Debug(string.Format("LAUNCHER: Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir));
 
                     MessageBox.Show(null, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -652,13 +657,13 @@ namespace GameLauncher {
             settingsProxyCheckbox.Checked = _disableProxy;
             settingsDiscordRPCCheckbox.Checked = _disableDiscordRPC;
 
-            Log.Debug("Hiding RegisterFormElements"); RegisterFormElements(false);
-            Log.Debug("Hiding SettingsFormElements"); SettingsFormElements(false);
-            Log.Debug("Hiding LoggedInFormElements"); LoggedInFormElements(false);
+            Log.Debug("CORE: Hiding RegisterFormElements"); RegisterFormElements(false);
+            Log.Debug("CORE: Hiding SettingsFormElements"); SettingsFormElements(false);
+            Log.Debug("CORE: Hiding LoggedInFormElements"); LoggedInFormElements(false);
 
-            Log.Debug("Showing LoginFormElements"); LoginFormElements(true);
+            Log.Debug("CORE: Showing LoginFormElements"); LoginFormElements(true);
 
-            Log.Debug("Setting Registry Options");
+            Log.Debug("CORE: Setting Registry Options");
             try {
                 var gameInstallDirValue = Registry.GetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", RegistryValueKind.String);
                 if (gameInstallDirValue == null || gameInstallDirValue.ToString() != Path.GetFullPath(_settingFile.Read("InstallationDirectory"))) {
@@ -673,13 +678,17 @@ namespace GameLauncher {
                 Log.Error(ex.Message);
             }
 
-            Log.Debug("Setting configurations");
+            Log.Debug("LAUNCHER: Setting configurations");
             _newGameFilesPath = Path.GetFullPath(_settingFile.Read("InstallationDirectory"));
-            settingsGameFilesCurrent.Text = "CURRENT DIRECTORY: " + _newGameFilesPath;
+            settingsGameFilesCurrentText.Text = "CURRENT DIRECTORY";
+            settingsGameFilesCurrent.Text = _newGameFilesPath;
             //DavidCarbon
-            settingsCDNCurrent.Text = "CURRENT CDN URL: " + _settingFile.Read("CDN");
+            settingsCDNCurrent.Text = _settingFile.Read("CDN");
 
-            Log.Debug("Initializing DiscordRPC");
+
+
+            Log.Debug("DISCORD: Initializing DiscordRPC");
+            Log.Debug("DISCORD: Checking if Discord RPC is Disabled from User Settings! It's value is " + _disableDiscordRPC);
 
             _presence.State = _OS;
             _presence.Details = "In-Launcher: " + Application.ProductVersion;
@@ -691,14 +700,14 @@ namespace GameLauncher {
             if(discordRpcClient != null) discordRpcClient.SetPresence(_presence);
 
             BeginInvoke((MethodInvoker)delegate {
-                Log.Debug("Initialize Downloading Process");
+                Log.Debug("CORE: 'GetServerInformation' from all Servers in Server List and Download Selected Server Banners");
                 LaunchNfsw();
             });
 
             this.BringToFront();
 
             if(!DetectLinux.LinuxDetected()) {
-                Log.Debug("Checking for update: " + Self.mainserver + "/update.php?version=" + Application.ProductVersion);
+                Log.Debug("LAUNCHER: Checking for update: " + Self.mainserver + "/update.php?version=" + Application.ProductVersion);
                 new LauncherUpdateCheck(launcherIconStatus, launcherStatusText, launcherStatusDesc).checkAvailability();
             } else {
                 launcherIconStatus.Image = Properties.Resources.ac_success;
@@ -784,17 +793,10 @@ namespace GameLauncher {
             }
 
             ServerProxy.Instance.Stop();
-
-            //File.WriteAllLines("invalidfiles.dat", invalidFileList);
-
             Notification.Dispose();
 
-            Process[] allOfThem2 = Process.GetProcessesByName("GameLauncher");
-            foreach (var oneProcess in allOfThem2) {
-                Process.GetProcessById(oneProcess.Id).Kill();
-            }
-
-            Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+            //Leave this here. Its to properly close the launcher from Visual Studio (And Close the Launcher a well)
+            this.Close();
         }
 
         private void addServer_Click(object sender, EventArgs e)
@@ -807,15 +809,6 @@ namespace GameLauncher {
             if (!(serverPick.SelectedItem is ServerInfo server)) return;
 
             var form = new DebugWindow(server.IpAddress, server.Name);
-            form.Show();
-        }
-
-        private void OpenMapHandler(object sender, EventArgs e)
-        {
-            if (!(serverPick.SelectedItem is ServerInfo server)) return;
-
-            var form = new ShowMap(server.IpAddress, _realServername);
-
             form.Show();
         }
 
@@ -991,6 +984,7 @@ namespace GameLauncher {
             ServerStatusText.Text = "Server Status - Pinging";
             ServerStatusText.ForeColor = Color.FromArgb(66, 179, 189);
             ServerStatusDesc.Text = "";
+            ServerStatusIcon.Image = Properties.Resources.server_checking;
 
             loginButton.ForeColor = Color.Gray;
             var verticalImageUrl = "";
@@ -1036,6 +1030,7 @@ namespace GameLauncher {
                     ServerStatusText.Text = "Server Status - Offline ( OFF )";
                     ServerStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                     ServerStatusDesc.Text = "Failed to connect to server.";
+                    ServerStatusIcon.Image = Properties.Resources.server_offline;
                     _serverEnabled = false;
                     _allowRegistration = false;
 
@@ -1050,6 +1045,7 @@ namespace GameLauncher {
                     ServerStatusText.Text = "Server Status - Offline ( OFF )";
                     ServerStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                     ServerStatusDesc.Text = "Server seems to be offline.";
+                    ServerStatusIcon.Image = Properties.Resources.server_offline;
                     _serverEnabled = false;
                     _allowRegistration = false;
 
@@ -1136,7 +1132,7 @@ namespace GameLauncher {
                     try { 
                         ServerStatusText.Text = "Server Status - Online ( ON )";
                         ServerStatusText.ForeColor = Color.FromArgb(159, 193, 32);
-
+                        ServerStatusIcon.Image = Properties.Resources.server_online;
                         loginButton.ForeColor = Color.White;
                         _loginEnabled = true;
                     }
@@ -1230,15 +1226,18 @@ namespace GameLauncher {
             settingsMainCDNText.Font = new Font(AkrobatSemiBold, 10.5f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             settingsBkupSrvText.Font = new Font(AkrobatSemiBold, 10.5f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             settingsBkupCDNText.Font = new Font(AkrobatSemiBold, 10.5f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsCDNCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsCDNCurrentText.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsCDNCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             settingsCDNText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsCancel.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsSave.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsGamePathText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsVFilesButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsProxyCheckbox.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsDiscordRPCCheckbox.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsWordFilterCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsGameFilesCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsGameFilesCurrent.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsGameFilesCurrentText.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             /* Registering Screen */
             registerAgree.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             registerCancel.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
@@ -1657,6 +1656,55 @@ namespace GameLauncher {
             settingsSave.Image = Properties.Resources.greenbutton_click;
         }
 
+        //
+        private void settingsCancel_MouseEnter(object sender, EventArgs e)
+        {
+            settingsCancel.Image = Properties.Resources.graybutton_hover;
+        }
+
+        private void settingsCancel_MouseLeave(object sender, EventArgs e)
+        {
+            settingsCancel.Image = Properties.Resources.graybutton;
+        }
+
+        private void settingsCancel_MouseUp(object sender, EventArgs e)
+        {
+            settingsCancel.Image = Properties.Resources.graybutton_hover;
+        }
+
+        private void settingsCancel_MouseDown(object sender, EventArgs e)
+        {
+            settingsCancel.Image = Properties.Resources.graybutton_click;
+        }
+
+        private void settingsCancel_Click(object sender, EventArgs e)
+        {
+            SettingsFormElements(false);
+
+            if (_loggedIn)
+            {
+                BackgroundImage = Properties.Resources.loggedbg;
+                LoginFormElements();
+                LoggedInFormElements(true);
+            }
+            else
+            {
+                BackgroundImage = Properties.Resources.loginbg;
+                LoggedInFormElements(false);
+                LoginFormElements(true);
+            }
+
+            //Reset Connection Status Labels - DavidCarbon
+            settingsMainSrvText.Text = "Main Server List API: PINGING";
+            settingsMainSrvText.ForeColor = Color.FromArgb(66, 179, 189);
+            settingsMainCDNText.Text = "Main CDN List API: PINGING";
+            settingsMainCDNText.ForeColor = Color.FromArgb(66, 179, 189);
+            settingsBkupSrvText.Text = "Backup Server List API: PINGING";
+            settingsBkupSrvText.ForeColor = Color.FromArgb(66, 179, 189);
+            settingsBkupCDNText.Text = "Backup CDN List API: PINGING";
+            settingsBkupCDNText.ForeColor = Color.FromArgb(66, 179, 189);
+        }
+
         private void settingsSave_Click(object sender, EventArgs e) {
 
             //TODO null check
@@ -1773,7 +1821,8 @@ namespace GameLauncher {
             if (result2 == DialogResult.OK)
             {
                 _newGameFilesPath = Path.GetFullPath(fbd2.SelectedPath);
-                settingsGameFilesCurrent.Text = "NEW DIRECTORY: " + _newGameFilesPath;
+                settingsGameFilesCurrentText.Text = "NEW DIRECTORY";
+                settingsGameFilesCurrent.Text = _newGameFilesPath;
             }
         }
 
@@ -1786,16 +1835,18 @@ namespace GameLauncher {
                 currentWindowInfo.Text = "";
             }
 
+            settingsCancel.Visible = hideElements;
             settingsSave.Visible = hideElements;
             settingsLanguage.Visible = hideElements;
             settingsLanguageText.Visible = hideElements;
             settingsCDNPick.Visible = hideElements;
             settingsCDNText.Visible = hideElements;
             settingsGameFiles.Visible = hideElements;
+            settingsGameFilesCurrentText.Visible = hideElements;
             settingsGameFilesCurrent.Visible = hideElements;
             settingsGamePathText.Visible = hideElements;
             settingsWordFilterCheck.Visible = hideElements;
-            settingsVFilesButton.Visible = hideElements;
+            //settingsVFilesButton.Visible = hideElements;
             settingsProxyCheckbox.Visible = hideElements;
             settingsDiscordRPCCheckbox.Visible = hideElements;
             //Connection Status - DavidCarbon
@@ -1804,6 +1855,7 @@ namespace GameLauncher {
             settingsMainCDNText.Visible = hideElements;
             settingsBkupSrvText.Visible = hideElements;
             settingsBkupCDNText.Visible = hideElements;
+            settingsCDNCurrentText.Visible = hideElements;
             settingsCDNCurrent.Visible = hideElements;
 
         }
@@ -1871,6 +1923,7 @@ namespace GameLauncher {
         //DavidCarbon
         private async void PingAPIStatus ()
         {
+            Log.Debug("SETTINGS PINGING API: Checking APIs");
             await Task.Delay(500);
             HttpWebRequest requestMainServerList = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/serverlist.json");
             requestMainServerList.AllowAutoRedirect = false; // Find out if this site is up and don't follow a redirector
@@ -1882,12 +1935,14 @@ namespace GameLauncher {
                 mainServerListResponse.Close();
                 settingsMainSrvText.Text = "Main Server List API: ONLINE";
                 settingsMainSrvText.ForeColor = Color.FromArgb(159, 193, 32);
+                Log.Debug("SETTINGS PINGING API: Main Server List Online");
                 //Do something with response.Headers to find out information about the request
             }
             catch (WebException)
             {
                 settingsMainSrvText.Text = "Main Server List API: ERROR";
                 settingsMainSrvText.ForeColor = Color.FromArgb(254, 0, 0);
+                Log.Debug("SETTINGS PINGING API: Main Server List Failed to Connect");
                 //Set flag if there was a timeout or some other issues
             }
 
@@ -1902,11 +1957,13 @@ namespace GameLauncher {
                 bkupServerListResponse.Close();
                 settingsBkupSrvText.Text = "Backup Server List API: ONLINE";
                 settingsBkupSrvText.ForeColor = Color.FromArgb(159, 193, 32);
+                Log.Debug("SETTINGS PINGING API: Backup Server List Online");
             }
             catch (WebException)
             {
                 settingsBkupSrvText.Text = "Backup Server List API: ERROR";
                 settingsBkupSrvText.ForeColor = Color.FromArgb(254, 0, 0);
+                Log.Debug("SETTINGS PINGING API: Backup Server List failed to Connect");
             }
 
             await Task.Delay(1500);
@@ -1920,11 +1977,13 @@ namespace GameLauncher {
                 mainCDNListResponse.Close();
                 settingsMainCDNText.Text = "Main CDN List API: ONLINE";
                 settingsMainCDNText.ForeColor = Color.FromArgb(159, 193, 32);
+                Log.Debug("SETTINGS PINGING API: Main CDN List Online");
             }
             catch (WebException)
             {
                 settingsMainCDNText.Text = "Main CDN List API: ERROR";
                 settingsMainCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                Log.Debug("SETTINGS PINGING API: Main CDN List failed to Connect");
             }
 
             await Task.Delay(2000);
@@ -1938,11 +1997,13 @@ namespace GameLauncher {
                 bkupCDNListResponse.Close();
                 settingsBkupCDNText.Text = "Backup CDN List API: ONLINE";
                 settingsBkupCDNText.ForeColor = Color.FromArgb(159, 193, 32);
+                Log.Debug("SETTINGS PINGING API: Backup CDN List Online");
             }
             catch (WebException)
             {
                 settingsBkupCDNText.Text = "Backup CDN List API: ERROR";
                 settingsBkupCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                Log.Debug("SETTINGS PINGING API: Backup CDN List failed to Connect");
             }
 
         }
@@ -1950,6 +2011,7 @@ namespace GameLauncher {
         //Check Serverlist API Status Upon Main Screen load - DavidCarbon
         private async void PingServerListAPIStatus()
         {
+            Log.Debug("PINGING API: Checking API Status");
             HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/serverlist.json");
             requestMainServerListAPI.AllowAutoRedirect = false;
             requestMainServerListAPI.Method = "HEAD";
@@ -1962,6 +2024,7 @@ namespace GameLauncher {
                 APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
                 APIStatusDesc.Text = "Connected to Main API";
                 APIStatusIcon.Image = Properties.Resources.api_success;
+                Log.Debug("PINGING API: Main Server has responded. Its Online!");
             }
             catch (WebException)
             {
@@ -1969,7 +2032,8 @@ namespace GameLauncher {
                 APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                 APIStatusDesc.Text = "Checking to Backup API";
                 APIStatusIcon.Image = Properties.Resources.api_error;
-                
+                Log.Debug("PINGING API: Main Server has responded. Its Offline! Checking Backup...");
+
                 await Task.Delay(1500);
                 APIStatusText.Text = "Backup API - Pinging";
                 APIStatusText.ForeColor = Color.FromArgb(66, 179, 189);
@@ -1991,6 +2055,7 @@ namespace GameLauncher {
                         APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
                         APIStatusDesc.Text = "Connected to Backup API";
                         APIStatusIcon.Image = Properties.Resources.api_success;
+                        Log.Debug("PINGING API: Backup Server has responded. Its Online!");
                     }
                     catch (WebException)
                     {
@@ -1998,7 +2063,7 @@ namespace GameLauncher {
                         APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                         APIStatusDesc.Text = "Failed to Connect to APIs";
                         APIStatusIcon.Image = Properties.Resources.api_error;
-                        Log.Debug("Failed to Connect to API");
+                        Log.Debug("PINGING API: Failed to Connect to APIs! Quick Hide and Bunker Down! (Ask for help)");
                     }
                 }
                 catch { }
@@ -2162,7 +2227,7 @@ namespace GameLauncher {
 
                 client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_RELOADED);
                 client2.DownloadFileCompleted += (test, stuff) => {
-                    Log.Debug("Downloaded: " + FileName);
+                    Log.Debug("LAUNCHER: Downloaded: " + FileName);
                     isDownloadingModNetFiles = false;
                     if (modFilesDownloadUrls.Any() == false)
                     {
@@ -2267,7 +2332,7 @@ namespace GameLauncher {
 
             playButton.BackgroundImage = Properties.Resources.playbutton;
 
-            Log.Debug("Installing ModNet");
+            Log.Debug("LAUNCHER: Installing ModNet");
             playProgressText.Text = ("Detecting ModNetSupport for " + _realServernameBanner).ToUpper();
             String jsonModNet = ModNetReloaded.ModNetSupported(_serverIp);
 
@@ -2325,7 +2390,7 @@ namespace GameLauncher {
                         var name = Path.GetFileName(file);
 
                         if (json3.entries.All(en => en.Name != name)) {
-                            Log.Debug("removing package: " + file);
+                            Log.Debug("LAUNCHER: removing package: " + file);
                             try { 
                                 File.Delete(file);
                             } catch(Exception ex) {
@@ -2334,7 +2399,7 @@ namespace GameLauncher {
                         }
                     }
                 } catch(Exception ex) {
-                    Log.Debug(ex.Message);
+                    Log.Debug("LAUNCHER " + ex.Message);
                     MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{ex.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             } else {
@@ -2474,7 +2539,7 @@ namespace GameLauncher {
                         ContextMenu.MenuItems.Add("-");
                         ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", (sender2, e2) =>
                         {
-                            MessageBox.Show(null, "Please close the game before closing launcher.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(null, "Please close the game before closing launcher.", "Please close the game before closing launcher.", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }));
 
                         Update();
@@ -2866,6 +2931,7 @@ namespace GameLauncher {
                 serverPick.SelectedIndex = index;
             }
         }
+
     }
     /* Moved 7 Unused Code to Gist */
     /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/00de505302fbf9f8cfea9b163a707d9f8f122552/MainScreen.cs */

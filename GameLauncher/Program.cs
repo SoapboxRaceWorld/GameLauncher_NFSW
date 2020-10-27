@@ -229,7 +229,7 @@ namespace GameLauncher {
             File.Delete("communication.log");
             File.Delete("launcher.log");
 
-            Log.Debug("GameLauncher " + Application.ProductVersion);
+            Log.Debug("BUILD: GameLauncher " + Application.ProductVersion);
 
             if (_settingFile.KeyExists("InstallationDirectory")) {
                 if(!File.Exists(_settingFile.Read("InstallationDirectory"))) {
@@ -248,7 +248,7 @@ namespace GameLauncher {
             {
                 try
                 {
-                    Log.Debug("Starting LZMA downloader");
+                    Log.Debug("CORE: Starting LZMA downloader");
                     using (WebClientWithTimeout wc = new WebClientWithTimeout())
                     {
                         wc.DownloadFileAsync(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
@@ -271,19 +271,19 @@ namespace GameLauncher {
                 }
                 catch (Exception ex)
                 {
-                    Log.Debug("Failed to download LZMA. " + ex.Message);
+                    Log.Debug("CORE: Failed to download LZMA. " + ex.Message);
                 }
             }
 
             //StaticConfiguration.DisableErrorTraces = false;
 
-            Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
+            Log.Debug("CORE: Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
 
-            Log.Debug("Checking current directory");
+            Log.Debug("CORE: Checking current directory");
 
             if (Self.isTempFolder(Directory.GetCurrentDirectory())) {
                 MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
@@ -291,7 +291,7 @@ namespace GameLauncher {
             }
 
 			if(!File.Exists("GameLauncherUpdater.exe")) {
-                Log.Debug("Starting GameLauncherUpdater downloader");
+                Log.Debug("CORE: Starting GameLauncherUpdater downloader");
                 try {
                     using (WebClientWithTimeout wc = new WebClientWithTimeout()) {
                         wc.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) => {
@@ -302,7 +302,7 @@ namespace GameLauncher {
                         wc.DownloadFileAsync(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
                     }
                 } catch(Exception ex) {
-                    Log.Debug("Failed to download updater. " + ex.Message);
+                    Log.Debug("CORE: Failed to download updater. " + ex.Message);
                 }
             }
 
@@ -389,10 +389,10 @@ namespace GameLauncher {
 
                             MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         } else {
-                            Log.Debug("Checking Proxy");
+                            Log.Debug("CORE: Starting Proxy");
                             ServerProxy.Instance.Start();
                             
-                            Log.Debug("Starting MainScreen");
+                            Log.Debug("CORE: Starting MainScreen");
                             Application.Run(new MainScreen());
                         }
                     } else {
