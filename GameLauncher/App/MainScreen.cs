@@ -2494,7 +2494,7 @@ namespace GameLauncher {
                 discordRpcClient.Initialize();
             }
 
-            if(((ServerInfo)serverPick.SelectedItem).Category == "DEV") {
+            if((_disableDiscordRPC == false) && ((ServerInfo)serverPick.SelectedItem).Category == "DEV") {
                 discordRpcClient.Dispose();
                 discordRpcClient = null;
             }
