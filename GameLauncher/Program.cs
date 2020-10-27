@@ -23,6 +23,7 @@ using System.Globalization;
 
 namespace GameLauncher {
     internal static class Program {
+
         internal class Arguments {
             [Option('p', "parse", Required = false, HelpText = "Parses URI")]
             public string Parse { get; set; }
@@ -320,9 +321,10 @@ namespace GameLauncher {
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             if (Debugger.IsAttached) {
-                Log.Debug("Checking Proxy");
+                Log.Debug("PROXY: Starting Proxy");
                 ServerProxy.Instance.Start();
-                Log.Debug("Starting MainScreen");
+                
+                Log.Debug("CORE: Starting MainScreen");
                 Application.Run(new MainScreen());
             } else {
                 if (NFSW.isNFSWRunning()) {

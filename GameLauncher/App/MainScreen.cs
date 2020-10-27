@@ -62,6 +62,8 @@ namespace GameLauncher {
         private bool _gameKilledBySpeedBugCheck = false;
         private bool _disableLogout = false;
 
+        public static String getTempNa = Path.GetTempFileName();
+
         //private bool _disableChecks;
         private bool _disableProxy;
         private bool _disableDiscordRPC;
@@ -74,6 +76,7 @@ namespace GameLauncher {
         private DateTime _downloadStartTime;
         private readonly Downloader _downloader;
 
+        private string _loginWelcomeTime = "";
         private string _loginToken = "";
         private string _userId = "";
         private string _serverIp = "";
@@ -117,6 +120,8 @@ namespace GameLauncher {
 
         List<ServerInfo> finalItems = new List<ServerInfo>();
         Dictionary<string, int> serverStatusDictionary = new Dictionary<string, int>();
+
+        String filename_pack = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameFiles.sbrwpack");
 
         //UltimateLauncherFunction: SelectServer
         private static ServerInfo _ServerList;
@@ -223,6 +228,7 @@ namespace GameLauncher {
 
             _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1") ? true : false;
             _disableDiscordRPC = (_settingFile.KeyExists("DisableRPC") && _settingFile.Read("DisableRPC") == "1") ? true : false;
+            Log.Debug("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + _disableProxy);
 
             Self.centerScreen(this);
 
@@ -242,38 +248,38 @@ namespace GameLauncher {
 
             loginButton.MouseEnter += new EventHandler(loginButton_MouseEnter);
             loginButton.MouseLeave += new EventHandler(loginButton_MouseLeave);
-            loginButton.Click += new EventHandler(loginButton_Click);
             loginButton.MouseUp += new MouseEventHandler(loginButton_MouseUp);
             loginButton.MouseDown += new MouseEventHandler(loginButton_MouseDown);
+            loginButton.Click += new EventHandler(loginButton_Click);
 
-            registerButton.MouseEnter += registerButton_MouseEnter;
-            registerButton.MouseLeave += registerButton_MouseLeave;
-            registerButton.MouseUp += registerButton_MouseUp;
-            registerButton.MouseDown += registerButton_MouseDown;
+            registerButton.MouseEnter += greenbutton_hover_MouseEnter;
+            registerButton.MouseLeave += greenbutton_MouseLeave;
+            registerButton.MouseUp += greenbutton_hover_MouseUp;
+            registerButton.MouseDown += greenbutton_click_MouseDown;
             registerButton.Click += registerButton_Click;
 
-            registerCancel.Click += registerCancel_Click;
-            registerCancel.MouseEnter += registerCancel_MouseEnter;
-            registerCancel.MouseLeave += registerCancel_MouseLeave;
-            registerCancel.MouseUp += registerCancel_MouseUp;
-            registerCancel.MouseDown += registerCancel_MouseDown;
+            registerCancel.MouseEnter += new EventHandler(graybutton_hover_MouseEnter);
+            registerCancel.MouseLeave += new EventHandler(graybutton_MouseLeave);
+            registerCancel.MouseUp += new MouseEventHandler(graybutton_hover_MouseUp);
+            registerCancel.MouseDown += new MouseEventHandler(graybutton_click_MouseDown);
+            registerCancel.Click += new EventHandler(registerCancel_Click);
 
-            logoutButton.Click += logoutButton_Click;
-            logoutButton.MouseEnter += logoutButton_MouseEnter;
-            logoutButton.MouseLeave += logoutButton_MouseLeave;
-            logoutButton.MouseUp += logoutButton_MouseUp;
-            logoutButton.MouseDown += logoutButton_MouseDown;
+            logoutButton.MouseEnter += new EventHandler(graybutton_hover_MouseEnter);
+            logoutButton.MouseLeave += new EventHandler(graybutton_MouseLeave);
+            logoutButton.MouseUp += new MouseEventHandler(graybutton_hover_MouseUp);
+            logoutButton.MouseDown += new MouseEventHandler(graybutton_click_MouseDown);
+            logoutButton.Click += new EventHandler(logoutButton_Click);
 
-            settingsSave.MouseEnter += new EventHandler(settingsSave_MouseEnter);
-            settingsSave.MouseLeave += new EventHandler(settingsSave_MouseLeave);
-            settingsSave.MouseUp += new MouseEventHandler(settingsSave_MouseUp);
-            settingsSave.MouseDown += new MouseEventHandler(settingsSave_MouseDown);
+            settingsSave.MouseEnter += new EventHandler(greenbutton_hover_MouseEnter);
+            settingsSave.MouseLeave += new EventHandler(greenbutton_MouseLeave);
+            settingsSave.MouseUp += new MouseEventHandler(greenbutton_hover_MouseUp);
+            settingsSave.MouseDown += new MouseEventHandler(greenbutton_click_MouseDown);
             settingsSave.Click += new EventHandler(settingsSave_Click);
 
-            settingsCancel.MouseEnter += new EventHandler(settingsCancel_MouseEnter);
-            settingsCancel.MouseLeave += new EventHandler(settingsCancel_MouseLeave);
-            settingsCancel.MouseUp += new MouseEventHandler(settingsCancel_MouseUp);
-            settingsCancel.MouseDown += new MouseEventHandler(settingsCancel_MouseDown);
+            settingsCancel.MouseEnter += new EventHandler(graybutton_hover_MouseEnter);
+            settingsCancel.MouseLeave += new EventHandler(graybutton_MouseLeave);
+            settingsCancel.MouseUp += new MouseEventHandler(graybutton_hover_MouseUp);
+            settingsCancel.MouseDown += new MouseEventHandler(graybutton_click_MouseDown);
             settingsCancel.Click += new EventHandler(settingsCancel_Click);
 
             settingsGameFiles.Click += new EventHandler(settingsGameFiles_Click);
@@ -292,20 +298,26 @@ namespace GameLauncher {
 
             forgotPassword.LinkClicked += new LinkLabelLinkClickedEventHandler(forgotPassword_LinkClicked);
 
-            MouseDown += new MouseEventHandler(moveWindow_MouseDown);
             MouseMove += new MouseEventHandler(moveWindow_MouseMove);
             MouseUp += new MouseEventHandler(moveWindow_MouseUp);
+            MouseDown += new MouseEventHandler(moveWindow_MouseDown);
 
-            logo.MouseDown += new MouseEventHandler(moveWindow_MouseDown);
+            logo.MouseEnter += new EventHandler(logo_MouseEnter);
+            logo.MouseLeave += new EventHandler(logo_MouseLeave);
             logo.MouseMove += new MouseEventHandler(moveWindow_MouseMove);
             logo.MouseUp += new MouseEventHandler(moveWindow_MouseUp);
+            logo.MouseDown += new MouseEventHandler(moveWindow_MouseDown);
 
             playButton.MouseEnter += new EventHandler(playButton_MouseEnter);
             playButton.MouseLeave += new EventHandler(playButton_MouseLeave);
-            playButton.Click += new EventHandler(playButton_Click);
             playButton.MouseUp += new MouseEventHandler(playButton_MouseUp);
             playButton.MouseDown += new MouseEventHandler(playButton_MouseDown);
+            playButton.Click += new EventHandler(playButton_Click);
 
+            registerText.MouseEnter += new EventHandler(greenbutton_hover_MouseEnter);
+            registerText.MouseLeave += new EventHandler(greenbutton_MouseLeave);
+            registerText.MouseUp += new MouseEventHandler(greenbutton_hover_MouseUp);
+            registerText.MouseDown += new MouseEventHandler(greenbutton_click_MouseDown);
             registerText.Click += new EventHandler(registerText_LinkClicked);
 
             this.Load += new EventHandler(mainScreen_Load);
@@ -1208,12 +1220,12 @@ namespace GameLauncher {
             APIStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             APIStatusDesc.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            playProgressTextTimer.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             email.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             loginButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             password.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             rememberMe.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             forgotPassword.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             playButton.Font = new Font(AkrobatSemiBold, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             currentWindowInfo.Font = new Font(AkrobatSemiBold, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             imageServerName.Font = new Font(AkrobatSemiBold, 25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
@@ -1252,6 +1264,7 @@ namespace GameLauncher {
 
         private void registerText_LinkClicked(object sender, EventArgs e)
         {
+            registerButton.Image = Properties.Resources.greenbutton_click;
             if (_allowRegistration) {
                 if(!string.IsNullOrEmpty(json.webSignupUrl)) {
                     Process.Start(json.webSignupUrl);
@@ -1266,7 +1279,7 @@ namespace GameLauncher {
                 }
 
                 BackgroundImage = (_ticketRequired) ? Properties.Resources.register_ticket : Properties.Resources.register_noticket;
-                currentWindowInfo.Text = "REGISTER ON " + _realServername.ToUpper() + ":";
+                currentWindowInfo.Text = "REGISTER ON \n" + _realServername.ToUpper();
                 LoginFormElements(false);
                 RegisterFormElements(true);
             } else {
@@ -1315,13 +1328,32 @@ namespace GameLauncher {
         {
             if (hideElements)
             {
-                currentWindowInfo.Text = string.Format("Welcome back, {0}!", email.Text).ToUpper();
+                DateTime currentTime = DateTime.Now;
+
+                if (currentTime.Hour < 12)
+                {
+                    _loginWelcomeTime = "Good Morning";
+                }
+                else if (currentTime.Hour <= 16)
+                {
+                    _loginWelcomeTime = "Good Afternoon";
+                }
+                else if (currentTime.Hour <= 20)
+                {
+                    _loginWelcomeTime = "Good Evening";
+                }
+                else
+                {
+                    _loginWelcomeTime = "Good Night";
+                }
+                currentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n {0}", email.Text).ToUpper();
             }
 
             logoutButton.Visible = hideElements;
             playProgress.Visible = hideElements;
             extractingProgress.Visible = hideElements;
             playProgressText.Visible = hideElements;
+            playProgressTextTimer.Visible = hideElements;
             playButton.Visible = hideElements;
             settingsButton.Visible = hideElements;
             verticalBanner.Visible = hideElements;
@@ -1341,7 +1373,7 @@ namespace GameLauncher {
         {
             if (hideElements)
             {
-                currentWindowInfo.Text = "Enter your account information to Log In:".ToUpper();
+                currentWindowInfo.Text = "Enter your account information to Log In".ToUpper();
             }
 
             rememberMe.Visible = hideElements;
@@ -1365,6 +1397,7 @@ namespace GameLauncher {
             settingsButton.Visible = hideElements;
             verticalBanner.Visible = hideElements;
             playProgressText.Visible = hideElements;
+            playProgressTextTimer.Visible = hideElements;
             playProgress.Visible = hideElements;
             extractingProgress.Visible = hideElements;
             addServer.Visible = hideElements;
@@ -1412,55 +1445,40 @@ namespace GameLauncher {
             if(_disableLogout == true) {
                 return;
             }
-            //var reply = MessageBox.Show(null, string.Format("Are you sure you want to log out from {0}?", serverPick.GetItemText(serverPick.SelectedItem)), "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            //if (reply == MessageBoxResult.Yes) {
-                BackgroundImage = Properties.Resources.loginbg;
-                _loggedIn = false;
-                LoggedInFormElements(false);
-                LoginFormElements(true);
+            BackgroundImage = Properties.Resources.loginbg;
+            _loggedIn = false;
+            LoggedInFormElements(false);
+            LoginFormElements(true);
 
-                _userId = String.Empty;
-                _loginToken = String.Empty;
-            //}
+            _userId = String.Empty;
+            _loginToken = String.Empty;
         }
 
-        private void logoutButton_MouseDown(object sender, EventArgs e)
+        private void greenbutton_hover_MouseEnter(object sender, EventArgs e)
         {
-            logoutButton.Image = Properties.Resources.graybutton_click;
-        }
-
-        private void logoutButton_MouseEnter(object sender, EventArgs e)
-        {
-            logoutButton.Image = Properties.Resources.graybutton_hover;
-        }
-
-        private void logoutButton_MouseLeave(object sender, EventArgs e)
-        {
-            logoutButton.Image = Properties.Resources.graybutton;
-        }
-
-        private void logoutButton_MouseUp(object sender, EventArgs e)
-        {
-            logoutButton.Image = Properties.Resources.graybutton_hover;
-        }
-
-        private void registerButton_MouseEnter(object sender, EventArgs e)
-        {
+            settingsSave.Image = Properties.Resources.greenbutton_hover;
+            registerText.Image = Properties.Resources.greenbutton_hover;
             registerButton.Image = Properties.Resources.greenbutton_hover;
         }
 
-        private void registerButton_MouseLeave(object sender, EventArgs e)
+        private void greenbutton_MouseLeave(object sender, EventArgs e)
         {
+            settingsSave.Image = Properties.Resources.greenbutton;
+            registerText.Image = Properties.Resources.greenbutton;
             registerButton.Image = Properties.Resources.greenbutton;
         }
 
-        private void registerButton_MouseUp(object sender, EventArgs e)
+        private void greenbutton_hover_MouseUp(object sender, EventArgs e)
         {
+            settingsSave.Image = Properties.Resources.greenbutton_hover;
+            registerText.Image = Properties.Resources.greenbutton_hover;
             registerButton.Image = Properties.Resources.greenbutton_hover;
         }
 
-        private void registerButton_MouseDown(object sender, EventArgs e)
+        private void greenbutton_click_MouseDown(object sender, EventArgs e)
         {
+            settingsSave.Image = Properties.Resources.greenbutton_click;
+            registerText.Image = Properties.Resources.greenbutton_click;
             registerButton.Image = Properties.Resources.greenbutton_click;
         }
 
@@ -1472,23 +1490,31 @@ namespace GameLauncher {
             LoginFormElements(true);
         }
 
-        private void registerCancel_MouseDown(object sender, EventArgs e)
+        private void graybutton_click_MouseDown(object sender, EventArgs e)
         {
+            settingsCancel.Image = Properties.Resources.graybutton_click;
+            logoutButton.Image = Properties.Resources.graybutton_click;
             registerCancel.Image = Properties.Resources.graybutton_click;
         }
 
-        private void registerCancel_MouseEnter(object sender, EventArgs e)
+        private void graybutton_hover_MouseEnter(object sender, EventArgs e)
         {
+            settingsCancel.Image = Properties.Resources.graybutton_hover;
+            logoutButton.Image = Properties.Resources.graybutton_hover;
             registerCancel.Image = Properties.Resources.graybutton_hover;
         }
 
-        private void registerCancel_MouseLeave(object sender, EventArgs e)
+        private void graybutton_MouseLeave(object sender, EventArgs e)
         {
+            settingsCancel.Image = Properties.Resources.graybutton;
+            logoutButton.Image = Properties.Resources.graybutton;
             registerCancel.Image = Properties.Resources.graybutton;
         }
 
-        private void registerCancel_MouseUp(object sender, EventArgs e)
+        private void graybutton_hover_MouseUp(object sender, EventArgs e)
         {
+            settingsCancel.Image = Properties.Resources.graybutton_hover;
+            logoutButton.Image = Properties.Resources.graybutton_hover;
             registerCancel.Image = Properties.Resources.graybutton_hover;
         }
 
@@ -1640,41 +1666,14 @@ namespace GameLauncher {
             settingsButton.BackgroundImage = Properties.Resources.settingsbtn;
         }
 
-        private void settingsSave_MouseEnter(object sender, EventArgs e) {
-            settingsSave.Image = Properties.Resources.greenbutton_hover;
-        }
-
-        private void settingsSave_MouseLeave(object sender, EventArgs e) {
-            settingsSave.Image = Properties.Resources.greenbutton;
-        }
-
-        private void settingsSave_MouseUp(object sender, EventArgs e) {
-            settingsSave.Image = Properties.Resources.greenbutton_hover;
-        }
-
-        private void settingsSave_MouseDown(object sender, EventArgs e) {
-            settingsSave.Image = Properties.Resources.greenbutton_click;
-        }
-
-        //
-        private void settingsCancel_MouseEnter(object sender, EventArgs e)
+        private void logo_MouseLeave(object sender, EventArgs e)
         {
-            settingsCancel.Image = Properties.Resources.graybutton_hover;
+            logo.Image = Properties.Resources.logo;
         }
 
-        private void settingsCancel_MouseLeave(object sender, EventArgs e)
+        private void logo_MouseEnter(object sender, EventArgs e)
         {
-            settingsCancel.Image = Properties.Resources.graybutton;
-        }
-
-        private void settingsCancel_MouseUp(object sender, EventArgs e)
-        {
-            settingsCancel.Image = Properties.Resources.graybutton_hover;
-        }
-
-        private void settingsCancel_MouseDown(object sender, EventArgs e)
-        {
-            settingsCancel.Image = Properties.Resources.graybutton_click;
+            logo.Image = Properties.Resources.logo_hover;
         }
 
         private void settingsCancel_Click(object sender, EventArgs e)
@@ -1868,7 +1867,7 @@ namespace GameLauncher {
 
             if(_realServername == "Freeroam Sparkserver") {
                 //Force proxy enabled.
-                Log.Info("Forcing Proxified connection for FRSS");
+                Log.Info("LAUNCHER: Forcing Proxified connection for FRSS");
                 _disableProxy = false;
             }
 
@@ -2494,7 +2493,7 @@ namespace GameLauncher {
                 discordRpcClient.Initialize();
             }
 
-            if((_disableDiscordRPC == false) && ((ServerInfo)serverPick.SelectedItem).Category == "DEV") {
+            if ((_disableDiscordRPC == false) && ((ServerInfo)serverPick.SelectedItem).Category == "DEV") {
                 discordRpcClient.Dispose();
                 discordRpcClient = null;
             }
@@ -2623,18 +2622,19 @@ namespace GameLauncher {
                 DriveInfo[] allDrives = DriveInfo.GetDrives();
                 foreach (DriveInfo d in allDrives) {
                     if (d.Name == Path.GetPathRoot(_settingFile.Read("InstallationDirectory"))) {
-                        if (d.TotalFreeSpace <= 4000000000)  {
+                        if (d.TotalFreeSpace <= 10000000000)  {
 
                             extractingProgress.Value = 100;
                             extractingProgress.Width = 519;
                             extractingProgress.Image = Properties.Resources.warningprogress;
                             extractingProgress.ProgressColor = Color.Orange;
 
-                            playProgressText.Text = "Please make sure you have at least 4GB free space on hard drive.".ToUpper();
+                            playProgressText.Text = "Please make sure you have at least 10GB free space on hard drive.".ToUpper();
 
                             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
                             TaskbarProgress.SetValue(Handle, 100, 100);
-                        } else {
+                        }
+                        else {
                             DownloadCoreFiles();
                         }
                     }
@@ -2652,7 +2652,17 @@ namespace GameLauncher {
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
-            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/nfsw.exe"))
+            //Guess who is Back - DavidCarbon
+            if (File.Exists(filename_pack))
+            {
+                playProgressTextTimer.Visible = true;
+                playProgressText.Text = "Local GameFiles sbrwpack Found In Launcher Folder".ToUpper();
+                playProgressTextTimer.Text = "Loading".ToUpper() ;
+
+                //GameFiles.sbrwpack
+                localGameFiles();
+            }
+            else if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/nfsw.exe"))
             {
                 _downloadStartTime = DateTime.Now;
                 _downloader.StartDownload(_NFSW_Installation_Source, "", _settingFile.Read("InstallationDirectory"), false, false, 1130632198);
@@ -2772,6 +2782,132 @@ namespace GameLauncher {
             }
         }
 
+        //Check Local GameFiles Hash
+        private async void localGameFiles()
+        {
+            await Task.Delay(5000);
+            if (SHA.HashFile("GameFiles.sbrwpack") == "B42E00939DC656C14BF5A05644080AD015522C8C")
+            {
+                TaskbarProgress.SetValue(Handle, 100, 100);
+                playProgress.Value = 100;
+                playProgress.Width = 519;
+
+                GoForUnpack(filename_pack);
+            }
+        }
+
+        //That's right the Protype Extractor from 2.1.5.x, now back from the dead - DavidCarbon
+        public void GoForUnpack(string filename_pack)
+        {
+            //Thread.Sleep(1);
+
+            Thread unpacker = new Thread(() => {
+                this.BeginInvoke((MethodInvoker)delegate {
+                    using (ZipArchive archive = ZipFile.OpenRead(filename_pack))
+                    {
+                        int numFiles = archive.Entries.Count;
+                        int current = 1;
+
+                        foreach (ZipArchiveEntry entry in archive.Entries)
+                        {
+                            string fullName = entry.FullName;
+
+                            extractingProgress.Value = (int)((long)100 * current / numFiles);
+                            extractingProgress.Width = (int)((long)519 * current / numFiles);
+
+                            TaskbarProgress.SetValue(Handle, (int)(100 * current / numFiles), 100);
+
+                            if (!File.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), fullName.Replace(".sbrw", String.Empty))))
+                            {
+                                playProgressText.Text = ("Unpacking " + fullName.Replace(".sbrw", String.Empty)).ToUpper();
+                                playProgressTextTimer.Text = "[" + current + " / " + archive.Entries.Count + "]";
+
+
+                                if (fullName.Substring(fullName.Length - 1) == "/")
+                                {
+                                    //Is a directory, create it!
+                                    string folderName = fullName.Remove(fullName.Length - 1);
+                                    if (Directory.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName)))
+                                    {
+                                        Directory.Delete(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName), true);
+                                    }
+
+                                    Directory.CreateDirectory(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName));
+                                }
+                                else
+                                {
+                                    String oldFileName = fullName.Replace(".sbrw", String.Empty);
+                                    String[] split = oldFileName.Split('/');
+
+                                    String newFileName = String.Empty;
+
+                                    if (split.Length >= 2)
+                                    {
+                                        newFileName = Path.Combine(split[split.Length - 2], split[split.Length - 1]);
+                                    }
+                                    else
+                                    {
+                                        newFileName = split.Last();
+                                    }
+
+                                    String KEY = Regex.Replace(SHA.HashPassword(newFileName), "[^0-9.]", "").Substring(0, 8);
+                                    String IV = Regex.Replace(MDFive.HashPassword(newFileName), "[^0-9.]", "").Substring(0, 8);
+
+                                    entry.ExtractToFile(getTempNa, true);
+
+                                    DESCryptoServiceProvider dESCryptoServiceProvider = new DESCryptoServiceProvider()
+                                    {
+                                        Key = Encoding.ASCII.GetBytes(KEY),
+                                        IV = Encoding.ASCII.GetBytes(IV)
+                                    };
+
+                                    FileStream fileStream = new FileStream(Path.Combine(_settingFile.Read("InstallationDirectory"), oldFileName), FileMode.Create);
+                                    CryptoStream cryptoStream = new CryptoStream(fileStream, dESCryptoServiceProvider.CreateDecryptor(), CryptoStreamMode.Write);
+                                    BinaryWriter binaryFile = new BinaryWriter(cryptoStream);
+
+                                    using (BinaryReader reader = new BinaryReader(File.Open(getTempNa, FileMode.Open)))
+                                    {
+                                        long numBytes = new FileInfo(getTempNa).Length;
+                                        binaryFile.Write(reader.ReadBytes((int)numBytes));
+                                        binaryFile.Close();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                playProgressText.Text = ("Skipping " + fullName).ToUpper();
+                            }
+
+                            _presence.State = "Unpacking game: " + (100 * current / numFiles) + "%";
+                            discordRpcClient.SetPresence(_presence);
+
+                            Application.DoEvents();
+
+                            if (numFiles == current)
+                            {
+                                playProgressTextTimer.Visible = false;
+                                playProgressTextTimer.Text = "";
+
+                                _isDownloading = false;
+                                OnDownloadFinished();
+
+                                Notification.Visible = true;
+                                Notification.BalloonTipIcon = ToolTipIcon.Info;
+                                Notification.BalloonTipTitle = "GameLauncherReborn";
+                                Notification.BalloonTipText = "Your game is now ready to launch!";
+                                Notification.ShowBalloonTip(5000);
+                                Notification.Dispose();
+                            }
+
+                            current++;
+                        }
+                    }
+                });
+            });
+
+            unpacker.Start();
+        }
+
         private string FormatFileSize(long byteCount, bool si = true) {
             int unit = si ? 1000 : 1024;
             if (byteCount < unit) return byteCount + " B";
@@ -2859,6 +2995,9 @@ namespace GameLauncher {
             _isDownloading = false;
             _playenabled = false;
 
+            playButton.Visible = false;
+            logoutButton.Visible = false;
+
             extractingProgress.Value = 100;
             extractingProgress.Width = 519;
 
@@ -2911,10 +3050,6 @@ namespace GameLauncher {
             _formGraphics.Dispose();
         }
 
-        private void srvinfo_Click(object sender, EventArgs e) {
-            //new SrvInfo().Show();
-        }
-
         //VerifyHash
         private void vfilesButton_Click(object sender, EventArgs e)
         {
@@ -2931,7 +3066,6 @@ namespace GameLauncher {
                 serverPick.SelectedIndex = index;
             }
         }
-
     }
     /* Moved 7 Unused Code to Gist */
     /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/00de505302fbf9f8cfea9b163a707d9f8f122552/MainScreen.cs */

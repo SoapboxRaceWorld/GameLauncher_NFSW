@@ -54,6 +54,8 @@ namespace GameLauncher.App
 
             string TracksHigh = (SettingFile.Read("TracksHigh") == "1") ? "True" : "False";
             string Password = (!String.IsNullOrEmpty(SettingFile.Read("Password"))) ? "True" : "False";
+            string ProxyStatus = (!String.IsNullOrEmpty(SettingFile.Read("DisableProxy"))) ? "False" : "True";
+            string RPCStatus = (!String.IsNullOrEmpty(SettingFile.Read("DisableRPC"))) ? "False" : "True";
 
             string Antivirus = String.Empty;
             string Firewall = String.Empty;
@@ -137,6 +139,8 @@ namespace GameLauncher.App
                 new ListType{ Name = "TracksHigh", Value = TracksHigh},
                 new ListType{ Name = "LauncherPos", Value = LauncherPosition},
                 new ListType{ Name = "Skipping Update", Value = UpdateSkip},
+                new ListType{ Name = "Disable Proxy", Value = ProxyStatus},
+                new ListType{ Name = "Disable RPC", Value = RPCStatus},
                 new ListType{ Name = "", Value = "" },
                 new ListType{ Name = "Server Name", Value = ServerName},
                 new ListType{ Name = "Server Address", Value = ServerIP},
