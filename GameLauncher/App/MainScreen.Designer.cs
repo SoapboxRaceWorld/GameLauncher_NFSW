@@ -154,7 +154,7 @@
             this.currentWindowInfo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.currentWindowInfo.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.currentWindowInfo.ForeColor = System.Drawing.Color.White;
-            this.currentWindowInfo.Location = new System.Drawing.Point(650, 99);
+            this.currentWindowInfo.Location = new System.Drawing.Point(638, 94);
             this.currentWindowInfo.Name = "currentWindowInfo";
             this.currentWindowInfo.Size = new System.Drawing.Size(194, 61);
             this.currentWindowInfo.TabIndex = 16;
@@ -169,7 +169,7 @@
             this.rememberMe.BackColor = System.Drawing.Color.Transparent;
             this.rememberMe.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.rememberMe.ForeColor = System.Drawing.Color.White;
-            this.rememberMe.Location = new System.Drawing.Point(615, 285);
+            this.rememberMe.Location = new System.Drawing.Point(618, 285);
             this.rememberMe.Name = "rememberMe";
             this.rememberMe.Size = new System.Drawing.Size(158, 19);
             this.rememberMe.TabIndex = 5;
@@ -229,7 +229,7 @@
             this.settingsLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.settingsLanguage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.settingsLanguage.FormattingEnabled = true;
-            this.settingsLanguage.Location = new System.Drawing.Point(46, 245);
+            this.settingsLanguage.Location = new System.Drawing.Point(46, 242);
             this.settingsLanguage.Name = "settingsLanguage";
             this.settingsLanguage.Size = new System.Drawing.Size(210, 21);
             this.settingsLanguage.TabIndex = 24;
@@ -344,7 +344,7 @@
             this.forgotPassword.AutoSize = true;
             this.forgotPassword.BackColor = System.Drawing.Color.Transparent;
             this.forgotPassword.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
-            this.forgotPassword.Location = new System.Drawing.Point(612, 307);
+            this.forgotPassword.Location = new System.Drawing.Point(618, 307);
             this.forgotPassword.Name = "forgotPassword";
             this.forgotPassword.Size = new System.Drawing.Size(143, 13);
             this.forgotPassword.TabIndex = 6;
@@ -578,7 +578,7 @@
             this.settingsCDNPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.settingsCDNPick.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.settingsCDNPick.FormattingEnabled = true;
-            this.settingsCDNPick.Location = new System.Drawing.Point(407, 154);
+            this.settingsCDNPick.Location = new System.Drawing.Point(404, 152);
             this.settingsCDNPick.Name = "settingsCDNPick";
             this.settingsCDNPick.Size = new System.Drawing.Size(210, 21);
             this.settingsCDNPick.TabIndex = 84;
