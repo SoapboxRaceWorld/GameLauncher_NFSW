@@ -95,6 +95,7 @@
             this.errorTicketBorder = new System.Windows.Forms.PictureBox();
             this.errorMainEmailBorder = new System.Windows.Forms.PictureBox();
             this.errorMainPasswordBorder = new System.Windows.Forms.PictureBox();
+            this.ServerPingStatusText = new System.Windows.Forms.Label();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
@@ -185,7 +186,7 @@
             this.rememberMe.ForeColor = System.Drawing.Color.White;
             this.rememberMe.Location = new System.Drawing.Point(618, 285);
             this.rememberMe.Name = "rememberMe";
-            this.rememberMe.Size = new System.Drawing.Size(158, 19);
+            this.rememberMe.Size = new System.Drawing.Size(159, 19);
             this.rememberMe.TabIndex = 5;
             this.rememberMe.Text = "REMEMBER MY LOGIN";
             this.rememberMe.UseVisualStyleBackColor = false;
@@ -625,7 +626,7 @@
             this.settingsWordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsWordFilterCheck.Location = new System.Drawing.Point(46, 281);
             this.settingsWordFilterCheck.Name = "settingsWordFilterCheck";
-            this.settingsWordFilterCheck.Size = new System.Drawing.Size(234, 17);
+            this.settingsWordFilterCheck.Size = new System.Drawing.Size(235, 17);
             this.settingsWordFilterCheck.TabIndex = 93;
             this.settingsWordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.settingsWordFilterCheck.UseVisualStyleBackColor = false;
@@ -649,7 +650,7 @@
             this.settingsProxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsProxyCheckbox.Location = new System.Drawing.Point(46, 301);
             this.settingsProxyCheckbox.Name = "settingsProxyCheckbox";
-            this.settingsProxyCheckbox.Size = new System.Drawing.Size(102, 17);
+            this.settingsProxyCheckbox.Size = new System.Drawing.Size(103, 17);
             this.settingsProxyCheckbox.TabIndex = 102;
             this.settingsProxyCheckbox.Text = "Disable Proxy";
             this.settingsProxyCheckbox.UseVisualStyleBackColor = false;
@@ -782,7 +783,7 @@
             this.settingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsDiscordRPCCheckbox.Location = new System.Drawing.Point(46, 321);
             this.settingsDiscordRPCCheckbox.Name = "settingsDiscordRPCCheckbox";
-            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(143, 17);
+            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(144, 17);
             this.settingsDiscordRPCCheckbox.TabIndex = 123;
             this.settingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
             this.settingsDiscordRPCCheckbox.UseVisualStyleBackColor = false;
@@ -930,6 +931,22 @@
             this.errorMainPasswordBorder.TabStop = false;
             this.errorMainPasswordBorder.Visible = false;
             // 
+            // ServerPingStatusText
+            // 
+            this.ServerPingStatusText.BackColor = System.Drawing.Color.Transparent;
+            this.ServerPingStatusText.Cursor = System.Windows.Forms.Cursors.Default;
+            this.ServerPingStatusText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ServerPingStatusText.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
+            this.ServerPingStatusText.ForeColor = System.Drawing.Color.White;
+            this.ServerPingStatusText.Location = new System.Drawing.Point(635, 301);
+            this.ServerPingStatusText.Name = "ServerPingStatusText";
+            this.ServerPingStatusText.Size = new System.Drawing.Size(194, 61);
+            this.ServerPingStatusText.TabIndex = 148;
+            this.ServerPingStatusText.Text = "Your Ping to the Server";
+            this.ServerPingStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ServerPingStatusText.UseCompatibleTextRendering = true;
+            this.ServerPingStatusText.UseMnemonic = false;
+            // 
             // extractingProgress
             // 
             this.extractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -969,6 +986,7 @@
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.ServerPingStatusText);
             this.Controls.Add(this.errorMainPasswordBorder);
             this.Controls.Add(this.errorMainEmailBorder);
             this.Controls.Add(this.errorTicketBorder);
@@ -1129,5 +1147,6 @@
         private System.Windows.Forms.PictureBox errorTicketBorder;
         private System.Windows.Forms.PictureBox errorMainEmailBorder;
         private System.Windows.Forms.PictureBox errorMainPasswordBorder;
+        private System.Windows.Forms.Label ServerPingStatusText;
     }
 }
