@@ -939,10 +939,16 @@ namespace GameLauncher {
                     MessageBox.Show(null, Tokens.Warning, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
+                errorMainEmailBorder.Visible = false;
+                errorMainPasswordBorder.Visible = false;
+
                 BackgroundImage = Properties.Resources.loggedbg;
                 LoginFormElements(false);
                 LoggedInFormElements(true);
             } else {
+                //Main Screen Login
+                errorMainPasswordBorder.Visible = true;
+                errorMainEmailBorder.Visible = true;
                 MessageBox.Show(null, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -1489,6 +1495,47 @@ namespace GameLauncher {
             currentWindowInfo.Text = "Enter your account information to Log In:".ToUpper();
             RegisterFormElements(false);
             LoginFormElements(true);
+            registerAgree.ForeColor = Color.White;
+            errorEmailBorder.Visible = false;
+            errorPasswordBorder.Visible = false;
+            errorPasswordValidateBorder.Visible = false;
+            errorTicketBorder.Visible = false;
+        }
+
+        private void registerAgree_CheckedChanged(object sender, EventArgs e)
+        {
+            registerAgree.ForeColor = Color.White;
+        }
+
+        private void registerEmail_TextChanged(object sender, EventArgs e)
+        {
+            errorEmailBorder.Visible = false;
+        }
+
+        private void registerTicket_TextChanged(object sender, EventArgs e)
+        {
+            errorTicketBorder.Visible = false;
+        }
+
+        private void registerConfirmPassword_TextChanged(object sender, EventArgs e)
+        {
+            errorPasswordValidateBorder.Visible = false;
+        }
+
+        private void registerPassword_TextChanged(object sender, EventArgs e)
+        {
+            errorPasswordBorder.Visible = false;
+        }
+
+        private void email_TextChanged(object sender, EventArgs e)
+        {
+            errorMainEmailBorder.Visible = false;
+        }
+
+        private void password_TextChanged(object sender, EventArgs e)
+        {
+            errorMainEmailBorder.Visible = false;
+            errorMainPasswordBorder.Visible = false;
         }
 
         private void graybutton_click_MouseDown(object sender, EventArgs e)
@@ -1535,28 +1582,37 @@ namespace GameLauncher {
 
             if (string.IsNullOrEmpty(registerEmail.Text)) {
                 registerErrors.Add("Please enter your e-mail.");
+                errorEmailBorder.Visible = true;
+
             } else if (Self.validateEmail(registerEmail.Text) == false) {
                 registerErrors.Add("Please enter a valid e-mail address.");
+                errorEmailBorder.Visible = true;
             }
 
             if (string.IsNullOrEmpty(registerTicket.Text) && _ticketRequired) {
                 registerErrors.Add("Please enter your ticket.");
+                errorTicketBorder.Visible = true;
             }
 
             if (string.IsNullOrEmpty(registerPassword.Text)) {
                 registerErrors.Add("Please enter your password.");
+                errorPasswordBorder.Visible = true;
             }
 
             if (string.IsNullOrEmpty(registerConfirmPassword.Text)) {
                 registerErrors.Add("Please confirm your password.");
+                errorPasswordValidateBorder.Visible = true;
             }
 
             if (registerConfirmPassword.Text != registerPassword.Text) {
                 registerErrors.Add("Passwords don't match.");
+                errorPasswordBorder.Visible = true;
+                errorPasswordValidateBorder.Visible = true;
             }
 
             if (!registerAgree.Checked) {
                 registerErrors.Add("You have not agreed to the Terms of Service.");
+                registerAgree.ForeColor = Color.FromArgb(254, 0, 0);
             }
 
             if (registerErrors.Count == 0) {
@@ -1616,6 +1672,12 @@ namespace GameLauncher {
 
                         MessageBox.Show(null, Tokens.Success, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
+                        registerAgree.ForeColor = Color.White;
+                        errorEmailBorder.Visible = false;
+                        errorPasswordBorder.Visible = false;
+                        errorPasswordValidateBorder.Visible = false;
+                        errorTicketBorder.Visible = false;
+
                         BackgroundImage = Properties.Resources.loginbg;
 
                         RegisterFormElements(false);
@@ -1625,8 +1687,6 @@ namespace GameLauncher {
                     } else {
                         MessageBox.Show(null, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-
-
                 } else {
                     var message = "There were some errors while registering, please fix them:\n\n";
 
@@ -3067,6 +3127,7 @@ namespace GameLauncher {
                 serverPick.SelectedIndex = index;
             }
         }
+
     }
     /* Moved 7 Unused Code to Gist */
     /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/00de505302fbf9f8cfea9b163a707d9f8f122552/MainScreen.cs */

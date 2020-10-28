@@ -89,6 +89,12 @@
             this.settingsCancel = new System.Windows.Forms.Button();
             this.settingsSave = new System.Windows.Forms.Button();
             this.playProgressTextTimer = new System.Windows.Forms.Label();
+            this.errorEmailBorder = new System.Windows.Forms.PictureBox();
+            this.errorPasswordBorder = new System.Windows.Forms.PictureBox();
+            this.errorPasswordValidateBorder = new System.Windows.Forms.PictureBox();
+            this.errorTicketBorder = new System.Windows.Forms.PictureBox();
+            this.errorMainEmailBorder = new System.Windows.Forms.PictureBox();
+            this.errorMainPasswordBorder = new System.Windows.Forms.PictureBox();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
@@ -98,6 +104,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.ServerStatusIcon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.APIStatusIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorEmailBorder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorPasswordBorder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorPasswordValidateBorder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorTicketBorder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorMainEmailBorder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorMainPasswordBorder)).BeginInit();
             this.SuspendLayout();
             // 
             // closebtn
@@ -121,6 +133,7 @@
             this.email.Name = "email";
             this.email.Size = new System.Drawing.Size(187, 22);
             this.email.TabIndex = 2;
+            this.email.TextChanged += new System.EventHandler(this.email_TextChanged);
             // 
             // password
             // 
@@ -134,6 +147,7 @@
             this.password.TabIndex = 4;
             this.password.UseSystemPasswordChar = true;
             this.password.WordWrap = false;
+            this.password.TextChanged += new System.EventHandler(this.password_TextChanged);
             // 
             // serverPick
             // 
@@ -256,6 +270,7 @@
             this.registerEmail.Name = "registerEmail";
             this.registerEmail.Size = new System.Drawing.Size(187, 22);
             this.registerEmail.TabIndex = 30;
+            this.registerEmail.TextChanged += new System.EventHandler(this.registerEmail_TextChanged);
             // 
             // registerTicket
             // 
@@ -267,6 +282,7 @@
             this.registerTicket.Name = "registerTicket";
             this.registerTicket.Size = new System.Drawing.Size(187, 22);
             this.registerTicket.TabIndex = 31;
+            this.registerTicket.TextChanged += new System.EventHandler(this.registerTicket_TextChanged);
             // 
             // registerPassword
             // 
@@ -279,6 +295,7 @@
             this.registerPassword.Size = new System.Drawing.Size(187, 22);
             this.registerPassword.TabIndex = 32;
             this.registerPassword.UseSystemPasswordChar = true;
+            this.registerPassword.TextChanged += new System.EventHandler(this.registerPassword_TextChanged);
             // 
             // registerConfirmPassword
             // 
@@ -291,6 +308,7 @@
             this.registerConfirmPassword.Size = new System.Drawing.Size(187, 22);
             this.registerConfirmPassword.TabIndex = 33;
             this.registerConfirmPassword.UseSystemPasswordChar = true;
+            this.registerConfirmPassword.TextChanged += new System.EventHandler(this.registerConfirmPassword_TextChanged);
             // 
             // registerAgree
             // 
@@ -302,6 +320,7 @@
             this.registerAgree.TabIndex = 38;
             this.registerAgree.Text = "BY REGISTERING YOU AGREE TO THE TERMS OF SERVICE";
             this.registerAgree.UseVisualStyleBackColor = false;
+            this.registerAgree.CheckedChanged += new System.EventHandler(this.registerAgree_CheckedChanged);
             // 
             // playProgressText
             // 
@@ -839,6 +858,78 @@
             this.playProgressTextTimer.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.playProgressTextTimer.Visible = false;
             // 
+            // errorEmailBorder
+            // 
+            this.errorEmailBorder.BackColor = System.Drawing.Color.Transparent;
+            this.errorEmailBorder.Image = global::GameLauncher.Properties.Resources.error_text_border;
+            this.errorEmailBorder.Location = new System.Drawing.Point(614, 162);
+            this.errorEmailBorder.Name = "errorEmailBorder";
+            this.errorEmailBorder.Size = new System.Drawing.Size(231, 37);
+            this.errorEmailBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.errorEmailBorder.TabIndex = 138;
+            this.errorEmailBorder.TabStop = false;
+            this.errorEmailBorder.Visible = false;
+            // 
+            // errorPasswordBorder
+            // 
+            this.errorPasswordBorder.BackColor = System.Drawing.Color.Transparent;
+            this.errorPasswordBorder.Image = global::GameLauncher.Properties.Resources.error_text_border;
+            this.errorPasswordBorder.Location = new System.Drawing.Point(615, 211);
+            this.errorPasswordBorder.Name = "errorPasswordBorder";
+            this.errorPasswordBorder.Size = new System.Drawing.Size(231, 37);
+            this.errorPasswordBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.errorPasswordBorder.TabIndex = 139;
+            this.errorPasswordBorder.TabStop = false;
+            this.errorPasswordBorder.Visible = false;
+            // 
+            // errorPasswordValidateBorder
+            // 
+            this.errorPasswordValidateBorder.BackColor = System.Drawing.Color.Transparent;
+            this.errorPasswordValidateBorder.Image = global::GameLauncher.Properties.Resources.error_text_border;
+            this.errorPasswordValidateBorder.Location = new System.Drawing.Point(614, 260);
+            this.errorPasswordValidateBorder.Name = "errorPasswordValidateBorder";
+            this.errorPasswordValidateBorder.Size = new System.Drawing.Size(231, 37);
+            this.errorPasswordValidateBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.errorPasswordValidateBorder.TabIndex = 140;
+            this.errorPasswordValidateBorder.TabStop = false;
+            this.errorPasswordValidateBorder.Visible = false;
+            // 
+            // errorTicketBorder
+            // 
+            this.errorTicketBorder.BackColor = System.Drawing.Color.Transparent;
+            this.errorTicketBorder.Image = global::GameLauncher.Properties.Resources.error_text_border;
+            this.errorTicketBorder.Location = new System.Drawing.Point(615, 309);
+            this.errorTicketBorder.Name = "errorTicketBorder";
+            this.errorTicketBorder.Size = new System.Drawing.Size(230, 37);
+            this.errorTicketBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.errorTicketBorder.TabIndex = 141;
+            this.errorTicketBorder.TabStop = false;
+            this.errorTicketBorder.Visible = false;
+            // 
+            // errorMainEmailBorder
+            // 
+            this.errorMainEmailBorder.BackColor = System.Drawing.Color.Transparent;
+            this.errorMainEmailBorder.Image = global::GameLauncher.Properties.Resources.error_text_border;
+            this.errorMainEmailBorder.Location = new System.Drawing.Point(615, 186);
+            this.errorMainEmailBorder.Name = "errorMainEmailBorder";
+            this.errorMainEmailBorder.Size = new System.Drawing.Size(231, 37);
+            this.errorMainEmailBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.errorMainEmailBorder.TabIndex = 144;
+            this.errorMainEmailBorder.TabStop = false;
+            this.errorMainEmailBorder.Visible = false;
+            // 
+            // errorMainPasswordBorder
+            // 
+            this.errorMainPasswordBorder.BackColor = System.Drawing.Color.Transparent;
+            this.errorMainPasswordBorder.Image = global::GameLauncher.Properties.Resources.error_text_border;
+            this.errorMainPasswordBorder.Location = new System.Drawing.Point(614, 238);
+            this.errorMainPasswordBorder.Name = "errorMainPasswordBorder";
+            this.errorMainPasswordBorder.Size = new System.Drawing.Size(231, 37);
+            this.errorMainPasswordBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.errorMainPasswordBorder.TabIndex = 145;
+            this.errorMainPasswordBorder.TabStop = false;
+            this.errorMainPasswordBorder.Visible = false;
+            // 
             // extractingProgress
             // 
             this.extractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -878,6 +969,12 @@
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.errorMainPasswordBorder);
+            this.Controls.Add(this.errorMainEmailBorder);
+            this.Controls.Add(this.errorTicketBorder);
+            this.Controls.Add(this.errorPasswordValidateBorder);
+            this.Controls.Add(this.errorPasswordBorder);
+            this.Controls.Add(this.errorEmailBorder);
             this.Controls.Add(this.playProgressTextTimer);
             this.Controls.Add(this.settingsCancel);
             this.Controls.Add(this.settingsCDNCurrentText);
@@ -952,6 +1049,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.ServerStatusIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.verticalBanner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.APIStatusIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorEmailBorder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorPasswordBorder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorPasswordValidateBorder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorTicketBorder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorMainEmailBorder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorMainPasswordBorder)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1020,5 +1123,11 @@
         private System.Windows.Forms.Button settingsCancel;
         private System.Windows.Forms.Button settingsSave;
         internal System.Windows.Forms.Label playProgressTextTimer;
+        private System.Windows.Forms.PictureBox errorEmailBorder;
+        private System.Windows.Forms.PictureBox errorPasswordBorder;
+        private System.Windows.Forms.PictureBox errorPasswordValidateBorder;
+        private System.Windows.Forms.PictureBox errorTicketBorder;
+        private System.Windows.Forms.PictureBox errorMainEmailBorder;
+        private System.Windows.Forms.PictureBox errorMainPasswordBorder;
     }
 }
