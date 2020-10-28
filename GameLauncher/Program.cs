@@ -124,44 +124,16 @@ namespace GameLauncher {
                     }
                 }
 
-                if (Environment.Is64BitOperatingSystem == true) {
-                    if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x64)) {
-                        var result = MessageBox.Show(
-                            "You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed. Click OK to install it.",
-                            "Compatibility",
-                            MessageBoxButtons.OKCancel,
-                            MessageBoxIcon.Warning);
-
-                        if (result != DialogResult.OK) {
-                            MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            return;
-                        }
-
-                        var wc = new WebClientWithTimeout();
-                        wc.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x64.exe", "VC_redist.x64.exe");
-                        var proc = Process.Start(new ProcessStartInfo {
-                            Verb = "runas",
-                            FileName = "VC_redist.x64.exe"
-                        });
-
-                        if (proc == null) {
-                            MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            return;
-                        }
-                        Thread.Sleep(4000);
-                    }
-                }
-
-                if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86)) {
+                if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
+                {
                     var result = MessageBox.Show(
                         "You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed. Click OK to install it.",
                         "Compatibility",
                         MessageBoxButtons.OKCancel,
                         MessageBoxIcon.Warning);
 
-                    if (result != DialogResult.OK) {
+                    if (result != DialogResult.OK)
+                    {
                         MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
                         return;
@@ -169,17 +141,54 @@ namespace GameLauncher {
 
                     var wc = new WebClientWithTimeout();
                     wc.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x86.exe", "VC_redist.x86.exe");
-                    var proc = Process.Start(new ProcessStartInfo {
+                    var proc = Process.Start(new ProcessStartInfo
+                    {
                         Verb = "runas",
+                        Arguments = "/quiet",
                         FileName = "VC_redist.x86.exe"
                     });
 
-                    if (proc == null) {
+                    if (proc == null)
+                    {
                         MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
                         return;
                     }
-                    Thread.Sleep(5000);
+                }
+
+                if (Environment.Is64BitOperatingSystem == true)
+                {
+                    if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x64))
+                    {
+                        var result = MessageBox.Show(
+                            "You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed. Click OK to install it.",
+                            "Compatibility",
+                            MessageBoxButtons.OKCancel,
+                            MessageBoxIcon.Warning);
+
+                        if (result != DialogResult.OK)
+                        {
+                            MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        var wc = new WebClientWithTimeout();
+                        wc.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x64.exe", "VC_redist.x64.exe");
+                        var proc = Process.Start(new ProcessStartInfo
+                        {
+                            Verb = "runas",
+                            Arguments = "/quiet",
+                            FileName = "VC_redist.x64.exe"
+                        });
+
+                        if (proc == null)
+                        {
+                            MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
                 }
             }
 
@@ -321,11 +330,12 @@ namespace GameLauncher {
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             if (Debugger.IsAttached) {
-                Log.Debug("PROXY: Starting Proxy");
+                Log.Debug("DEBUGGER PROXY: Starting Proxy");
                 ServerProxy.Instance.Start();
-                
-                Log.Debug("CORE: Starting MainScreen");
+
+                Log.Debug("DEBUGGER CORE: Starting MainScreen");
                 Application.Run(new MainScreen());
+
             } else {
                 if (NFSW.isNFSWRunning()) {
                     MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -391,9 +401,9 @@ namespace GameLauncher {
 
                             MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         } else {
-                            Log.Debug("CORE: Starting Proxy");
+                            Log.Debug("PROXY: Starting Proxy");
                             ServerProxy.Instance.Start();
-                            
+
                             Log.Debug("CORE: Starting MainScreen");
                             Application.Run(new MainScreen());
                         }

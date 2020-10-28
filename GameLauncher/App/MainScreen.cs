@@ -639,7 +639,8 @@ namespace GameLauncher {
                 } catch(Exception error) {
                     MessageBox.Show(error.Message, "An error occurred while loading CDN List");
                     _slresponse2 = JsonConvert.SerializeObject(new[] {
-                        new CDNObject { name = "[CF] WorldUnited.gg Mirror", url = "http://cdn.worldunited.gg/gamefiles/packed/" }
+                        new CDNObject { name = "[CF] WorldUnited.gg Mirror", url = "http://cdn.worldunited.gg/gamefiles/packed/" },
+                        new CDNObject { name = "[CF] DavidCarbon Mirror", url = "http://g-sbrw.davidcarbon.download"}
                     });
                 }
 
