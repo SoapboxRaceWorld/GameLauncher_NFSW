@@ -88,6 +88,7 @@
             this.settingsCDNCurrentText = new System.Windows.Forms.Label();
             this.settingsCancel = new System.Windows.Forms.Button();
             this.settingsSave = new System.Windows.Forms.Button();
+            this.playProgressTextTimer = new System.Windows.Forms.Label();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
@@ -153,11 +154,12 @@
             this.currentWindowInfo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.currentWindowInfo.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.currentWindowInfo.ForeColor = System.Drawing.Color.White;
-            this.currentWindowInfo.Location = new System.Drawing.Point(653, 106);
+            this.currentWindowInfo.Location = new System.Drawing.Point(650, 99);
             this.currentWindowInfo.Name = "currentWindowInfo";
             this.currentWindowInfo.Size = new System.Drawing.Size(194, 61);
             this.currentWindowInfo.TabIndex = 16;
             this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN";
+            this.currentWindowInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.currentWindowInfo.UseCompatibleTextRendering = true;
             this.currentWindowInfo.UseMnemonic = false;
             // 
@@ -213,7 +215,7 @@
             // settingsButton
             // 
             this.settingsButton.BackColor = System.Drawing.Color.Transparent;
-            this.settingsButton.BackgroundImage = global::GameLauncher.Properties.Resources.settingsbtn1;
+            this.settingsButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("settingsButton.BackgroundImage")));
             this.settingsButton.Location = new System.Drawing.Point(805, 24);
             this.settingsButton.Name = "settingsButton";
             this.settingsButton.Size = new System.Drawing.Size(24, 24);
@@ -341,7 +343,7 @@
             this.forgotPassword.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(228)))), ((int)(((byte)(0)))));
             this.forgotPassword.AutoSize = true;
             this.forgotPassword.BackColor = System.Drawing.Color.Transparent;
-            this.forgotPassword.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(228)))), ((int)(((byte)(0)))));
+            this.forgotPassword.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
             this.forgotPassword.Location = new System.Drawing.Point(612, 307);
             this.forgotPassword.Name = "forgotPassword";
             this.forgotPassword.Size = new System.Drawing.Size(143, 13);
@@ -825,6 +827,18 @@
             this.settingsSave.Text = "SAVE";
             this.settingsSave.UseVisualStyleBackColor = false;
             // 
+            // playProgressTextTimer
+            // 
+            this.playProgressTextTimer.BackColor = System.Drawing.Color.Transparent;
+            this.playProgressTextTimer.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
+            this.playProgressTextTimer.ForeColor = System.Drawing.Color.White;
+            this.playProgressTextTimer.Location = new System.Drawing.Point(442, 422);
+            this.playProgressTextTimer.Name = "playProgressTextTimer";
+            this.playProgressTextTimer.Size = new System.Drawing.Size(120, 19);
+            this.playProgressTextTimer.TabIndex = 135;
+            this.playProgressTextTimer.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.playProgressTextTimer.Visible = false;
+            // 
             // extractingProgress
             // 
             this.extractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -864,6 +878,7 @@
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.playProgressTextTimer);
             this.Controls.Add(this.settingsCancel);
             this.Controls.Add(this.settingsCDNCurrentText);
             this.Controls.Add(this.settingsGameFilesCurrentText);
@@ -929,7 +944,7 @@
             this.Name = "MainScreen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GameLauncher";
-            this.TransparencyKey = System.Drawing.Color.Red;
+            this.TransparencyKey = System.Drawing.Color.Fuchsia;
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
@@ -1004,5 +1019,6 @@
         private System.Windows.Forms.Label settingsCDNCurrentText;
         private System.Windows.Forms.Button settingsCancel;
         private System.Windows.Forms.Button settingsSave;
+        internal System.Windows.Forms.Label playProgressTextTimer;
     }
 }

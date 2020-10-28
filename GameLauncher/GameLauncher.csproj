@@ -302,6 +302,7 @@
     <None Include="Resources\buttons_info.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\logo_hover.png" />
     <None Include="Resources\server_unknown.png" />
     <None Include="Resources\server_online.png" />
     <None Include="Resources\server_offline.png" />
