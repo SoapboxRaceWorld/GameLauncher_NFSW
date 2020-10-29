@@ -1302,6 +1302,8 @@ namespace GameLauncher {
 
         private void registerText_LinkClicked(object sender, EventArgs e)
         {
+            errorMainEmailBorder.Visible = false;
+            errorMainPasswordBorder.Visible = false;
             registerButton.Image = Properties.Resources.greenbutton_click;
             if (_allowRegistration) {
                 if(!string.IsNullOrEmpty(json.webSignupUrl)) {
@@ -1741,6 +1743,8 @@ namespace GameLauncher {
                 WindowState = FormWindowState.Normal;
             }
 
+            errorMainEmailBorder.Visible = false;
+            errorMainPasswordBorder.Visible = false;
             settingsButton.BackgroundImage = Properties.Resources.settingsbtn_click;
             BackgroundImage = Properties.Resources.secondarybackground;
             SettingsFormElements(true);
