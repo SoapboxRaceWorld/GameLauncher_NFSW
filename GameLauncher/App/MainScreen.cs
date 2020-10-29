@@ -2626,8 +2626,6 @@ namespace GameLauncher {
                         ContextMenu = new ContextMenu();
                         ContextMenu.MenuItems.Add(new MenuItem("Donate", (b, n) => { Process.Start("http://paypal.me/metonator95"); }));
                         ContextMenu.MenuItems.Add("-");
-                        ContextMenu.MenuItems.Add(new MenuItem("Add Server", addServer_Click));
-                        ContextMenu.MenuItems.Add("-");
                         ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", (sender2, e2) =>
                         {
                             MessageBox.Show(null, "Please close the game before closing launcher.", "Please close the game before closing launcher.", MessageBoxButtons.OK, MessageBoxIcon.Information);
