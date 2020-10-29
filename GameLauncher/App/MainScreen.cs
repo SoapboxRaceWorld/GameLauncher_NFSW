@@ -1159,6 +1159,36 @@ namespace GameLauncher {
                         //¯\_(ツ)_/¯
                     }
 
+                    if (!DetectLinux.LinuxDetected()) {
+                        Ping pingSender = new Ping();
+                        pingSender.SendAsync(stringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
+                        pingSender.PingCompleted += (sender3, e3) => {
+                            PingReply reply = e3.Reply;
+
+                            if (reply.Status == IPStatus.Success && _realServername != "Offline Built-In Server")
+                            {
+                                if (this.ServerPingStatusText.InvokeRequired)
+                                {
+                                    ServerStatusDesc.Invoke(new Action(delegate () {
+                                        ServerPingStatusText.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), reply.RoundtripTime + "ms");
+                                    }));
+                                }
+                                else
+                                {
+                                    this.ServerPingStatusText.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), reply.RoundtripTime + "ms");
+                                }
+                            }
+                            else
+                            {
+                                this.ServerPingStatusText.Text = string.Format("");
+                            }
+                        };
+                    }
+                    else
+                    {
+                        this.ServerPingStatusText.Text = string.Format("");
+                    }
+
                     //for thread safety
                     if (this.ServerStatusDesc.InvokeRequired)
                     {
@@ -1224,6 +1254,7 @@ namespace GameLauncher {
             launcherStatusDesc.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             ServerStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             ServerStatusDesc.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            ServerPingStatusText.Font = new Font(AkrobatSemiBold, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             APIStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             APIStatusDesc.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
@@ -1355,7 +1386,7 @@ namespace GameLauncher {
                 }
                 currentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n {0}", email.Text).ToUpper();
             }
-
+            ServerPingStatusText.Visible = hideElements;
             logoutButton.Visible = hideElements;
             playProgress.Visible = hideElements;
             extractingProgress.Visible = hideElements;
@@ -2595,8 +2626,6 @@ namespace GameLauncher {
                         ContextMenu = new ContextMenu();
                         ContextMenu.MenuItems.Add(new MenuItem("Donate", (b, n) => { Process.Start("http://paypal.me/metonator95"); }));
                         ContextMenu.MenuItems.Add("-");
-                        ContextMenu.MenuItems.Add(new MenuItem("Add Server", addServer_Click));
-                        ContextMenu.MenuItems.Add("-");
                         ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", (sender2, e2) =>
                         {
                             MessageBox.Show(null, "Please close the game before closing launcher.", "Please close the game before closing launcher.", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -3058,6 +3087,7 @@ namespace GameLauncher {
 
             playButton.Visible = false;
             logoutButton.Visible = false;
+            ServerPingStatusText.Visible = false;
 
             extractingProgress.Value = 100;
             extractingProgress.Width = 519;
