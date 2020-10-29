@@ -982,6 +982,9 @@ namespace GameLauncher {
         }
 
         private void serverPick_SelectedIndexChanged(object sender, EventArgs e) {
+            errorMainEmailBorder.Visible = false;
+            errorMainPasswordBorder.Visible = false;
+
             ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
             _serverInfo = (ServerInfo)serverPick.SelectedItem;
