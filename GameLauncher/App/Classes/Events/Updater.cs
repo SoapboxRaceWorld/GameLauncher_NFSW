@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GameLauncher.HashPassword;
+using GameLauncher.Properties;
 using GameLauncherReborn;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
@@ -80,15 +81,42 @@ namespace GameLauncher.App.Classes.Events {
                                     text.ForeColor = Color.Yellow;
                                     description.Text = "New Version : " + updater.Payload.LatestVersion;
 
+                                    IniFile _settingFile = new IniFile("Settings.ini");
+
+                                    if (_settingFile.Read("IgnoreUpdateVersion") == updater.Payload.LatestVersion)
+                                    {
+                                        //No Update Popup
+                                        //Blame DavidCarbon if this Breaks (to some degree), not Zacam...
+                                    }
+                                    else
+                                    {
                                     DialogResult updateConfirm = new UpdatePopup(updater).ShowDialog();
 
-                                    if(updateConfirm == DialogResult.OK) {
-                                        if (File.Exists("GameLauncherUpdater.exe")) {
+                                        if (updateConfirm == DialogResult.OK)
+                                        {
+                                            if (File.Exists("GameLauncherUpdater.exe"))
+                                            {
                                             Process.Start(@"GameLauncherUpdater.exe", Process.GetCurrentProcess().Id.ToString());
-                                        } else {
-                                            Process.Start(@"https://github.com/worldunitedgg/GameLauncher_NFSW/releases/latest");
                                         }
+                                            else
+                                            {
+                                                Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
+                                            }
+                                        };
+
+                                        //Check if User clicked Ignore so it doesn't update "IgnoreUpdateVersion"
+                                        if (updateConfirm == DialogResult.Cancel)
+                                        {
+                                            Settings.Default.IgnoreUpdateVersion = String.Empty;
                                     };
+
+                                        //Write to Settings.ini to Skip Update
+                                        if (updateConfirm == DialogResult.Ignore)
+                                        {
+                                            Settings.Default.IgnoreUpdateVersion = updater.Payload.LatestVersion;
+                                        };
+                                    }
+                                    Settings.Default.Save();
                                 }
                             } else {
                                 text.Text = "Launcher Status - GitHub Error";

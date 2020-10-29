@@ -27,11 +27,6 @@ namespace GameLauncher.App.Classes {
             return Data[EXE][Key];
         }
 
-	    public int ReadInt(string Key)
-	    {
-	        return Convert.ToInt32(Data[EXE][Key]);
-	    }
-
         public void Write(string Key, string Value) {
 			try {
 				Data[EXE][Key] = Value;
@@ -46,11 +41,6 @@ namespace GameLauncher.App.Classes {
 			    Data[EXE].RemoveKey(Key);
                 Parser.WriteFile(Path, Data);
             } catch { }
-        }
-
-        public void DeleteSection(string Section) {
-			Data.Sections.RemoveSection(Section);
-            Parser.WriteFile(Path, Data);
         }
 
         public bool KeyExists(string Key) {

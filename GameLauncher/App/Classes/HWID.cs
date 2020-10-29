@@ -154,10 +154,5 @@ namespace Security {
         {
             return identifier("Win32_VideoController", "PNPDeviceId");
         }
-
-        private static string macId()
-        {
-            return identifier("Win32_NetworkAdapterConfiguration", "MACAddress", "IPEnabled");
-        }
     }
 }

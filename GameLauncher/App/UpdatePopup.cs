@@ -7,12 +7,20 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using GameLauncher.App.Classes;
 
 namespace GameLauncher.App {
     public partial class UpdatePopup : Form {
         public UpdatePopup(UpdateCheckResponse updater) {
+            IniFile _settingFile = new IniFile("Settings.ini");
+
+            if (_settingFile.Read("IgnoreUpdateVersion") == updater.Payload.LatestVersion)
+            {
+                //No Update Popup
+            }
+            else
+            {
             InitializeComponent();
 
             changelogText.Text = new WebClientWithTimeout().DownloadString(Self.mainserver + "/launcher/changelog");
@@ -26,6 +34,9 @@ namespace GameLauncher.App {
             updateLabel.Text = "An update is available. Would you like to update?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + updater.Payload.LatestVersion;
 
             this.update.DialogResult = DialogResult.OK;
+                this.ignore.DialogResult = DialogResult.Cancel;
+                this.skip.DialogResult = DialogResult.Ignore;
+            }
         }
     }
 }

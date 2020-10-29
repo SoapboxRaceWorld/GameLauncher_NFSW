@@ -11,14 +11,5 @@ namespace GameLauncher.App.Classes {
                 Application.DoEvents();
             }
         }
-
-        public static void WaitMSeconds(int sec) {
-            if (sec < 1) return;
-            DateTime _desired = DateTime.Now.AddMilliseconds(sec);
-            while (DateTime.Now < _desired)
-            {
-                Application.DoEvents();
-            }
-        }
     }
 }

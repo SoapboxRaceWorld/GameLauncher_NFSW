@@ -29,9 +29,4 @@ namespace SoapBox.JsonScheme {
         public string webRecoveryUrl { get; set; }
         public bool rwacallow { get; set; }
     }
-
-    public class FreeroamObject {
-        public int[] position { get; set; }
-        public string username { get; set; }
-    }
 }

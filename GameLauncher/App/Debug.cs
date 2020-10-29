@@ -54,7 +54,8 @@ namespace GameLauncher.App
 
             string TracksHigh = (SettingFile.Read("TracksHigh") == "1") ? "True" : "False";
             string Password = (!String.IsNullOrEmpty(SettingFile.Read("Password"))) ? "True" : "False";
-            string SkipUpdate = (SettingFile.Read("SkipUpdate") == "1") ? "True" : "False";
+            string ProxyStatus = (!String.IsNullOrEmpty(SettingFile.Read("DisableProxy"))) ? "False" : "True";
+            string RPCStatus = (!String.IsNullOrEmpty(SettingFile.Read("DisableRPC"))) ? "False" : "True";
 
             string Antivirus = String.Empty;
             string Firewall = String.Empty;
@@ -94,6 +95,17 @@ namespace GameLauncher.App
                 LauncherPosition = SettingFile.Read("LauncherPosX") + "x" + SettingFile.Read("LauncherPosY");
             }
 
+            string UpdateSkip = "";
+
+            if (SettingFile.Read("IgnoreUpdateVersion") == Application.ProductVersion || SettingFile.Read("IgnoreUpdateVersion") == String.Empty)
+            {
+                    UpdateSkip = "False";
+            }
+            else
+            {
+                UpdateSkip = SettingFile.Read("IgnoreUpdateVersion");
+            }
+
             long memKb = 0;
             ulong lpFreeBytesAvailable = 0;
             List<string> GPUs = new List<string>();
@@ -122,16 +134,18 @@ namespace GameLauncher.App
 
             var settings = new List<ListType> {
                 new ListType{ Name = "InstallationDirectory", Value = SettingFile.Read("InstallationDirectory")},
-                new ListType{ Name = "HWID", Value = Security.FingerPrint.Value()},
-                new ListType{ Name = "Server Address", Value = ServerIP},
-                new ListType{ Name = "Server Name", Value = ServerName},
                 new ListType{ Name = "Credentials Saved", Value = Password},
                 new ListType{ Name = "Language", Value =  SettingFile.Read("Language")},
                 new ListType{ Name = "TracksHigh", Value = TracksHigh},
-                new ListType{ Name = "SkipUpdate", Value = SkipUpdate},
                 new ListType{ Name = "LauncherPos", Value = LauncherPosition},
+                new ListType{ Name = "Skipping Update", Value = UpdateSkip},
+                new ListType{ Name = "Disable Proxy", Value = ProxyStatus},
+                new ListType{ Name = "Disable RPC", Value = RPCStatus},
+                new ListType{ Name = "", Value = "" },
+                new ListType{ Name = "Server Name", Value = ServerName},
+                new ListType{ Name = "Server Address", Value = ServerIP},
+                new ListType{ Name = "CDN Address", Value = SettingFile.Read("CDN")},
                 new ListType{ Name = "ProxyPort", Value = Self.ProxyPort.ToString()},
-
                 new ListType{ Name = "", Value = "" },
             };
 
@@ -150,6 +164,7 @@ namespace GameLauncher.App
                 });
             }
             settings.AddRange(new[] {
+                new ListType{ Name = "HWID", Value = Security.FingerPrint.Value()},
                 new ListType{ Name = "Operating System", Value = OS},
                 new ListType{ Name = "Environment Version", Value = Environment.OSVersion.Version.ToString() },
                 new ListType{ Name = "Screen Resolution", Value = Screen.PrimaryScreen.Bounds.Width + "x" + Screen.PrimaryScreen.Bounds.Height }

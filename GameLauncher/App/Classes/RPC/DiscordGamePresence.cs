@@ -67,7 +67,7 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageKey = "gamemode_treasure"
                 };
 
-                MainScreen.discordRpcClient.SetPresence(_presence);
+                if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
             }
 
 
@@ -89,8 +89,6 @@ namespace GameLauncher.App.Classes.RPC {
 
             //FIRST PERSONA EVER LOCALIZED IN CODE
             if (uri == "/User/GetPermanentSession") {
-                //try { Statuses.getToken(); } catch { }
-
                 try {
                     SBRW_XML.LoadXml(serverreply);
 
@@ -139,7 +137,7 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageKey = "gamemode_freeroam"
                 };
 
-                MainScreen.discordRpcClient.SetPresence(_presence);
+                if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = true;
                 Self.CanDisableGame = true;
@@ -152,8 +150,7 @@ namespace GameLauncher.App.Classes.RPC {
                 SBRW_XML.LoadXml(serverreply);
                 var eventIdNode = SBRW_XML.SelectSingleNode("LobbyInfo/EventId");
 
-                if (eventIdNode != null)
-                {
+                if (eventIdNode != null) {
                     EventID = Convert.ToInt32(eventIdNode.InnerText);
 
                     _presence.Details = "In Lobby: " + EventList.getEventName(EventID);
@@ -165,13 +162,13 @@ namespace GameLauncher.App.Classes.RPC {
                         SmallImageText = EventList.getEventName(Convert.ToInt32(EventID)),
                         SmallImageKey = EventList.getEventType(Convert.ToInt32(EventID))
                     };
-                    MainScreen.discordRpcClient.SetPresence(_presence);
+                    if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
                     eventTerminatedManually = false;
                 }
             }
 
-            if(uri == "/matchmaking/joinqueueracenow") {
+            if (uri == "/matchmaking/joinqueueracenow") {
                 _presence.Details = "Searching for event...";
                 _presence.State = Self.MapZoneRPC;
                 _presence.Assets = new Assets {
@@ -180,7 +177,7 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageText = "In-Freeroam",
                     SmallImageKey = "gamemode_freeroam"
                 };
-                MainScreen.discordRpcClient.SetPresence(_presence);
+                if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = true;
             }
@@ -189,7 +186,7 @@ namespace GameLauncher.App.Classes.RPC {
             if (uri == "/DriverPersona/UpdatePersonaPresence") {
                 string UpdatePersonaPresenceParam = GET.Split(';').Last().Split('=').Last();
                 _presence.Assets = new Assets();
-                if(UpdatePersonaPresenceParam == "1") {
+                if (UpdatePersonaPresenceParam == "1") {
                     _presence.Details = "Driving " + PersonaCarName;
                     _presence.Assets.SmallImageText = "In-Freeroam";
                     _presence.Assets.SmallImageKey = "gamemode_freeroam";
@@ -207,7 +204,7 @@ namespace GameLauncher.App.Classes.RPC {
                 _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
                 _presence.Assets.LargeImageKey = PersonaAvatarId;
 
-                MainScreen.discordRpcClient.SetPresence(_presence);
+                if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
             }
 
             //IN EVENT
@@ -226,8 +223,7 @@ namespace GameLauncher.App.Classes.RPC {
                     SmallImageKey = EventList.getEventType(EventID)
                 };
 
-
-                MainScreen.discordRpcClient.SetPresence(_presence);
+                if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = false;
             }
@@ -243,7 +239,7 @@ namespace GameLauncher.App.Classes.RPC {
                 };
 
                 AntiCheat.disableChecks();
-                MainScreen.discordRpcClient.SetPresence(_presence);
+                if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = false;
             }
@@ -261,7 +257,7 @@ namespace GameLauncher.App.Classes.RPC {
                 AntiCheat.event_id = EventID;
                 AntiCheat.enableChecks();
 
-                MainScreen.discordRpcClient.SetPresence(_presence);
+                if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
             }
 
             //CARS RELATED
@@ -278,14 +274,14 @@ namespace GameLauncher.App.Classes.RPC {
                     XmlNodeList OwnedCarTrans = CarsOwnedByPersona.SelectNodes("OwnedCarTrans");
 
                     foreach (XmlNode node in OwnedCarTrans) {
-                        if(DefaultID == current) {
+                        if (DefaultID == current) {
                             PersonaCarName = CarList.getCarName(node.SelectSingleNode("CustomCar/Name").InnerText);
                         }
                         current++;
                     }
                 }
                 if (Regex.Match(uri, "/personas/" + single_personaId + "/defaultcar", RegexOptions.IgnoreCase).Success) {
-                    if(splitted_uri.Last() != "defaultcar") {
+                    if (splitted_uri.Last() != "defaultcar") {
                         string receivedId = splitted_uri.Last();
 
                         SBRW_XML.LoadXml(carslotsXML);

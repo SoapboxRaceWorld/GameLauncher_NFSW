@@ -44,25 +44,6 @@ namespace GameLauncherReborn {
         public static string discordid = String.Empty;
         public static string MapZoneRPC = String.Empty;
 
-        public static void runAsAdmin() {
-            string[] args = Environment.GetCommandLineArgs();
-
-            ProcessStartInfo processStartInfo = new ProcessStartInfo() {
-                Verb = "runas",
-                FileName = Application.ExecutablePath
-            };
-
-            if ((int)args.Length > 0) {
-                processStartInfo.Arguments = args[0];
-            }
-
-            try {
-                Process.Start(processStartInfo);
-            } catch (Exception exception1) {
-                MessageBox.Show("Failed to self-run as admin: " + exception1.Message);
-            }
-        }
-
         public static long getTimestamp(bool valid = false) {
             long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
 

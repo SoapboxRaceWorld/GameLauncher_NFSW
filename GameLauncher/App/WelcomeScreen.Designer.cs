@@ -28,12 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WelcomeScreen));
             this.WelcomeText = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.QualityDownload = new System.Windows.Forms.ComboBox();
+            this.downloadSourceText = new System.Windows.Forms.Label();
             this.CDNSource = new System.Windows.Forms.ComboBox();
             this.Save = new System.Windows.Forms.Button();
+            this.ServerStatusText = new System.Windows.Forms.Label();
+            this.CDNStatusText = new System.Windows.Forms.Label();
+            this.apiErrorButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // WelcomeText
@@ -43,36 +45,18 @@
             this.WelcomeText.Name = "WelcomeText";
             this.WelcomeText.Size = new System.Drawing.Size(357, 69);
             this.WelcomeText.TabIndex = 0;
-            this.WelcomeText.Text = "Howdy! Looks like it\'s the first time this launcher is started. Please specify wh" +
-    "ere you want to download all required game files ";
+            this.WelcomeText.Text = "Checking API Status";
             this.WelcomeText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // label1
+            // downloadSourceText
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 84);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(85, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Download Type:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 117);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(95, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Download Source:";
-            // 
-            // QualityDownload
-            // 
-            this.QualityDownload.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.QualityDownload.FormattingEnabled = true;
-            this.QualityDownload.Location = new System.Drawing.Point(132, 81);
-            this.QualityDownload.Name = "QualityDownload";
-            this.QualityDownload.Size = new System.Drawing.Size(237, 21);
-            this.QualityDownload.TabIndex = 3;
+            this.downloadSourceText.AutoSize = true;
+            this.downloadSourceText.Location = new System.Drawing.Point(12, 117);
+            this.downloadSourceText.Name = "downloadSourceText";
+            this.downloadSourceText.Size = new System.Drawing.Size(95, 13);
+            this.downloadSourceText.TabIndex = 2;
+            this.downloadSourceText.Text = "Download Source:";
+            this.downloadSourceText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CDNSource
             // 
@@ -94,22 +78,52 @@
             this.Save.UseVisualStyleBackColor = true;
             this.Save.Click += new System.EventHandler(this.Save_Click);
             // 
+            // ServerStatusText
+            // 
+            this.ServerStatusText.Location = new System.Drawing.Point(12, 78);
+            this.ServerStatusText.Name = "ServerStatusText";
+            this.ServerStatusText.Size = new System.Drawing.Size(164, 13);
+            this.ServerStatusText.TabIndex = 6;
+            this.ServerStatusText.Text = "Server API Status - Pinging";
+            this.ServerStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // CDNStatusText
+            // 
+            this.CDNStatusText.Location = new System.Drawing.Point(205, 78);
+            this.CDNStatusText.Name = "CDNStatusText";
+            this.CDNStatusText.Size = new System.Drawing.Size(164, 13);
+            this.CDNStatusText.TabIndex = 7;
+            this.CDNStatusText.Text = "CDN API Status - Pinging";
+            this.CDNStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // apiErrorButton
+            // 
+            this.apiErrorButton.AutoSize = true;
+            this.apiErrorButton.Location = new System.Drawing.Point(152, 141);
+            this.apiErrorButton.Name = "apiErrorButton";
+            this.apiErrorButton.Size = new System.Drawing.Size(89, 23);
+            this.apiErrorButton.TabIndex = 8;
+            this.apiErrorButton.Text = "Manual Bypass";
+            this.apiErrorButton.UseVisualStyleBackColor = true;
+            this.apiErrorButton.Click += new System.EventHandler(this.apiErrorButton_Click);
+            // 
             // WelcomeScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(381, 206);
+            this.Controls.Add(this.apiErrorButton);
+            this.Controls.Add(this.CDNStatusText);
+            this.Controls.Add(this.ServerStatusText);
             this.Controls.Add(this.Save);
             this.Controls.Add(this.CDNSource);
-            this.Controls.Add(this.QualityDownload);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.downloadSourceText);
             this.Controls.Add(this.WelcomeText);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "WelcomeScreen";
             this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GameLauncher";
             this.TopMost = true;
@@ -122,10 +136,11 @@
         #endregion
 
         private System.Windows.Forms.Label WelcomeText;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox QualityDownload;
+        private System.Windows.Forms.Label downloadSourceText;
         private System.Windows.Forms.ComboBox CDNSource;
         private System.Windows.Forms.Button Save;
+        private System.Windows.Forms.Label ServerStatusText;
+        private System.Windows.Forms.Label CDNStatusText;
+        private System.Windows.Forms.Button apiErrorButton;
     }
 }

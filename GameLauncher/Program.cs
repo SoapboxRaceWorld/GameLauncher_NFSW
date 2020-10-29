@@ -23,6 +23,7 @@ using System.Globalization;
 
 namespace GameLauncher {
     internal static class Program {
+
         internal class Arguments {
             [Option('p', "parse", Required = false, HelpText = "Parses URI")]
             public string Parse { get; set; }
@@ -44,8 +45,51 @@ namespace GameLauncher {
                 }
             }
 
+            try
+            {
+                //Check Using Backup API
+                HttpWebRequest requestBkupServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/generate_204/");
+                requestBkupServerListAPI.AllowAutoRedirect = false;
+                requestBkupServerListAPI.Method = "HEAD";
+                requestBkupServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+                try
+                {
+                    HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestBkupServerListAPI.GetResponse();
+                    bkupServerListResponseAPI.Close();
+                }
+                catch (WebException)
+                {
+                    HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/cdn_list.json");
+                    requestMainServerListAPI.AllowAutoRedirect = false;
+                    requestMainServerListAPI.Method = "HEAD";
+                    requestMainServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+                    try
+                    {
+                        HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestMainServerListAPI.GetResponse();
+                        bkupServerListResponseAPI.Close();
+                    }
+                    catch { }
+                }
+            }
+            catch
+            {
+                DialogResult restartAppNoApis = MessageBox.Show(null, "There's no internet connection, Launcher might crash \n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (restartAppNoApis == DialogResult.No)
+                {
+                    MessageBox.Show("Good Luck... \n No Really \n ...Good Luck", "GameLauncher Will Continue, When It Failed To Connect To API");
+                }
+
+                if (restartAppNoApis == DialogResult.Yes)
+                {
+                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                }
+
+            }
+
             IniFile _settingFile = new IniFile("Settings.ini");
 
+            if (!DetectLinux.LinuxDetected()) {
             //Windows 7 Fix
             if (!(_settingFile.KeyExists("PatchesApplied"))) {
                 String _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
@@ -80,11 +124,81 @@ namespace GameLauncher {
                 }
             }
 
+                if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
+                {
+                    var result = MessageBox.Show(
+                        "You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed. Click OK to install it.",
+                        "Compatibility",
+                        MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Warning);
+
+                    if (result != DialogResult.OK)
+                    {
+                        MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    var wc = new WebClientWithTimeout();
+                    wc.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x86.exe", "VC_redist.x86.exe");
+                    var proc = Process.Start(new ProcessStartInfo
+                    {
+                        Verb = "runas",
+                        Arguments = "/quiet",
+                        FileName = "VC_redist.x86.exe"
+                    });
+
+                    if (proc == null)
+                    {
+                        MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+
+                if (Environment.Is64BitOperatingSystem == true)
+                {
+                    if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x64))
+                    {
+                        var result = MessageBox.Show(
+                            "You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed. Click OK to install it.",
+                            "Compatibility",
+                            MessageBoxButtons.OKCancel,
+                            MessageBoxIcon.Warning);
+
+                        if (result != DialogResult.OK)
+                        {
+                            MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        var wc = new WebClientWithTimeout();
+                        wc.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x64.exe", "VC_redist.x64.exe");
+                        var proc = Process.Start(new ProcessStartInfo
+                        {
+                            Verb = "runas",
+                            Arguments = "/quiet",
+                            FileName = "VC_redist.x64.exe"
+                        });
+
+                        if (proc == null)
+                        {
+                            MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
+                }
+            }
+
             Console.WriteLine("Application path: " + Path.GetDirectoryName(Application.ExecutablePath));
 
             if (!Self.hasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath))) {
                 MessageBox.Show("This application requires admin priviledge");
             }
+
+            Log.StartLogging();
 
             if (DetectLinux.LinuxDetected()) {
                 if (!_settingFile.KeyExists("InstallationDirectory")) {
@@ -98,14 +212,16 @@ namespace GameLauncher {
                         String _slresponse = wc3.DownloadString(Self.CDNUrlList);
                         CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
                         _settingFile.Write("CDN", CDNList.First().url);
-                    } catch {
+                    }
+                    catch {
                         try {
                             List<CDNObject> CDNList = new List<CDNObject>();
                             WebClientWithTimeout wc3 = new WebClientWithTimeout();
                             String _slresponse = wc3.DownloadString(Self.CDNUrlStaticList);
                             CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
                             _settingFile.Write("CDN", CDNList.First().url);
-                        } catch {
+                        }
+                        catch {
                             _settingFile.Write("CDN", "http://cdn.worldunited.gg/gamefiles/packed/");
                         }
                     }
@@ -123,8 +239,7 @@ namespace GameLauncher {
             File.Delete("communication.log");
             File.Delete("launcher.log");
 
-            Log.StartLogging();
-            Log.Debug("GameLauncher " + Application.ProductVersion);
+            Log.Debug("BUILD: GameLauncher " + Application.ProductVersion);
 
             if (_settingFile.KeyExists("InstallationDirectory")) {
                 if(!File.Exists(_settingFile.Read("InstallationDirectory"))) {
@@ -132,15 +247,53 @@ namespace GameLauncher {
                 }
             }
 
+            if (!_settingFile.KeyExists("IgnoreUpdateVersion"))
+            {
+                _settingFile.Write("IgnoreUpdateVersion", String.Empty);
+            }
+
+            //INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
+            //Updated RedTheKitsune Code so it downloads the file if its missing. It also restarts the launcher if the user click on yes on Prompt. - DavidCarbon
+            if (!File.Exists("LZMA.dll"))
+            {
+                try
+                {
+                    Log.Debug("CORE: Starting LZMA downloader");
+                    using (WebClientWithTimeout wc = new WebClientWithTimeout())
+                    {
+                        wc.DownloadFileAsync(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
+                    }
+
+                    DialogResult restartApp = MessageBox.Show(null, "Downloaded Missing LZMA.ddl File. \nPlease Restart Launcher, Thanks!", "GameLauncher Restart Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                    if (restartApp == DialogResult.Yes)
+                    {
+                        Properties.Settings.Default.IsRestarting = true;
+                        Properties.Settings.Default.Save();
+                        Application.Restart();
+                        Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+
+                    }
+                    if (restartApp == DialogResult.No)
+                    {
+                        Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug("CORE: Failed to download LZMA. " + ex.Message);
+                }
+            }
+
             //StaticConfiguration.DisableErrorTraces = false;
 
-            Log.Debug("Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
+            Log.Debug("CORE: Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
 
-            Log.Debug("Checking current directory");
+            Log.Debug("CORE: Checking current directory");
 
             if (Self.isTempFolder(Directory.GetCurrentDirectory())) {
                 MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
@@ -148,7 +301,7 @@ namespace GameLauncher {
             }
 
 			if(!File.Exists("GameLauncherUpdater.exe")) {
-                Log.Debug("Starting GameLauncherUpdater downloader");
+                Log.Debug("CORE: Starting GameLauncherUpdater downloader");
                 try {
                     using (WebClientWithTimeout wc = new WebClientWithTimeout()) {
                         wc.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) => {
@@ -159,7 +312,7 @@ namespace GameLauncher {
                         wc.DownloadFileAsync(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
                     }
                 } catch(Exception ex) {
-                    Log.Debug("Failed to download updater. " + ex.Message);
+                    Log.Debug("CORE: Failed to download updater. " + ex.Message);
                 }
             }
 
@@ -177,10 +330,12 @@ namespace GameLauncher {
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             if (Debugger.IsAttached) {
-                Log.Debug("Checking Proxy");
+                Log.Debug("DEBUGGER PROXY: Starting Proxy");
                 ServerProxy.Instance.Start();
-                Log.Debug("Starting MainScreen");
+
+                Log.Debug("DEBUGGER CORE: Starting MainScreen");
                 Application.Run(new MainScreen());
+
             } else {
                 if (NFSW.isNFSWRunning()) {
                     MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -246,10 +401,10 @@ namespace GameLauncher {
 
                             MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         } else {
-                            Log.Debug("Checking Proxy");
+                            Log.Debug("PROXY: Starting Proxy");
                             ServerProxy.Instance.Start();
                             
-                            Log.Debug("Starting MainScreen");
+                            Log.Debug("CORE: Starting MainScreen");
                             Application.Run(new MainScreen());
                         }
                     } else {
