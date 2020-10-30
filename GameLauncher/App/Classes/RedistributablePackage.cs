@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameLauncher.App.Classes.Logger;
 using Microsoft.Win32;
 
 // based on https://github.com/bitbeans/RedistributableChecker/blob/master/RedistributableChecker/RedistributablePackage.cs
@@ -35,19 +36,19 @@ namespace GameLauncher.App.Classes
 				switch (redistributableVersion)
 				{
 					case RedistributablePackageVersion.VC2015to2019x86:
-						var parametersVc2015to2019x86 = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\DevDiv\VC\Servicing\14.0\RuntimeMinimum", false);
+						var parametersVc2015to2019x86 = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x86", false);
 						if (parametersVc2015to2019x86 == null) return false;
 						var vc2015to2019x86Version = parametersVc2015to2019x86.GetValue("Version");
-						if (((string)vc2015to2019x86Version).StartsWith("14.2"))
+						if (((string)vc2015to2019x86Version).StartsWith("v14.2"))
 						{
 							return true;
 						}
 						break;
 					case RedistributablePackageVersion.VC2015to2019x64:
-						var parametersVc2015to2019x64 = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\DevDiv\VC\Servicing\14.0\RuntimeMinimum", false);
+						var parametersVc2015to2019x64 = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64", false);
 						if (parametersVc2015to2019x64 == null) return false;
 						var vc2015to2019x64Version = parametersVc2015to2019x64.GetValue("Version");
-						if (((string)vc2015to2019x64Version).StartsWith("14.2"))
+						if (((string)vc2015to2019x64Version).StartsWith("v14.2"))
 						{
 							return true;
 						}
