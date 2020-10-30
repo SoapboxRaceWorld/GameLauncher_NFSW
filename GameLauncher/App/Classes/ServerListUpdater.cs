@@ -4,6 +4,7 @@ using GameLauncherReborn;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -42,13 +43,6 @@ namespace GameLauncher.App.Classes
 
                 if (fileItems.Count > 0)
                 {
-                    serverInfos.Add(new ServerInfo
-                    {
-                        Id = "__category-CUSTOM__",
-                        Name = "<GROUP>Custom Servers",
-                        IsSpecial = true
-                    });
-
                     fileItems.Select(si =>
                     {
                         si.DistributionUrl = "";
@@ -66,13 +60,6 @@ namespace GameLauncher.App.Classes
             {
                 serverInfos.Add(new ServerInfo
                 {
-                    Id = "__category-OFFLINE__",
-                    Name = "<GROUP>Offline Server",
-                    IsSpecial = true
-                });
-
-                serverInfos.Add(new ServerInfo
-                {
                     Name = "Offline Built-In Server",
                     Category = "OFFLINE",
                     DiscordPresenceKey = "",
@@ -80,6 +67,20 @@ namespace GameLauncher.App.Classes
                     DistributionUrl = "",
                     IpAddress = "http://localhost:4416/sbrw/Engine.svc",
                     Id = "OFFLINE"
+                });
+            }
+
+            if (Debugger.IsAttached)
+            {
+                serverInfos.Add(new ServerInfo
+                {
+                    Name = "Local Debug Server",
+                    Category = "DEBUG",
+                    DiscordPresenceKey = "",
+                    IsSpecial = false,
+                    DistributionUrl = "",
+                    IpAddress = "http://localhost:8680",
+                    Id = "DEV"
                 });
             }
 

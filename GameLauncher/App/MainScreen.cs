@@ -105,9 +105,6 @@ namespace GameLauncher {
         int CurrentModFileCount = 0;
         int TotalModFileCount = 0;
 
-        int CountFiles = 0;
-        int CountFilesTotal = 0;
-
         private Point _startPoint = new Point(38, 144);
         private Point _endPoint = new Point(562, 144);
 
@@ -2320,6 +2317,7 @@ namespace GameLauncher {
                 ModNetFileNameInUse = FileName;
 
                 WebClientWithTimeout client2 = new WebClientWithTimeout();
+                client2.Timeout(12000);
 
                 client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_RELOADED);
                 client2.DownloadFileCompleted += (test, stuff) => {
@@ -2399,32 +2397,6 @@ namespace GameLauncher {
                 "zlib1.dll", 
                 "ModLoader.asi"
             };
-            String[] ModNetLegacyFiles = new string[] { 
-                "modules/udpcrc.soapbox.module", 
-                "modules/udpcrypt1.soapbox.module", 
-                "modules/udpcrypt2.soapbox.module", 
-                "modules/xmppsubject.soapbox.module",
-                "scripts/global.ini", 
-                "lightfx.dll", 
-                "ModManager.asi", 
-                "global.ini",
-            };
-
-            String[] RemoveAllFiles = GlobalFiles.Concat(ModNetReloadedFiles).Concat(ModNetLegacyFiles).Concat(new[]
-            {
-                "PocoFoundation.dll",
-                "PocoNet.dll",
-            }).ToArray();
-
-            foreach (string file in RemoveAllFiles) {
-                if(File.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), file))) { 
-                    try {
-                        File.Delete(Path.Combine(_settingFile.Read("InstallationDirectory"), file));
-                    } catch(Exception ex) {
-                        MessageBox.Show($"File {file} cannot be deleted.\n{ex.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                }
-            }
 
             playButton.BackgroundImage = Properties.Resources.playbutton;
 
@@ -2464,6 +2436,7 @@ namespace GameLauncher {
 
                     IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
 
+                    int CountFilesTotal = 0;
                     CountFilesTotal = json3.entries.Count;
 
                     String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", MDFive.HashPassword(json2.serverID).ToLower());
@@ -2555,18 +2528,6 @@ namespace GameLauncher {
                     File.Delete(linksPath);
                 }
             }
-        }
-
-        void client_DownloadProgressChanged_LEGACY(object sender, DownloadProgressChangedEventArgs e) {
-            this.BeginInvoke((MethodInvoker)delegate {
-                double bytesIn = double.Parse(e.BytesReceived.ToString());
-                double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-                double percentage = bytesIn / totalBytes * 100;
-                playProgressText.Text = ("Downloaded " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
-
-                extractingProgress.Value = Convert.ToInt32(Decimal.Divide(CountFiles, CountFilesTotal) * 100);
-                extractingProgress.Width = Convert.ToInt32(Decimal.Divide(CountFiles, CountFilesTotal) * 519);
-            });
         }
 
         void client_DownloadProgressChanged_RELOADED(object sender, DownloadProgressChangedEventArgs e) {
@@ -2858,22 +2819,6 @@ namespace GameLauncher {
             else
             {
                 OnDownloadFinished();
-            }
-        }
-
-        public bool DownloadMods(string serverKey)
-        {
-            try
-            {
-                playProgress.Width = 1;
-                ModManager.Download(ModManager.GetMods(serverKey), _settingFile.Read("InstallationDirectory"), serverKey, playProgressText, extractingProgress);
-                return true;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message + e.StackTrace);
-                ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
-                return false;
             }
         }
 

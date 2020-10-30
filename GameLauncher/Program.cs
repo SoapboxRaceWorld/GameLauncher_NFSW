@@ -23,6 +23,8 @@ using System.Globalization;
 
 namespace GameLauncher {
     internal static class Program {
+        //Update this if a new GameLauncherUpdater.exe has been delployed - DavidCarbon
+        private static string LatestUpdaterBuildVersion = "1.0.0.4";
 
         internal class Arguments {
             [Option('p', "parse", Required = false, HelpText = "Parses URI")]
@@ -301,7 +303,7 @@ namespace GameLauncher {
             }
 
 			if(!File.Exists("GameLauncherUpdater.exe")) {
-                Log.Debug("CORE: Starting GameLauncherUpdater downloader");
+                Log.Debug("CORE LAUNCHER UPDATER: Starting GameLauncherUpdater downloader");
                 try {
                     using (WebClientWithTimeout wc = new WebClientWithTimeout()) {
                         wc.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) => {
@@ -312,7 +314,39 @@ namespace GameLauncher {
                         wc.DownloadFileAsync(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
                     }
                 } catch(Exception ex) {
-                    Log.Debug("CORE: Failed to download updater. " + ex.Message);
+                    Log.Debug("CORE LAUCHER UPDATER: Failed to download updater. " + ex.Message);
+                }
+            }
+            else if (File.Exists("GameLauncherUpdater.exe"))
+            {
+                String GameLauncherUpdaterLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameLauncherUpdater.exe");
+                var LauncherUpdaterBuild = FileVersionInfo.GetVersionInfo(GameLauncherUpdaterLocation);
+                var LauncherUpdaterBuildNumber = LauncherUpdaterBuild.FileVersion;
+                var UpdaterBuildNumberResult = LauncherUpdaterBuildNumber.CompareTo(LatestUpdaterBuildVersion);
+
+                if (UpdaterBuildNumberResult < 0)
+                {
+                    Log.Debug("CORE LAUNCHER UPDATER: " + UpdaterBuildNumberResult + " Builds behind latest Updater!");
+                }
+                else
+                {
+                    Log.Debug("CORE LAUNCHER UPDATER: Latest GameLauncherUpdater!");
+                }
+
+                if (UpdaterBuildNumberResult < 0) {
+                    Log.Debug("CORE LAUNCHER UPDATER: Downloading New GameLauncherUpdater.exe");
+                    File.Delete("GameLauncherUpdater.exe");
+                    try
+                    {
+                        using (WebClientWithTimeout wc = new WebClientWithTimeout())
+                        {
+                            wc.DownloadFileAsync(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Debug("CORE LAUNCHER UPDATER: Failed to download new updater. " + ex.Message);
+                    }
                 }
             }
 

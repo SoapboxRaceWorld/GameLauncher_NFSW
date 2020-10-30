@@ -18,8 +18,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GameLauncher.App {
-    public partial class SelectServer : Form {
+namespace GameLauncher.App
+{
+    public partial class SelectServer : Form
+    {
         private int ID = 1;
         Dictionary<int, GetServerInformation> rememberServerInformationID = new Dictionary<int, GetServerInformation>();
         private GetServerInformation ServerInfo;
@@ -29,7 +31,8 @@ namespace GameLauncher.App {
 
         private readonly IniFile _settingFile = new IniFile("Settings.ini");
 
-        public SelectServer() {
+        public SelectServer()
+        {
             InitializeComponent();
 
             //And one for keeping data about server, IP tbh
@@ -63,10 +66,12 @@ namespace GameLauncher.App {
             //Actually accept JSON instead of old format//
             List<ServerInfo> serverInfos = new List<ServerInfo>();
 
+            foreach (var serverListURL in Self.serverlisturl)
+            {
             try
             {
                     var wc = new WebClientWithTimeout();
-                var response = wc.DownloadString(Self.serverlisturl[0]);
+                    var response = wc.DownloadString(serverListURL);
 
                 try
                 {
@@ -74,13 +79,15 @@ namespace GameLauncher.App {
                     }
                 catch (Exception error)
                 {
-                    Log.Error("Error occurred while deserializing server list from [" + Self.serverlisturl[0] + "]: " + error.Message);
+                        Log.Error("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message);
                 }
             }
             catch (Exception error)
             {
-                Log.Error("Error occurred while loading server list from [" + Self.serverlisturl[0] + "]: " + error.Message);
+                    Log.Error("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message);
             }
+            }
+
 
             if (File.Exists("servers.json"))
             {
@@ -108,6 +115,7 @@ namespace GameLauncher.App {
                     newFinalItems.Add(xServ);
                 }
             }
+            Console.Write(newFinalItems);
 
                     
             foreach (var substring in newFinalItems)
@@ -147,7 +155,7 @@ namespace GameLauncher.App {
                         {
 
                             WebClientWithTimeout getdata = new WebClientWithTimeout();
-                            getdata.Timeout(1000);
+                            getdata.Timeout(8000);
 
                             GetServerInformation content = JsonConvert.DeserializeObject<GetServerInformation>(getdata.DownloadString(serverurl));
 
