@@ -35,7 +35,7 @@ namespace GameLauncher.App.Classes
 				switch (redistributableVersion)
 				{
 					case RedistributablePackageVersion.VC2015to2019x86:
-						var parametersVc2015to2019x86 = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\DevDiv\VC\Servicing\14.0\RuntimeMinimum", false);
+						var parametersVc2015to2019x86 = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\DevDiv\VC\Servicing\14.0\RuntimeMinimum", false);
 						if (parametersVc2015to2019x86 == null) return false;
 						var vc2015to2019x86Version = parametersVc2015to2019x86.GetValue("Version");
 						if (((string)vc2015to2019x86Version).StartsWith("14.2"))
