@@ -60,7 +60,7 @@
             this.settingsGameFiles = new System.Windows.Forms.Button();
             this.settingsGameFilesCurrent = new System.Windows.Forms.LinkLabel();
             this.settingsGamePathText = new System.Windows.Forms.Label();
-            this.addServer = new System.Windows.Forms.Button();
+            this.AddServer = new System.Windows.Forms.Button();
             this.launcherIconStatus = new System.Windows.Forms.PictureBox();
             this.launcherStatusText = new System.Windows.Forms.Label();
             this.ServerStatusDesc = new System.Windows.Forms.Label();
@@ -493,14 +493,14 @@
             this.settingsGamePathText.Text = "GAMEFILES PATH:";
             this.settingsGamePathText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // addServer
+            // AddServer
             // 
-            this.addServer.Location = new System.Drawing.Point(838, 64);
-            this.addServer.Name = "addServer";
-            this.addServer.Size = new System.Drawing.Size(24, 23);
-            this.addServer.TabIndex = 68;
-            this.addServer.Text = "+";
-            this.addServer.UseVisualStyleBackColor = true;
+            this.AddServer.Location = new System.Drawing.Point(838, 64);
+            this.AddServer.Name = "AddServer";
+            this.AddServer.Size = new System.Drawing.Size(24, 23);
+            this.AddServer.TabIndex = 68;
+            this.AddServer.Text = "+";
+            this.AddServer.UseVisualStyleBackColor = true;
             // 
             // launcherIconStatus
             // 
@@ -1018,7 +1018,7 @@
             this.Controls.Add(this.ServerStatusDesc);
             this.Controls.Add(this.launcherStatusText);
             this.Controls.Add(this.launcherIconStatus);
-            this.Controls.Add(this.addServer);
+            this.Controls.Add(this.AddServer);
             this.Controls.Add(this.settingsGameFilesCurrent);
             this.Controls.Add(this.translatedBy);
             this.Controls.Add(this.logo);
@@ -1111,7 +1111,7 @@
         private System.Windows.Forms.Button settingsGameFiles;
         private System.Windows.Forms.LinkLabel settingsGameFilesCurrent;
         private System.Windows.Forms.Label settingsGamePathText;
-        private System.Windows.Forms.Button addServer;
+        private System.Windows.Forms.Button AddServer;
         private GameLauncherReborn.ProgressBarEx extractingProgress;
         private System.Windows.Forms.PictureBox launcherIconStatus;
         private System.Windows.Forms.Label launcherStatusText;
