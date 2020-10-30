@@ -122,7 +122,7 @@
             this.closebtn.Size = new System.Drawing.Size(24, 24);
             this.closebtn.TabIndex = 0;
             this.closebtn.TabStop = false;
-            this.closebtn.Click += new System.EventHandler(this.closebtn_Click);
+            this.closebtn.Click += new System.EventHandler(this.Closebtn_Click);
             // 
             // email
             // 
@@ -134,7 +134,7 @@
             this.email.Name = "email";
             this.email.Size = new System.Drawing.Size(187, 22);
             this.email.TabIndex = 2;
-            this.email.TextChanged += new System.EventHandler(this.email_TextChanged);
+            this.email.TextChanged += new System.EventHandler(this.Email_TextChanged);
             // 
             // password
             // 
@@ -148,7 +148,7 @@
             this.password.TabIndex = 4;
             this.password.UseSystemPasswordChar = true;
             this.password.WordWrap = false;
-            this.password.TextChanged += new System.EventHandler(this.password_TextChanged);
+            this.password.TextChanged += new System.EventHandler(this.Password_TextChanged);
             // 
             // serverPick
             // 
@@ -271,7 +271,7 @@
             this.registerEmail.Name = "registerEmail";
             this.registerEmail.Size = new System.Drawing.Size(187, 22);
             this.registerEmail.TabIndex = 30;
-            this.registerEmail.TextChanged += new System.EventHandler(this.registerEmail_TextChanged);
+            this.registerEmail.TextChanged += new System.EventHandler(this.RegisterEmail_TextChanged);
             // 
             // registerTicket
             // 
@@ -283,7 +283,7 @@
             this.registerTicket.Name = "registerTicket";
             this.registerTicket.Size = new System.Drawing.Size(187, 22);
             this.registerTicket.TabIndex = 31;
-            this.registerTicket.TextChanged += new System.EventHandler(this.registerTicket_TextChanged);
+            this.registerTicket.TextChanged += new System.EventHandler(this.RegisterTicket_TextChanged);
             // 
             // registerPassword
             // 
@@ -296,7 +296,7 @@
             this.registerPassword.Size = new System.Drawing.Size(187, 22);
             this.registerPassword.TabIndex = 32;
             this.registerPassword.UseSystemPasswordChar = true;
-            this.registerPassword.TextChanged += new System.EventHandler(this.registerPassword_TextChanged);
+            this.registerPassword.TextChanged += new System.EventHandler(this.RegisterPassword_TextChanged);
             // 
             // registerConfirmPassword
             // 
@@ -309,7 +309,7 @@
             this.registerConfirmPassword.Size = new System.Drawing.Size(187, 22);
             this.registerConfirmPassword.TabIndex = 33;
             this.registerConfirmPassword.UseSystemPasswordChar = true;
-            this.registerConfirmPassword.TextChanged += new System.EventHandler(this.registerConfirmPassword_TextChanged);
+            this.registerConfirmPassword.TextChanged += new System.EventHandler(this.RegisterConfirmPassword_TextChanged);
             // 
             // registerAgree
             // 
@@ -321,7 +321,7 @@
             this.registerAgree.TabIndex = 38;
             this.registerAgree.Text = "BY REGISTERING YOU AGREE TO THE TERMS OF SERVICE";
             this.registerAgree.UseVisualStyleBackColor = false;
-            this.registerAgree.CheckedChanged += new System.EventHandler(this.registerAgree_CheckedChanged);
+            this.registerAgree.CheckedChanged += new System.EventHandler(this.RegisterAgree_CheckedChanged);
             // 
             // playProgressText
             // 
@@ -616,7 +616,7 @@
             this.settingsVFilesButton.Text = "Validate Game Files";
             this.settingsVFilesButton.UseVisualStyleBackColor = false;
             this.settingsVFilesButton.Visible = false;
-            this.settingsVFilesButton.Click += new System.EventHandler(this.vfilesButton_Click);
+            this.settingsVFilesButton.Click += new System.EventHandler(this.VFilesButton_Click);
             // 
             // settingsWordFilterCheck
             // 
@@ -829,7 +829,7 @@
             this.settingsCancel.TabIndex = 132;
             this.settingsCancel.Text = "CANCEL";
             this.settingsCancel.UseVisualStyleBackColor = false;
-            this.settingsCancel.Click += new System.EventHandler(this.settingsCancel_Click);
+            this.settingsCancel.Click += new System.EventHandler(this.SettingsCancel_Click);
             // 
             // settingsSave
             // 

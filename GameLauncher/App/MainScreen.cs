@@ -135,18 +135,18 @@ namespace GameLauncher {
 			  .Select(s => s[random.Next(s.Length)]).ToArray());
 		}
 
-        private void moveWindow_MouseDown(object sender, MouseEventArgs e)
+        private void MoveWindow_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Y <= 90) _mouseDownPoint = new Point(e.X, e.Y);
         }
 
-        private void moveWindow_MouseUp(object sender, MouseEventArgs e)
+        private void MoveWindow_MouseUp(object sender, MouseEventArgs e)
         {
             _mouseDownPoint = Point.Empty;
             Opacity = 1;
         }
 
-        private void moveWindow_MouseMove(object sender, MouseEventArgs e)
+        private void MoveWindow_MouseMove(object sender, MouseEventArgs e)
         {
             if (_mouseDownPoint.IsEmpty) { return; }
             var f = this as Form;
@@ -235,54 +235,54 @@ namespace GameLauncher {
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
 
             Log.Debug("CORE: Applying EventHandlers");
-            closebtn.MouseEnter += new EventHandler(closebtn_MouseEnter);
-            closebtn.MouseLeave += new EventHandler(closebtn_MouseLeave);
-            closebtn.Click += new EventHandler(closebtn_Click);
+            closebtn.MouseEnter += new EventHandler(Closebtn_MouseEnter);
+            closebtn.MouseLeave += new EventHandler(Closebtn_MouseLeave);
+            closebtn.Click += new EventHandler(Closebtn_Click);
 
-            settingsButton.MouseEnter += new EventHandler(settingsButton_MouseEnter);
-            settingsButton.MouseLeave += new EventHandler(settingsButton_MouseLeave);
-            settingsButton.Click += new EventHandler(settingsButton_Click);
+            settingsButton.MouseEnter += new EventHandler(SettingsButton_MouseEnter);
+            settingsButton.MouseLeave += new EventHandler(SettingsButton_MouseLeave);
+            settingsButton.Click += new EventHandler(SettingsButton_Click);
 
-            loginButton.MouseEnter += new EventHandler(loginButton_MouseEnter);
-            loginButton.MouseLeave += new EventHandler(loginButton_MouseLeave);
-            loginButton.MouseUp += new MouseEventHandler(loginButton_MouseUp);
-            loginButton.MouseDown += new MouseEventHandler(loginButton_MouseDown);
-            loginButton.Click += new EventHandler(loginButton_Click);
+            loginButton.MouseEnter += new EventHandler(LoginButton_MouseEnter);
+            loginButton.MouseLeave += new EventHandler(LoginButton_MouseLeave);
+            loginButton.MouseUp += new MouseEventHandler(LoginButton_MouseUp);
+            loginButton.MouseDown += new MouseEventHandler(LoginButton_MouseDown);
+            loginButton.Click += new EventHandler(LoginButton_Click);
 
-            registerButton.MouseEnter += greenbutton_hover_MouseEnter;
-            registerButton.MouseLeave += greenbutton_MouseLeave;
-            registerButton.MouseUp += greenbutton_hover_MouseUp;
-            registerButton.MouseDown += greenbutton_click_MouseDown;
-            registerButton.Click += registerButton_Click;
+            registerButton.MouseEnter += Greenbutton_hover_MouseEnter;
+            registerButton.MouseLeave += Greenbutton_MouseLeave;
+            registerButton.MouseUp += Greenbutton_hover_MouseUp;
+            registerButton.MouseDown += Greenbutton_click_MouseDown;
+            registerButton.Click += RegisterButton_Click;
 
-            registerCancel.MouseEnter += new EventHandler(graybutton_hover_MouseEnter);
-            registerCancel.MouseLeave += new EventHandler(graybutton_MouseLeave);
-            registerCancel.MouseUp += new MouseEventHandler(graybutton_hover_MouseUp);
-            registerCancel.MouseDown += new MouseEventHandler(graybutton_click_MouseDown);
-            registerCancel.Click += new EventHandler(registerCancel_Click);
+            registerCancel.MouseEnter += new EventHandler(Graybutton_hover_MouseEnter);
+            registerCancel.MouseLeave += new EventHandler(Graybutton_MouseLeave);
+            registerCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
+            registerCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
+            registerCancel.Click += new EventHandler(RegisterCancel_Click);
 
-            logoutButton.MouseEnter += new EventHandler(graybutton_hover_MouseEnter);
-            logoutButton.MouseLeave += new EventHandler(graybutton_MouseLeave);
-            logoutButton.MouseUp += new MouseEventHandler(graybutton_hover_MouseUp);
-            logoutButton.MouseDown += new MouseEventHandler(graybutton_click_MouseDown);
-            logoutButton.Click += new EventHandler(logoutButton_Click);
+            logoutButton.MouseEnter += new EventHandler(Graybutton_hover_MouseEnter);
+            logoutButton.MouseLeave += new EventHandler(Graybutton_MouseLeave);
+            logoutButton.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
+            logoutButton.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
+            logoutButton.Click += new EventHandler(LogoutButton_Click);
 
-            settingsSave.MouseEnter += new EventHandler(greenbutton_hover_MouseEnter);
-            settingsSave.MouseLeave += new EventHandler(greenbutton_MouseLeave);
-            settingsSave.MouseUp += new MouseEventHandler(greenbutton_hover_MouseUp);
-            settingsSave.MouseDown += new MouseEventHandler(greenbutton_click_MouseDown);
-            settingsSave.Click += new EventHandler(settingsSave_Click);
+            settingsSave.MouseEnter += new EventHandler(Greenbutton_hover_MouseEnter);
+            settingsSave.MouseLeave += new EventHandler(Greenbutton_MouseLeave);
+            settingsSave.MouseUp += new MouseEventHandler(Greenbutton_hover_MouseUp);
+            settingsSave.MouseDown += new MouseEventHandler(Greenbutton_click_MouseDown);
+            settingsSave.Click += new EventHandler(SettingsSave_Click);
 
-            settingsCancel.MouseEnter += new EventHandler(graybutton_hover_MouseEnter);
-            settingsCancel.MouseLeave += new EventHandler(graybutton_MouseLeave);
-            settingsCancel.MouseUp += new MouseEventHandler(graybutton_hover_MouseUp);
-            settingsCancel.MouseDown += new MouseEventHandler(graybutton_click_MouseDown);
-            settingsCancel.Click += new EventHandler(settingsCancel_Click);
+            settingsCancel.MouseEnter += new EventHandler(Graybutton_hover_MouseEnter);
+            settingsCancel.MouseLeave += new EventHandler(Graybutton_MouseLeave);
+            settingsCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
+            settingsCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
+            settingsCancel.Click += new EventHandler(SettingsCancel_Click);
 
-            settingsGameFiles.Click += new EventHandler(settingsGameFiles_Click);
-            settingsGameFilesCurrent.Click += new EventHandler(settingsGameFilesCurrent_Click);
+            settingsGameFiles.Click += new EventHandler(SettingsGameFiles_Click);
+            settingsGameFilesCurrent.Click += new EventHandler(SettingsGameFilesCurrent_Click);
 
-            addServer.Click += new EventHandler(addServer_Click);
+            addServer.Click += new EventHandler(AddServer_Click);
             launcherStatusDesc.Click += new EventHandler(OpenDebugWindow);
 
             email.KeyUp += new KeyEventHandler(Loginbuttonenabler);
@@ -290,38 +290,38 @@ namespace GameLauncher {
             password.KeyUp += new KeyEventHandler(Loginbuttonenabler);
             password.KeyDown += new KeyEventHandler(LoginEnter);
 
-            serverPick.SelectedIndexChanged += new EventHandler(serverPick_SelectedIndexChanged);
-            serverPick.DrawItem += new DrawItemEventHandler(comboBox1_DrawItem);
+            serverPick.SelectedIndexChanged += new EventHandler(ServerPick_SelectedIndexChanged);
+            serverPick.DrawItem += new DrawItemEventHandler(ComboBox1_DrawItem);
 
-            forgotPassword.LinkClicked += new LinkLabelLinkClickedEventHandler(forgotPassword_LinkClicked);
+            forgotPassword.LinkClicked += new LinkLabelLinkClickedEventHandler(ForgotPassword_LinkClicked);
 
-            MouseMove += new MouseEventHandler(moveWindow_MouseMove);
-            MouseUp += new MouseEventHandler(moveWindow_MouseUp);
-            MouseDown += new MouseEventHandler(moveWindow_MouseDown);
+            MouseMove += new MouseEventHandler(MoveWindow_MouseMove);
+            MouseUp += new MouseEventHandler(MoveWindow_MouseUp);
+            MouseDown += new MouseEventHandler(MoveWindow_MouseDown);
 
-            logo.MouseEnter += new EventHandler(logo_MouseEnter);
-            logo.MouseLeave += new EventHandler(logo_MouseLeave);
-            logo.MouseMove += new MouseEventHandler(moveWindow_MouseMove);
-            logo.MouseUp += new MouseEventHandler(moveWindow_MouseUp);
-            logo.MouseDown += new MouseEventHandler(moveWindow_MouseDown);
+            logo.MouseEnter += new EventHandler(Logo_MouseEnter);
+            logo.MouseLeave += new EventHandler(Logo_MouseLeave);
+            logo.MouseMove += new MouseEventHandler(MoveWindow_MouseMove);
+            logo.MouseUp += new MouseEventHandler(MoveWindow_MouseUp);
+            logo.MouseDown += new MouseEventHandler(MoveWindow_MouseDown);
 
-            playButton.MouseEnter += new EventHandler(playButton_MouseEnter);
-            playButton.MouseLeave += new EventHandler(playButton_MouseLeave);
-            playButton.MouseUp += new MouseEventHandler(playButton_MouseUp);
-            playButton.MouseDown += new MouseEventHandler(playButton_MouseDown);
-            playButton.Click += new EventHandler(playButton_Click);
+            playButton.MouseEnter += new EventHandler(PlayButton_MouseEnter);
+            playButton.MouseLeave += new EventHandler(PlayButton_MouseLeave);
+            playButton.MouseUp += new MouseEventHandler(PlayButton_MouseUp);
+            playButton.MouseDown += new MouseEventHandler(PlayButton_MouseDown);
+            playButton.Click += new EventHandler(PlayButton_Click);
 
-            registerText.MouseEnter += new EventHandler(greenbutton_hover_MouseEnter);
-            registerText.MouseLeave += new EventHandler(greenbutton_MouseLeave);
-            registerText.MouseUp += new MouseEventHandler(greenbutton_hover_MouseUp);
-            registerText.MouseDown += new MouseEventHandler(greenbutton_click_MouseDown);
-            registerText.Click += new EventHandler(registerText_LinkClicked);
+            registerText.MouseEnter += new EventHandler(Greenbutton_hover_MouseEnter);
+            registerText.MouseLeave += new EventHandler(Greenbutton_MouseLeave);
+            registerText.MouseUp += new MouseEventHandler(Greenbutton_hover_MouseUp);
+            registerText.MouseDown += new MouseEventHandler(Greenbutton_click_MouseDown);
+            registerText.Click += new EventHandler(RegisterText_LinkClicked);
 
-            this.Load += new EventHandler(mainScreen_Load);
+            this.Load += new EventHandler(MainScreen_Load);
 
             this.Shown += (x,y) => {
                 if(UriScheme.ForceGame == true) {
-                    playButton_Click(x, y);
+                    PlayButton_Click(x, y);
                 }
 
                 new Thread(() => {
@@ -429,7 +429,7 @@ namespace GameLauncher {
             ModManager.LoadModCache();
         }
 
-        private void comboBox1_DrawItem(object sender, DrawItemEventArgs e) {
+        private void ComboBox1_DrawItem(object sender, DrawItemEventArgs e) {
             var font = (sender as ComboBox).Font;
             Brush backgroundColor;
             Brush textColor;
@@ -473,7 +473,7 @@ namespace GameLauncher {
             }
         }
 
-        private void mainScreen_Load(object sender, EventArgs e) {
+        private void MainScreen_Load(object sender, EventArgs e) {
             Log.Debug("CORE: Entering mainScreen_Load");
 
             Log.Debug("LAUNCHER: Updating server list");
@@ -499,10 +499,10 @@ namespace GameLauncher {
 
             ContextMenu.MenuItems.Add(new MenuItem("Donate", (b,n) => { Process.Start("http://paypal.me/metonator95"); }));
             ContextMenu.MenuItems.Add("-");
-            ContextMenu.MenuItems.Add(new MenuItem("Settings", settingsButton_Click));
-            ContextMenu.MenuItems.Add(new MenuItem("Add Server", addServer_Click));
+            ContextMenu.MenuItems.Add(new MenuItem("Settings", SettingsButton_Click));
+            ContextMenu.MenuItems.Add(new MenuItem("Add Server", AddServer_Click));
             ContextMenu.MenuItems.Add("-");
-            ContextMenu.MenuItems.Add(new MenuItem("Close launcher", closebtn_Click));
+            ContextMenu.MenuItems.Add(new MenuItem("Close launcher", Closebtn_Click));
 
             Notification.ContextMenu = ContextMenu;
             Notification.Icon = new Icon(Icon, Icon.Width, Icon.Height);
@@ -574,7 +574,7 @@ namespace GameLauncher {
 
                     Log.Debug("SERVERLIST: Triggering server change");
                     if (serverPick.SelectedIndex == 1) {
-                        serverPick_SelectedIndexChanged(sender, e);
+                        ServerPick_SelectedIndexChanged(sender, e);
                     }
                     Log.Debug("SERVERLIST: All done");
                 }
@@ -741,7 +741,7 @@ namespace GameLauncher {
             PingServerListAPIStatus();
         }
 
-        private void closebtn_Click(object sender, EventArgs e) {
+        private void Closebtn_Click(object sender, EventArgs e) {
             closebtn.BackgroundImage = Properties.Resources.close_click;
 
 		    try {
@@ -807,7 +807,7 @@ namespace GameLauncher {
             this.Close();
         }
 
-        private void addServer_Click(object sender, EventArgs e)
+        private void AddServer_Click(object sender, EventArgs e)
         {
              new AddServer().Show();
         }
@@ -820,12 +820,12 @@ namespace GameLauncher {
             form.Show();
         }
 
-        private void closebtn_MouseEnter(object sender, EventArgs e)
+        private void Closebtn_MouseEnter(object sender, EventArgs e)
         {
             closebtn.BackgroundImage = Properties.Resources.close_hover;
         }
 
-        private void closebtn_MouseLeave(object sender, EventArgs e)
+        private void Closebtn_MouseLeave(object sender, EventArgs e)
         {
             closebtn.BackgroundImage = Properties.Resources.close;
         }
@@ -834,7 +834,7 @@ namespace GameLauncher {
         {
             if (e.KeyCode == Keys.Return && _loginEnabled)
             {
-                loginButton_Click(null, null);
+                LoginButton_Click(null, null);
                 e.SuppressKeyPress = true;
             }
         }
@@ -857,7 +857,7 @@ namespace GameLauncher {
             _useSavedPassword = false;
         }
 
-        private void loginButton_MouseUp(object sender, EventArgs e)
+        private void LoginButton_MouseUp(object sender, EventArgs e)
         {
             if (_loginEnabled || _builtinserver)
             {
@@ -869,7 +869,7 @@ namespace GameLauncher {
             }
         }
 
-        private void loginButton_MouseDown(object sender, EventArgs e)
+        private void LoginButton_MouseDown(object sender, EventArgs e)
         {
             if (_loginEnabled || _builtinserver)
             {
@@ -881,7 +881,7 @@ namespace GameLauncher {
             }
         }
 
-        private void loginButton_Click(object sender, EventArgs e) {
+        private void LoginButton_Click(object sender, EventArgs e) {
             if ((_loginEnabled == false || _serverEnabled == false) && _builtinserver == false) {
                 return;
             }
@@ -948,7 +948,7 @@ namespace GameLauncher {
             }
         }
 
-        private void loginButton_MouseEnter(object sender, EventArgs e)
+        private void LoginButton_MouseEnter(object sender, EventArgs e)
         {
             if (_loginEnabled || _builtinserver)
             {
@@ -962,7 +962,7 @@ namespace GameLauncher {
             }
         }
 
-        private void loginButton_MouseLeave(object sender, EventArgs e)
+        private void LoginButton_MouseLeave(object sender, EventArgs e)
         {
             if (_loginEnabled || _builtinserver)
             {
@@ -976,7 +976,7 @@ namespace GameLauncher {
             }
         }
 
-        private void serverPick_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ServerPick_SelectedIndexChanged(object sender, EventArgs e) {
             errorMainEmailBorder.Visible = false;
             errorMainPasswordBorder.Visible = false;
 
@@ -1298,7 +1298,7 @@ namespace GameLauncher {
             registerText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
         }
 
-        private void registerText_LinkClicked(object sender, EventArgs e)
+        private void RegisterText_LinkClicked(object sender, EventArgs e)
         {
             errorMainEmailBorder.Visible = false;
             errorMainPasswordBorder.Visible = false;
@@ -1325,7 +1325,7 @@ namespace GameLauncher {
             }
         }
 
-        private void forgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+        private void ForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             if (!string.IsNullOrEmpty(json.webRecoveryUrl)) {
                 Process.Start(json.webRecoveryUrl);
                 MessageBox.Show(null, "A browser window has been opened to complete password recovery on " + json.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1479,7 +1479,7 @@ namespace GameLauncher {
             registerAgree.Checked = false;
         }
 
-        private void logoutButton_Click(object sender, EventArgs e) {
+        private void LogoutButton_Click(object sender, EventArgs e) {
             if(_disableLogout == true) {
                 return;
             }
@@ -1492,35 +1492,35 @@ namespace GameLauncher {
                 _loginToken = String.Empty;
         }
 
-        private void greenbutton_hover_MouseEnter(object sender, EventArgs e)
+        private void Greenbutton_hover_MouseEnter(object sender, EventArgs e)
         {
             settingsSave.Image = Properties.Resources.greenbutton_hover;
             registerText.Image = Properties.Resources.greenbutton_hover;
             registerButton.Image = Properties.Resources.greenbutton_hover;
         }
 
-        private void greenbutton_MouseLeave(object sender, EventArgs e)
+        private void Greenbutton_MouseLeave(object sender, EventArgs e)
         {
             settingsSave.Image = Properties.Resources.greenbutton;
             registerText.Image = Properties.Resources.greenbutton;
             registerButton.Image = Properties.Resources.greenbutton;
         }
 
-        private void greenbutton_hover_MouseUp(object sender, EventArgs e)
+        private void Greenbutton_hover_MouseUp(object sender, EventArgs e)
         {
             settingsSave.Image = Properties.Resources.greenbutton_hover;
             registerText.Image = Properties.Resources.greenbutton_hover;
             registerButton.Image = Properties.Resources.greenbutton_hover;
         }
 
-        private void greenbutton_click_MouseDown(object sender, EventArgs e)
+        private void Greenbutton_click_MouseDown(object sender, EventArgs e)
         {
             settingsSave.Image = Properties.Resources.greenbutton_click;
             registerText.Image = Properties.Resources.greenbutton_click;
             registerButton.Image = Properties.Resources.greenbutton_click;
         }
 
-        private void registerCancel_Click(object sender, EventArgs e)
+        private void RegisterCancel_Click(object sender, EventArgs e)
         {
             BackgroundImage = Properties.Resources.loginbg;
             currentWindowInfo.Text = "Enter your account information to Log In:".ToUpper();
@@ -1533,64 +1533,64 @@ namespace GameLauncher {
             errorTicketBorder.Visible = false;
         }
 
-        private void registerAgree_CheckedChanged(object sender, EventArgs e)
+        private void RegisterAgree_CheckedChanged(object sender, EventArgs e)
         {
             registerAgree.ForeColor = Color.White;
         }
 
-        private void registerEmail_TextChanged(object sender, EventArgs e)
+        private void RegisterEmail_TextChanged(object sender, EventArgs e)
         {
             errorEmailBorder.Visible = false;
         }
 
-        private void registerTicket_TextChanged(object sender, EventArgs e)
+        private void RegisterTicket_TextChanged(object sender, EventArgs e)
         {
             errorTicketBorder.Visible = false;
         }
 
-        private void registerConfirmPassword_TextChanged(object sender, EventArgs e)
+        private void RegisterConfirmPassword_TextChanged(object sender, EventArgs e)
         {
             errorPasswordValidateBorder.Visible = false;
         }
 
-        private void registerPassword_TextChanged(object sender, EventArgs e)
+        private void RegisterPassword_TextChanged(object sender, EventArgs e)
         {
             errorPasswordBorder.Visible = false;
         }
 
-        private void email_TextChanged(object sender, EventArgs e)
+        private void Email_TextChanged(object sender, EventArgs e)
         {
             errorMainEmailBorder.Visible = false;
         }
 
-        private void password_TextChanged(object sender, EventArgs e)
+        private void Password_TextChanged(object sender, EventArgs e)
         {
             errorMainEmailBorder.Visible = false;
             errorMainPasswordBorder.Visible = false;
         }
 
-        private void graybutton_click_MouseDown(object sender, EventArgs e)
+        private void Graybutton_click_MouseDown(object sender, EventArgs e)
         {
             settingsCancel.Image = Properties.Resources.graybutton_click;
             logoutButton.Image = Properties.Resources.graybutton_click;
             registerCancel.Image = Properties.Resources.graybutton_click;
         }
 
-        private void graybutton_hover_MouseEnter(object sender, EventArgs e)
+        private void Graybutton_hover_MouseEnter(object sender, EventArgs e)
         {
             settingsCancel.Image = Properties.Resources.graybutton_hover;
             logoutButton.Image = Properties.Resources.graybutton_hover;
             registerCancel.Image = Properties.Resources.graybutton_hover;
         }
 
-        private void graybutton_MouseLeave(object sender, EventArgs e)
+        private void Graybutton_MouseLeave(object sender, EventArgs e)
         {
             settingsCancel.Image = Properties.Resources.graybutton;
             logoutButton.Image = Properties.Resources.graybutton;
             registerCancel.Image = Properties.Resources.graybutton;
         }
 
-        private void graybutton_hover_MouseUp(object sender, EventArgs e)
+        private void Graybutton_hover_MouseUp(object sender, EventArgs e)
         {
             settingsCancel.Image = Properties.Resources.graybutton_hover;
             logoutButton.Image = Properties.Resources.graybutton_hover;
@@ -1606,7 +1606,7 @@ namespace GameLauncher {
             g.DrawRectangle(p, new Rectangle(x.Location.X - variance, x.Location.Y - variance, x.Width + variance, x.Height + variance));
         }
 
-        private void registerButton_Click(object sender, EventArgs e) {
+        private void RegisterButton_Click(object sender, EventArgs e) {
             Refresh();
 
             List<string> registerErrors = new List<string>(); 
@@ -1734,7 +1734,7 @@ namespace GameLauncher {
          * SETTINGS PAGE LAYOUT
          */
 
-        private void settingsButton_Click(object sender, EventArgs e)
+        private void SettingsButton_Click(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Minimized)
             {
@@ -1752,25 +1752,25 @@ namespace GameLauncher {
             PingAPIStatus();
         }
 
-        private void settingsButton_MouseEnter(object sender, EventArgs e) {
+        private void SettingsButton_MouseEnter(object sender, EventArgs e) {
             settingsButton.BackgroundImage = Properties.Resources.settingsbtn_hover;
         }
 
-        private void settingsButton_MouseLeave(object sender, EventArgs e) {
+        private void SettingsButton_MouseLeave(object sender, EventArgs e) {
             settingsButton.BackgroundImage = Properties.Resources.settingsbtn;
         }
 
-        private void logo_MouseLeave(object sender, EventArgs e)
+        private void Logo_MouseLeave(object sender, EventArgs e)
         {
             logo.Image = Properties.Resources.logo;
         }
 
-        private void logo_MouseEnter(object sender, EventArgs e)
+        private void Logo_MouseEnter(object sender, EventArgs e)
         {
             logo.Image = Properties.Resources.logo_hover;
         }
 
-        private void settingsCancel_Click(object sender, EventArgs e)
+        private void SettingsCancel_Click(object sender, EventArgs e)
         {
             SettingsFormElements(false);
 
@@ -1798,7 +1798,7 @@ namespace GameLauncher {
             settingsBkupCDNText.ForeColor = Color.FromArgb(66, 179, 189);
         }
 
-        private void settingsSave_Click(object sender, EventArgs e) {
+        private void SettingsSave_Click(object sender, EventArgs e) {
 
             //TODO null check
             _settingFile.Write("Language", settingsLanguage.SelectedValue.ToString());
@@ -1906,7 +1906,7 @@ namespace GameLauncher {
             settingsBkupCDNText.ForeColor = Color.FromArgb(66, 179, 189);
         }
 
-        private void settingsGameFiles_Click(object sender, EventArgs e)
+        private void SettingsGameFiles_Click(object sender, EventArgs e)
         {
             var fbd2 = new FolderBrowserDialog();
             var result2 = fbd2.ShowDialog();
@@ -1919,7 +1919,7 @@ namespace GameLauncher {
             }
         }
 
-        private void settingsGameFilesCurrent_Click(object sender, EventArgs e) {
+        private void SettingsGameFilesCurrent_Click(object sender, EventArgs e) {
             Process.Start(_newGameFilesPath);
         }
 
@@ -2250,7 +2250,7 @@ namespace GameLauncher {
                         if (_gameKilledBySpeedBugCheck == true) exitCode = 2137;
 
                         if (exitCode == 0) {
-                            closebtn_Click(null, null);
+                            Closebtn_Click(null, null);
                         } else {
                             x.BeginInvoke(new Action(() => {
                                 x.WindowState = FormWindowState.Normal;
@@ -2298,7 +2298,7 @@ namespace GameLauncher {
                                     Application.Restart();
                                     Application.ExitThread();
                                 }
-                                this.closebtn_Click(null, null);
+                                this.Closebtn_Click(null, null);
                             }));
                         }
                     };
@@ -2319,7 +2319,7 @@ namespace GameLauncher {
                 WebClientWithTimeout client2 = new WebClientWithTimeout();
                 client2.Timeout(12000);
 
-                client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged_RELOADED);
+                client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged_RELOADED);
                 client2.DownloadFileCompleted += (test, stuff) => {
                     Log.Debug("LAUNCHER: Downloaded: " + FileName);
                     isDownloadingModNetFiles = false;
@@ -2338,11 +2338,11 @@ namespace GameLauncher {
             }
         }
 
-        private void playButton_Click(object sender, EventArgs e) {
+        private void PlayButton_Click(object sender, EventArgs e) {
             if(UriScheme.ForceGame != true) { 
                 if (_loggedIn == false) {
                     if(_useSavedPassword == false) return;
-                    loginButton_Click(sender, e);
+                    LoginButton_Click(sender, e);
                 }
 
                 if (_playenabled == false) {
@@ -2530,7 +2530,7 @@ namespace GameLauncher {
             }
         }
 
-        void client_DownloadProgressChanged_RELOADED(object sender, DownloadProgressChangedEventArgs e) {
+        void Client_DownloadProgressChanged_RELOADED(object sender, DownloadProgressChangedEventArgs e) {
             this.BeginInvoke((MethodInvoker)delegate {
                 double bytesIn = double.Parse(e.BytesReceived.ToString());
                 double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
@@ -2612,7 +2612,7 @@ namespace GameLauncher {
             }
         }
 
-        private void playButton_MouseUp(object sender, EventArgs e)
+        private void PlayButton_MouseUp(object sender, EventArgs e)
         {
             if (_playenabled == false)
             {
@@ -2622,7 +2622,7 @@ namespace GameLauncher {
             playButton.BackgroundImage = Properties.Resources.playbutton_hover;
         }
 
-        private void playButton_MouseDown(object sender, EventArgs e)
+        private void PlayButton_MouseDown(object sender, EventArgs e)
         {
             if (_playenabled == false)
             {
@@ -2632,7 +2632,7 @@ namespace GameLauncher {
             playButton.BackgroundImage = Properties.Resources.playbutton_click;
         }
 
-        private void playButton_MouseEnter(object sender, EventArgs e)
+        private void PlayButton_MouseEnter(object sender, EventArgs e)
         {
             if (_playenabled == false)
             {
@@ -2642,7 +2642,7 @@ namespace GameLauncher {
             playButton.BackgroundImage = Properties.Resources.playbutton_hover;
         }
 
-        private void playButton_MouseLeave(object sender, EventArgs e)
+        private void PlayButton_MouseLeave(object sender, EventArgs e)
         {
             if (_playenabled == false)
             {
@@ -2716,7 +2716,7 @@ namespace GameLauncher {
                 playProgressTextTimer.Text = "Loading".ToUpper() ;
 
                 //GameFiles.sbrwpack
-                localGameFiles();
+                LocalGameFiles();
             }
             else if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/nfsw.exe"))
             {
@@ -2823,7 +2823,7 @@ namespace GameLauncher {
         }
 
         //Check Local GameFiles Hash
-        private async void localGameFiles()
+        private async void LocalGameFiles()
         {
             await Task.Delay(5000);
             if (SHA.HashFile("GameFiles.sbrwpack") == "B42E00939DC656C14BF5A05644080AD015522C8C")
@@ -3092,7 +3092,7 @@ namespace GameLauncher {
         }
 
         //VerifyHash
-        private void vfilesButton_Click(object sender, EventArgs e)
+        private void VFilesButton_Click(object sender, EventArgs e)
         {
             //In Development (Zacam got this)
         }
