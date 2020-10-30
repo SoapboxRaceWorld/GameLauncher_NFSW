@@ -238,12 +238,12 @@ namespace GameLauncher.App
             });
         }
 
-        private void btnAddServer_Click(object sender, EventArgs e)
+        private void BtnAddServer_Click(object sender, EventArgs e)
         {
             new AddServer().Show();
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void BtnClose_Click(object sender, EventArgs e)
         {
             this.Close();
         }

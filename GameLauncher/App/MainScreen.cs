@@ -282,7 +282,7 @@ namespace GameLauncher {
             settingsGameFiles.Click += new EventHandler(settingsGameFiles_Click);
             settingsGameFilesCurrent.Click += new EventHandler(settingsGameFilesCurrent_Click);
 
-            addServer.Click += new EventHandler(addServer_Click);
+            AddServer.Click += new EventHandler(AddServer_Click);
             launcherStatusDesc.Click += new EventHandler(OpenDebugWindow);
 
             email.KeyUp += new KeyEventHandler(Loginbuttonenabler);
@@ -500,7 +500,7 @@ namespace GameLauncher {
             ContextMenu.MenuItems.Add(new MenuItem("Donate", (b,n) => { Process.Start("http://paypal.me/metonator95"); }));
             ContextMenu.MenuItems.Add("-");
             ContextMenu.MenuItems.Add(new MenuItem("Settings", settingsButton_Click));
-            ContextMenu.MenuItems.Add(new MenuItem("Add Server", addServer_Click));
+            ContextMenu.MenuItems.Add(new MenuItem("Add Server", AddServer_Click));
             ContextMenu.MenuItems.Add("-");
             ContextMenu.MenuItems.Add(new MenuItem("Close launcher", closebtn_Click));
 
@@ -809,7 +809,7 @@ namespace GameLauncher {
             this.Close();
         }
 
-        private void addServer_Click(object sender, EventArgs e)
+        private void AddServer_Click(object sender, EventArgs e)
         {
              new AddServer().Show();
         }
@@ -1440,7 +1440,7 @@ namespace GameLauncher {
             playProgressTextTimer.Visible = hideElements;
             playProgress.Visible = hideElements;
             extractingProgress.Visible = hideElements;
-            addServer.Visible = hideElements;
+            AddServer.Visible = hideElements;
             //allowedCountriesLabel.Visible = hideElements;
             serverPick.Enabled = true;
         }
@@ -1470,7 +1470,7 @@ namespace GameLauncher {
             APIStatusDesc.Visible = hideElements;
             APIStatusIcon.Visible = hideElements;
 
-            addServer.Visible = hideElements;
+            AddServer.Visible = hideElements;
             serverPick.Visible = hideElements;
             serverPick.Enabled = false;
 
