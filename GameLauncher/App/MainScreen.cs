@@ -2427,6 +2427,10 @@ namespace GameLauncher {
                     {
                         //Cached content goes here
                         EventList.remoteEvent = new WebClientWithTimeout().DownloadString(json2.BasePath + "/events.json");
+                    }
+                    catch { }
+                    try
+                    {
                         CarList.remoteCarList = new WebClientWithTimeout().DownloadString(json2.BasePath + "/cars.json");
                     }
                     catch { }
