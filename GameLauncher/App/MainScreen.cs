@@ -495,7 +495,7 @@ namespace GameLauncher {
             translatedBy.Text = "";
             ContextMenu = new ContextMenu();
 
-            ContextMenu.MenuItems.Add(new MenuItem("Donate", (b,n) => { Process.Start("http://paypal.me/metonator95"); }));
+            ContextMenu.MenuItems.Add(new MenuItem("Donate", (b,n) => { Process.Start("https://paypal.me/metonator95"); }));
             ContextMenu.MenuItems.Add("-");
             ContextMenu.MenuItems.Add(new MenuItem("Settings", SettingsButton_Click));
             ContextMenu.MenuItems.Add(new MenuItem("Add Server", AddServer_Click));
@@ -2412,8 +2412,8 @@ namespace GameLauncher {
                     foreach (string file in newFiles) {
                         playProgressText.Text = ("Fetching ModNetReloaded Files: " + file).ToUpper();
                         Application.DoEvents();
-
-                        newModNetFilesDownload.DownloadFile("https://cdn.soapboxrace.world/modules-v2/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                        newModNetFilesDownload.Timeout(8000);
+                        newModNetFilesDownload.DownloadFile("http://cdn.soapboxrace.world/modules-v2/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
                     }
 
                     //get files now
@@ -2424,8 +2424,12 @@ namespace GameLauncher {
                     try
                     {
                         //Cached content goes here
-                        EventList.remoteEvent = new WebClientWithTimeout().DownloadString(json2.basePath + "/events.json");
-                        CarList.remoteCarList = new WebClientWithTimeout().DownloadString(json2.basePath + "/cars.json");
+                        EventList.remoteEvent = new WebClientWithTimeout().DownloadString(json2.BasePath + "/events.json");
+                    }
+                    catch { }
+                    try
+                    {
+                        CarList.remoteCarList = new WebClientWithTimeout().DownloadString(json2.BasePath + "/cars.json");
                     }
                     catch { }
 
