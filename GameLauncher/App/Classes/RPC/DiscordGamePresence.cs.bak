@@ -35,7 +35,7 @@ namespace GameLauncher.App.Classes.RPC {
         public static int TEDay = 0;
         public static List<string> PersonaIds = new List<string>();
 
-        public static void HandleGameState(string uri, string serverreply = "", string POST = "", string GET = "") {
+        public static void handleGameState(string uri, string serverreply = "", string POST = "", string GET = "") {
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');
 

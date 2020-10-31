@@ -124,7 +124,7 @@ namespace GameLauncher.App.Classes.Proxy
 
             try
             {
-                DiscordGamePresence.HandleGameState(path, responseBody, POSTContent, GETContent);
+                DiscordGamePresence.handleGameState(path, responseBody, POSTContent, GETContent);
             }
             catch (Exception e)
             {

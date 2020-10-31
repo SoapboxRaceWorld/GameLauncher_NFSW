@@ -19,7 +19,7 @@ namespace GameLauncher.App.Classes {
             return _linuxDistro;
         }
 
-        public static bool IsValidWineMonoInstalled() {
+        public static bool isValidWineMonoInstalled() {
             return true;
         }
 
