@@ -29,7 +29,7 @@ namespace GameLauncher.App.Classes.Events {
             description = statusDescription;
         }
 
-        public void checkAvailability() {
+        public void CheckAvailability() {
             text.Text = "Launcher Status - Checking...";
             description.Text = "Version : v" + Application.ProductVersion;
             status.Image = Properties.Resources.ac_unknown;

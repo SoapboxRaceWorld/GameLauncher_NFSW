@@ -24,7 +24,7 @@ namespace GameLauncher.App {
             InitializeComponent();
         }
 
-        private void picturebox_Paint(object sender, PaintEventArgs e) {
+        private void Picturebox_Paint(object sender, PaintEventArgs e) {
             PictureBox p = sender as PictureBox;
             Graphics gr = e.Graphics;
             gr.ResetTransform();

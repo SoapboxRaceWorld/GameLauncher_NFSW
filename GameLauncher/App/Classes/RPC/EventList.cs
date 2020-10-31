@@ -10,7 +10,7 @@ namespace GameLauncher.App.Classes.RPC {
     class EventList {
         public static String remoteEvent = String.Empty;
 
-        public static string getEventName(int id) {
+        public static string GetEventName(int id) {
             // Let's load the "Cached From Server" version first
             if (remoteEvent != String.Empty) {
                 dynamic dynJson = JsonConvert.DeserializeObject(remoteEvent);
@@ -37,7 +37,7 @@ namespace GameLauncher.App.Classes.RPC {
             return "EVENT:"+id;
         }
 
-        public static string getEventType(int id) {
+        public static string GetEventType(int id) {
             // Let's load the "Cached From Server" version first
             if (remoteEvent != String.Empty) {
                 dynamic dynJson = JsonConvert.DeserializeObject(remoteEvent);

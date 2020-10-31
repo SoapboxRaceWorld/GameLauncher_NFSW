@@ -21,7 +21,7 @@ namespace GameLauncher.App {
             InitializeComponent();
         }
 
-        public void drawErrorAroundTextBox(TextBox x) {
+        public void DrawErrorAroundTextBox(TextBox x) {
             x.BorderStyle = BorderStyle.Fixed3D;
             Pen p = new Pen(Color.Red);
             Graphics g = this.CreateGraphics();
@@ -29,7 +29,7 @@ namespace GameLauncher.App {
             g.DrawRectangle(p, new Rectangle(x.Location.X - variance, x.Location.Y - variance, x.Width + variance, x.Height + variance));
         }
 
-        private void okButton_Click(object sender, EventArgs e) {
+        private void OkButton_Click(object sender, EventArgs e) {
 			if (!File.Exists("servers.json")) {
 				File.Create("servers.json");
 			}
@@ -41,12 +41,12 @@ namespace GameLauncher.App {
             String wellFormattedURL = "";
 
             if (IsNullOrEmpty(serverAddress.Text)) {
-                drawErrorAroundTextBox(serverAddress);
+                DrawErrorAroundTextBox(serverAddress);
                 success = false;
             }
 
             if (IsNullOrEmpty(serverName.Text)) {
-                drawErrorAroundTextBox(serverName);
+                DrawErrorAroundTextBox(serverName);
                 success = false;
             }
 
@@ -54,7 +54,7 @@ namespace GameLauncher.App {
             bool result = Uri.TryCreate(serverAddress.Text, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
             if (!result) {
-                drawErrorAroundTextBox(serverAddress);
+                DrawErrorAroundTextBox(serverAddress);
                 success = false;
             } else {
                 wellFormattedURL = uriResult.ToString();
@@ -72,12 +72,12 @@ namespace GameLauncher.App {
 
                 GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(serverLoginResponse);
 
-                if(IsNullOrEmpty(json.serverName)) {
-                    drawErrorAroundTextBox(serverAddress);
+                if (IsNullOrEmpty(json.ServerName)) {
+                    DrawErrorAroundTextBox(serverAddress);
                     success = false;
                 }
             } catch {
-                drawErrorAroundTextBox(serverAddress);
+                DrawErrorAroundTextBox(serverAddress);
                 success = false;
             }
 
@@ -115,13 +115,13 @@ namespace GameLauncher.App {
                     MessageBox.Show(null, "Failed to add new server. " + ex.Message, "GameLauncher", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
                 }
 
-                cancelButton_Click(sender, e);
+                CancelButton_Click(sender, e);
             } else {
                 error.Visible = true;
             }
         }
 
-        private void cancelButton_Click(object sender, EventArgs e) {
+        private void CancelButton_Click(object sender, EventArgs e) {
             this.Close();
         }
     }

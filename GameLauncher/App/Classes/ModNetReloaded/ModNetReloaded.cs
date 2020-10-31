@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace GameLauncher.App.Classes.ModNetReloaded {
     public class MainJson {
-        public string basePath { get; set; }
-        public string serverID { get; set; }
-        public List<object> features { get; set; }
+        public string BasePath { get; set; }
+        public string ServerID { get; set; }
+        public List<object> Features { get; set; }
     }
 
     public class IndexJsonEntry
@@ -19,8 +19,8 @@ namespace GameLauncher.App.Classes.ModNetReloaded {
     }
 
     public class IndexJson {
-        public DateTime built_at { get; set; }
-        public List<IndexJsonEntry> entries { get; set; }
+        public DateTime Built_At { get; set; }
+        public List<IndexJsonEntry> Entries { get; set; }
     }
 
     class ModNetReloaded {

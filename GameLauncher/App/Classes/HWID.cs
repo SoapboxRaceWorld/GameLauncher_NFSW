@@ -27,7 +27,7 @@ namespace Security {
 
         private static string WindowsValue()
         {
-            return GetHash(cpuId() + baseId() + diskId() + videoId());
+            return GetHash(CpuId() + BaseId() + DiskId() + VideoId());
         }
 
         private static string LinuxValue() {
@@ -66,7 +66,7 @@ namespace Security {
             return s;
         }
 
-        private static string identifier(string wmiClass, string wmiProperty, string wmiMustBeTrue)
+        private static string Identifier(string wmiClass, string wmiProperty, string wmiMustBeTrue)
         {
             string result = "";
             ManagementClass mc = new ManagementClass(wmiClass);
@@ -95,7 +95,7 @@ namespace Security {
             return result;
         }
 
-        private static string identifier(string wmiClass, string wmiProperty)
+        private static string Identifier(string wmiClass, string wmiProperty)
         {
             string result = "";
             ManagementClass mc = new ManagementClass(wmiClass);
@@ -118,41 +118,41 @@ namespace Security {
             return result;
         }
 
-        private static string cpuId()
+        private static string CpuId()
         {
-            string retVal = identifier("Win32_Processor", "UniqueId");
+            string retVal = Identifier("Win32_Processor", "UniqueId");
             if (retVal == "")
             {
-                retVal = identifier("Win32_Processor", "ProcessorId");
+                retVal = Identifier("Win32_Processor", "ProcessorId");
                 if (retVal == "")
                 {
-                    retVal = identifier("Win32_Processor", "Name");
+                    retVal = Identifier("Win32_Processor", "Name");
 
                     if (retVal == "")
                     {
-                        retVal = identifier("Win32_Processor", "Manufacturer");
+                        retVal = Identifier("Win32_Processor", "Manufacturer");
                     }
 
-                    retVal += identifier("Win32_Processor", "MaxClockSpeed");
+                    retVal += Identifier("Win32_Processor", "MaxClockSpeed");
                 }
             }
 
             return retVal;
         }
 
-        private static string diskId()
+        private static string DiskId()
         {
-            return identifier("Win32_DiskDrive", "PNPDeviceId");
+            return Identifier("Win32_DiskDrive", "PNPDeviceId");
         }
 
-        private static string baseId()
+        private static string BaseId()
         {
-            return identifier("Win32_BaseBoard", "Product") + " " + identifier("Win32_BaseBoard", "SerialNumber");
+            return Identifier("Win32_BaseBoard", "Product") + " " + Identifier("Win32_BaseBoard", "SerialNumber");
         }
 
-        private static string videoId()
+        private static string VideoId()
         {
-            return identifier("Win32_VideoController", "PNPDeviceId");
+            return Identifier("Win32_VideoController", "PNPDeviceId");
         }
 
         /* Moved 1 Private function Code to Gist */
