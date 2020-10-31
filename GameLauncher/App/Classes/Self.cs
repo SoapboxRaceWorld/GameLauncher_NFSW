@@ -43,7 +43,7 @@ namespace GameLauncherReborn {
         public static string discordid = String.Empty;
         public static string MapZoneRPC = String.Empty;
 
-        public static long getTimestamp(bool valid = false) {
+        public static long GetTimestamp(bool valid = false) {
             long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
 
             if(valid == true) {
@@ -55,7 +55,7 @@ namespace GameLauncherReborn {
             return ticks;
         }
 
-		public static bool hasWriteAccessToFolder(string path) {
+		public static bool HasWriteAccessToFolder(string path) {
 			try {
 				File.Create(path + "temp.txt").Close();
 				File.Delete(path + "temp.txt");
@@ -90,13 +90,13 @@ namespace GameLauncherReborn {
             return "Unknown";
         }
 
-        public static void centerScreen(Form form) {
+        public static void CenterScreen(Form form) {
             form.StartPosition = FormStartPosition.Manual;
             form.Top = (Screen.PrimaryScreen.Bounds.Height - form.Height) / 2;
             form.Left = (Screen.PrimaryScreen.Bounds.Width - form.Width) / 2;
         }
 
-		public static bool validateEmail(string email) {
+		public static bool ValidateEmail(string email) {
 			String theEmailPattern = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
 								   + "@"
 								   + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
@@ -104,7 +104,7 @@ namespace GameLauncherReborn {
 			return Regex.IsMatch(email, theEmailPattern);
 		}
 
-		public static bool isTempFolder(string directory) {
+		public static bool IsTempFolder(string directory) {
 			return directory.Contains("Temp");
 		}
 
@@ -142,7 +142,7 @@ namespace GameLauncherReborn {
             return machineUint == 0x014c;
         }
 
-        public static bool getInstalledHotFix(string identification) {
+        public static bool GetInstalledHotFix(string identification) {
             var search = new ManagementObjectSearcher("SELECT HotFixID FROM Win32_QuickFixEngineering");
             var collection = search.Get();
 

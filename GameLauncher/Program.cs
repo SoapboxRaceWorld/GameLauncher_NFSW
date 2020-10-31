@@ -96,13 +96,13 @@ namespace GameLauncher {
                 if (!(_settingFile.KeyExists("PatchesApplied"))) {
                     String _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
                     if (_OS.Contains("Windows 7")) {
-                        if (Self.getInstalledHotFix("KB3020369") == false || Self.getInstalledHotFix("KB3125574") == false) {
+                        if (Self.GetInstalledHotFix("KB3020369") == false || Self.GetInstalledHotFix("KB3125574") == false) {
                             String messageBoxPopupKB = String.Empty;
                             messageBoxPopupKB = "Hey Windows 7 User, in order to play on this server, we need to make additional tweaks to your system.\n";
                             messageBoxPopupKB += "We must make sure you have those Windows Update packages installed:\n\n";
 
-                            if (Self.getInstalledHotFix("KB3020369") == false) messageBoxPopupKB += "- Update KB3020369\n";
-                            if (Self.getInstalledHotFix("KB3125574") == false) messageBoxPopupKB += "- Update KB3125574\n";
+                            if (Self.GetInstalledHotFix("KB3020369") == false) messageBoxPopupKB += "- Update KB3020369\n";
+                            if (Self.GetInstalledHotFix("KB3125574") == false) messageBoxPopupKB += "- Update KB3125574\n";
 
                             messageBoxPopupKB += "\nAditionally, we must add a value to the registry:\n";
 
@@ -196,7 +196,7 @@ namespace GameLauncher {
 
             Console.WriteLine("Application path: " + Path.GetDirectoryName(Application.ExecutablePath));
 
-            if (!Self.hasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath))) {
+            if (!Self.HasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath))) {
                 MessageBox.Show("This application requires admin priviledge");
             }
 
@@ -233,7 +233,7 @@ namespace GameLauncher {
             if (!string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory"))) {
                 Console.WriteLine("Game path: " + _settingFile.Read("InstallationDirectory"));
 
-                if (!Self.hasWriteAccessToFolder(_settingFile.Read("InstallationDirectory"))) {
+                if (!Self.HasWriteAccessToFolder(_settingFile.Read("InstallationDirectory"))) {
                     MessageBox.Show("This application requires admin priviledge. Restarting...");
                 }
             }
@@ -297,7 +297,7 @@ namespace GameLauncher {
 
             Log.Debug("CORE: Checking current directory");
 
-            if (Self.isTempFolder(Directory.GetCurrentDirectory())) {
+            if (Self.IsTempFolder(Directory.GetCurrentDirectory())) {
                 MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 Environment.Exit(0);
             }

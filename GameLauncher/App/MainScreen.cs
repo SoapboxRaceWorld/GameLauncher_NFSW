@@ -225,7 +225,7 @@ namespace GameLauncher {
             _disableDiscordRPC = (_settingFile.KeyExists("DisableRPC") && _settingFile.Read("DisableRPC") == "1") ? true : false;
             Log.Debug("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + _disableProxy);
 
-            Self.centerScreen(this);
+            Self.CenterScreen(this);
 
             Log.Debug("CORE: Disabling MaximizeBox");
             MaximizeBox = false;
@@ -344,7 +344,7 @@ namespace GameLauncher {
 
 
             Log.Debug("CORE: Checking permissions");
-            if (!Self.hasWriteAccessToFolder(Directory.GetCurrentDirectory())) {
+            if (!Self.HasWriteAccessToFolder(Directory.GetCurrentDirectory())) {
                 Log.Error("CORE: Check Permission Failed.");
                 MessageBox.Show(null, "Failed to write the test file. Make sure you're running the launcher with administrative privileges.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -380,7 +380,7 @@ namespace GameLauncher {
                 };
 
                 if (fbd.ShowDialog() == CommonFileDialogResult.Ok) {
-                    if (!Self.hasWriteAccessToFolder(fbd.FileName)) {
+                    if (!Self.HasWriteAccessToFolder(fbd.FileName)) {
                         Log.Error("LAUNCHER: Not enough permissions. Exiting.");
                         MessageBox.Show(null, "You don't have enough permission to select this path as installation folder. Please select another directory.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         Environment.Exit(Environment.ExitCode);
@@ -484,7 +484,7 @@ namespace GameLauncher {
             if (Location.X >= Screen.PrimaryScreen.Bounds.Width || Location.Y >= Screen.PrimaryScreen.Bounds.Height || Location.X <= 0 || Location.Y <= 0) {
                 Log.Debug("CORE: Window location restored to centerScreen");
 
-                Self.centerScreen(this);
+                Self.CenterScreen(this);
                 _windowMoved = true;
             }
 
@@ -1026,7 +1026,7 @@ namespace GameLauncher {
             }
 
             WebClientWithTimeout client = new WebClientWithTimeout();
-            var artificialPingStart = Self.getTimestamp();
+            var artificialPingStart = Self.GetTimestamp();
             verticalBanner.BackColor = Color.Transparent;
 
             var stringToUri = new Uri(serverIp + "/GetServerInformation");
@@ -1039,7 +1039,7 @@ namespace GameLauncher {
             client.DownloadStringCompleted += (sender2, e2) => {
                 aTimer.Enabled = false;
 
-                var artificialPingEnd = Self.getTimestamp();
+                var artificialPingEnd = Self.GetTimestamp();
 
                 if(e2.Cancelled) {
                     ServerStatusBar(_colorOffline, _startPoint, _endPoint);
@@ -1616,7 +1616,7 @@ namespace GameLauncher {
                 registerErrors.Add("Please enter your e-mail.");
                 errorEmailBorder.Visible = true;
 
-            } else if (Self.validateEmail(registerEmail.Text) == false) {
+            } else if (Self.ValidateEmail(registerEmail.Text) == false) {
                 registerErrors.Add("Please enter a valid e-mail address.");
                 errorEmailBorder.Visible = true;
             }
