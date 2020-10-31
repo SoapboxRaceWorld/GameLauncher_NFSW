@@ -89,8 +89,7 @@ namespace GameLauncher {
         private readonly Pen _colorOffline = new Pen(Color.FromArgb(128, 0, 0));
         private readonly Pen _colorOnline = new Pen(Color.FromArgb(0, 128, 0));
         private readonly Pen _colorLoading = new Pen(Color.FromArgb(0, 0, 0));
-        private readonly Pen _colorIssues = new Pen(Color.FromArgb(255, 145, 0));
-
+        
         private readonly IniFile _settingFile = new IniFile("Settings.ini");
         private readonly string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
         private string _presenceImageKey;
@@ -110,10 +109,8 @@ namespace GameLauncher {
 
         ServerInfo _serverInfo = null;
         GetServerInformation json = new GetServerInformation();
-        String purejson = String.Empty;
 
         public static DiscordRpcClient discordRpcClient;
-        private Random rnd;
 
         List<ServerInfo> finalItems = new List<ServerInfo>();
         Dictionary<string, int> serverStatusDictionary = new Dictionary<string, int>();
@@ -170,6 +167,7 @@ namespace GameLauncher {
 
             Log.Debug("CORE: Entered mainScreen");
 
+            Random rnd;
             rnd = new Random(Environment.TickCount);
 
             discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID);
@@ -1083,6 +1081,7 @@ namespace GameLauncher {
                             serverStatusDictionary[_serverInfo.Id] = 1;
                         }
 
+                        String purejson = String.Empty;
                         purejson = e2.Result;
                         json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
                         Self.rememberjson = e2.Result;
