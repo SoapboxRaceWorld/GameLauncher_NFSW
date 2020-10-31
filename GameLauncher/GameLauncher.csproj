@@ -232,12 +232,6 @@
       <DependentUpon>WelcomeScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="App\ShowMap.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="App\ShowMap.Designer.cs">
-      <DependentUpon>ShowMap.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App\Classes\FontWrapper.cs" />
     <EmbeddedResource Include="App\AddServer.resx">
@@ -255,9 +249,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="App\SelectServer.resx">
       <DependentUpon>SelectServer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App\ShowMap.resx">
-      <DependentUpon>ShowMap.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\UpdatePopup.resx">
       <DependentUpon>UpdatePopup.cs</DependentUpon>
