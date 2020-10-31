@@ -105,7 +105,7 @@
             this.apiErrorButton.TabIndex = 8;
             this.apiErrorButton.Text = "Manual Bypass";
             this.apiErrorButton.UseVisualStyleBackColor = true;
-            this.apiErrorButton.Click += new System.EventHandler(this.apiErrorButton_Click);
+            this.apiErrorButton.Click += new System.EventHandler(this.APIErrorButton_Click);
             // 
             // WelcomeScreen
             // 

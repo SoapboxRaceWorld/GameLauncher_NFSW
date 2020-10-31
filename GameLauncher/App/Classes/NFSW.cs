@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace GameLauncherReborn {
     class NFSW {
-        public static bool detectByMutex() {
+        public static bool DetectByMutex() {
             Mutex detectRunningNFSW = new Mutex(false, "Global\\{3E34CEFB-7B34-4e62-8034-33256B8BC2F7}");
             try {
                 if (!detectRunningNFSW.WaitOne(0, false)) {
@@ -22,7 +22,7 @@ namespace GameLauncherReborn {
             }
         }
 
-        public static bool detectByProcess() {
+        public static bool DetectByProcess() {
             Process[] nfswProcess = Process.GetProcessesByName("nfsw");
 
             if (nfswProcess.Length == 0) {
@@ -32,8 +32,8 @@ namespace GameLauncherReborn {
             }
         }
 
-        public static bool isNFSWRunning() {
-            return detectByMutex() || detectByProcess();
+        public static bool IsNFSWRunning() {
+            return DetectByMutex() || DetectByProcess();
         }
     }
 }

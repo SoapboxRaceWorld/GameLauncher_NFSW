@@ -213,7 +213,7 @@ namespace GameLauncher {
                         WebClientWithTimeout wc3 = new WebClientWithTimeout();
                         String _slresponse = wc3.DownloadString(Self.CDNUrlList);
                         CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
-                        _settingFile.Write("CDN", CDNList.First().url);
+                        _settingFile.Write("CDN", CDNList.First().Url);
                     }
                     catch {
                         try {
@@ -221,7 +221,7 @@ namespace GameLauncher {
                             WebClientWithTimeout wc3 = new WebClientWithTimeout();
                             String _slresponse = wc3.DownloadString(Self.CDNUrlStaticList);
                             CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
-                            _settingFile.Write("CDN", CDNList.First().url);
+                            _settingFile.Write("CDN", CDNList.First().Url);
                         }
                         catch {
                             _settingFile.Write("CDN", "http://cdn.worldunited.gg/gamefiles/packed/");
@@ -371,7 +371,7 @@ namespace GameLauncher {
                 Application.Run(new MainScreen());
 
             } else {
-                if (NFSW.isNFSWRunning()) {
+                if (NFSW.IsNFSWRunning()) {
                     MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                 }

@@ -66,7 +66,7 @@
             this.btnAddServer.TabIndex = 6;
             this.btnAddServer.Text = "Add Server";
             this.btnAddServer.UseVisualStyleBackColor = true;
-            this.btnAddServer.Click += new System.EventHandler(this.btnAddServer_Click);
+            this.btnAddServer.Click += new System.EventHandler(this.BtnAddServer_Click);
             // 
             // btnClose
             // 
@@ -76,7 +76,7 @@
             this.btnClose.TabIndex = 5;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
             // SelectServer
             // 

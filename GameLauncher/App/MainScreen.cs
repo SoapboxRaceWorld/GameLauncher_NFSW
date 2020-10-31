@@ -634,8 +634,8 @@ namespace GameLauncher {
                 } catch(Exception error) {
                     MessageBox.Show(error.Message, "An error occurred while loading CDN List");
                     _slresponse2 = JsonConvert.SerializeObject(new[] {
-                        new CDNObject { name = "[CF] WorldUnited.gg Mirror", url = "http://cdn.worldunited.gg/gamefiles/packed/" },
-                        new CDNObject { name = "[CF] DavidCarbon Mirror", url = "http://g-sbrw.davidcarbon.download"}
+                        new CDNObject { Name = "[CF] WorldUnited.gg Mirror", Url = "http://cdn.worldunited.gg/gamefiles/packed/" },
+                        new CDNObject { Name = "[CF] DavidCarbon Mirror", Url = "http://g-sbrw.davidcarbon.download"}
                     });
                 }
 
@@ -714,7 +714,7 @@ namespace GameLauncher {
 
             if(!DetectLinux.LinuxDetected()) {
                 Log.Debug("LAUNCHER: Checking for update: " + Self.mainserver + "/update.php?version=" + Application.ProductVersion);
-                new LauncherUpdateCheck(launcherIconStatus, launcherStatusText, launcherStatusDesc).checkAvailability();
+                new LauncherUpdateCheck(launcherIconStatus, launcherStatusText, launcherStatusDesc).CheckAvailability();
             } else {
                 launcherIconStatus.Image = Properties.Resources.ac_success;
                 launcherStatusText.ForeColor = Color.FromArgb(0x9fc120);
@@ -898,7 +898,7 @@ namespace GameLauncher {
             Tokens.IPAddress = _serverInfo.IpAddress;
             Tokens.ServerName = _serverInfo.Name;
 
-            Self.userAgent = (_serverInfo.forceUserAgent == null) ? null : _serverInfo.forceUserAgent;
+            Self.userAgent = (_serverInfo.ForceUserAgent == null) ? null : _serverInfo.ForceUserAgent;
 
             if (_modernAuthSupport == false) {
                 //ClassicAuth sends password in SHA1
@@ -1084,18 +1084,18 @@ namespace GameLauncher {
                         json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
                         Self.rememberjson = e2.Result;
                         try {
-                            _realServernameBanner = json.serverName;
-                            if (!string.IsNullOrEmpty(json.bannerUrl)) {
+                            _realServernameBanner = json.ServerName;
+                            if (!string.IsNullOrEmpty(json.BannerUrl)) {
                                 bool result;
 
                                 try {
-                                    result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                                    result = Uri.TryCreate(json.BannerUrl, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 } catch {
                                     result = false;
                                 }
 
                                 if (result) {
-                                    verticalImageUrl = json.bannerUrl;
+                                    verticalImageUrl = json.BannerUrl;
                                 } else {
                                     verticalImageUrl = null;
                                 }
@@ -1107,9 +1107,9 @@ namespace GameLauncher {
                         }
 
                         try {
-                            if (string.IsNullOrEmpty(json.requireTicket)) {
+                            if (string.IsNullOrEmpty(json.RequireTicket)) {
                                 _ticketRequired = true;
-                            } else if (json.requireTicket == "true") {
+                            } else if (json.RequireTicket == "true") {
                                 _ticketRequired = true;
                             } else {
                                 _ticketRequired = false;
@@ -1119,9 +1119,9 @@ namespace GameLauncher {
                         }
 
                         try {
-                            if (string.IsNullOrEmpty(json.modernAuthSupport)) {
+                            if (string.IsNullOrEmpty(json.ModernAuthSupport)) {
                                 _modernAuthSupport = false;
-                            } else if (json.modernAuthSupport == "true") {
+                            } else if (json.ModernAuthSupport == "true") {
                                 if(stringToUri.Scheme == "https") {
                                     _modernAuthSupport = true;
                                 } else {
@@ -1134,10 +1134,10 @@ namespace GameLauncher {
                             _modernAuthSupport = false;
                         }
 
-                        if (json.maxUsersAllowed == 0) {
-                            numPlayers = string.Format("{0}/{1}", json.onlineNumber, json.numberOfRegistered);
+                        if (json.MaxUsersAllowed == 0) {
+                            numPlayers = string.Format("{0}/{1}", json.OnlineNumber, json.NumberOfRegistered);
                         } else {
-                            numPlayers = string.Format("{0}/{1}", json.onlineNumber, json.maxUsersAllowed.ToString());
+                            numPlayers = string.Format("{0}/{1}", json.OnlineNumber, json.MaxUsersAllowed.ToString());
                         }
 
                         _allowRegistration = true;
@@ -1303,9 +1303,9 @@ namespace GameLauncher {
             errorMainPasswordBorder.Visible = false;
             registerButton.Image = Properties.Resources.greenbutton_click;
             if (_allowRegistration) {
-                if(!string.IsNullOrEmpty(json.webSignupUrl)) {
-                    Process.Start(json.webSignupUrl);
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + json.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if(!string.IsNullOrEmpty(json.WebSignupUrl)) {
+                    Process.Start(json.WebSignupUrl);
+                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + json.ServerName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
@@ -1325,9 +1325,9 @@ namespace GameLauncher {
         }
 
         private void ForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            if (!string.IsNullOrEmpty(json.webRecoveryUrl)) {
-                Process.Start(json.webRecoveryUrl);
-                MessageBox.Show(null, "A browser window has been opened to complete password recovery on " + json.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (!string.IsNullOrEmpty(json.WebRecoveryUrl)) {
+                Process.Start(json.WebRecoveryUrl);
+                MessageBox.Show(null, "A browser window has been opened to complete password recovery on " + json.ServerName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -1801,7 +1801,7 @@ namespace GameLauncher {
 
             //TODO null check
             _settingFile.Write("Language", settingsLanguage.SelectedValue.ToString());
-            _settingFile.Write("CDN", ((CDNObject)settingsCDNPick.SelectedItem).url);
+            _settingFile.Write("CDN", ((CDNObject)settingsCDNPick.SelectedItem).Url);
 
             var userSettingsXml = new XmlDocument();
 
@@ -2190,7 +2190,7 @@ namespace GameLauncher {
             AntiCheat.process_id = nfswProcess.Id;
 
             //TIMER HERE
-            int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2*60*60;
+            int secondsToShutDown = (json.SecondsToShutDown != 0) ? json.SecondsToShutDown : 2*60*60;
                 System.Timers.Timer shutdowntimer = new System.Timers.Timer();
                 shutdowntimer.Elapsed += (x2, y2) => {
                     if(secondsToShutDown == 300) {
@@ -2430,20 +2430,20 @@ namespace GameLauncher {
                     catch { }
 
                     //get new index
-                    Uri newIndexFile = new Uri(json2.basePath + "/index.json");
+                    Uri newIndexFile = new Uri(json2.BasePath + "/index.json");
                     String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
 
                     IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
 
                     int CountFilesTotal = 0;
-                    CountFilesTotal = json3.entries.Count;
+                    CountFilesTotal = json3.Entries.Count;
 
-                    String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", MDFive.HashPassword(json2.serverID).ToLower());
+                    String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", MDFive.HashPassword(json2.ServerID).ToLower());
                     if(!Directory.Exists(path)) Directory.CreateDirectory(path);
 
-                    foreach (IndexJsonEntry modfile in json3.entries) {
+                    foreach (IndexJsonEntry modfile in json3.Entries) {
                         if (SHA.HashFile(path + "/" + modfile.Name).ToLower() != modfile.Checksum) {
-                            modFilesDownloadUrls.Enqueue(new Uri(json2.basePath + "/" + modfile.Name));
+                            modFilesDownloadUrls.Enqueue(new Uri(json2.BasePath + "/" + modfile.Name));
                             TotalModFileCount++;
                         }
                     }
@@ -2457,7 +2457,7 @@ namespace GameLauncher {
                     foreach (var file in Directory.GetFiles(path)) {
                         var name = Path.GetFileName(file);
 
-                        if (json3.entries.All(en => en.Name != name)) {
+                        if (json3.Entries.All(en => en.Name != name)) {
                             Log.Debug("LAUNCHER: removing package: " + file);
                             try { 
                                 File.Delete(file);
@@ -2589,7 +2589,7 @@ namespace GameLauncher {
                         ShowInTaskbar = false;
 
                         ContextMenu = new ContextMenu();
-                        ContextMenu.MenuItems.Add(new MenuItem("Donate", (b, n) => { Process.Start("http://paypal.me/metonator95"); }));
+                        ContextMenu.MenuItems.Add(new MenuItem("Donate", (b, n) => { Process.Start("https://paypal.me/metonator95"); }));
                         ContextMenu.MenuItems.Add("-");
                         ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", (sender2, e2) =>
                         {

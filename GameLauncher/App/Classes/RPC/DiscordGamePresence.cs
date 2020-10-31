@@ -153,14 +153,14 @@ namespace GameLauncher.App.Classes.RPC {
                 if (eventIdNode != null) {
                     EventID = Convert.ToInt32(eventIdNode.InnerText);
 
-                    _presence.Details = "In Lobby: " + EventList.getEventName(EventID);
+                    _presence.Details = "In Lobby: " + EventList.GetEventName(EventID);
                     _presence.State = serverName;
                     _presence.Assets = new Assets
                     {
                         LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                         LargeImageKey = PersonaAvatarId,
-                        SmallImageText = EventList.getEventName(Convert.ToInt32(EventID)),
-                        SmallImageKey = EventList.getEventType(Convert.ToInt32(EventID))
+                        SmallImageText = EventList.GetEventName(Convert.ToInt32(EventID)),
+                        SmallImageKey = EventList.GetEventType(Convert.ToInt32(EventID))
                     };
                     if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
@@ -213,14 +213,14 @@ namespace GameLauncher.App.Classes.RPC {
 
                 EventID = Convert.ToInt32(splitted_uri[3]);
 
-                _presence.Details = "In Event: " + EventList.getEventName(EventID);
+                _presence.Details = "In Event: " + EventList.GetEventName(EventID);
                 _presence.State = serverName;
                 _presence.Assets = new Assets
                 {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                     LargeImageKey = PersonaAvatarId,
-                    SmallImageText = EventList.getEventName(EventID),
-                    SmallImageKey = EventList.getEventType(EventID)
+                    SmallImageText = EventList.GetEventName(EventID),
+                    SmallImageKey = EventList.GetEventType(EventID)
                 };
 
                 if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
@@ -228,34 +228,34 @@ namespace GameLauncher.App.Classes.RPC {
                 eventTerminatedManually = false;
             }
             if (uri == "/event/arbitration") {
-                _presence.Details = "In Event: " + EventList.getEventName(EventID);
+                _presence.Details = "In Event: " + EventList.GetEventName(EventID);
                 _presence.State = serverName;
                 _presence.Assets = new Assets
                 {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                     LargeImageKey = PersonaAvatarId,
-                    SmallImageText = EventList.getEventName(EventID),
-                    SmallImageKey = EventList.getEventType(EventID)
+                    SmallImageText = EventList.GetEventName(EventID),
+                    SmallImageKey = EventList.GetEventType(EventID)
                 };
 
-                AntiCheat.disableChecks();
+                AntiCheat.DisableChecks();
                 if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = false;
             }
             if (uri == "/event/launched" && eventTerminatedManually == false) {
-                _presence.Details = "In Event: " + EventList.getEventName(EventID);
+                _presence.Details = "In Event: " + EventList.GetEventName(EventID);
                 _presence.State = serverName;
                 _presence.Assets = new Assets
                 {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                     LargeImageKey = PersonaAvatarId,
-                    SmallImageText = EventList.getEventName(EventID),
-                    SmallImageKey = EventList.getEventType(EventID)
+                    SmallImageText = EventList.GetEventName(EventID),
+                    SmallImageKey = EventList.GetEventType(EventID)
                 };
 
                 AntiCheat.event_id = EventID;
-                AntiCheat.enableChecks();
+                AntiCheat.EnableChecks();
 
                 if(MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
             }
@@ -275,7 +275,7 @@ namespace GameLauncher.App.Classes.RPC {
 
                     foreach (XmlNode node in OwnedCarTrans) {
                         if (DefaultID == current) {
-                            PersonaCarName = CarList.getCarName(node.SelectSingleNode("CustomCar/Name").InnerText);
+                            PersonaCarName = CarList.GetCarName(node.SelectSingleNode("CustomCar/Name").InnerText);
                         }
                         current++;
                     }
@@ -290,7 +290,7 @@ namespace GameLauncher.App.Classes.RPC {
 
                         foreach (XmlNode node in OwnedCarTrans) {
                             if (receivedId == node.SelectSingleNode("Id").InnerText) {
-                                PersonaCarName = CarList.getCarName(node.SelectSingleNode("CustomCar/Name").InnerText);
+                                PersonaCarName = CarList.GetCarName(node.SelectSingleNode("CustomCar/Name").InnerText);
                             }
                         }
                     }

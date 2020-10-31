@@ -141,12 +141,12 @@ namespace GameLauncher.App {
             {
                 _slresponse = JsonConvert.SerializeObject(new[] {
                     new CDNObject {
-                        name = "[CF] WorldUnited.gg Mirror",
-                        url = "http://cdn.worldunited.gg/gamefiles/packed/"
+                        Name = "[CF] WorldUnited.gg Mirror",
+                        Url = "http://cdn.worldunited.gg/gamefiles/packed/"
                     },
                     new CDNObject {
-                        name = "[CF] DavidCarbon Mirror",
-                        url = "http://g-sbrw.davidcarbon.download/"
+                        Name = "[CF] DavidCarbon Mirror",
+                        Url = "http://g-sbrw.davidcarbon.download/"
                     }
                 });
             }
@@ -159,7 +159,7 @@ namespace GameLauncher.App {
 
         private void Save_Click(object sender, EventArgs e) {
             CDN.TrackHigh = "1"; //Max Graphics = 1 , Min Graphics = 0
-            CDN.CDNUrl = ((CDNObject)CDNSource.SelectedItem).url;
+            CDN.CDNUrl = ((CDNObject)CDNSource.SelectedItem).Url;
 
             QuitWithoutSaving_Click(sender, e);
         }
@@ -168,7 +168,7 @@ namespace GameLauncher.App {
             this.Close();
         }
 
-        private void apiErrorButton_Click(object sender, EventArgs e)
+        private void APIErrorButton_Click(object sender, EventArgs e)
         {
             APIErrorFormElements(false);
             SettingsFormElements();

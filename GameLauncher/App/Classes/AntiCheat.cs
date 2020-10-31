@@ -36,7 +36,7 @@ namespace GameLauncher.App.Classes
         public static bool detect_PURSUITBOT    = false;
         public static bool detect_PMASKER       = false;
 
-        public static void enableChecks() {
+        public static void EnableChecks() {
             Process process = Process.GetProcessById(process_id);
             IntPtr processHandle = Kernel32.OpenProcess(0x0010, false, process.Id);
             int baseAddress = process.MainModule.BaseAddress.ToInt32();
@@ -94,7 +94,7 @@ namespace GameLauncher.App.Classes
             thread.Start();
         }
 
-        public static void disableChecks() {
+        public static void DisableChecks() {
             if (detect_MULTIHACK == true)       AntiCheat.cheats_detected |= 1;
             if (detect_FAST_POWERUPS == true)   AntiCheat.cheats_detected |= 2;
             if (detect_SPEEDHACK == true)       AntiCheat.cheats_detected |= 4;

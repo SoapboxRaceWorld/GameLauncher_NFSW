@@ -32,7 +32,7 @@ namespace GameLauncher.App.Classes
         public string DiscordPresenceKey { get; set; }
 
         [JsonProperty("forceUserAgent")]
-        public string forceUserAgent { get; set; }
+        public string ForceUserAgent { get; set; }
 
         [JsonProperty("discord_application_id")]
         public string DiscordAppId { get; set; }

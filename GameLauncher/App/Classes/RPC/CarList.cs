@@ -9,7 +9,7 @@ namespace GameLauncher.App.Classes.RPC {
     class CarList {
         public static String remoteCarList = String.Empty;
 
-        public static string getCarName(string id) {
+        public static string GetCarName(string id) {
             // Let's load the "Cached From Server" version first
             if (remoteCarList != String.Empty) {
                 dynamic dynJson = JsonConvert.DeserializeObject(remoteCarList);
