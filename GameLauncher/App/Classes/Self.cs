@@ -28,8 +28,6 @@ namespace GameLauncherReborn {
         public static string CDNUrlList = mainserver + "/cdn_list.json";
         public static string CDNUrlStaticList = staticapiserver + "/cdn_list.json";
 
-        private static IniFile SettingFile = new IniFile("Settings.ini");
-
         public static string DiscordRPCID = "540651192179752970";
 
         public static int ProxyPort = new Random().Next(6260, 8269);
