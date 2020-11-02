@@ -58,7 +58,6 @@ namespace GameLauncher.App.Classes.RPC {
                 PersonaTreasure++;
 
                 _presence.Details = "Collecting gems (" + PersonaTreasure+" of "+TotalTreasure+")";
-                _presence.State = Self.MapZoneRPC;
                 _presence.Assets = new Assets
                 {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
@@ -134,7 +133,6 @@ namespace GameLauncher.App.Classes.RPC {
 
             if (uri == "/matchmaking/leavelobby" || uri == "/matchmaking/declineinvite") {
                 _presence.Details = "Driving " + PersonaCarName;
-                _presence.State = Self.MapZoneRPC;
                 _presence.Assets = new Assets {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                     LargeImageKey = PersonaAvatarId,
@@ -176,7 +174,6 @@ namespace GameLauncher.App.Classes.RPC {
 
             if(uri == "/matchmaking/joinqueueracenow") {
                 _presence.Details = "Searching for event...";
-                _presence.State = Self.MapZoneRPC;
                 _presence.Assets = new Assets {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                     LargeImageKey = PersonaAvatarId,
@@ -196,7 +193,6 @@ namespace GameLauncher.App.Classes.RPC {
                     _presence.Details = "Driving " + PersonaCarName;
                     _presence.Assets.SmallImageText = "In-Freeroam";
                     _presence.Assets.SmallImageKey = "gamemode_freeroam";
-                    _presence.State = Self.MapZoneRPC;
 
                     Self.CanDisableGame = true;
                 } else {

@@ -40,7 +40,6 @@ namespace GameLauncherReborn {
 
         public static string rememberjson = "";
         public static string discordid = String.Empty;
-        public static string MapZoneRPC = String.Empty;
 
         public static long GetTimestamp(bool valid = false) {
             long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;

@@ -2606,8 +2606,6 @@ namespace GameLauncher {
                         Refresh();
 
                         Notification.ContextMenu = ContextMenu;
-
-                        Self.MapZoneRPC = "GameLauncherReborn v" + Application.ProductVersion;
                     }
                 } else {
                     MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
