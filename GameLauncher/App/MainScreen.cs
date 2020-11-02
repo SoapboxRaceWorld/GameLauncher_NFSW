@@ -1907,14 +1907,26 @@ namespace GameLauncher {
             settingsBkupCDNText.ForeColor = Color.FromArgb(66, 179, 189);
         }
 
+        //Changing GameFiles Location from Settings
         private void SettingsGameFiles_Click(object sender, EventArgs e)
         {
+            /*
             var fbd2 = new FolderBrowserDialog();
             var result2 = fbd2.ShowDialog();
 
             if (result2 == DialogResult.OK)
             {
                 _newGameFilesPath = Path.GetFullPath(fbd2.SelectedPath);
+                settingsGameFilesCurrentText.Text = "NEW DIRECTORY";
+                settingsGameFilesCurrent.Text = _newGameFilesPath;
+            }
+            */
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.InitialDirectory = "C:\\";
+            dialog.IsFolderPicker = true;
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                _newGameFilesPath = Path.GetFullPath(dialog.FileName);
                 settingsGameFilesCurrentText.Text = "NEW DIRECTORY";
                 settingsGameFilesCurrent.Text = _newGameFilesPath;
             }
