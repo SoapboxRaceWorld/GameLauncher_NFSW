@@ -25,6 +25,7 @@ namespace GameLauncher.App
         private int ID = 1;
         Dictionary<int, GetServerInformation> rememberServerInformationID = new Dictionary<int, GetServerInformation>();
         private GetServerInformation ServerInfo;
+        Dictionary<int, ServerInfo> data = new Dictionary<int, ServerInfo>();
 
         //Used to ping the Server in ms
         public Queue<string> servers = new Queue<string>();
@@ -36,8 +37,6 @@ namespace GameLauncher.App
             InitializeComponent();
 
             //And one for keeping data about server, IP tbh
-            Dictionary<int, ServerInfo> data = new Dictionary<int, ServerInfo>();
-
             ServerListRenderer.View = View.Details;
             ServerListRenderer.FullRowSelect = true;
 
@@ -241,6 +240,18 @@ namespace GameLauncher.App
         private void BtnAddServer_Click(object sender, EventArgs e)
         {
             new AddServer().Show();
+        }
+
+        private void BtnSelectServer_Click(object sender, EventArgs e)
+        {
+                if (ServerListRenderer.SelectedItems.Count == 1)
+                {
+                    rememberServerInformationID.TryGetValue(ServerListRenderer.SelectedIndices[0], out ServerInfo);
+
+                    MainScreen.ServerName = data[ServerListRenderer.SelectedIndices[0] + 1];
+
+                    this.Close();
+                }
         }
 
         private void BtnClose_Click(object sender, EventArgs e)

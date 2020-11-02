@@ -32,6 +32,7 @@
             this.ServerListRenderer = new System.Windows.Forms.ListView();
             this.loading = new System.Windows.Forms.Label();
             this.btnAddServer = new System.Windows.Forms.Button();
+            this.btnSelectServer = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -44,7 +45,7 @@
             this.ServerListRenderer.Location = new System.Drawing.Point(12, 12);
             this.ServerListRenderer.MultiSelect = false;
             this.ServerListRenderer.Name = "ServerListRenderer";
-            this.ServerListRenderer.Size = new System.Drawing.Size(546, 256);
+            this.ServerListRenderer.Size = new System.Drawing.Size(546, 230);
             this.ServerListRenderer.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.ServerListRenderer.TabIndex = 0;
             this.ServerListRenderer.UseCompatibleStateImageBehavior = false;
@@ -52,7 +53,7 @@
             // loading
             // 
             this.loading.AutoSize = true;
-            this.loading.Location = new System.Drawing.Point(12, 278);
+            this.loading.Location = new System.Drawing.Point(220, 253);
             this.loading.Name = "loading";
             this.loading.Size = new System.Drawing.Size(91, 13);
             this.loading.TabIndex = 4;
@@ -60,20 +61,30 @@
             // 
             // btnAddServer
             // 
-            this.btnAddServer.Location = new System.Drawing.Point(402, 273);
+            this.btnAddServer.Location = new System.Drawing.Point(15, 248);
             this.btnAddServer.Name = "btnAddServer";
             this.btnAddServer.Size = new System.Drawing.Size(75, 23);
-            this.btnAddServer.TabIndex = 6;
+            this.btnAddServer.TabIndex = 5;
             this.btnAddServer.Text = "Add Server";
             this.btnAddServer.UseVisualStyleBackColor = true;
             this.btnAddServer.Click += new System.EventHandler(this.BtnAddServer_Click);
             // 
+            // btnSelectServer
+            // 
+            this.btnSelectServer.Location = new System.Drawing.Point(403, 248);
+            this.btnSelectServer.Name = "btnSelectServer";
+            this.btnSelectServer.Size = new System.Drawing.Size(75, 23);
+            this.btnSelectServer.TabIndex = 6;
+            this.btnSelectServer.Text = "Select";
+            this.btnSelectServer.UseVisualStyleBackColor = true;
+            this.btnSelectServer.Click += new System.EventHandler(this.BtnSelectServer_Click);
+            // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(483, 273);
+            this.btnClose.Location = new System.Drawing.Point(483, 248);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
-            this.btnClose.TabIndex = 5;
+            this.btnClose.TabIndex = 7;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
@@ -82,8 +93,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(570, 300);
+            this.ClientSize = new System.Drawing.Size(570, 275);
             this.Controls.Add(this.btnAddServer);
+            this.Controls.Add(this.btnSelectServer);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.loading);
             this.Controls.Add(this.ServerListRenderer);
@@ -106,6 +118,7 @@
         private System.Windows.Forms.ListView ServerListRenderer;
         private System.Windows.Forms.Label loading;
         private System.Windows.Forms.Button btnAddServer;
+        private System.Windows.Forms.Button btnSelectServer;
         private System.Windows.Forms.Button btnClose;
     }
 }
