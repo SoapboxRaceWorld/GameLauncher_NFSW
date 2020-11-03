@@ -1,8 +1,6 @@
-using System;
-
 namespace GameLauncher
 {
-	public abstract class DownloaderCommand
+    public abstract class DownloaderCommand
 	{
 		protected GameLauncher.Downloader _downloader;
 

@@ -1,22 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using GameLauncher.HashPassword;
 using GameLauncher.Properties;
 using GameLauncherReborn;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
 
-namespace GameLauncher.App.Classes.Events {
+namespace GameLauncher.App.Classes.Events
+{
     class LauncherUpdateCheck
     {
         PictureBox status;

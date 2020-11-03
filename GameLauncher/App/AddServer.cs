@@ -3,19 +3,15 @@ using Newtonsoft.Json;
 using SoapBox.JsonScheme;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GameLauncher.App.Classes;
 using GameLauncher.HashPassword;
 using static System.String;
 
-namespace GameLauncher.App {
+namespace GameLauncher.App
+{
     public partial class AddServer : Form {
         public AddServer() {
             InitializeComponent();

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
-namespace GameLauncherUpdate {
+namespace GameLauncherUpdate
+{
     class Delay {
         public static void WaitSeconds(int sec) {
             if (sec < 1) return;

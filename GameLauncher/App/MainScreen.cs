@@ -20,29 +20,22 @@ using GameLauncherReborn;
 using Microsoft.Win32;
 using GameLauncher.App;
 using GameLauncher.HashPassword;
-using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Security;
 using GameLauncher.App.Classes.Logger;
 using System.IO.Compression;
 using GameLauncher.App.Classes.Auth;
 using DiscordRPC;
-using DiscordRPC.Logging;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Threading.Tasks;
-using System.Collections.Concurrent;
-using System.Management;
 using GameLauncher.App.Classes.ModNetReloaded;
 using GameLauncher.App.Classes.HashPassword;
-using System.Security;
 using GameLauncher.App.Classes.RPC;
 using GameLauncher.App.Classes.GPU;
-using CommandLine;
-using System.Runtime.CompilerServices;
 using GameLauncher.Properties;
 
-namespace GameLauncher {
+namespace GameLauncher
+{
     public sealed partial class MainScreen : Form {
         private Point _mouseDownPoint = Point.Empty;
         private bool _loginEnabled;

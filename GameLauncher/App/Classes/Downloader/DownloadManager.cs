@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
@@ -9,7 +8,7 @@ using System.Xml;
 
 namespace GameLauncher
 {
-	internal class DownloadManager
+    internal class DownloadManager
 	{
 		private const int MaxWorkers = 3;
 

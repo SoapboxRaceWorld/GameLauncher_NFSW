@@ -5,9 +5,9 @@ using System.Drawing.Text;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
-namespace GameLauncher.Resources {
+namespace GameLauncher.Resources
+{
     class FontWrapper {
         internal static class UnsafeNativeMethods {
             [DllImport("gdi32.dll")]

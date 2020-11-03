@@ -1,16 +1,11 @@
-﻿using System;
-using System.Management;
+﻿using System.Management;
 using System.Security.Cryptography;
-using System.Security;
-using System.Collections;
 using System.Text;
-using System.Windows.Forms;
 using System.IO;
 using GameLauncher.App.Classes;
-using Microsoft.Win32;
-using System.Collections.Generic;
 
-namespace Security {
+namespace Security
+{
     public class FingerPrint {
         private static string fingerPrint = string.Empty;
         public static string Value() {

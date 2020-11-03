@@ -1,18 +1,11 @@
 ﻿using GameLauncher.App.Classes;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Management;
-using System.Text;
 using System.Windows.Forms;
-using GameLauncher;
-using GameLauncher.App;
-using System.Runtime.InteropServices;
 using GameLauncherReborn;
-using System.IO;
 
 namespace GameLauncher.App
 {

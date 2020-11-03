@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Win32;
 
 // based on https://github.com/bitbeans/RedistributableChecker/blob/master/RedistributableChecker/RedistributablePackage.cs
 namespace GameLauncher.App.Classes
 {
-	/// <summary>
-	/// Microsoft Visual C++ Redistributable Package Versions
-	/// </summary>
-	public enum RedistributablePackageVersion
+    /// <summary>
+    /// Microsoft Visual C++ Redistributable Package Versions
+    /// </summary>
+    public enum RedistributablePackageVersion
 	{
 		VC2015to2019x86,
 		VC2015to2019x64,

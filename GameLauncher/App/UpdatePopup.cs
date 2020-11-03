@@ -1,16 +1,11 @@
 ﻿using GameLauncher.App.Classes.Events;
 using GameLauncherReborn;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GameLauncher.App.Classes;
 
-namespace GameLauncher.App {
+namespace GameLauncher.App
+{
     public partial class UpdatePopup : Form {
         public UpdatePopup(UpdateCheckResponse updater) {
             IniFile _settingFile = new IniFile("Settings.ini");

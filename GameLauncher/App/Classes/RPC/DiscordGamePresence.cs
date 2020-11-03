@@ -3,15 +3,12 @@ using GameLauncher.App.Classes.Proxy;
 using GameLauncherReborn;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml;
 
-namespace GameLauncher.App.Classes.RPC {
+namespace GameLauncher.App.Classes.RPC
+{
     class DiscordGamePresence {
         public static RichPresence _presence = new RichPresence();
 

@@ -1,7 +1,5 @@
 ﻿using GameLauncher.App.Classes;
 using System;
-using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -13,7 +11,8 @@ using Flurl.Http;
 using System.Management;
 using System.Net;
 
-namespace GameLauncherReborn {
+namespace GameLauncherReborn
+{
     class Self {
         public static string mainserver = "https://api.worldunited.gg";
         public static string fileserver = "https://files.worldunited.gg";

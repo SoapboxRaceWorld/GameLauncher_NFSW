@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace GameLauncher.HashPassword {
+namespace GameLauncher.HashPassword
+{
     class SHA {
         public static string HashPassword(string input) {
             HashAlgorithm algorithm = SHA1.Create();

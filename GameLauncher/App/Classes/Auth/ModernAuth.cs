@@ -1,15 +1,11 @@
 ﻿using Nancy.Json;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
-namespace GameLauncher.App.Classes.Auth {
+namespace GameLauncher.App.Classes.Auth
+{
     public class ModernAuthObject {
         public string Token { get; set; }
         public string UserId { get; set; }

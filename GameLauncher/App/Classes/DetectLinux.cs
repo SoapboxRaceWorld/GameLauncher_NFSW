@@ -1,9 +1,8 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.IO;
 
-namespace GameLauncher.App.Classes {
+namespace GameLauncher.App.Classes
+{
     class DetectLinux {
         private static string _linuxDistro = null;
 

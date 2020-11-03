@@ -1,11 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GameLauncher.App.Classes.RPC {
+namespace GameLauncher.App.Classes.RPC
+{
     class CarList {
         public static String remoteCarList = String.Empty;
 

@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Windows.Forms;
 using System.IO.Compression;
 using System.Threading;
 
 using SimpleJSON;
 
-namespace GameLauncherUpdate {
+namespace GameLauncherUpdate
+{
     public partial class Form1 : Form {
         string tempNameZip = Path.GetTempFileName();
         string version;

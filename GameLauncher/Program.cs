@@ -6,22 +6,17 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using GameLauncher.App;
 using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Logger;
-using GameLauncher.HashPassword;
 using GameLauncherReborn;
-using Nancy;
-using IniParser;
-using GameLauncher.App.Classes.GPU;
-using System.Reflection;
 using Newtonsoft.Json;
 using System.Linq;
 using Microsoft.Win32;
 using CommandLine;
 using System.Globalization;
 
-namespace GameLauncher {
+namespace GameLauncher
+{
     internal static class Program {
         //Update this if a new GameLauncherUpdater.exe has been delployed - DavidCarbon
         private static string LatestUpdaterBuildVersion = "1.0.0.4";
