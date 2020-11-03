@@ -1907,6 +1907,7 @@ namespace GameLauncher
             changeGameFilesPath.ValidateNames = false;
             changeGameFilesPath.CheckFileExists = false;
             changeGameFilesPath.CheckPathExists = true;
+            changeGameFilesPath.Title = "Select the location to Find or Download nfsw.exe";
             changeGameFilesPath.FileName = "Select Game Files Folder";
             if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
             {
