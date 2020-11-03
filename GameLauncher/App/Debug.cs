@@ -171,8 +171,8 @@ namespace GameLauncher.App
 
             data.Columns[0].Width += 50;
 
-            int size_x = 1024;
-            int size_y = 450;
+            int size_x = 582;
+            int size_y = 580;
 
             data.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Size = new Size(size_x, size_y);
