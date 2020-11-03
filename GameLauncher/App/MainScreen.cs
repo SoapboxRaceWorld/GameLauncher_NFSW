@@ -41,7 +41,6 @@ using GameLauncher.App.Classes.GPU;
 using CommandLine;
 using System.Runtime.CompilerServices;
 using GameLauncher.Properties;
-//using System.Windows;
 
 namespace GameLauncher {
     public sealed partial class MainScreen : Form {
@@ -1907,15 +1906,18 @@ namespace GameLauncher {
             settingsBkupCDNText.ForeColor = Color.FromArgb(66, 179, 189);
         }
 
-        //Changing GameFiles Location from Settings
+        //Changing GameFiles Location from Settings - DavidCarbon & Zacam
         private void SettingsGameFiles_Click(object sender, EventArgs e)
         {
-            CommonOpenFileDialog changeGameFilesPath = new CommonOpenFileDialog();
+            System.Windows.Forms.OpenFileDialog changeGameFilesPath = new System.Windows.Forms.OpenFileDialog();
             changeGameFilesPath.InitialDirectory = "C:\\";
-            changeGameFilesPath.IsFolderPicker = true;
-            if (changeGameFilesPath.ShowDialog() == CommonFileDialogResult.Ok)
+            changeGameFilesPath.ValidateNames = false;
+            changeGameFilesPath.CheckFileExists = false;
+            changeGameFilesPath.CheckPathExists = true;
+            changeGameFilesPath.FileName = "Select Game Files Folder";
+            if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
             {
-                _newGameFilesPath = Path.GetFullPath(changeGameFilesPath.FileName);
+                _newGameFilesPath = Path.GetDirectoryName(changeGameFilesPath.FileName);
                 settingsGameFilesCurrentText.Text = "NEW DIRECTORY";
                 settingsGameFilesCurrent.Text = _newGameFilesPath;
             }
