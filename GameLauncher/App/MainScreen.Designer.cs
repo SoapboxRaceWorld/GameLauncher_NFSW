@@ -183,11 +183,11 @@
             this.serverPick.BackColor = System.Drawing.Color.White;
             this.serverPick.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.serverPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.serverPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.serverPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.serverPick.FormattingEnabled = true;
             this.serverPick.Location = new System.Drawing.Point(599, 65);
             this.serverPick.Name = "serverPick";
-            this.serverPick.Size = new System.Drawing.Size(233, 21);
+            this.serverPick.Size = new System.Drawing.Size(233, 22);
             this.serverPick.TabIndex = 5;
             // 
             // addServer
@@ -409,14 +409,19 @@
             // 
             // settingsGameFiles
             // 
+            this.settingsGameFiles.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.settingsGameFiles.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.settingsGameFiles.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.settingsGameFiles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.settingsGameFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.settingsGameFiles.ForeColor = System.Drawing.Color.Silver;
             this.settingsGameFiles.Location = new System.Drawing.Point(64, 151);
+            this.settingsGameFiles.Margin = new System.Windows.Forms.Padding(0);
             this.settingsGameFiles.Name = "settingsGameFiles";
             this.settingsGameFiles.Size = new System.Drawing.Size(210, 23);
             this.settingsGameFiles.TabIndex = 57;
             this.settingsGameFiles.Text = "Change GameFiles Path";
-            this.settingsGameFiles.UseVisualStyleBackColor = true;
+            this.settingsGameFiles.UseVisualStyleBackColor = false;
             // 
             // settingsGameFilesCurrentText
             // 
@@ -463,7 +468,7 @@
             // 
             // settingsLanguage
             // 
-            this.settingsLanguage.BackColor = System.Drawing.Color.DarkSlateGray;
+            this.settingsLanguage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.settingsLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.settingsLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.settingsLanguage.ForeColor = System.Drawing.Color.White;
@@ -527,7 +532,7 @@
             // 
             // settingsCDNPick
             // 
-            this.settingsCDNPick.BackColor = System.Drawing.Color.DarkSlateGray;
+            this.settingsCDNPick.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.settingsCDNPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.settingsCDNPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.settingsCDNPick.ForeColor = System.Drawing.Color.White;
