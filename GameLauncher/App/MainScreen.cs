@@ -1795,7 +1795,6 @@ namespace GameLauncher
 
             //TODO null check
             _settingFile.Write("Language", settingsLanguage.SelectedValue.ToString());
-            _settingFile.Write("CDN", ((CDNObject)settingsCDNPick.SelectedItem).Url);
 
             var userSettingsXml = new XmlDocument();
 
@@ -1843,6 +1842,12 @@ namespace GameLauncher
 
             if (_settingFile.Read("InstallationDirectory") != _newGameFilesPath) {
                 _settingFile.Write("InstallationDirectory", _newGameFilesPath);
+                _restartRequired = true;
+            }
+
+            if (_settingFile.Read("CDN") != ((CDNObject)settingsCDNPick.SelectedItem).Url)
+            {
+                _settingFile.Write("CDN", ((CDNObject)settingsCDNPick.SelectedItem).Url);
                 _restartRequired = true;
             }
 
@@ -1919,6 +1924,11 @@ namespace GameLauncher
 
         private void SettingsGameFilesCurrent_Click(object sender, EventArgs e) {
             Process.Start(_newGameFilesPath);
+        }
+
+        private void settingsCDNCurrent_LinkClicked(object sender, EventArgs e)
+        {
+            Process.Start(_settingFile.Read("CDN"));
         }
 
         private void SettingsFormElements(bool hideElements = true) {
@@ -3107,7 +3117,6 @@ namespace GameLauncher
                 serverPick.SelectedIndex = index;
             }
         }
-
     }
     /* Moved 7 Unused Code to Gist */
     /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/00de505302fbf9f8cfea9b163a707d9f8f122552/MainScreen.cs */

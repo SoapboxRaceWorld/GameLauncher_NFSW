@@ -79,7 +79,6 @@
             this.settingsBkupSrvText = new System.Windows.Forms.Label();
             this.settingsBkupCDNText = new System.Windows.Forms.Label();
             this.settingsMainCDNText = new System.Windows.Forms.Label();
-            this.settingsCDNCurrent = new System.Windows.Forms.Label();
             this.APIStatusIcon = new System.Windows.Forms.PictureBox();
             this.APIStatusText = new System.Windows.Forms.Label();
             this.APIStatusDesc = new System.Windows.Forms.Label();
@@ -98,6 +97,7 @@
             this.ServerPingStatusText = new System.Windows.Forms.Label();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.settingsCDNCurrent = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
@@ -725,19 +725,6 @@
             this.settingsMainCDNText.TabIndex = 109;
             this.settingsMainCDNText.Text = "Main CDN List API: PINGING";
             // 
-            // settingsCDNCurrent
-            // 
-            this.settingsCDNCurrent.AutoSize = true;
-            this.settingsCDNCurrent.BackColor = System.Drawing.Color.Transparent;
-            this.settingsCDNCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.settingsCDNCurrent.ForeColor = System.Drawing.Color.Transparent;
-            this.settingsCDNCurrent.Location = new System.Drawing.Point(404, 195);
-            this.settingsCDNCurrent.Name = "settingsCDNCurrent";
-            this.settingsCDNCurrent.Size = new System.Drawing.Size(80, 13);
-            this.settingsCDNCurrent.TabIndex = 110;
-            this.settingsCDNCurrent.Text = "http://localhost";
-            this.settingsCDNCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // APIStatusIcon
             // 
             this.APIStatusIcon.BackColor = System.Drawing.Color.Transparent;
@@ -980,12 +967,31 @@
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
             // 
+            // settingsCDNCurrent
+            // 
+            this.settingsCDNCurrent.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.settingsCDNCurrent.AutoSize = true;
+            this.settingsCDNCurrent.BackColor = System.Drawing.Color.Transparent;
+            this.settingsCDNCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.settingsCDNCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.settingsCDNCurrent.LinkColor = System.Drawing.Color.White;
+            this.settingsCDNCurrent.Location = new System.Drawing.Point(404, 195);
+            this.settingsCDNCurrent.Name = "settingsCDNCurrent";
+            this.settingsCDNCurrent.Size = new System.Drawing.Size(80, 13);
+            this.settingsCDNCurrent.TabIndex = 110;
+            this.settingsCDNCurrent.TabStop = true;
+            this.settingsCDNCurrent.Text = "http://localhost";
+            this.settingsCDNCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.settingsCDNCurrent.VisitedLinkColor = System.Drawing.Color.White;
+            this.settingsCDNCurrent.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.settingsCDNCurrent_LinkClicked);
+            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.settingsCDNCurrent);
             this.Controls.Add(this.ServerPingStatusText);
             this.Controls.Add(this.errorMainPasswordBorder);
             this.Controls.Add(this.errorMainEmailBorder);
@@ -1001,7 +1007,6 @@
             this.Controls.Add(this.APIStatusText);
             this.Controls.Add(this.APIStatusDesc);
             this.Controls.Add(this.APIStatusIcon);
-            this.Controls.Add(this.settingsCDNCurrent);
             this.Controls.Add(this.settingsMainCDNText);
             this.Controls.Add(this.settingsBkupCDNText);
             this.Controls.Add(this.settingsBkupSrvText);
@@ -1131,7 +1136,6 @@
         private System.Windows.Forms.Label settingsBkupSrvText;
         private System.Windows.Forms.Label settingsBkupCDNText;
         private System.Windows.Forms.Label settingsMainCDNText;
-        private System.Windows.Forms.Label settingsCDNCurrent;
         private System.Windows.Forms.PictureBox APIStatusIcon;
         private System.Windows.Forms.Label APIStatusText;
         private System.Windows.Forms.Label APIStatusDesc;
@@ -1148,5 +1152,6 @@
         private System.Windows.Forms.PictureBox errorMainEmailBorder;
         private System.Windows.Forms.PictureBox errorMainPasswordBorder;
         private System.Windows.Forms.Label ServerPingStatusText;
+        private System.Windows.Forms.LinkLabel settingsCDNCurrent;
     }
 }
