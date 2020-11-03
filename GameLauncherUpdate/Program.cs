@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace GameLauncherUpdate
+namespace GameLauncherUpdater
 {
     static class Program
     {

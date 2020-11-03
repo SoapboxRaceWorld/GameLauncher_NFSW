@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // Ogólne informacje o zestawie są kontrolowane poprzez następujący 
 // zestaw atrybutów. Zmień wartości tych atrybutów, aby zmodyfikować informacje
 // powiązane z zestawem.
-[assembly: AssemblyTitle("GameLauncherUpdate")]
+[assembly: AssemblyTitle("GameLauncherUpdater")]
 [assembly: AssemblyDescription("Game Launcher Updater for Need for Speed(TM): World")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Soapbox Race World")]

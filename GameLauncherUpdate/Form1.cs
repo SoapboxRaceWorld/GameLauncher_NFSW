@@ -9,7 +9,7 @@ using System.Threading;
 
 using SimpleJSON;
 
-namespace GameLauncherUpdate
+namespace GameLauncherUpdater
 {
     public partial class Form1 : Form {
         string tempNameZip = Path.GetTempFileName();
@@ -116,7 +116,7 @@ namespace GameLauncherUpdate
 
                             Directory.CreateDirectory(folderName);
                         } else {
-                            if (fullName != "GameLauncherUpdate.exe") {
+                            if (fullName != "GameLauncherUpdater.exe") {
                                 if (File.Exists(fullName)) {
                                     File.Delete(fullName);
                                 }

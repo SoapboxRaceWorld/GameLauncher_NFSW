@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C3DFD242-2688-4228-88E8-D4588CBA1833}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>GameLauncherUpdate</RootNamespace>
-    <AssemblyName>GameLauncherUpdate</AssemblyName>
+    <RootNamespace>GameLauncherUpdater</RootNamespace>
+    <AssemblyName>GameLauncherUpdater</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

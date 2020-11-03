@@ -1,4 +1,4 @@
-﻿namespace GameLauncherUpdate
+﻿namespace GameLauncherUpdater
 {
     partial class Form1
     {
@@ -56,7 +56,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.BackgroundImage = global::GameLauncherUpdate.Properties.Resources.beta_map_v2;
+            this.BackgroundImage = global::GameLauncherUpdater.Properties.Resources.beta_map_v2;
             this.ClientSize = new System.Drawing.Size(355, 53);
             this.Controls.Add(this.information);
             this.Controls.Add(this.downloadProgress);

@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameLauncher", "GameLauncher\GameLauncher.csproj", "{0A114C5C-3566-4A62-B05D-CBA311988D8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameLauncherUpdate", "GameLauncherUpdate\GameLauncherUpdate.csproj", "{C3DFD242-2688-4228-88E8-D4588CBA1833}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameLauncherUpdater", "GameLauncherUpdate\GameLauncherUpdater.csproj", "{C3DFD242-2688-4228-88E8-D4588CBA1833}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
