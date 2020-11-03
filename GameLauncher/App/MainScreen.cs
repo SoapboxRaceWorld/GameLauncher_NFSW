@@ -680,7 +680,7 @@ namespace GameLauncher
 
             Log.Debug("LAUNCHER: Setting configurations");
             _newGameFilesPath = Path.GetFullPath(_settingFile.Read("InstallationDirectory"));
-            settingsGameFilesCurrentText.Text = "CURRENT DIRECTORY";
+            settingsGameFilesCurrentText.Text = "CURRENT DIRECTORY:";
             settingsGameFilesCurrent.Text = _newGameFilesPath;
             //DavidCarbon
             settingsCDNCurrent.Text = _settingFile.Read("CDN");
