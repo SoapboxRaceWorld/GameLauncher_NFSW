@@ -226,14 +226,7 @@ namespace GameLauncher.App
             };
 
             ServerListRenderer.DoubleClick += new EventHandler((handler, args) => {
-                if (ServerListRenderer.SelectedItems.Count == 1)
-                {
-                    rememberServerInformationID.TryGetValue(ServerListRenderer.SelectedIndices[0], out ServerInfo);
-
-                    MainScreen.ServerName = data[ServerListRenderer.SelectedIndices[0] + 1];
-
-                    this.Close();
-                }
+                SelectedGameServerToRemember();
             });
         }
 
@@ -244,14 +237,7 @@ namespace GameLauncher.App
 
         private void BtnSelectServer_Click(object sender, EventArgs e)
         {
-                if (ServerListRenderer.SelectedItems.Count == 1)
-                {
-                    rememberServerInformationID.TryGetValue(ServerListRenderer.SelectedIndices[0], out ServerInfo);
-
-                    MainScreen.ServerName = data[ServerListRenderer.SelectedIndices[0] + 1];
-
-                    this.Close();
-                }
+            SelectedGameServerToRemember();
         }
 
         private void BtnClose_Click(object sender, EventArgs e)
@@ -259,5 +245,16 @@ namespace GameLauncher.App
             this.Close();
         }
 
+        private void SelectedGameServerToRemember()
+        {
+            if (ServerListRenderer.SelectedItems.Count == 1)
+            {
+                rememberServerInformationID.TryGetValue(ServerListRenderer.SelectedIndices[0], out ServerInfo);
+
+                MainScreen.ServerName = data[ServerListRenderer.SelectedIndices[0] + 1];
+
+                this.Close();
+            }
+        }
     }
 }
