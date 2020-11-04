@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.RPC
 {
@@ -27,12 +28,14 @@ namespace GameLauncher.App.Classes.RPC
         public static string PersonaCarId = String.Empty;
         public static string PersonaCarName = String.Empty;
         public static string LoggedPersonaId = String.Empty;
+        public static string LauncherRPC = String.Empty;
         public static int PersonaTreasure = 0;
         public static int TotalTreasure = 15;
         public static int TEDay = 0;
         public static List<string> PersonaIds = new List<string>();
 
         public static void HandleGameState(string uri, string serverreply = "", string POST = "", string GET = "") {
+            LauncherRPC = "GameLauncherReborn v" + Application.ProductVersion;
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');
 
@@ -55,6 +58,7 @@ namespace GameLauncher.App.Classes.RPC
                 PersonaTreasure++;
 
                 _presence.Details = "Collecting gems (" + PersonaTreasure+" of "+TotalTreasure+")";
+                _presence.State = LauncherRPC;
                 _presence.Assets = new Assets
                 {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
@@ -80,6 +84,7 @@ namespace GameLauncher.App.Classes.RPC
                 PersonaAvatarId = String.Empty;
                 PersonaCarId = String.Empty;
                 PersonaCarName = String.Empty;
+                LauncherRPC = String.Empty;
                 PersonaTreasure = 0;
             }
 
@@ -130,6 +135,7 @@ namespace GameLauncher.App.Classes.RPC
 
             if (uri == "/matchmaking/leavelobby" || uri == "/matchmaking/declineinvite") {
                 _presence.Details = "Driving " + PersonaCarName;
+                _presence.State = LauncherRPC;
                 _presence.Assets = new Assets {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                     LargeImageKey = PersonaAvatarId,
@@ -171,6 +177,7 @@ namespace GameLauncher.App.Classes.RPC
 
             if(uri == "/matchmaking/joinqueueracenow") {
                 _presence.Details = "Searching for event...";
+                _presence.State = LauncherRPC;
                 _presence.Assets = new Assets {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                     LargeImageKey = PersonaAvatarId,
@@ -190,6 +197,7 @@ namespace GameLauncher.App.Classes.RPC
                     _presence.Details = "Driving " + PersonaCarName;
                     _presence.Assets.SmallImageText = "In-Freeroam";
                     _presence.Assets.SmallImageKey = "gamemode_freeroam";
+                    _presence.State = LauncherRPC;
 
                     Self.CanDisableGame = true;
                 } else {
