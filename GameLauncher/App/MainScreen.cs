@@ -1948,6 +1948,8 @@ namespace GameLauncher
                 currentWindowInfo.Text = "";
             }
 
+            SettingsPanel.Visible = hideElements;
+            /*
             settingsCancel.Visible = hideElements;
             settingsSave.Visible = hideElements;
             settingsLanguage.Visible = hideElements;
@@ -1972,7 +1974,7 @@ namespace GameLauncher
             settingsBkupCDNText.Visible = hideElements;
             settingsCDNCurrentText.Visible = hideElements;
             settingsCDNCurrent.Visible = hideElements;
-
+            */
         }
 
         private void StartGame(string userId, string loginToken) {
@@ -3131,6 +3133,7 @@ namespace GameLauncher
                 serverPick.SelectedIndex = index;
             }
         }
+
     }
     /* Moved 7 Unused Code to Gist */
     /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/00de505302fbf9f8cfea9b163a707d9f8f122552/MainScreen.cs */
