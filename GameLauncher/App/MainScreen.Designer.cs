@@ -76,9 +76,9 @@
             this.registerButton = new System.Windows.Forms.Button();
             this.registerCancel = new System.Windows.Forms.Button();
             this.SettingsPanel = new System.Windows.Forms.Panel();
+            this.settingsGamePathText = new System.Windows.Forms.Label();
             this.settingsSave = new System.Windows.Forms.Button();
             this.settingsCancel = new System.Windows.Forms.Button();
-            this.settingsGamePathText = new System.Windows.Forms.Label();
             this.settingsGameFiles = new System.Windows.Forms.Button();
             this.settingsCDNText = new System.Windows.Forms.Label();
             this.settingsCDNPick = new System.Windows.Forms.ComboBox();
@@ -99,6 +99,8 @@
             this.settingsMainCDNText = new System.Windows.Forms.Label();
             this.settingsBkupSrvText = new System.Windows.Forms.Label();
             this.settingsBkupCDNText = new System.Windows.Forms.Label();
+            this.ShowPlayPanel = new System.Windows.Forms.Panel();
+            this.RegisterPanel = new System.Windows.Forms.Panel();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
@@ -115,6 +117,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.errorPasswordValidateBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorTicketBorder)).BeginInit();
             this.SettingsPanel.SuspendLayout();
+            this.ShowPlayPanel.SuspendLayout();
+            this.RegisterPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // Timeout
@@ -422,7 +426,7 @@
             this.rememberMe.BackColor = System.Drawing.Color.Transparent;
             this.rememberMe.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.rememberMe.ForeColor = System.Drawing.Color.White;
-            this.rememberMe.Location = new System.Drawing.Point(628, 285);
+            this.rememberMe.Location = new System.Drawing.Point(618, 285);
             this.rememberMe.Name = "rememberMe";
             this.rememberMe.Size = new System.Drawing.Size(159, 19);
             this.rememberMe.TabIndex = 5;
@@ -435,7 +439,7 @@
             this.forgotPassword.AutoSize = true;
             this.forgotPassword.BackColor = System.Drawing.Color.Transparent;
             this.forgotPassword.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
-            this.forgotPassword.Location = new System.Drawing.Point(628, 307);
+            this.forgotPassword.Location = new System.Drawing.Point(618, 307);
             this.forgotPassword.Name = "forgotPassword";
             this.forgotPassword.Size = new System.Drawing.Size(143, 13);
             this.forgotPassword.TabIndex = 6;
@@ -482,7 +486,7 @@
             this.ServerPingStatusText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ServerPingStatusText.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.ServerPingStatusText.ForeColor = System.Drawing.Color.White;
-            this.ServerPingStatusText.Location = new System.Drawing.Point(633, 301);
+            this.ServerPingStatusText.Location = new System.Drawing.Point(20, 0);
             this.ServerPingStatusText.Name = "ServerPingStatusText";
             this.ServerPingStatusText.Size = new System.Drawing.Size(194, 61);
             this.ServerPingStatusText.TabIndex = 148;
@@ -500,7 +504,7 @@
             this.logoutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.logoutButton.ForeColor = System.Drawing.Color.White;
             this.logoutButton.Image = global::GameLauncher.Properties.Resources.graybutton;
-            this.logoutButton.Location = new System.Drawing.Point(614, 364);
+            this.logoutButton.Location = new System.Drawing.Point(2, 61);
             this.logoutButton.Name = "logoutButton";
             this.logoutButton.Size = new System.Drawing.Size(231, 35);
             this.logoutButton.TabIndex = 44;
@@ -518,7 +522,7 @@
             this.playButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.playButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.playButton.ForeColor = System.Drawing.Color.Transparent;
-            this.playButton.Location = new System.Drawing.Point(615, 406);
+            this.playButton.Location = new System.Drawing.Point(3, 96);
             this.playButton.Name = "playButton";
             this.playButton.Size = new System.Drawing.Size(230, 63);
             this.playButton.TabIndex = 15;
@@ -543,7 +547,7 @@
             this.registerEmail.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.registerEmail.Font = new System.Drawing.Font("Arial", 14F);
             this.registerEmail.ForeColor = System.Drawing.Color.White;
-            this.registerEmail.Location = new System.Drawing.Point(650, 172);
+            this.registerEmail.Location = new System.Drawing.Point(50, 77);
             this.registerEmail.Name = "registerEmail";
             this.registerEmail.Size = new System.Drawing.Size(187, 22);
             this.registerEmail.TabIndex = 30;
@@ -553,7 +557,7 @@
             // 
             this.errorEmailBorder.BackColor = System.Drawing.Color.Transparent;
             this.errorEmailBorder.Image = global::GameLauncher.Properties.Resources.error_text_border;
-            this.errorEmailBorder.Location = new System.Drawing.Point(614, 162);
+            this.errorEmailBorder.Location = new System.Drawing.Point(15, 67);
             this.errorEmailBorder.Name = "errorEmailBorder";
             this.errorEmailBorder.Size = new System.Drawing.Size(231, 37);
             this.errorEmailBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -567,7 +571,7 @@
             this.registerPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.registerPassword.Font = new System.Drawing.Font("Arial", 14F);
             this.registerPassword.ForeColor = System.Drawing.Color.White;
-            this.registerPassword.Location = new System.Drawing.Point(650, 221);
+            this.registerPassword.Location = new System.Drawing.Point(52, 126);
             this.registerPassword.Name = "registerPassword";
             this.registerPassword.Size = new System.Drawing.Size(187, 22);
             this.registerPassword.TabIndex = 32;
@@ -578,7 +582,7 @@
             // 
             this.errorPasswordBorder.BackColor = System.Drawing.Color.Transparent;
             this.errorPasswordBorder.Image = global::GameLauncher.Properties.Resources.error_text_border;
-            this.errorPasswordBorder.Location = new System.Drawing.Point(615, 211);
+            this.errorPasswordBorder.Location = new System.Drawing.Point(14, 116);
             this.errorPasswordBorder.Name = "errorPasswordBorder";
             this.errorPasswordBorder.Size = new System.Drawing.Size(231, 37);
             this.errorPasswordBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -592,7 +596,7 @@
             this.registerConfirmPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.registerConfirmPassword.Font = new System.Drawing.Font("Arial", 14F);
             this.registerConfirmPassword.ForeColor = System.Drawing.Color.White;
-            this.registerConfirmPassword.Location = new System.Drawing.Point(650, 270);
+            this.registerConfirmPassword.Location = new System.Drawing.Point(52, 175);
             this.registerConfirmPassword.Name = "registerConfirmPassword";
             this.registerConfirmPassword.Size = new System.Drawing.Size(187, 22);
             this.registerConfirmPassword.TabIndex = 33;
@@ -603,7 +607,7 @@
             // 
             this.errorPasswordValidateBorder.BackColor = System.Drawing.Color.Transparent;
             this.errorPasswordValidateBorder.Image = global::GameLauncher.Properties.Resources.error_text_border;
-            this.errorPasswordValidateBorder.Location = new System.Drawing.Point(614, 260);
+            this.errorPasswordValidateBorder.Location = new System.Drawing.Point(15, 165);
             this.errorPasswordValidateBorder.Name = "errorPasswordValidateBorder";
             this.errorPasswordValidateBorder.Size = new System.Drawing.Size(231, 37);
             this.errorPasswordValidateBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -617,7 +621,7 @@
             this.registerTicket.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.registerTicket.Font = new System.Drawing.Font("Arial", 14F);
             this.registerTicket.ForeColor = System.Drawing.Color.White;
-            this.registerTicket.Location = new System.Drawing.Point(650, 319);
+            this.registerTicket.Location = new System.Drawing.Point(52, 224);
             this.registerTicket.Name = "registerTicket";
             this.registerTicket.Size = new System.Drawing.Size(187, 22);
             this.registerTicket.TabIndex = 31;
@@ -627,7 +631,7 @@
             // 
             this.errorTicketBorder.BackColor = System.Drawing.Color.Transparent;
             this.errorTicketBorder.Image = global::GameLauncher.Properties.Resources.error_text_border;
-            this.errorTicketBorder.Location = new System.Drawing.Point(615, 309);
+            this.errorTicketBorder.Location = new System.Drawing.Point(15, 214);
             this.errorTicketBorder.Name = "errorTicketBorder";
             this.errorTicketBorder.Size = new System.Drawing.Size(230, 37);
             this.errorTicketBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -639,7 +643,7 @@
             // 
             this.registerAgree.BackColor = System.Drawing.Color.Transparent;
             this.registerAgree.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
-            this.registerAgree.Location = new System.Drawing.Point(622, 354);
+            this.registerAgree.Location = new System.Drawing.Point(15, 257);
             this.registerAgree.Name = "registerAgree";
             this.registerAgree.Size = new System.Drawing.Size(232, 35);
             this.registerAgree.TabIndex = 38;
@@ -656,7 +660,7 @@
             this.registerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.registerButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
             this.registerButton.Image = global::GameLauncher.Properties.Resources.greenbutton;
-            this.registerButton.Location = new System.Drawing.Point(614, 400);
+            this.registerButton.Location = new System.Drawing.Point(15, 296);
             this.registerButton.Name = "registerButton";
             this.registerButton.Size = new System.Drawing.Size(231, 35);
             this.registerButton.TabIndex = 19;
@@ -672,7 +676,7 @@
             this.registerCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.registerCancel.ForeColor = System.Drawing.Color.White;
             this.registerCancel.Image = global::GameLauncher.Properties.Resources.graybutton;
-            this.registerCancel.Location = new System.Drawing.Point(614, 442);
+            this.registerCancel.Location = new System.Drawing.Point(15, 336);
             this.registerCancel.Name = "registerCancel";
             this.registerCancel.Size = new System.Drawing.Size(231, 35);
             this.registerCancel.TabIndex = 43;
@@ -681,6 +685,7 @@
             // 
             // SettingsPanel
             // 
+            this.SettingsPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.SettingsPanel.BackColor = System.Drawing.Color.Transparent;
             this.SettingsPanel.Controls.Add(this.settingsGamePathText);
             this.SettingsPanel.Controls.Add(this.settingsSave);
@@ -706,10 +711,24 @@
             this.SettingsPanel.Controls.Add(this.settingsBkupSrvText);
             this.SettingsPanel.Controls.Add(this.settingsBkupCDNText);
             this.SettingsPanel.ForeColor = System.Drawing.Color.Transparent;
+            this.SettingsPanel.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.SettingsPanel.Location = new System.Drawing.Point(31, 56);
             this.SettingsPanel.Name = "SettingsPanel";
             this.SettingsPanel.Size = new System.Drawing.Size(830, 434);
             this.SettingsPanel.TabIndex = 150;
+            // 
+            // settingsGamePathText
+            // 
+            this.settingsGamePathText.AutoSize = true;
+            this.settingsGamePathText.BackColor = System.Drawing.Color.Transparent;
+            this.settingsGamePathText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.settingsGamePathText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.settingsGamePathText.Location = new System.Drawing.Point(24, 67);
+            this.settingsGamePathText.Name = "settingsGamePathText";
+            this.settingsGamePathText.Size = new System.Drawing.Size(135, 18);
+            this.settingsGamePathText.TabIndex = 135;
+            this.settingsGamePathText.Text = "GAMEFILES PATH";
+            this.settingsGamePathText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // settingsSave
             // 
@@ -742,19 +761,6 @@
             this.settingsCancel.TabIndex = 152;
             this.settingsCancel.Text = "CANCEL";
             this.settingsCancel.UseVisualStyleBackColor = false;
-            // 
-            // settingsGamePathText
-            // 
-            this.settingsGamePathText.AutoSize = true;
-            this.settingsGamePathText.BackColor = System.Drawing.Color.Transparent;
-            this.settingsGamePathText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.settingsGamePathText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.settingsGamePathText.Location = new System.Drawing.Point(24, 67);
-            this.settingsGamePathText.Name = "settingsGamePathText";
-            this.settingsGamePathText.Size = new System.Drawing.Size(135, 18);
-            this.settingsGamePathText.TabIndex = 135;
-            this.settingsGamePathText.Text = "GAMEFILES PATH";
-            this.settingsGamePathText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // settingsGameFiles
             // 
@@ -1027,6 +1033,44 @@
             this.settingsBkupCDNText.TabIndex = 145;
             this.settingsBkupCDNText.Text = "Backup CDN List API: PINGING";
             // 
+            // ShowPlayPanel
+            // 
+            this.ShowPlayPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ShowPlayPanel.BackColor = System.Drawing.Color.Transparent;
+            this.ShowPlayPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ShowPlayPanel.Controls.Add(this.ServerPingStatusText);
+            this.ShowPlayPanel.Controls.Add(this.logoutButton);
+            this.ShowPlayPanel.Controls.Add(this.playButton);
+            this.ShowPlayPanel.ForeColor = System.Drawing.Color.Transparent;
+            this.ShowPlayPanel.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.ShowPlayPanel.Location = new System.Drawing.Point(612, 312);
+            this.ShowPlayPanel.Name = "ShowPlayPanel";
+            this.ShowPlayPanel.Size = new System.Drawing.Size(237, 164);
+            this.ShowPlayPanel.TabIndex = 153;
+            // 
+            // RegisterPanel
+            // 
+            this.RegisterPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.RegisterPanel.BackColor = System.Drawing.Color.Transparent;
+            this.RegisterPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.RegisterPanel.Controls.Add(this.registerEmail);
+            this.RegisterPanel.Controls.Add(this.errorEmailBorder);
+            this.RegisterPanel.Controls.Add(this.registerPassword);
+            this.RegisterPanel.Controls.Add(this.errorPasswordBorder);
+            this.RegisterPanel.Controls.Add(this.registerConfirmPassword);
+            this.RegisterPanel.Controls.Add(this.errorPasswordValidateBorder);
+            this.RegisterPanel.Controls.Add(this.registerTicket);
+            this.RegisterPanel.Controls.Add(this.errorTicketBorder);
+            this.RegisterPanel.Controls.Add(this.registerAgree);
+            this.RegisterPanel.Controls.Add(this.registerButton);
+            this.RegisterPanel.Controls.Add(this.registerCancel);
+            this.RegisterPanel.ForeColor = System.Drawing.Color.Transparent;
+            this.RegisterPanel.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.RegisterPanel.Location = new System.Drawing.Point(600, 95);
+            this.RegisterPanel.Name = "RegisterPanel";
+            this.RegisterPanel.Size = new System.Drawing.Size(263, 374);
+            this.RegisterPanel.TabIndex = 156;
+            // 
             // extractingProgress
             // 
             this.extractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -1064,12 +1108,15 @@
             this.BackgroundImage = global::GameLauncher.Properties.Resources.loginbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.currentWindowInfo);
             this.Controls.Add(this.logo);
-            this.Controls.Add(this.SettingsPanel);
+            this.Controls.Add(this.RegisterPanel);
+            this.Controls.Add(this.settingsButton);
+            this.Controls.Add(this.ShowPlayPanel);
             this.Controls.Add(this.closebtn);
+            this.Controls.Add(this.SettingsPanel);
             this.Controls.Add(this.SelectServerBtn);
             this.Controls.Add(this.translatedBy);
-            this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.serverPick);
             this.Controls.Add(this.addServer);
             this.Controls.Add(this.playProgressText);
@@ -1083,7 +1130,6 @@
             this.Controls.Add(this.ServerStatusDesc);
             this.Controls.Add(this.APIStatusText);
             this.Controls.Add(this.APIStatusDesc);
-            this.Controls.Add(this.currentWindowInfo);
             this.Controls.Add(this.email);
             this.Controls.Add(this.errorMainEmailBorder);
             this.Controls.Add(this.password);
@@ -1092,22 +1138,8 @@
             this.Controls.Add(this.forgotPassword);
             this.Controls.Add(this.loginButton);
             this.Controls.Add(this.registerText);
-            this.Controls.Add(this.ServerPingStatusText);
-            this.Controls.Add(this.logoutButton);
-            this.Controls.Add(this.playButton);
             this.Controls.Add(this.playProgress);
             this.Controls.Add(this.playProgressTextTimer);
-            this.Controls.Add(this.registerEmail);
-            this.Controls.Add(this.errorEmailBorder);
-            this.Controls.Add(this.registerPassword);
-            this.Controls.Add(this.errorPasswordBorder);
-            this.Controls.Add(this.registerConfirmPassword);
-            this.Controls.Add(this.errorPasswordValidateBorder);
-            this.Controls.Add(this.registerTicket);
-            this.Controls.Add(this.errorTicketBorder);
-            this.Controls.Add(this.registerAgree);
-            this.Controls.Add(this.registerButton);
-            this.Controls.Add(this.registerCancel);
             this.Controls.Add(this.imageServerName);
             this.Controls.Add(this.verticalBanner);
             this.DoubleBuffered = true;
@@ -1133,6 +1165,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.errorTicketBorder)).EndInit();
             this.SettingsPanel.ResumeLayout(false);
             this.SettingsPanel.PerformLayout();
+            this.ShowPlayPanel.ResumeLayout(false);
+            this.RegisterPanel.ResumeLayout(false);
+            this.RegisterPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1211,5 +1246,7 @@
         private System.Windows.Forms.Label settingsMainCDNText;
         private System.Windows.Forms.Label settingsBkupSrvText;
         private System.Windows.Forms.Label settingsBkupCDNText;
+        private System.Windows.Forms.Panel ShowPlayPanel;
+        private System.Windows.Forms.Panel RegisterPanel;
     }
 }

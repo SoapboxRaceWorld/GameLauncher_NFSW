@@ -936,6 +936,7 @@ namespace GameLauncher
                 BackgroundImage = Properties.Resources.loggedbg;
                 LoginFormElements(false);
                 LoggedInFormElements(true);
+                settingsButton.Visible = false;
             } else {
                 //Main Screen Login
                 errorMainPasswordBorder.Visible = true;
@@ -1387,9 +1388,8 @@ namespace GameLauncher
                 }
                 currentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n {0}", email.Text).ToUpper();
             }
-            ServerPingStatusText.Visible = hideElements;
-            logoutButton.Visible = hideElements;
-            playProgress.Visible = hideElements;
+
+            ShowPlayPanel.Visible = hideElements;
             extractingProgress.Visible = hideElements;
             playProgressText.Visible = hideElements;
             playProgressTextTimer.Visible = hideElements;
@@ -1440,17 +1440,14 @@ namespace GameLauncher
             playProgress.Visible = hideElements;
             extractingProgress.Visible = hideElements;
             addServer.Visible = hideElements;
+            addServer.Enabled = true;
             //allowedCountriesLabel.Visible = hideElements;
             serverPick.Enabled = true;
         }
 
         private void RegisterFormElements(bool hideElements = true) {
-            registerButton.Visible = hideElements;
-            registerEmail.Visible = hideElements;
-            registerPassword.Visible = hideElements;
-            registerConfirmPassword.Visible = hideElements;
-            registerAgree.Visible = hideElements;
-            registerCancel.Visible = hideElements;
+
+            RegisterPanel.Visible = hideElements;
             registerTicket.Visible = (_ticketRequired) ? hideElements : false;
 
             verticalBanner.Visible = hideElements;
@@ -1470,6 +1467,7 @@ namespace GameLauncher
             APIStatusIcon.Visible = hideElements;
 
             addServer.Visible = hideElements;
+            addServer.Enabled = false;
             serverPick.Visible = hideElements;
             serverPick.Enabled = false;
 
@@ -1788,6 +1786,10 @@ namespace GameLauncher
                 LoginFormElements(true);
             }
 
+        }
+
+        public void ClearColoredPingStatus()
+        {
             //Reset Connection Status Labels - DavidCarbon
             settingsMainSrvText.Text = "Main Server List API: PINGING";
             settingsMainSrvText.ForeColor = Color.FromArgb(66, 179, 189);
@@ -1901,15 +1903,6 @@ namespace GameLauncher
                 LoginFormElements(true);
             }
 
-            //Reset Connection Status Labels - DavidCarbon
-            settingsMainSrvText.Text = "Main Server List API: PINGING";
-            settingsMainSrvText.ForeColor = Color.FromArgb(66, 179, 189);
-            settingsMainCDNText.Text = "Main CDN List API: PINGING";
-            settingsMainCDNText.ForeColor = Color.FromArgb(66, 179, 189);
-            settingsBkupSrvText.Text = "Backup Server List API: PINGING";
-            settingsBkupSrvText.ForeColor = Color.FromArgb(66, 179, 189);
-            settingsBkupCDNText.Text = "Backup CDN List API: PINGING";
-            settingsBkupCDNText.ForeColor = Color.FromArgb(66, 179, 189);
         }
 
         //Changing GameFiles Location from Settings - DavidCarbon & Zacam
@@ -2040,6 +2033,7 @@ namespace GameLauncher
         //DavidCarbon
         private async void PingAPIStatus ()
         {
+            ClearColoredPingStatus();
             Log.Debug("SETTINGS PINGING API: Checking APIs");
             await Task.Delay(500);
             HttpWebRequest requestMainServerList = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/serverlist.json");
@@ -3061,9 +3055,12 @@ namespace GameLauncher
             _isDownloading = false;
             _playenabled = false;
 
+            ShowPlayPanel.Visible = false;
+            /*
             playButton.Visible = false;
             logoutButton.Visible = false;
             ServerPingStatusText.Visible = false;
+            */
 
             extractingProgress.Value = 100;
             extractingProgress.Width = 519;
