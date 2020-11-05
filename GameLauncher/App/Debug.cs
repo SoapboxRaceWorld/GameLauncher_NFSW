@@ -45,7 +45,6 @@ namespace GameLauncher.App
 
             IniFile SettingFile = new IniFile("Settings.ini");
 
-            string TracksHigh = (SettingFile.Read("TracksHigh") == "1") ? "True" : "False";
             string Password = (!String.IsNullOrEmpty(SettingFile.Read("Password"))) ? "True" : "False";
             string ProxyStatus = (!String.IsNullOrEmpty(SettingFile.Read("DisableProxy"))) ? "False" : "True";
             string RPCStatus = (!String.IsNullOrEmpty(SettingFile.Read("DisableRPC"))) ? "False" : "True";
@@ -129,7 +128,6 @@ namespace GameLauncher.App
                 new ListType{ Name = "InstallationDirectory", Value = SettingFile.Read("InstallationDirectory")},
                 new ListType{ Name = "Credentials Saved", Value = Password},
                 new ListType{ Name = "Language", Value =  SettingFile.Read("Language")},
-                new ListType{ Name = "TracksHigh", Value = TracksHigh},
                 new ListType{ Name = "LauncherPos", Value = LauncherPosition},
                 new ListType{ Name = "Skipping Update", Value = UpdateSkip},
                 new ListType{ Name = "Disable Proxy", Value = ProxyStatus},

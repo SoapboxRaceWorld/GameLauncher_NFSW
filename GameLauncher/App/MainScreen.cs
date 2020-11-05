@@ -355,13 +355,10 @@ namespace GameLauncher
                         Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                     } else {
                         _settingFile.Write("CDN", CDN.CDNUrl);
-                        _settingFile.Write("TracksHigh", CDN.TrackHigh);
-
                         _NFSW_Installation_Source = CDN.CDNUrl;
                     }
                 } catch {
                     _settingFile.Write("CDN", "http://cdn.worldunited.gg/gamefiles/packed/");
-                    _settingFile.Write("TracksHigh", "1");
                     _NFSW_Installation_Source = "http://cdn.worldunited.gg/gamefiles/packed/";
                 }
 
@@ -2722,7 +2719,7 @@ namespace GameLauncher
 
         public void DownloadCoreFiles()
         {
-            playProgressText.Text = "Checking core files...".ToUpper();
+            playProgressText.Text = "Checking Core Files...".ToUpper();
             playProgress.Width = 0;
             extractingProgress.Width = 0;
 
@@ -2751,16 +2748,16 @@ namespace GameLauncher
 
         public void DownloadTracksFiles()
         {
-            playProgressText.Text = "Checking track files...".ToUpper();
+            playProgressText.Text = "Checking Tracks Files...".ToUpper();
             playProgress.Width = 0;
             extractingProgress.Width = 0;
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
-            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/TracksHigh/STREAML5RA_98.BUN"))
+            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/Tracks/STREAML5RA_98.BUN"))
             {
                 _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload(_NFSW_Installation_Source, "TracksHigh", _settingFile.Read("InstallationDirectory"), false, false, 278397707);
+                _downloader.StartDownload(_NFSW_Installation_Source, "Tracks", _settingFile.Read("InstallationDirectory"), false, false, 615494528);
             }
             else
             {
@@ -2770,7 +2767,7 @@ namespace GameLauncher
 
         public void DownloadSpeechFiles()
         {
-            playProgressText.Text = "Looking for correct speech files...".ToUpper();
+            playProgressText.Text = "Looking for correct Speech Files...".ToUpper();
             playProgress.Width = 0;
             extractingProgress.Width = 0;
 
@@ -2810,31 +2807,12 @@ namespace GameLauncher
                 _langInfo = "ENGLISH";
             }
 
-            playProgressText.Text = string.Format("Checking for {0} speech files.", _langInfo).ToUpper();
+            playProgressText.Text = string.Format("Checking for {0} Speech Files.", _langInfo).ToUpper();
 
             if (!File.Exists(_settingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big"))
             {
                 _downloadStartTime = DateTime.Now;
                 _downloader.StartDownload(_NFSW_Installation_Source, speechFile, _settingFile.Read("InstallationDirectory"), false, false, speechSize);
-            }
-            else
-            {
-                DownloadTracksHighFiles();
-            }
-        }
-
-        public void DownloadTracksHighFiles()
-        {
-            playProgressText.Text = "Checking track (high) files.".ToUpper();
-            playProgress.Width = 0;
-            extractingProgress.Width = 0;
-
-            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
-
-            if (_settingFile.Read("TracksHigh") == "1" && !File.Exists(_settingFile.Read("InstallationDirectory") + "\\Tracks\\STREAML5RA_98.BUN"))
-            {
-                _downloadStartTime = DateTime.Now;
-                _downloader.StartDownload(_NFSW_Installation_Source, "Tracks", _settingFile.Read("InstallationDirectory"), false, false, 615494528);
             }
             else
             {

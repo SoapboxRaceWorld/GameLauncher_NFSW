@@ -153,7 +153,6 @@ namespace GameLauncher.App
         }
 
         private void Save_Click(object sender, EventArgs e) {
-            CDN.TrackHigh = "1"; //Max Graphics = 1 , Min Graphics = 0
             CDN.CDNUrl = ((CDNObject)CDNSource.SelectedItem).Url;
 
             QuitWithoutSaving_Click(sender, e);
