@@ -112,12 +112,17 @@
             // apiErrorButton
             // 
             this.apiErrorButton.AutoSize = true;
-            this.apiErrorButton.Location = new System.Drawing.Point(152, 141);
+            this.apiErrorButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.apiErrorButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.apiErrorButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.apiErrorButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.apiErrorButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.apiErrorButton.Location = new System.Drawing.Point(148, 141);
             this.apiErrorButton.Name = "apiErrorButton";
-            this.apiErrorButton.Size = new System.Drawing.Size(89, 23);
+            this.apiErrorButton.Size = new System.Drawing.Size(91, 25);
             this.apiErrorButton.TabIndex = 8;
             this.apiErrorButton.Text = "Manual Bypass";
-            this.apiErrorButton.UseVisualStyleBackColor = true;
+            this.apiErrorButton.UseVisualStyleBackColor = false;
             this.apiErrorButton.Click += new System.EventHandler(this.APIErrorButton_Click);
             // 
             // WelcomeScreen
