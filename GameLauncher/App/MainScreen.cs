@@ -1928,7 +1928,7 @@ namespace GameLauncher
             Process.Start(_newGameFilesPath);
         }
 
-        private void settingsCDNCurrent_LinkClicked(object sender, EventArgs e)
+        private void SettingsCDNCurrent_LinkClicked(object sender, EventArgs e)
         {
             Process.Start(_settingFile.Read("CDN"));
         }

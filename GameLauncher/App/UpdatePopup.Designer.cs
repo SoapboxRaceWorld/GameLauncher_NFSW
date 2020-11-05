@@ -66,7 +66,7 @@
             this.changelogText.ReadOnly = true;
             this.changelogText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.changelogText.Size = new System.Drawing.Size(368, 139);
-            this.changelogText.TabIndex = 0;
+            this.changelogText.TabIndex = 3;
             this.changelogText.Text = "This is a Test";
             // 
             // update
@@ -79,7 +79,7 @@
             this.update.Location = new System.Drawing.Point(149, 230);
             this.update.Name = "update";
             this.update.Size = new System.Drawing.Size(75, 23);
-            this.update.TabIndex = 2;
+            this.update.TabIndex = 1;
             this.update.Text = "Update";
             this.update.UseVisualStyleBackColor = false;
             // 
@@ -95,7 +95,7 @@
             // updateLabel
             // 
             this.updateLabel.AutoSize = true;
-            this.updateLabel.Location = new System.Drawing.Point(63, 19);
+            this.updateLabel.Location = new System.Drawing.Point(64, 17);
             this.updateLabel.Name = "updateLabel";
             this.updateLabel.Size = new System.Drawing.Size(35, 13);
             this.updateLabel.TabIndex = 4;
@@ -126,7 +126,7 @@
             this.ignore.Location = new System.Drawing.Point(230, 230);
             this.ignore.Name = "ignore";
             this.ignore.Size = new System.Drawing.Size(75, 23);
-            this.ignore.TabIndex = 1;
+            this.ignore.TabIndex = 2;
             this.ignore.Text = "Ignore";
             this.ignore.UseVisualStyleBackColor = false;
             // 
@@ -154,7 +154,7 @@
             this.Name = "UpdatePopup";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Update Available";
+            this.Text = "GameLauncher - Update Available";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.icon)).EndInit();

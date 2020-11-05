@@ -426,9 +426,9 @@
             this.rememberMe.BackColor = System.Drawing.Color.Transparent;
             this.rememberMe.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.rememberMe.ForeColor = System.Drawing.Color.White;
-            this.rememberMe.Location = new System.Drawing.Point(618, 285);
+            this.rememberMe.Location = new System.Drawing.Point(650, 285);
             this.rememberMe.Name = "rememberMe";
-            this.rememberMe.Size = new System.Drawing.Size(159, 19);
+            this.rememberMe.Size = new System.Drawing.Size(158, 19);
             this.rememberMe.TabIndex = 5;
             this.rememberMe.Text = "REMEMBER MY LOGIN";
             this.rememberMe.UseVisualStyleBackColor = false;
@@ -439,12 +439,13 @@
             this.forgotPassword.AutoSize = true;
             this.forgotPassword.BackColor = System.Drawing.Color.Transparent;
             this.forgotPassword.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
-            this.forgotPassword.Location = new System.Drawing.Point(618, 307);
+            this.forgotPassword.Location = new System.Drawing.Point(648, 306);
             this.forgotPassword.Name = "forgotPassword";
             this.forgotPassword.Size = new System.Drawing.Size(143, 13);
             this.forgotPassword.TabIndex = 6;
             this.forgotPassword.TabStop = true;
             this.forgotPassword.Text = "I FORGOT MY PASSWORD";
+            this.forgotPassword.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.forgotPassword.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(228)))), ((int)(((byte)(0)))));
             // 
             // loginButton
@@ -456,11 +457,11 @@
             this.loginButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.loginButton.ForeColor = System.Drawing.Color.White;
             this.loginButton.Image = global::GameLauncher.Properties.Resources.graybutton;
-            this.loginButton.Location = new System.Drawing.Point(615, 395);
+            this.loginButton.Location = new System.Drawing.Point(614, 395);
             this.loginButton.Name = "loginButton";
             this.loginButton.Size = new System.Drawing.Size(231, 35);
             this.loginButton.TabIndex = 12;
-            this.loginButton.Text = "LOG IN";
+            this.loginButton.Text = "LOG ON";
             this.loginButton.UseVisualStyleBackColor = false;
             // 
             // registerText
@@ -504,7 +505,7 @@
             this.logoutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.logoutButton.ForeColor = System.Drawing.Color.White;
             this.logoutButton.Image = global::GameLauncher.Properties.Resources.graybutton;
-            this.logoutButton.Location = new System.Drawing.Point(2, 61);
+            this.logoutButton.Location = new System.Drawing.Point(2, 60);
             this.logoutButton.Name = "logoutButton";
             this.logoutButton.Size = new System.Drawing.Size(231, 35);
             this.logoutButton.TabIndex = 44;
@@ -522,7 +523,7 @@
             this.playButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.playButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.playButton.ForeColor = System.Drawing.Color.Transparent;
-            this.playButton.Location = new System.Drawing.Point(3, 96);
+            this.playButton.Location = new System.Drawing.Point(3, 94);
             this.playButton.Name = "playButton";
             this.playButton.Size = new System.Drawing.Size(230, 63);
             this.playButton.TabIndex = 15;
@@ -643,7 +644,7 @@
             // 
             this.registerAgree.BackColor = System.Drawing.Color.Transparent;
             this.registerAgree.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
-            this.registerAgree.Location = new System.Drawing.Point(15, 257);
+            this.registerAgree.Location = new System.Drawing.Point(16, 257);
             this.registerAgree.Name = "registerAgree";
             this.registerAgree.Size = new System.Drawing.Size(232, 35);
             this.registerAgree.TabIndex = 38;
@@ -662,7 +663,7 @@
             this.registerButton.Image = global::GameLauncher.Properties.Resources.greenbutton;
             this.registerButton.Location = new System.Drawing.Point(15, 296);
             this.registerButton.Name = "registerButton";
-            this.registerButton.Size = new System.Drawing.Size(231, 35);
+            this.registerButton.Size = new System.Drawing.Size(230, 35);
             this.registerButton.TabIndex = 19;
             this.registerButton.Text = "REGISTER";
             this.registerButton.UseVisualStyleBackColor = false;
@@ -678,7 +679,7 @@
             this.registerCancel.Image = global::GameLauncher.Properties.Resources.graybutton;
             this.registerCancel.Location = new System.Drawing.Point(15, 336);
             this.registerCancel.Name = "registerCancel";
-            this.registerCancel.Size = new System.Drawing.Size(231, 35);
+            this.registerCancel.Size = new System.Drawing.Size(230, 35);
             this.registerCancel.TabIndex = 43;
             this.registerCancel.Text = "CANCEL";
             this.registerCancel.UseVisualStyleBackColor = false;
@@ -795,8 +796,9 @@
             // 
             this.settingsCDNPick.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.settingsCDNPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.settingsCDNPick.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.settingsCDNPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.settingsCDNPick.ForeColor = System.Drawing.Color.White;
+            this.settingsCDNPick.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.settingsCDNPick.FormattingEnabled = true;
             this.settingsCDNPick.Location = new System.Drawing.Point(26, 133);
             this.settingsCDNPick.Name = "settingsCDNPick";
@@ -820,8 +822,9 @@
             // 
             this.settingsLanguage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.settingsLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.settingsLanguage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.settingsLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.settingsLanguage.ForeColor = System.Drawing.Color.White;
+            this.settingsLanguage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.settingsLanguage.FormattingEnabled = true;
             this.settingsLanguage.Location = new System.Drawing.Point(26, 180);
             this.settingsLanguage.Name = "settingsLanguage";
@@ -836,7 +839,7 @@
             this.settingsWordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsWordFilterCheck.Location = new System.Drawing.Point(26, 218);
             this.settingsWordFilterCheck.Name = "settingsWordFilterCheck";
-            this.settingsWordFilterCheck.Size = new System.Drawing.Size(235, 17);
+            this.settingsWordFilterCheck.Size = new System.Drawing.Size(234, 17);
             this.settingsWordFilterCheck.TabIndex = 139;
             this.settingsWordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.settingsWordFilterCheck.UseVisualStyleBackColor = false;
@@ -849,7 +852,7 @@
             this.settingsProxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsProxyCheckbox.Location = new System.Drawing.Point(26, 238);
             this.settingsProxyCheckbox.Name = "settingsProxyCheckbox";
-            this.settingsProxyCheckbox.Size = new System.Drawing.Size(103, 17);
+            this.settingsProxyCheckbox.Size = new System.Drawing.Size(102, 17);
             this.settingsProxyCheckbox.TabIndex = 141;
             this.settingsProxyCheckbox.Text = "Disable Proxy";
             this.settingsProxyCheckbox.UseVisualStyleBackColor = false;
@@ -862,7 +865,7 @@
             this.settingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsDiscordRPCCheckbox.Location = new System.Drawing.Point(26, 258);
             this.settingsDiscordRPCCheckbox.Name = "settingsDiscordRPCCheckbox";
-            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(144, 17);
+            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(143, 17);
             this.settingsDiscordRPCCheckbox.TabIndex = 148;
             this.settingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
             this.settingsDiscordRPCCheckbox.UseVisualStyleBackColor = false;
@@ -940,7 +943,7 @@
             this.settingsCDNCurrent.Text = "http://localhost";
             this.settingsCDNCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.settingsCDNCurrent.VisitedLinkColor = System.Drawing.Color.White;
-            this.settingsCDNCurrent.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.settingsCDNCurrent_LinkClicked);
+            this.settingsCDNCurrent.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.SettingsCDNCurrent_LinkClicked);
             // 
             // settingsLauncherPathText
             // 

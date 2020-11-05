@@ -41,7 +41,8 @@
             // WelcomeText
             // 
             this.WelcomeText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.WelcomeText.Location = new System.Drawing.Point(12, 9);
+            this.WelcomeText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.WelcomeText.Location = new System.Drawing.Point(9, 9);
             this.WelcomeText.Name = "WelcomeText";
             this.WelcomeText.Size = new System.Drawing.Size(357, 69);
             this.WelcomeText.TabIndex = 0;
@@ -51,35 +52,46 @@
             // downloadSourceText
             // 
             this.downloadSourceText.AutoSize = true;
-            this.downloadSourceText.Location = new System.Drawing.Point(12, 117);
+            this.downloadSourceText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.downloadSourceText.Location = new System.Drawing.Point(12, 115);
             this.downloadSourceText.Name = "downloadSourceText";
-            this.downloadSourceText.Size = new System.Drawing.Size(95, 13);
+            this.downloadSourceText.Size = new System.Drawing.Size(129, 13);
             this.downloadSourceText.TabIndex = 2;
-            this.downloadSourceText.Text = "Download Source:";
+            this.downloadSourceText.Text = "CDN / Download Source:";
             this.downloadSourceText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CDNSource
             // 
+            this.CDNSource.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.CDNSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CDNSource.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CDNSource.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.CDNSource.FormattingEnabled = true;
-            this.CDNSource.Location = new System.Drawing.Point(132, 114);
+            this.CDNSource.ItemHeight = 13;
+            this.CDNSource.Location = new System.Drawing.Point(164, 114);
             this.CDNSource.Name = "CDNSource";
-            this.CDNSource.Size = new System.Drawing.Size(237, 21);
+            this.CDNSource.Size = new System.Drawing.Size(190, 21);
             this.CDNSource.TabIndex = 4;
             // 
             // Save
             // 
+            this.Save.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
             this.Save.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.Save.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.Save.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.Save.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Save.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Save.Location = new System.Drawing.Point(15, 158);
             this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(354, 37);
+            this.Save.Size = new System.Drawing.Size(339, 32);
             this.Save.TabIndex = 5;
-            this.Save.Text = "Save Settings and Select Download Location";
-            this.Save.UseVisualStyleBackColor = true;
+            this.Save.Text = "Save Settings and Select Download / Install Location";
+            this.Save.UseVisualStyleBackColor = false;
             this.Save.Click += new System.EventHandler(this.Save_Click);
             // 
             // ServerStatusText
             // 
+            this.ServerStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ServerStatusText.Location = new System.Drawing.Point(12, 78);
             this.ServerStatusText.Name = "ServerStatusText";
             this.ServerStatusText.Size = new System.Drawing.Size(164, 13);
@@ -89,7 +101,8 @@
             // 
             // CDNStatusText
             // 
-            this.CDNStatusText.Location = new System.Drawing.Point(205, 78);
+            this.CDNStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.CDNStatusText.Location = new System.Drawing.Point(196, 78);
             this.CDNStatusText.Name = "CDNStatusText";
             this.CDNStatusText.Size = new System.Drawing.Size(164, 13);
             this.CDNStatusText.TabIndex = 7;
@@ -111,7 +124,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(381, 206);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
+            this.ClientSize = new System.Drawing.Size(379, 206);
             this.Controls.Add(this.apiErrorButton);
             this.Controls.Add(this.CDNStatusText);
             this.Controls.Add(this.ServerStatusText);
@@ -123,7 +137,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "WelcomeScreen";
-            this.ShowIcon = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GameLauncher";
             this.TopMost = true;
