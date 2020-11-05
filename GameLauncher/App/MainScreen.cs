@@ -366,7 +366,7 @@ namespace GameLauncher
                     EnsurePathExists = true,
                     EnsureFileExists = false,
                     AllowNonFileSystemItems = false,
-                    Title = "Select The Folder With NFS World Instalation",
+                    Title = "Select the location to Find or Download NFS:W",
                     IsFolderPicker = true
                 };
 
@@ -1747,6 +1747,23 @@ namespace GameLauncher
             LoginFormElements(false);
             PingAPIStatus();
         }
+        private void CDN_Offline_Switch()
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                WindowState = FormWindowState.Normal;
+            }
+
+            errorMainEmailBorder.Visible = false;
+            errorMainPasswordBorder.Visible = false;
+            settingsButton.BackgroundImage = Properties.Resources.settingsbtn_click;
+            BackgroundImage = Properties.Resources.secondarybackground;
+            SettingsFormElements(true);
+            RegisterFormElements(false);
+            LoggedInFormElements(false);
+            LoginFormElements(false);
+            PingAPIStatus();
+        }
 
         private void SettingsButton_MouseEnter(object sender, EventArgs e) {
             settingsButton.BackgroundImage = Properties.Resources.settingsbtn_hover;
@@ -3050,7 +3067,10 @@ namespace GameLauncher
         private void OnDownloadFailed(Exception ex)
         {
             string failureMessage;
-            MessageBox.Show(null, "Failed to download gamefiles. Possible cause is that CDN went offline. Please select other CDN from Settings", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(null, "Failed to download gamefiles. \n\nCDN might be offline. \n\nPlease select a different CDN on Next Screen", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            //CDN Went Offline Screen switch - DavidCarbon
+            CDN_Offline_Switch();
 
             try {
                 failureMessage = ex.Message;
