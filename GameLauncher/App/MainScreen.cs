@@ -2039,7 +2039,7 @@ namespace GameLauncher
                     SmallImageKey = _presenceImageKey
                 };
 
-                if (discordRpcClient != null) discordRpcClient.SetPresence(_presence);
+                if(discordRpcClient != null) discordRpcClient.SetPresence(_presence);
             }
 
         }
@@ -2934,7 +2934,7 @@ namespace GameLauncher
                             }
 
                             _presence.State = "Unpacking game: " + (100 * current / numFiles) + "%";
-                            discordRpcClient.SetPresence(_presence);
+                            if(discordRpcClient != null) discordRpcClient.SetPresence(_presence);
 
                             Application.DoEvents();
 
