@@ -1745,6 +1745,7 @@ namespace GameLauncher
             RegisterFormElements(false);
             LoggedInFormElements(false);
             LoginFormElements(false);
+            IsCDNDownGame();
             PingAPIStatus();
         }
         private void CDN_Offline_Switch()
@@ -1762,6 +1763,7 @@ namespace GameLauncher
             RegisterFormElements(false);
             LoggedInFormElements(false);
             LoginFormElements(false);
+            IsCDNDownGame();
             PingAPIStatus();
         }
 
@@ -1956,32 +1958,6 @@ namespace GameLauncher
             }
 
             SettingsPanel.Visible = hideElements;
-            /*
-            settingsCancel.Visible = hideElements;
-            settingsSave.Visible = hideElements;
-            settingsLanguage.Visible = hideElements;
-            settingsLanguageText.Visible = hideElements;
-            settingsCDNPick.Visible = hideElements;
-            settingsCDNText.Visible = hideElements;
-            settingsLauncherPathText.Visible = hideElements;
-            settingsLauncherPathCurrent.Visible = hideElements;
-            settingsGameFiles.Visible = hideElements;
-            settingsGameFilesCurrentText.Visible = hideElements;
-            settingsGameFilesCurrent.Visible = hideElements;
-            settingsGamePathText.Visible = hideElements;
-            settingsWordFilterCheck.Visible = hideElements;
-            //settingsVFilesButton.Visible = hideElements;
-            settingsProxyCheckbox.Visible = hideElements;
-            settingsDiscordRPCCheckbox.Visible = hideElements;
-            //Connection Status - DavidCarbon
-            settingsNetworkText.Visible = hideElements;
-            settingsMainSrvText.Visible = hideElements;
-            settingsMainCDNText.Visible = hideElements;
-            settingsBkupSrvText.Visible = hideElements;
-            settingsBkupCDNText.Visible = hideElements;
-            settingsCDNCurrentText.Visible = hideElements;
-            settingsCDNCurrent.Visible = hideElements;
-            */
         }
 
         private void StartGame(string userId, string loginToken) {
@@ -2193,6 +2169,31 @@ namespace GameLauncher
                 }
                 catch { }
             }
+        }
+
+        //CDN Display Playing Game! - DavidCarbon
+        private async void IsCDNDownGame()
+        {
+            settingsCDNCurrent.LinkColor = Color.FromArgb(66, 179, 189);
+            Log.Debug("SETTINGS PINGING CDN: Checking Current CDN from Settings.ini");
+            await Task.Delay(500);
+            HttpWebRequest pingCurrentCDN = (HttpWebRequest)HttpWebRequest.Create(_settingFile.Read("CDN"));
+            pingCurrentCDN.AllowAutoRedirect = false;
+            pingCurrentCDN.Method = "HEAD";
+            pingCurrentCDN.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+            try
+            {
+                HttpWebResponse cdnResponse = (HttpWebResponse)pingCurrentCDN.GetResponse();
+                cdnResponse.Close();
+                settingsCDNCurrent.LinkColor = Color.LawnGreen;
+                Log.Debug("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Online!");
+            }
+            catch (WebException)
+            {
+                settingsCDNCurrent.LinkColor = Color.FromArgb(254, 0, 0);
+                Log.Debug("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Offline!");
+            }
+
         }
 
         private void LaunchGame(string userId, string loginToken, string serverIp, Form x) {
