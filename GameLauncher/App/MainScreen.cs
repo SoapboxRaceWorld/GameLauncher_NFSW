@@ -323,7 +323,7 @@ namespace GameLauncher
                     List<ServerInfo> allServs = finalItems.FindAll(i => string.Equals(i.IsSpecial, false));
                     allServs.ForEach(delegate(ServerInfo server) {
                         try { 
-                            WebClientWithTimeout pingServer = new WebClientWithTimeout();
+                            WebClient pingServer = new WebClient();
                             pingServer.DownloadString(server.IpAddress + "/GetServerInformation");
 
                             if(!serverStatusDictionary.ContainsKey(server.Id))
@@ -620,7 +620,7 @@ namespace GameLauncher
             Task.Run(() => {
                 String _slresponse2 = string.Empty;
                 try {
-                    WebClientWithTimeout wc = new WebClientWithTimeout();
+                    WebClient wc = new WebClient();
                     try {
                         _slresponse2 = wc.DownloadString(Self.CDNUrlList);
                     } catch {
@@ -1030,7 +1030,7 @@ namespace GameLauncher
                 loginButton.ForeColor = Color.Gray;
             }
 
-            WebClientWithTimeout client = new WebClientWithTimeout();
+            WebClient client = new WebClient();
             var artificialPingStart = Self.GetTimestamp();
             verticalBanner.BackColor = Color.Transparent;
 
@@ -1209,7 +1209,7 @@ namespace GameLauncher
                     _serverEnabled = true;
 
                     if (!string.IsNullOrEmpty(verticalImageUrl)) {
-                        WebClientWithTimeout client2 = new WebClientWithTimeout();
+                        WebClient client2 = new WebClient();
                         Uri stringToUri3 = new Uri(verticalImageUrl);
                         client2.DownloadDataAsync(stringToUri3);
                         client2.DownloadProgressChanged += (sender4, e4) => {
@@ -1657,7 +1657,7 @@ namespace GameLauncher
                 bool allowReg = false;
 
                 try {
-                    WebClientWithTimeout breachCheck = new WebClientWithTimeout();
+                    WebClient breachCheck = new WebClient();
                     String checkPassword = SHA.HashPassword(registerPassword.Text.ToString()).ToUpper();
 
                     var regex = new Regex(@"([0-9A-Z]{5})([0-9A-Z]{35})").Split(checkPassword);
@@ -2373,8 +2373,7 @@ namespace GameLauncher
 
                 ModNetFileNameInUse = FileName;
 
-                WebClientWithTimeout client2 = new WebClientWithTimeout();
-                client2.Timeout(12000);
+                WebClient client2 = new WebClient();
 
                 client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged_RELOADED);
                 client2.DownloadFileCompleted += (test, stuff) => {
@@ -2475,19 +2474,18 @@ namespace GameLauncher
                     //metonator was here!
                     try
                     {
-                        //Cached content goes here
-                        EventList.remoteEvent = new WebClientWithTimeout().DownloadString(json2.BasePath + "/events.json");
+                        EventList.remoteEvent = new WebClient().DownloadString(json2.BasePath + "/events.json");
                     }
                     catch { }
                     try
                     {
-                        CarList.remoteCarList = new WebClientWithTimeout().DownloadString(json2.BasePath + "/cars.json");
+                        CarList.remoteCarList = new WebClient().DownloadString(json2.BasePath + "/cars.json");
                     }
                     catch { }
 
                     //get new index
                     Uri newIndexFile = new Uri(json2.BasePath + "/index.json");
-                    String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
+                    String jsonindex = new WebClient().DownloadString(newIndexFile);
 
                     IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
 
@@ -2830,7 +2828,7 @@ namespace GameLauncher
                 }
                 else
                 {
-                    WebClientWithTimeout wc = new WebClientWithTimeout();
+                    WebClient wc = new WebClient();
                     var response = wc.DownloadString(_NFSW_Installation_Source + "/" + _settingFile.Read("Language").ToLower() + "/index.xml");
 
                     response = response.Substring(3, response.Length - 3);

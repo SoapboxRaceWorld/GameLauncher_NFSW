@@ -195,7 +195,7 @@ namespace GameLauncher
                 {
 
                     try {
-                        WebClientWithTimeout webClient = new WebClientWithTimeout();
+                        WebClient webClient = new WebClient();
                         webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.Downloader_DownloadFileCompleted);
                         string tempFileName = Path.GetTempFileName();
                         webClient.DownloadFileAsync(new Uri(url), tempFileName);
@@ -266,7 +266,7 @@ namespace GameLauncher
                         num4 = (long)num;
                     }
                     long num5 = 0L;
-                    WebClientWithTimeout webClient = new WebClientWithTimeout();
+                    WebClient webClient = new WebClient();
                     webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
                     webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
                     webClient.Headers.Add("Accept-Encoding", "gzip,deflate");
@@ -718,7 +718,7 @@ namespace GameLauncher
                 else
                 {
                     long num = long.Parse(indexFile.SelectSingleNode("/index/header/length").InnerText);
-                    WebClientWithTimeout webClient = new WebClientWithTimeout();
+                    WebClient webClient = new WebClient();
                     webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
                     webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
                     webClient.Headers.Add("Accept-Encoding", "gzip,deflate");
@@ -855,7 +855,7 @@ namespace GameLauncher
 
         public static byte[] GetData(string url)
         {
-            WebClientWithTimeout webClient = new WebClientWithTimeout();
+            WebClient webClient = new WebClient();
             webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
             webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
             webClient.Headers.Add("Accept-Encoding", "gzip");

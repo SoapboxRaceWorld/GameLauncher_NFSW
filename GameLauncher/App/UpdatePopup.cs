@@ -1,4 +1,5 @@
-﻿using GameLauncher.App.Classes.Events;
+﻿using System.Net;
+using GameLauncher.App.Classes.Events;
 using GameLauncherReborn;
 using System.Drawing;
 using System.Windows.Forms;
@@ -18,7 +19,7 @@ namespace GameLauncher.App
             {
                 InitializeComponent();
 
-                changelogText.Text = new WebClientWithTimeout().DownloadString(Self.mainserver + "/launcher/changelog");
+                changelogText.Text = new WebClient().DownloadString(Self.mainserver + "/launcher/changelog");
                 changelogText.Select(0, 0);
                 changelogText.SelectionLength = 0;
                 changelogText.TabStop = false;

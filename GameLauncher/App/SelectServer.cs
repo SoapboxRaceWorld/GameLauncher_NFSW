@@ -5,6 +5,7 @@ using GameLauncherReborn;
 using Newtonsoft.Json;
 using SoapBox.JsonScheme;
 using System;
+using System.Net;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -63,7 +64,7 @@ namespace GameLauncher.App
             {
                 try
                 {
-                    var wc = new WebClientWithTimeout();
+                    var wc = new WebClient();
                     var response = wc.DownloadString(serverListURL);
 
                     try
@@ -147,8 +148,8 @@ namespace GameLauncher.App
                         try
                         {
 
-                            WebClientWithTimeout getdata = new WebClientWithTimeout();
-                            getdata.Timeout(8000);
+                            WebClient getdata = new WebClient();
+                            //getdata.Timeout(8000);
 
                             GetServerInformation content = JsonConvert.DeserializeObject<GetServerInformation>(getdata.DownloadString(serverurl));
 

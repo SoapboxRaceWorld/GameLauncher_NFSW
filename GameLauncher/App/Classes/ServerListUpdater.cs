@@ -3,6 +3,7 @@ using GameLauncher.HashPassword;
 using GameLauncherReborn;
 using Newtonsoft.Json;
 using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -21,7 +22,7 @@ namespace GameLauncher.App.Classes
             foreach (var serverListURL in Self.serverlisturl) {
                 try {
                     Log.Debug("Loading serverlist from: " + serverListURL);
-                    var wc = new WebClientWithTimeout();
+                    var wc = new WebClient();
                     var response = wc.DownloadString(serverListURL);
                     Log.Debug("Loaded serverlist from: " + serverListURL);
 

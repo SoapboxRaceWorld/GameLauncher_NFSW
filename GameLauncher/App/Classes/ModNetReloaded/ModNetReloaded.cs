@@ -1,5 +1,6 @@
 ﻿using GameLauncherReborn;
 using System;
+using System.Net;
 using System.Collections.Generic;
 
 namespace GameLauncher.App.Classes.ModNetReloaded
@@ -25,7 +26,7 @@ namespace GameLauncher.App.Classes.ModNetReloaded
         public static string ModNetSupported(string _serverIp) {
             try {
                 Uri newModNetUri = new Uri(_serverIp + "/Modding/GetModInfo");
-                WebClientWithTimeout x = new WebClientWithTimeout();
+                WebClient x = new WebClient();
                 return x.DownloadString(newModNetUri);
             } catch(Exception) {
                 return String.Empty;

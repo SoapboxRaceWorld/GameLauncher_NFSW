@@ -93,8 +93,8 @@ namespace GameLauncher
                     if (_OS.Contains("Windows 7")) {
                         if (Self.GetInstalledHotFix("KB3020369") == false || Self.GetInstalledHotFix("KB3125574") == false) {
                             String messageBoxPopupKB = String.Empty;
-                            messageBoxPopupKB = "Hey Windows 7 User, in order to play on this server, we need to make additional tweaks to your system.\n";
-                            messageBoxPopupKB += "We must make sure you have those Windows Update packages installed:\n\n";
+                            messageBoxPopupKB = "Hey Windows 7 User, we've detected a potential issue of some missing Updates that are required.\n";
+                            messageBoxPopupKB += "We found that these Windows Update packages are showing as not installed:\n\n";
 
                             if (Self.GetInstalledHotFix("KB3020369") == false) messageBoxPopupKB += "- Update KB3020369\n";
                             if (Self.GetInstalledHotFix("KB3125574") == false) messageBoxPopupKB += "- Update KB3125574\n";
@@ -111,9 +111,9 @@ namespace GameLauncher
                                 RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
                                 key.SetValue("DisabledByDefault", 0x0);
 
-                                MessageBox.Show(null, "Registry option set, Remember that the following patch might work after a system reboot", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBox.Show(null, "Registry option set, Remember that the changes may require a system reboot to take effect", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             } else {
-                                MessageBox.Show(null, "Roger that, There will be some issues connecting to the servers.", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBox.Show(null, "Roger that, There may be some issues connecting to the servers.", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
 
                             _settingFile.Write("PatchesApplied", "1");
@@ -136,7 +136,7 @@ namespace GameLauncher
                         return;
                     }
 
-                    var wc = new WebClientWithTimeout();
+                    var wc = new WebClient();
                     wc.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x86.exe", "VC_redist.x86.exe");
                     var proc = Process.Start(new ProcessStartInfo
                     {
@@ -170,7 +170,7 @@ namespace GameLauncher
                             return;
                         }
 
-                        var wc = new WebClientWithTimeout();
+                        var wc = new WebClient();
                         wc.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x64.exe", "VC_redist.x64.exe");
                         var proc = Process.Start(new ProcessStartInfo
                         {
@@ -205,7 +205,7 @@ namespace GameLauncher
                 if (!_settingFile.KeyExists("CDN")) {
                     try {
                         List<CDNObject> CDNList = new List<CDNObject>();
-                        WebClientWithTimeout wc3 = new WebClientWithTimeout();
+                        WebClient wc3 = new WebClient();
                         String _slresponse = wc3.DownloadString(Self.CDNUrlList);
                         CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
                         _settingFile.Write("CDN", CDNList.First().Url);
@@ -213,7 +213,7 @@ namespace GameLauncher
                     catch {
                         try {
                             List<CDNObject> CDNList = new List<CDNObject>();
-                            WebClientWithTimeout wc3 = new WebClientWithTimeout();
+                            WebClient wc3 = new WebClient();
                             String _slresponse = wc3.DownloadString(Self.CDNUrlStaticList);
                             CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
                             _settingFile.Write("CDN", CDNList.First().Url);
@@ -256,7 +256,7 @@ namespace GameLauncher
                 try
                 {
                     Log.Debug("CORE: Starting LZMA downloader");
-                    using (WebClientWithTimeout wc = new WebClientWithTimeout())
+                    using (WebClient wc = new WebClient())
                     {
                         wc.DownloadFileAsync(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
                     }
@@ -296,7 +296,7 @@ namespace GameLauncher
             if (!File.Exists("GameLauncherUpdater.exe")) {
                 Log.Debug("CORE LAUNCHER UPDATER: Starting GameLauncherUpdater downloader");
                 try {
-                    using (WebClientWithTimeout wc = new WebClientWithTimeout()) {
+                    using (WebClient wc = new WebClient()) {
                         wc.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) => {
                             if (new FileInfo("GameLauncherUpdater.exe").Length == 0) {
                                 File.Delete("GameLauncherUpdater.exe");
@@ -329,7 +329,7 @@ namespace GameLauncher
                     File.Delete("GameLauncherUpdater.exe");
                     try
                     {
-                        using (WebClientWithTimeout wc = new WebClientWithTimeout())
+                        using (WebClient wc = new WebClient())
                         {
                             wc.DownloadFileAsync(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
                         }

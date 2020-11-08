@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -28,7 +29,7 @@ namespace GameLauncher.App.Classes.Events
             text.ForeColor = Color.FromArgb(0x848484);
 
             try { 
-                WebClientWithTimeout update_data = new WebClientWithTimeout();
+                WebClient update_data = new WebClient();
                 update_data.CancelAsync();
                 update_data.DownloadStringAsync(new Uri(Self.mainserver + "/update.php?version=" + Application.ProductVersion));
                 update_data.DownloadStringCompleted += (sender, e) => {

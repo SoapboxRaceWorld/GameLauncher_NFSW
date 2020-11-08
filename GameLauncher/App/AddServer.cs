@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using SoapBox.JsonScheme;
 using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -62,7 +63,7 @@ namespace GameLauncher.App
             serverName.Enabled = false;
 
             try {
-                var client = new WebClientWithTimeout();
+                var client = new WebClient();
                 Uri StringToUri = new Uri(wellFormattedURL + "/GetServerInformation");
                 var serverLoginResponse = client.DownloadString(StringToUri);
 
