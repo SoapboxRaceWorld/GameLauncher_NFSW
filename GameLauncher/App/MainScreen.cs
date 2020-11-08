@@ -465,6 +465,10 @@ namespace GameLauncher
         private void MainScreen_Load(object sender, EventArgs e) {
             Log.Debug("CORE: Entering mainScreen_Load");
 
+            /* Clean Links to remove Mods  */
+            Log.Debug("CLEANLINKS: Cleaning Up Mod Files {Startup}");
+            CleanModsFiles();
+
             Log.Debug("LAUNCHER: Updating server list");
             ServerListUpdater.UpdateList();
 
@@ -732,6 +736,10 @@ namespace GameLauncher
             /* Load Settings API Connection Status */
             Task.Delay(800);
             PingServerListAPIStatus();
+
+            /* Remove TracksHigh Folder and Files */
+            RemoveTracksHighFiles();
+
         }
 
         private void Closebtn_Click(object sender, EventArgs e) {
@@ -795,6 +803,9 @@ namespace GameLauncher
 
             ServerProxy.Instance.Stop();
             Notification.Dispose();
+
+            Log.Debug("CLEANLINKS: Cleaning Up Mod Files {Exiting}");
+            CleanModsFiles();
 
             //Leave this here. Its to properly close the launcher from Visual Studio (And Close the Launcher a well)
             this.Close();
@@ -2411,19 +2422,14 @@ namespace GameLauncher
                 }
             }
 
-            var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
-            if (File.Exists(linksPath))
-            {
-                CleanLinks(linksPath);
-            }
-
             ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
 
-            if (!Directory.Exists(_settingFile.Read("InstallationDirectory") + "/modules")) Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/modules");
+            if (Directory.Exists(_settingFile.Read("InstallationDirectory") + "/modules")) Directory.Delete(_settingFile.Read("InstallationDirectory") + "/modules", true);
             if (!Directory.Exists(_settingFile.Read("InstallationDirectory") + "/scripts")) Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/scripts");
-            String[] GlobalFiles            = new string[] { "dinput8.dll", "global.ini" };
             String[] ModNetReloadedFiles = new string[]
             {
+                "dinput8.dll",
+                "global.ini",
                 "7z.dll", 
                 "fmt.dll", 
                 "libcurl.dll", 
@@ -2441,13 +2447,12 @@ namespace GameLauncher
                 playProgressText.Text = "ModNetReloaded support detected, setting up...".ToUpper();
 
                 try {
-                    string[] newFiles = GlobalFiles.Concat(ModNetReloadedFiles).ToArray();
-                    WebClientWithTimeout newModNetFilesDownload = new WebClientWithTimeout();
+                    string[] newFiles = ModNetReloadedFiles.ToArray();
+                    WebClient newModNetFilesDownload = new WebClient();
                     foreach (string file in newFiles) {
                         playProgressText.Text = ("Fetching ModNetReloaded Files: " + file).ToUpper();
                         Application.DoEvents();
-                        newModNetFilesDownload.Timeout(8000);
-                        newModNetFilesDownload.DownloadFile("http://cdn.soapboxrace.world/modules-v2/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                        newModNetFilesDownload.DownloadFile(Self.modnetserver + "/modules-v2/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
                     }
 
                     //get files now
@@ -2731,9 +2736,17 @@ namespace GameLauncher
                     }
                 }
             } else {
-				OnDownloadFinished();
+                OnDownloadFinished();
 			}
 		}
+
+        public void RemoveTracksHighFiles()
+        {
+            if (File.Exists(_settingFile.Read("InstallationDirectory") + "/TracksHigh/STREAML5RA_98.BUN"))
+            {
+                Directory.Delete(_settingFile.Read("InstallationDirectory") + "/TracksHigh", true);
+            }
+        }
 
         public void DownloadCoreFiles()
         {
@@ -3127,6 +3140,16 @@ namespace GameLauncher
 
                 var index = finalItems.FindIndex(i => string.Equals(i.IpAddress, ServerName.IpAddress));
                 serverPick.SelectedIndex = index;
+            }
+        }
+
+        public void CleanModsFiles()
+        {
+            var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
+            if (File.Exists(linksPath))
+            {
+                Log.Debug("CLEANLINKS: Found Server Mod Files to remove {Process}");
+                CleanLinks(linksPath);
             }
         }
 

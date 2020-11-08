@@ -363,7 +363,7 @@
             this.currentWindowInfo.ForeColor = System.Drawing.Color.White;
             this.currentWindowInfo.Location = new System.Drawing.Point(638, 95);
             this.currentWindowInfo.Name = "currentWindowInfo";
-            this.currentWindowInfo.Size = new System.Drawing.Size(194, 61);
+            this.currentWindowInfo.Size = new System.Drawing.Size(223, 64);
             this.currentWindowInfo.TabIndex = 16;
             this.currentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION TO LOG IN";
             this.currentWindowInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -428,7 +428,7 @@
             this.rememberMe.ForeColor = System.Drawing.Color.White;
             this.rememberMe.Location = new System.Drawing.Point(650, 285);
             this.rememberMe.Name = "rememberMe";
-            this.rememberMe.Size = new System.Drawing.Size(158, 19);
+            this.rememberMe.Size = new System.Drawing.Size(159, 19);
             this.rememberMe.TabIndex = 5;
             this.rememberMe.Text = "REMEMBER MY LOGIN";
             this.rememberMe.UseVisualStyleBackColor = false;
@@ -839,7 +839,7 @@
             this.settingsWordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsWordFilterCheck.Location = new System.Drawing.Point(26, 218);
             this.settingsWordFilterCheck.Name = "settingsWordFilterCheck";
-            this.settingsWordFilterCheck.Size = new System.Drawing.Size(234, 17);
+            this.settingsWordFilterCheck.Size = new System.Drawing.Size(235, 17);
             this.settingsWordFilterCheck.TabIndex = 139;
             this.settingsWordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.settingsWordFilterCheck.UseVisualStyleBackColor = false;
@@ -852,7 +852,7 @@
             this.settingsProxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsProxyCheckbox.Location = new System.Drawing.Point(26, 238);
             this.settingsProxyCheckbox.Name = "settingsProxyCheckbox";
-            this.settingsProxyCheckbox.Size = new System.Drawing.Size(102, 17);
+            this.settingsProxyCheckbox.Size = new System.Drawing.Size(103, 17);
             this.settingsProxyCheckbox.TabIndex = 141;
             this.settingsProxyCheckbox.Text = "Disable Proxy";
             this.settingsProxyCheckbox.UseVisualStyleBackColor = false;
@@ -865,7 +865,7 @@
             this.settingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsDiscordRPCCheckbox.Location = new System.Drawing.Point(26, 258);
             this.settingsDiscordRPCCheckbox.Name = "settingsDiscordRPCCheckbox";
-            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(143, 17);
+            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(144, 17);
             this.settingsDiscordRPCCheckbox.TabIndex = 148;
             this.settingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
             this.settingsDiscordRPCCheckbox.UseVisualStyleBackColor = false;
