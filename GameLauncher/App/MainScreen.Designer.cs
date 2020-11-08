@@ -76,6 +76,7 @@
             this.registerButton = new System.Windows.Forms.Button();
             this.registerCancel = new System.Windows.Forms.Button();
             this.SettingsPanel = new System.Windows.Forms.Panel();
+            this.SettingsClearCommunicationLogButton = new System.Windows.Forms.Button();
             this.SettingsClearCrashLogsButton = new System.Windows.Forms.Button();
             this.settingsVFilesButton = new System.Windows.Forms.Button();
             this.settingsGamePathText = new System.Windows.Forms.Label();
@@ -689,6 +690,7 @@
             // 
             this.SettingsPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.SettingsPanel.BackColor = System.Drawing.Color.Transparent;
+            this.SettingsPanel.Controls.Add(this.SettingsClearCommunicationLogButton);
             this.SettingsPanel.Controls.Add(this.SettingsClearCrashLogsButton);
             this.SettingsPanel.Controls.Add(this.settingsVFilesButton);
             this.SettingsPanel.Controls.Add(this.settingsGamePathText);
@@ -720,6 +722,24 @@
             this.SettingsPanel.Size = new System.Drawing.Size(830, 434);
             this.SettingsPanel.TabIndex = 150;
             // 
+            // SettingsClearCommunicationLogButton
+            // 
+            this.SettingsClearCommunicationLogButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.SettingsClearCommunicationLogButton.Enabled = false;
+            this.SettingsClearCommunicationLogButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.SettingsClearCommunicationLogButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.SettingsClearCommunicationLogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SettingsClearCommunicationLogButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.SettingsClearCommunicationLogButton.ForeColor = System.Drawing.Color.Silver;
+            this.SettingsClearCommunicationLogButton.Location = new System.Drawing.Point(26, 253);
+            this.SettingsClearCommunicationLogButton.Margin = new System.Windows.Forms.Padding(0);
+            this.SettingsClearCommunicationLogButton.Name = "SettingsClearCommunicationLogButton";
+            this.SettingsClearCommunicationLogButton.Size = new System.Drawing.Size(131, 25);
+            this.SettingsClearCommunicationLogButton.TabIndex = 154;
+            this.SettingsClearCommunicationLogButton.Text = "Clear NFSWO Log";
+            this.SettingsClearCommunicationLogButton.UseVisualStyleBackColor = false;
+            this.SettingsClearCommunicationLogButton.Click += new System.EventHandler(this.SettingsClearCommunicationLogButton_Click);
+            // 
             // SettingsClearCrashLogsButton
             // 
             this.SettingsClearCrashLogsButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
@@ -744,7 +764,7 @@
             this.settingsVFilesButton.BackColor = System.Drawing.Color.Transparent;
             this.settingsVFilesButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.settingsVFilesButton.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.settingsVFilesButton.Location = new System.Drawing.Point(26, 316);
+            this.settingsVFilesButton.Location = new System.Drawing.Point(26, 354);
             this.settingsVFilesButton.Name = "settingsVFilesButton";
             this.settingsVFilesButton.Size = new System.Drawing.Size(131, 23);
             this.settingsVFilesButton.TabIndex = 153;
@@ -871,7 +891,7 @@
             this.settingsWordFilterCheck.BackColor = System.Drawing.Color.Transparent;
             this.settingsWordFilterCheck.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.settingsWordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
-            this.settingsWordFilterCheck.Location = new System.Drawing.Point(26, 250);
+            this.settingsWordFilterCheck.Location = new System.Drawing.Point(26, 288);
             this.settingsWordFilterCheck.Name = "settingsWordFilterCheck";
             this.settingsWordFilterCheck.Size = new System.Drawing.Size(235, 17);
             this.settingsWordFilterCheck.TabIndex = 139;
@@ -884,7 +904,7 @@
             this.settingsProxyCheckbox.BackColor = System.Drawing.Color.Transparent;
             this.settingsProxyCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.settingsProxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
-            this.settingsProxyCheckbox.Location = new System.Drawing.Point(26, 270);
+            this.settingsProxyCheckbox.Location = new System.Drawing.Point(26, 308);
             this.settingsProxyCheckbox.Name = "settingsProxyCheckbox";
             this.settingsProxyCheckbox.Size = new System.Drawing.Size(103, 17);
             this.settingsProxyCheckbox.TabIndex = 141;
@@ -897,7 +917,7 @@
             this.settingsDiscordRPCCheckbox.BackColor = System.Drawing.Color.Transparent;
             this.settingsDiscordRPCCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.settingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
-            this.settingsDiscordRPCCheckbox.Location = new System.Drawing.Point(26, 290);
+            this.settingsDiscordRPCCheckbox.Location = new System.Drawing.Point(26, 328);
             this.settingsDiscordRPCCheckbox.Name = "settingsDiscordRPCCheckbox";
             this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(144, 17);
             this.settingsDiscordRPCCheckbox.TabIndex = 148;
@@ -1272,5 +1292,6 @@
         private System.Windows.Forms.Panel ShowPlayPanel;
         private System.Windows.Forms.Panel RegisterPanel;
         private System.Windows.Forms.Button settingsVFilesButton;
+        private System.Windows.Forms.Button SettingsClearCommunicationLogButton;
     }
 }

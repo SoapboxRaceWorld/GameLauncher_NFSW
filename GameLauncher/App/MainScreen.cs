@@ -1759,6 +1759,11 @@ namespace GameLauncher
             IsCDNDownGame();
             PingAPIStatus();
 
+            if (File.Exists(_settingFile.Read("InstallationDirectory") + "/NFSWO_COMMUNICATION_LOG.txt"))
+            {
+                SettingsClearCommunicationLogButton.Enabled = true;
+            }
+
             var crashLogFilesDirectory = new DirectoryInfo(_settingFile.Read("InstallationDirectory"));
 
             foreach (var file in crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp"))
@@ -3182,6 +3187,13 @@ namespace GameLauncher
 
             MessageBox.Show(null, "Deleted Crash Logs", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             SettingsClearCrashLogsButton.Enabled = false;
+        }
+
+        private void SettingsClearCommunicationLogButton_Click(object sender, EventArgs e)
+        {
+            File.Delete(_settingFile.Read("InstallationDirectory") + "/NFSWO_COMMUNICATION_LOG.txt");
+            MessageBox.Show(null, "Deleted NFSWO Communication Log", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            SettingsClearCommunicationLogButton.Enabled = false;
         }
     }
     /* Moved 7 Unused Code to Gist */
