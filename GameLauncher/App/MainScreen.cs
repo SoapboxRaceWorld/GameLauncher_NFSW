@@ -1271,7 +1271,7 @@ namespace GameLauncher
             settingsWordFilterCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsProxyCheckbox.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsDiscordRPCCheckbox.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsVFilesButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            SettingsClearCrashLogsButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsGameFilesCurrentText.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsGameFilesCurrent.Font = new Font(AkrobatRegular, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             settingsCDNCurrentText.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
@@ -1758,6 +1758,14 @@ namespace GameLauncher
             LoginFormElements(false);
             IsCDNDownGame();
             PingAPIStatus();
+
+            var crashLogFilesDirectory = new DirectoryInfo(_settingFile.Read("InstallationDirectory"));
+
+            foreach (var file in crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp"))
+            {
+                SettingsClearCrashLogsButton.Enabled = true;
+            }
+
         }
         private void CDN_Offline_Switch()
         {
@@ -3153,6 +3161,28 @@ namespace GameLauncher
             }
         }
 
+        private void SettingsClearCrashLogsButton_Click(object sender, EventArgs e)
+        {
+            var crashLogFilesDirectory = new DirectoryInfo(_settingFile.Read("InstallationDirectory"));
+
+            foreach (var file in crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp"))
+            {
+                file.Delete();
+            }
+
+            foreach (var file in crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.txt"))
+            {
+                file.Delete();
+            }
+
+            foreach (var file in crashLogFilesDirectory.EnumerateFiles("NFSCrashDump_CL0*.dmp"))
+            {
+                file.Delete();
+            }
+
+            MessageBox.Show(null, "Deleted Crash Logs", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            SettingsClearCrashLogsButton.Enabled = false;
+        }
     }
     /* Moved 7 Unused Code to Gist */
     /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/00de505302fbf9f8cfea9b163a707d9f8f122552/MainScreen.cs */
