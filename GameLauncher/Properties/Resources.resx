@@ -121,14 +121,8 @@
   <data name="ac_error" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ac_error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="close_click" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\close_click.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="ac_success" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ac_success.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="settingsbtn_click" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\settingsbtn_click.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ac_warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ac_warning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -150,12 +144,6 @@
   </data>
   <data name="secondarybackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\secondarybackground.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="settingsbtn_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\settingsbtn_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="close_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\close_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="warningprogress" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\warningprogress.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -219,9 +207,6 @@
   </data>
   <data name="logo_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\logo_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="settingsbtn1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\settingsbtn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="email_error_text_border" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\email_error_text_border.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

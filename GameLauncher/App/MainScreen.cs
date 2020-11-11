@@ -743,7 +743,7 @@ namespace GameLauncher
         }
 
         private void Closebtn_Click(object sender, EventArgs e) {
-            closebtn.BackgroundImage = Properties.Resources.close_click;
+            //closebtn.BackgroundImage = Properties.Resources.close_click;
 
 		    try {
                 if (!(serverPick.SelectedItem is ServerInfo server)) return;
@@ -826,7 +826,7 @@ namespace GameLauncher
 
         private void Closebtn_MouseEnter(object sender, EventArgs e)
         {
-            closebtn.BackgroundImage = Properties.Resources.close_hover;
+            //closebtn.BackgroundImage = Properties.Resources.close_hover;
         }
 
         private void Closebtn_MouseLeave(object sender, EventArgs e)
@@ -1755,7 +1755,7 @@ namespace GameLauncher
                 WindowState = FormWindowState.Normal;
             }
 
-            settingsButton.BackgroundImage = Properties.Resources.settingsbtn_click;
+            //settingsButton.BackgroundImage = Properties.Resources.settingsbtn_click;
             BackgroundImage = Properties.Resources.secondarybackground;
             SettingsFormElements(true);
             RegisterFormElements(false);
@@ -1784,7 +1784,7 @@ namespace GameLauncher
                 WindowState = FormWindowState.Normal;
             }
 
-            settingsButton.BackgroundImage = Properties.Resources.settingsbtn_click;
+            //settingsButton.BackgroundImage = Properties.Resources.settingsbtn_click;
             BackgroundImage = Properties.Resources.secondarybackground;
             SettingsFormElements(true);
             RegisterFormElements(false);
@@ -1795,7 +1795,7 @@ namespace GameLauncher
         }
 
         private void SettingsButton_MouseEnter(object sender, EventArgs e) {
-            settingsButton.BackgroundImage = Properties.Resources.settingsbtn_hover;
+            //settingsButton.BackgroundImage = Properties.Resources.settingsbtn_hover;
         }
 
         private void SettingsButton_MouseLeave(object sender, EventArgs e) {

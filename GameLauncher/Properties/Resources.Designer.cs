@@ -153,26 +153,6 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap close_click {
-            get {
-                object obj = ResourceManager.GetObject("close_click", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap close_hover {
-            get {
-                object obj = ResourceManager.GetObject("close_hover", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap email_error_text_border {
             get {
                 object obj = ResourceManager.GetObject("email_error_text_border", resourceCulture);
@@ -416,36 +396,6 @@ namespace GameLauncher.Properties {
         internal static System.Drawing.Bitmap settingsbtn {
             get {
                 object obj = ResourceManager.GetObject("settingsbtn", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap settingsbtn_click {
-            get {
-                object obj = ResourceManager.GetObject("settingsbtn_click", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap settingsbtn_hover {
-            get {
-                object obj = ResourceManager.GetObject("settingsbtn_hover", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap settingsbtn1 {
-            get {
-                object obj = ResourceManager.GetObject("settingsbtn1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
