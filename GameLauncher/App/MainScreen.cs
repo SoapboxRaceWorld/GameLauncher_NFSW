@@ -454,7 +454,7 @@ namespace GameLauncher
                         backgroundColor = Brushes.LightCoral;
                     }
 
-                    textColor = SystemBrushes.WindowText;
+                    textColor = Brushes.Black;
                 }
 
                 e.Graphics.FillRectangle(backgroundColor, e.Bounds);
@@ -1261,11 +1261,11 @@ namespace GameLauncher
             // serverPick -- Server List Text is not controlled here
             imageServerName.Font = new Font(AkrobatSemiBold, 25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             launcherStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            launcherStatusDesc.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            launcherStatusDesc.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             ServerStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            ServerStatusDesc.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            ServerStatusDesc.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             APIStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            APIStatusDesc.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            APIStatusDesc.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
         /* Settings */
             settingsGamePathText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             // settingsGameFiles -- Change GameFiles Path button text is not controlled here
@@ -1422,7 +1422,7 @@ namespace GameLauncher
         {
             if (hideElements)
             {
-                currentWindowInfo.Text = "Enter your account information to Log In".ToUpper();
+                currentWindowInfo.Text = "Enter Account Information\n to Log In".ToUpper();
             }
 
             rememberMe.Visible = hideElements;
