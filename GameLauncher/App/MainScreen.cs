@@ -1889,6 +1889,8 @@ namespace GameLauncher
 
             if (_settingFile.Read("CDN") != ((CDNObject)settingsCDNPick.SelectedItem).Url)
             {
+                settingsCDNCurrentText.Text = "CHANGED CDN";
+                settingsCDNCurrent.Text = ((CDNObject)settingsCDNPick.SelectedItem).Url;
                 _settingFile.Write("CDN", ((CDNObject)settingsCDNPick.SelectedItem).Url);
                 _restartRequired = true;
             }
@@ -2200,6 +2202,33 @@ namespace GameLauncher
             {
                 settingsCDNCurrent.LinkColor = Color.FromArgb(254, 0, 0);
                 Log.Debug("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Offline!");
+            }
+
+        }
+
+        private async void IsChangedCDNDown()
+        {
+            settingsCDNText.Text = "CDN: PINGING";
+            settingsCDNText.ForeColor = Color.FromArgb(66, 179, 189);
+            Log.Debug("SETTINGS PINGING CHANGED CDN: Checking Changed CDN from Drop Down List");
+            await Task.Delay(500);
+            HttpWebRequest pingCurrentCDN = (HttpWebRequest)HttpWebRequest.Create(((CDNObject)settingsCDNPick.SelectedItem).Url);
+            pingCurrentCDN.AllowAutoRedirect = false;
+            pingCurrentCDN.Method = "HEAD";
+            pingCurrentCDN.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+            try
+            {
+                HttpWebResponse cdnResponse = (HttpWebResponse)pingCurrentCDN.GetResponse();
+                cdnResponse.Close();
+                settingsCDNText.Text = "CDN: ONLINE";
+                settingsCDNText.ForeColor = Color.LawnGreen;
+                Log.Debug("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)settingsCDNPick.SelectedItem).Url + " Is Online!");
+            }
+            catch (WebException)
+            {
+                settingsCDNText.Text = "CDN: OFFLINE";
+                settingsCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                Log.Debug("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)settingsCDNPick.SelectedItem).Url + " Is Offline!");
             }
 
         }
@@ -3176,6 +3205,11 @@ namespace GameLauncher
             File.Delete(_settingFile.Read("InstallationDirectory") + "/NFSWO_COMMUNICATION_LOG.txt");
             MessageBox.Show(null, "Deleted NFSWO Communication Log", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             SettingsClearCommunicationLogButton.Enabled = false;
+        }
+
+        private void settingsCDNPick_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            IsChangedCDNDown();
         }
     }
     /* Moved 7 Unused Code to Gist */

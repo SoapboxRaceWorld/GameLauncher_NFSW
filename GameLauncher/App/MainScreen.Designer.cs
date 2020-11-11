@@ -76,13 +76,13 @@
             this.registerButton = new System.Windows.Forms.Button();
             this.registerCancel = new System.Windows.Forms.Button();
             this.SettingsPanel = new System.Windows.Forms.Panel();
+            this.settingsGameFiles = new System.Windows.Forms.Button();
             this.SettingsClearCommunicationLogButton = new System.Windows.Forms.Button();
             this.SettingsClearCrashLogsButton = new System.Windows.Forms.Button();
             this.settingsVFilesButton = new System.Windows.Forms.Button();
             this.settingsGamePathText = new System.Windows.Forms.Label();
             this.settingsSave = new System.Windows.Forms.Button();
             this.settingsCancel = new System.Windows.Forms.Button();
-            this.settingsGameFiles = new System.Windows.Forms.Button();
             this.settingsCDNText = new System.Windows.Forms.Label();
             this.settingsCDNPick = new System.Windows.Forms.ComboBox();
             this.settingsLanguageText = new System.Windows.Forms.Label();
@@ -689,13 +689,13 @@
             // 
             this.SettingsPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.SettingsPanel.BackColor = System.Drawing.Color.Transparent;
+            this.SettingsPanel.Controls.Add(this.settingsGameFiles);
             this.SettingsPanel.Controls.Add(this.SettingsClearCommunicationLogButton);
             this.SettingsPanel.Controls.Add(this.SettingsClearCrashLogsButton);
             this.SettingsPanel.Controls.Add(this.settingsVFilesButton);
             this.SettingsPanel.Controls.Add(this.settingsGamePathText);
             this.SettingsPanel.Controls.Add(this.settingsSave);
             this.SettingsPanel.Controls.Add(this.settingsCancel);
-            this.SettingsPanel.Controls.Add(this.settingsGameFiles);
             this.SettingsPanel.Controls.Add(this.settingsCDNText);
             this.SettingsPanel.Controls.Add(this.settingsCDNPick);
             this.SettingsPanel.Controls.Add(this.settingsLanguageText);
@@ -720,6 +720,22 @@
             this.SettingsPanel.Name = "SettingsPanel";
             this.SettingsPanel.Size = new System.Drawing.Size(873, 475);
             this.SettingsPanel.TabIndex = 150;
+            // 
+            // settingsGameFiles
+            // 
+            this.settingsGameFiles.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.settingsGameFiles.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.settingsGameFiles.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.settingsGameFiles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.settingsGameFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.settingsGameFiles.ForeColor = System.Drawing.Color.Silver;
+            this.settingsGameFiles.Location = new System.Drawing.Point(26, 89);
+            this.settingsGameFiles.Margin = new System.Windows.Forms.Padding(0);
+            this.settingsGameFiles.Name = "settingsGameFiles";
+            this.settingsGameFiles.Size = new System.Drawing.Size(220, 23);
+            this.settingsGameFiles.TabIndex = 130;
+            this.settingsGameFiles.Text = "Change GameFiles Path";
+            this.settingsGameFiles.UseVisualStyleBackColor = false;
             // 
             // SettingsClearCommunicationLogButton
             // 
@@ -816,22 +832,6 @@
             this.settingsCancel.Text = "CANCEL";
             this.settingsCancel.UseVisualStyleBackColor = false;
             // 
-            // settingsGameFiles
-            // 
-            this.settingsGameFiles.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.settingsGameFiles.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.settingsGameFiles.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.settingsGameFiles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.settingsGameFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.settingsGameFiles.ForeColor = System.Drawing.Color.Silver;
-            this.settingsGameFiles.Location = new System.Drawing.Point(26, 89);
-            this.settingsGameFiles.Margin = new System.Windows.Forms.Padding(0);
-            this.settingsGameFiles.Name = "settingsGameFiles";
-            this.settingsGameFiles.Size = new System.Drawing.Size(220, 23);
-            this.settingsGameFiles.TabIndex = 130;
-            this.settingsGameFiles.Text = "Change GameFiles Path";
-            this.settingsGameFiles.UseVisualStyleBackColor = false;
-            // 
             // settingsCDNText
             // 
             this.settingsCDNText.AutoSize = true;
@@ -840,9 +840,9 @@
             this.settingsCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.settingsCDNText.Location = new System.Drawing.Point(25, 111);
             this.settingsCDNText.Name = "settingsCDNText";
-            this.settingsCDNText.Size = new System.Drawing.Size(41, 18);
+            this.settingsCDNText.Size = new System.Drawing.Size(111, 18);
             this.settingsCDNText.TabIndex = 137;
-            this.settingsCDNText.Text = "CDN";
+            this.settingsCDNText.Text = "CDN: PINGING";
             this.settingsCDNText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // settingsCDNPick
@@ -857,6 +857,7 @@
             this.settingsCDNPick.Name = "settingsCDNPick";
             this.settingsCDNPick.Size = new System.Drawing.Size(220, 21);
             this.settingsCDNPick.TabIndex = 133;
+            this.settingsCDNPick.SelectedIndexChanged += new System.EventHandler(this.settingsCDNPick_SelectedIndexChanged);
             // 
             // settingsLanguageText
             // 
