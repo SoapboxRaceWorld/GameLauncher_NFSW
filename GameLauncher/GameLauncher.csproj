@@ -293,6 +293,13 @@
     <None Include="Resources\buttons_info.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\ticket_text_border.png" />
+    <None Include="Resources\ticket_error_text_border.png" />
+    <None Include="Resources\password_text_border.png" />
+    <None Include="Resources\password_error_text_border.png" />
+    <None Include="Resources\email_error_text_border.png" />
+    <None Include="Resources\email_text_border.png" />
+    <None Include="Resources\mainbackground.png" />
     <None Include="Resources\error_text_border.png" />
     <None Include="Resources\logo_hover.png" />
     <None Include="Resources\server_unknown.png" />

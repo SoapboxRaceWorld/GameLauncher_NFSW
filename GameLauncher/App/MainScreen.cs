@@ -938,17 +938,13 @@ namespace GameLauncher
                     MessageBox.Show(null, Tokens.Warning, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
-                errorMainEmailBorder.Visible = false;
-                errorMainPasswordBorder.Visible = false;
-
-                BackgroundImage = Properties.Resources.loggedbg;
                 LoginFormElements(false);
                 LoggedInFormElements(true);
                 settingsButton.Visible = false;
             } else {
                 //Main Screen Login
-                errorMainPasswordBorder.Visible = true;
-                errorMainEmailBorder.Visible = true;
+                MainEmailBorder.Image = Properties.Resources.email_error_text_border;
+                MainPasswordBorder.Image = Properties.Resources.password_error_text_border;
                 MessageBox.Show(null, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -982,8 +978,8 @@ namespace GameLauncher
         }
 
         private void ServerPick_SelectedIndexChanged(object sender, EventArgs e) {
-            errorMainEmailBorder.Visible = false;
-            errorMainPasswordBorder.Visible = false;
+            MainEmailBorder.Image = Properties.Resources.email_text_border;
+            MainPasswordBorder.Image = Properties.Resources.password_text_border;
 
             ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
@@ -1310,8 +1306,6 @@ namespace GameLauncher
 
         private void RegisterText_LinkClicked(object sender, EventArgs e)
         {
-            errorMainEmailBorder.Visible = false;
-            errorMainPasswordBorder.Visible = false;
             registerButton.Image = Properties.Resources.greenbutton_click;
             if (_allowRegistration) {
                 if(!string.IsNullOrEmpty(json.WebSignupUrl)) {
@@ -1326,7 +1320,6 @@ namespace GameLauncher
                     return;
                 }
 
-                BackgroundImage = (_ticketRequired) ? Properties.Resources.register_ticket : Properties.Resources.register_noticket;
                 currentWindowInfo.Text = "REGISTER ON \n" + _realServername.ToUpper();
                 LoginFormElements(false);
                 RegisterFormElements(true);
@@ -1451,6 +1444,12 @@ namespace GameLauncher
             addServer.Enabled = true;
             //allowedCountriesLabel.Visible = hideElements;
             serverPick.Enabled = true;
+
+            //Input Strokes
+            MainEmailBorder.Visible = hideElements;
+            MainEmailBorder.Image = Properties.Resources.email_text_border;
+            MainPasswordBorder.Visible = hideElements;
+            MainPasswordBorder.Image = Properties.Resources.password_text_border;
         }
 
         private void RegisterFormElements(bool hideElements = true) {
@@ -1484,13 +1483,19 @@ namespace GameLauncher
             registerPassword.Text = "";
             registerConfirmPassword.Text = "";
             registerAgree.Checked = false;
+
+            //Input Strokes
+            RegisterEmailBorder.Visible = hideElements;
+            RegisterPasswordBorder.Visible = hideElements;
+            RegisterPasswordValidateBorder.Visible = hideElements;
+            RegisterTicketBorder.Visible = (_ticketRequired) ? hideElements : false;
         }
 
         private void LogoutButton_Click(object sender, EventArgs e) {
             if(_disableLogout == true) {
                 return;
             }
-            BackgroundImage = Properties.Resources.loginbg;
+            BackgroundImage = Properties.Resources.mainbackground;
             _loggedIn = false;
             LoggedInFormElements(false);
             LoginFormElements(true);
@@ -1529,15 +1534,21 @@ namespace GameLauncher
 
         private void RegisterCancel_Click(object sender, EventArgs e)
         {
-            BackgroundImage = Properties.Resources.loginbg;
+            BackgroundImage = Properties.Resources.mainbackground;
             currentWindowInfo.Text = "Enter your account information to Log In:".ToUpper();
             RegisterFormElements(false);
             LoginFormElements(true);
+            ResetRegisterErrorColors();
+        }
+
+        private void ResetRegisterErrorColors()
+        {
             registerAgree.ForeColor = Color.White;
-            errorEmailBorder.Visible = false;
-            errorPasswordBorder.Visible = false;
-            errorPasswordValidateBorder.Visible = false;
-            errorTicketBorder.Visible = false;
+            //Reset Input Stroke Images
+            RegisterEmailBorder.Image = Properties.Resources.email_text_border;
+            RegisterPasswordBorder.Image = Properties.Resources.password_text_border;
+            RegisterPasswordValidateBorder.Image = Properties.Resources.password_text_border;
+            RegisterTicketBorder.Image = Properties.Resources.ticket_text_border;
         }
 
         private void RegisterAgree_CheckedChanged(object sender, EventArgs e)
@@ -1547,33 +1558,33 @@ namespace GameLauncher
 
         private void RegisterEmail_TextChanged(object sender, EventArgs e)
         {
-            errorEmailBorder.Visible = false;
+            RegisterEmailBorder.Image = Properties.Resources.email_text_border;
         }
 
         private void RegisterTicket_TextChanged(object sender, EventArgs e)
         {
-            errorTicketBorder.Visible = false;
+            RegisterTicketBorder.Image = Properties.Resources.ticket_text_border;
         }
 
         private void RegisterConfirmPassword_TextChanged(object sender, EventArgs e)
         {
-            errorPasswordValidateBorder.Visible = false;
+            RegisterPasswordValidateBorder.Image = Properties.Resources.password_text_border;
         }
 
         private void RegisterPassword_TextChanged(object sender, EventArgs e)
         {
-            errorPasswordBorder.Visible = false;
+            RegisterPasswordBorder.Image = Properties.Resources.password_text_border;
         }
 
         private void Email_TextChanged(object sender, EventArgs e)
         {
-            errorMainEmailBorder.Visible = false;
+            MainEmailBorder.Image = Properties.Resources.email_text_border;
         }
 
         private void Password_TextChanged(object sender, EventArgs e)
         {
-            errorMainEmailBorder.Visible = false;
-            errorMainPasswordBorder.Visible = false;
+            MainEmailBorder.Image = Properties.Resources.email_text_border;
+            MainPasswordBorder.Image = Properties.Resources.password_text_border;
         }
 
         private void Graybutton_click_MouseDown(object sender, EventArgs e)
@@ -1620,32 +1631,32 @@ namespace GameLauncher
 
             if (string.IsNullOrEmpty(registerEmail.Text)) {
                 registerErrors.Add("Please enter your e-mail.");
-                errorEmailBorder.Visible = true;
+                RegisterEmailBorder.Image = Properties.Resources.email_error_text_border;
 
             } else if (Self.ValidateEmail(registerEmail.Text) == false) {
                 registerErrors.Add("Please enter a valid e-mail address.");
-                errorEmailBorder.Visible = true;
+                RegisterEmailBorder.Image = Properties.Resources.email_error_text_border;
             }
 
             if (string.IsNullOrEmpty(registerTicket.Text) && _ticketRequired) {
                 registerErrors.Add("Please enter your ticket.");
-                errorTicketBorder.Visible = true;
+                RegisterTicketBorder.Image = Properties.Resources.ticket_error_text_border;
             }
 
             if (string.IsNullOrEmpty(registerPassword.Text)) {
                 registerErrors.Add("Please enter your password.");
-                errorPasswordBorder.Visible = true;
+                RegisterPasswordBorder.Image = Properties.Resources.password_error_text_border;
             }
 
             if (string.IsNullOrEmpty(registerConfirmPassword.Text)) {
                 registerErrors.Add("Please confirm your password.");
-                errorPasswordValidateBorder.Visible = true;
+                RegisterPasswordValidateBorder.Image = Properties.Resources.password_error_text_border;
             }
 
             if (registerConfirmPassword.Text != registerPassword.Text) {
                 registerErrors.Add("Passwords don't match.");
-                errorPasswordBorder.Visible = true;
-                errorPasswordValidateBorder.Visible = true;
+                RegisterPasswordBorder.Visible = true;
+                RegisterPasswordValidateBorder.Image = Properties.Resources.password_error_text_border;
             }
 
             if (!registerAgree.Checked) {
@@ -1710,13 +1721,9 @@ namespace GameLauncher
 
                         MessageBox.Show(null, Tokens.Success, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                        registerAgree.ForeColor = Color.White;
-                        errorEmailBorder.Visible = false;
-                        errorPasswordBorder.Visible = false;
-                        errorPasswordValidateBorder.Visible = false;
-                        errorTicketBorder.Visible = false;
+                        ResetRegisterErrorColors();
 
-                        BackgroundImage = Properties.Resources.loginbg;
+                        BackgroundImage = Properties.Resources.mainbackground;
 
                         RegisterFormElements(false);
                         LoginFormElements(true);
@@ -1748,8 +1755,6 @@ namespace GameLauncher
                 WindowState = FormWindowState.Normal;
             }
 
-            errorMainEmailBorder.Visible = false;
-            errorMainPasswordBorder.Visible = false;
             settingsButton.BackgroundImage = Properties.Resources.settingsbtn_click;
             BackgroundImage = Properties.Resources.secondarybackground;
             SettingsFormElements(true);
@@ -1779,8 +1784,6 @@ namespace GameLauncher
                 WindowState = FormWindowState.Normal;
             }
 
-            errorMainEmailBorder.Visible = false;
-            errorMainPasswordBorder.Visible = false;
             settingsButton.BackgroundImage = Properties.Resources.settingsbtn_click;
             BackgroundImage = Properties.Resources.secondarybackground;
             SettingsFormElements(true);
@@ -1812,20 +1815,9 @@ namespace GameLauncher
         private void SettingsCancel_Click(object sender, EventArgs e)
         {
             SettingsFormElements(false);
-
-            if (_loggedIn)
-            {
-                BackgroundImage = Properties.Resources.loggedbg;
-                LoginFormElements();
-                LoggedInFormElements(true);
-            }
-            else
-            {
-                BackgroundImage = Properties.Resources.loginbg;
-                LoggedInFormElements(false);
-                LoginFormElements(true);
-            }
-
+            LoggedInFormElements(false);
+            LoginFormElements(true);
+            BackgroundImage = Properties.Resources.mainbackground;
         }
 
         public void ClearColoredPingStatus()
@@ -1932,17 +1924,9 @@ namespace GameLauncher
             }
 
             SettingsFormElements(false);
-
-            if (_loggedIn) {
-                BackgroundImage = Properties.Resources.loggedbg;
-                LoginFormElements();
-                LoggedInFormElements(true);
-            } else {
-                BackgroundImage = Properties.Resources.loginbg;
-                LoggedInFormElements(false);
-                LoginFormElements(true);
-            }
-
+            LoggedInFormElements(false);
+            LoginFormElements(true);
+            BackgroundImage = Properties.Resources.mainbackground;
         }
 
         //Changing GameFiles Location from Settings - DavidCarbon & Zacam
