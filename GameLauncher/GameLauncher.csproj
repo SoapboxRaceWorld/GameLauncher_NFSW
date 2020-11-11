@@ -177,6 +177,7 @@
     <Compile Include="App\Classes\Events\Updater.cs" />
     <Compile Include="App\Classes\NFSW.cs" />
     <Compile Include="App\Classes\ParseUri.cs" />
+    <Compile Include="App\Classes\AboutNoteBlock.cs" />
     <Compile Include="App\Classes\ProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -213,6 +214,12 @@
       <DependentUpon>MainScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\JsonScheme.cs" />
+    <Compile Include="App\About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
     <Compile Include="App\SelectServer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -246,6 +253,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="App\MainScreen.resx">
       <DependentUpon>MainScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\About.resx">
+      <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\SelectServer.resx">
       <DependentUpon>SelectServer.cs</DependentUpon>

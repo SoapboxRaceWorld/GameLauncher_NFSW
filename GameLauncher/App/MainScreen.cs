@@ -1051,8 +1051,11 @@ namespace GameLauncher
                     ServerStatusIcon.Image = Properties.Resources.server_offline;
                     _serverEnabled = false;
                     _allowRegistration = false;
+                    //Disable Login & Register Button
+                    loginButton.Enabled = false;
+                    registerText.Enabled = false;
 
-                    if(!serverStatusDictionary.ContainsKey(_serverInfo.Id)) {
+                    if (!serverStatusDictionary.ContainsKey(_serverInfo.Id)) {
                         serverStatusDictionary.Add(_serverInfo.Id, 2);
                     } else { 
                         serverStatusDictionary[_serverInfo.Id] = 2; 
@@ -1066,6 +1069,9 @@ namespace GameLauncher
                     ServerStatusIcon.Image = Properties.Resources.server_offline;
                     _serverEnabled = false;
                     _allowRegistration = false;
+                    //Disable Login & Register Button
+                    loginButton.Enabled = false;
+                    registerText.Enabled = false;
 
                     if (!serverStatusDictionary.ContainsKey(_serverInfo.Id)) {
                         serverStatusDictionary.Add(_serverInfo.Id, 0);
@@ -1152,8 +1158,11 @@ namespace GameLauncher
                         ServerStatusText.Text = "Server Status - Online ( ON )";
                         ServerStatusText.ForeColor = Color.FromArgb(159, 193, 32);
                         ServerStatusIcon.Image = Properties.Resources.server_online;
-                        loginButton.ForeColor = Color.White;
                         _loginEnabled = true;
+                        //Enable Login & Register Button
+                        loginButton.ForeColor = Color.White;
+                        loginButton.Enabled = true;
+                        registerText.Enabled = true;
                     }
                     catch {
                         //¯\_(ツ)_/¯
@@ -3210,6 +3219,11 @@ namespace GameLauncher
         private void settingsCDNPick_SelectedIndexChanged(object sender, EventArgs e)
         {
             IsChangedCDNDown();
+        }
+
+        private void PatchNotes_Click(object sender, EventArgs e)
+        {
+            new About().Show();
         }
     }
     /* Moved 7 Unused Code to Gist */
