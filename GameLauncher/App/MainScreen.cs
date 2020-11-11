@@ -79,9 +79,9 @@ namespace GameLauncher
 
         private readonly RichPresence _presence = new RichPresence();
 
-        private readonly Pen _colorOffline = new Pen(Color.FromArgb(128, 0, 0));
-        private readonly Pen _colorOnline = new Pen(Color.FromArgb(0, 128, 0));
-        private readonly Pen _colorLoading = new Pen(Color.FromArgb(0, 0, 0));
+        //private readonly Pen _colorOffline = new Pen(Color.FromArgb(128, 0, 0));
+        //private readonly Pen _colorOnline = new Pen(Color.FromArgb(0, 128, 0));
+        //private readonly Pen _colorLoading = new Pen(Color.FromArgb(0, 0, 0));
         
         private readonly IniFile _settingFile = new IniFile("Settings.ini");
         private readonly string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
@@ -97,8 +97,8 @@ namespace GameLauncher
         int CurrentModFileCount = 0;
         int TotalModFileCount = 0;
 
-        private Point _startPoint = new Point(38, 144);
-        private Point _endPoint = new Point(562, 144);
+        //private Point _startPoint = new Point(28, 308);
+        //private Point _endPoint = new Point(549, 308);
 
         ServerInfo _serverInfo = null;
         GetServerInformation json = new GetServerInformation();
@@ -275,7 +275,7 @@ namespace GameLauncher
             settingsGameFilesCurrent.Click += new EventHandler(SettingsGameFilesCurrent_Click);
 
             addServer.Click += new EventHandler(AddServer_Click);
-            launcherStatusDesc.Click += new EventHandler(OpenDebugWindow);
+            settingsLauncherVersion.Click += new EventHandler(OpenDebugWindow);
 
             email.KeyUp += new KeyEventHandler(Loginbuttonenabler);
             email.KeyDown += new KeyEventHandler(LoginEnter);
@@ -411,8 +411,8 @@ namespace GameLauncher
             imageServerName.Location = pos;
             imageServerName.BackColor = Color.Transparent;
 
-            Log.Debug("CORE: Setting ServerStatusBar");
-            ServerStatusBar(_colorLoading, _startPoint, _endPoint);
+            //Log.Debug("CORE: Setting ServerStatusBar");
+            //ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
             Log.Debug("CORE: Loading ModManager Cache");
             ModManager.LoadModCache();
@@ -717,8 +717,7 @@ namespace GameLauncher
             } else {
                 launcherIconStatus.Image = Properties.Resources.ac_success;
                 launcherStatusText.ForeColor = Color.FromArgb(0x9fc120);
-                launcherStatusText.Text = "Launcher Status - Linux Fix";
-                launcherStatusDesc.Text = "APLHA STAGE. VERSION " + Application.ProductVersion;
+                launcherStatusText.Text = "Launcher Status - Linux";
             }
 
             Self.gamedir = _settingFile.Read("InstallationDirectory");
@@ -981,7 +980,7 @@ namespace GameLauncher
             MainEmailBorder.Image = Properties.Resources.email_text_border;
             MainPasswordBorder.Image = Properties.Resources.password_text_border;
 
-            ServerStatusBar(_colorLoading, _startPoint, _endPoint);
+            //ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
             _serverInfo = (ServerInfo)serverPick.SelectedItem;
             _realServername = _serverInfo.Name;
@@ -1043,7 +1042,7 @@ namespace GameLauncher
                 var artificialPingEnd = Self.GetTimestamp();
 
                 if(e2.Cancelled) {
-                    ServerStatusBar(_colorOffline, _startPoint, _endPoint);
+                    //ServerStatusBar(_colorOffline, _startPoint, _endPoint);
 
                     ServerStatusText.Text = "Server Status - Offline ( OFF )";
                     ServerStatusText.ForeColor = Color.FromArgb(254, 0, 0);
@@ -1061,7 +1060,7 @@ namespace GameLauncher
                         serverStatusDictionary[_serverInfo.Id] = 2; 
                     }
                 } else if (e2.Error != null) {
-                    ServerStatusBar(_colorOffline, _startPoint, _endPoint);
+                    //ServerStatusBar(_colorOffline, _startPoint, _endPoint);
 
                     ServerStatusText.Text = "Server Status - Offline ( OFF )";
                     ServerStatusText.ForeColor = Color.FromArgb(254, 0, 0);
@@ -1151,7 +1150,7 @@ namespace GameLauncher
 
                         _allowRegistration = true;
 
-                        ServerStatusBar(_colorOnline, _startPoint, _endPoint);
+                        //ServerStatusBar(_colorOnline, _startPoint, _endPoint);
                     }
 
                     try { 
@@ -1288,13 +1287,14 @@ namespace GameLauncher
             settingsMainCDNText.Font = new Font(AkrobatRegular, 10.5f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             settingsBkupSrvText.Font = new Font(AkrobatRegular, 10.5f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             settingsBkupCDNText.Font = new Font(AkrobatRegular, 10.5f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsLauncherVersion.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsSave.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             settingsCancel.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
         /* Log In Panel */
             currentWindowInfo.Font = new Font(AkrobatSemiBold, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             email.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             password.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            rememberMe.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            rememberMe.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             forgotPassword.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             loginButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             registerText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
@@ -1422,7 +1422,7 @@ namespace GameLauncher
         {
             if (hideElements)
             {
-                currentWindowInfo.Text = "Enter Account Information\n to Log In".ToUpper();
+                currentWindowInfo.Text = "Enter Your Account Information to Log In".ToUpper();
             }
 
             rememberMe.Visible = hideElements;
@@ -3216,7 +3216,7 @@ namespace GameLauncher
             SettingsClearCommunicationLogButton.Enabled = false;
         }
 
-        private void settingsCDNPick_SelectedIndexChanged(object sender, EventArgs e)
+        private void SettingsCDNPick_SelectedIndexChanged(object sender, EventArgs e)
         {
             IsChangedCDNDown();
         }

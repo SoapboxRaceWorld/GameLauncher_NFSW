@@ -1,4 +1,5 @@
-﻿namespace GameLauncher
+﻿using System.Windows.Forms;
+namespace GameLauncher
 {
     sealed partial class MainScreen
     {
@@ -76,6 +77,7 @@
             this.registerButton = new System.Windows.Forms.Button();
             this.registerCancel = new System.Windows.Forms.Button();
             this.SettingsPanel = new System.Windows.Forms.Panel();
+            this.settingsLauncherVersion = new System.Windows.Forms.Label();
             this.settingsAboutButton = new System.Windows.Forms.Button();
             this.settingsGameFiles = new System.Windows.Forms.Button();
             this.SettingsClearCommunicationLogButton = new System.Windows.Forms.Button();
@@ -283,7 +285,7 @@
             this.launcherStatusDesc.Name = "launcherStatusDesc";
             this.launcherStatusDesc.Size = new System.Drawing.Size(146, 13);
             this.launcherStatusDesc.TabIndex = 5;
-            this.launcherStatusDesc.Text = "Version : 2.0.0.0-Build123456";
+            this.launcherStatusDesc.Text = "Version : v" + Application.ProductVersion;
             this.launcherStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ServerStatusIcon
@@ -372,9 +374,9 @@
             this.currentWindowInfo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.currentWindowInfo.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.currentWindowInfo.ForeColor = System.Drawing.Color.White;
-            this.currentWindowInfo.Location = new System.Drawing.Point(622, 82);
+            this.currentWindowInfo.Location = new System.Drawing.Point(640, 82);
             this.currentWindowInfo.Name = "currentWindowInfo";
-            this.currentWindowInfo.Size = new System.Drawing.Size(220, 60);
+            this.currentWindowInfo.Size = new System.Drawing.Size(180, 60);
             this.currentWindowInfo.TabIndex = 16;
             this.currentWindowInfo.Text = "ENTER ACCOUNT INFORMATION\n TO LOG IN";
             this.currentWindowInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -450,7 +452,7 @@
             this.forgotPassword.AutoSize = true;
             this.forgotPassword.BackColor = System.Drawing.Color.Transparent;
             this.forgotPassword.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
-            this.forgotPassword.Location = new System.Drawing.Point(643, 281);
+            this.forgotPassword.Location = new System.Drawing.Point(659, 281);
             this.forgotPassword.Name = "forgotPassword";
             this.forgotPassword.Size = new System.Drawing.Size(143, 13);
             this.forgotPassword.TabIndex = 7;
@@ -695,6 +697,7 @@
             // 
             this.SettingsPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.SettingsPanel.BackColor = System.Drawing.Color.Transparent;
+            this.SettingsPanel.Controls.Add(this.settingsLauncherVersion);
             this.SettingsPanel.Controls.Add(this.settingsAboutButton);
             this.SettingsPanel.Controls.Add(this.settingsGameFiles);
             this.SettingsPanel.Controls.Add(this.SettingsClearCommunicationLogButton);
@@ -727,6 +730,19 @@
             this.SettingsPanel.Name = "SettingsPanel";
             this.SettingsPanel.Size = new System.Drawing.Size(837, 452);
             this.SettingsPanel.TabIndex = 150;
+            // 
+            // settingsLauncherVersion
+            // 
+            this.settingsLauncherVersion.AutoSize = true;
+            this.settingsLauncherVersion.BackColor = System.Drawing.Color.Transparent;
+            this.settingsLauncherVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.settingsLauncherVersion.Location = new System.Drawing.Point(28, 416);
+            this.settingsLauncherVersion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.settingsLauncherVersion.Name = "settingsLauncherVersion";
+            this.settingsLauncherVersion.Size = new System.Drawing.Size(146, 13);
+            this.settingsLauncherVersion.TabIndex = 160;
+            this.settingsLauncherVersion.Text = "Version : v" + Application.ProductVersion;
+            this.settingsLauncherVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // settingsAboutButton
             // 
@@ -878,7 +894,7 @@
             this.settingsCDNPick.Name = "settingsCDNPick";
             this.settingsCDNPick.Size = new System.Drawing.Size(220, 21);
             this.settingsCDNPick.TabIndex = 133;
-            this.settingsCDNPick.SelectedIndexChanged += new System.EventHandler(this.settingsCDNPick_SelectedIndexChanged);
+            this.settingsCDNPick.SelectedIndexChanged += new System.EventHandler(this.SettingsCDNPick_SelectedIndexChanged);
             // 
             // settingsLanguageText
             // 
@@ -1315,5 +1331,6 @@
         private System.Windows.Forms.Button settingsVFilesButton;
         private System.Windows.Forms.Button SettingsClearCommunicationLogButton;
         private System.Windows.Forms.Button settingsAboutButton;
+        private System.Windows.Forms.Label settingsLauncherVersion;
     }
 }

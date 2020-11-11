@@ -1,4 +1,5 @@
-﻿namespace GameLauncher.App
+﻿using System.Windows.Forms;
+namespace GameLauncher.App
 {
     partial class SelectServer
     {
@@ -34,6 +35,7 @@
             this.btnAddServer = new System.Windows.Forms.Button();
             this.btnSelectServer = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
+            this.version = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // ServerListRenderer
@@ -54,7 +56,7 @@
             // loading
             // 
             this.loading.AutoSize = true;
-            this.loading.Location = new System.Drawing.Point(242, 252);
+            this.loading.Location = new System.Drawing.Point(232, 242);
             this.loading.Name = "loading";
             this.loading.Size = new System.Drawing.Size(91, 13);
             this.loading.TabIndex = 4;
@@ -105,12 +107,24 @@
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
+            // version
+            // 
+            this.version.AutoSize = true;
+            this.version.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.version.Location = new System.Drawing.Point(232, 257);
+            this.version.Name = "version";
+            this.version.Size = new System.Drawing.Size(90, 13);
+            this.version.TabIndex = 9;
+            this.version.Text = "Version : v" + Application.ProductVersion;
+            this.version.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
             // SelectServer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.ClientSize = new System.Drawing.Size(570, 275);
+            this.Controls.Add(this.version);
             this.Controls.Add(this.btnAddServer);
             this.Controls.Add(this.btnSelectServer);
             this.Controls.Add(this.btnClose);
@@ -137,5 +151,6 @@
         private System.Windows.Forms.Button btnAddServer;
         private System.Windows.Forms.Button btnSelectServer;
         private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Label version;
     }
 }

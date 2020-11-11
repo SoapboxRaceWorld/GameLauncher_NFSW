@@ -1,4 +1,5 @@
-﻿namespace GameLauncher.App
+﻿using System.Windows.Forms;
+namespace GameLauncher.App
 {
     partial class AddServer
     {
@@ -36,6 +37,7 @@
             this.serverAddress = new System.Windows.Forms.TextBox();
             this.serverAddressLabel = new System.Windows.Forms.Label();
             this.error = new System.Windows.Forms.Label();
+            this.version = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // okButton
@@ -111,7 +113,7 @@
             // 
             this.error.AutoSize = true;
             this.error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
-            this.error.Location = new System.Drawing.Point(12, 111);
+            this.error.Location = new System.Drawing.Point(12, 104);
             this.error.Name = "error";
             this.error.Size = new System.Drawing.Size(111, 13);
             this.error.TabIndex = 0;
@@ -119,12 +121,22 @@
             this.error.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.error.Visible = false;
             // 
+            // version
+            // 
+            this.version.AutoSize = true;
+            this.version.Location = new System.Drawing.Point(14, 124);
+            this.version.Name = "version";
+            this.version.Size = new System.Drawing.Size(132, 13);
+            this.version.TabIndex = 7;
+            this.version.Text = "Version : v" + Application.ProductVersion;
+            // 
             // AddServer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.ClientSize = new System.Drawing.Size(399, 141);
+            this.Controls.Add(this.version);
             this.Controls.Add(this.error);
             this.Controls.Add(this.serverAddress);
             this.Controls.Add(this.serverAddressLabel);
@@ -156,5 +168,6 @@
         private System.Windows.Forms.TextBox serverAddress;
         private System.Windows.Forms.Label serverAddressLabel;
         private System.Windows.Forms.Label error;
+        private System.Windows.Forms.Label version;
     }
 }
