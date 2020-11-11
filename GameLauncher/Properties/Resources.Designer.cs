@@ -193,16 +193,6 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap error_text_border {
-            get {
-                object obj = ResourceManager.GetObject("error_text_border", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap errorprogress {
             get {
                 object obj = ResourceManager.GetObject("errorprogress", resourceCulture);
@@ -303,16 +293,6 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap map {
-            get {
-                object obj = ResourceManager.GetObject("map", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap password_error_text_border {
             get {
                 object obj = ResourceManager.GetObject("password_error_text_border", resourceCulture);
@@ -376,26 +356,6 @@ namespace GameLauncher.Properties {
         internal static System.Drawing.Bitmap progressgrayscale {
             get {
                 object obj = ResourceManager.GetObject("progressgrayscale", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap register_noticket {
-            get {
-                object obj = ResourceManager.GetObject("register_noticket", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap register_ticket {
-            get {
-                object obj = ResourceManager.GetObject("register_ticket", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -493,16 +453,6 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap tick {
-            get {
-                object obj = ResourceManager.GetObject("tick", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap ticket_error_text_border {
             get {
                 object obj = ResourceManager.GetObject("ticket_error_text_border", resourceCulture);
@@ -526,16 +476,6 @@ namespace GameLauncher.Properties {
         internal static System.Drawing.Bitmap warningprogress {
             get {
                 object obj = ResourceManager.GetObject("warningprogress", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap webicon {
-            get {
-                object obj = ResourceManager.GetObject("webicon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
