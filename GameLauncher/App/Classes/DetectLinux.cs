@@ -42,10 +42,6 @@ namespace GameLauncher.App.Classes
                             val = val.Substring(0, val.Length - 1);
                         }
 
-                        if (val == "Arch Linux" && new Random().NextDouble() < 0.2) {
-                            return "btw i use arch";
-                        }
-
                         return val;
                     }
                 }
