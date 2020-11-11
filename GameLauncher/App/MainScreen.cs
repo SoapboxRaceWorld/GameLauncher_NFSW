@@ -2195,7 +2195,7 @@ namespace GameLauncher
             {
                 HttpWebResponse cdnResponse = (HttpWebResponse)pingCurrentCDN.GetResponse();
                 cdnResponse.Close();
-                settingsCDNCurrent.LinkColor = Color.LawnGreen;
+                settingsCDNCurrent.LinkColor = Color.FromArgb(159, 193, 32);
                 Log.Debug("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Online!");
             }
             catch (WebException)
@@ -2221,7 +2221,7 @@ namespace GameLauncher
                 HttpWebResponse cdnResponse = (HttpWebResponse)pingCurrentCDN.GetResponse();
                 cdnResponse.Close();
                 settingsCDNText.Text = "CDN: ONLINE";
-                settingsCDNText.ForeColor = Color.LawnGreen;
+                settingsCDNText.ForeColor = Color.FromArgb(159, 193, 32);
                 Log.Debug("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)settingsCDNPick.SelectedItem).Url + " Is Online!");
             }
             catch (WebException)

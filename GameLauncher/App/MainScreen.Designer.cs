@@ -156,7 +156,7 @@
             // 
             // SelectServerBtn
             // 
-            this.SelectServerBtn.Location = new System.Drawing.Point(529, 11);
+            this.SelectServerBtn.Location = new System.Drawing.Point(941, 21);
             this.SelectServerBtn.Name = "SelectServerBtn";
             this.SelectServerBtn.Size = new System.Drawing.Size(228, 23);
             this.SelectServerBtn.TabIndex = 1;
