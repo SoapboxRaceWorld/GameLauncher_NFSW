@@ -19,7 +19,7 @@ namespace GameLauncher
 {
     internal static class Program {
         //Update this if a new GameLauncherUpdater.exe has been delployed - DavidCarbon
-        private static string LatestUpdaterBuildVersion = "1.0.0.4";
+        private static readonly string LatestUpdaterBuildVersion = "1.0.0.4";
 
         internal class Arguments {
             [Option('p', "parse", Required = false, HelpText = "Parses URI")]
@@ -372,8 +372,8 @@ namespace GameLauncher
                     if (mutex.WaitOne(0, false)) {
                         string[] files = {
                             "CommandLine.dll - 2.8.0",
-                            "DiscordRPC.dll - 1.0.150.0",
-                            "Flurl.dll - 2.8.2",
+                            "DiscordRPC.dll - 1.0.166.0",
+                            "Flurl.dll - 3.0.0",
                             "Flurl.Http.dll - 2.4.2",
                             "INIFileParser.dll - 2.5.2",
                             "LZMA.dll - 9.10 beta",

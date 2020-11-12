@@ -1396,7 +1396,7 @@ namespace GameLauncher
                 {
                     _loginWelcomeTime = "Good Night";
                 }
-                currentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n {0}", email.Text).ToUpper();
+                currentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", email.Text).ToUpper();
             }
 
             ShowPlayPanel.Visible = hideElements;
