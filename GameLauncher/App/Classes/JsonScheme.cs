@@ -5,6 +5,7 @@ namespace SoapBox.JsonScheme {
         public string MessageSrv { get; set; }
         public string HomePageUrl { get; set; }
         public string FacebookUrl { get; set; }
+        public string TwitterUrl { get; set; }
         public string DiscordUrl { get; set; }
         public string ServerName { get; set; }
         public string Country { get; set; }

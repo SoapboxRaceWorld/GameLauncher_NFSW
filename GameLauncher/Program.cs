@@ -124,7 +124,7 @@ namespace GameLauncher
                 if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
                 {
                     var result = MessageBox.Show(
-                        "You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nClick OK to install it.",
+                        "You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nThis may restart your computer. \n \nClick OK to install it.",
                         "Compatibility",
                         MessageBoxButtons.OKCancel,
                         MessageBoxIcon.Warning);
@@ -158,7 +158,7 @@ namespace GameLauncher
                     if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x64))
                     {
                         var result = MessageBox.Show(
-                            "You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nClick OK to install it.",
+                            "You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nThis may restart your computer. \n \nClick OK to install it.",
                             "Compatibility",
                             MessageBoxButtons.OKCancel,
                             MessageBoxIcon.Warning);
