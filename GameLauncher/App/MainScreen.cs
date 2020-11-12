@@ -719,6 +719,7 @@ namespace GameLauncher
                 launcherStatusText.ForeColor = Color.FromArgb(0x9fc120);
                 launcherStatusText.Text = "Launcher Status - Linux";
             }
+            settingsLauncherVersion.Text = launcherStatusDesc.Text;
 
             Self.gamedir = _settingFile.Read("InstallationDirectory");
 

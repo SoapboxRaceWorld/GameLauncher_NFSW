@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-namespace GameLauncher
+﻿namespace GameLauncher
 {
     sealed partial class MainScreen
     {
@@ -285,7 +284,7 @@ namespace GameLauncher
             this.launcherStatusDesc.Name = "launcherStatusDesc";
             this.launcherStatusDesc.Size = new System.Drawing.Size(132, 13);
             this.launcherStatusDesc.TabIndex = 5;
-            this.launcherStatusDesc.Text = "Version : v16.6.30225.117";
+            this.launcherStatusDesc.Text = "Version : v2.0.0.0";
             this.launcherStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ServerStatusIcon
@@ -741,7 +740,7 @@ namespace GameLauncher
             this.settingsLauncherVersion.Name = "settingsLauncherVersion";
             this.settingsLauncherVersion.Size = new System.Drawing.Size(132, 13);
             this.settingsLauncherVersion.TabIndex = 160;
-            this.settingsLauncherVersion.Text = "Version : v16.6.30225.117";
+            this.settingsLauncherVersion.Text = "Version v2.0.0.0";
             this.settingsLauncherVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // settingsAboutButton
