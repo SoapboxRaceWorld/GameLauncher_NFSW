@@ -742,6 +742,7 @@ namespace GameLauncher
             this.settingsLauncherVersion.Size = new System.Drawing.Size(132, 13);
             this.settingsLauncherVersion.TabIndex = 160;
             this.settingsLauncherVersion.Text = "Version : v16.6.30225.117";
+            this.settingsLauncherVersion.Text = "Version : v" + Application.ProductVersion;
             this.settingsLauncherVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // settingsAboutButton
