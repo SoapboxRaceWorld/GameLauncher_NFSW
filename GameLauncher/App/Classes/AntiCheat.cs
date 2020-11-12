@@ -85,7 +85,7 @@ namespace GameLauncher.App.Classes
                             }
                         }
                     }
-                    Thread.Sleep(500);
+                    Thread.Sleep(100);
                 }
             }) { IsBackground = true };
             thread.Start();

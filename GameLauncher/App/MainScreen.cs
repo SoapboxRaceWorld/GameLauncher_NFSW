@@ -1399,6 +1399,7 @@ namespace GameLauncher
                 currentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", email.Text).ToUpper();
             }
 
+            ServerPingStatusText.Visible = hideElements;
             ShowPlayPanel.Visible = hideElements;
             extractingProgress.Visible = hideElements;
             playProgressText.Visible = hideElements;
@@ -3098,11 +3099,6 @@ namespace GameLauncher
             _playenabled = false;
 
             ShowPlayPanel.Visible = false;
-            /*
-            playButton.Visible = false;
-            logoutButton.Visible = false;
-            ServerPingStatusText.Visible = false;
-            */
 
             extractingProgress.Value = 100;
             extractingProgress.Width = 519;

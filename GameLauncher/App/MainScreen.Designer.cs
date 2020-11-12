@@ -283,9 +283,9 @@ namespace GameLauncher
             this.launcherStatusDesc.Location = new System.Drawing.Point(54, 469);
             this.launcherStatusDesc.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.launcherStatusDesc.Name = "launcherStatusDesc";
-            this.launcherStatusDesc.Size = new System.Drawing.Size(146, 13);
+            this.launcherStatusDesc.Size = new System.Drawing.Size(132, 13);
             this.launcherStatusDesc.TabIndex = 5;
-            this.launcherStatusDesc.Text = "Version : v" + Application.ProductVersion;
+            this.launcherStatusDesc.Text = "Version : v16.6.30225.117";
             this.launcherStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ServerStatusIcon
@@ -441,7 +441,7 @@ namespace GameLauncher
             this.rememberMe.ForeColor = System.Drawing.Color.White;
             this.rememberMe.Location = new System.Drawing.Point(645, 260);
             this.rememberMe.Name = "rememberMe";
-            this.rememberMe.Size = new System.Drawing.Size(158, 19);
+            this.rememberMe.Size = new System.Drawing.Size(159, 19);
             this.rememberMe.TabIndex = 6;
             this.rememberMe.Text = "REMEMBER MY LOGIN";
             this.rememberMe.UseVisualStyleBackColor = false;
@@ -500,7 +500,7 @@ namespace GameLauncher
             this.ServerPingStatusText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ServerPingStatusText.Font = new System.Drawing.Font("Arial", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(238)));
             this.ServerPingStatusText.ForeColor = System.Drawing.Color.White;
-            this.ServerPingStatusText.Location = new System.Drawing.Point(20, 0);
+            this.ServerPingStatusText.Location = new System.Drawing.Point(625, 290);
             this.ServerPingStatusText.Name = "ServerPingStatusText";
             this.ServerPingStatusText.Size = new System.Drawing.Size(194, 61);
             this.ServerPingStatusText.TabIndex = 148;
@@ -739,9 +739,9 @@ namespace GameLauncher
             this.settingsLauncherVersion.Location = new System.Drawing.Point(28, 416);
             this.settingsLauncherVersion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.settingsLauncherVersion.Name = "settingsLauncherVersion";
-            this.settingsLauncherVersion.Size = new System.Drawing.Size(146, 13);
+            this.settingsLauncherVersion.Size = new System.Drawing.Size(132, 13);
             this.settingsLauncherVersion.TabIndex = 160;
-            this.settingsLauncherVersion.Text = "Version : v" + Application.ProductVersion;
+            this.settingsLauncherVersion.Text = "Version : v16.6.30225.117";
             this.settingsLauncherVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // settingsAboutButton
@@ -930,7 +930,7 @@ namespace GameLauncher
             this.settingsWordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsWordFilterCheck.Location = new System.Drawing.Point(26, 288);
             this.settingsWordFilterCheck.Name = "settingsWordFilterCheck";
-            this.settingsWordFilterCheck.Size = new System.Drawing.Size(234, 17);
+            this.settingsWordFilterCheck.Size = new System.Drawing.Size(235, 17);
             this.settingsWordFilterCheck.TabIndex = 135;
             this.settingsWordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.settingsWordFilterCheck.UseVisualStyleBackColor = false;
@@ -943,7 +943,7 @@ namespace GameLauncher
             this.settingsProxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsProxyCheckbox.Location = new System.Drawing.Point(26, 308);
             this.settingsProxyCheckbox.Name = "settingsProxyCheckbox";
-            this.settingsProxyCheckbox.Size = new System.Drawing.Size(102, 17);
+            this.settingsProxyCheckbox.Size = new System.Drawing.Size(103, 17);
             this.settingsProxyCheckbox.TabIndex = 136;
             this.settingsProxyCheckbox.Text = "Disable Proxy";
             this.settingsProxyCheckbox.UseVisualStyleBackColor = false;
@@ -956,7 +956,7 @@ namespace GameLauncher
             this.settingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsDiscordRPCCheckbox.Location = new System.Drawing.Point(26, 328);
             this.settingsDiscordRPCCheckbox.Name = "settingsDiscordRPCCheckbox";
-            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(143, 17);
+            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(144, 17);
             this.settingsDiscordRPCCheckbox.TabIndex = 137;
             this.settingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
             this.settingsDiscordRPCCheckbox.UseVisualStyleBackColor = false;
@@ -1118,7 +1118,6 @@ namespace GameLauncher
             this.ShowPlayPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ShowPlayPanel.BackColor = System.Drawing.Color.Transparent;
             this.ShowPlayPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ShowPlayPanel.Controls.Add(this.ServerPingStatusText);
             this.ShowPlayPanel.Controls.Add(this.logoutButton);
             this.ShowPlayPanel.Controls.Add(this.playButton);
             this.ShowPlayPanel.ForeColor = System.Drawing.Color.Transparent;
@@ -1189,6 +1188,7 @@ namespace GameLauncher
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.currentWindowInfo);
+            this.Controls.Add(this.ServerPingStatusText);
             this.Controls.Add(this.logo);
             this.Controls.Add(this.RegisterPanel);
             this.Controls.Add(this.settingsButton);
