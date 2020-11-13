@@ -808,7 +808,7 @@ namespace GameLauncher
             CleanModsFiles();
 
             //Leave this here. Its to properly close the launcher from Visual Studio (And Close the Launcher a well)
-            this.Close();
+            try { this.Close(); } catch { }
         }
 
         private void AddServer_Click(object sender, EventArgs e)
