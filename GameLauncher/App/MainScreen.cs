@@ -2494,21 +2494,26 @@ namespace GameLauncher
                     //get files now
                     MainJson json2 = JsonConvert.DeserializeObject<MainJson>(jsonModNet);
 
-
                     //metonator was here!
                     try
                     {
-                        EventList.remoteEvent = new WebClient().DownloadString(json2.BasePath + "/events.json");
+                        CarsList.remoteCarsList = new WebClient().DownloadString(json2.BasePath + "/cars.json");
                     }
                     catch { }
+                    if (CarsList.remoteCarsList != String.Empty) { Log.Debug("DISCORD: Found RemoteRPC List for cars.json"); }
+                    if (CarsList.remoteCarsList == String.Empty) { Log.Debug("DISCORD: RemoteRPC List for cars.json does not exist"); }
+
                     try
                     {
-                        CarList.remoteCarList = new WebClient().DownloadString(json2.BasePath + "/cars.json");
+                        EventsList.remoteEventsList = new WebClient().DownloadString(json2.BasePath + "/events.json");
                     }
-                    catch { }
+                     catch { }
+                    if (EventsList.remoteEventsList != String.Empty) { Log.Debug("DISCORD: Found RemoteRPC List for events.json"); }
+                    if (EventsList.remoteEventsList == String.Empty) { Log.Debug("DISCORD: RemoteRPC List for events.json does not exist"); }
 
                     //get new index
                     Uri newIndexFile = new Uri(json2.BasePath + "/index.json");
+                    Log.Debug("CORE: Loading Server Mods List");
                     String jsonindex = new WebClient().DownloadString(newIndexFile);
 
                     IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);

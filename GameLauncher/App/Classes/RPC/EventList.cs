@@ -1,15 +1,16 @@
 ﻿using Newtonsoft.Json;
 using System;
+using GameLauncher.App.Classes.Logger;
 
 namespace GameLauncher.App.Classes.RPC
 {
-    class EventList {
-        public static String remoteEvent = String.Empty;
+    class EventsList {
+        public static String remoteEventsList = String.Empty;
 
         public static string GetEventName(int id) {
-            // Let's load the "Cached From Server" version first
-            if (remoteEvent != String.Empty) {
-                dynamic dynJson = JsonConvert.DeserializeObject(remoteEvent);
+            // Let's load the "From Server" version first
+            if (remoteEventsList != String.Empty) {
+                dynamic dynJson = JsonConvert.DeserializeObject(remoteEventsList);
 
                 foreach (var item in dynJson) {
                     if (item.id == id) {
@@ -19,7 +20,7 @@ namespace GameLauncher.App.Classes.RPC
             }
 
             // If we don't have a Server version, load "default" version
-            if (remoteEvent == String.Empty) {
+            if (remoteEventsList == String.Empty) {
                 dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.events.json"));
 
                 foreach (var item in dynJson) {
@@ -34,9 +35,9 @@ namespace GameLauncher.App.Classes.RPC
         }
 
         public static string GetEventType(int id) {
-            // Let's load the "Cached From Server" version first
-            if (remoteEvent != String.Empty) {
-                dynamic dynJson = JsonConvert.DeserializeObject(remoteEvent);
+            // Let's load the "From Server" version first
+            if (remoteEventsList != String.Empty) {
+                dynamic dynJson = JsonConvert.DeserializeObject(remoteEventsList);
 
                 foreach (var item in dynJson) {
                     if (item.id == id) {
@@ -46,7 +47,7 @@ namespace GameLauncher.App.Classes.RPC
             }
 
             // If we don't have a Server version, load "default" version
-            if (remoteEvent != String.Empty) {
+            if (remoteEventsList != String.Empty) {
                 dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.events.json"));
 
                 foreach (var item in dynJson) {

@@ -1,15 +1,16 @@
 ﻿using Newtonsoft.Json;
 using System;
+using GameLauncher.App.Classes.Logger;
 
 namespace GameLauncher.App.Classes.RPC
 {
-    class CarList {
-        public static String remoteCarList = String.Empty;
+    class CarsList {
+        public static String remoteCarsList = String.Empty;
 
         public static string GetCarName(string id) {
             // Let's load the "Cached From Server" version first
-            if (remoteCarList != String.Empty) {
-                dynamic dynJson = JsonConvert.DeserializeObject(remoteCarList);
+            if (remoteCarsList != String.Empty) {
+                dynamic dynJson = JsonConvert.DeserializeObject(remoteCarsList);
 
                 foreach (var item in dynJson) {
                     if (item.carid == id) {
@@ -19,7 +20,7 @@ namespace GameLauncher.App.Classes.RPC
             }
 
             // If we don't have a Server version, load "default" version
-            if (remoteCarList == String.Empty) {
+            if (remoteCarsList == String.Empty) {
                 dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.cars.json"));
 
                 foreach (var item in dynJson) {
