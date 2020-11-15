@@ -68,6 +68,7 @@ namespace GameLauncher
         private DateTime _downloadStartTime;
         private readonly Downloader _downloader;
 
+        private string _discordLink = "";
         private string _loginWelcomeTime = "";
         private string _loginToken = "";
         private string _userId = "";
@@ -1113,6 +1114,61 @@ namespace GameLauncher
                             }
                         } catch {
                             verticalImageUrl = null;
+                        }
+
+                        //DavidCarbonGaming
+                        /* Social Panel */
+
+                        //Discord Invite Display
+                        try
+                        {
+                            if (string.IsNullOrEmpty(json.DiscordUrl))
+                            {
+                                DiscordInviteLink.Enabled = false;
+                                this.DiscordInviteLink.Text = "";
+                                _discordLink = "";
+                            }
+                            else
+                            {
+                                DiscordInviteLink.Enabled = true;
+                                this.DiscordInviteLink.Text = string.Format("{0}", json.DiscordUrl.ToString());
+                                _discordLink = json.DiscordUrl;
+                            }
+                        }
+                        catch
+                        {
+                            DiscordInviteLink.Enabled = false;
+                            this.DiscordInviteLink.Text = "";
+                            _discordLink = "";
+                        }
+
+                        //Scenery Group Display
+                        try
+                        {
+                            if (json.ActivatedHolidaySceneryGroups == "SCENERY_GROUP_NEWYEARS")
+                            {
+                                this.SceneryGroupText.Text = "New Years Scenery";
+                            }
+                            else if (json.ActivatedHolidaySceneryGroups == "SCENERY_GROUP_OKTOBERFEST")
+                            {
+                                this.SceneryGroupText.Text = "OKTOBERFEST Scenery";
+                            }
+                            else if (json.ActivatedHolidaySceneryGroups == "SCENERY_GROUP_HALLOWEEN")
+                            {
+                                this.SceneryGroupText.Text = "Halloween Scenery";
+                            }
+                            else if (json.ActivatedHolidaySceneryGroups == "SCENERY_GROUP_CHRISTMAS")
+                            {
+                                this.SceneryGroupText.Text = "Christmas Scenery";
+                            }
+                            else
+                            {
+                                this.SceneryGroupText.Text = "Normal Scenery";
+                            }
+                        }
+                        catch
+                        {
+                            this.SceneryGroupText.Text = "Normal Scenery";
                         }
 
                         try {
@@ -3226,6 +3282,11 @@ namespace GameLauncher
         private void PatchNotes_Click(object sender, EventArgs e)
         {
             new About().Show();
+        }
+
+        private void DiscordInviteLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(_discordLink);
         }
     }
     /* Moved 7 Unused Code to Gist */

@@ -107,6 +107,9 @@
             this.RegisterPanel = new System.Windows.Forms.Panel();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
+            this.DiscordIcon = new System.Windows.Forms.PictureBox();
+            this.DiscordInviteLink = new System.Windows.Forms.LinkLabel();
+            this.SceneryGroupText = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
@@ -123,6 +126,7 @@
             this.SettingsPanel.SuspendLayout();
             this.ShowPlayPanel.SuspendLayout();
             this.RegisterPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DiscordIcon)).BeginInit();
             this.SuspendLayout();
             // 
             // Timeout
@@ -282,7 +286,7 @@
             this.launcherStatusDesc.Location = new System.Drawing.Point(54, 469);
             this.launcherStatusDesc.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.launcherStatusDesc.Name = "launcherStatusDesc";
-            this.launcherStatusDesc.Size = new System.Drawing.Size(132, 13);
+            this.launcherStatusDesc.Size = new System.Drawing.Size(90, 13);
             this.launcherStatusDesc.TabIndex = 5;
             this.launcherStatusDesc.Text = "Version : v2.0.0.0";
             this.launcherStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -725,7 +729,7 @@
             this.SettingsPanel.Controls.Add(this.settingsBkupCDNText);
             this.SettingsPanel.ForeColor = System.Drawing.Color.Transparent;
             this.SettingsPanel.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.SettingsPanel.Location = new System.Drawing.Point(26, 53);
+            this.SettingsPanel.Location = new System.Drawing.Point(586, 473);
             this.SettingsPanel.Name = "SettingsPanel";
             this.SettingsPanel.Size = new System.Drawing.Size(837, 452);
             this.SettingsPanel.TabIndex = 150;
@@ -738,7 +742,7 @@
             this.settingsLauncherVersion.Location = new System.Drawing.Point(28, 416);
             this.settingsLauncherVersion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.settingsLauncherVersion.Name = "settingsLauncherVersion";
-            this.settingsLauncherVersion.Size = new System.Drawing.Size(132, 13);
+            this.settingsLauncherVersion.Size = new System.Drawing.Size(84, 13);
             this.settingsLauncherVersion.TabIndex = 160;
             this.settingsLauncherVersion.Text = "Version v2.0.0.0";
             this.settingsLauncherVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1180,12 +1184,56 @@
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
             // 
+            // DiscordIcon
+            // 
+            this.DiscordIcon.BackColor = System.Drawing.Color.Transparent;
+            this.DiscordIcon.Image = ((System.Drawing.Image)(resources.GetObject("DiscordIcon.Image")));
+            this.DiscordIcon.Location = new System.Drawing.Point(398, 327);
+            this.DiscordIcon.Margin = new System.Windows.Forms.Padding(2);
+            this.DiscordIcon.Name = "DiscordIcon";
+            this.DiscordIcon.Size = new System.Drawing.Size(24, 24);
+            this.DiscordIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.DiscordIcon.TabIndex = 159;
+            this.DiscordIcon.TabStop = false;
+            // 
+            // DiscordInviteLink
+            // 
+            this.DiscordInviteLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.DiscordInviteLink.AutoSize = true;
+            this.DiscordInviteLink.BackColor = System.Drawing.Color.Transparent;
+            this.DiscordInviteLink.ForeColor = System.Drawing.Color.Transparent;
+            this.DiscordInviteLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.DiscordInviteLink.Location = new System.Drawing.Point(420, 327);
+            this.DiscordInviteLink.Name = "DiscordInviteLink";
+            this.DiscordInviteLink.Size = new System.Drawing.Size(92, 13);
+            this.DiscordInviteLink.TabIndex = 163;
+            this.DiscordInviteLink.TabStop = true;
+            this.DiscordInviteLink.Text = "https://discord.gg";
+            this.DiscordInviteLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DiscordInviteLink_LinkClicked);
+            // 
+            // SceneryGroupText
+            // 
+            this.SceneryGroupText.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.SceneryGroupText.AutoSize = true;
+            this.SceneryGroupText.BackColor = System.Drawing.Color.Transparent;
+            this.SceneryGroupText.ForeColor = System.Drawing.Color.Transparent;
+            this.SceneryGroupText.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.SceneryGroupText.Location = new System.Drawing.Point(27, 338);
+            this.SceneryGroupText.Name = "SceneryGroupText";
+            this.SceneryGroupText.Size = new System.Drawing.Size(78, 13);
+            this.SceneryGroupText.TabIndex = 166;
+            this.SceneryGroupText.TabStop = true;
+            this.SceneryGroupText.Text = "Scenery Group";
+            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.mainbackground;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.SceneryGroupText);
+            this.Controls.Add(this.DiscordInviteLink);
+            this.Controls.Add(this.DiscordIcon);
             this.Controls.Add(this.currentWindowInfo);
             this.Controls.Add(this.ServerPingStatusText);
             this.Controls.Add(this.logo);
@@ -1247,6 +1295,7 @@
             this.ShowPlayPanel.ResumeLayout(false);
             this.RegisterPanel.ResumeLayout(false);
             this.RegisterPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DiscordIcon)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1331,5 +1380,8 @@
         private System.Windows.Forms.Button SettingsClearCommunicationLogButton;
         private System.Windows.Forms.Button settingsAboutButton;
         private System.Windows.Forms.Label settingsLauncherVersion;
+        private System.Windows.Forms.PictureBox DiscordIcon;
+        private System.Windows.Forms.LinkLabel DiscordInviteLink;
+        private System.Windows.Forms.LinkLabel SceneryGroupText;
     }
 }
