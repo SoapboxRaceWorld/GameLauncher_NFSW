@@ -1237,7 +1237,7 @@ namespace GameLauncher
                         }
 
                         //Scenery Group Display
-                        
+                        /*
                         try
                         {
                             if (json.ActivatedHolidaySceneryGroups == "SCENERY_GROUP_NEWYEARS")
@@ -1265,7 +1265,7 @@ namespace GameLauncher
                         {
                             this.SceneryGroupText.Text = "Normal Scenery";
                         }
-                        
+                        */
 
                         try {
                             if (string.IsNullOrEmpty(json.RequireTicket)) {
