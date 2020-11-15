@@ -105,11 +105,19 @@
             this.settingsBkupCDNText = new System.Windows.Forms.Label();
             this.ShowPlayPanel = new System.Windows.Forms.Panel();
             this.RegisterPanel = new System.Windows.Forms.Panel();
-            this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
-            this.playProgress = new GameLauncherReborn.ProgressBarEx();
-            this.DiscordIcon = new System.Windows.Forms.PictureBox();
             this.DiscordInviteLink = new System.Windows.Forms.LinkLabel();
             this.SceneryGroupText = new System.Windows.Forms.LinkLabel();
+            this.ServerShutDown = new System.Windows.Forms.Label();
+            this.ServerInfoPanel = new System.Windows.Forms.Panel();
+            this.HomePageIcon = new System.Windows.Forms.PictureBox();
+            this.DiscordIcon = new System.Windows.Forms.PictureBox();
+            this.FacebookIcon = new System.Windows.Forms.PictureBox();
+            this.TwitterAccountLink = new System.Windows.Forms.LinkLabel();
+            this.TwitterIcon = new System.Windows.Forms.PictureBox();
+            this.FacebookGroupLink = new System.Windows.Forms.LinkLabel();
+            this.HomePageLink = new System.Windows.Forms.LinkLabel();
+            this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
+            this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.closebtn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
@@ -126,7 +134,11 @@
             this.SettingsPanel.SuspendLayout();
             this.ShowPlayPanel.SuspendLayout();
             this.RegisterPanel.SuspendLayout();
+            this.ServerInfoPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.HomePageIcon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DiscordIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.FacebookIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TwitterIcon)).BeginInit();
             this.SuspendLayout();
             // 
             // Timeout
@@ -729,7 +741,7 @@
             this.SettingsPanel.Controls.Add(this.settingsBkupCDNText);
             this.SettingsPanel.ForeColor = System.Drawing.Color.Transparent;
             this.SettingsPanel.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.SettingsPanel.Location = new System.Drawing.Point(586, 473);
+            this.SettingsPanel.Location = new System.Drawing.Point(27, 50);
             this.SettingsPanel.Name = "SettingsPanel";
             this.SettingsPanel.Size = new System.Drawing.Size(837, 452);
             this.SettingsPanel.TabIndex = 150;
@@ -1153,6 +1165,166 @@
             this.RegisterPanel.Size = new System.Drawing.Size(263, 374);
             this.RegisterPanel.TabIndex = 156;
             // 
+            // DiscordInviteLink
+            // 
+            this.DiscordInviteLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.DiscordInviteLink.AutoSize = true;
+            this.DiscordInviteLink.BackColor = System.Drawing.Color.Transparent;
+            this.DiscordInviteLink.ForeColor = System.Drawing.Color.Transparent;
+            this.DiscordInviteLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.DiscordInviteLink.Location = new System.Drawing.Point(109, 14);
+            this.DiscordInviteLink.Name = "DiscordInviteLink";
+            this.DiscordInviteLink.Size = new System.Drawing.Size(43, 26);
+            this.DiscordInviteLink.TabIndex = 163;
+            this.DiscordInviteLink.TabStop = true;
+            this.DiscordInviteLink.Text = "Discord\r\nInvite";
+            this.DiscordInviteLink.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.DiscordInviteLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DiscordInviteLink_LinkClicked);
+            // 
+            // SceneryGroupText
+            // 
+            this.SceneryGroupText.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.SceneryGroupText.AutoSize = true;
+            this.SceneryGroupText.BackColor = System.Drawing.Color.Transparent;
+            this.SceneryGroupText.ForeColor = System.Drawing.Color.Transparent;
+            this.SceneryGroupText.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.SceneryGroupText.Location = new System.Drawing.Point(8, 59);
+            this.SceneryGroupText.Name = "SceneryGroupText";
+            this.SceneryGroupText.Size = new System.Drawing.Size(78, 13);
+            this.SceneryGroupText.TabIndex = 166;
+            this.SceneryGroupText.TabStop = true;
+            this.SceneryGroupText.Text = "Scenery Group";
+            // 
+            // ServerShutDown
+            // 
+            this.ServerShutDown.BackColor = System.Drawing.Color.Transparent;
+            this.ServerShutDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.ServerShutDown.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.ServerShutDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ServerShutDown.Location = new System.Drawing.Point(154, 57);
+            this.ServerShutDown.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.ServerShutDown.Name = "ServerShutDown";
+            this.ServerShutDown.Size = new System.Drawing.Size(162, 15);
+            this.ServerShutDown.TabIndex = 169;
+            this.ServerShutDown.Text = "ServerTimer";
+            this.ServerShutDown.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // ServerInfoPanel
+            // 
+            this.ServerInfoPanel.BackColor = System.Drawing.Color.Transparent;
+            this.ServerInfoPanel.BackgroundImage = global::GameLauncher.Properties.Resources.eyecatcher;
+            this.ServerInfoPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ServerInfoPanel.Controls.Add(this.HomePageIcon);
+            this.ServerInfoPanel.Controls.Add(this.DiscordIcon);
+            this.ServerInfoPanel.Controls.Add(this.FacebookIcon);
+            this.ServerInfoPanel.Controls.Add(this.TwitterAccountLink);
+            this.ServerInfoPanel.Controls.Add(this.TwitterIcon);
+            this.ServerInfoPanel.Controls.Add(this.FacebookGroupLink);
+            this.ServerInfoPanel.Controls.Add(this.HomePageLink);
+            this.ServerInfoPanel.Controls.Add(this.DiscordInviteLink);
+            this.ServerInfoPanel.Controls.Add(this.ServerShutDown);
+            this.ServerInfoPanel.Controls.Add(this.SceneryGroupText);
+            this.ServerInfoPanel.Location = new System.Drawing.Point(142, 301);
+            this.ServerInfoPanel.Name = "ServerInfoPanel";
+            this.ServerInfoPanel.Size = new System.Drawing.Size(325, 88);
+            this.ServerInfoPanel.TabIndex = 172;
+            // 
+            // HomePageIcon
+            // 
+            this.HomePageIcon.BackColor = System.Drawing.Color.Transparent;
+            this.HomePageIcon.Image = ((System.Drawing.Image)(resources.GetObject("HomePageIcon.Image")));
+            this.HomePageIcon.Location = new System.Drawing.Point(11, 13);
+            this.HomePageIcon.Margin = new System.Windows.Forms.Padding(2);
+            this.HomePageIcon.Name = "HomePageIcon";
+            this.HomePageIcon.Size = new System.Drawing.Size(24, 24);
+            this.HomePageIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.HomePageIcon.TabIndex = 178;
+            this.HomePageIcon.TabStop = false;
+            // 
+            // DiscordIcon
+            // 
+            this.DiscordIcon.BackColor = System.Drawing.Color.Transparent;
+            this.DiscordIcon.Image = ((System.Drawing.Image)(resources.GetObject("DiscordIcon.Image")));
+            this.DiscordIcon.Location = new System.Drawing.Point(80, 13);
+            this.DiscordIcon.Margin = new System.Windows.Forms.Padding(2);
+            this.DiscordIcon.Name = "DiscordIcon";
+            this.DiscordIcon.Size = new System.Drawing.Size(24, 24);
+            this.DiscordIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.DiscordIcon.TabIndex = 177;
+            this.DiscordIcon.TabStop = false;
+            // 
+            // FacebookIcon
+            // 
+            this.FacebookIcon.BackColor = System.Drawing.Color.Transparent;
+            this.FacebookIcon.Image = ((System.Drawing.Image)(resources.GetObject("FacebookIcon.Image")));
+            this.FacebookIcon.Location = new System.Drawing.Point(157, 13);
+            this.FacebookIcon.Margin = new System.Windows.Forms.Padding(2);
+            this.FacebookIcon.Name = "FacebookIcon";
+            this.FacebookIcon.Size = new System.Drawing.Size(24, 24);
+            this.FacebookIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.FacebookIcon.TabIndex = 176;
+            this.FacebookIcon.TabStop = false;
+            // 
+            // TwitterAccountLink
+            // 
+            this.TwitterAccountLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.TwitterAccountLink.AutoSize = true;
+            this.TwitterAccountLink.BackColor = System.Drawing.Color.Transparent;
+            this.TwitterAccountLink.ForeColor = System.Drawing.Color.Transparent;
+            this.TwitterAccountLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.TwitterAccountLink.Location = new System.Drawing.Point(275, 12);
+            this.TwitterAccountLink.Name = "TwitterAccountLink";
+            this.TwitterAccountLink.Size = new System.Drawing.Size(39, 26);
+            this.TwitterAccountLink.TabIndex = 175;
+            this.TwitterAccountLink.TabStop = true;
+            this.TwitterAccountLink.Text = "Twitter\r\nPage";
+            this.TwitterAccountLink.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.TwitterAccountLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.TwitterAccountLink_LinkClicked);
+            // 
+            // TwitterIcon
+            // 
+            this.TwitterIcon.BackColor = System.Drawing.Color.Transparent;
+            this.TwitterIcon.Image = ((System.Drawing.Image)(resources.GetObject("TwitterIcon.Image")));
+            this.TwitterIcon.Location = new System.Drawing.Point(246, 13);
+            this.TwitterIcon.Margin = new System.Windows.Forms.Padding(2);
+            this.TwitterIcon.Name = "TwitterIcon";
+            this.TwitterIcon.Size = new System.Drawing.Size(24, 24);
+            this.TwitterIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.TwitterIcon.TabIndex = 174;
+            this.TwitterIcon.TabStop = false;
+            // 
+            // FacebookGroupLink
+            // 
+            this.FacebookGroupLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.FacebookGroupLink.AutoSize = true;
+            this.FacebookGroupLink.BackColor = System.Drawing.Color.Transparent;
+            this.FacebookGroupLink.ForeColor = System.Drawing.Color.Transparent;
+            this.FacebookGroupLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.FacebookGroupLink.Location = new System.Drawing.Point(186, 12);
+            this.FacebookGroupLink.Name = "FacebookGroupLink";
+            this.FacebookGroupLink.Size = new System.Drawing.Size(55, 26);
+            this.FacebookGroupLink.TabIndex = 173;
+            this.FacebookGroupLink.TabStop = true;
+            this.FacebookGroupLink.Text = "Facebook\r\nGroup";
+            this.FacebookGroupLink.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.FacebookGroupLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.FacebookGroupLink_LinkClicked);
+            // 
+            // HomePageLink
+            // 
+            this.HomePageLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.HomePageLink.AutoSize = true;
+            this.HomePageLink.BackColor = System.Drawing.Color.Transparent;
+            this.HomePageLink.ForeColor = System.Drawing.Color.Transparent;
+            this.HomePageLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.HomePageLink.Location = new System.Drawing.Point(40, 13);
+            this.HomePageLink.Name = "HomePageLink";
+            this.HomePageLink.Size = new System.Drawing.Size(35, 26);
+            this.HomePageLink.TabIndex = 171;
+            this.HomePageLink.TabStop = true;
+            this.HomePageLink.Text = "Home\r\nPage";
+            this.HomePageLink.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.HomePageLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.HomePageLink_LinkClicked);
+            // 
             // extractingProgress
             // 
             this.extractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -1184,56 +1356,12 @@
             this.playProgress.Size = new System.Drawing.Size(519, 13);
             this.playProgress.Text = "downloadProgress";
             // 
-            // DiscordIcon
-            // 
-            this.DiscordIcon.BackColor = System.Drawing.Color.Transparent;
-            this.DiscordIcon.Image = ((System.Drawing.Image)(resources.GetObject("DiscordIcon.Image")));
-            this.DiscordIcon.Location = new System.Drawing.Point(398, 327);
-            this.DiscordIcon.Margin = new System.Windows.Forms.Padding(2);
-            this.DiscordIcon.Name = "DiscordIcon";
-            this.DiscordIcon.Size = new System.Drawing.Size(24, 24);
-            this.DiscordIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.DiscordIcon.TabIndex = 159;
-            this.DiscordIcon.TabStop = false;
-            // 
-            // DiscordInviteLink
-            // 
-            this.DiscordInviteLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.DiscordInviteLink.AutoSize = true;
-            this.DiscordInviteLink.BackColor = System.Drawing.Color.Transparent;
-            this.DiscordInviteLink.ForeColor = System.Drawing.Color.Transparent;
-            this.DiscordInviteLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.DiscordInviteLink.Location = new System.Drawing.Point(420, 327);
-            this.DiscordInviteLink.Name = "DiscordInviteLink";
-            this.DiscordInviteLink.Size = new System.Drawing.Size(92, 13);
-            this.DiscordInviteLink.TabIndex = 163;
-            this.DiscordInviteLink.TabStop = true;
-            this.DiscordInviteLink.Text = "https://discord.gg";
-            this.DiscordInviteLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DiscordInviteLink_LinkClicked);
-            // 
-            // SceneryGroupText
-            // 
-            this.SceneryGroupText.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SceneryGroupText.AutoSize = true;
-            this.SceneryGroupText.BackColor = System.Drawing.Color.Transparent;
-            this.SceneryGroupText.ForeColor = System.Drawing.Color.Transparent;
-            this.SceneryGroupText.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.SceneryGroupText.Location = new System.Drawing.Point(27, 338);
-            this.SceneryGroupText.Name = "SceneryGroupText";
-            this.SceneryGroupText.Size = new System.Drawing.Size(78, 13);
-            this.SceneryGroupText.TabIndex = 166;
-            this.SceneryGroupText.TabStop = true;
-            this.SceneryGroupText.Text = "Scenery Group";
-            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.mainbackground;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
-            this.Controls.Add(this.SceneryGroupText);
-            this.Controls.Add(this.DiscordInviteLink);
-            this.Controls.Add(this.DiscordIcon);
             this.Controls.Add(this.currentWindowInfo);
             this.Controls.Add(this.ServerPingStatusText);
             this.Controls.Add(this.logo);
@@ -1267,8 +1395,9 @@
             this.Controls.Add(this.registerText);
             this.Controls.Add(this.playProgress);
             this.Controls.Add(this.playProgressTextTimer);
-            this.Controls.Add(this.imageServerName);
             this.Controls.Add(this.verticalBanner);
+            this.Controls.Add(this.ServerInfoPanel);
+            this.Controls.Add(this.imageServerName);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1295,7 +1424,12 @@
             this.ShowPlayPanel.ResumeLayout(false);
             this.RegisterPanel.ResumeLayout(false);
             this.RegisterPanel.PerformLayout();
+            this.ServerInfoPanel.ResumeLayout(false);
+            this.ServerInfoPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.HomePageIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DiscordIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.FacebookIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TwitterIcon)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1380,8 +1514,16 @@
         private System.Windows.Forms.Button SettingsClearCommunicationLogButton;
         private System.Windows.Forms.Button settingsAboutButton;
         private System.Windows.Forms.Label settingsLauncherVersion;
-        private System.Windows.Forms.PictureBox DiscordIcon;
         private System.Windows.Forms.LinkLabel DiscordInviteLink;
         private System.Windows.Forms.LinkLabel SceneryGroupText;
+        private System.Windows.Forms.Label ServerShutDown;
+        private System.Windows.Forms.Panel ServerInfoPanel;
+        private System.Windows.Forms.LinkLabel TwitterAccountLink;
+        private System.Windows.Forms.PictureBox TwitterIcon;
+        private System.Windows.Forms.LinkLabel FacebookGroupLink;
+        private System.Windows.Forms.LinkLabel HomePageLink;
+        private System.Windows.Forms.PictureBox HomePageIcon;
+        private System.Windows.Forms.PictureBox DiscordIcon;
+        private System.Windows.Forms.PictureBox FacebookIcon;
     }
 }

@@ -68,7 +68,10 @@ namespace GameLauncher
         private DateTime _downloadStartTime;
         private readonly Downloader _downloader;
 
-        private string _discordLink = "";
+        private string _serverWebsiteLink = "";
+        private string _serverFacebookLink = "";
+        private string _serverDiscordLink = "";
+        private string _serverTwitterLink = "";
         private string _loginWelcomeTime = "";
         private string _loginToken = "";
         private string _userId = "";
@@ -1020,11 +1023,13 @@ namespace GameLauncher
                 loginButton.Image = Properties.Resources.graybutton;
                 loginButton.Text = "Launch".ToUpper();
                 loginButton.ForeColor = Color.White;
+                ServerInfoPanel.Visible = false;
             } else {
                 _builtinserver = false;
                 loginButton.Image = Properties.Resources.graybutton;
                 loginButton.Text = "Login".ToUpper();
                 loginButton.ForeColor = Color.Gray;
+                ServerInfoPanel.Visible = false;
             }
 
             WebClient client = new WebClient();
@@ -1055,6 +1060,8 @@ namespace GameLauncher
                     //Disable Login & Register Button
                     loginButton.Enabled = false;
                     registerText.Enabled = false;
+                    //Disable Social Panel
+                    ServerInfoPanel.Visible = false;
 
                     if (!serverStatusDictionary.ContainsKey(_serverInfo.Id)) {
                         serverStatusDictionary.Add(_serverInfo.Id, 2);
@@ -1073,6 +1080,8 @@ namespace GameLauncher
                     //Disable Login & Register Button
                     loginButton.Enabled = false;
                     registerText.Enabled = false;
+                    //Disable Social Panel
+                    ServerInfoPanel.Visible = false;
 
                     if (!serverStatusDictionary.ContainsKey(_serverInfo.Id)) {
                         serverStatusDictionary.Add(_serverInfo.Id, 0);
@@ -1088,6 +1097,8 @@ namespace GameLauncher
                         } else {
                             serverStatusDictionary[_serverInfo.Id] = 1;
                         }
+                        //Enable Social Panel
+                        ServerInfoPanel.Visible = true;
 
                         String purejson = String.Empty;
                         purejson = e2.Result;
@@ -1124,25 +1135,109 @@ namespace GameLauncher
                         {
                             if (string.IsNullOrEmpty(json.DiscordUrl))
                             {
+                                DiscordIcon.Enabled = false;
                                 DiscordInviteLink.Enabled = false;
-                                this.DiscordInviteLink.Text = "";
-                                _discordLink = "";
+                                _serverDiscordLink = null;
                             }
                             else
                             {
+                                DiscordIcon.Enabled = true;
                                 DiscordInviteLink.Enabled = true;
-                                this.DiscordInviteLink.Text = string.Format("{0}", json.DiscordUrl.ToString());
-                                _discordLink = json.DiscordUrl;
+                                _serverDiscordLink = json.DiscordUrl;
                             }
                         }
                         catch
                         {
+                            DiscordIcon.Enabled = false;
                             DiscordInviteLink.Enabled = false;
-                            this.DiscordInviteLink.Text = "";
-                            _discordLink = "";
+                            _serverDiscordLink = null;
+                        }
+
+                        //Homepage Display
+                        try
+                        {
+                            if (string.IsNullOrEmpty(json.HomePageUrl))
+                            {
+                                HomePageIcon.Enabled = false;
+                                HomePageLink.Enabled = false;
+                                _serverWebsiteLink = null;
+                            }
+                            else
+                            {
+                                HomePageIcon.Enabled = true;
+                                HomePageLink.Enabled = true;
+                                _serverWebsiteLink = json.HomePageUrl;
+                            }
+                        }
+                        catch
+                        {
+                            HomePageIcon.Enabled = false;
+                            DiscordInviteLink.Enabled = false;
+                            _serverWebsiteLink = null;
+                        }
+
+                        //Facebook Group Display
+                        try
+                        {
+                            if (string.IsNullOrEmpty(json.FacebookUrl) || json.FacebookUrl == "Your facebook page url")
+                            {
+                                FacebookIcon.Enabled = false;
+                                FacebookGroupLink.Enabled = false;
+                                _serverFacebookLink = null;
+                            }
+                            else
+                            {
+                                FacebookIcon.Enabled = true;
+                                FacebookGroupLink.Enabled = true;
+                                _serverFacebookLink = json.FacebookUrl;
+                            }
+                        }
+                        catch
+                        {
+                            FacebookIcon.Enabled = false;
+                            FacebookGroupLink.Enabled = false;
+                            _serverFacebookLink = null;
+                        }
+
+                        //Twitter Account Display
+                        try
+                        {
+                            if (string.IsNullOrEmpty(json.TwitterUrl))
+                            {
+                                TwitterIcon.Enabled = false;
+                                TwitterAccountLink.Enabled = false;
+                                _serverTwitterLink = null;
+                            }
+                            else
+                            {
+                                TwitterIcon.Enabled = true;
+                                TwitterAccountLink.Enabled = true;
+                                _serverTwitterLink = json.TwitterUrl;
+                            }
+                        }
+                        catch
+                        {
+                            TwitterIcon.Enabled = false;
+                            TwitterAccountLink.Enabled = false;
+                            _serverTwitterLink = null;
+                        }
+
+                        //Server Set Speedbug Timer Display
+                        try
+                        {
+                            int serverSecondsToShutDown = (json.SecondsToShutDown != 0) ? json.SecondsToShutDown : 2 * 60 * 60;
+                            TimeSpan t = TimeSpan.FromSeconds(serverSecondsToShutDown);
+                            string serverSecondsToShutDownNamed = string.Format("Force Restart Timer: " + "{0} Hours", t.Hours);
+
+                             this.ServerShutDown.Text = serverSecondsToShutDownNamed;
+                        }
+                        catch
+                        {
+                            this.ServerShutDown.Text = "∞ and Beyond";
                         }
 
                         //Scenery Group Display
+                        
                         try
                         {
                             if (json.ActivatedHolidaySceneryGroups == "SCENERY_GROUP_NEWYEARS")
@@ -1170,6 +1265,7 @@ namespace GameLauncher
                         {
                             this.SceneryGroupText.Text = "Normal Scenery";
                         }
+                        
 
                         try {
                             if (string.IsNullOrEmpty(json.RequireTicket)) {
@@ -1322,6 +1418,13 @@ namespace GameLauncher
             ServerStatusDesc.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             APIStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             APIStatusDesc.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+        /* Social Panel */
+            ServerShutDown.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            HomePageLink.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            DiscordInviteLink.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            FacebookGroupLink.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            TwitterAccountLink.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            SceneryGroupText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
         /* Settings */
             settingsGamePathText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             // settingsGameFiles -- Change GameFiles Path button text is not controlled here
@@ -1822,7 +1925,6 @@ namespace GameLauncher
                 WindowState = FormWindowState.Normal;
             }
 
-            //settingsButton.BackgroundImage = Properties.Resources.settingsbtn_click;
             BackgroundImage = Properties.Resources.secondarybackground;
             SettingsFormElements(true);
             RegisterFormElements(false);
@@ -1830,6 +1932,8 @@ namespace GameLauncher
             LoginFormElements(false);
             IsCDNDownGame();
             PingAPIStatus();
+            //Hide Social Panel
+            ServerInfoPanel.Visible = false;
 
             if (File.Exists(_settingFile.Read("InstallationDirectory") + "/NFSWO_COMMUNICATION_LOG.txt"))
             {
@@ -1851,7 +1955,6 @@ namespace GameLauncher
                 WindowState = FormWindowState.Normal;
             }
 
-            //settingsButton.BackgroundImage = Properties.Resources.settingsbtn_click;
             BackgroundImage = Properties.Resources.secondarybackground;
             SettingsFormElements(true);
             RegisterFormElements(false);
@@ -1862,7 +1965,7 @@ namespace GameLauncher
         }
 
         private void SettingsButton_MouseEnter(object sender, EventArgs e) {
-            //settingsButton.BackgroundImage = Properties.Resources.settingsbtn_hover;
+
         }
 
         private void SettingsButton_MouseLeave(object sender, EventArgs e) {
@@ -1885,6 +1988,8 @@ namespace GameLauncher
             LoggedInFormElements(false);
             LoginFormElements(true);
             BackgroundImage = Properties.Resources.mainbackground;
+            //Show Social Panel
+            ServerInfoPanel.Visible = true;
         }
 
         public void ClearColoredPingStatus()
@@ -1996,6 +2101,8 @@ namespace GameLauncher
             LoggedInFormElements(false);
             LoginFormElements(true);
             BackgroundImage = Properties.Resources.mainbackground;
+            //Show Social Panel
+            ServerInfoPanel.Visible = true;
         }
 
         //Changing GameFiles Location from Settings - DavidCarbon & Zacam
@@ -3286,7 +3393,26 @@ namespace GameLauncher
 
         private void DiscordInviteLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(_discordLink);
+            if (_serverDiscordLink != null)
+                Process.Start(_serverDiscordLink);
+        }
+
+        private void HomePageLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (_serverWebsiteLink != null)
+                Process.Start(_serverWebsiteLink);
+        }
+
+        private void FacebookGroupLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (_serverFacebookLink != null)
+                Process.Start(_serverFacebookLink);
+        }
+
+        private void TwitterAccountLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (_serverTwitterLink != null)
+                Process.Start(_serverTwitterLink);
         }
     }
     /* Moved 7 Unused Code to Gist */

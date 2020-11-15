@@ -29,6 +29,7 @@ namespace SoapBox.JsonScheme {
         public string WebSignupUrl { get; set; }
         public string WebRecoveryUrl { get; set; }
         public bool RWACallow { get; set; }
+        public string playerCountRewardMultiplier { get; set; }
     }
 
     /* Moved "FreeroamObject" to Gist */
