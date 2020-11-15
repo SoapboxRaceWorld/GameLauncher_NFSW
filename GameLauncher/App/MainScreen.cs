@@ -1239,35 +1239,24 @@ namespace GameLauncher
                         //Scenery Group Display
                         String sceneriesList = string.Join(",", json.ActivatedHolidaySceneryGroups);
                         this.SceneryGroupText.Text = sceneriesList.Replace("SCENERY_GROUP_", String.Empty);
-                        /*
-                        try
-                        {
-                            if (json.ActivatedHolidaySceneryGroups == "SCENERY_GROUP_NEWYEARS")
-                            {
+                        switch(json.ActivatedHolidaySceneryGroups) {
+                        switch (String.Join("", json.ActivatedHolidaySceneryGroups)) {
+                            case "SCENERY_GROUP_NEWYEARS":
                                 this.SceneryGroupText.Text = "New Years Scenery";
-                            }
-                            else if (json.ActivatedHolidaySceneryGroups == "SCENERY_GROUP_OKTOBERFEST")
-                            {
+                                break;
+                            case "SCENERY_GROUP_OKTOBERFEST":
                                 this.SceneryGroupText.Text = "OKTOBERFEST Scenery";
-                            }
-                            else if (json.ActivatedHolidaySceneryGroups == "SCENERY_GROUP_HALLOWEEN")
-                            {
+                                break;
+                            case "SCENERY_GROUP_HALLOWEEN":
                                 this.SceneryGroupText.Text = "Halloween Scenery";
-                            }
-                            else if (json.ActivatedHolidaySceneryGroups == "SCENERY_GROUP_CHRISTMAS")
-                            {
+                                break;
+                            case "SCENERY_GROUP_CHRISTMAS":
                                 this.SceneryGroupText.Text = "Christmas Scenery";
-                            }
-                            else
-                            {
+                                break;
+                            default:
                                 this.SceneryGroupText.Text = "Normal Scenery";
-                            }
+                                break;
                         }
-                        catch
-                        {
-                            this.SceneryGroupText.Text = "Normal Scenery";
-                        }
-                        */
 
                         try {
                             if (string.IsNullOrEmpty(json.RequireTicket)) {
