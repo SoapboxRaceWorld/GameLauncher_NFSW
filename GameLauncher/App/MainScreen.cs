@@ -1237,9 +1237,6 @@ namespace GameLauncher
                         }
 
                         //Scenery Group Display
-                        String sceneriesList = string.Join(",", json.ActivatedHolidaySceneryGroups);
-                        this.SceneryGroupText.Text = sceneriesList.Replace("SCENERY_GROUP_", String.Empty);
-                        switch(json.ActivatedHolidaySceneryGroups) {
                         switch (String.Join("", json.ActivatedHolidaySceneryGroups)) {
                             case "SCENERY_GROUP_NEWYEARS":
                                 this.SceneryGroupText.Text = "New Years Scenery";
