@@ -1135,20 +1135,20 @@ namespace GameLauncher
                         {
                             if (string.IsNullOrEmpty(json.DiscordUrl))
                             {
-                                DiscordIcon.Enabled = false;
+                                DiscordIcon.BackgroundImage = Properties.Resources.social_discord_disabled;
                                 DiscordInviteLink.Enabled = false;
                                 _serverDiscordLink = null;
                             }
                             else
                             {
-                                DiscordIcon.Enabled = true;
+                                DiscordIcon.BackgroundImage = Properties.Resources.social_discord;
                                 DiscordInviteLink.Enabled = true;
                                 _serverDiscordLink = json.DiscordUrl;
                             }
                         }
                         catch
                         {
-                            DiscordIcon.Enabled = false;
+                            DiscordIcon.BackgroundImage = Properties.Resources.social_discord_disabled;
                             DiscordInviteLink.Enabled = false;
                             _serverDiscordLink = null;
                         }
@@ -1181,20 +1181,20 @@ namespace GameLauncher
                         {
                             if (string.IsNullOrEmpty(json.FacebookUrl) || json.FacebookUrl == "Your facebook page url")
                             {
-                                FacebookIcon.Enabled = false;
+                                FacebookIcon.BackgroundImage = Properties.Resources.social_facebook_disabled;
                                 FacebookGroupLink.Enabled = false;
                                 _serverFacebookLink = null;
                             }
                             else
                             {
-                                FacebookIcon.Enabled = true;
+                                FacebookIcon.BackgroundImage = Properties.Resources.social_facebook;
                                 FacebookGroupLink.Enabled = true;
                                 _serverFacebookLink = json.FacebookUrl;
                             }
                         }
                         catch
                         {
-                            FacebookIcon.Enabled = false;
+                            FacebookIcon.BackgroundImage = Properties.Resources.social_facebook_disabled;
                             FacebookGroupLink.Enabled = false;
                             _serverFacebookLink = null;
                         }
@@ -1204,20 +1204,20 @@ namespace GameLauncher
                         {
                             if (string.IsNullOrEmpty(json.TwitterUrl))
                             {
-                                TwitterIcon.Enabled = false;
+                                TwitterIcon.BackgroundImage = Properties.Resources.social_twitter_disabled;
                                 TwitterAccountLink.Enabled = false;
                                 _serverTwitterLink = null;
                             }
                             else
                             {
-                                TwitterIcon.Enabled = true;
+                                TwitterIcon.BackgroundImage = Properties.Resources.social_twitter;
                                 TwitterAccountLink.Enabled = true;
                                 _serverTwitterLink = json.TwitterUrl;
                             }
                         }
                         catch
                         {
-                            TwitterIcon.Enabled = false;
+                            TwitterIcon.BackgroundImage = Properties.Resources.social_twitter_disabled;
                             TwitterAccountLink.Enabled = false;
                             _serverTwitterLink = null;
                         }

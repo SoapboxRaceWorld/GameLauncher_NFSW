@@ -306,6 +306,12 @@
     <None Include="Resources\buttons_info.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\social_twitter_disabled.png" />
+    <None Include="Resources\social_twitter.png" />
+    <None Include="Resources\social_facebook_disabled.png" />
+    <None Include="Resources\social_facebook.png" />
+    <None Include="Resources\social_discord_disabled.png" />
+    <None Include="Resources\social_discord.png" />
     <None Include="Resources\eyecatcher.png" />
     <None Include="Resources\ticket_text_border.png" />
     <None Include="Resources\ticket_error_text_border.png" />

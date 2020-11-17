@@ -741,7 +741,7 @@
             this.SettingsPanel.Controls.Add(this.settingsBkupCDNText);
             this.SettingsPanel.ForeColor = System.Drawing.Color.Transparent;
             this.SettingsPanel.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.SettingsPanel.Location = new System.Drawing.Point(27, 50);
+            this.SettingsPanel.Location = new System.Drawing.Point(586, 483);
             this.SettingsPanel.Name = "SettingsPanel";
             this.SettingsPanel.Size = new System.Drawing.Size(837, 452);
             this.SettingsPanel.TabIndex = 150;
@@ -1172,7 +1172,7 @@
             this.DiscordInviteLink.BackColor = System.Drawing.Color.Transparent;
             this.DiscordInviteLink.ForeColor = System.Drawing.Color.Transparent;
             this.DiscordInviteLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.DiscordInviteLink.Location = new System.Drawing.Point(109, 14);
+            this.DiscordInviteLink.Location = new System.Drawing.Point(109, 11);
             this.DiscordInviteLink.Name = "DiscordInviteLink";
             this.DiscordInviteLink.Size = new System.Drawing.Size(43, 26);
             this.DiscordInviteLink.TabIndex = 163;
@@ -1219,7 +1219,7 @@
             // 
             this.HomePageIcon.BackColor = System.Drawing.Color.Transparent;
             this.HomePageIcon.Image = ((System.Drawing.Image)(resources.GetObject("HomePageIcon.Image")));
-            this.HomePageIcon.Location = new System.Drawing.Point(11, 13);
+            this.HomePageIcon.Location = new System.Drawing.Point(11, 11);
             this.HomePageIcon.Margin = new System.Windows.Forms.Padding(2);
             this.HomePageIcon.Name = "HomePageIcon";
             this.HomePageIcon.Size = new System.Drawing.Size(24, 24);
@@ -1230,8 +1230,9 @@
             // DiscordIcon
             // 
             this.DiscordIcon.BackColor = System.Drawing.Color.Transparent;
-            this.DiscordIcon.Image = ((System.Drawing.Image)(resources.GetObject("DiscordIcon.Image")));
-            this.DiscordIcon.Location = new System.Drawing.Point(80, 13);
+            this.DiscordIcon.BackgroundImage = global::GameLauncher.Properties.Resources.social_discord;
+            this.DiscordIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.DiscordIcon.Location = new System.Drawing.Point(80, 11);
             this.DiscordIcon.Margin = new System.Windows.Forms.Padding(2);
             this.DiscordIcon.Name = "DiscordIcon";
             this.DiscordIcon.Size = new System.Drawing.Size(24, 24);
@@ -1242,8 +1243,9 @@
             // FacebookIcon
             // 
             this.FacebookIcon.BackColor = System.Drawing.Color.Transparent;
-            this.FacebookIcon.Image = ((System.Drawing.Image)(resources.GetObject("FacebookIcon.Image")));
-            this.FacebookIcon.Location = new System.Drawing.Point(157, 13);
+            this.FacebookIcon.BackgroundImage = global::GameLauncher.Properties.Resources.social_facebook;
+            this.FacebookIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.FacebookIcon.Location = new System.Drawing.Point(157, 11);
             this.FacebookIcon.Margin = new System.Windows.Forms.Padding(2);
             this.FacebookIcon.Name = "FacebookIcon";
             this.FacebookIcon.Size = new System.Drawing.Size(24, 24);
@@ -1258,7 +1260,7 @@
             this.TwitterAccountLink.BackColor = System.Drawing.Color.Transparent;
             this.TwitterAccountLink.ForeColor = System.Drawing.Color.Transparent;
             this.TwitterAccountLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.TwitterAccountLink.Location = new System.Drawing.Point(275, 12);
+            this.TwitterAccountLink.Location = new System.Drawing.Point(275, 11);
             this.TwitterAccountLink.Name = "TwitterAccountLink";
             this.TwitterAccountLink.Size = new System.Drawing.Size(39, 26);
             this.TwitterAccountLink.TabIndex = 175;
@@ -1270,8 +1272,9 @@
             // TwitterIcon
             // 
             this.TwitterIcon.BackColor = System.Drawing.Color.Transparent;
-            this.TwitterIcon.Image = ((System.Drawing.Image)(resources.GetObject("TwitterIcon.Image")));
-            this.TwitterIcon.Location = new System.Drawing.Point(246, 13);
+            this.TwitterIcon.BackgroundImage = global::GameLauncher.Properties.Resources.social_twitter;
+            this.TwitterIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.TwitterIcon.Location = new System.Drawing.Point(246, 11);
             this.TwitterIcon.Margin = new System.Windows.Forms.Padding(2);
             this.TwitterIcon.Name = "TwitterIcon";
             this.TwitterIcon.Size = new System.Drawing.Size(24, 24);
@@ -1286,7 +1289,7 @@
             this.FacebookGroupLink.BackColor = System.Drawing.Color.Transparent;
             this.FacebookGroupLink.ForeColor = System.Drawing.Color.Transparent;
             this.FacebookGroupLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.FacebookGroupLink.Location = new System.Drawing.Point(186, 12);
+            this.FacebookGroupLink.Location = new System.Drawing.Point(186, 11);
             this.FacebookGroupLink.Name = "FacebookGroupLink";
             this.FacebookGroupLink.Size = new System.Drawing.Size(55, 26);
             this.FacebookGroupLink.TabIndex = 173;
@@ -1302,7 +1305,7 @@
             this.HomePageLink.BackColor = System.Drawing.Color.Transparent;
             this.HomePageLink.ForeColor = System.Drawing.Color.Transparent;
             this.HomePageLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.HomePageLink.Location = new System.Drawing.Point(40, 13);
+            this.HomePageLink.Location = new System.Drawing.Point(40, 11);
             this.HomePageLink.Name = "HomePageLink";
             this.HomePageLink.Size = new System.Drawing.Size(35, 26);
             this.HomePageLink.TabIndex = 171;
