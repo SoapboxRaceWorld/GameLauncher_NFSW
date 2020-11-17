@@ -1227,7 +1227,7 @@ namespace GameLauncher
                         {
                             int serverSecondsToShutDown = (json.SecondsToShutDown != 0) ? json.SecondsToShutDown : 2 * 60 * 60;
                             TimeSpan t = TimeSpan.FromSeconds(serverSecondsToShutDown);
-                            string serverSecondsToShutDownNamed = string.Format("Force Restart Timer: " + "{0} Hours", t.Hours);
+                            string serverSecondsToShutDownNamed = string.Format("Restart Timer: " + "{0} Hours", t.Hours);
 
                              this.ServerShutDown.Text = serverSecondsToShutDownNamed;
                         }
@@ -1239,19 +1239,19 @@ namespace GameLauncher
                         //Scenery Group Display
                         switch (String.Join("", json.ActivatedHolidaySceneryGroups)) {
                             case "SCENERY_GROUP_NEWYEARS":
-                                this.SceneryGroupText.Text = "New Years Scenery";
+                                this.SceneryGroupText.Text = "Scenery: New Years";
                                 break;
                             case "SCENERY_GROUP_OKTOBERFEST":
-                                this.SceneryGroupText.Text = "OKTOBERFEST Scenery";
+                                this.SceneryGroupText.Text = "Scenery: OKTOBERFEST";
                                 break;
                             case "SCENERY_GROUP_HALLOWEEN":
-                                this.SceneryGroupText.Text = "Halloween Scenery";
+                                this.SceneryGroupText.Text = "Scenery: Halloween";
                                 break;
                             case "SCENERY_GROUP_CHRISTMAS":
-                                this.SceneryGroupText.Text = "Christmas Scenery";
+                                this.SceneryGroupText.Text = "Scenery: Christmas";
                                 break;
                             default:
-                                this.SceneryGroupText.Text = "Normal Scenery";
+                                this.SceneryGroupText.Text = "Scenery: Normal";
                                 break;
                         }
 

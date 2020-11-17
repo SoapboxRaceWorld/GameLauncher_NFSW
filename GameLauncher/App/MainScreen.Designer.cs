@@ -106,7 +106,6 @@
             this.ShowPlayPanel = new System.Windows.Forms.Panel();
             this.RegisterPanel = new System.Windows.Forms.Panel();
             this.DiscordInviteLink = new System.Windows.Forms.LinkLabel();
-            this.SceneryGroupText = new System.Windows.Forms.LinkLabel();
             this.ServerShutDown = new System.Windows.Forms.Label();
             this.ServerInfoPanel = new System.Windows.Forms.Panel();
             this.HomePageIcon = new System.Windows.Forms.PictureBox();
@@ -116,6 +115,7 @@
             this.TwitterIcon = new System.Windows.Forms.PictureBox();
             this.FacebookGroupLink = new System.Windows.Forms.LinkLabel();
             this.HomePageLink = new System.Windows.Forms.LinkLabel();
+            this.SceneryGroupText = new System.Windows.Forms.Label();
             this.extractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.playProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
@@ -1181,33 +1181,19 @@
             this.DiscordInviteLink.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.DiscordInviteLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DiscordInviteLink_LinkClicked);
             // 
-            // SceneryGroupText
-            // 
-            this.SceneryGroupText.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SceneryGroupText.AutoSize = true;
-            this.SceneryGroupText.BackColor = System.Drawing.Color.Transparent;
-            this.SceneryGroupText.ForeColor = System.Drawing.Color.Transparent;
-            this.SceneryGroupText.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.SceneryGroupText.Location = new System.Drawing.Point(8, 59);
-            this.SceneryGroupText.Name = "SceneryGroupText";
-            this.SceneryGroupText.Size = new System.Drawing.Size(78, 13);
-            this.SceneryGroupText.TabIndex = 166;
-            this.SceneryGroupText.TabStop = true;
-            this.SceneryGroupText.Text = "Scenery Group";
-            // 
             // ServerShutDown
             // 
             this.ServerShutDown.BackColor = System.Drawing.Color.Transparent;
             this.ServerShutDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.ServerShutDown.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.ServerShutDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ServerShutDown.Location = new System.Drawing.Point(154, 57);
+            this.ServerShutDown.Location = new System.Drawing.Point(152, 58);
             this.ServerShutDown.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.ServerShutDown.Name = "ServerShutDown";
             this.ServerShutDown.Size = new System.Drawing.Size(162, 15);
             this.ServerShutDown.TabIndex = 169;
-            this.ServerShutDown.Text = "ServerTimer";
-            this.ServerShutDown.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ServerShutDown.Text = "Restart Timer: 0 Hours";
+            this.ServerShutDown.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ServerInfoPanel
             // 
@@ -1324,6 +1310,20 @@
             this.HomePageLink.Text = "Home\r\nPage";
             this.HomePageLink.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.HomePageLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.HomePageLink_LinkClicked);
+            // 
+            // SceneryGroupText
+            // 
+            this.SceneryGroupText.BackColor = System.Drawing.Color.Transparent;
+            this.SceneryGroupText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.SceneryGroupText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.SceneryGroupText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SceneryGroupText.Location = new System.Drawing.Point(8, 61);
+            this.SceneryGroupText.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.SceneryGroupText.Name = "SceneryGroupText";
+            this.SceneryGroupText.Size = new System.Drawing.Size(140, 14);
+            this.SceneryGroupText.TabIndex = 179;
+            this.SceneryGroupText.Text = "Scenery: Normal";
+            this.SceneryGroupText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // extractingProgress
             // 
@@ -1515,7 +1515,6 @@
         private System.Windows.Forms.Button settingsAboutButton;
         private System.Windows.Forms.Label settingsLauncherVersion;
         private System.Windows.Forms.LinkLabel DiscordInviteLink;
-        private System.Windows.Forms.LinkLabel SceneryGroupText;
         private System.Windows.Forms.Label ServerShutDown;
         private System.Windows.Forms.Panel ServerInfoPanel;
         private System.Windows.Forms.LinkLabel TwitterAccountLink;
@@ -1525,5 +1524,6 @@
         private System.Windows.Forms.PictureBox HomePageIcon;
         private System.Windows.Forms.PictureBox DiscordIcon;
         private System.Windows.Forms.PictureBox FacebookIcon;
+        private System.Windows.Forms.Label SceneryGroupText;
     }
 }
