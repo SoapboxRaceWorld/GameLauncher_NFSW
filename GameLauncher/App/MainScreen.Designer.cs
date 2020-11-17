@@ -741,7 +741,7 @@
             this.SettingsPanel.Controls.Add(this.settingsBkupCDNText);
             this.SettingsPanel.ForeColor = System.Drawing.Color.Transparent;
             this.SettingsPanel.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.SettingsPanel.Location = new System.Drawing.Point(586, 483);
+            this.SettingsPanel.Location = new System.Drawing.Point(27, 50);
             this.SettingsPanel.Name = "SettingsPanel";
             this.SettingsPanel.Size = new System.Drawing.Size(837, 452);
             this.SettingsPanel.TabIndex = 150;
