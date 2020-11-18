@@ -456,7 +456,7 @@
             this.rememberMe.ForeColor = System.Drawing.Color.White;
             this.rememberMe.Location = new System.Drawing.Point(645, 260);
             this.rememberMe.Name = "rememberMe";
-            this.rememberMe.Size = new System.Drawing.Size(159, 19);
+            this.rememberMe.Size = new System.Drawing.Size(158, 19);
             this.rememberMe.TabIndex = 6;
             this.rememberMe.Text = "REMEMBER MY LOGIN";
             this.rememberMe.UseVisualStyleBackColor = false;
@@ -485,9 +485,9 @@
             this.loginButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.loginButton.ForeColor = System.Drawing.Color.White;
             this.loginButton.Image = global::GameLauncher.Properties.Resources.graybutton;
-            this.loginButton.Location = new System.Drawing.Point(606, 362);
+            this.loginButton.Location = new System.Drawing.Point(605, 362);
             this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(231, 35);
+            this.loginButton.Size = new System.Drawing.Size(230, 35);
             this.loginButton.TabIndex = 8;
             this.loginButton.Text = "LOG ON";
             this.loginButton.UseVisualStyleBackColor = false;
@@ -685,9 +685,9 @@
             this.registerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.registerButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
             this.registerButton.Image = global::GameLauncher.Properties.Resources.greenbutton;
-            this.registerButton.Location = new System.Drawing.Point(19, 296);
+            this.registerButton.Location = new System.Drawing.Point(18, 296);
             this.registerButton.Name = "registerButton";
-            this.registerButton.Size = new System.Drawing.Size(231, 35);
+            this.registerButton.Size = new System.Drawing.Size(230, 35);
             this.registerButton.TabIndex = 17;
             this.registerButton.Text = "REGISTER";
             this.registerButton.UseVisualStyleBackColor = false;
@@ -765,7 +765,7 @@
             this.settingsAboutButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.settingsAboutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.settingsAboutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.settingsAboutButton.Location = new System.Drawing.Point(753, 5);
+            this.settingsAboutButton.Location = new System.Drawing.Point(756, 5);
             this.settingsAboutButton.Name = "settingsAboutButton";
             this.settingsAboutButton.Size = new System.Drawing.Size(75, 23);
             this.settingsAboutButton.TabIndex = 159;
@@ -945,7 +945,7 @@
             this.settingsWordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsWordFilterCheck.Location = new System.Drawing.Point(26, 288);
             this.settingsWordFilterCheck.Name = "settingsWordFilterCheck";
-            this.settingsWordFilterCheck.Size = new System.Drawing.Size(235, 17);
+            this.settingsWordFilterCheck.Size = new System.Drawing.Size(234, 17);
             this.settingsWordFilterCheck.TabIndex = 135;
             this.settingsWordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.settingsWordFilterCheck.UseVisualStyleBackColor = false;
@@ -958,7 +958,7 @@
             this.settingsProxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsProxyCheckbox.Location = new System.Drawing.Point(26, 308);
             this.settingsProxyCheckbox.Name = "settingsProxyCheckbox";
-            this.settingsProxyCheckbox.Size = new System.Drawing.Size(103, 17);
+            this.settingsProxyCheckbox.Size = new System.Drawing.Size(102, 17);
             this.settingsProxyCheckbox.TabIndex = 136;
             this.settingsProxyCheckbox.Text = "Disable Proxy";
             this.settingsProxyCheckbox.UseVisualStyleBackColor = false;
@@ -971,7 +971,7 @@
             this.settingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsDiscordRPCCheckbox.Location = new System.Drawing.Point(26, 328);
             this.settingsDiscordRPCCheckbox.Name = "settingsDiscordRPCCheckbox";
-            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(144, 17);
+            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(143, 17);
             this.settingsDiscordRPCCheckbox.TabIndex = 137;
             this.settingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
             this.settingsDiscordRPCCheckbox.UseVisualStyleBackColor = false;
@@ -1172,13 +1172,13 @@
             this.DiscordInviteLink.BackColor = System.Drawing.Color.Transparent;
             this.DiscordInviteLink.ForeColor = System.Drawing.Color.Transparent;
             this.DiscordInviteLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.DiscordInviteLink.Location = new System.Drawing.Point(109, 11);
+            this.DiscordInviteLink.Location = new System.Drawing.Point(106, 11);
             this.DiscordInviteLink.Name = "DiscordInviteLink";
             this.DiscordInviteLink.Size = new System.Drawing.Size(43, 26);
             this.DiscordInviteLink.TabIndex = 163;
             this.DiscordInviteLink.TabStop = true;
             this.DiscordInviteLink.Text = "Discord\r\nInvite";
-            this.DiscordInviteLink.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.DiscordInviteLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.DiscordInviteLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DiscordInviteLink_LinkClicked);
             // 
             // ServerShutDown
@@ -1187,7 +1187,7 @@
             this.ServerShutDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.ServerShutDown.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.ServerShutDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ServerShutDown.Location = new System.Drawing.Point(152, 59);
+            this.ServerShutDown.Location = new System.Drawing.Point(155, 58);
             this.ServerShutDown.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.ServerShutDown.Name = "ServerShutDown";
             this.ServerShutDown.Size = new System.Drawing.Size(162, 15);
@@ -1220,7 +1220,7 @@
             this.HomePageIcon.BackColor = System.Drawing.Color.Transparent;
             this.HomePageIcon.BackgroundImage = global::GameLauncher.Properties.Resources.social_home_page;
             this.HomePageIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.HomePageIcon.Location = new System.Drawing.Point(11, 11);
+            this.HomePageIcon.Location = new System.Drawing.Point(10, 11);
             this.HomePageIcon.Margin = new System.Windows.Forms.Padding(2);
             this.HomePageIcon.Name = "HomePageIcon";
             this.HomePageIcon.Size = new System.Drawing.Size(24, 24);
@@ -1233,7 +1233,7 @@
             this.DiscordIcon.BackColor = System.Drawing.Color.Transparent;
             this.DiscordIcon.BackgroundImage = global::GameLauncher.Properties.Resources.social_discord;
             this.DiscordIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.DiscordIcon.Location = new System.Drawing.Point(80, 11);
+            this.DiscordIcon.Location = new System.Drawing.Point(79, 13);
             this.DiscordIcon.Margin = new System.Windows.Forms.Padding(2);
             this.DiscordIcon.Name = "DiscordIcon";
             this.DiscordIcon.Size = new System.Drawing.Size(24, 24);
@@ -1246,7 +1246,7 @@
             this.FacebookIcon.BackColor = System.Drawing.Color.Transparent;
             this.FacebookIcon.BackgroundImage = global::GameLauncher.Properties.Resources.social_facebook;
             this.FacebookIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.FacebookIcon.Location = new System.Drawing.Point(157, 11);
+            this.FacebookIcon.Location = new System.Drawing.Point(157, 13);
             this.FacebookIcon.Margin = new System.Windows.Forms.Padding(2);
             this.FacebookIcon.Name = "FacebookIcon";
             this.FacebookIcon.Size = new System.Drawing.Size(24, 24);
@@ -1261,13 +1261,13 @@
             this.TwitterAccountLink.BackColor = System.Drawing.Color.Transparent;
             this.TwitterAccountLink.ForeColor = System.Drawing.Color.Transparent;
             this.TwitterAccountLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.TwitterAccountLink.Location = new System.Drawing.Point(275, 11);
+            this.TwitterAccountLink.Location = new System.Drawing.Point(274, 11);
             this.TwitterAccountLink.Name = "TwitterAccountLink";
             this.TwitterAccountLink.Size = new System.Drawing.Size(39, 26);
             this.TwitterAccountLink.TabIndex = 175;
             this.TwitterAccountLink.TabStop = true;
             this.TwitterAccountLink.Text = "Twitter\r\nPage";
-            this.TwitterAccountLink.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.TwitterAccountLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.TwitterAccountLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.TwitterAccountLink_LinkClicked);
             // 
             // TwitterIcon
@@ -1296,7 +1296,7 @@
             this.FacebookGroupLink.TabIndex = 173;
             this.FacebookGroupLink.TabStop = true;
             this.FacebookGroupLink.Text = "Facebook\r\nGroup";
-            this.FacebookGroupLink.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.FacebookGroupLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.FacebookGroupLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.FacebookGroupLink_LinkClicked);
             // 
             // HomePageLink
@@ -1306,13 +1306,13 @@
             this.HomePageLink.BackColor = System.Drawing.Color.Transparent;
             this.HomePageLink.ForeColor = System.Drawing.Color.Transparent;
             this.HomePageLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.HomePageLink.Location = new System.Drawing.Point(40, 11);
+            this.HomePageLink.Location = new System.Drawing.Point(39, 11);
             this.HomePageLink.Name = "HomePageLink";
             this.HomePageLink.Size = new System.Drawing.Size(35, 26);
             this.HomePageLink.TabIndex = 171;
             this.HomePageLink.TabStop = true;
             this.HomePageLink.Text = "Home\r\nPage";
-            this.HomePageLink.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.HomePageLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.HomePageLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.HomePageLink_LinkClicked);
             // 
             // SceneryGroupText
@@ -1373,7 +1373,6 @@
             this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.ShowPlayPanel);
             this.Controls.Add(this.closebtn);
-            this.Controls.Add(this.SettingsPanel);
             this.Controls.Add(this.SelectServerBtn);
             this.Controls.Add(this.translatedBy);
             this.Controls.Add(this.serverPick);
@@ -1402,6 +1401,7 @@
             this.Controls.Add(this.verticalBanner);
             this.Controls.Add(this.ServerInfoPanel);
             this.Controls.Add(this.imageServerName);
+            this.Controls.Add(this.SettingsPanel);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
