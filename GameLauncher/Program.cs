@@ -92,11 +92,13 @@ namespace GameLauncher
 
             }
 
-            var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
-            if (File.Exists(linksPath))
-            {
-                Log.Debug("CLEANLINKS: Cleaning Up Mod Files {Startup}");
-                CleanLinks(linksPath);
+            if (_settingFile.KeyExists("InstallationDirectory")) {
+                var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
+                if (File.Exists(linksPath))
+                {
+                    Log.Debug("CLEANLINKS: Cleaning Up Mod Files {Startup}");
+                    CleanLinks(linksPath);
+                }
             }
 
             if (!DetectLinux.LinuxDetected()) {
