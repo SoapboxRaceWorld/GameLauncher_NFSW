@@ -9,10 +9,18 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Setup Nuget.exe
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       uses: warrenbuckley/Setup-Nuget@v1
     - name: Restore packages
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'    
       run: nuget restore GameLauncher.sln
     - name: Setup MSBuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'      
     - name: Build with MSBuild
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'    
       run: msbuild  GameLauncher.sln -p:Configuration=Release
