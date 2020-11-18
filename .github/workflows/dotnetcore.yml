@@ -5,10 +5,8 @@ on: [push]
 jobs:
   build:
     runs-on: windows-latest
+
     steps:
-      uses: actions/github-script@v3
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     - uses: actions/checkout@v1
     - name: Setup Nuget.exe
       uses: warrenbuckley/Setup-Nuget@v1
@@ -17,11 +15,4 @@ jobs:
     - name: Setup MSBuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
     - name: Build with MSBuild
-      run: msbuild GameLauncher.sln -p:Configuration=Debug
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: ArtifactBuild
-        path: |
-          ${{ github.workspace }}/GameLauncher/bin/Debug/GameLauncher.exe
-          ${{ github.workspace }}/GameLauncher/bin/Debug/*.dll
+      run: msbuild  GameLauncher.sln -p:Configuration=Release
