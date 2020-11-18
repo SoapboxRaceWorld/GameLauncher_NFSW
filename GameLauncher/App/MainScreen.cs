@@ -1306,6 +1306,11 @@ namespace GameLauncher
                         loginButton.ForeColor = Color.White;
                         loginButton.Enabled = true;
                         registerText.Enabled = true;
+
+                        if (((ServerInfo)serverPick.SelectedItem).Category == "DEV"){
+                            //Disable Social Panel
+                            DisableSocialPanelandClearIt();
+                        }
                     }
                     catch {
                         //¯\_(ツ)_/¯
