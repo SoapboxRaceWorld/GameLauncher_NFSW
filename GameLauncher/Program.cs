@@ -18,6 +18,8 @@ using System.Globalization;
 namespace GameLauncher
 {
     internal static class Program {
+        private static IniFile _settingFile = new IniFile("Settings.ini");
+
         //Update this if a new GameLauncherUpdater.exe has been delployed - DavidCarbon
         private static readonly string LatestUpdaterBuildVersion = "1.0.0.4";
 
@@ -42,6 +44,8 @@ namespace GameLauncher
                 }
             }
 
+            Log.Debug("BUILD: GameLauncher " + Application.ProductVersion);
+
             try
             {
                 //Check Using Backup API
@@ -53,6 +57,7 @@ namespace GameLauncher
                 {
                     HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestBkupServerListAPI.GetResponse();
                     bkupServerListResponseAPI.Close();
+                    Log.Debug("PRE-CHECK: Internet Check Passed {api-sbrw.davidcarbon.download}");
                 }
                 catch (WebException)
                 {
@@ -62,8 +67,10 @@ namespace GameLauncher
                     requestMainServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
                     try
                     {
+                        Log.Debug("PRE-CHECK: Failed to Connect to {api-sbrw.davidcarbon.download} Checking {api.worldunited.gg}");
                         HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestMainServerListAPI.GetResponse();
                         bkupServerListResponseAPI.Close();
+                        Log.Debug("PRE-CHECK: Internet Check Passed {api.worldunited.gg}");
                     }
                     catch { }
                 }
@@ -75,6 +82,7 @@ namespace GameLauncher
                 if (restartAppNoApis == DialogResult.No)
                 {
                     MessageBox.Show("Good Luck... \n No Really \n ...Good Luck", "GameLauncher Will Continue, When It Failed To Connect To API");
+                    Log.Debug("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and Will Continue");
                 }
 
                 if (restartAppNoApis == DialogResult.Yes)
@@ -84,7 +92,12 @@ namespace GameLauncher
 
             }
 
-            IniFile _settingFile = new IniFile("Settings.ini");
+            var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
+            if (File.Exists(linksPath))
+            {
+                Log.Debug("CLEANLINKS: Cleaning Up Mod Files {Startup}");
+                CleanLinks(linksPath);
+            }
 
             if (!DetectLinux.LinuxDetected()) {
                 //Windows 7 Fix
@@ -235,8 +248,6 @@ namespace GameLauncher
 
             File.Delete("communication.log");
             File.Delete("launcher.log");
-
-            Log.Debug("BUILD: GameLauncher " + Application.ProductVersion);
 
             if (_settingFile.KeyExists("InstallationDirectory")) {
                 if(!File.Exists(_settingFile.Read("InstallationDirectory"))) {
@@ -439,6 +450,61 @@ namespace GameLauncher
                 } finally {
                     mutex.Close();
                     mutex = null;
+                }
+            }
+        }
+
+        private static readonly object LinkCleanerLock = new object();
+
+        private static void CleanLinks(string linksPath)
+        {
+            lock (LinkCleanerLock)
+            {
+                if (File.Exists(linksPath))
+                {
+                    Log.Debug("CLEANLINKS: Found Server Mod Files to remove {Process}");
+                    string dir = _settingFile.Read("InstallationDirectory");
+                    foreach (var readLine in File.ReadLines(linksPath))
+                    {
+                        var parts = readLine.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        if (parts.Length != 2)
+                        {
+                            continue;
+                        }
+
+                        string loc = parts[0];
+                        int type = int.Parse(parts[1]);
+                        string realLoc = Path.Combine(dir, loc);
+                        if (type == 0)
+                        {
+                            if (!File.Exists(realLoc))
+                            {
+                                throw new Exception(".links file includes nonexistent file: " + realLoc);
+                            }
+
+                            string origPath = realLoc + ".orig";
+
+                            if (!File.Exists(origPath))
+                            {
+                                File.Delete(realLoc);
+                                continue;
+                            }
+
+                            File.Delete(realLoc);
+                            File.Move(origPath, realLoc);
+                        }
+                        else
+                        {
+                            if (!Directory.Exists(realLoc))
+                            {
+                                throw new Exception(".links file includes nonexistent directory: " + realLoc);
+                            }
+                            Directory.Delete(realLoc, true);
+                        }
+                    }
+
+                    File.Delete(linksPath);
                 }
             }
         }

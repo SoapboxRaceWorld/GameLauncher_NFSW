@@ -469,10 +469,6 @@ namespace GameLauncher
         private void MainScreen_Load(object sender, EventArgs e) {
             Log.Debug("CORE: Entering mainScreen_Load");
 
-            /* Clean Links to remove Mods  */
-            Log.Debug("CLEANLINKS: Cleaning Up Mod Files {Startup}");
-            CleanModsFiles();
-
             Log.Debug("LAUNCHER: Updating server list");
             ServerListUpdater.UpdateList();
 
@@ -808,8 +804,12 @@ namespace GameLauncher
             ServerProxy.Instance.Stop();
             Notification.Dispose();
 
-            Log.Debug("CLEANLINKS: Cleaning Up Mod Files {Exiting}");
-            CleanModsFiles();
+            var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
+            if (File.Exists(linksPath))
+            {
+                Log.Debug("CLEANLINKS: Cleaning Up Mod Files {Exiting}");
+                CleanLinks(linksPath);
+            }
 
             //Leave this here. Its to properly close the launcher from Visual Studio (And Close the Launcher a well)
             try { this.Close(); } catch { }
@@ -2750,6 +2750,7 @@ namespace GameLauncher
             {
                 if (File.Exists(linksPath))
                 {
+                    Log.Debug("CLEANLINKS: Found Server Mod Files to remove {Process}");
                     string dir = _settingFile.Read("InstallationDirectory");
                     foreach (var readLine in File.ReadLines(linksPath))
                     {
@@ -3358,16 +3359,6 @@ namespace GameLauncher
 
                 var index = finalItems.FindIndex(i => string.Equals(i.IpAddress, ServerName.IpAddress));
                 serverPick.SelectedIndex = index;
-            }
-        }
-
-        public void CleanModsFiles()
-        {
-            var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
-            if (File.Exists(linksPath))
-            {
-                Log.Debug("CLEANLINKS: Found Server Mod Files to remove {Process}");
-                CleanLinks(linksPath);
             }
         }
 
