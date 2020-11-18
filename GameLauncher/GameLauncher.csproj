@@ -306,6 +306,12 @@
     <None Include="Resources\buttons_info.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\progress_warning.png" />
+    <None Include="Resources\progress_success.png" />
+    <None Include="Resources\progress_preload.png" />
+    <None Include="Resources\progress_error.png" />
+    <None Include="Resources\social_home_page_disabled.png" />
+    <None Include="Resources\social_home_page.png" />
     <None Include="Resources\social_twitter_disabled.png" />
     <None Include="Resources\social_twitter.png" />
     <None Include="Resources\social_facebook_disabled.png" />

@@ -130,26 +130,14 @@
   <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="progressgrayscale" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\progressgrayscale.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="settingsbtn" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\settingsbtn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="progress" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\progress.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ac_unknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ac_unknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="secondarybackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\secondarybackground.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="warningprogress" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\warningprogress.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="errorprogress" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\errorprogress.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="close" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\close.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -249,5 +237,23 @@
   </data>
   <data name="social_twitter_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\social_twitter_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="social_home_page" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\social_home_page.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="social_home_page_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\social_home_page_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="progress_error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\progress_error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="progress_preload" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\progress_preload.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="progress_success" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\progress_success.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="progress_warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\progress_warning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

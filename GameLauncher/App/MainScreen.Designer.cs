@@ -1187,7 +1187,7 @@
             this.ServerShutDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.ServerShutDown.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.ServerShutDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ServerShutDown.Location = new System.Drawing.Point(152, 58);
+            this.ServerShutDown.Location = new System.Drawing.Point(152, 59);
             this.ServerShutDown.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.ServerShutDown.Name = "ServerShutDown";
             this.ServerShutDown.Size = new System.Drawing.Size(162, 15);
@@ -1218,7 +1218,8 @@
             // HomePageIcon
             // 
             this.HomePageIcon.BackColor = System.Drawing.Color.Transparent;
-            this.HomePageIcon.Image = ((System.Drawing.Image)(resources.GetObject("HomePageIcon.Image")));
+            this.HomePageIcon.BackgroundImage = global::GameLauncher.Properties.Resources.social_home_page;
+            this.HomePageIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.HomePageIcon.Location = new System.Drawing.Point(11, 11);
             this.HomePageIcon.Margin = new System.Windows.Forms.Padding(2);
             this.HomePageIcon.Name = "HomePageIcon";
@@ -1320,7 +1321,7 @@
             this.SceneryGroupText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.SceneryGroupText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.SceneryGroupText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SceneryGroupText.Location = new System.Drawing.Point(8, 61);
+            this.SceneryGroupText.Location = new System.Drawing.Point(8, 59);
             this.SceneryGroupText.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.SceneryGroupText.Name = "SceneryGroupText";
             this.SceneryGroupText.Size = new System.Drawing.Size(140, 14);
@@ -1335,7 +1336,7 @@
             this.extractingProgress.Border = false;
             this.extractingProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.extractingProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.extractingProgress.Image = global::GameLauncher.Properties.Resources.progress;
+            this.extractingProgress.Image = global::GameLauncher.Properties.Resources.progress_success;
             this.extractingProgress.Location = new System.Drawing.Point(30, 425);
             this.extractingProgress.Name = "extractingProgress";
             this.extractingProgress.ProgressColor = System.Drawing.Color.Green;
@@ -1351,7 +1352,7 @@
             this.playProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.playProgress.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.playProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.playProgress.Image = global::GameLauncher.Properties.Resources.progressgrayscale;
+            this.playProgress.Image = global::GameLauncher.Properties.Resources.progress_preload;
             this.playProgress.Location = new System.Drawing.Point(30, 425);
             this.playProgress.Name = "playProgress";
             this.playProgress.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(84)))), ((int)(((byte)(92)))));

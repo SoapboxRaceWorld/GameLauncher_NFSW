@@ -1016,6 +1016,9 @@ namespace GameLauncher
             var serverIp = _serverInfo.IpAddress;
             string numPlayers;
 
+            //Disable Social Panel when switching
+            DisableSocialPanelandClearIt();
+
             imageServerName.Text = ((ServerInfo)serverPick.SelectedItem).Name;
 
             if (serverPick.GetItemText(serverPick.SelectedItem) == "Offline Built-In Server") {
@@ -1061,7 +1064,7 @@ namespace GameLauncher
                     loginButton.Enabled = false;
                     registerText.Enabled = false;
                     //Disable Social Panel
-                    ServerInfoPanel.Visible = false;
+                    DisableSocialPanelandClearIt();
 
                     if (!serverStatusDictionary.ContainsKey(_serverInfo.Id)) {
                         serverStatusDictionary.Add(_serverInfo.Id, 2);
@@ -1081,7 +1084,7 @@ namespace GameLauncher
                     loginButton.Enabled = false;
                     registerText.Enabled = false;
                     //Disable Social Panel
-                    ServerInfoPanel.Visible = false;
+                    DisableSocialPanelandClearIt();
 
                     if (!serverStatusDictionary.ContainsKey(_serverInfo.Id)) {
                         serverStatusDictionary.Add(_serverInfo.Id, 0);
@@ -1090,6 +1093,7 @@ namespace GameLauncher
                     }
                 } else {
                     if (_realServername == "Offline Built-In Server") {
+                        DisableSocialPanelandClearIt();
                         numPlayers = "∞";
                     } else {
                         if (!serverStatusDictionary.ContainsKey(_serverInfo.Id)) {
@@ -1127,8 +1131,7 @@ namespace GameLauncher
                             verticalImageUrl = null;
                         }
 
-                        //DavidCarbonGaming
-                        /* Social Panel */
+                        /* Social Panel Core */
 
                         //Discord Invite Display
                         try
@@ -1158,21 +1161,21 @@ namespace GameLauncher
                         {
                             if (string.IsNullOrEmpty(json.HomePageUrl))
                             {
-                                HomePageIcon.Enabled = false;
+                                HomePageIcon.BackgroundImage = Properties.Resources.social_home_page_disabled;
                                 HomePageLink.Enabled = false;
                                 _serverWebsiteLink = null;
                             }
                             else
                             {
-                                HomePageIcon.Enabled = true;
+                                HomePageIcon.BackgroundImage = Properties.Resources.social_home_page;
                                 HomePageLink.Enabled = true;
                                 _serverWebsiteLink = json.HomePageUrl;
                             }
                         }
                         catch
                         {
-                            HomePageIcon.Enabled = false;
-                            DiscordInviteLink.Enabled = false;
+                            HomePageIcon.BackgroundImage = Properties.Resources.social_home_page_disabled;
+                            HomePageLink.Enabled = false;
                             _serverWebsiteLink = null;
                         }
 
@@ -1519,6 +1522,35 @@ namespace GameLauncher
                 MessageBox.Show(null, responseString, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
+        }
+
+        /* Main Screen Elements */
+
+        /* Social Panel | Ping or Offline | */
+        private void DisableSocialPanelandClearIt()
+        {
+            //Hides Social Panel
+            ServerInfoPanel.Visible = false;
+            //Home
+            HomePageIcon.BackgroundImage = Properties.Resources.social_home_page_disabled;
+            HomePageLink.Enabled = false;
+            _serverWebsiteLink = null;
+            //Discord
+            DiscordIcon.BackgroundImage = Properties.Resources.social_discord_disabled;
+            DiscordInviteLink.Enabled = false;
+            _serverDiscordLink = null;
+            //Facebook
+            FacebookIcon.BackgroundImage = Properties.Resources.social_facebook_disabled;
+            FacebookGroupLink.Enabled = false;
+            _serverFacebookLink = null;
+            //Twitter
+            TwitterIcon.BackgroundImage = Properties.Resources.social_twitter_disabled;
+            TwitterAccountLink.Enabled = false;
+            _serverTwitterLink = null;
+            //Scenery
+            SceneryGroupText.Text = "Expecting something?";
+            //Restart Timer
+            ServerShutDown.Text = "But it's me, Game Launcher!";
         }
 
         /*  After Successful Login, Hide Login Forms */
@@ -2913,7 +2945,7 @@ namespace GameLauncher
 
                             extractingProgress.Value = 100;
                             extractingProgress.Width = 519;
-                            extractingProgress.Image = Properties.Resources.warningprogress;
+                            extractingProgress.Image = Properties.Resources.progress_warning;
                             extractingProgress.ProgressColor = Color.Orange;
 
                             playProgressText.Text = "Please make sure you have at least 10GB free space on hard drive.".ToUpper();
@@ -3280,7 +3312,7 @@ namespace GameLauncher
 
             extractingProgress.Value = 100;
             extractingProgress.Width = 519;
-            extractingProgress.Image = Properties.Resources.errorprogress;
+            extractingProgress.Image = Properties.Resources.progress_error;
             extractingProgress.ProgressColor = Color.FromArgb(254,0,0);
 
             playProgressText.Text = failureMessage.ToUpper();

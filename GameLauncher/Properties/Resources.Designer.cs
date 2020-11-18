@@ -173,16 +173,6 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap errorprogress {
-            get {
-                object obj = ResourceManager.GetObject("errorprogress", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap eyecatcher {
             get {
                 object obj = ResourceManager.GetObject("eyecatcher", resourceCulture);
@@ -333,9 +323,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap progress {
+        internal static System.Drawing.Bitmap progress_error {
             get {
-                object obj = ResourceManager.GetObject("progress", resourceCulture);
+                object obj = ResourceManager.GetObject("progress_error", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -343,9 +333,29 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap progressgrayscale {
+        internal static System.Drawing.Bitmap progress_preload {
             get {
-                object obj = ResourceManager.GetObject("progressgrayscale", resourceCulture);
+                object obj = ResourceManager.GetObject("progress_preload", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap progress_success {
+            get {
+                object obj = ResourceManager.GetObject("progress_success", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap progress_warning {
+            get {
+                object obj = ResourceManager.GetObject("progress_warning", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -453,6 +463,26 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap social_home_page {
+            get {
+                object obj = ResourceManager.GetObject("social_home_page", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap social_home_page_disabled {
+            get {
+                object obj = ResourceManager.GetObject("social_home_page_disabled", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap social_twitter {
             get {
                 object obj = ResourceManager.GetObject("social_twitter", resourceCulture);
@@ -486,16 +516,6 @@ namespace GameLauncher.Properties {
         internal static System.Drawing.Bitmap ticket_text_border {
             get {
                 object obj = ResourceManager.GetObject("ticket_text_border", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap warningprogress {
-            get {
-                object obj = ResourceManager.GetObject("warningprogress", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
