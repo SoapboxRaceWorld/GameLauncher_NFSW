@@ -6,8 +6,9 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-    - uses: actions/github-script@v3
-    - env: ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+      uses: actions/github-script@v3
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     - uses: actions/checkout@v1
     - name: Setup Nuget.exe
       uses: warrenbuckley/Setup-Nuget@v1
