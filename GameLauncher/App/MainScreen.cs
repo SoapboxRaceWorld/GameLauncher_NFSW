@@ -33,6 +33,8 @@ using GameLauncher.App.Classes.HashPassword;
 using GameLauncher.App.Classes.RPC;
 using GameLauncher.App.Classes.GPU;
 using GameLauncher.Properties;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
+using System.Management.Automation;
 
 namespace GameLauncher
 {
@@ -340,6 +342,15 @@ namespace GameLauncher
                 }).Start();
             };
 
+            if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (_settingFile.Read("WindowsDefender") == "Not Excluded"))
+            {
+                Log.Debug("WINDOWS DEFENDER: Windows 10 Detected! Running Exclusions for Core Folders");
+                WindowsDefenderFirstRun();
+            }
+            else if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && _settingFile.KeyExists("WindowsDefender"))
+            {
+                Log.Debug("WINDOWS DEFENDER: Found 'WindowsDefender' key! Its value is " + _settingFile.Read("WindowsDefender"));
+            }
 
             Log.Debug("CORE: Checking permissions");
             if (!Self.HasWriteAccessToFolder(Directory.GetCurrentDirectory())) {
@@ -2079,9 +2090,21 @@ namespace GameLauncher
 
             userSettingsXml.Save(_userSettings);
 
-            if (_settingFile.Read("InstallationDirectory") != _newGameFilesPath) {
+            if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (_settingFile.Read("InstallationDirectory") != _newGameFilesPath))
+            {
+                WindowsDefenderGameFilesDirctoryChange();
+            }
+            else if (_settingFile.Read("InstallationDirectory") != _newGameFilesPath)
+            {
                 _settingFile.Write("InstallationDirectory", _newGameFilesPath);
                 _restartRequired = true;
+                //Clean Mods Files from New Dirctory (If it has .links in directory)
+                var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
+                if (File.Exists(linksPath))
+                {
+                    Log.Debug("CLEANLINKS: Cleaning Up Mod Files {Settings}");
+                    CleanLinks(linksPath);
+                }
             }
 
             if (_settingFile.Read("CDN") != ((CDNObject)settingsCDNPick.SelectedItem).Url)
@@ -3430,6 +3453,49 @@ namespace GameLauncher
             if (_serverTwitterLink != null)
                 Process.Start(_serverTwitterLink);
         }
+        private void WindowsDefenderFirstRun()
+        {
+            // Create Windows Defender Exclusion
+            try
+            {
+                Log.Debug("WINDOWS DEFENDER: Excluding Core Folders");
+                //Add Exclusion to Windows Defender
+                using (PowerShell ps = PowerShell.Create())
+                {
+                    ps.AddScript($"Add-MpPreference -ExclusionPath \"{AppDomain.CurrentDomain.BaseDirectory}\"");
+                    ps.AddScript($"Add-MpPreference -ExclusionPath \"{_settingFile.Read("InstallationDirectory")}\"");
+                    var result = ps.Invoke();
+                }
+                _settingFile.Write("WindowsDefender", "Excluded");
+            }
+            catch
+            {
+                Log.Debug("WINDOWS DEFENDER: Failed to Exclude Folders");
+                _settingFile.Write("WindowsDefender", "Not Excluded");
+            }
+        }
+
+        private void WindowsDefenderGameFilesDirctoryChange()
+        {
+            using (PowerShell ps = PowerShell.Create())
+            {
+                Log.Debug("WINDOWS DEFENDER: Removing OLD Game Files Directory: " + _settingFile.Read("InstallationDirectory"));
+                ps.AddScript($"Remove-MpPreference -ExclusionPath \"{_settingFile.Read("InstallationDirectory")}\"");
+                Log.Debug("WINDOWS DEFENDER: Excluding NEW Game Files Directory: " + _newGameFilesPath);
+                ps.AddScript($"Add-MpPreference -ExclusionPath \"{_newGameFilesPath}\"");
+                var result = ps.Invoke();
+            }
+            _settingFile.Write("InstallationDirectory", _newGameFilesPath);
+            _restartRequired = true;
+            //Clean Mods Files from New Dirctory (If it has .links in directory)
+            var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
+            if (File.Exists(linksPath))
+            {
+                Log.Debug("CLEANLINKS: Cleaning Up Mod Files {Settings}");
+                CleanLinks(linksPath);
+            }
+        }
+
     }
     /* Moved 7 Unused Code to Gist */
     /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/00de505302fbf9f8cfea9b163a707d9f8f122552/MainScreen.cs */

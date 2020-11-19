@@ -456,7 +456,7 @@
             this.rememberMe.ForeColor = System.Drawing.Color.White;
             this.rememberMe.Location = new System.Drawing.Point(645, 260);
             this.rememberMe.Name = "rememberMe";
-            this.rememberMe.Size = new System.Drawing.Size(158, 19);
+            this.rememberMe.Size = new System.Drawing.Size(159, 19);
             this.rememberMe.TabIndex = 6;
             this.rememberMe.Text = "REMEMBER MY LOGIN";
             this.rememberMe.UseVisualStyleBackColor = false;
@@ -945,7 +945,7 @@
             this.settingsWordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsWordFilterCheck.Location = new System.Drawing.Point(26, 288);
             this.settingsWordFilterCheck.Name = "settingsWordFilterCheck";
-            this.settingsWordFilterCheck.Size = new System.Drawing.Size(234, 17);
+            this.settingsWordFilterCheck.Size = new System.Drawing.Size(235, 17);
             this.settingsWordFilterCheck.TabIndex = 135;
             this.settingsWordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.settingsWordFilterCheck.UseVisualStyleBackColor = false;
@@ -958,7 +958,7 @@
             this.settingsProxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsProxyCheckbox.Location = new System.Drawing.Point(26, 308);
             this.settingsProxyCheckbox.Name = "settingsProxyCheckbox";
-            this.settingsProxyCheckbox.Size = new System.Drawing.Size(102, 17);
+            this.settingsProxyCheckbox.Size = new System.Drawing.Size(103, 17);
             this.settingsProxyCheckbox.TabIndex = 136;
             this.settingsProxyCheckbox.Text = "Disable Proxy";
             this.settingsProxyCheckbox.UseVisualStyleBackColor = false;
@@ -971,7 +971,7 @@
             this.settingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsDiscordRPCCheckbox.Location = new System.Drawing.Point(26, 328);
             this.settingsDiscordRPCCheckbox.Name = "settingsDiscordRPCCheckbox";
-            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(143, 17);
+            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(144, 17);
             this.settingsDiscordRPCCheckbox.TabIndex = 137;
             this.settingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
             this.settingsDiscordRPCCheckbox.UseVisualStyleBackColor = false;
@@ -1373,6 +1373,7 @@
             this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.ShowPlayPanel);
             this.Controls.Add(this.closebtn);
+            this.Controls.Add(this.SettingsPanel);
             this.Controls.Add(this.SelectServerBtn);
             this.Controls.Add(this.translatedBy);
             this.Controls.Add(this.serverPick);
@@ -1401,7 +1402,6 @@
             this.Controls.Add(this.verticalBanner);
             this.Controls.Add(this.ServerInfoPanel);
             this.Controls.Add(this.imageServerName);
-            this.Controls.Add(this.SettingsPanel);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

@@ -14,6 +14,7 @@ using System.Linq;
 using Microsoft.Win32;
 using CommandLine;
 using System.Globalization;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
 
 namespace GameLauncher
 {
@@ -104,8 +105,7 @@ namespace GameLauncher
             if (!DetectLinux.LinuxDetected()) {
                 //Windows 7 Fix
                 if (!(_settingFile.KeyExists("PatchesApplied"))) {
-                    String _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
-                    if (_OS.Contains("Windows 7")) {
+                    if (WindowsProductVersion.GetWindowsNumber() == 6.1) {
                         if (Self.GetInstalledHotFix("KB3020369") == false || Self.GetInstalledHotFix("KB3125574") == false) {
                             String messageBoxPopupKB = String.Empty;
                             messageBoxPopupKB = "Hey Windows 7 User, we've detected a potential issue of some missing Updates that are required.\n";
@@ -260,6 +260,11 @@ namespace GameLauncher
             if (!_settingFile.KeyExists("IgnoreUpdateVersion"))
             {
                 _settingFile.Write("IgnoreUpdateVersion", String.Empty);
+            }
+
+            if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (!_settingFile.KeyExists("WindowsDefender")))
+            {
+                _settingFile.Write("WindowsDefender", "Not Excluded");
             }
 
             //INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
