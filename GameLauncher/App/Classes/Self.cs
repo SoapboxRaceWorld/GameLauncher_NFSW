@@ -28,7 +28,18 @@ namespace GameLauncherReborn
             woplserver + "/serverlist.json"
         };
 
+        public static string[] cdnlisturl = new string[] {
+            staticapiserver + "/cdn_list.json",
+            secondstaticapiserver + "/cdn_list.json",
+            woplserver + "/cdn_list.json"
+        };
+
         public static string statsurl = mainserver + "/stats";
+
+        /* OLD CDN LIST Urls */
+        /// <summary>
+        /// Leave these old CDNList Urls as a Legacy fallback
+        /// </summary>
         public static string CDNUrlList = mainserver + "/cdn_list.json";
         public static string CDNUrlStaticList = staticapiserver + "/cdn_list.json";
 

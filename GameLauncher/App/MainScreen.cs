@@ -112,6 +112,7 @@ namespace GameLauncher
         public static DiscordRpcClient discordRpcClient;
 
         List<ServerInfo> finalItems = new List<ServerInfo>();
+        List<CDNObject> finalCDNItems = new List<CDNObject>();
         Dictionary<string, int> serverStatusDictionary = new Dictionary<string, int>();
 
         String filename_pack = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameFiles.sbrwpack");
@@ -522,8 +523,8 @@ namespace GameLauncher
                 rememberMe.Checked = true;
             }
 
+            /* Server Display List */
             serverPick.DisplayMember = "Name";
-
             Log.Debug("LAUNCHER: Setting server list");
             finalItems = ServerListUpdater.GetList();
             serverPick.DataSource = finalItems;
@@ -539,50 +540,75 @@ namespace GameLauncher
                 } else {
                     Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                 }
-            } //else {
-                Log.Debug("SERVERLIST: Checking...");
-                Log.Debug("SERVERLIST: Setting first server in list");
-                Log.Debug("SERVERLIST: Checking if server is set on INI File");
-                try { 
-                    if (string.IsNullOrEmpty(_settingFile.Read("Server"))) {
-                        Log.Debug("SERVERLIST: Failed to find anything... assuming " + ((ServerInfo)serverPick.SelectedItem).IpAddress);
-                        _settingFile.Write("Server", ((ServerInfo)serverPick.SelectedItem).IpAddress);
+            }
+
+            Log.Debug("SERVERLIST: Checking...");
+            Log.Debug("SERVERLIST: Setting first server in list");
+            Log.Debug("SERVERLIST: Checking if server is set on INI File");
+            try
+            {
+                if (string.IsNullOrEmpty(_settingFile.Read("Server")))
+                {
+                    Log.Debug("SERVERLIST: Failed to find anything... assuming " + ((ServerInfo)serverPick.SelectedItem).IpAddress);
+                    _settingFile.Write("Server", ((ServerInfo)serverPick.SelectedItem).IpAddress);
+                }
+            }
+            catch
+            {
+                Log.Debug("SERVERLIST: Failed to write anything...");
+                _settingFile.Write("Server", "");
+            }
+
+            Log.Debug("SERVERLIST: Re-Checking if server is set on INI File");
+            if (_settingFile.KeyExists("Server"))
+            {
+                Log.Debug("SERVERLIST: Found something!");
+                _skipServerTrigger = true;
+
+                Log.Debug("SERVERLIST: Checking if server exists on our database");
+
+                if (finalItems.FindIndex(i => string.Equals(i.IpAddress, _settingFile.Read("Server"))) != 0 /*_slresponse.Contains(_settingFile.Read("Server"))*/)
+                {
+                    Log.Debug("SERVERLIST: Server found! Checking ID");
+                    var index = finalItems.FindIndex(i => string.Equals(i.IpAddress, _settingFile.Read("Server")));
+
+                    Log.Debug("SERVERLIST: ID is " + index);
+                    if (index >= 0)
+                    {
+                        Log.Debug("SERVERLIST: ID set correctly");
+                        serverPick.SelectedIndex = index;
                     }
-                } catch {
-                    Log.Debug("SERVERLIST: Failed to write anything...");
-                    _settingFile.Write("Server", "");
+                }
+                else
+                {
+                    Log.Debug("SERVERLIST: Unable to find anything, assuming default");
+                    serverPick.SelectedIndex = 1;
+                    Log.Debug("SERVERLIST: Deleting unknown entry");
+                    _settingFile.DeleteKey("Server");
                 }
 
-                Log.Debug("SERVERLIST: Re-Checking if server is set on INI File");
-                if (_settingFile.KeyExists("Server")) {
-                    Log.Debug("SERVERLIST: Found something!");
-                    _skipServerTrigger = true;
-
-                    Log.Debug("SERVERLIST: Checking if server exists on our database");
-
-                    if ( finalItems.FindIndex(i => string.Equals(i.IpAddress, _settingFile.Read("Server"))) != 0 /*_slresponse.Contains(_settingFile.Read("Server"))*/) {
-                        Log.Debug("SERVERLIST: Server found! Checking ID");
-                        var index = finalItems.FindIndex(i => string.Equals(i.IpAddress, _settingFile.Read("Server")));
-
-                        Log.Debug("SERVERLIST: ID is " + index);
-                        if (index >= 0) {
-                            Log.Debug("SERVERLIST: ID set correctly");
-                            serverPick.SelectedIndex = index;
-                        }
-					} else {
-                        Log.Debug("SERVERLIST: Unable to find anything, assuming default");
-                        serverPick.SelectedIndex = 1;
-                        Log.Debug("SERVERLIST: Deleting unknown entry");
-                        _settingFile.DeleteKey("Server");
-                    }
-
-                    Log.Debug("SERVERLIST: Triggering server change");
-                    if (serverPick.SelectedIndex == 1) {
-                        ServerPick_SelectedIndexChanged(sender, e);
-                    }
-                    Log.Debug("SERVERLIST: All done");
+                Log.Debug("SERVERLIST: Triggering server change");
+                if (serverPick.SelectedIndex == 1)
+                {
+                    ServerPick_SelectedIndexChanged(sender, e);
                 }
-            //}
+                Log.Debug("SERVERLIST: All done");
+            }
+
+            /* NEW CDN Display List */
+            CDNListUpdater.UpdateCDNList();
+
+            Log.Debug("LAUNCHER: Setting CDN list");
+            finalCDNItems = CDNListUpdater.GetCDNList();
+
+            Task.Run(() => {
+
+                settingsCDNPick.Invoke(new Action(() =>
+                {
+                    settingsCDNPick.DisplayMember = "Name";
+                    settingsCDNPick.DataSource = finalCDNItems;
+                }));
+            });
 
             Log.Debug("LAUNCHER: Checking for password");
             if (_settingFile.KeyExists("Password"))
@@ -627,32 +653,6 @@ namespace GameLauncher
             {
                 settingsLanguage.SelectedValue = _settingFile.Read("Language");
             }
-
-            Task.Run(() => {
-                String _slresponse2 = string.Empty;
-                try {
-                    WebClient wc = new WebClient();
-                    try {
-                        _slresponse2 = wc.DownloadString(Self.CDNUrlList);
-                    } catch {
-                        _slresponse2 = wc.DownloadString(Self.CDNUrlStaticList);
-                    }
-                } catch(Exception error) {
-                    MessageBox.Show(error.Message, "An error occurred while loading CDN List");
-                    _slresponse2 = JsonConvert.SerializeObject(new[] {
-                        new CDNObject { Name = "[CF] WorldUnited.gg Mirror", Url = "http://cdn.worldunited.gg/gamefiles/packed/" },
-                        new CDNObject { Name = "[CF] DavidCarbon Mirror", Url = "http://g-sbrw.davidcarbon.download"}
-                    });
-                }
-
-                List<CDNObject> CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse2);
-
-                settingsCDNPick.Invoke(new Action(() => 
-                {
-                    settingsCDNPick.DisplayMember = "name";
-                    settingsCDNPick.DataSource = CDNList;
-                }));
-            });
 
             Log.Debug("LAUNCHER: Re-checking InstallationDirectory: " + _settingFile.Read("InstallationDirectory"));
 
@@ -1966,9 +1966,13 @@ namespace GameLauncher
             RegisterFormElements(false);
             LoggedInFormElements(false);
             LoginFormElements(false);
+
+            /* Functions Calls */
+            RememberLastCDN();
             IsCDNDownGame();
             PingAPIStatus();
-            //Hide Social Panel
+
+            /* Hide Social Panel */
             ServerInfoPanel.Visible = false;
 
             if (File.Exists(_settingFile.Read("InstallationDirectory") + "/NFSWO_COMMUNICATION_LOG.txt"))
@@ -1984,6 +1988,7 @@ namespace GameLauncher
             }
 
         }
+
         private void CDN_Offline_Switch()
         {
             if (WindowState == FormWindowState.Minimized)
@@ -3493,6 +3498,40 @@ namespace GameLauncher
             {
                 Log.Debug("CLEANLINKS: Cleaning Up Mod Files {Settings}");
                 CleanLinks(linksPath);
+            }
+        }
+
+        private void RememberLastCDN()
+        {
+            /* Last Selected CDN */
+            Log.Debug("SETTINGS CDNLIST: Checking...");
+            Log.Debug("SETTINGS CDNLIST: Setting first server in list");
+            Log.Debug("SETTINGS CDNLIST: Checking if server is set on INI File");
+
+            if (_settingFile.KeyExists("CDN"))
+            {
+                Log.Debug("SETTINGS CDNLIST: Found something!");
+                Log.Debug("SETTINGS CDNLIST: Checking if CDN exists on our database");
+
+                if (finalCDNItems.FindIndex(i => string.Equals(i.Url, _settingFile.Read("CDN"))) != 0)
+                {
+                    Log.Debug("SETTINGS CDNLIST: CDN found! Checking ID");
+                    var index = finalCDNItems.FindIndex(i => string.Equals(i.Url, _settingFile.Read("CDN")));
+
+                    Log.Debug("SETTINGS CDNLIST: ID is " + index);
+                    if (index >= 0)
+                    {
+                        Log.Debug("SETTINGS CDNLIST: ID set correctly");
+                        settingsCDNPick.SelectedIndex = index;
+                    }
+                }
+                else
+                {
+                    Log.Debug("SETTINGS CDNLIST: Unable to find anything, assuming default");
+                    settingsCDNPick.SelectedIndex = 1;
+                    Log.Debug("SETTINGS CDNLIST: Unknown entry value is " + _settingFile.Read("CDN"));
+                }
+                Log.Debug("SETTINGS CDNLIST: All done");
             }
         }
 

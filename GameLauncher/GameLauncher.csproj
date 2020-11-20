@@ -198,6 +198,7 @@
     <Compile Include="App\Classes\RPC\DiscordGamePresence.cs" />
     <Compile Include="App\Classes\RPC\EventList.cs" />
     <Compile Include="App\Classes\Self.cs" />
+    <Compile Include="App\Classes\CDNListUpdater.cs" />
     <Compile Include="App\Classes\ServerListUpdater.cs" />
     <Compile Include="App\Classes\ServerProxy.cs" />
     <Compile Include="App\Classes\Singleton.cs" />

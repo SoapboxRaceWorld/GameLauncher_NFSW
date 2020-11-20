@@ -1,4 +1,5 @@
 ﻿using GameLauncher.App.Classes;
+using GameLauncher.App.Classes.Logger;
 using GameLauncherReborn;
 using Newtonsoft.Json;
 using System;
@@ -118,23 +119,38 @@ namespace GameLauncher.App
 
         private void ShowCDNSources()
         {
-            //CDN
-            String _slresponse = String.Empty;
             try
             {
-                WebClientWithTimeout wc = new WebClientWithTimeout();
-                try
-                {
-                    _slresponse = wc.DownloadString(Self.CDNUrlList);
-                }
-                catch
-                {
-                    _slresponse = wc.DownloadString(Self.CDNUrlStaticList);
-                }
+                /* NEW CDN Display List */
+                List<CDNObject> finalCDNItems = new List<CDNObject>();
+
+                CDNListUpdater.UpdateCDNList();
+
+                Log.Debug("WELCOME: Setting CDN list");
+                finalCDNItems = CDNListUpdater.GetCDNList();
+
+                CDNSource.DisplayMember = "Name";
+                CDNSource.DataSource = finalCDNItems;
             }
             catch
             {
-                _slresponse = JsonConvert.SerializeObject(new[] {
+                /* OLD CDN Display List */
+                String _slresponse = String.Empty;
+                try
+                {
+                    WebClientWithTimeout wc = new WebClientWithTimeout();
+                    try
+                    {
+                        _slresponse = wc.DownloadString(Self.CDNUrlList);
+                    }
+                    catch
+                    {
+                        _slresponse = wc.DownloadString(Self.CDNUrlStaticList);
+                    }
+                }
+                catch
+                {
+                    _slresponse = JsonConvert.SerializeObject(new[] {
                     new CDNObject {
                         Name = "[CF] WorldUnited.gg Mirror",
                         Url = "http://cdn.worldunited.gg/gamefiles/packed/"
@@ -144,12 +160,14 @@ namespace GameLauncher.App
                         Url = "http://g-sbrw.davidcarbon.download/"
                     }
                 });
+                }
+
+                Log.Debug("WELCOME: Setting Old Display CDN list");
+                CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
+
+                CDNSource.DisplayMember = "name";
+                CDNSource.DataSource = CDNList;
             }
-
-            CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
-
-            CDNSource.DisplayMember = "name";
-            CDNSource.DataSource = CDNList;
         }
 
         private void Save_Click(object sender, EventArgs e) {

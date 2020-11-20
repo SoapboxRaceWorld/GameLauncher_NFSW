@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace GameLauncher.App.Classes
 {
@@ -7,8 +8,12 @@ namespace GameLauncher.App.Classes
         public static string TrackHigh = String.Empty;
     }
 
-    public class CDNObject {
+    public class CDNObject 
+    {
+        [JsonProperty("name")]
         public string Name { get; set; }
+
+        [JsonProperty("url")]
         public string Url { get; set; }
     }
 }
