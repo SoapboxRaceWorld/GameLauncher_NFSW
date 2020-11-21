@@ -456,7 +456,7 @@
             this.rememberMe.ForeColor = System.Drawing.Color.White;
             this.rememberMe.Location = new System.Drawing.Point(645, 260);
             this.rememberMe.Name = "rememberMe";
-            this.rememberMe.Size = new System.Drawing.Size(159, 19);
+            this.rememberMe.Size = new System.Drawing.Size(158, 19);
             this.rememberMe.TabIndex = 6;
             this.rememberMe.Text = "REMEMBER MY LOGIN";
             this.rememberMe.UseVisualStyleBackColor = false;
@@ -487,7 +487,7 @@
             this.loginButton.Image = global::GameLauncher.Properties.Resources.graybutton;
             this.loginButton.Location = new System.Drawing.Point(605, 362);
             this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(230, 35);
+            this.loginButton.Size = new System.Drawing.Size(231, 35);
             this.loginButton.TabIndex = 8;
             this.loginButton.Text = "LOG ON";
             this.loginButton.UseVisualStyleBackColor = false;
@@ -501,7 +501,7 @@
             this.registerText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.registerText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
             this.registerText.Image = global::GameLauncher.Properties.Resources.greenbutton;
-            this.registerText.Location = new System.Drawing.Point(606, 409);
+            this.registerText.Location = new System.Drawing.Point(605, 409);
             this.registerText.Name = "registerText";
             this.registerText.Size = new System.Drawing.Size(231, 35);
             this.registerText.TabIndex = 10;
@@ -687,7 +687,7 @@
             this.registerButton.Image = global::GameLauncher.Properties.Resources.greenbutton;
             this.registerButton.Location = new System.Drawing.Point(18, 296);
             this.registerButton.Name = "registerButton";
-            this.registerButton.Size = new System.Drawing.Size(230, 35);
+            this.registerButton.Size = new System.Drawing.Size(231, 35);
             this.registerButton.TabIndex = 17;
             this.registerButton.Text = "REGISTER";
             this.registerButton.UseVisualStyleBackColor = false;
@@ -701,7 +701,7 @@
             this.registerCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.registerCancel.ForeColor = System.Drawing.Color.White;
             this.registerCancel.Image = global::GameLauncher.Properties.Resources.graybutton;
-            this.registerCancel.Location = new System.Drawing.Point(19, 336);
+            this.registerCancel.Location = new System.Drawing.Point(18, 336);
             this.registerCancel.Name = "registerCancel";
             this.registerCancel.Size = new System.Drawing.Size(231, 35);
             this.registerCancel.TabIndex = 18;
@@ -945,7 +945,7 @@
             this.settingsWordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsWordFilterCheck.Location = new System.Drawing.Point(26, 288);
             this.settingsWordFilterCheck.Name = "settingsWordFilterCheck";
-            this.settingsWordFilterCheck.Size = new System.Drawing.Size(235, 17);
+            this.settingsWordFilterCheck.Size = new System.Drawing.Size(234, 17);
             this.settingsWordFilterCheck.TabIndex = 135;
             this.settingsWordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.settingsWordFilterCheck.UseVisualStyleBackColor = false;
@@ -958,7 +958,7 @@
             this.settingsProxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsProxyCheckbox.Location = new System.Drawing.Point(26, 308);
             this.settingsProxyCheckbox.Name = "settingsProxyCheckbox";
-            this.settingsProxyCheckbox.Size = new System.Drawing.Size(103, 17);
+            this.settingsProxyCheckbox.Size = new System.Drawing.Size(102, 17);
             this.settingsProxyCheckbox.TabIndex = 136;
             this.settingsProxyCheckbox.Text = "Disable Proxy";
             this.settingsProxyCheckbox.UseVisualStyleBackColor = false;
@@ -971,7 +971,7 @@
             this.settingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.settingsDiscordRPCCheckbox.Location = new System.Drawing.Point(26, 328);
             this.settingsDiscordRPCCheckbox.Name = "settingsDiscordRPCCheckbox";
-            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(144, 17);
+            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(143, 17);
             this.settingsDiscordRPCCheckbox.TabIndex = 137;
             this.settingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
             this.settingsDiscordRPCCheckbox.UseVisualStyleBackColor = false;
