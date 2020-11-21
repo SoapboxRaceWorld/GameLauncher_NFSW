@@ -36,13 +36,6 @@ namespace GameLauncherReborn
 
         public static string statsurl = mainserver + "/stats";
 
-        /* OLD CDN LIST Urls */
-        /// <summary>
-        /// Leave these old CDNList Urls as a Legacy fallback
-        /// </summary>
-        public static string CDNUrlList = mainserver + "/cdn_list.json";
-        public static string CDNUrlStaticList = staticapiserver + "/cdn_list.json";
-
         public static string DiscordRPCID = "540651192179752970";
 
         public static int ProxyPort = new Random().Next(6260, 8269);

@@ -216,28 +216,6 @@ namespace GameLauncher
                 if (!_settingFile.KeyExists("InstallationDirectory")) {
                     _settingFile.Write("InstallationDirectory", "GameFiles");
                 }
-
-                if (!_settingFile.KeyExists("CDN")) {
-                    try {
-                        List<CDNObject> CDNList = new List<CDNObject>();
-                        WebClient wc3 = new WebClient();
-                        String _slresponse = wc3.DownloadString(Self.CDNUrlList);
-                        CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
-                        _settingFile.Write("CDN", CDNList.First().Url);
-                    }
-                    catch {
-                        try {
-                            List<CDNObject> CDNList = new List<CDNObject>();
-                            WebClient wc3 = new WebClient();
-                            String _slresponse = wc3.DownloadString(Self.CDNUrlStaticList);
-                            CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
-                            _settingFile.Write("CDN", CDNList.First().Url);
-                        }
-                        catch {
-                            _settingFile.Write("CDN", "http://cdn.worldunited.gg/gamefiles/packed/");
-                        }
-                    }
-                }
             }
 
             if (!string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory"))) {

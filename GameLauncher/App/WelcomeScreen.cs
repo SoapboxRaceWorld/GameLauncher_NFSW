@@ -119,55 +119,16 @@ namespace GameLauncher.App
 
         private void ShowCDNSources()
         {
-            try
-            {
-                /* NEW CDN Display List */
-                List<CDNObject> finalCDNItems = new List<CDNObject>();
+            /* NEW CDN Display List */
+            List<CDNObject> finalCDNItems = new List<CDNObject>();
 
-                CDNListUpdater.UpdateCDNList();
+            CDNListUpdater.UpdateCDNList();
 
-                Log.Debug("WELCOME: Setting CDN list");
-                finalCDNItems = CDNListUpdater.GetCDNList();
+            Log.Debug("WELCOME: Setting CDN list");
+            finalCDNItems = CDNListUpdater.GetCDNList();
 
-                CDNSource.DisplayMember = "Name";
-                CDNSource.DataSource = finalCDNItems;
-            }
-            catch
-            {
-                /* OLD CDN Display List */
-                String _slresponse = String.Empty;
-                try
-                {
-                    WebClientWithTimeout wc = new WebClientWithTimeout();
-                    try
-                    {
-                        _slresponse = wc.DownloadString(Self.CDNUrlList);
-                    }
-                    catch
-                    {
-                        _slresponse = wc.DownloadString(Self.CDNUrlStaticList);
-                    }
-                }
-                catch
-                {
-                    _slresponse = JsonConvert.SerializeObject(new[] {
-                    new CDNObject {
-                        Name = "[CF] WorldUnited.gg Mirror",
-                        Url = "http://cdn.worldunited.gg/gamefiles/packed/"
-                    },
-                    new CDNObject {
-                        Name = "[CF] DavidCarbon Mirror",
-                        Url = "http://g-sbrw.davidcarbon.download/"
-                    }
-                });
-                }
-
-                Log.Debug("WELCOME: Setting Old Display CDN list");
-                CDNList = JsonConvert.DeserializeObject<List<CDNObject>>(_slresponse);
-
-                CDNSource.DisplayMember = "name";
-                CDNSource.DataSource = CDNList;
-            }
+            CDNSource.DisplayMember = "Name";
+            CDNSource.DataSource = finalCDNItems;
         }
 
         private void Save_Click(object sender, EventArgs e) {
