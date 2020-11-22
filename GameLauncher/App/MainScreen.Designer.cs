@@ -751,7 +751,7 @@
             this.settingsLauncherVersion.AutoSize = true;
             this.settingsLauncherVersion.BackColor = System.Drawing.Color.Transparent;
             this.settingsLauncherVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.settingsLauncherVersion.Location = new System.Drawing.Point(28, 416);
+            this.settingsLauncherVersion.Location = new System.Drawing.Point(27, 419);
             this.settingsLauncherVersion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.settingsLauncherVersion.Name = "settingsLauncherVersion";
             this.settingsLauncherVersion.Size = new System.Drawing.Size(84, 13);
