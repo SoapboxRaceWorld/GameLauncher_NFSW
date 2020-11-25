@@ -3645,7 +3645,7 @@ namespace GameLauncher
                 MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is disadvised! Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files" + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
             }
-            else if (Self.IsUsersFolders(_settingFile.Read("InstallationDirectory")) || Self.IsProgramFiles(_settingFile.Read("InstallationDirectory")) || Self.IsProgramFiles(_settingFile.Read("InstallationDirectory")))
+            else if (Self.IsUsersFolders(_settingFile.Read("InstallationDirectory")) || Self.IsProgramFiles(_settingFile.Read("InstallationDirectory")) || Self.IsWindowsFolder(_settingFile.Read("InstallationDirectory")))
             {
                 Directory.CreateDirectory("Game Files");
                 Log.Debug("LAUNCHER: Installing NFSW in a Special Directory is disadvised.");
