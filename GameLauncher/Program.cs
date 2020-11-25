@@ -35,6 +35,38 @@ namespace GameLauncher
         }
 
         private static void Main2(Arguments args) {
+
+            /* Set Launcher Directory */
+            Log.Debug("CORE: Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(true);
+
+            Log.Debug("CORE: Checking current directory");
+
+            /* Start Directory Checks */
+            if (Self.IsTempFolder(Directory.GetCurrentDirectory()))
+            {
+                MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                Environment.Exit(0);
+            }
+            else if (Self.IsUsersFolders(Directory.GetCurrentDirectory()))
+            {
+                MessageBox.Show(null, "Please, choose a different directory for the game launcher.\n\nSpecial Folders such as:\n\n Downloads, Documents, Desktop, Videos, Music, OneDrive, or Any Type of User Folders\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                Environment.Exit(0);
+            }
+            else if (Self.IsProgramFiles(Directory.GetCurrentDirectory()))
+            {
+                MessageBox.Show(null, "Please, choose a different directory for the game launcher.\n\nSpecial Folders such as:\n\nProgram Files or Program Files (x86)\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                Environment.Exit(0);
+            }
+
+            if (!Self.HasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath)))
+            {
+                MessageBox.Show("This application requires admin priviledge");
+            }
+
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
 
@@ -206,10 +238,6 @@ namespace GameLauncher
 
             Console.WriteLine("Application path: " + Path.GetDirectoryName(Application.ExecutablePath));
 
-            if (!Self.HasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath))) {
-                MessageBox.Show("This application requires admin priviledge");
-            }
-
             Log.StartLogging();
 
             if (DetectLinux.LinuxDetected()) {
@@ -275,19 +303,6 @@ namespace GameLauncher
             }
 
             //StaticConfiguration.DisableErrorTraces = false;
-
-            Log.Debug("CORE: Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
-
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(true);
-
-            Log.Debug("CORE: Checking current directory");
-
-            if (Self.IsTempFolder(Directory.GetCurrentDirectory())) {
-                MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                Environment.Exit(0);
-            }
 
             if (!File.Exists("GameLauncherUpdater.exe")) {
                 Log.Debug("CORE LAUNCHER UPDATER: Starting GameLauncherUpdater downloader");

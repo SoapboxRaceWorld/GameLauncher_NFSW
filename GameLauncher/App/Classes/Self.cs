@@ -110,9 +110,19 @@ namespace GameLauncherReborn
 			return Regex.IsMatch(email, theEmailPattern);
 		}
 
+        /* Folder String Checks */
 		public static bool IsTempFolder(string directory) {
 			return directory.Contains("Temp");
 		}
+
+        public static bool IsUsersFolders(string directory) {
+            return directory.Contains("Users");
+        }
+
+        public static bool IsProgramFiles(string directory)
+        {
+            return directory.Contains("Program Files");
+        }
 
         public static string CleanFromUnknownChars(string s) {
             StringBuilder sb = new StringBuilder(s.Length);
