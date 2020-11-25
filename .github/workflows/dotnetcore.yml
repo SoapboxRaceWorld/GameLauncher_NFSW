@@ -25,9 +25,11 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'    
       run: msbuild  GameLauncher.sln -p:Configuration=Release
     - name: Upload Artifacts
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true' 
       uses: actions/upload-artifact@v2
       with:
         name: ArtifactBuild
         path: |
-          ${{ github.workspace }}/GameLauncher/bin/Debug/GameLauncher.exe
-          ${{ github.workspace }}/GameLauncher/bin/Debug/*.dll
+          ${{ github.workspace }}/GameLauncher/bin/Release/GameLauncher.exe
+          ${{ github.workspace }}/GameLauncher/bin/Release/*.dll
