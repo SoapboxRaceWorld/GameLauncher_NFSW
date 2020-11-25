@@ -43,9 +43,9 @@ namespace GameLauncher
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
 
-            Log.Debug("CORE: Checking current directory");
-
             if (!DetectLinux.LinuxDetected()) {
+                Log.Debug("CORE: Checking current directory");
+
                 /* Start Directory Checks */
                 if (Self.IsUsersFolders(Directory.GetCurrentDirectory()) && Self.IsTempFolder(Directory.GetCurrentDirectory()))
                 //Both conditionals are in check to prevent the case of a user making a folder called "Temp" and prevents
