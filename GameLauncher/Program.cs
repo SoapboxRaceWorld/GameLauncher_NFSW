@@ -46,7 +46,9 @@ namespace GameLauncher
             Log.Debug("CORE: Checking current directory");
 
             /* Start Directory Checks */
-            if (Self.IsTempFolder(Directory.GetCurrentDirectory()))
+            if (Self.IsUsersFolders(Directory.GetCurrentDirectory()) && Self.IsTempFolder(Directory.GetCurrentDirectory()))
+            //Both conditionals are in check to prevent the case of a user making a folder called "Temp" and prevents
+            //Launcher to launch
             {
                 MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 Environment.Exit(0);
@@ -59,6 +61,11 @@ namespace GameLauncher
             else if (Self.IsProgramFiles(Directory.GetCurrentDirectory()))
             {
                 MessageBox.Show(null, "Please, choose a different directory for the game launcher.\n\nSpecial Folders such as:\n\nProgram Files or Program Files (x86)\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                Environment.Exit(0);
+            }
+            else if (Self.IsWindowsFolder(Directory.GetCurrentDirectory()))
+            {
+                MessageBox.Show(null, "Please, choose a different directory for the game launcher.\n\nSpecial Folder such as:\n\nWindows\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 Environment.Exit(0);
             }
 

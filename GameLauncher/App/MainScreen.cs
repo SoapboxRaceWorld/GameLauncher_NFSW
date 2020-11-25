@@ -424,11 +424,16 @@ namespace GameLauncher
                 MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
             }
-            else if (
-                _settingFile.Read("InstallationDirectory") == Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) ||
-                _settingFile.Read("InstallationDirectory") == Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) ||
-                _settingFile.Read("InstallationDirectory") == Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) ||
-                _settingFile.Read("InstallationDirectory") == Environment.GetFolderPath(Environment.SpecialFolder.Windows))
+            else if (Self.IsUsersFolders(_settingFile.Read("InstallationDirectory")) && Self.IsTempFolder(_settingFile.Read("InstallationDirectory")))
+            //Both conditionals are in check to prevent the case of a user making a folder called "Temp" and prevents
+            //Launcher to launch
+            {
+                Directory.CreateDirectory("Game Files");
+                Log.Debug("LAUNCHER: (╯°□°）╯︵ ┻━┻ Installing NFSW in the Temp Folder is disadvised!");
+                MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is disadvised! Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files" + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
+            }
+            else if (Self.IsUsersFolders(_settingFile.Read("InstallationDirectory")) || Self.IsProgramFiles(_settingFile.Read("InstallationDirectory")) || Self.IsProgramFiles(_settingFile.Read("InstallationDirectory")))
             {
                 Directory.CreateDirectory("Game Files");
                 Log.Debug("LAUNCHER: Installing NFSW in a Special Directory is disadvised.");

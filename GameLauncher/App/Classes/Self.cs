@@ -112,16 +112,21 @@ namespace GameLauncherReborn
 
         /* Folder String Checks */
 		public static bool IsTempFolder(string directory) {
-			return directory.Contains("Temp");
+			//Only True if the folder contains the string "Temp"
+            return directory.Contains("Temp");
 		}
 
         public static bool IsUsersFolders(string directory) {
-            return directory.Contains("Users");
+            return directory.Contains("C:\\Users");
         }
 
-        public static bool IsProgramFiles(string directory)
-        {
-            return directory.Contains("Program Files");
+        public static bool IsProgramFiles(string directory) {
+            return directory.Contains("C:\\Program Files");
+        }
+
+        public static bool IsWindowsFolder(string directory) {
+            //You would be surprised how many cases I seen this
+            return directory.Contains("C:\\Windows");
         }
 
         public static string CleanFromUnknownChars(string s) {
