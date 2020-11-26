@@ -3,6 +3,7 @@ using GameLauncherReborn;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Cache;
@@ -548,16 +549,20 @@ namespace GameLauncher
                                 }
                                 if (this.mProgressUpdated != null)
                                 {
-                                    object[] args3 = new object[]
+                                    try
                                     {
-                                        num2,
-                                        num3,
-                                        num4,
-                                        text6,
-                                        0
-                                    };
+                                        object[] args3 = new object[]
+                                        {
+                                            num2,
+                                            num3,
+                                            num4,
+                                            text6,
+                                            0
+                                        };
 
-                                    this.mFE.BeginInvoke(this.mProgressUpdated, args3);
+                                        this.mFE.BeginInvoke(this.mProgressUpdated, args3);
+                                    }
+                                    catch { Process.GetProcessById(Process.GetCurrentProcess().Id).Kill(); }
                                 }
                             }
                             if (xmlNode3 != null)
@@ -596,8 +601,12 @@ namespace GameLauncher
                                 //TODO: use total file lenght and extracted file length instead of files checked and total array size.
                                 fileschecked =+ num3;
 
-                                object[] xxxxxx = new object[] { text6, fileschecked, num4};
-								this.mFE.BeginInvoke(this.mShowExtract, xxxxxx);
+                                try
+                                {
+                                    object[] xxxxxx = new object[] { text6, fileschecked, num4 };
+                                    this.mFE.BeginInvoke(this.mShowExtract, xxxxxx);
+                                }
+                                catch { Process.GetProcessById(Process.GetCurrentProcess().Id).Kill(); }
 
 								if (num24 != 0)
                                 {
