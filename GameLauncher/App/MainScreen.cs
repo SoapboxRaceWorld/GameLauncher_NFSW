@@ -1314,9 +1314,9 @@ namespace GameLauncher
                         }
 
                         if (json.MaxUsersAllowed == 0) {
-                            numPlayers = string.Format("{0}/{1}", json.OnlineNumber, json.NumberOfRegistered);
+                            numPlayers = string.Format("{0} / {1}", json.OnlineNumber, json.NumberOfRegistered);
                         } else {
-                            numPlayers = string.Format("{0}/{1}", json.OnlineNumber, json.MaxUsersAllowed.ToString());
+                            numPlayers = string.Format("{0} / {1}", json.OnlineNumber, json.MaxUsersAllowed.ToString());
                         }
 
                         _allowRegistration = true;
