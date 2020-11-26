@@ -9,8 +9,6 @@ using System.Windows.Forms;
 using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Logger;
 using GameLauncherReborn;
-using Newtonsoft.Json;
-using System.Linq;
 using Microsoft.Win32;
 using CommandLine;
 using System.Globalization;
@@ -20,9 +18,7 @@ namespace GameLauncher
 {
     internal static class Program {
         private static IniFile _settingFile = new IniFile("Settings.ini");
-
-        //Update this if a new GameLauncherUpdater.exe has been delployed - DavidCarbon
-        private static readonly string LatestUpdaterBuildVersion = "1.0.0.4";
+        private static string LatestUpdaterBuildVersion = "1.0.0.4";
 
         internal class Arguments {
             [Option('p', "parse", Required = false, HelpText = "Parses URI")]
@@ -35,6 +31,19 @@ namespace GameLauncher
         }
 
         private static void Main2(Arguments args) {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
+
+            if (UriScheme.IsCommandLineArgumentsInstalled())
+            {
+                UriScheme.InstallCommandLineArguments(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), AppDomain.CurrentDomain.FriendlyName));
+                if (args.Parse != null)
+                {
+                    new UriScheme(args.Parse);
+                }
+            }
+
+            Log.Debug("BUILD: GameLauncher " + Application.ProductVersion);
 
             /* Set Launcher Directory */
             Log.Debug("CORE: Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
@@ -56,17 +65,21 @@ namespace GameLauncher
                 }
                 else if (Self.IsUsersFolders(Directory.GetCurrentDirectory()))
                 {
-                    MessageBox.Show(null, "Please, choose a different directory for the game launcher.\n\nSpecial Folders such as:\n\n Downloads, Documents, Desktop, Videos, Music, OneDrive, or Any Type of User Folders\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    MessageBox.Show(null, "Please, choose a different directory for the game launcher.\n\nSpecial Folders such as:" +
+                        "\n\n Downloads, Documents, Desktop, Videos, Music, OneDrive, or Any Type of User Folders" +
+                        "\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     Environment.Exit(0);
                 }
                 else if (Self.IsProgramFiles(Directory.GetCurrentDirectory()))
                 {
-                    MessageBox.Show(null, "Please, choose a different directory for the game launcher.\n\nSpecial Folders such as:\n\nProgram Files or Program Files (x86)\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    MessageBox.Show(null, "Please, choose a different directory for the game launcher." +
+                        "\n\nSpecial Folders such as:\n\nProgram Files or Program Files (x86)\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     Environment.Exit(0);
                 }
                 else if (Self.IsWindowsFolder(Directory.GetCurrentDirectory()))
                 {
-                    MessageBox.Show(null, "Please, choose a different directory for the game launcher.\n\nSpecial Folder such as:\n\nWindows\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    MessageBox.Show(null, "Please, choose a different directory for the game launcher." +
+                        "\n\nSpecial Folder such as:\n\nWindows\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     Environment.Exit(0);
                 }
 
@@ -74,19 +87,73 @@ namespace GameLauncher
                 {
                     MessageBox.Show("This application requires admin priviledge");
                 }
-            }
-
-            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
-
-            if (UriScheme.IsCommandLineArgumentsInstalled()) {
-                UriScheme.InstallCommandLineArguments(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), AppDomain.CurrentDomain.FriendlyName));
-                if(args.Parse != null) {
-                    new UriScheme(args.Parse);
+                
+                //Update this text file if a new GameLauncherUpdater.exe has been delployed - DavidCarbon
+                try {
+                    LatestUpdaterBuildVersion = new WebClient().DownloadString("http://api2-sbrw.davidcarbon.download/Version.txt");
+                    Log.Debug("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
+                }
+                catch {
+                    LatestUpdaterBuildVersion = new WebClient().DownloadString("http://api-sbrw.davidcarbon.download/Version.txt");
+                    Log.Debug("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
                 }
             }
 
-            Log.Debug("BUILD: GameLauncher " + Application.ProductVersion);
+            if (!File.Exists("GameLauncherUpdater.exe"))
+            {
+                Log.Debug("LAUNCHER UPDATER: Starting GameLauncherUpdater downloader");
+                try
+                {
+                    using (WebClient wc = new WebClient())
+                    {
+                        wc.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) => {
+                            if (new FileInfo("GameLauncherUpdater.exe").Length == 0)
+                            {
+                                File.Delete("GameLauncherUpdater.exe");
+                            }
+                        };
+                        wc.DownloadFileAsync(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug("LAUCHER UPDATER: Failed to download updater. " + ex.Message);
+                }
+            }
+            else if (File.Exists("GameLauncherUpdater.exe"))
+            {
+                String GameLauncherUpdaterLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameLauncherUpdater.exe");
+                var LauncherUpdaterBuild = FileVersionInfo.GetVersionInfo(GameLauncherUpdaterLocation);
+                var LauncherUpdaterBuildNumber = LauncherUpdaterBuild.FileVersion;
+                var UpdaterBuildNumberResult = LauncherUpdaterBuildNumber.CompareTo(LatestUpdaterBuildVersion);
+
+                Log.Debug("LAUNCHER UPDATER BUILD: GameLauncherUpdater " + LauncherUpdaterBuildNumber);
+                if (UpdaterBuildNumberResult < 0)
+                {
+                    Log.Debug("LAUNCHER UPDATER: " + UpdaterBuildNumberResult + " Builds behind latest Updater!");
+                }
+                else
+                {
+                    Log.Debug("LAUNCHER UPDATER: Latest GameLauncherUpdater!");
+                }
+
+                if (UpdaterBuildNumberResult < 0)
+                {
+                    Log.Debug("LAUNCHER UPDATER: Downloading New GameLauncherUpdater.exe");
+                    File.Delete("GameLauncherUpdater.exe");
+                    try
+                    {
+                        using (WebClient wc = new WebClient())
+                        {
+                            wc.DownloadFileAsync(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Debug("LAUNCHER UPDATER: Failed to download new updater. " + ex.Message);
+                    }
+                }
+            }
 
             try
             {
@@ -312,54 +379,6 @@ namespace GameLauncher
             }
 
             //StaticConfiguration.DisableErrorTraces = false;
-
-            if (!File.Exists("GameLauncherUpdater.exe")) {
-                Log.Debug("CORE LAUNCHER UPDATER: Starting GameLauncherUpdater downloader");
-                try {
-                    using (WebClient wc = new WebClient()) {
-                        wc.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) => {
-                            if (new FileInfo("GameLauncherUpdater.exe").Length == 0) {
-                                File.Delete("GameLauncherUpdater.exe");
-                            }
-                        };
-                        wc.DownloadFileAsync(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
-                    }
-                } catch(Exception ex) {
-                    Log.Debug("CORE LAUCHER UPDATER: Failed to download updater. " + ex.Message);
-                }
-            }
-            else if (File.Exists("GameLauncherUpdater.exe"))
-            {
-                String GameLauncherUpdaterLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameLauncherUpdater.exe");
-                var LauncherUpdaterBuild = FileVersionInfo.GetVersionInfo(GameLauncherUpdaterLocation);
-                var LauncherUpdaterBuildNumber = LauncherUpdaterBuild.FileVersion;
-                var UpdaterBuildNumberResult = LauncherUpdaterBuildNumber.CompareTo(LatestUpdaterBuildVersion);
-
-                if (UpdaterBuildNumberResult < 0)
-                {
-                    Log.Debug("CORE LAUNCHER UPDATER: " + UpdaterBuildNumberResult + " Builds behind latest Updater!");
-                }
-                else
-                {
-                    Log.Debug("CORE LAUNCHER UPDATER: Latest GameLauncherUpdater!");
-                }
-
-                if (UpdaterBuildNumberResult < 0) {
-                    Log.Debug("CORE LAUNCHER UPDATER: Downloading New GameLauncherUpdater.exe");
-                    File.Delete("GameLauncherUpdater.exe");
-                    try
-                    {
-                        using (WebClient wc = new WebClient())
-                        {
-                            wc.DownloadFileAsync(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Debug("CORE LAUNCHER UPDATER: Failed to download new updater. " + ex.Message);
-                    }
-                }
-            }
 
             if (!File.Exists("servers.json")) {
                 try {

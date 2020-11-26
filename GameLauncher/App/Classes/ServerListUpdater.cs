@@ -21,19 +21,19 @@ namespace GameLauncher.App.Classes
 
             foreach (var serverListURL in Self.serverlisturl) {
                 try {
-                    Log.Debug("Loading serverlist from: " + serverListURL);
+                    Log.Debug("LIST CORE: Loading serverlist from: " + serverListURL);
                     var wc = new WebClient();
                     var response = wc.DownloadString(serverListURL);
-                    Log.Debug("Loaded serverlist from: " + serverListURL);
+                    Log.Debug("LIST CORE: Loaded serverlist from: " + serverListURL);
 
                     try {
                         serverInfos.AddRange(
                             JsonConvert.DeserializeObject<List<ServerInfo>>(response));
                     } catch (Exception error) {
-                        Log.Error("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message);
+                        Log.Error("LIST CORE: Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message);
                     }
                 } catch (Exception error) {
-                    Log.Error("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message);
+                    Log.Error("LIST CORE: Error occurred while loading server list from [" + serverListURL + "]: " + error.Message);
                 }
             }
 

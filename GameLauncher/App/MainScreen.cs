@@ -219,12 +219,12 @@ namespace GameLauncher
             InitializeComponent();
 
             if (!DetectLinux.LinuxDetected()) {
-                Log.Debug("Applying Windows Fonts");
+                Log.Debug("CORE: Applying Windows Fonts");
                 ApplyEmbeddedFonts();
             }
             else
             {
-                Log.Debug("Applying Default Fonts");
+                Log.Debug("CORE: Applying Default Fonts");
                 ApplyDefaultFonts();
             }
 
