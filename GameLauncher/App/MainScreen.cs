@@ -218,15 +218,8 @@ namespace GameLauncher
             Log.Debug("CORE: InitializeComponent");
             InitializeComponent();
 
-            if (!DetectLinux.LinuxDetected()) {
-                Log.Debug("CORE: Applying Windows Fonts");
-                ApplyEmbeddedFonts();
-            }
-            else
-            {
-                Log.Debug("CORE: Applying Default Fonts");
-                ApplyDefaultFonts();
-            }
+            Log.Debug("CORE: Applying Fonts");
+            ApplyEmbeddedFonts();
 
             _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1") ? true : false;
             _disableDiscordRPC = (_settingFile.KeyExists("DisableRPC") && _settingFile.Read("DisableRPC") == "1") ? true : false;
@@ -1424,140 +1417,73 @@ namespace GameLauncher
             };
         }
 
-        /* Font for Non-Windows Systems */
-        private void ApplyDefaultFonts()
-        {
-            /* Front Screen */
-            // serverPick -- Server List Text is not controlled here
-            imageServerName.Font = new Font(FontFamily.GenericSansSerif, 18F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            launcherStatusText.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            launcherStatusDesc.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            ServerStatusText.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            ServerStatusDesc.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            APIStatusText.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            APIStatusDesc.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /* Social Panel */
-            ServerShutDown.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            HomePageLink.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            DiscordInviteLink.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            FacebookGroupLink.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            TwitterAccountLink.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            SceneryGroupText.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /* Settings */
-            settingsGamePathText.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            // settingsGameFiles -- Change GameFiles Path button text is not controlled here
-            settingsCDNText.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            // settingsCDNPick -- CDN Menu Dropdown text is not controlled here
-            settingsLanguageText.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            // settingsLanguage -- Language Menu Dropdown text is not controlled here
-            settingsWordFilterCheck.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsProxyCheckbox.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsDiscordRPCCheckbox.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            SettingsClearCrashLogsButton.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsGameFilesCurrentText.Font = new Font(FontFamily.GenericSansSerif, 7f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsGameFilesCurrent.Font = new Font(FontFamily.GenericSansSerif, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsCDNCurrentText.Font = new Font(FontFamily.GenericSansSerif, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsCDNCurrent.Font = new Font(FontFamily.GenericSansSerif, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsLauncherPathText.Font = new Font(FontFamily.GenericSansSerif, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsLauncherPathCurrent.Font = new Font(FontFamily.GenericSansSerif, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsNetworkText.Font = new Font(FontFamily.GenericSansSerif, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsMainSrvText.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsMainCDNText.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsBkupSrvText.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsBkupCDNText.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsLauncherVersion.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsSave.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsCancel.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /* Log In Panel */
-            currentWindowInfo.Font = new Font(FontFamily.GenericSansSerif, 10F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            email.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            password.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            rememberMe.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            forgotPassword.Font = new Font(FontFamily.GenericSansSerif, 7F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            loginButton.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerText.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            ServerPingStatusText.Font = new Font(FontFamily.GenericSansSerif, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            logoutButton.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            playButton.Font = new Font(FontFamily.GenericSansSerif, 14F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            playProgressText.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            playProgressTextTimer.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            /* Registering Panel */
-            registerEmail.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            registerPassword.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            registerConfirmPassword.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            registerTicket.Font = new Font(FontFamily.GenericSansSerif, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            registerAgree.Font = new Font(FontFamily.GenericSansSerif, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerButton.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerCancel.Font = new Font(FontFamily.GenericSansSerif, 8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-        }
-
-        /* Font for Windows Systems */
+        /* Font for all Systems */
         private void ApplyEmbeddedFonts()
         {
-            FontFamily AkrobatSemiBold = FontWrapper.Instance.GetFontFamily("Akrobat-SemiBold.ttf");
-            FontFamily AkrobatRegular = FontWrapper.Instance.GetFontFamily("Akrobat-Regular.ttf");
+            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
+            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             /* Front Screen */
             // serverPick -- Server List Text is not controlled here
-            imageServerName.Font = new Font(AkrobatSemiBold, 28F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            launcherStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            launcherStatusDesc.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            ServerStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            ServerStatusDesc.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            APIStatusText.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            APIStatusDesc.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            imageServerName.Font = new Font(DejaVuSansCondensed, 28F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            launcherStatusText.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            launcherStatusDesc.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            ServerStatusText.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            ServerStatusDesc.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            APIStatusText.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            APIStatusDesc.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             /* Social Panel */
-            ServerShutDown.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            HomePageLink.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            DiscordInviteLink.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            FacebookGroupLink.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            TwitterAccountLink.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            SceneryGroupText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            ServerShutDown.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            HomePageLink.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            DiscordInviteLink.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            FacebookGroupLink.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            TwitterAccountLink.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            SceneryGroupText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             /* Settings */
-            settingsGamePathText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsGamePathText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             // settingsGameFiles -- Change GameFiles Path button text is not controlled here
-            settingsCDNText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsCDNText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             // settingsCDNPick -- CDN Menu Dropdown text is not controlled here
-            settingsLanguageText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsLanguageText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             // settingsLanguage -- Language Menu Dropdown text is not controlled here
-            settingsWordFilterCheck.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsProxyCheckbox.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsDiscordRPCCheckbox.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            SettingsClearCrashLogsButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsGameFilesCurrentText.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsGameFilesCurrent.Font = new Font(AkrobatRegular, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsCDNCurrentText.Font = new Font(AkrobatSemiBold, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsCDNCurrent.Font = new Font(AkrobatRegular, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsLauncherPathText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsLauncherPathCurrent.Font = new Font(AkrobatRegular, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsNetworkText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsMainSrvText.Font = new Font(AkrobatRegular, 10.8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsMainCDNText.Font = new Font(AkrobatRegular, 10.8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsBkupSrvText.Font = new Font(AkrobatRegular, 10.8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsBkupCDNText.Font = new Font(AkrobatRegular, 10.8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsLauncherVersion.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsSave.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsCancel.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsWordFilterCheck.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsProxyCheckbox.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsDiscordRPCCheckbox.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            SettingsClearCrashLogsButton.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsGameFilesCurrentText.Font = new Font(DejaVuSansCondensed, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsGameFilesCurrent.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsCDNCurrentText.Font = new Font(DejaVuSansCondensed, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsCDNCurrent.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsLauncherPathText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsLauncherPathCurrent.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsNetworkText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsMainSrvText.Font = new Font(DejaVuSans, 10.8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsMainCDNText.Font = new Font(DejaVuSans, 10.8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsBkupSrvText.Font = new Font(DejaVuSans, 10.8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsBkupCDNText.Font = new Font(DejaVuSans, 10.8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsLauncherVersion.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsSave.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsCancel.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             /* Log In Panel */
-            currentWindowInfo.Font = new Font(AkrobatSemiBold, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            email.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            password.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            rememberMe.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            forgotPassword.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            loginButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            ServerPingStatusText.Font = new Font(AkrobatSemiBold, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            logoutButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            playButton.Font = new Font(AkrobatSemiBold, 18F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            playProgressText.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            playProgressTextTimer.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            currentWindowInfo.Font = new Font(DejaVuSansCondensed, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            email.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            password.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            rememberMe.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            forgotPassword.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            loginButton.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            ServerPingStatusText.Font = new Font(DejaVuSansCondensed, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            logoutButton.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            playButton.Font = new Font(DejaVuSansCondensed, 18F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            playProgressText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            playProgressTextTimer.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             /* Registering Panel */
-            registerEmail.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            registerPassword.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            registerConfirmPassword.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            registerTicket.Font = new Font(AkrobatRegular, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            registerAgree.Font = new Font(AkrobatSemiBold, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerButton.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerCancel.Font = new Font(AkrobatSemiBold, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerEmail.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerPassword.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerConfirmPassword.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerTicket.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerAgree.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerButton.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerCancel.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
         }
 
         private void RegisterText_LinkClicked(object sender, EventArgs e)

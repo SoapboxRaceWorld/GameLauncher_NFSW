@@ -128,7 +128,7 @@
     </Reference>
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
-        <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
@@ -281,9 +281,8 @@
     <None Include="app.config" />
     <EmbeddedResource Include="App\Classes\RPC\JSON\events.json" />
     <EmbeddedResource Include="App\Classes\RPC\JSON\cars.json" />
-    <EmbeddedResource Include="Fonts\Airport-Cyr.ttf" />
-    <EmbeddedResource Include="Fonts\Akrobat-Regular.ttf" />
-    <EmbeddedResource Include="Fonts\Akrobat-SemiBold.ttf" />
+    <EmbeddedResource Include="Fonts\DejaVuSans.ttf" />
+    <EmbeddedResource Include="Fonts\DejaVuSansCondensed.ttf" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest">
       <SubType>Designer</SubType>
