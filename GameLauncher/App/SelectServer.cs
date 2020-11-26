@@ -2,11 +2,13 @@
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.HashPassword;
 using GameLauncherReborn;
+using GameLauncher.Resources;
 using Newtonsoft.Json;
 using SoapBox.JsonScheme;
 using System;
 using System.Net;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -21,6 +23,7 @@ namespace GameLauncher.App
         Dictionary<int, GetServerInformation> rememberServerInformationID = new Dictionary<int, GetServerInformation>();
         private GetServerInformation ServerInfo;
         Dictionary<int, ServerInfo> data = new Dictionary<int, ServerInfo>();
+        private readonly float _dpiDefaultScale = 96f;
 
         //Used to ping the Server in ms
         public Queue<string> servers = new Queue<string>();
@@ -30,6 +33,7 @@ namespace GameLauncher.App
         public SelectServer()
         {
             InitializeComponent();
+            ApplyEmbeddedFonts();
 
             //And one for keeping data about server, IP tbh
             ServerListRenderer.View = View.Details;
@@ -81,7 +85,6 @@ namespace GameLauncher.App
                     Log.Error("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message);
                 }
             }
-
 
             if (File.Exists("servers.json"))
             {
@@ -223,6 +226,18 @@ namespace GameLauncher.App
             ServerListRenderer.DoubleClick += new EventHandler((handler, args) => {
                 SelectedGameServerToRemember();
             });
+        }
+
+        private void ApplyEmbeddedFonts()
+        {
+            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
+            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
+            Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            ServerListRenderer.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            btnAddServer.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            btnSelectServer.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            btnClose.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            version.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
         }
 
         private void BtnAddServer_Click(object sender, EventArgs e)

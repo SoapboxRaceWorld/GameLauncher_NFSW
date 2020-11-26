@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(About));
             this.patchContainerPanel = new System.Windows.Forms.Panel();
             this.AboutText = new System.Windows.Forms.Label();
             this.patchPanel2 = new System.Windows.Forms.Panel();
@@ -63,7 +64,7 @@
             // AboutText
             // 
             this.AboutText.BackColor = System.Drawing.Color.Transparent;
-            this.AboutText.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Italic);
+            this.AboutText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 26.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AboutText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.AboutText.Location = new System.Drawing.Point(0, 0);
             this.AboutText.Name = "AboutText";
@@ -89,7 +90,7 @@
             this.patchButton2.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.patchButton2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.patchButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.patchButton2.Font = new System.Drawing.Font("Segoe UI", 15F);
+            this.patchButton2.Font = new System.Drawing.Font("DejaVu Sans", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.patchButton2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.patchButton2.Location = new System.Drawing.Point(0, 277);
             this.patchButton2.Name = "patchButton2";
@@ -104,7 +105,7 @@
             // 
             this.patchText2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
             this.patchText2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.patchText2.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.patchText2.Font = new System.Drawing.Font("DejaVu Sans", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.patchText2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.patchText2.Location = new System.Drawing.Point(0, 42);
             this.patchText2.Name = "patchText2";
@@ -114,7 +115,7 @@
             // patchTitle2
             // 
             this.patchTitle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(21)))), ((int)(((byte)(28)))));
-            this.patchTitle2.Font = new System.Drawing.Font("Segoe UI", 15F);
+            this.patchTitle2.Font = new System.Drawing.Font("DejaVu Sans", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.patchTitle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.patchTitle2.Location = new System.Drawing.Point(0, 0);
             this.patchTitle2.Name = "patchTitle2";
@@ -140,7 +141,7 @@
             this.patchButton1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.patchButton1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.patchButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.patchButton1.Font = new System.Drawing.Font("Segoe UI", 15F);
+            this.patchButton1.Font = new System.Drawing.Font("DejaVu Sans", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.patchButton1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.patchButton1.Location = new System.Drawing.Point(0, 277);
             this.patchButton1.Name = "patchButton1";
@@ -155,7 +156,7 @@
             // 
             this.patchText1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
             this.patchText1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.patchText1.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.patchText1.Font = new System.Drawing.Font("DejaVu Sans", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.patchText1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.patchText1.Location = new System.Drawing.Point(0, 42);
             this.patchText1.Name = "patchText1";
@@ -166,7 +167,7 @@
             // 
             this.patchTitle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(21)))), ((int)(((byte)(28)))));
             this.patchTitle1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.patchTitle1.Font = new System.Drawing.Font("Segoe UI", 15F);
+            this.patchTitle1.Font = new System.Drawing.Font("DejaVu Sans", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.patchTitle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.patchTitle1.Location = new System.Drawing.Point(0, 0);
             this.patchTitle1.Name = "patchTitle1";
@@ -192,7 +193,7 @@
             this.patchButton3.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.patchButton3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.patchButton3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.patchButton3.Font = new System.Drawing.Font("Segoe UI", 15F);
+            this.patchButton3.Font = new System.Drawing.Font("DejaVu Sans", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.patchButton3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.patchButton3.Location = new System.Drawing.Point(0, 277);
             this.patchButton3.Name = "patchButton3";
@@ -207,7 +208,7 @@
             // 
             this.patchText3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
             this.patchText3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.patchText3.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.patchText3.Font = new System.Drawing.Font("DejaVu Sans", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.patchText3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.patchText3.Location = new System.Drawing.Point(0, 42);
             this.patchText3.Name = "patchText3";
@@ -217,7 +218,7 @@
             // patchTitle3
             // 
             this.patchTitle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(21)))), ((int)(((byte)(28)))));
-            this.patchTitle3.Font = new System.Drawing.Font("Segoe UI", 15F);
+            this.patchTitle3.Font = new System.Drawing.Font("DejaVu Sans", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.patchTitle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.patchTitle3.Location = new System.Drawing.Point(0, 0);
             this.patchTitle3.Name = "patchTitle3";
@@ -228,17 +229,18 @@
             // 
             // About
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
-            this.ClientSize = new System.Drawing.Size(714, 397);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(717, 397);
             this.Controls.Add(this.patchContainerPanel);
+            this.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(730, 436);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(730, 436);
             this.Name = "About";
-            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "About this Launcher";

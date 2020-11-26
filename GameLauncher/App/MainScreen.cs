@@ -284,10 +284,10 @@ namespace GameLauncher
             addServer.Click += new EventHandler(AddServer_Click);
             settingsLauncherVersion.Click += new EventHandler(OpenDebugWindow);
 
-            email.KeyUp += new KeyEventHandler(Loginbuttonenabler);
-            email.KeyDown += new KeyEventHandler(LoginEnter);
-            password.KeyUp += new KeyEventHandler(Loginbuttonenabler);
-            password.KeyDown += new KeyEventHandler(LoginEnter);
+            MainEmail.KeyUp += new KeyEventHandler(Loginbuttonenabler);
+            MainEmail.KeyDown += new KeyEventHandler(LoginEnter);
+            MainPassword.KeyUp += new KeyEventHandler(Loginbuttonenabler);
+            MainPassword.KeyDown += new KeyEventHandler(LoginEnter);
 
             serverPick.SelectedIndexChanged += new EventHandler(ServerPick_SelectedIndexChanged);
             serverPick.DrawItem += new DrawItemEventHandler(ComboBox1_DrawItem);
@@ -519,8 +519,8 @@ namespace GameLauncher
 
             ContextMenu = null;
 
-            email.Text = _settingFile.Read("AccountEmail");
-            password.Text = Properties.Settings.Default.PasswordDecoded;
+            MainEmail.Text = _settingFile.Read("AccountEmail");
+            MainPassword.Text = Properties.Settings.Default.PasswordDecoded;
             if (!string.IsNullOrEmpty(_settingFile.Read("AccountEmail")) && !string.IsNullOrEmpty(_settingFile.Read("Password"))) {
                 Log.Debug("LAUNCHER: Restoring last saved email and password");
                 rememberMe.Checked = true;
@@ -864,7 +864,7 @@ namespace GameLauncher
 
         private void Loginbuttonenabler(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(email.Text) || string.IsNullOrEmpty(password.Text))
+            if (string.IsNullOrEmpty(MainEmail.Text) || string.IsNullOrEmpty(MainPassword.Text))
             {
                 _loginEnabled = false;
                 loginButton.Image = Properties.Resources.graybutton;
@@ -916,8 +916,8 @@ namespace GameLauncher
 
             Tokens.Clear();
 
-            String username = email.Text.ToString();
-            String pass = password.Text.ToString();
+            String username = MainEmail.Text.ToString();
+            String pass = MainPassword.Text.ToString();
             String realpass;
 
             Tokens.IPAddress = _serverInfo.IpAddress;
@@ -927,18 +927,18 @@ namespace GameLauncher
 
             if (_modernAuthSupport == false) {
                 //ClassicAuth sends password in SHA1
-                realpass = (_useSavedPassword) ? _settingFile.Read("Password") : SHA.HashPassword(password.Text.ToString()).ToLower();
+                realpass = (_useSavedPassword) ? _settingFile.Read("Password") : SHA.HashPassword(MainPassword.Text.ToString()).ToLower();
                 ClassicAuth.Login(username, realpass);
             } else {
                 //ModernAuth sends passwords in plaintext, but is POST request
-                realpass = (_useSavedPassword) ? _settingFile.Read("Password") : password.Text.ToString();
+                realpass = (_useSavedPassword) ? _settingFile.Read("Password") : MainPassword.Text.ToString();
                 ModernAuth.Login(username, realpass);
             }
 
             if (rememberMe.Checked) {
                 _settingFile.Write("AccountEmail", username);
                 _settingFile.Write("Password", realpass);
-                Properties.Settings.Default.PasswordDecoded = password.Text.ToString();
+                Properties.Settings.Default.PasswordDecoded = MainPassword.Text.ToString();
             } else {
                 _settingFile.DeleteKey("AccountEmail");
                 _settingFile.DeleteKey("Password");
@@ -1156,12 +1156,14 @@ namespace GameLauncher
                                 DiscordIcon.BackgroundImage = Properties.Resources.social_discord_disabled;
                                 DiscordInviteLink.Enabled = false;
                                 _serverDiscordLink = null;
+                                DiscordInviteLink.Text = "";
                             }
                             else
                             {
                                 DiscordIcon.BackgroundImage = Properties.Resources.social_discord;
                                 DiscordInviteLink.Enabled = true;
                                 _serverDiscordLink = json.DiscordUrl;
+                                DiscordInviteLink.Text = "Discord Invite";
                             }
                         }
                         catch
@@ -1169,6 +1171,7 @@ namespace GameLauncher
                             DiscordIcon.BackgroundImage = Properties.Resources.social_discord_disabled;
                             DiscordInviteLink.Enabled = false;
                             _serverDiscordLink = null;
+                            DiscordInviteLink.Text = "";
                         }
 
                         //Homepage Display
@@ -1179,12 +1182,14 @@ namespace GameLauncher
                                 HomePageIcon.BackgroundImage = Properties.Resources.social_home_page_disabled;
                                 HomePageLink.Enabled = false;
                                 _serverWebsiteLink = null;
+                                HomePageLink.Text = "";
                             }
                             else
                             {
                                 HomePageIcon.BackgroundImage = Properties.Resources.social_home_page;
                                 HomePageLink.Enabled = true;
                                 _serverWebsiteLink = json.HomePageUrl;
+                                HomePageLink.Text = "Home Page";
                             }
                         }
                         catch
@@ -1192,6 +1197,7 @@ namespace GameLauncher
                             HomePageIcon.BackgroundImage = Properties.Resources.social_home_page_disabled;
                             HomePageLink.Enabled = false;
                             _serverWebsiteLink = null;
+                            HomePageLink.Text = "";
                         }
 
                         //Facebook Group Display
@@ -1202,12 +1208,14 @@ namespace GameLauncher
                                 FacebookIcon.BackgroundImage = Properties.Resources.social_facebook_disabled;
                                 FacebookGroupLink.Enabled = false;
                                 _serverFacebookLink = null;
+                                FacebookGroupLink.Text = "";
                             }
                             else
                             {
                                 FacebookIcon.BackgroundImage = Properties.Resources.social_facebook;
                                 FacebookGroupLink.Enabled = true;
                                 _serverFacebookLink = json.FacebookUrl;
+                                FacebookGroupLink.Text = "Faceboox Page";
                             }
                         }
                         catch
@@ -1215,6 +1223,7 @@ namespace GameLauncher
                             FacebookIcon.BackgroundImage = Properties.Resources.social_facebook_disabled;
                             FacebookGroupLink.Enabled = false;
                             _serverFacebookLink = null;
+                            FacebookGroupLink.Text = "";
                         }
 
                         //Twitter Account Display
@@ -1225,12 +1234,14 @@ namespace GameLauncher
                                 TwitterIcon.BackgroundImage = Properties.Resources.social_twitter_disabled;
                                 TwitterAccountLink.Enabled = false;
                                 _serverTwitterLink = null;
+                                TwitterAccountLink.Text = "";
                             }
                             else
                             {
                                 TwitterIcon.BackgroundImage = Properties.Resources.social_twitter;
                                 TwitterAccountLink.Enabled = true;
                                 _serverTwitterLink = json.TwitterUrl;
+                                TwitterAccountLink.Text = "Twitter Feed";
                             }
                         }
                         catch
@@ -1238,6 +1249,7 @@ namespace GameLauncher
                             TwitterIcon.BackgroundImage = Properties.Resources.social_twitter_disabled;
                             TwitterAccountLink.Enabled = false;
                             _serverTwitterLink = null;
+                            TwitterAccountLink.Text = "";
                         }
 
                         //Server Set Speedbug Timer Display
@@ -1245,7 +1257,7 @@ namespace GameLauncher
                         {
                             int serverSecondsToShutDown = (json.SecondsToShutDown != 0) ? json.SecondsToShutDown : 2 * 60 * 60;
                             TimeSpan t = TimeSpan.FromSeconds(serverSecondsToShutDown);
-                            string serverSecondsToShutDownNamed = string.Format("Restart Timer: " + "{0} Hours", t.Hours);
+                            string serverSecondsToShutDownNamed = string.Format("Restart Timer: " + t.Hours + " Hours");
 
                              this.ServerShutDown.Text = serverSecondsToShutDownNamed;
                         }
@@ -1420,70 +1432,82 @@ namespace GameLauncher
         /* Font for all Systems */
         private void ApplyEmbeddedFonts()
         {
-            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
+            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
+            Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             /* Front Screen */
-            // serverPick -- Server List Text is not controlled here
-            imageServerName.Font = new Font(DejaVuSansCondensed, 28F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            launcherStatusText.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            launcherStatusDesc.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            ServerStatusText.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            ServerStatusDesc.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            APIStatusText.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            APIStatusDesc.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            SelectServerBtn.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            translatedBy.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            serverPick.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            addServer.Font = new Font(DejaVuSansCondensed, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            imageServerName.Font = new Font(DejaVuSans, 9.75f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            ShowPlayPanel.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            currentWindowInfo.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            launcherStatusText.Font = new Font(DejaVuSansCondensed, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            launcherStatusDesc.Font = new Font(DejaVuSansCondensed, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            ServerStatusText.Font = new Font(DejaVuSansCondensed, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            ServerStatusDesc.Font = new Font(DejaVuSansCondensed, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            APIStatusText.Font = new Font(DejaVuSansCondensed, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            APIStatusDesc.Font = new Font(DejaVuSansCondensed, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            extractingProgress.Font  = new Font(DejaVuSansCondensed, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             /* Social Panel */
-            ServerShutDown.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            HomePageLink.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            DiscordInviteLink.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            FacebookGroupLink.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            TwitterAccountLink.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            SceneryGroupText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            ServerInfoPanel.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            HomePageLink.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            DiscordInviteLink.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            FacebookGroupLink.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            TwitterAccountLink.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            SceneryGroupText.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            ServerShutDown.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             /* Settings */
-            settingsGamePathText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            // settingsGameFiles -- Change GameFiles Path button text is not controlled here
-            settingsCDNText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            // settingsCDNPick -- CDN Menu Dropdown text is not controlled here
-            settingsLanguageText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            // settingsLanguage -- Language Menu Dropdown text is not controlled here
-            settingsWordFilterCheck.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsProxyCheckbox.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsDiscordRPCCheckbox.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            SettingsClearCrashLogsButton.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsGameFilesCurrentText.Font = new Font(DejaVuSansCondensed, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsGameFilesCurrent.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsCDNCurrentText.Font = new Font(DejaVuSansCondensed, 8f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsCDNCurrent.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsLauncherPathText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsLauncherPathCurrent.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsNetworkText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsMainSrvText.Font = new Font(DejaVuSans, 10.8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsMainCDNText.Font = new Font(DejaVuSans, 10.8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsBkupSrvText.Font = new Font(DejaVuSans, 10.8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsBkupCDNText.Font = new Font(DejaVuSans, 10.8F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            settingsLauncherVersion.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsSave.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            settingsCancel.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            SettingsPanel.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsAboutButton.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsGamePathText.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsGameFiles.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsCDNText.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsCDNPick.Font = new Font(DejaVuSansCondensed, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsLanguageText.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsLanguage.Font = new Font(DejaVuSansCondensed, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            SettingsClearCrashLogsButton.Font = new Font(DejaVuSansCondensed, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            SettingsClearCommunicationLogButton.Font = new Font(DejaVuSansCondensed, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsWordFilterCheck.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsProxyCheckbox.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsDiscordRPCCheckbox.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsGameFilesCurrentText.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsGameFilesCurrent.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsCDNCurrentText.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsCDNCurrent.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsLauncherPathText.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsLauncherPathCurrent.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsNetworkText.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsMainSrvText.Font = new Font(DejaVuSansCondensed, 9F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsMainCDNText.Font = new Font(DejaVuSansCondensed, 9F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsBkupSrvText.Font = new Font(DejaVuSansCondensed, 9F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsBkupCDNText.Font = new Font(DejaVuSansCondensed, 9F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsLauncherVersion.Font = new Font(DejaVuSansCondensed, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            settingsSave.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            settingsCancel.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
             /* Log In Panel */
-            currentWindowInfo.Font = new Font(DejaVuSansCondensed, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            email.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            password.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            rememberMe.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            forgotPassword.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            loginButton.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            ServerPingStatusText.Font = new Font(DejaVuSansCondensed, 11f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            logoutButton.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            playButton.Font = new Font(DejaVuSansCondensed, 18F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            playProgressText.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            playProgressTextTimer.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            MainEmail.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            MainPassword.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            rememberMe.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            forgotPassword.Font = new Font(DejaVuSansCondensed, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            loginButton.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerText.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            ServerPingStatusText.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            logoutButton.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            playButton.Font = new Font(DejaVuSansCondensed, 14.25F * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            playProgress.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            playProgressText.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            playProgressTextTimer.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
             /* Registering Panel */
-            registerEmail.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            registerPassword.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            registerConfirmPassword.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            registerTicket.Font = new Font(DejaVuSans, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            registerAgree.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerButton.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            registerCancel.Font = new Font(DejaVuSansCondensed, 10f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            RegisterPanel.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerEmail.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerPassword.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerConfirmPassword.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerTicket.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerAgree.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            registerButton.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            registerCancel.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
         }
 
         private void RegisterText_LinkClicked(object sender, EventArgs e)
@@ -1598,7 +1622,7 @@ namespace GameLauncher
                 {
                     _loginWelcomeTime = "Good Night";
                 }
-                currentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", email.Text).ToUpper();
+                currentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", MainEmail.Text).ToUpper();
             }
 
             ServerPingStatusText.Visible = hideElements;
@@ -1643,8 +1667,8 @@ namespace GameLauncher
 
             registerText.Visible = hideElements;
             serverPick.Visible = hideElements;
-            email.Visible = hideElements;
-            password.Visible = hideElements;
+            MainEmail.Visible = hideElements;
+            MainPassword.Visible = hideElements;
             forgotPassword.Visible = hideElements;
             settingsButton.Visible = hideElements;
             verticalBanner.Visible = hideElements;
@@ -1699,7 +1723,7 @@ namespace GameLauncher
             //Input Strokes
             RegisterEmailBorder.Visible = hideElements;
             RegisterPasswordBorder.Visible = hideElements;
-            RegisterPasswordValidateBorder.Visible = hideElements;
+            RegisterConfirmPasswordBorder.Visible = hideElements;
             RegisterTicketBorder.Visible = (_ticketRequired) ? hideElements : false;
         }
 
@@ -1759,7 +1783,7 @@ namespace GameLauncher
             //Reset Input Stroke Images
             RegisterEmailBorder.Image = Properties.Resources.email_text_border;
             RegisterPasswordBorder.Image = Properties.Resources.password_text_border;
-            RegisterPasswordValidateBorder.Image = Properties.Resources.password_text_border;
+            RegisterConfirmPasswordBorder.Image = Properties.Resources.password_text_border;
             RegisterTicketBorder.Image = Properties.Resources.ticket_text_border;
         }
 
@@ -1780,7 +1804,7 @@ namespace GameLauncher
 
         private void RegisterConfirmPassword_TextChanged(object sender, EventArgs e)
         {
-            RegisterPasswordValidateBorder.Image = Properties.Resources.password_text_border;
+            RegisterConfirmPasswordBorder.Image = Properties.Resources.password_text_border;
         }
 
         private void RegisterPassword_TextChanged(object sender, EventArgs e)
@@ -1862,13 +1886,13 @@ namespace GameLauncher
 
             if (string.IsNullOrEmpty(registerConfirmPassword.Text)) {
                 registerErrors.Add("Please confirm your password.");
-                RegisterPasswordValidateBorder.Image = Properties.Resources.password_error_text_border;
+                RegisterConfirmPasswordBorder.Image = Properties.Resources.password_error_text_border;
             }
 
             if (registerConfirmPassword.Text != registerPassword.Text) {
                 registerErrors.Add("Passwords don't match.");
                 RegisterPasswordBorder.Visible = true;
-                RegisterPasswordValidateBorder.Image = Properties.Resources.password_error_text_border;
+                RegisterConfirmPasswordBorder.Image = Properties.Resources.password_error_text_border;
             }
 
             if (!registerAgree.Checked) {

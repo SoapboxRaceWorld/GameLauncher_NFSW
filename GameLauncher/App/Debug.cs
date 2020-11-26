@@ -6,6 +6,7 @@ using System.Linq;
 using System.Management;
 using System.Windows.Forms;
 using GameLauncherReborn;
+using GameLauncher.Resources;
 
 namespace GameLauncher.App
 {
@@ -13,6 +14,7 @@ namespace GameLauncher.App
     {
         string ServerIP = String.Empty;
         string ServerName = String.Empty;
+        private readonly float _dpiDefaultScale = 96f;
 
         public DebugWindow(string serverIP, string serverName)
         {
@@ -20,6 +22,14 @@ namespace GameLauncher.App
             ServerName = serverName;
 
             InitializeComponent();
+            ApplyEmbeddedFonts();
+        }
+
+        private void ApplyEmbeddedFonts()
+        {
+            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
+            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
+            Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
         }
 
         public static string AntivirusInstalled(string caller = "AntiVirusProduct")
@@ -126,6 +136,7 @@ namespace GameLauncher.App
 
             var settings = new List<ListType> {
                 new ListType{ Name = "InstallationDirectory", Value = SettingFile.Read("InstallationDirectory")},
+                new ListType{ Name = "Launcher Version", Value = Application.ProductVersion},
                 new ListType{ Name = "Credentials Saved", Value = Password},
                 new ListType{ Name = "Language", Value =  SettingFile.Read("Language")},
                 new ListType{ Name = "LauncherPos", Value = LauncherPosition},

@@ -33,7 +33,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>original_icon.ico</ApplicationIcon>
+    <ApplicationIcon>nuIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>GameLauncher.Program</StartupObject>
@@ -371,7 +371,7 @@
     <None Include="Resources\close_hover.png" />
     <None Include="Resources\tick.png" />
     <None Include="Resources\map.png" />
-    <Content Include="original_icon.ico" />
+    <Content Include="nuIcon.ico" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

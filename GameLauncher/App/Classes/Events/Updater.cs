@@ -58,18 +58,18 @@ namespace GameLauncher.App.Classes.Events
                             if(updater.Code == 0) { 
                                 if (updater.Payload.UpdateExists == false) {
                                     if(updater.Payload.LatestVersion.CompareTo(updater.Payload.ClientVersion) >= 0) {
-                                        text.Text = "Launcher Status - Updated";
+                                        text.Text = "Launcher Status - Good";
                                         status.Image = Properties.Resources.ac_success;
                                         text.ForeColor = Color.FromArgb(0x9fc120);
                                     } else {
-                                        text.Text = "Launcher Status - Prerelease";
+                                        text.Text = "Launcher Status - Beta";
                                         status.Image = Properties.Resources.ac_warning;
                                         text.ForeColor = Color.Yellow;
                                     }
 
                                     description.Text = "Version : v" + Application.ProductVersion;
                                 } else {
-                                    text.Text = "Launcher Status - Available";
+                                    text.Text = "Update - Available";
                                     status.Image = Properties.Resources.ac_warning;
                                     text.ForeColor = Color.Yellow;
                                     description.Text = "New Version : " + updater.Payload.LatestVersion;
@@ -112,7 +112,7 @@ namespace GameLauncher.App.Classes.Events
                                     Settings.Default.Save();
                                 }
                             } else {
-                                text.Text = "Launcher Status - GitHub Error";
+                                text.Text = "Launcher - GitHub Error";
                                 status.Image = Properties.Resources.ac_error;
                                 text.ForeColor = Color.FromArgb(254, 0, 0);
                                 description.Text = "Version : v" + Application.ProductVersion;
@@ -122,7 +122,7 @@ namespace GameLauncher.App.Classes.Events
                             {
                                 text.Invoke(new Action(delegate ()
                                 {
-                                    text.Text = "Launcher Status - Backend Error";
+                                    text.Text = "Launcher - Backend Error";
                                     text.ForeColor = Color.FromArgb(254, 0, 0);
                                 }));
                                 status.Invoke(new Action(delegate ()
@@ -136,7 +136,7 @@ namespace GameLauncher.App.Classes.Events
                             }
                             else
                             {
-                                text.Text = "Launcher Status - Backend Error";
+                                text.Text = "Launcher - Backend Error";
                                 status.Image = Properties.Resources.ac_error;
                                 text.ForeColor = Color.FromArgb(254, 0, 0);
                                 description.Text = "Version : v" + Application.ProductVersion;
@@ -145,7 +145,7 @@ namespace GameLauncher.App.Classes.Events
                     }
                 };
             } catch {
-                text.Text = "Launcher Status - Internal Error";
+                text.Text = "Launcher - Internal Error";
                 status.Image = Properties.Resources.ac_error;
                 text.ForeColor = Color.FromArgb(254, 0, 0);
                 description.Text = "Version : v" + Application.ProductVersion;

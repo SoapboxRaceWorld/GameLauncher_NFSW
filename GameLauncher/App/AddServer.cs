@@ -1,4 +1,5 @@
 ﻿using GameLauncherReborn;
+using GameLauncher.Resources;
 using Newtonsoft.Json;
 using SoapBox.JsonScheme;
 using System;
@@ -14,8 +15,10 @@ using static System.String;
 namespace GameLauncher.App
 {
     public partial class AddServer : Form {
+        private readonly float _dpiDefaultScale = 96f;
         public AddServer() {
             InitializeComponent();
+            ApplyEmbeddedFonts();
         }
 
         public void DrawErrorAroundTextBox(TextBox x) {
@@ -24,6 +27,20 @@ namespace GameLauncher.App
             Graphics g = this.CreateGraphics();
             int variance = 1;
             g.DrawRectangle(p, new Rectangle(x.Location.X - variance, x.Location.Y - variance, x.Width + variance, x.Height + variance));
+        }
+
+        private void ApplyEmbeddedFonts() {
+            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
+            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
+            Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            okButton.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            cancelButton.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            serverNameLabel.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            serverName.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            serverAddress.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            serverAddressLabel.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            error.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            version.Font= new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
         }
 
         private void OkButton_Click(object sender, EventArgs e) {
