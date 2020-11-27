@@ -2450,7 +2450,7 @@ namespace GameLauncher
             settingsCDNCurrent.LinkColor = Color.FromArgb(66, 179, 189);
             Log.Debug("SETTINGS PINGING CDN: Checking Current CDN from Settings.ini");
             await Task.Delay(500);
-            HttpWebRequest pingCurrentCDN = (HttpWebRequest)HttpWebRequest.Create(_settingFile.Read("CDN"));
+            HttpWebRequest pingCurrentCDN = (HttpWebRequest)HttpWebRequest.Create(((CDNObject)settingsCDNPick.SelectedItem).Url + "/index.xml");
             pingCurrentCDN.AllowAutoRedirect = false;
             pingCurrentCDN.Method = "HEAD";
             pingCurrentCDN.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
@@ -2475,7 +2475,7 @@ namespace GameLauncher
             settingsCDNText.ForeColor = Color.FromArgb(66, 179, 189);
             Log.Debug("SETTINGS PINGING CHANGED CDN: Checking Changed CDN from Drop Down List");
             await Task.Delay(500);
-            HttpWebRequest pingCurrentCDN = (HttpWebRequest)HttpWebRequest.Create(((CDNObject)settingsCDNPick.SelectedItem).Url);
+            HttpWebRequest pingCurrentCDN = (HttpWebRequest)HttpWebRequest.Create(((CDNObject)settingsCDNPick.SelectedItem).Url + "/index.xml");
             pingCurrentCDN.AllowAutoRedirect = false;
             pingCurrentCDN.Method = "HEAD";
             pingCurrentCDN.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
