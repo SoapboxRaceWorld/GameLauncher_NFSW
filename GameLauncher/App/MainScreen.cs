@@ -35,6 +35,8 @@ using GameLauncher.App.Classes.GPU;
 using GameLauncher.Properties;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using System.Management.Automation;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace GameLauncher
 {
@@ -1062,6 +1064,8 @@ namespace GameLauncher
             _allowRegistration = false;
             _loginEnabled = false;
 
+
+
             ServerStatusText.Text = "Server Status - Pinging";
             ServerStatusText.ForeColor = Color.FromArgb(66, 179, 189);
             ServerStatusDesc.Text = "";
@@ -1069,8 +1073,8 @@ namespace GameLauncher
 
             loginButton.ForeColor = Color.Gray;
             var verticalImageUrl = "";
-            verticalBanner.Image = null;
-            verticalBanner.BackColor = Color.Transparent;
+            verticalBanner.Image = grayscaleMe(".cache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+            verticalBanner.BackColor = Color.Black;
 
             var serverIp = _serverInfo.IpAddress;
             string numPlayers;
@@ -1168,7 +1172,6 @@ namespace GameLauncher
                         json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
                         Self.rememberjson = e2.Result;
                         try {
-                            _realServernameBanner = json.ServerName;
                             if (!string.IsNullOrEmpty(json.BannerUrl)) {
                                 bool result;
 
@@ -1432,7 +1435,9 @@ namespace GameLauncher
 
                     _serverEnabled = true;
 
+                    if (!Directory.Exists(".cache")) { Directory.CreateDirectory(".cache"); }
                     if (!string.IsNullOrEmpty(verticalImageUrl)) {
+
                         WebClient client2 = new WebClient();
                         Uri stringToUri3 = new Uri(verticalImageUrl);
                         client2.DownloadDataAsync(stringToUri3);
@@ -1444,8 +1449,14 @@ namespace GameLauncher
 
                         client2.DownloadDataCompleted += (sender4, e4) => {
                             if (e4.Cancelled) {
+                                //Load cached banner!
+                                verticalBanner.Image = grayscaleMe(".cache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+                                verticalBanner.BackColor = Color.Black;
                                 return;
                             } else if (e4.Error != null) {
+                                //Load cached banner!
+                                verticalBanner.Image = grayscaleMe(".cache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+                                verticalBanner.BackColor = Color.Black;
                                 return;
                             } else {
                                 try {
@@ -1453,8 +1464,11 @@ namespace GameLauncher
                                         Image image;
                                         var memoryStream = new MemoryStream(e4.Result);
                                         image = Image.FromStream(memoryStream);
+
                                         verticalBanner.Image = image;
                                         verticalBanner.BackColor = Color.Black;
+
+                                        File.WriteAllBytes(".cache/" + SHA.HashPassword(_realServernameBanner) + ".bin", memoryStream.ToArray());
 
                                         imageServerName.Text = String.Empty; //_realServernameBanner;
                                     } else {
@@ -1468,9 +1482,41 @@ namespace GameLauncher
                                 }
                             }
                         };
+                    } else {
+                        //Load cached banner!
+                        verticalBanner.Image = grayscaleMe(".cache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+                        verticalBanner.BackColor = Color.Black;
                     }
                 }
             };
+        }
+
+        public Image grayscaleMe(String filename) {
+            if (!File.Exists(filename)) return null;
+
+            try {
+                using (var fs = new FileStream(filename, FileMode.Open)) {
+                    var bmp = new Bitmap(fs);
+                    Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+                    BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.ReadWrite, bmp.PixelFormat);
+                    IntPtr ptr = bmpData.Scan0;
+                    int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
+                    byte[] rgbValues = new byte[bytes];
+                    Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+                    for (int i = 0; i < rgbValues.Length; i += 3)
+                    {
+                        byte gray = (byte)(rgbValues[i] * .21 + rgbValues[i + 1] * .71 + rgbValues[i + 2] * .071);
+                        rgbValues[i] = rgbValues[i + 1] = rgbValues[i + 2] = gray;
+                    }
+
+                    Marshal.Copy(rgbValues, 0, ptr, bytes);
+                    bmp.UnlockBits(bmpData);
+                    return (Bitmap)bmp.Clone();
+                }
+            } catch {
+                return null;
+            }
         }
 
         /* Font for all Systems */
