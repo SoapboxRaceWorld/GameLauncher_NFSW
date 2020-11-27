@@ -12,7 +12,6 @@ namespace GameLauncher.App
 {
     public partial class About : Form
     {
-        private readonly float _dpiDefaultScale = 96f;
         private List<AboutNoteBlock> patchNoteBlocks = new List<AboutNoteBlock>();
 
         public About()
@@ -25,17 +24,16 @@ namespace GameLauncher.App
         {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
-            Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            AboutText.Font = new Font(DejaVuSansCondensed, 26.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Italic);
-            patchTitle1.Font = new Font(DejaVuSans, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            patchText1.Font = new Font(DejaVuSans, 9.75f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            patchButton1.Font = new Font(DejaVuSans, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            patchTitle2.Font = new Font(DejaVuSans, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            patchText2.Font = new Font(DejaVuSans, 9.75f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            patchButton2.Font = new Font(DejaVuSans, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            patchTitle3.Font = new Font(DejaVuSans, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            patchText3.Font = new Font(DejaVuSans, 9.75f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            patchButton3.Font = new Font(DejaVuSans, 15f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            AboutText.Font = new Font(DejaVuSansCondensed, 26.25f, FontStyle.Italic);
+            patchTitle1.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
+            patchText1.Font = new Font(DejaVuSans, 9.75f, FontStyle.Regular);
+            patchButton1.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
+            patchTitle2.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
+            patchText2.Font = new Font(DejaVuSans, 9.75f, FontStyle.Regular);
+            patchButton2.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
+            patchTitle3.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
+            patchText3.Font = new Font(DejaVuSans, 9.75f, FontStyle.Regular);
+            patchButton3.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
         }
 
         private void FetchPatchNotes()

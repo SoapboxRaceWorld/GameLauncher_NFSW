@@ -15,7 +15,6 @@ using static System.String;
 namespace GameLauncher.App
 {
     public partial class AddServer : Form {
-        private readonly float _dpiDefaultScale = 96f;
         public AddServer() {
             InitializeComponent();
             ApplyEmbeddedFonts();
@@ -32,15 +31,14 @@ namespace GameLauncher.App
         private void ApplyEmbeddedFonts() {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
-            Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            okButton.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            cancelButton.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            serverNameLabel.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            serverName.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            serverAddress.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            serverAddressLabel.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            error.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            version.Font= new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            okButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            cancelButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            serverNameLabel.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            serverName.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            serverAddress.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            serverAddressLabel.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            error.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            version.Font= new Font(DejaVuSans, 8.25f, FontStyle.Regular);
         }
 
         private void OkButton_Click(object sender, EventArgs e) {

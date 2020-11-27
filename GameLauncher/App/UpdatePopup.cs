@@ -10,8 +10,6 @@ namespace GameLauncher.App
 {
     public partial class UpdatePopup : Form
     {
-        private readonly float _dpiDefaultScale = 96f;
-
         public UpdatePopup(UpdateCheckResponse updater)
         {
             IniFile _settingFile = new IniFile("Settings.ini");
@@ -45,12 +43,11 @@ namespace GameLauncher.App
         {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
-            Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            changelogText.Font = new Font(DejaVuSans, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            update.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            updateLabel.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            skip.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            ignore.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
+            changelogText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            update.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            updateLabel.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            skip.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            ignore.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
         }
     }
 }

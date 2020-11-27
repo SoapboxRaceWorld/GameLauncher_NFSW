@@ -16,7 +16,6 @@ namespace GameLauncher.App
         List<CDNObject> CDNList = new List<CDNObject>();
         private bool CDNStatusCheck = false;
         private bool ServerStatusCheck = false;
-        private readonly float _dpiDefaultScale = 96f;
 
         public WelcomeScreen() {
             InitializeComponent();
@@ -27,15 +26,14 @@ namespace GameLauncher.App
         {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
-            Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            WelcomeText.Font = new Font(DejaVuSans, 9.75f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            downloadSourceText.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            CDNSource.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            Save.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            ServerStatusText.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            CDNStatusText.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            apiErrorButton.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            VersionLabel.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            WelcomeText.Font = new Font(DejaVuSans, 9.75f, FontStyle.Bold);
+            downloadSourceText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            CDNSource.Font = new Font(DejaVuSans, 8.25f, FontStyle.Bold);
+            Save.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            ServerStatusText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
+            CDNStatusText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
+            apiErrorButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            VersionLabel.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
         }
 
         //Check Serverlist API Status Upon Main Screen load - DavidCarbon

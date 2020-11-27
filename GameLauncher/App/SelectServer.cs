@@ -23,7 +23,6 @@ namespace GameLauncher.App
         Dictionary<int, GetServerInformation> rememberServerInformationID = new Dictionary<int, GetServerInformation>();
         private GetServerInformation ServerInfo;
         Dictionary<int, ServerInfo> data = new Dictionary<int, ServerInfo>();
-        private readonly float _dpiDefaultScale = 96f;
 
         //Used to ping the Server in ms
         public Queue<string> servers = new Queue<string>();
@@ -232,12 +231,11 @@ namespace GameLauncher.App
         {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
-            Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            ServerListRenderer.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
-            btnAddServer.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            btnSelectServer.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            btnClose.Font = new Font(DejaVuSansCondensed, 9f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Bold);
-            version.Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            ServerListRenderer.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
+            btnAddServer.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            btnSelectServer.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            btnClose.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            version.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
         }
 
         private void BtnAddServer_Click(object sender, EventArgs e)

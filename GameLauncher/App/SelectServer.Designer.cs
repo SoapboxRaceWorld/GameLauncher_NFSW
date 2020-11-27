@@ -41,6 +41,7 @@ namespace GameLauncher.App
             // ServerListRenderer
             // 
             this.ServerListRenderer.AutoArrange = false;
+            this.ServerListRenderer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ServerListRenderer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
             this.ServerListRenderer.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerListRenderer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
@@ -74,7 +75,7 @@ namespace GameLauncher.App
             this.btnAddServer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnAddServer.Location = new System.Drawing.Point(15, 247);
             this.btnAddServer.Name = "btnAddServer";
-            this.btnAddServer.Size = new System.Drawing.Size(75, 23);
+            this.btnAddServer.Size = new System.Drawing.Size(82, 23);
             this.btnAddServer.TabIndex = 8;
             this.btnAddServer.Text = "Add Server";
             this.btnAddServer.UseVisualStyleBackColor = false;

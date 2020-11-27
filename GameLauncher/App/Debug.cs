@@ -14,7 +14,6 @@ namespace GameLauncher.App
     {
         string ServerIP = String.Empty;
         string ServerName = String.Empty;
-        private readonly float _dpiDefaultScale = 96f;
 
         public DebugWindow(string serverIP, string serverName)
         {
@@ -29,7 +28,7 @@ namespace GameLauncher.App
         {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
-            Font = new Font(DejaVuSans, 8.25f * _dpiDefaultScale / CreateGraphics().DpiX, FontStyle.Regular);
+            Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
         }
 
         public static string AntivirusInstalled(string caller = "AntiVirusProduct")
