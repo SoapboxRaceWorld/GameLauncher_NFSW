@@ -66,6 +66,7 @@ namespace GameLauncher.App
             // CDNSource
             // 
             this.CDNSource.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.CDNSource.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.CDNSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CDNSource.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CDNSource.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -73,6 +74,7 @@ namespace GameLauncher.App
             this.CDNSource.FormattingEnabled = true;
             this.CDNSource.ItemHeight = 13;
             this.CDNSource.Location = new System.Drawing.Point(164, 114);
+            this.CDNSource.MaxDropDownItems = 21;
             this.CDNSource.Name = "CDNSource";
             this.CDNSource.Size = new System.Drawing.Size(190, 21);
             this.CDNSource.TabIndex = 4;

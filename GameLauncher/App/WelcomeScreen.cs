@@ -20,6 +20,8 @@ namespace GameLauncher.App
         public WelcomeScreen() {
             InitializeComponent();
             ApplyEmbeddedFonts();
+
+            CDNSource.DrawItem += new DrawItemEventHandler(CDNSource_DrawItem);
         }
 
         private void ApplyEmbeddedFonts()
@@ -148,9 +150,16 @@ namespace GameLauncher.App
         }
 
         private void Save_Click(object sender, EventArgs e) {
-            CDN.CDNUrl = ((CDNObject)CDNSource.SelectedItem).Url;
+            if (((CDNObject)CDNSource.SelectedItem).Url != null)
+            {
+                CDN.CDNUrl = ((CDNObject)CDNSource.SelectedItem).Url;
 
-            QuitWithoutSaving_Click(sender, e);
+                QuitWithoutSaving_Click(sender, e);
+            }
+            else
+            {
+                MessageBox.Show(null, "Please Choose a CDN. \n\n(╯°□°）╯︵ ┻━┻", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void QuitWithoutSaving_Click(object sender, EventArgs e) {
@@ -207,6 +216,50 @@ namespace GameLauncher.App
             downloadSourceText.Visible = hideElements;
             CDNSource.Visible = hideElements;
             Save.Visible = hideElements;
+        }
+
+        public void CDNSource_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            var font = (sender as ComboBox).Font;
+            Brush backgroundColor;
+            Brush textColor;
+            Brush customTextColor = new SolidBrush(Color.FromArgb(178, 210, 255));
+            Brush customBGColor = new SolidBrush(Color.FromArgb(44, 58, 76));
+
+            var cdnListText = "";
+
+            if (sender is ComboBox cb)
+            {
+                if (cb.Items[e.Index] is CDNObject si)
+                {
+                    cdnListText = si.Name;
+                }
+            }
+
+            if (cdnListText.StartsWith("<GROUP>"))
+            {
+                font = new Font(font, FontStyle.Bold);
+                e.Graphics.FillRectangle(Brushes.White, e.Bounds);
+                e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, Brushes.Black, e.Bounds);
+            }
+            else
+            {
+                font = new Font(font, FontStyle.Bold);
+                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                {
+                    backgroundColor = SystemBrushes.Highlight;
+                    textColor = SystemBrushes.HighlightText;
+                }
+                else
+                {
+                    backgroundColor = customBGColor;
+                    textColor = customTextColor;
+                }
+
+                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                e.Graphics.DrawString(cdnListText, font, textColor, e.Bounds);
+            }
+
         }
     }
 }

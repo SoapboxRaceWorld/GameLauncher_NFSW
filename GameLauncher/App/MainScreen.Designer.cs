@@ -454,7 +454,7 @@
             this.rememberMe.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.rememberMe.Location = new System.Drawing.Point(645, 260);
             this.rememberMe.Name = "rememberMe";
-            this.rememberMe.Size = new System.Drawing.Size(162, 17);
+            this.rememberMe.Size = new System.Drawing.Size(163, 17);
             this.rememberMe.TabIndex = 6;
             this.rememberMe.Text = "REMEMBER MY LOGIN";
             this.rememberMe.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -852,7 +852,7 @@
             this.settingsGamePathText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.settingsGamePathText.Location = new System.Drawing.Point(24, 67);
             this.settingsGamePathText.Name = "settingsGamePathText";
-            this.settingsGamePathText.Size = new System.Drawing.Size(121, 14);
+            this.settingsGamePathText.Size = new System.Drawing.Size(122, 14);
             this.settingsGamePathText.TabIndex = 135;
             this.settingsGamePathText.Text = "GAMEFILES PATH";
             this.settingsGamePathText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -899,7 +899,7 @@
             this.settingsCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.settingsCDNText.Location = new System.Drawing.Point(24, 111);
             this.settingsCDNText.Name = "settingsCDNText";
-            this.settingsCDNText.Size = new System.Drawing.Size(102, 14);
+            this.settingsCDNText.Size = new System.Drawing.Size(103, 14);
             this.settingsCDNText.TabIndex = 137;
             this.settingsCDNText.Text = "CDN: PINGING";
             this.settingsCDNText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -907,6 +907,7 @@
             // settingsCDNPick
             // 
             this.settingsCDNPick.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.settingsCDNPick.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.settingsCDNPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.settingsCDNPick.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.settingsCDNPick.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -926,7 +927,7 @@
             this.settingsLanguageText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.settingsLanguageText.Location = new System.Drawing.Point(24, 158);
             this.settingsLanguageText.Name = "settingsLanguageText";
-            this.settingsLanguageText.Size = new System.Drawing.Size(124, 14);
+            this.settingsLanguageText.Size = new System.Drawing.Size(125, 14);
             this.settingsLanguageText.TabIndex = 131;
             this.settingsLanguageText.Text = "GAME LANGUAGE";
             this.settingsLanguageText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -953,7 +954,7 @@
             this.settingsWordFilterCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.settingsWordFilterCheck.Location = new System.Drawing.Point(26, 288);
             this.settingsWordFilterCheck.Name = "settingsWordFilterCheck";
-            this.settingsWordFilterCheck.Size = new System.Drawing.Size(225, 18);
+            this.settingsWordFilterCheck.Size = new System.Drawing.Size(226, 18);
             this.settingsWordFilterCheck.TabIndex = 135;
             this.settingsWordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.settingsWordFilterCheck.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -968,7 +969,7 @@
             this.settingsProxyCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.settingsProxyCheckbox.Location = new System.Drawing.Point(26, 308);
             this.settingsProxyCheckbox.Name = "settingsProxyCheckbox";
-            this.settingsProxyCheckbox.Size = new System.Drawing.Size(99, 18);
+            this.settingsProxyCheckbox.Size = new System.Drawing.Size(100, 18);
             this.settingsProxyCheckbox.TabIndex = 136;
             this.settingsProxyCheckbox.Text = "Disable Proxy";
             this.settingsProxyCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -983,7 +984,7 @@
             this.settingsDiscordRPCCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.settingsDiscordRPCCheckbox.Location = new System.Drawing.Point(26, 328);
             this.settingsDiscordRPCCheckbox.Name = "settingsDiscordRPCCheckbox";
-            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(136, 18);
+            this.settingsDiscordRPCCheckbox.Size = new System.Drawing.Size(137, 18);
             this.settingsDiscordRPCCheckbox.TabIndex = 137;
             this.settingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
             this.settingsDiscordRPCCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -997,7 +998,7 @@
             this.settingsGameFilesCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.settingsGameFilesCurrentText.Location = new System.Drawing.Point(313, 82);
             this.settingsGameFilesCurrentText.Name = "settingsGameFilesCurrentText";
-            this.settingsGameFilesCurrentText.Size = new System.Drawing.Size(153, 14);
+            this.settingsGameFilesCurrentText.Size = new System.Drawing.Size(154, 14);
             this.settingsGameFilesCurrentText.TabIndex = 149;
             this.settingsGameFilesCurrentText.Text = "CURRENT DIRECTORY:";
             this.settingsGameFilesCurrentText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -1027,7 +1028,7 @@
             this.settingsCDNCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.settingsCDNCurrentText.Location = new System.Drawing.Point(313, 120);
             this.settingsCDNCurrentText.Name = "settingsCDNCurrentText";
-            this.settingsCDNCurrentText.Size = new System.Drawing.Size(108, 14);
+            this.settingsCDNCurrentText.Size = new System.Drawing.Size(110, 14);
             this.settingsCDNCurrentText.TabIndex = 150;
             this.settingsCDNCurrentText.Text = "CURRENT CDN:";
             this.settingsCDNCurrentText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -1191,7 +1192,7 @@
             this.DiscordInviteLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.DiscordInviteLink.Location = new System.Drawing.Point(154, 12);
             this.DiscordInviteLink.Name = "DiscordInviteLink";
-            this.DiscordInviteLink.Size = new System.Drawing.Size(95, 13);
+            this.DiscordInviteLink.Size = new System.Drawing.Size(98, 13);
             this.DiscordInviteLink.TabIndex = 172;
             this.DiscordInviteLink.TabStop = true;
             this.DiscordInviteLink.Text = "Discord Invite";
@@ -1280,7 +1281,7 @@
             this.TwitterAccountLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.TwitterAccountLink.Location = new System.Drawing.Point(437, 12);
             this.TwitterAccountLink.Name = "TwitterAccountLink";
-            this.TwitterAccountLink.Size = new System.Drawing.Size(88, 13);
+            this.TwitterAccountLink.Size = new System.Drawing.Size(86, 13);
             this.TwitterAccountLink.TabIndex = 174;
             this.TwitterAccountLink.TabStop = true;
             this.TwitterAccountLink.Text = "Twitter Feed";
@@ -1310,7 +1311,7 @@
             this.FacebookGroupLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.FacebookGroupLink.Location = new System.Drawing.Point(292, 12);
             this.FacebookGroupLink.Name = "FacebookGroupLink";
-            this.FacebookGroupLink.Size = new System.Drawing.Size(110, 13);
+            this.FacebookGroupLink.Size = new System.Drawing.Size(112, 13);
             this.FacebookGroupLink.TabIndex = 173;
             this.FacebookGroupLink.TabStop = true;
             this.FacebookGroupLink.Text = "Facebook Group";
@@ -1328,7 +1329,7 @@
             this.HomePageLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.HomePageLink.Location = new System.Drawing.Point(36, 12);
             this.HomePageLink.Name = "HomePageLink";
-            this.HomePageLink.Size = new System.Drawing.Size(79, 13);
+            this.HomePageLink.Size = new System.Drawing.Size(81, 13);
             this.HomePageLink.TabIndex = 171;
             this.HomePageLink.TabStop = true;
             this.HomePageLink.Text = "Home Page";

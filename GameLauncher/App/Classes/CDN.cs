@@ -10,6 +10,9 @@ namespace GameLauncher.App.Classes
 
     public class CDNObject 
     {
+        [JsonProperty("category")]
+        public string Category { get; set; }
+
         [JsonProperty("name")]
         public string Name { get; set; }
 

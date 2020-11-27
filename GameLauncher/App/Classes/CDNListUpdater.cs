@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GameLauncher.App.Classes
 {
@@ -13,6 +14,8 @@ namespace GameLauncher.App.Classes
 
         public static void UpdateCDNList()
         {
+            List<CDNObject> cdnInfos = new List<CDNObject>();
+
             foreach (var cdnListURL in Self.cdnlisturl)
             {
                 try
@@ -24,7 +27,8 @@ namespace GameLauncher.App.Classes
 
                     try
                     {
-                        finalCDNItems.AddRange(JsonConvert.DeserializeObject<List<CDNObject>>(responseList));
+                        cdnInfos.AddRange(
+                            JsonConvert.DeserializeObject<List<CDNObject>>(responseList));
                     }
                     catch (Exception error)
                     {
@@ -34,6 +38,18 @@ namespace GameLauncher.App.Classes
                 catch (Exception error)
                 {
                     Log.Error("LIST CORE: Error occurred while loading cdn list from [" + cdnListURL + "]: " + error.Message);
+                }
+
+                foreach (var cdnItemGroup in cdnInfos.GroupBy(s => s.Category))
+                {
+                    if (finalCDNItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{cdnItemGroup.Key} CDNs")) == -1)
+                    {
+                        finalCDNItems.Add(new CDNObject
+                        {
+                            Name = $"<GROUP>{cdnItemGroup.Key} CDNs"
+                        });
+                    }
+                    finalCDNItems.AddRange(cdnItemGroup.ToList());
                 }
             }
         }

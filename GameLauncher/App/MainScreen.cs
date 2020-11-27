@@ -290,6 +290,7 @@ namespace GameLauncher
 
             serverPick.SelectedIndexChanged += new EventHandler(ServerPick_SelectedIndexChanged);
             serverPick.DrawItem += new DrawItemEventHandler(ComboBox1_DrawItem);
+            settingsCDNPick.DrawItem += new DrawItemEventHandler(settingsCDNPick_DrawItem);
 
             forgotPassword.LinkClicked += new LinkLabelLinkClickedEventHandler(ForgotPassword_LinkClicked);
 
@@ -478,6 +479,50 @@ namespace GameLauncher
                 e.Graphics.FillRectangle(backgroundColor, e.Bounds);
                 e.Graphics.DrawString("    " + serverListText, font, textColor, e.Bounds);
             }
+        }
+
+        private void settingsCDNPick_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            var font = (sender as ComboBox).Font;
+            Brush backgroundColor;
+            Brush textColor;
+            Brush customTextColor = new SolidBrush(Color.FromArgb(178, 210, 255));
+            Brush customBGColor = new SolidBrush(Color.FromArgb(44, 58, 76));
+
+            var cdnListText = "";
+
+            if (sender is ComboBox cb)
+            {
+                if (cb.Items[e.Index] is CDNObject si)
+                {
+                    cdnListText = si.Name;
+                }
+            }
+
+            if (cdnListText.StartsWith("<GROUP>"))
+            {
+                font = new Font(font, FontStyle.Bold);
+                e.Graphics.FillRectangle(Brushes.White, e.Bounds);
+                e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, Brushes.Black, e.Bounds);
+            }
+            else
+            {
+                font = new Font(font, FontStyle.Bold);
+                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                {
+                    backgroundColor = SystemBrushes.Highlight;
+                    textColor = SystemBrushes.HighlightText;
+                }
+                else
+                {
+                    backgroundColor = customBGColor;
+                    textColor = customTextColor;
+                }
+
+                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                e.Graphics.DrawString(cdnListText, font, textColor, e.Bounds);
+            }
+
         }
 
         private void MainScreen_Load(object sender, EventArgs e) {
@@ -2146,12 +2191,16 @@ namespace GameLauncher
                 }
             }
 
-            if (_settingFile.Read("CDN") != ((CDNObject)settingsCDNPick.SelectedItem).Url)
+            if (_settingFile.Read("CDN") != ((CDNObject)settingsCDNPick.SelectedItem).Url && ((CDNObject)settingsCDNPick.SelectedItem).Url != null)
             {
                 settingsCDNCurrentText.Text = "CHANGED CDN";
                 settingsCDNCurrent.Text = ((CDNObject)settingsCDNPick.SelectedItem).Url;
                 _settingFile.Write("CDN", ((CDNObject)settingsCDNPick.SelectedItem).Url);
                 _restartRequired = true;
+            }
+            else
+            {
+                MessageBox.Show(null, "CDN Settings. \n\nNot Saved. \n\n(╯°□°）╯︵ ┻━┻", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             String disableProxy = (settingsProxyCheckbox.Checked == true) ? "1" : "0";
@@ -3469,7 +3518,15 @@ namespace GameLauncher
 
         private void SettingsCDNPick_SelectedIndexChanged(object sender, EventArgs e)
         {
-            IsChangedCDNDown();
+            if (((CDNObject)settingsCDNPick.SelectedItem).Url != null)
+            {
+                IsChangedCDNDown();
+            }
+            else
+            {
+                settingsCDNText.Text = "CDN:";
+                settingsCDNText.ForeColor = Color.FromArgb(224, 224, 224);
+            }
         }
 
         private void PatchNotes_Click(object sender, EventArgs e)
