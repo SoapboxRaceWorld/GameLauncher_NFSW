@@ -2785,6 +2785,8 @@ namespace GameLauncher
 
                     if (modFilesDownloadUrls.Count != 0) {
                         this.DownloadModNetFilesRightNow(path);
+                        _presence.State = "Downloading Server Mods!";
+                        if (discordRpcClient != null) discordRpcClient.SetPresence(_presence);
                     } else {
                         LaunchGame();
                     }
@@ -3312,6 +3314,9 @@ namespace GameLauncher
                 playProgress.Value = (int)(100 * downloadCurrent / compressedLength);
                 playProgress.Width = (int)(519 * downloadCurrent / compressedLength);
 
+                _presence.State = string.Format("Downloaded {0}% of the Game!", (int)(100 * downloadCurrent / compressedLength));
+                if (discordRpcClient != null) discordRpcClient.SetPresence(_presence);
+
                 TaskbarProgress.SetValue(Handle, (int)(100 * downloadCurrent / compressedLength), 100);
             } catch {
                 TaskbarProgress.SetValue(Handle, 0, 100);
@@ -3379,6 +3384,9 @@ namespace GameLauncher
             } catch {
                 failureMessage = "Download failed.";
             }
+
+            _presence.State = "Failed to Downloaded Game!";
+            if (discordRpcClient != null) discordRpcClient.SetPresence(_presence);
 
             extractingProgress.Value = 100;
             extractingProgress.Width = 519;
