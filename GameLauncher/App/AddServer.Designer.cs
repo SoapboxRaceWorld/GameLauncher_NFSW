@@ -30,8 +30,8 @@ namespace GameLauncher.App
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddServer));
-            this.OkButton = new System.Windows.Forms.Button();
-            this.CancelButton = new System.Windows.Forms.Button();
+            this.OkBTN = new System.Windows.Forms.Button();
+            this.CancelBTN = new System.Windows.Forms.Button();
             this.ServerNameLabel = new System.Windows.Forms.Label();
             this.ServerName = new System.Windows.Forms.TextBox();
             this.ServerAddress = new System.Windows.Forms.TextBox();
@@ -40,37 +40,37 @@ namespace GameLauncher.App
             this.Version = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // OkButton
+            // OkBTN
             // 
-            this.OkButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.OkButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.OkButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.OkButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OkButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OkButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.OkButton.Location = new System.Drawing.Point(309, 108);
-            this.OkButton.Name = "OkButton";
-            this.OkButton.Size = new System.Drawing.Size(75, 23);
-            this.OkButton.TabIndex = 3;
-            this.OkButton.Text = "OK";
-            this.OkButton.UseVisualStyleBackColor = false;
-            this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
+            this.OkBTN.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.OkBTN.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.OkBTN.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.OkBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.OkBTN.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OkBTN.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.OkBTN.Location = new System.Drawing.Point(309, 108);
+            this.OkBTN.Name = "OkBTN";
+            this.OkBTN.Size = new System.Drawing.Size(75, 23);
+            this.OkBTN.TabIndex = 3;
+            this.OkBTN.Text = "OK";
+            this.OkBTN.UseVisualStyleBackColor = false;
+            this.OkBTN.Click += new System.EventHandler(this.OkButton_Click);
             // 
-            // CancelButton
+            // CancelBTN
             // 
-            this.CancelButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.CancelButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.CancelButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.CancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CancelButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CancelButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.CancelButton.Location = new System.Drawing.Point(224, 108);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 4;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = false;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            this.CancelBTN.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.CancelBTN.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.CancelBTN.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.CancelBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CancelBTN.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CancelBTN.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.CancelBTN.Location = new System.Drawing.Point(224, 108);
+            this.CancelBTN.Name = "CancelBTN";
+            this.CancelBTN.Size = new System.Drawing.Size(75, 23);
+            this.CancelBTN.TabIndex = 4;
+            this.CancelBTN.Text = "Cancel";
+            this.CancelBTN.UseVisualStyleBackColor = false;
+            this.CancelBTN.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // ServerNameLabel
             // 
@@ -149,8 +149,8 @@ namespace GameLauncher.App
             this.Controls.Add(this.ServerAddressLabel);
             this.Controls.Add(this.ServerName);
             this.Controls.Add(this.ServerNameLabel);
-            this.Controls.Add(this.CancelButton);
-            this.Controls.Add(this.OkButton);
+            this.Controls.Add(this.CancelBTN);
+            this.Controls.Add(this.OkBTN);
             this.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -169,8 +169,8 @@ namespace GameLauncher.App
 
         #endregion
 
-        private System.Windows.Forms.Button OkButton;
-        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button OkBTN;
+        private System.Windows.Forms.Button CancelBTN;
         private System.Windows.Forms.Label ServerNameLabel;
         private System.Windows.Forms.TextBox ServerName;
         private System.Windows.Forms.TextBox ServerAddress;

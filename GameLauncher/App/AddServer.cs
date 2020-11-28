@@ -31,8 +31,8 @@ namespace GameLauncher.App
         private void ApplyEmbeddedFonts() {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
-            OkButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            CancelButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            OkBTN.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            CancelBTN.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
             ServerNameLabel.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
             ServerName.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             ServerAddress.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
@@ -72,8 +72,8 @@ namespace GameLauncher.App
                 wellFormattedURL = uriResult.ToString();
             }
 
-            CancelButton.Enabled = false;
-            OkButton.Enabled = false;
+            CancelBTN.Enabled = false;
+            OkBTN.Enabled = false;
             ServerAddress.Enabled = false;
             ServerName.Enabled = false;
 
@@ -93,8 +93,8 @@ namespace GameLauncher.App
                 success = false;
             }
 
-            CancelButton.Enabled = true;
-            OkButton.Enabled = true;
+            CancelBTN.Enabled = true;
+            OkBTN.Enabled = true;
             ServerAddress.Enabled = true;
             ServerName.Enabled = true;
 
