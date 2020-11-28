@@ -31,12 +31,12 @@ namespace GameLauncher.App
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WelcomeScreen));
             this.WelcomeText = new System.Windows.Forms.Label();
-            this.downloadSourceText = new System.Windows.Forms.Label();
+            this.DownloadSourceText = new System.Windows.Forms.Label();
             this.CDNSource = new System.Windows.Forms.ComboBox();
             this.Save = new System.Windows.Forms.Button();
             this.ServerStatusText = new System.Windows.Forms.Label();
             this.CDNStatusText = new System.Windows.Forms.Label();
-            this.apiErrorButton = new System.Windows.Forms.Button();
+            this.APIErrorButton = new System.Windows.Forms.Button();
             this.VersionLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -51,17 +51,17 @@ namespace GameLauncher.App
             this.WelcomeText.Text = "Checking API Status";
             this.WelcomeText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // downloadSourceText
+            // DownloadSourceText
             // 
-            this.downloadSourceText.AutoSize = true;
-            this.downloadSourceText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.downloadSourceText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.downloadSourceText.Location = new System.Drawing.Point(12, 115);
-            this.downloadSourceText.Name = "downloadSourceText";
-            this.downloadSourceText.Size = new System.Drawing.Size(129, 13);
-            this.downloadSourceText.TabIndex = 2;
-            this.downloadSourceText.Text = "CDN / Download Source:";
-            this.downloadSourceText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.DownloadSourceText.AutoSize = true;
+            this.DownloadSourceText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DownloadSourceText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.DownloadSourceText.Location = new System.Drawing.Point(12, 115);
+            this.DownloadSourceText.Name = "DownloadSourceText";
+            this.DownloadSourceText.Size = new System.Drawing.Size(129, 13);
+            this.DownloadSourceText.TabIndex = 2;
+            this.DownloadSourceText.Text = "CDN / Download Source:";
+            this.DownloadSourceText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CDNSource
             // 
@@ -118,22 +118,22 @@ namespace GameLauncher.App
             this.CDNStatusText.Text = "CDN API Status - Pinging";
             this.CDNStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // apiErrorButton
+            // APIErrorButton
             // 
-            this.apiErrorButton.AutoSize = true;
-            this.apiErrorButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.apiErrorButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.apiErrorButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.apiErrorButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.apiErrorButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.apiErrorButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.apiErrorButton.Location = new System.Drawing.Point(148, 141);
-            this.apiErrorButton.Name = "apiErrorButton";
-            this.apiErrorButton.Size = new System.Drawing.Size(91, 25);
-            this.apiErrorButton.TabIndex = 8;
-            this.apiErrorButton.Text = "Manual Bypass";
-            this.apiErrorButton.UseVisualStyleBackColor = false;
-            this.apiErrorButton.Click += new System.EventHandler(this.APIErrorButton_Click);
+            this.APIErrorButton.AutoSize = true;
+            this.APIErrorButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.APIErrorButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.APIErrorButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.APIErrorButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.APIErrorButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.APIErrorButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.APIErrorButton.Location = new System.Drawing.Point(148, 141);
+            this.APIErrorButton.Name = "APIErrorButton";
+            this.APIErrorButton.Size = new System.Drawing.Size(91, 25);
+            this.APIErrorButton.TabIndex = 8;
+            this.APIErrorButton.Text = "Manual Bypass";
+            this.APIErrorButton.UseVisualStyleBackColor = false;
+            this.APIErrorButton.Click += new System.EventHandler(this.APIErrorButton_Click);
             // 
             // VersionLabel
             // 
@@ -152,12 +152,12 @@ namespace GameLauncher.App
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.ClientSize = new System.Drawing.Size(379, 206);
             this.Controls.Add(this.VersionLabel);
-            this.Controls.Add(this.apiErrorButton);
+            this.Controls.Add(this.APIErrorButton);
             this.Controls.Add(this.CDNStatusText);
             this.Controls.Add(this.ServerStatusText);
             this.Controls.Add(this.Save);
             this.Controls.Add(this.CDNSource);
-            this.Controls.Add(this.downloadSourceText);
+            this.Controls.Add(this.DownloadSourceText);
             this.Controls.Add(this.WelcomeText);
             this.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -178,12 +178,12 @@ namespace GameLauncher.App
         #endregion
 
         private System.Windows.Forms.Label WelcomeText;
-        private System.Windows.Forms.Label downloadSourceText;
+        private System.Windows.Forms.Label DownloadSourceText;
         private System.Windows.Forms.ComboBox CDNSource;
         private System.Windows.Forms.Button Save;
         private System.Windows.Forms.Label ServerStatusText;
         private System.Windows.Forms.Label CDNStatusText;
-        private System.Windows.Forms.Button apiErrorButton;
+        private System.Windows.Forms.Button APIErrorButton;
         private System.Windows.Forms.Label VersionLabel;
     }
 }

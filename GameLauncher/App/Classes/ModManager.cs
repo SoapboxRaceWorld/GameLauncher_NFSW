@@ -125,10 +125,10 @@ namespace GameLauncher.App.Classes
             }
         }
 
-        public static bool Download(List<ModInfo> mods, string gameDir, string serverKey, System.Windows.Forms.Label playProgress, ProgressBarEx progress)
+        public static bool Download(List<ModInfo> mods, string gameDir, string serverKey, System.Windows.Forms.Label PlayProgress, ProgressBarEx progress)
         {
             ServerInfo serverInfo;
-            playProgress.Text = ("Downloading mods for " + serverKey).ToUpper();
+            PlayProgress.Text = ("Downloading mods for " + serverKey).ToUpper();
             progress.Value = 0;
 
             int currentModCount = 0;
@@ -162,7 +162,7 @@ namespace GameLauncher.App.Classes
                         if (computedHash != file.Hash) {
                             moddownloaded++;
                             var wc = new WebClient();
-                            playProgress.Text = ("Downloading " + serverKey + " files: " + file.Path + " (" + moddownloaded + "/" + totalModsCount + ")").ToUpper();
+                            PlayProgress.Text = ("Downloading " + serverKey + " files: " + file.Path + " (" + moddownloaded + "/" + totalModsCount + ")").ToUpper();
                             var fileData = wc.DownloadData(url + file.Path);
                             using (var fs = File.OpenWrite(Path.Combine(serverModsDirectory, file.Path)))
                             using (var bw = new BinaryWriter(fs)) {
@@ -182,7 +182,7 @@ namespace GameLauncher.App.Classes
                         {
                             currentModCount++;
 
-                            playProgress.Text = ("Downloading " + serverKey + " files: " + file.Path + " (" + currentModCount + "/" + totalModsCount + ") ").ToUpper();
+                            PlayProgress.Text = ("Downloading " + serverKey + " files: " + file.Path + " (" + currentModCount + "/" + totalModsCount + ") ").ToUpper();
                             progress.Value = Convert.ToInt32(Decimal.Divide(currentModCount, totalModsCount) * 100);
                             progress.Width = Convert.ToInt32(Decimal.Divide(currentModCount, totalModsCount) * 519);
 

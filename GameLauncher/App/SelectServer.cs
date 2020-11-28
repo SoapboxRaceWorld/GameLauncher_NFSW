@@ -206,7 +206,7 @@ namespace GameLauncher.App
 
                         if (servers.Count == 0)
                         {
-                            loading.Text = "";
+                            Loading.Text = "";
                         }
 
                         Application.DoEvents();
@@ -232,10 +232,10 @@ namespace GameLauncher.App
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
             ServerListRenderer.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
-            btnAddServer.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            btnSelectServer.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            btnClose.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            version.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
+            BtnAddServer.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            BtnSelectServer.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            BtnClose.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            Version.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
         }
 
         private void BtnAddServer_Click(object sender, EventArgs e)

@@ -31,14 +31,14 @@ namespace GameLauncher.App
         private void ApplyEmbeddedFonts() {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
-            okButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            cancelButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            serverNameLabel.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            serverName.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            serverAddress.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            serverAddressLabel.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            error.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            version.Font= new Font(DejaVuSans, 8.25f, FontStyle.Regular);
+            OkButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            CancelButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            ServerNameLabel.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            ServerName.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            ServerAddress.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            ServerAddressLabel.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            Error.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            Version.Font= new Font(DejaVuSans, 8.25f, FontStyle.Regular);
         }
 
         private void OkButton_Click(object sender, EventArgs e) {
@@ -47,35 +47,35 @@ namespace GameLauncher.App
 			}
 
 			bool success = true;
-            error.Visible = false;
+            Error.Visible = false;
             this.Refresh();
 
             String wellFormattedURL = "";
 
-            if (IsNullOrEmpty(serverAddress.Text)) {
-                DrawErrorAroundTextBox(serverAddress);
+            if (IsNullOrEmpty(ServerAddress.Text)) {
+                DrawErrorAroundTextBox(ServerAddress);
                 success = false;
             }
 
-            if (IsNullOrEmpty(serverName.Text)) {
-                DrawErrorAroundTextBox(serverName);
+            if (IsNullOrEmpty(ServerName.Text)) {
+                DrawErrorAroundTextBox(ServerName);
                 success = false;
             }
 
             Uri uriResult;
-            bool result = Uri.TryCreate(serverAddress.Text, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            bool result = Uri.TryCreate(ServerAddress.Text, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
             if (!result) {
-                DrawErrorAroundTextBox(serverAddress);
+                DrawErrorAroundTextBox(ServerAddress);
                 success = false;
             } else {
                 wellFormattedURL = uriResult.ToString();
             }
 
-            cancelButton.Enabled = false;
-            okButton.Enabled = false;
-            serverAddress.Enabled = false;
-            serverName.Enabled = false;
+            CancelButton.Enabled = false;
+            OkButton.Enabled = false;
+            ServerAddress.Enabled = false;
+            ServerName.Enabled = false;
 
             try {
                 var client = new WebClient();
@@ -85,18 +85,18 @@ namespace GameLauncher.App
                 GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(serverLoginResponse);
 
                 if (IsNullOrEmpty(json.ServerName)) {
-                    DrawErrorAroundTextBox(serverAddress);
+                    DrawErrorAroundTextBox(ServerAddress);
                     success = false;
                 }
             } catch {
-                DrawErrorAroundTextBox(serverAddress);
+                DrawErrorAroundTextBox(ServerAddress);
                 success = false;
             }
 
-            cancelButton.Enabled = true;
-            okButton.Enabled = true;
-            serverAddress.Enabled = true;
-            serverName.Enabled = true;
+            CancelButton.Enabled = true;
+            OkButton.Enabled = true;
+            ServerAddress.Enabled = true;
+            ServerName.Enabled = true;
 
             if (success == true) {
                 try {
@@ -113,7 +113,7 @@ namespace GameLauncher.App
 
                     servers.Add(new ServerInfo
                     {
-                        Name = serverName.Text,
+                        Name = ServerName.Text,
                         IpAddress = wellFormattedURL,
                         IsSpecial = false,
                         Id = SHA.HashPassword(uriResult.Host)
@@ -129,7 +129,7 @@ namespace GameLauncher.App
 
                 CancelButton_Click(sender, e);
             } else {
-                error.Visible = true;
+                Error.Visible = true;
             }
         }
 

@@ -25,15 +25,15 @@ namespace GameLauncher.App
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
             AboutText.Font = new Font(DejaVuSansCondensed, 26.25f, FontStyle.Italic);
-            patchTitle1.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
-            patchText1.Font = new Font(DejaVuSans, 9.75f, FontStyle.Regular);
-            patchButton1.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
-            patchTitle2.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
-            patchText2.Font = new Font(DejaVuSans, 9.75f, FontStyle.Regular);
-            patchButton2.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
-            patchTitle3.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
-            patchText3.Font = new Font(DejaVuSans, 9.75f, FontStyle.Regular);
-            patchButton3.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
+            PatchTitle1.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
+            PatchText1.Font = new Font(DejaVuSans, 9.75f, FontStyle.Regular);
+            PatchButton1.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
+            PatchTitle2.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
+            PatchText2.Font = new Font(DejaVuSans, 9.75f, FontStyle.Regular);
+            PatchButton2.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
+            PatchTitle3.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
+            PatchText3.Font = new Font(DejaVuSans, 9.75f, FontStyle.Regular);
+            PatchButton3.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
         }
 
         private void FetchPatchNotes()
@@ -66,17 +66,17 @@ namespace GameLauncher.App
             }
             catch
             {
-                patchContainerPanel.Visible = false;
+                PatchContainerPanel.Visible = false;
                 MessageBox.Show("The launcher was unable to retrieve about info from the server!");
             }
 
-            Label[] patchTitleObjects = { patchTitle1, patchTitle2, patchTitle3 };
-            Label[] patchTextObjects = { patchText1, patchText2, patchText3 };
+            Label[] PatchTitleObjects = { PatchTitle1, PatchTitle2, PatchTitle3 };
+            Label[] PatchTextObjects = { PatchText1, PatchText2, PatchText3 };
 
             for (int i = 0; i < patchNoteBlocks.Count; i++)
             {
-                patchTitleObjects[i].Text = patchNoteBlocks[i].Title;
-                patchTextObjects[i].Text = patchNoteBlocks[i].Text;
+                PatchTitleObjects[i].Text = patchNoteBlocks[i].Title;
+                PatchTextObjects[i].Text = patchNoteBlocks[i].Text;
             }
         }
 
@@ -85,13 +85,13 @@ namespace GameLauncher.App
             Button button = (Button)sender;
             switch (button.Name)
             {
-                case nameof(patchButton1):
+                case nameof(PatchButton1):
                     Process.Start(patchNoteBlocks[0].Link);
                     break;
-                case nameof(patchButton2):
+                case nameof(PatchButton2):
                     Process.Start(patchNoteBlocks[1].Link);
                     break;
-                case nameof(patchButton3):
+                case nameof(PatchButton3):
                     Process.Start(patchNoteBlocks[2].Link);
                     break;
             }

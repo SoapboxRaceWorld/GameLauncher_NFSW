@@ -29,12 +29,12 @@ namespace GameLauncher.App
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
             WelcomeText.Font = new Font(DejaVuSans, 9.75f, FontStyle.Bold);
-            downloadSourceText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            DownloadSourceText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
             CDNSource.Font = new Font(DejaVuSans, 8.25f, FontStyle.Bold);
             Save.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
             ServerStatusText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
             CDNStatusText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            apiErrorButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            APIErrorButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
             VersionLabel.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
         }
 
@@ -207,13 +207,13 @@ namespace GameLauncher.App
 
         private void APIErrorFormElements(bool hideElements = true)
         {
-            apiErrorButton.Visible = hideElements;
+            APIErrorButton.Visible = hideElements;
         }
 
         private void SettingsFormElements(bool hideElements = true)
         {
             ShowCDNSources();
-            downloadSourceText.Visible = hideElements;
+            DownloadSourceText.Visible = hideElements;
             CDNSource.Visible = hideElements;
             Save.Visible = hideElements;
         }

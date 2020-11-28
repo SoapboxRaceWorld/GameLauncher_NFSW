@@ -23,19 +23,19 @@ namespace GameLauncher.App
                 InitializeComponent();
                 ApplyEmbeddedFonts();
 
-                changelogText.Text = new WebClient().DownloadString(Self.mainserver + "/launcher/changelog");
-                changelogText.Select(0, 0);
-                changelogText.SelectionLength = 0;
-                changelogText.TabStop = false;
+                ChangelogText.Text = new WebClient().DownloadString(Self.mainserver + "/launcher/changelog");
+                ChangelogText.Select(0, 0);
+                ChangelogText.SelectionLength = 0;
+                ChangelogText.TabStop = false;
 
                 Bitmap bitmap1 = Bitmap.FromHicon(SystemIcons.Information.Handle);
-                icon.Image = bitmap1;
+                UpdateIcon.Image = bitmap1;
 
-                updateLabel.Text = "An update is available. Would you like to update?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + updater.Payload.LatestVersion;
+                UpdateText.Text = "An update is available. Would you like to update?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + updater.Payload.LatestVersion;
 
-                this.update.DialogResult = DialogResult.OK;
-                this.ignore.DialogResult = DialogResult.Cancel;
-                this.skip.DialogResult = DialogResult.Ignore;
+                this.UpdateButton.DialogResult = DialogResult.OK;
+                this.IgnoreButton.DialogResult = DialogResult.Cancel;
+                this.SkipButton.DialogResult = DialogResult.Ignore;
             }
         }
 
@@ -43,11 +43,11 @@ namespace GameLauncher.App
         {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
-            changelogText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            update.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            updateLabel.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            skip.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            ignore.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            ChangelogText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            UpdateButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            UpdateText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            SkipButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            IgnoreButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
         }
     }
 }

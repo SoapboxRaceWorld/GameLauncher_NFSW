@@ -29,129 +29,129 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdatePopup));
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.changelogText = new System.Windows.Forms.TextBox();
-            this.update = new System.Windows.Forms.Button();
-            this.icon = new System.Windows.Forms.PictureBox();
-            this.updateLabel = new System.Windows.Forms.Label();
-            this.skip = new System.Windows.Forms.Button();
-            this.ignore = new System.Windows.Forms.Button();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.icon)).BeginInit();
+            this.ChangelogBox = new System.Windows.Forms.GroupBox();
+            this.ChangelogText = new System.Windows.Forms.TextBox();
+            this.UpdateButton = new System.Windows.Forms.Button();
+            this.UpdateIcon = new System.Windows.Forms.PictureBox();
+            this.UpdateText = new System.Windows.Forms.Label();
+            this.SkipButton = new System.Windows.Forms.Button();
+            this.IgnoreButton = new System.Windows.Forms.Button();
+            this.ChangelogBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.UpdateIcon)).BeginInit();
             this.SuspendLayout();
             // 
-            // groupBox1
+            // ChangelogBox
             // 
-            this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.groupBox1.Controls.Add(this.changelogText);
-            this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.groupBox1.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.groupBox1.Location = new System.Drawing.Point(12, 64);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox1.Size = new System.Drawing.Size(374, 158);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Changelog:";
+            this.ChangelogBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ChangelogBox.Controls.Add(this.ChangelogText);
+            this.ChangelogBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ChangelogBox.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ChangelogBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.ChangelogBox.Location = new System.Drawing.Point(12, 64);
+            this.ChangelogBox.Margin = new System.Windows.Forms.Padding(0);
+            this.ChangelogBox.Name = "ChangelogBox";
+            this.ChangelogBox.Padding = new System.Windows.Forms.Padding(0);
+            this.ChangelogBox.Size = new System.Drawing.Size(374, 158);
+            this.ChangelogBox.TabIndex = 0;
+            this.ChangelogBox.TabStop = false;
+            this.ChangelogBox.Text = "Changelog:";
             // 
-            // changelogText
+            // ChangelogText
             // 
-            this.changelogText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.changelogText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.changelogText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.changelogText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
-            this.changelogText.Location = new System.Drawing.Point(6, 13);
-            this.changelogText.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-            this.changelogText.Multiline = true;
-            this.changelogText.Name = "changelogText";
-            this.changelogText.ReadOnly = true;
-            this.changelogText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.changelogText.Size = new System.Drawing.Size(368, 139);
-            this.changelogText.TabIndex = 3;
-            this.changelogText.Text = "This is a Test";
+            this.ChangelogText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ChangelogText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ChangelogText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ChangelogText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.ChangelogText.Location = new System.Drawing.Point(6, 13);
+            this.ChangelogText.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
+            this.ChangelogText.Multiline = true;
+            this.ChangelogText.Name = "ChangelogText";
+            this.ChangelogText.ReadOnly = true;
+            this.ChangelogText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.ChangelogText.Size = new System.Drawing.Size(368, 139);
+            this.ChangelogText.TabIndex = 3;
+            this.ChangelogText.Text = "This is a Test";
             // 
-            // update
+            // UpdateButton
             // 
-            this.update.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.update.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.update.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.update.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.update.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.update.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.update.Location = new System.Drawing.Point(149, 230);
-            this.update.Name = "update";
-            this.update.Size = new System.Drawing.Size(75, 23);
-            this.update.TabIndex = 1;
-            this.update.Text = "Update";
-            this.update.UseVisualStyleBackColor = false;
+            this.UpdateButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.UpdateButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.UpdateButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.UpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UpdateButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UpdateButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.UpdateButton.Location = new System.Drawing.Point(149, 230);
+            this.UpdateButton.Name = "UpdateButton";
+            this.UpdateButton.Size = new System.Drawing.Size(75, 23);
+            this.UpdateButton.TabIndex = 1;
+            this.UpdateButton.Text = "Update";
+            this.UpdateButton.UseVisualStyleBackColor = false;
             // 
-            // icon
+            // UpdateIcon
             // 
-            this.icon.Location = new System.Drawing.Point(20, 20);
-            this.icon.Name = "icon";
-            this.icon.Size = new System.Drawing.Size(32, 32);
-            this.icon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.icon.TabIndex = 3;
-            this.icon.TabStop = false;
+            this.UpdateIcon.Location = new System.Drawing.Point(20, 20);
+            this.UpdateIcon.Name = "UpdateIcon";
+            this.UpdateIcon.Size = new System.Drawing.Size(32, 32);
+            this.UpdateIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.UpdateIcon.TabIndex = 3;
+            this.UpdateIcon.TabStop = false;
             // 
-            // updateLabel
+            // UpdateText
             // 
-            this.updateLabel.AutoSize = true;
-            this.updateLabel.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.updateLabel.Location = new System.Drawing.Point(64, 17);
-            this.updateLabel.Name = "updateLabel";
-            this.updateLabel.Size = new System.Drawing.Size(35, 13);
-            this.updateLabel.TabIndex = 4;
-            this.updateLabel.Text = "label1";
+            this.UpdateText.AutoSize = true;
+            this.UpdateText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UpdateText.Location = new System.Drawing.Point(64, 17);
+            this.UpdateText.Name = "UpdateText";
+            this.UpdateText.Size = new System.Drawing.Size(51, 14);
+            this.UpdateText.TabIndex = 4;
+            this.UpdateText.Text = "Update";
             // 
-            // skip
+            // SkipButton
             // 
-            this.skip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.skip.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.skip.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.skip.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.skip.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.skip.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.skip.Location = new System.Drawing.Point(311, 230);
-            this.skip.Name = "skip";
-            this.skip.Size = new System.Drawing.Size(75, 23);
-            this.skip.TabIndex = 6;
-            this.skip.Text = "Skip";
-            this.skip.UseVisualStyleBackColor = false;
+            this.SkipButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.SkipButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.SkipButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.SkipButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SkipButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SkipButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.SkipButton.Location = new System.Drawing.Point(311, 230);
+            this.SkipButton.Name = "SkipButton";
+            this.SkipButton.Size = new System.Drawing.Size(75, 23);
+            this.SkipButton.TabIndex = 6;
+            this.SkipButton.Text = "Skip";
+            this.SkipButton.UseVisualStyleBackColor = false;
             // 
-            // ignore
+            // IgnoreButton
             // 
-            this.ignore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.ignore.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.ignore.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.ignore.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.ignore.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ignore.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ignore.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ignore.Location = new System.Drawing.Point(230, 230);
-            this.ignore.Name = "ignore";
-            this.ignore.Size = new System.Drawing.Size(75, 23);
-            this.ignore.TabIndex = 2;
-            this.ignore.Text = "Ignore";
-            this.ignore.UseVisualStyleBackColor = false;
+            this.IgnoreButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.IgnoreButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.IgnoreButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.IgnoreButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.IgnoreButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.IgnoreButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IgnoreButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.IgnoreButton.Location = new System.Drawing.Point(230, 230);
+            this.IgnoreButton.Name = "IgnoreButton";
+            this.IgnoreButton.Size = new System.Drawing.Size(75, 23);
+            this.IgnoreButton.TabIndex = 2;
+            this.IgnoreButton.Text = "Ignore";
+            this.IgnoreButton.UseVisualStyleBackColor = false;
             // 
             // UpdatePopup
             // 
-            this.AcceptButton = this.update;
+            this.AcceptButton = this.UpdateButton;
             this.AccessibleRole = System.Windows.Forms.AccessibleRole.MenuPopup;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
-            this.CancelButton = this.ignore;
+            this.CancelButton = this.IgnoreButton;
             this.ClientSize = new System.Drawing.Size(398, 262);
-            this.Controls.Add(this.skip);
-            this.Controls.Add(this.updateLabel);
-            this.Controls.Add(this.icon);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.update);
-            this.Controls.Add(this.ignore);
+            this.Controls.Add(this.SkipButton);
+            this.Controls.Add(this.UpdateText);
+            this.Controls.Add(this.UpdateIcon);
+            this.Controls.Add(this.ChangelogBox);
+            this.Controls.Add(this.UpdateButton);
+            this.Controls.Add(this.IgnoreButton);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -163,9 +163,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GameLauncher - Update Available";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.icon)).EndInit();
+            this.ChangelogBox.ResumeLayout(false);
+            this.ChangelogBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.UpdateIcon)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -173,12 +173,12 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button update;
-        private System.Windows.Forms.TextBox changelogText;
-        private System.Windows.Forms.PictureBox icon;
-        private System.Windows.Forms.Label updateLabel;
-        private System.Windows.Forms.Button skip;
-        private System.Windows.Forms.Button ignore;
+        private System.Windows.Forms.GroupBox ChangelogBox;
+        private System.Windows.Forms.Button UpdateButton;
+        private System.Windows.Forms.TextBox ChangelogText;
+        private System.Windows.Forms.PictureBox UpdateIcon;
+        private System.Windows.Forms.Label UpdateText;
+        private System.Windows.Forms.Button SkipButton;
+        private System.Windows.Forms.Button IgnoreButton;
     }
 }

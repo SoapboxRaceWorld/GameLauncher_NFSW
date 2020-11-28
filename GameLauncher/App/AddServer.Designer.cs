@@ -30,112 +30,112 @@ namespace GameLauncher.App
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddServer));
-            this.okButton = new System.Windows.Forms.Button();
-            this.cancelButton = new System.Windows.Forms.Button();
-            this.serverNameLabel = new System.Windows.Forms.Label();
-            this.serverName = new System.Windows.Forms.TextBox();
-            this.serverAddress = new System.Windows.Forms.TextBox();
-            this.serverAddressLabel = new System.Windows.Forms.Label();
-            this.error = new System.Windows.Forms.Label();
-            this.version = new System.Windows.Forms.Label();
+            this.OkButton = new System.Windows.Forms.Button();
+            this.CancelButton = new System.Windows.Forms.Button();
+            this.ServerNameLabel = new System.Windows.Forms.Label();
+            this.ServerName = new System.Windows.Forms.TextBox();
+            this.ServerAddress = new System.Windows.Forms.TextBox();
+            this.ServerAddressLabel = new System.Windows.Forms.Label();
+            this.Error = new System.Windows.Forms.Label();
+            this.Version = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // okButton
+            // OkButton
             // 
-            this.okButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.okButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.okButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.okButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.okButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.okButton.Location = new System.Drawing.Point(309, 108);
-            this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 3;
-            this.okButton.Text = "OK";
-            this.okButton.UseVisualStyleBackColor = false;
-            this.okButton.Click += new System.EventHandler(this.OkButton_Click);
+            this.OkButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.OkButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.OkButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.OkButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.OkButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OkButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.OkButton.Location = new System.Drawing.Point(309, 108);
+            this.OkButton.Name = "OkButton";
+            this.OkButton.Size = new System.Drawing.Size(75, 23);
+            this.OkButton.TabIndex = 3;
+            this.OkButton.Text = "OK";
+            this.OkButton.UseVisualStyleBackColor = false;
+            this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
-            // cancelButton
+            // CancelButton
             // 
-            this.cancelButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.cancelButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.cancelButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cancelButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cancelButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.cancelButton.Location = new System.Drawing.Point(224, 108);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 23);
-            this.cancelButton.TabIndex = 4;
-            this.cancelButton.Text = "Cancel";
-            this.cancelButton.UseVisualStyleBackColor = false;
-            this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            this.CancelButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.CancelButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.CancelButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.CancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CancelButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CancelButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.CancelButton.Location = new System.Drawing.Point(224, 108);
+            this.CancelButton.Name = "CancelButton";
+            this.CancelButton.Size = new System.Drawing.Size(75, 23);
+            this.CancelButton.TabIndex = 4;
+            this.CancelButton.Text = "Cancel";
+            this.CancelButton.UseVisualStyleBackColor = false;
+            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
-            // serverNameLabel
+            // ServerNameLabel
             // 
-            this.serverNameLabel.AutoSize = true;
-            this.serverNameLabel.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.serverNameLabel.Location = new System.Drawing.Point(13, 13);
-            this.serverNameLabel.Name = "serverNameLabel";
-            this.serverNameLabel.Size = new System.Drawing.Size(72, 13);
-            this.serverNameLabel.TabIndex = 5;
-            this.serverNameLabel.Text = "Server Name:";
-            this.serverNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ServerNameLabel.AutoSize = true;
+            this.ServerNameLabel.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerNameLabel.Location = new System.Drawing.Point(13, 13);
+            this.ServerNameLabel.Name = "ServerNameLabel";
+            this.ServerNameLabel.Size = new System.Drawing.Size(72, 13);
+            this.ServerNameLabel.TabIndex = 5;
+            this.ServerNameLabel.Text = "Server Name:";
+            this.ServerNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // serverName
+            // ServerName
             // 
-            this.serverName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.serverName.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.serverName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
-            this.serverName.Location = new System.Drawing.Point(15, 29);
-            this.serverName.Name = "serverName";
-            this.serverName.Size = new System.Drawing.Size(369, 20);
-            this.serverName.TabIndex = 1;
-            this.serverName.WordWrap = false;
+            this.ServerName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ServerName.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.ServerName.Location = new System.Drawing.Point(15, 29);
+            this.ServerName.Name = "ServerName";
+            this.ServerName.Size = new System.Drawing.Size(369, 20);
+            this.ServerName.TabIndex = 1;
+            this.ServerName.WordWrap = false;
             // 
-            // serverAddress
+            // ServerAddress
             // 
-            this.serverAddress.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.serverAddress.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.serverAddress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
-            this.serverAddress.Location = new System.Drawing.Point(15, 78);
-            this.serverAddress.Name = "serverAddress";
-            this.serverAddress.Size = new System.Drawing.Size(369, 20);
-            this.serverAddress.TabIndex = 2;
+            this.ServerAddress.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ServerAddress.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerAddress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.ServerAddress.Location = new System.Drawing.Point(15, 78);
+            this.ServerAddress.Name = "ServerAddress";
+            this.ServerAddress.Size = new System.Drawing.Size(369, 20);
+            this.ServerAddress.TabIndex = 2;
             // 
-            // serverAddressLabel
+            // ServerAddressLabel
             // 
-            this.serverAddressLabel.AutoSize = true;
-            this.serverAddressLabel.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.serverAddressLabel.Location = new System.Drawing.Point(13, 62);
-            this.serverAddressLabel.Name = "serverAddressLabel";
-            this.serverAddressLabel.Size = new System.Drawing.Size(82, 13);
-            this.serverAddressLabel.TabIndex = 6;
-            this.serverAddressLabel.Text = "Server Address:";
-            this.serverAddressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ServerAddressLabel.AutoSize = true;
+            this.ServerAddressLabel.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerAddressLabel.Location = new System.Drawing.Point(13, 62);
+            this.ServerAddressLabel.Name = "ServerAddressLabel";
+            this.ServerAddressLabel.Size = new System.Drawing.Size(82, 13);
+            this.ServerAddressLabel.TabIndex = 6;
+            this.ServerAddressLabel.Text = "Server Address:";
+            this.ServerAddressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // error
+            // Error
             // 
-            this.error.AutoSize = true;
-            this.error.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
-            this.error.Location = new System.Drawing.Point(12, 104);
-            this.error.Name = "error";
-            this.error.Size = new System.Drawing.Size(111, 13);
-            this.error.TabIndex = 0;
-            this.error.Text = "Please check better...";
-            this.error.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.error.Visible = false;
+            this.Error.AutoSize = true;
+            this.Error.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
+            this.Error.Location = new System.Drawing.Point(12, 104);
+            this.Error.Name = "Error";
+            this.Error.Size = new System.Drawing.Size(111, 13);
+            this.Error.TabIndex = 0;
+            this.Error.Text = "Please check better...";
+            this.Error.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Error.Visible = false;
             // 
-            // version
+            // Version
             // 
-            this.version.AutoSize = true;
-            this.version.Location = new System.Drawing.Point(14, 124);
-            this.version.Name = "version";
-            this.version.Size = new System.Drawing.Size(132, 13);
-            this.version.TabIndex = 7;
-            this.version.Text = "Version : v" + Application.ProductVersion;
+            this.Version.AutoSize = true;
+            this.Version.Location = new System.Drawing.Point(14, 124);
+            this.Version.Name = "Version";
+            this.Version.Size = new System.Drawing.Size(132, 13);
+            this.Version.TabIndex = 7;
+            this.Version.Text = "Version : v" + Application.ProductVersion;
             // 
             // AddServer
             // 
@@ -143,14 +143,14 @@ namespace GameLauncher.App
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.ClientSize = new System.Drawing.Size(399, 141);
-            this.Controls.Add(this.version);
-            this.Controls.Add(this.error);
-            this.Controls.Add(this.serverAddress);
-            this.Controls.Add(this.serverAddressLabel);
-            this.Controls.Add(this.serverName);
-            this.Controls.Add(this.serverNameLabel);
-            this.Controls.Add(this.cancelButton);
-            this.Controls.Add(this.okButton);
+            this.Controls.Add(this.Version);
+            this.Controls.Add(this.Error);
+            this.Controls.Add(this.ServerAddress);
+            this.Controls.Add(this.ServerAddressLabel);
+            this.Controls.Add(this.ServerName);
+            this.Controls.Add(this.ServerNameLabel);
+            this.Controls.Add(this.CancelButton);
+            this.Controls.Add(this.OkButton);
             this.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -169,13 +169,13 @@ namespace GameLauncher.App
 
         #endregion
 
-        private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.Button cancelButton;
-        private System.Windows.Forms.Label serverNameLabel;
-        private System.Windows.Forms.TextBox serverName;
-        private System.Windows.Forms.TextBox serverAddress;
-        private System.Windows.Forms.Label serverAddressLabel;
-        private System.Windows.Forms.Label error;
-        private System.Windows.Forms.Label version;
+        private System.Windows.Forms.Button OkButton;
+        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Label ServerNameLabel;
+        private System.Windows.Forms.TextBox ServerName;
+        private System.Windows.Forms.TextBox ServerAddress;
+        private System.Windows.Forms.Label ServerAddressLabel;
+        private System.Windows.Forms.Label Error;
+        private System.Windows.Forms.Label Version;
     }
 }
