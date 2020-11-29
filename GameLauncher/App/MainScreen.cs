@@ -1469,7 +1469,11 @@ namespace GameLauncher
                                         VerticalBanner.Image = image;
                                         VerticalBanner.BackColor = Color.Black;
 
-                                        File.WriteAllBytes(".cache/" + SHA.HashPassword(_realServernameBanner) + ".bin", memoryStream.ToArray());
+                                        Console.WriteLine(getFileExtension(verticalImageUrl));
+
+                                        if (getFileExtension(verticalImageUrl) != "gif") {
+                                            File.WriteAllBytes(".cache/" + SHA.HashPassword(_realServernameBanner) + ".bin", memoryStream.ToArray());
+                                        }
 
                                         ImageServerName.Text = String.Empty; //_realServernameBanner;
                                     } else {
@@ -1490,6 +1494,10 @@ namespace GameLauncher
                     }
                 }
             };
+        }
+
+        public string getFileExtension(String filename) {
+            return filename.Split('.').Last();
         }
 
         public Image GrayscaleMe(String filename) {
@@ -1559,7 +1567,7 @@ namespace GameLauncher
             SettingsLanguage.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
             SettingsClearCrashLogsButton.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
             SettingsClearCommunicationLogButton.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
-            SettingsClearServerModCacheButton = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
+            SettingsClearServerModCacheButton.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
             SettingsWordFilterCheck.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
             SettingsProxyCheckbox.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
             SettingsDiscordRPCCheckbox.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
