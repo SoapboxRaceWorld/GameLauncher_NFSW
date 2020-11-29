@@ -3578,8 +3578,8 @@ namespace GameLauncher
             }
             else
             {
-                SettingsCDNPick.Text = "CDN:";
-                SettingsCDNPick.ForeColor = Color.FromArgb(224, 224, 224);
+                SettingsCDNText.Text = "CDN:";
+                SettingsCDNText.ForeColor = Color.FromArgb(224, 224, 224);
             }
 
             _lastSelectedCdnId = SettingsCDNPick.SelectedIndex;
