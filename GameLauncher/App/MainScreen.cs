@@ -2101,6 +2101,11 @@ namespace GameLauncher
                 SettingsClearCommunicationLogButton.Enabled = true;
             }
 
+            if (Directory.Exists(_settingFile.Read("InstallationDirectory") + "/.data"))
+            {
+                SettingsClearServerModCacheButton.Enabled = true;
+            }
+
             var crashLogFilesDirectory = new DirectoryInfo(_settingFile.Read("InstallationDirectory"));
 
             foreach (var file in crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp"))
@@ -3723,6 +3728,12 @@ namespace GameLauncher
             }
         }
 
+        private void SettingsClearServerModCacheButton_Click(object sender, EventArgs e)
+        {
+            Directory.Delete(_settingFile.Read("InstallationDirectory") + "/.data", true);
+            MessageBox.Show(null, "Deleted Server Mods Cache", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            SettingsClearServerModCacheButton.Enabled = false;
+        }
     }
     /* Moved 7 Unused Code to Gist */
     /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a8F89a5e5aebce38/raw/00de505302fbf9f8cfea9b163a707d9f8f122552/MainScreen.cs */

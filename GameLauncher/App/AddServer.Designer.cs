@@ -78,7 +78,7 @@ namespace GameLauncher.App
             this.ServerNameLabel.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerNameLabel.Location = new System.Drawing.Point(13, 13);
             this.ServerNameLabel.Name = "ServerNameLabel";
-            this.ServerNameLabel.Size = new System.Drawing.Size(72, 13);
+            this.ServerNameLabel.Size = new System.Drawing.Size(94, 14);
             this.ServerNameLabel.TabIndex = 5;
             this.ServerNameLabel.Text = "Server Name:";
             this.ServerNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -90,7 +90,7 @@ namespace GameLauncher.App
             this.ServerName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.ServerName.Location = new System.Drawing.Point(15, 29);
             this.ServerName.Name = "ServerName";
-            this.ServerName.Size = new System.Drawing.Size(369, 20);
+            this.ServerName.Size = new System.Drawing.Size(369, 21);
             this.ServerName.TabIndex = 1;
             this.ServerName.WordWrap = false;
             // 
@@ -101,7 +101,7 @@ namespace GameLauncher.App
             this.ServerAddress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.ServerAddress.Location = new System.Drawing.Point(15, 78);
             this.ServerAddress.Name = "ServerAddress";
-            this.ServerAddress.Size = new System.Drawing.Size(369, 20);
+            this.ServerAddress.Size = new System.Drawing.Size(369, 21);
             this.ServerAddress.TabIndex = 2;
             // 
             // ServerAddressLabel
@@ -110,7 +110,7 @@ namespace GameLauncher.App
             this.ServerAddressLabel.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerAddressLabel.Location = new System.Drawing.Point(13, 62);
             this.ServerAddressLabel.Name = "ServerAddressLabel";
-            this.ServerAddressLabel.Size = new System.Drawing.Size(82, 13);
+            this.ServerAddressLabel.Size = new System.Drawing.Size(108, 14);
             this.ServerAddressLabel.TabIndex = 6;
             this.ServerAddressLabel.Text = "Server Address:";
             this.ServerAddressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -122,7 +122,7 @@ namespace GameLauncher.App
             this.Error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
             this.Error.Location = new System.Drawing.Point(12, 104);
             this.Error.Name = "Error";
-            this.Error.Size = new System.Drawing.Size(111, 13);
+            this.Error.Size = new System.Drawing.Size(145, 14);
             this.Error.TabIndex = 0;
             this.Error.Text = "Please check better...";
             this.Error.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -133,13 +133,13 @@ namespace GameLauncher.App
             this.Version.AutoSize = true;
             this.Version.Location = new System.Drawing.Point(14, 124);
             this.Version.Name = "Version";
-            this.Version.Size = new System.Drawing.Size(132, 13);
+            this.Version.Size = new System.Drawing.Size(156, 13);
             this.Version.TabIndex = 7;
-            this.Version.Text = "Version : v" + Application.ProductVersion;
+            this.Version.Text = "Version : v16.6.30225.117";
             // 
             // AddServer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.ClientSize = new System.Drawing.Size(399, 141);

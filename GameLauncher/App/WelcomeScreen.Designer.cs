@@ -58,7 +58,7 @@ namespace GameLauncher.App
             this.DownloadSourceText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.DownloadSourceText.Location = new System.Drawing.Point(12, 115);
             this.DownloadSourceText.Name = "DownloadSourceText";
-            this.DownloadSourceText.Size = new System.Drawing.Size(129, 13);
+            this.DownloadSourceText.Size = new System.Drawing.Size(163, 14);
             this.DownloadSourceText.TabIndex = 2;
             this.DownloadSourceText.Text = "CDN / Download Source:";
             this.DownloadSourceText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -76,7 +76,7 @@ namespace GameLauncher.App
             this.CDNSource.Location = new System.Drawing.Point(164, 114);
             this.CDNSource.MaxDropDownItems = 21;
             this.CDNSource.Name = "CDNSource";
-            this.CDNSource.Size = new System.Drawing.Size(190, 21);
+            this.CDNSource.Size = new System.Drawing.Size(190, 19);
             this.CDNSource.TabIndex = 4;
             // 
             // Save
@@ -129,7 +129,7 @@ namespace GameLauncher.App
             this.APIErrorButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.APIErrorButton.Location = new System.Drawing.Point(148, 141);
             this.APIErrorButton.Name = "APIErrorButton";
-            this.APIErrorButton.Size = new System.Drawing.Size(91, 25);
+            this.APIErrorButton.Size = new System.Drawing.Size(114, 26);
             this.APIErrorButton.TabIndex = 8;
             this.APIErrorButton.Text = "Manual Bypass";
             this.APIErrorButton.UseVisualStyleBackColor = false;
@@ -140,14 +140,14 @@ namespace GameLauncher.App
             this.VersionLabel.AutoSize = true;
             this.VersionLabel.Location = new System.Drawing.Point(17, 190);
             this.VersionLabel.Name = "VersionLabel";
-            this.VersionLabel.Size = new System.Drawing.Size(107, 13);
+            this.VersionLabel.Size = new System.Drawing.Size(156, 13);
             this.VersionLabel.TabIndex = 9;
-            this.VersionLabel.Text = "Version : v" + Application.ProductVersion;
+            this.VersionLabel.Text = "Version : v16.6.30225.117";
             this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // WelcomeScreen
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.ClientSize = new System.Drawing.Size(379, 206);

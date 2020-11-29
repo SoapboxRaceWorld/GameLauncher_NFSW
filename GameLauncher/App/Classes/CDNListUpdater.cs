@@ -42,11 +42,11 @@ namespace GameLauncher.App.Classes
 
                 foreach (var cdnItemGroup in cdnInfos.GroupBy(s => s.Category))
                 {
-                    if (finalCDNItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{cdnItemGroup.Key} CDNs")) == -1)
+                    if (finalCDNItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{cdnItemGroup.Key} Mirrors")) == -1)
                     {
                         finalCDNItems.Add(new CDNObject
                         {
-                            Name = $"<GROUP>{cdnItemGroup.Key} CDNs",
+                            Name = $"<GROUP>{cdnItemGroup.Key} Mirrors",
                             IsSpecial = true
                         });
                     }

@@ -102,7 +102,7 @@
             this.UpdateText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.UpdateText.Location = new System.Drawing.Point(64, 17);
             this.UpdateText.Name = "UpdateText";
-            this.UpdateText.Size = new System.Drawing.Size(51, 14);
+            this.UpdateText.Size = new System.Drawing.Size(53, 14);
             this.UpdateText.TabIndex = 4;
             this.UpdateText.Text = "Update";
             // 

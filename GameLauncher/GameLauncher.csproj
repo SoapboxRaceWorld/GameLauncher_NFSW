@@ -13,7 +13,7 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
@@ -33,7 +33,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>nuIcon.ico</ApplicationIcon>
+    <ApplicationIcon>SBRW.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>GameLauncher.Program</StartupObject>
@@ -309,6 +309,7 @@
     <None Include="Resources\buttons_info.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SBRW.ico" />
     <None Include="Resources\progress_warning.png" />
     <None Include="Resources\progress_success.png" />
     <None Include="Resources\progress_preload.png" />
@@ -371,7 +372,6 @@
     <None Include="Resources\close_hover.png" />
     <None Include="Resources\tick.png" />
     <None Include="Resources\map.png" />
-    <Content Include="nuIcon.ico" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

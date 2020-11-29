@@ -41,8 +41,8 @@ namespace GameLauncher.App
             // ServerListRenderer
             // 
             this.ServerListRenderer.AutoArrange = false;
-            this.ServerListRenderer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ServerListRenderer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ServerListRenderer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ServerListRenderer.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerListRenderer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.ServerListRenderer.GridLines = true;
@@ -61,7 +61,7 @@ namespace GameLauncher.App
             this.Loading.AutoSize = true;
             this.Loading.Location = new System.Drawing.Point(232, 242);
             this.Loading.Name = "Loading";
-            this.Loading.Size = new System.Drawing.Size(91, 13);
+            this.Loading.Size = new System.Drawing.Size(111, 13);
             this.Loading.TabIndex = 4;
             this.Loading.Text = "Loading servers...";
             // 
@@ -119,14 +119,14 @@ namespace GameLauncher.App
             this.Version.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.Version.Location = new System.Drawing.Point(232, 257);
             this.Version.Name = "Version";
-            this.Version.Size = new System.Drawing.Size(90, 13);
+            this.Version.Size = new System.Drawing.Size(156, 13);
             this.Version.TabIndex = 9;
-            this.Version.Text = "Version : v" + Application.ProductVersion;
+            this.Version.Text = "Version : v16.6.30225.117";
             this.Version.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // SelectServer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.ClientSize = new System.Drawing.Size(570, 275);

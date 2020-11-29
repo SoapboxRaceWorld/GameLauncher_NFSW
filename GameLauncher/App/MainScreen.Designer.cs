@@ -76,6 +76,7 @@
             this.RegisterButton = new System.Windows.Forms.Button();
             this.RegisterCancel = new System.Windows.Forms.Button();
             this.SettingsPanel = new System.Windows.Forms.Panel();
+            this.SettingsClearServerModCacheButton = new System.Windows.Forms.Button();
             this.SettingsLauncherVersion = new System.Windows.Forms.Label();
             this.SettingsAboutButton = new System.Windows.Forms.Button();
             this.SettingsGameFiles = new System.Windows.Forms.Button();
@@ -718,6 +719,7 @@
             // 
             this.SettingsPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.SettingsPanel.BackColor = System.Drawing.Color.Transparent;
+            this.SettingsPanel.Controls.Add(this.SettingsClearServerModCacheButton);
             this.SettingsPanel.Controls.Add(this.SettingsLauncherVersion);
             this.SettingsPanel.Controls.Add(this.SettingsAboutButton);
             this.SettingsPanel.Controls.Add(this.SettingsGameFiles);
@@ -752,6 +754,23 @@
             this.SettingsPanel.Name = "SettingsPanel";
             this.SettingsPanel.Size = new System.Drawing.Size(837, 452);
             this.SettingsPanel.TabIndex = 150;
+            // 
+            // SettingsClearServerModCacheButton
+            // 
+            this.SettingsClearServerModCacheButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.SettingsClearServerModCacheButton.Enabled = false;
+            this.SettingsClearServerModCacheButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.SettingsClearServerModCacheButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.SettingsClearServerModCacheButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SettingsClearServerModCacheButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsClearServerModCacheButton.ForeColor = System.Drawing.Color.Silver;
+            this.SettingsClearServerModCacheButton.Location = new System.Drawing.Point(26, 291);
+            this.SettingsClearServerModCacheButton.Name = "SettingsClearServerModCacheButton";
+            this.SettingsClearServerModCacheButton.Size = new System.Drawing.Size(131, 25);
+            this.SettingsClearServerModCacheButton.TabIndex = 161;
+            this.SettingsClearServerModCacheButton.Text = "Clear Server Mods";
+            this.SettingsClearServerModCacheButton.UseVisualStyleBackColor = false;
+            this.SettingsClearServerModCacheButton.Click += new System.EventHandler(this.SettingsClearServerModCacheButton_Click);
             // 
             // SettingsLauncherVersion
             // 
@@ -836,7 +855,7 @@
             this.SettingsVFilesButton.BackColor = System.Drawing.Color.Transparent;
             this.SettingsVFilesButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsVFilesButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsVFilesButton.Location = new System.Drawing.Point(26, 354);
+            this.SettingsVFilesButton.Location = new System.Drawing.Point(26, 395);
             this.SettingsVFilesButton.Name = "SettingsVFilesButton";
             this.SettingsVFilesButton.Size = new System.Drawing.Size(131, 23);
             this.SettingsVFilesButton.TabIndex = 141;
@@ -952,7 +971,7 @@
             this.SettingsWordFilterCheck.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsWordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.SettingsWordFilterCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsWordFilterCheck.Location = new System.Drawing.Point(26, 288);
+            this.SettingsWordFilterCheck.Location = new System.Drawing.Point(26, 329);
             this.SettingsWordFilterCheck.Name = "SettingsWordFilterCheck";
             this.SettingsWordFilterCheck.Size = new System.Drawing.Size(226, 18);
             this.SettingsWordFilterCheck.TabIndex = 135;
@@ -967,7 +986,7 @@
             this.SettingsProxyCheckbox.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsProxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.SettingsProxyCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsProxyCheckbox.Location = new System.Drawing.Point(26, 308);
+            this.SettingsProxyCheckbox.Location = new System.Drawing.Point(26, 349);
             this.SettingsProxyCheckbox.Name = "SettingsProxyCheckbox";
             this.SettingsProxyCheckbox.Size = new System.Drawing.Size(100, 18);
             this.SettingsProxyCheckbox.TabIndex = 136;
@@ -982,7 +1001,7 @@
             this.SettingsDiscordRPCCheckbox.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.SettingsDiscordRPCCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsDiscordRPCCheckbox.Location = new System.Drawing.Point(26, 328);
+            this.SettingsDiscordRPCCheckbox.Location = new System.Drawing.Point(26, 369);
             this.SettingsDiscordRPCCheckbox.Name = "SettingsDiscordRPCCheckbox";
             this.SettingsDiscordRPCCheckbox.Size = new System.Drawing.Size(137, 18);
             this.SettingsDiscordRPCCheckbox.TabIndex = 137;
@@ -1552,5 +1571,6 @@
         private System.Windows.Forms.PictureBox DiscordIcon;
         private System.Windows.Forms.PictureBox FacebookIcon;
         private System.Windows.Forms.Label SceneryGroupText;
+        private System.Windows.Forms.Button SettingsClearServerModCacheButton;
     }
 }

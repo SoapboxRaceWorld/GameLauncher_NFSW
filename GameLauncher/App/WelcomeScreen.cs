@@ -23,6 +23,7 @@ namespace GameLauncher.App
 
             CDNSource.DrawItem += new DrawItemEventHandler(CDNSource_DrawItem);
             CDNSource.SelectedIndexChanged += new EventHandler(CDNSource_SelectedIndexChanged);
+            VersionLabel.Text = "Version : v" + Application.ProductVersion;
         }
 
         private void ApplyEmbeddedFonts()

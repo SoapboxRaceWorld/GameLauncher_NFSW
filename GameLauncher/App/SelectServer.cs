@@ -34,6 +34,8 @@ namespace GameLauncher.App
             InitializeComponent();
             ApplyEmbeddedFonts();
 
+            Version.Text = "Version : v" + Application.ProductVersion;
+
             //And one for keeping data about server, IP tbh
             ServerListRenderer.View = View.Details;
             ServerListRenderer.FullRowSelect = true;

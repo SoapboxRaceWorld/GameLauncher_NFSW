@@ -18,6 +18,7 @@ namespace GameLauncher.App
         public AddServer() {
             InitializeComponent();
             ApplyEmbeddedFonts();
+            Version.Text = "Version : v" + Application.ProductVersion;
         }
 
         public void DrawErrorAroundTextBox(TextBox x) {
