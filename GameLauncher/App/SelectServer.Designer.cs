@@ -121,7 +121,7 @@ namespace GameLauncher.App
             this.Version.Name = "Version";
             this.Version.Size = new System.Drawing.Size(156, 13);
             this.Version.TabIndex = 9;
-            this.Version.Text = "Version : v16.6.30225.117";
+            this.Version.Text = "Version : vX.X.X.X";
             this.Version.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // SelectServer

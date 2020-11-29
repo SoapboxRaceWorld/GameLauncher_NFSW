@@ -1559,6 +1559,7 @@ namespace GameLauncher
             SettingsLanguage.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
             SettingsClearCrashLogsButton.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
             SettingsClearCommunicationLogButton.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
+            SettingsClearServerModCacheButton = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
             SettingsWordFilterCheck.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
             SettingsProxyCheckbox.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
             SettingsDiscordRPCCheckbox.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);

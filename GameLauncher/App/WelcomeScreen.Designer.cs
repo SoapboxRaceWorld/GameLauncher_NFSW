@@ -142,7 +142,7 @@ namespace GameLauncher.App
             this.VersionLabel.Name = "VersionLabel";
             this.VersionLabel.Size = new System.Drawing.Size(156, 13);
             this.VersionLabel.TabIndex = 9;
-            this.VersionLabel.Text = "Version : v16.6.30225.117";
+            this.VersionLabel.Text = "Version : vX.X.X.X";
             this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // WelcomeScreen
