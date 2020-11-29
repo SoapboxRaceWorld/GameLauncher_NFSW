@@ -223,8 +223,8 @@ namespace GameLauncher
             Log.Debug("CORE: Applying Fonts");
             ApplyEmbeddedFonts();
 
-            _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1") ? true : false;
-            _disableDiscordRPC = (_settingFile.KeyExists("DisableRPC") && _settingFile.Read("DisableRPC") == "1") ? true : false;
+            _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1");
+            _disableDiscordRPC = (_settingFile.KeyExists("DisableRPC") && _settingFile.Read("DisableRPC") == "1");
             Log.Debug("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + _disableProxy);
 
             Self.CenterScreen(this);
@@ -787,7 +787,7 @@ namespace GameLauncher
 
             if(File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords") || File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords_dis")) { 
                 try { 
-                    SettingsWordFilterCheck.Checked = File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords") ? false : true;
+                    SettingsWordFilterCheck.Checked = !File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords");
                 } catch {
                     SettingsWordFilterCheck.Checked = false;
                 }
@@ -1469,9 +1469,9 @@ namespace GameLauncher
                                         VerticalBanner.Image = image;
                                         VerticalBanner.BackColor = Color.Black;
 
-                                        Console.WriteLine(getFileExtension(verticalImageUrl));
+                                        Console.WriteLine(GetFileExtension(verticalImageUrl));
 
-                                        if (getFileExtension(verticalImageUrl) != "gif") {
+                                        if (GetFileExtension(verticalImageUrl) != "gif") {
                                             File.WriteAllBytes(".cache/" + SHA.HashPassword(_realServernameBanner) + ".bin", memoryStream.ToArray());
                                         }
 
@@ -1496,7 +1496,7 @@ namespace GameLauncher
             };
         }
 
-        public string getFileExtension(String filename) {
+        public string GetFileExtension(String filename) {
             return filename.Split('.').Last();
         }
 
@@ -1791,7 +1791,7 @@ namespace GameLauncher
         private void RegisterFormElements(bool hideElements = true) {
 
             RegisterPanel.Visible = hideElements;
-            RegisterTicket.Visible = (_ticketRequired) ? hideElements : false;
+            RegisterTicket.Visible = _ticketRequired && hideElements;
 
             VerticalBanner.Visible = hideElements;
             ExtractingProgress.Visible = hideElements;
@@ -1824,7 +1824,7 @@ namespace GameLauncher
             RegisterEmailBorder.Visible = hideElements;
             RegisterPasswordBorder.Visible = hideElements;
             RegisterConfirmPasswordBorder.Visible = hideElements;
-            RegisterTicketBorder.Visible = (_ticketRequired) ? hideElements : false;
+            RegisterTicketBorder.Visible = _ticketRequired && hideElements;
         }
 
         private void LogoutButton_Click(object sender, EventArgs e) {
