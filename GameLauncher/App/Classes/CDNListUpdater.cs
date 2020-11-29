@@ -46,7 +46,8 @@ namespace GameLauncher.App.Classes
                     {
                         finalCDNItems.Add(new CDNObject
                         {
-                            Name = $"<GROUP>{cdnItemGroup.Key} CDNs"
+                            Name = $"<GROUP>{cdnItemGroup.Key} CDNs",
+                            IsSpecial = true
                         });
                     }
                     finalCDNItems.AddRange(cdnItemGroup.ToList());

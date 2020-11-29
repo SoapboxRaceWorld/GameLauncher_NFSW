@@ -65,6 +65,7 @@ namespace GameLauncher
         private bool _disableDiscordRPC;
 
         private int _lastSelectedServerId;
+        private int _lastSelectedCdnId;
         private int _nfswPid;
         private Thread _nfswstarted;
 
@@ -3565,15 +3566,23 @@ namespace GameLauncher
 
         private void SettingsCDNPick_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (((CDNObject)SettingsCDNPick.SelectedItem).IsSpecial)
+            {
+                SettingsCDNPick.SelectedIndex = _lastSelectedCdnId;
+                return;
+            }
+
             if (((CDNObject)SettingsCDNPick.SelectedItem).Url != null)
             {
                 IsChangedCDNDown();
             }
             else
             {
-                SettingsCDNText.Text = "CDN:";
-                SettingsCDNText.ForeColor = Color.FromArgb(224, 224, 224);
+                SettingsCDNPick.Text = "CDN:";
+                SettingsCDNPick.ForeColor = Color.FromArgb(224, 224, 224);
             }
+
+            _lastSelectedCdnId = SettingsCDNPick.SelectedIndex;
         }
 
         private void PatchNotes_Click(object sender, EventArgs e)

@@ -22,6 +22,7 @@ namespace GameLauncher.App
             ApplyEmbeddedFonts();
 
             CDNSource.DrawItem += new DrawItemEventHandler(CDNSource_DrawItem);
+            CDNSource.SelectedIndexChanged += new EventHandler(CDNSource_SelectedIndexChanged);
         }
 
         private void ApplyEmbeddedFonts()
@@ -36,6 +37,15 @@ namespace GameLauncher.App
             CDNStatusText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
             APIErrorButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
             VersionLabel.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
+        }
+
+        private void CDNSource_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (((CDNObject)CDNSource.SelectedItem).IsSpecial)
+            {
+                CDNSource.SelectedIndex = 1;
+                return;
+            }
         }
 
         //Check Serverlist API Status Upon Main Screen load - DavidCarbon

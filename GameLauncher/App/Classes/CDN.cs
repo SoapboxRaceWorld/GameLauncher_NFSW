@@ -18,5 +18,8 @@ namespace GameLauncher.App.Classes
 
         [JsonProperty("url")]
         public string Url { get; set; }
+
+        [JsonIgnore]
+        public bool IsSpecial { get; set; }
     }
 }
