@@ -66,7 +66,7 @@ namespace GameLauncherUpdater
                         error("Starting GameLauncher.exe");
                     }
                 } catch(Exception ex) {
-                    error("Failed to update. " + ex.Message);    
+                    error("Failed to update.\n" + ex.Message);    
                 }
             };
         }

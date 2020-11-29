@@ -52,7 +52,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>original_icon.ico</ApplicationIcon>
+    <ApplicationIcon>Launcher-W.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -114,39 +114,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\6.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\ikona.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\luncher.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icon_40.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icon_50.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icon_60.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icon_70.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icon_80.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icon_90.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icon_100.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="original_icon.ico" />
+    <Content Include="Launcher-W.ico" />
+    <None Include="Resources\Background.png" />
     <None Include="Resources\beta_map_v2.png" />
-    <None Include="Resources\beta_map.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
