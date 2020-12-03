@@ -39,19 +39,19 @@ namespace GameLauncher.App.Classes
                 {
                     Log.Error("LIST CORE: Error occurred while loading cdn list from [" + cdnListURL + "]: " + error.Message);
                 }
+            }
 
-                foreach (var cdnItemGroup in cdnInfos.GroupBy(s => s.Category))
+            foreach (var cdnItemGroup in cdnInfos.GroupBy(s => s.Category))
+            {
+                if (finalCDNItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{cdnItemGroup.Key} Mirrors")) == -1)
                 {
-                    if (finalCDNItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{cdnItemGroup.Key} Mirrors")) == -1)
+                    finalCDNItems.Add(new CDNObject
                     {
-                        finalCDNItems.Add(new CDNObject
-                        {
-                            Name = $"<GROUP>{cdnItemGroup.Key} Mirrors",
-                            IsSpecial = true
-                        });
-                    }
-                    finalCDNItems.AddRange(cdnItemGroup.ToList());
+                        Name = $"<GROUP>{cdnItemGroup.Key} Mirrors",
+                        IsSpecial = true
+                    });
                 }
+                finalCDNItems.AddRange(cdnItemGroup.ToList());
             }
         }
 

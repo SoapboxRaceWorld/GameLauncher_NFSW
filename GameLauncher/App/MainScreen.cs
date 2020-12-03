@@ -2556,24 +2556,31 @@ namespace GameLauncher
         //CDN Display Playing Game! - DavidCarbon
         private async void IsCDNDownGame()
         {
-            SettingsCDNCurrent.LinkColor = Color.FromArgb(66, 179, 189);
-            Log.Debug("SETTINGS PINGING CDN: Checking Current CDN from Settings.ini");
-            await Task.Delay(500);
-            HttpWebRequest pingCurrentCDN = (HttpWebRequest)HttpWebRequest.Create(((CDNObject)SettingsCDNPick.SelectedItem).Url + "/index.xml");
-            pingCurrentCDN.AllowAutoRedirect = false;
-            pingCurrentCDN.Method = "HEAD";
-            pingCurrentCDN.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            try
+            if (_settingFile.Read("CDN") != null)
             {
-                HttpWebResponse cdnResponse = (HttpWebResponse)pingCurrentCDN.GetResponse();
-                cdnResponse.Close();
-                SettingsCDNCurrent.LinkColor = Color.FromArgb(159, 193, 32);
-                Log.Debug("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Online!");
+                SettingsCDNCurrent.LinkColor = Color.FromArgb(66, 179, 189);
+                Log.Debug("SETTINGS PINGING CDN: Checking Current CDN from Settings.ini");
+                await Task.Delay(500);
+                HttpWebRequest pingCurrentCDN = (HttpWebRequest)HttpWebRequest.Create(_settingFile.Read("CDN") + "/index.xml");
+                pingCurrentCDN.AllowAutoRedirect = false;
+                pingCurrentCDN.Method = "HEAD";
+                pingCurrentCDN.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+                try
+                {
+                    HttpWebResponse cdnResponse = (HttpWebResponse)pingCurrentCDN.GetResponse();
+                    cdnResponse.Close();
+                    SettingsCDNCurrent.LinkColor = Color.FromArgb(159, 193, 32);
+                    Log.Debug("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Online!");
+                }
+                catch (WebException)
+                {
+                    SettingsCDNCurrent.LinkColor = Color.FromArgb(254, 0, 0);
+                    Log.Debug("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Offline!");
+                }
             }
-            catch (WebException)
+            else
             {
-                SettingsCDNCurrent.LinkColor = Color.FromArgb(254, 0, 0);
-                Log.Debug("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Offline!");
+                Log.Debug("SETTINGS PINGING CDN: Settings.ini has an Empty CDN URL");
             }
 
         }
@@ -3580,13 +3587,12 @@ namespace GameLauncher
 
         private void SettingsCDNPick_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (((CDNObject)SettingsCDNPick.SelectedItem).IsSpecial)
+            if (((CDNObject)SettingsCDNPick.SelectedItem).IsSpecial && ((CDNObject)SettingsCDNPick.SelectedItem).Url == null)
             {
                 SettingsCDNPick.SelectedIndex = _lastSelectedCdnId;
                 return;
             }
-
-            if (((CDNObject)SettingsCDNPick.SelectedItem).Url != null)
+            else if (((CDNObject)SettingsCDNPick.SelectedItem).Url != null)
             {
                 IsChangedCDNDown();
             }
