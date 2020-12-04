@@ -45,6 +45,12 @@ namespace GameLauncher
 
             Log.Debug("BUILD: GameLauncher " + Application.ProductVersion);
 
+            if (Properties.Settings.Default.IsRestarting) {
+                Properties.Settings.Default.IsRestarting = false;
+                Properties.Settings.Default.Save();
+                Thread.Sleep(3000);
+            }
+
             /* Set Launcher Directory */
             Log.Debug("CORE: Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
@@ -90,11 +96,11 @@ namespace GameLauncher
                 
                 //Update this text file if a new GameLauncherUpdater.exe has been delployed - DavidCarbon
                 try {
-                    LatestUpdaterBuildVersion = new WebClient().DownloadString("http://api2-sbrw.davidcarbon.download/Version.txt");
+                    LatestUpdaterBuildVersion = new WebClient().DownloadString(Self.secondstaticapiserver + "/Version.txt");
                     Log.Debug("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
                 }
                 catch {
-                    LatestUpdaterBuildVersion = new WebClient().DownloadString("http://api-sbrw.davidcarbon.download/Version.txt");
+                    LatestUpdaterBuildVersion = new WebClient().DownloadString(Self.staticapiserver + "/Version.txt");
                     Log.Debug("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
                 }
             }
