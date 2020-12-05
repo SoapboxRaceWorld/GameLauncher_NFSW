@@ -2097,6 +2097,16 @@ namespace GameLauncher
 
         private void SettingsButton_Click(object sender, EventArgs e)
         {
+            SettingsPanelDisplay();
+        }
+
+        private void CDN_Offline_Switch()
+        {
+            SettingsPanelDisplay();
+        }
+
+        private void SettingsPanelDisplay()
+        {
             if (WindowState == FormWindowState.Minimized)
             {
                 WindowState = FormWindowState.Normal;
@@ -2132,23 +2142,6 @@ namespace GameLauncher
             {
                 SettingsClearCrashLogsButton.Enabled = true;
             }
-
-        }
-
-        private void CDN_Offline_Switch()
-        {
-            if (WindowState == FormWindowState.Minimized)
-            {
-                WindowState = FormWindowState.Normal;
-            }
-
-            BackgroundImage = Properties.Resources.secondarybackground;
-            SettingsFormElements(true);
-            RegisterFormElements(false);
-            LoggedInFormElements(false);
-            LoginFormElements(false);
-            IsCDNDownGame();
-            PingAPIStatus();
         }
 
         private void SettingsButton_MouseEnter(object sender, EventArgs e) {
