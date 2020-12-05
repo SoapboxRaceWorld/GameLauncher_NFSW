@@ -377,8 +377,10 @@ namespace GameLauncher
                         _NFSW_Installation_Source = CDN.CDNUrl;
                     }
                 } catch {
+                    Log.Debug("LAUNCHER: CDN Source URL was Empty! Setting a Null Safe URL 'http://localhost'");
                     _settingFile.Write("CDN", "http://localhost");
                     _NFSW_Installation_Source = "http://localhost";
+                    Log.Debug("LAUNCHER: Installation Directory was Empty! Creating and Setting Directory at " + AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
                     _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
                 }
 
@@ -411,6 +413,13 @@ namespace GameLauncher
                     Environment.Exit(Environment.ExitCode);
                 }
                 fbd.Dispose();
+            }
+ 
+            if (!_settingFile.KeyExists("CDN") || string.IsNullOrEmpty(_settingFile.Read("CDN")))
+            {
+                _settingFile.Write("CDN", "http://localhost");
+                _NFSW_Installation_Source = "http://localhost";
+                Log.Debug("LAUNCHER: CDN Source URL was Empty! Setting a Null Safe URL 'http://localhost'");
             }
 
             if (!DetectLinux.LinuxDetected()) {
@@ -545,7 +554,7 @@ namespace GameLauncher
                 _windowMoved = true;
             }
 
-            _NFSW_Installation_Source = !string.IsNullOrEmpty(_settingFile.Read("CDN")) ? _settingFile.Read("CDN") : "http://cdn.worldunited.gg/gamefiles/packed/";
+            _NFSW_Installation_Source = !string.IsNullOrEmpty(_settingFile.Read("CDN")) ? _settingFile.Read("CDN") : "http://localhost";
             Log.Debug("LAUNCHER: NFSW Download Source is now: " + _NFSW_Installation_Source);
 
             Log.Debug("CORE: Applyinng ContextMenu");
@@ -1074,7 +1083,7 @@ namespace GameLauncher
 
             LoginButton.ForeColor = Color.Gray;
             var verticalImageUrl = "";
-            VerticalBanner.Image = GrayscaleMe(".cache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+            VerticalBanner.Image = GrayscaleMe(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
             VerticalBanner.BackColor = Color.Black;
 
             var serverIp = _serverInfo.IpAddress;
@@ -1436,7 +1445,7 @@ namespace GameLauncher
 
                     _serverEnabled = true;
 
-                    if (!Directory.Exists(".cache")) { Directory.CreateDirectory(".cache"); }
+                    if (!Directory.Exists(".BannerCache")) { Directory.CreateDirectory(".BannerCache"); }
                     if (!string.IsNullOrEmpty(verticalImageUrl)) {
 
                         WebClient client2 = new WebClient();
@@ -1445,18 +1454,19 @@ namespace GameLauncher
                         client2.DownloadProgressChanged += (sender4, e4) => {
                             if (e4.TotalBytesToReceive > 2000000) {
                                 client2.CancelAsync();
+                                Log.Debug("Unable to Cache " + _realServername + " Server Banner! {Over 2MB?}");
                             }
                         };
 
                         client2.DownloadDataCompleted += (sender4, e4) => {
                             if (e4.Cancelled) {
                                 //Load cached banner!
-                                VerticalBanner.Image = GrayscaleMe(".cache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+                                VerticalBanner.Image = GrayscaleMe(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
                                 VerticalBanner.BackColor = Color.Black;
                                 return;
                             } else if (e4.Error != null) {
                                 //Load cached banner!
-                                VerticalBanner.Image = GrayscaleMe(".cache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+                                VerticalBanner.Image = GrayscaleMe(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
                                 VerticalBanner.BackColor = Color.Black;
                                 return;
                             } else {
@@ -1472,7 +1482,7 @@ namespace GameLauncher
                                         Console.WriteLine(GetFileExtension(verticalImageUrl));
 
                                         if (GetFileExtension(verticalImageUrl) != "gif") {
-                                            File.WriteAllBytes(".cache/" + SHA.HashPassword(_realServernameBanner) + ".bin", memoryStream.ToArray());
+                                            File.WriteAllBytes(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin", memoryStream.ToArray());
                                         }
 
                                         ImageServerName.Text = String.Empty; //_realServernameBanner;
@@ -1483,13 +1493,14 @@ namespace GameLauncher
                                     }
                                 } catch(Exception ex) {
                                     Console.WriteLine(ex.Message);
+                                    Log.Debug(ex.Message);
                                     VerticalBanner.Image = null;
                                 }
                             }
                         };
                     } else {
                         //Load cached banner!
-                        VerticalBanner.Image = GrayscaleMe(".cache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+                        VerticalBanner.Image = GrayscaleMe(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
                         VerticalBanner.BackColor = Color.Black;
                     }
                 }
@@ -2556,7 +2567,7 @@ namespace GameLauncher
         //CDN Display Playing Game! - DavidCarbon
         private async void IsCDNDownGame()
         {
-            if (_settingFile.Read("CDN") != null)
+            if (!string.IsNullOrEmpty(_settingFile.Read("CDN")))
             {
                 SettingsCDNCurrent.LinkColor = Color.FromArgb(66, 179, 189);
                 Log.Debug("SETTINGS PINGING CDN: Checking Current CDN from Settings.ini");
@@ -2587,27 +2598,34 @@ namespace GameLauncher
 
         private async void IsChangedCDNDown()
         {
-            SettingsCDNText.Text = "CDN: PINGING";
-            SettingsCDNText.ForeColor = Color.FromArgb(66, 179, 189);
-            Log.Debug("SETTINGS PINGING CHANGED CDN: Checking Changed CDN from Drop Down List");
-            await Task.Delay(500);
-            HttpWebRequest pingCurrentCDN = (HttpWebRequest)HttpWebRequest.Create(((CDNObject)SettingsCDNPick.SelectedItem).Url + "/index.xml");
-            pingCurrentCDN.AllowAutoRedirect = false;
-            pingCurrentCDN.Method = "HEAD";
-            pingCurrentCDN.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            try
+            if (!string.IsNullOrEmpty(((CDNObject)SettingsCDNPick.SelectedItem).Url))
             {
-                HttpWebResponse cdnResponse = (HttpWebResponse)pingCurrentCDN.GetResponse();
-                cdnResponse.Close();
-                SettingsCDNText.Text = "CDN: ONLINE";
-                SettingsCDNText.ForeColor = Color.FromArgb(159, 193, 32);
-                Log.Debug("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Online!");
+                SettingsCDNText.Text = "CDN: PINGING";
+                SettingsCDNText.ForeColor = Color.FromArgb(66, 179, 189);
+                Log.Debug("SETTINGS PINGING CHANGED CDN: Checking Changed CDN from Drop Down List");
+                await Task.Delay(500);
+                HttpWebRequest pingCurrentCDN = (HttpWebRequest)HttpWebRequest.Create(((CDNObject)SettingsCDNPick.SelectedItem).Url + "/index.xml");
+                pingCurrentCDN.AllowAutoRedirect = false;
+                pingCurrentCDN.Method = "HEAD";
+                pingCurrentCDN.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+                try
+                {
+                    HttpWebResponse cdnResponse = (HttpWebResponse)pingCurrentCDN.GetResponse();
+                    cdnResponse.Close();
+                    SettingsCDNText.Text = "CDN: ONLINE";
+                    SettingsCDNText.ForeColor = Color.FromArgb(159, 193, 32);
+                    Log.Debug("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Online!");
+                }
+                catch (WebException)
+                {
+                    SettingsCDNText.Text = "CDN: OFFLINE";
+                    SettingsCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                    Log.Debug("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Offline!");
+                }
             }
-            catch (WebException)
+            else
             {
-                SettingsCDNText.Text = "CDN: OFFLINE";
-                SettingsCDNText.ForeColor = Color.FromArgb(254, 0, 0);
-                Log.Debug("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Offline!");
+                Log.Debug("SETTINGS PINGING CHANGED CDN: '((CDNObject)SettingsCDNPick.SelectedItem).Url)' has an Empty CDN URL");
             }
 
         }
@@ -3704,6 +3722,12 @@ namespace GameLauncher
                     {
                         Log.Debug("SETTINGS CDNLIST: ID set correctly");
                         SettingsCDNPick.SelectedIndex = index;
+                    }
+                    else if (index < 0)
+                    {
+                        Log.Debug("SETTINGS CDNLIST: Old CDN URL Standard Detected!");
+                        SettingsCDNPick.SelectedIndex = 1;
+                        Log.Debug("SETTINGS CDNLIST: Displaying First CDN in List!");
                     }
                 }
                 else
