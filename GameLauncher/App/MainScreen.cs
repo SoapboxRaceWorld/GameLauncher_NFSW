@@ -2688,7 +2688,7 @@ namespace GameLauncher
                                 secondsToShutDownNamed = "Waiting for event to finish.";
                             }
 
-                            User32.SetWindowText((IntPtr)p, "NEED FOR SPEED™ WORLD | Launcher Build: " + ProductVersion + " | Server: " + _realServername + " | Force Restart In: " + secondsToShutDownNamed);
+                            User32.SetWindowText((IntPtr)p, "NEED FOR SPEED™ WORLD | Server: " + _realServername + " | Launcher Build: " + ProductVersion + " | Force Restart In: " + secondsToShutDownNamed);
                         //}
                     }
 
