@@ -112,7 +112,7 @@ namespace GameLauncherReborn
 
         //Let's actually make it cleaner and nicer - MeTonaTOR
         public static FolderType CheckFolder(string FolderName) {
-            if (FolderName.Contains("Temp"))                                return FolderType.IsTempFolder;
+            if (FolderName.Contains("C:\\Users") && FolderName.Contains("Temp"))                                return FolderType.IsTempFolder;
             if (FolderName.Contains("C:\\Users"))                           return FolderType.IsUsersFolders;
             if (FolderName.Contains("C:\\Program Files"))                   return FolderType.IsProgramFilesFolder;
             if (FolderName.Contains("C:\\Windows"))                         return FolderType.IsWindowsFolder;

@@ -67,10 +67,10 @@ namespace GameLauncher
                         Environment.Exit(0);
                         break;
                     case FolderType.IsUsersFolders:
-                        Environment.Exit(0);
                         MessageBox.Show(null, "Please, choose a different directory for the game launcher.\n\nSpecial Folders such as:" +
-                            "\n\n Downloads, Documents, Desktop, Videos, Music, OneDrive, or Any Type of User Folders" +
+                            "\n\nDownloads, Documents, Desktop, Videos, Music, OneDrive, or Any Type of User Folders" +
                             "\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        Environment.Exit(0);
                         break;
                     case FolderType.IsProgramFilesFolder:
                         MessageBox.Show(null, "Please, choose a different directory for the game launcher." +
