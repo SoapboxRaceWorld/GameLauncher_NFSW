@@ -110,23 +110,15 @@ namespace GameLauncherReborn
 			return Regex.IsMatch(email, theEmailPattern);
 		}
 
-        /* Folder String Checks */
-		public static bool IsTempFolder(string directory) {
-			//Only True if the folder contains the string "Temp"
-            return directory.Contains("Temp");
-		}
+        //Let's actually make it cleaner and nicer - MeTonaTOR
+        public static FolderType CheckFolder(string FolderName) {
+            if (FolderName.Contains("Temp"))                                return FolderType.IsTempFolder;
+            if (FolderName.Contains("C:\\Users"))                           return FolderType.IsUsersFolders;
+            if (FolderName.Contains("C:\\Program Files"))                   return FolderType.IsProgramFilesFolder;
+            if (FolderName.Contains("C:\\Windows"))                         return FolderType.IsWindowsFolder;
+            if (FolderName + "\\" == AppDomain.CurrentDomain.BaseDirectory) return FolderType.IsSameAsLauncherFolder;
 
-        public static bool IsUsersFolders(string directory) {
-            return directory.Contains("C:\\Users");
-        }
-
-        public static bool IsProgramFiles(string directory) {
-            return directory.Contains("C:\\Program Files");
-        }
-
-        public static bool IsWindowsFolder(string directory) {
-            //You would be surprised how many cases I seen this
-            return directory.Contains("C:\\Windows");
+            return FolderType.Unknown;
         }
 
         public static string CleanFromUnknownChars(string s) {
@@ -186,5 +178,14 @@ namespace GameLauncherReborn
         /* Moved "runAsAdmin" Code to Gist */
         /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/eec2f9f80aa4b350ab98d32383e1ee1f2e1c26fd/Self.cs */
 
+    }
+
+    enum FolderType {
+        IsTempFolder,
+        IsUsersFolders,
+        IsProgramFilesFolder,
+        IsWindowsFolder,
+        IsSameAsLauncherFolder,
+        Unknown
     }
 }
