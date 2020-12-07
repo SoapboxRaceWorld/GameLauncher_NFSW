@@ -412,7 +412,7 @@ namespace GameLauncher
                     if (mutex.WaitOne(0, false)) {
                         string[] files = {
                             "CommandLine.dll - 2.8.0",
-                            "DiscordRPC.dll - 1.0.166.0",
+                            "DiscordRPC.dll - 1.0.169.0",
                             "Flurl.dll - 3.0.0",
                             "Flurl.Http.dll - 2.4.2",
                             "INIFileParser.dll - 2.5.2",
