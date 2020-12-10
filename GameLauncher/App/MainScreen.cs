@@ -2315,8 +2315,7 @@ namespace GameLauncher {
 
                 ModNetFileNameInUse = FileName;
 
-                WebClientWithTimeout client2 = new WebClientWithTimeout();
-                client2.Timeout(12000);
+                WebClient client2 = new WebClient();
 
                 client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged_RELOADED);
                 client2.DownloadFileCompleted += (test, stuff) => {
@@ -2408,11 +2407,10 @@ namespace GameLauncher {
 
                 try {
                     string[] newFiles = GlobalFiles.Concat(ModNetReloadedFiles).ToArray();
-                    WebClientWithTimeout newModNetFilesDownload = new WebClientWithTimeout();
+                    WebClient newModNetFilesDownload = new WebClient();
                     foreach (string file in newFiles) {
                         playProgressText.Text = ("Fetching ModNetReloaded Files: " + file).ToUpper();
                         Application.DoEvents();
-                        newModNetFilesDownload.Timeout(8000);
                         newModNetFilesDownload.DownloadFile("http://cdn.soapboxrace.world/modules-v2/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
                     }
 
