@@ -31,6 +31,8 @@ namespace GameLauncher
         }
 
         private static void Main2(Arguments args) {
+            Self.currentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
+
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
 
