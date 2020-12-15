@@ -30,6 +30,8 @@ namespace SoapBox.JsonScheme {
         public string WebRecoveryUrl { get; set; }
         public bool RWACallow { get; set; }
         public string playerCountRewardMultiplier { get; set; }
+        public bool happyHourEnabled { get; set; }
+        public string happyHourMultipler { get; set; }
     }
 
     /* Moved "FreeroamObject" to Gist */

@@ -41,6 +41,11 @@ using System.Runtime.InteropServices;
 namespace GameLauncher
 {
     public sealed partial class MainScreen : Form {
+        //Insider Build Number and Enabler
+        private bool InsiderBuild = true;
+        //Future Build number, month, day, and letter! Ex: 2.1.6.5.12-15-A
+        private string InsiderBuildNumber = "2.1.6.5.12-15-A";
+
         private Point _mouseDownPoint = Point.Empty;
         private bool _loginEnabled;
         private bool _serverEnabled;
@@ -552,6 +557,12 @@ namespace GameLauncher
 
                 Self.CenterScreen(this);
                 _windowMoved = true;
+            }
+
+            if (!string.IsNullOrEmpty(InsiderBuildNumber) && InsiderBuild != false)
+            {
+                InsiderBuildNumberText.Visible = true;
+                InsiderBuildNumberText.Text = "Insider Build: v" + InsiderBuildNumber;
             }
 
             _NFSW_Installation_Source = !string.IsNullOrEmpty(_settingFile.Read("CDN")) ? _settingFile.Read("CDN") : "http://localhost";

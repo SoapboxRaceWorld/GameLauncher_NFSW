@@ -119,6 +119,7 @@
             this.SceneryGroupText = new System.Windows.Forms.Label();
             this.ExtractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.PlayProgress = new GameLauncherReborn.ProgressBarEx();
+            this.InsiderBuildNumberText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CloseBTN)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).BeginInit();
@@ -1404,12 +1405,26 @@
             this.PlayProgress.Size = new System.Drawing.Size(519, 13);
             this.PlayProgress.Text = "downloadProgress";
             // 
+            // InsiderBuildNumberText
+            // 
+            this.InsiderBuildNumberText.BackColor = System.Drawing.Color.Transparent;
+            this.InsiderBuildNumberText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.InsiderBuildNumberText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.InsiderBuildNumberText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.InsiderBuildNumberText.Location = new System.Drawing.Point(389, 15);
+            this.InsiderBuildNumberText.Name = "InsiderBuildNumberText";
+            this.InsiderBuildNumberText.Size = new System.Drawing.Size(162, 15);
+            this.InsiderBuildNumberText.TabIndex = 173;
+            this.InsiderBuildNumberText.Text = "Insider Build: vX.X.X.X";
+            this.InsiderBuildNumberText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::GameLauncher.Properties.Resources.mainbackground;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.InsiderBuildNumberText);
             this.Controls.Add(this.CurrentWindowInfo);
             this.Controls.Add(this.ServerPingStatusText);
             this.Controls.Add(this.logo);
@@ -1575,5 +1590,6 @@
         private System.Windows.Forms.PictureBox FacebookIcon;
         private System.Windows.Forms.Label SceneryGroupText;
         private System.Windows.Forms.Button SettingsClearServerModCacheButton;
+        private System.Windows.Forms.Label InsiderBuildNumberText;
     }
 }
