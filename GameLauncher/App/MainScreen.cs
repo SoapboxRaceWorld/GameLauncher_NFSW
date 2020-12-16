@@ -1662,34 +1662,40 @@ namespace GameLauncher
                 MessageBox.Show(null, "A browser window has been opened to complete password recovery on " + json.ServerName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            else
+            {
+                string send = Prompt.ShowDialog("Please specify your email address.", "GameLauncher");
 
-            string send = Prompt.ShowDialog("Please specify your email address.", "GameLauncher");
+                if (send != String.Empty)
+                {
+                    String responseString;
+                    try
+                    {
+                        Uri resetPasswordUrl = new Uri(_serverInfo.IpAddress + "/RecoveryPassword/ForgotPassword");
 
-            if(send != String.Empty) {
-                String responseString;
-                try { 
-                    Uri resetPasswordUrl = new Uri(_serverInfo.IpAddress + "/RecoveryPassword/ForgotPassword");
+                        var request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
+                        var postData = "email=" + send;
+                        var data = Encoding.ASCII.GetBytes(postData);
+                        request.Method = "POST";
+                        request.ContentType = "application/x-www-form-urlencoded";
+                        request.ContentLength = data.Length;
 
-                    var request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
-                    var postData = "email="+send;
-                    var data = Encoding.ASCII.GetBytes(postData);
-                    request.Method = "POST";
-                    request.ContentType = "application/x-www-form-urlencoded";
-                    request.ContentLength = data.Length;
+                        using (var stream = request.GetRequestStream())
+                        {
+                            stream.Write(data, 0, data.Length);
+                        }
 
-                    using (var stream = request.GetRequestStream()) {
-                        stream.Write(data, 0, data.Length);
+                        var response = (HttpWebResponse)request.GetResponse();
+                        responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                    }
+                    catch
+                    {
+                        responseString = "Failed to send email!";
                     }
 
-                    var response = (HttpWebResponse)request.GetResponse();
-                    responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                } catch {
-                    responseString = "Failed to send email!";
+                    MessageBox.Show(null, responseString, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-
-                MessageBox.Show(null, responseString, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
         }
 
         /* Main Screen Elements */
