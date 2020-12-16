@@ -31,6 +31,11 @@ namespace GameLauncher
         }
 
         private static void Main2(Arguments args) {
+            File.Delete("communication.log");
+            File.Delete("launcher.log");
+
+            Log.StartLogging();
+
             Self.currentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
 
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
@@ -53,12 +58,58 @@ namespace GameLauncher
                 Thread.Sleep(3000);
             }
 
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(true);
+
+            try
+            {
+                //Check Using Backup API
+                HttpWebRequest requestBkupServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/generate_204/");
+                requestBkupServerListAPI.AllowAutoRedirect = false;
+                requestBkupServerListAPI.Method = "HEAD";
+                requestBkupServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+                try
+                {
+                    HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestBkupServerListAPI.GetResponse();
+                    bkupServerListResponseAPI.Close();
+                    Log.Debug("PRE-CHECK: Internet Check Passed {api-sbrw.davidcarbon.download}");
+                }
+                catch (WebException)
+                {
+                    HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/cdn_list.json");
+                    requestMainServerListAPI.AllowAutoRedirect = false;
+                    requestMainServerListAPI.Method = "HEAD";
+                    requestMainServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+                    try
+                    {
+                        Log.Debug("PRE-CHECK: Failed to Connect to {api-sbrw.davidcarbon.download} Checking {api.worldunited.gg}");
+                        HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestMainServerListAPI.GetResponse();
+                        bkupServerListResponseAPI.Close();
+                        Log.Debug("PRE-CHECK: Internet Check Passed {api.worldunited.gg}");
+                    }
+                    catch { }
+                }
+            }
+            catch
+            {
+                DialogResult restartAppNoApis = MessageBox.Show(null, "There's no internet connection, Launcher might crash \n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (restartAppNoApis == DialogResult.No)
+                {
+                    MessageBox.Show("Good Luck... \n No Really \n ...Good Luck", "GameLauncher Will Continue, When It Failed To Connect To API");
+                    Log.Debug("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and Will Continue");
+                }
+
+                if (restartAppNoApis == DialogResult.Yes)
+                {
+                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                }
+
+            }
+
             /* Set Launcher Directory */
             Log.Debug("CORE: Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
-
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(true);
 
             if (!DetectLinux.LinuxDetected()) {
                 Log.Debug("CORE: Checking current directory");
@@ -158,83 +209,39 @@ namespace GameLauncher
                 }
             }
 
-            try
-            {
-                //Check Using Backup API
-                HttpWebRequest requestBkupServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/generate_204/");
-                requestBkupServerListAPI.AllowAutoRedirect = false;
-                requestBkupServerListAPI.Method = "HEAD";
-                requestBkupServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-                try
-                {
-                    HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestBkupServerListAPI.GetResponse();
-                    bkupServerListResponseAPI.Close();
-                    Log.Debug("PRE-CHECK: Internet Check Passed {api-sbrw.davidcarbon.download}");
-                }
-                catch (WebException)
-                {
-                    HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/cdn_list.json");
-                    requestMainServerListAPI.AllowAutoRedirect = false;
-                    requestMainServerListAPI.Method = "HEAD";
-                    requestMainServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-                    try
-                    {
-                        Log.Debug("PRE-CHECK: Failed to Connect to {api-sbrw.davidcarbon.download} Checking {api.worldunited.gg}");
-                        HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestMainServerListAPI.GetResponse();
-                        bkupServerListResponseAPI.Close();
-                        Log.Debug("PRE-CHECK: Internet Check Passed {api.worldunited.gg}");
-                    }
-                    catch { }
-                }
-            }
-            catch
-            {
-                DialogResult restartAppNoApis = MessageBox.Show(null, "There's no internet connection, Launcher might crash \n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (restartAppNoApis == DialogResult.No)
-                {
-                    MessageBox.Show("Good Luck... \n No Really \n ...Good Luck", "GameLauncher Will Continue, When It Failed To Connect To API");
-                    Log.Debug("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and Will Continue");
-                }
-
-                if (restartAppNoApis == DialogResult.Yes)
-                {
-                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                }
-
-            }
-
             if (!DetectLinux.LinuxDetected()) {
                 //Windows 7 Fix
-                if (!(_settingFile.KeyExists("PatchesApplied"))) {
-                    if (WindowsProductVersion.GetWindowsNumber() == 6.1) {
-                        if (Self.GetInstalledHotFix("KB3020369") == false || Self.GetInstalledHotFix("KB3125574") == false) {
-                            String messageBoxPopupKB = String.Empty;
-                            messageBoxPopupKB = "Hey Windows 7 User, we've detected a potential issue of some missing Updates that are required.\n";
-                            messageBoxPopupKB += "We found that these Windows Update packages are showing as not installed:\n\n";
+                if (!_settingFile.KeyExists("PatchesApplied") && WindowsProductVersion.GetWindowsNumber() == 6.1) {
+                    if (Self.GetInstalledHotFix("KB3020369") == false || Self.GetInstalledHotFix("KB3125574") == false)
+                    {
+                        String messageBoxPopupKB = String.Empty;
+                        messageBoxPopupKB = "Hey Windows 7 User, we've detected a potential issue of some missing Updates that are required.\n";
+                        messageBoxPopupKB += "We found that these Windows Update packages are showing as not installed:\n\n";
 
-                            if (Self.GetInstalledHotFix("KB3020369") == false) messageBoxPopupKB += "- Update KB3020369\n";
-                            if (Self.GetInstalledHotFix("KB3125574") == false) messageBoxPopupKB += "- Update KB3125574\n";
+                        if (Self.GetInstalledHotFix("KB3020369") == false) messageBoxPopupKB += "- Update KB3020369\n";
+                        if (Self.GetInstalledHotFix("KB3125574") == false) messageBoxPopupKB += "- Update KB3125574\n";
 
-                            messageBoxPopupKB += "\nAditionally, we must add a value to the registry:\n";
+                        messageBoxPopupKB += "\nAditionally, we must add a value to the registry:\n";
 
-                            messageBoxPopupKB += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n/SCHANNEL/Protocols/TLS 1.2/Client\n";
-                            messageBoxPopupKB += "- Value: DisabledByDefault -> 0\n\n";
+                        messageBoxPopupKB += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n/SCHANNEL/Protocols/TLS 1.2/Client\n";
+                        messageBoxPopupKB += "- Value: DisabledByDefault -> 0\n\n";
 
-                            messageBoxPopupKB += "Would you like to add those values?";
-                            DialogResult replyPatchWin7 = MessageBox.Show(null, messageBoxPopupKB, "GameLauncherReborn", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        messageBoxPopupKB += "Would you like to add those values?";
+                        DialogResult replyPatchWin7 = MessageBox.Show(null, messageBoxPopupKB, "GameLauncherReborn", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                            if (replyPatchWin7 == DialogResult.Yes) {
-                                RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
-                                key.SetValue("DisabledByDefault", 0x0);
+                        if (replyPatchWin7 == DialogResult.Yes)
+                        {
+                            RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
+                            key.SetValue("DisabledByDefault", 0x0);
 
-                                MessageBox.Show(null, "Registry option set, Remember that the changes may require a system reboot to take effect", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            } else {
-                                MessageBox.Show(null, "Roger that, There may be some issues connecting to the servers.", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            }
-
-                            _settingFile.Write("PatchesApplied", "1");
+                            MessageBox.Show(null, "Registry option set, Remember that the changes may require a system reboot to take effect", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
+                        else
+                        {
+                            MessageBox.Show(null, "Roger that, There may be some issues connecting to the servers.", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+
+                        _settingFile.Write("PatchesApplied", "1");
                     }
                 }
 
@@ -308,8 +315,6 @@ namespace GameLauncher
 
             Console.WriteLine("Application path: " + Path.GetDirectoryName(Application.ExecutablePath));
 
-            Log.StartLogging();
-
             if (DetectLinux.LinuxDetected()) {
                 if (!_settingFile.KeyExists("InstallationDirectory")) {
                     _settingFile.Write("InstallationDirectory", "GameFiles");
@@ -323,9 +328,6 @@ namespace GameLauncher
                     MessageBox.Show("This application requires admin priviledge. Restarting...");
                 }
             }
-
-            File.Delete("communication.log");
-            File.Delete("launcher.log");
 
             if (_settingFile.KeyExists("InstallationDirectory")) {
                 if(!File.Exists(_settingFile.Read("InstallationDirectory"))) {
@@ -486,62 +488,60 @@ namespace GameLauncher
             }
         }
 
-        private static readonly object LinkCleanerLock = new object();
-
         private static void CleanLinks(string linksPath)
         {
-            lock (LinkCleanerLock)
+            if (File.Exists(linksPath))
             {
-                if (File.Exists(linksPath))
+                Log.Debug("CLEANLINKS: Found Server Mod Files to remove {Process}");
+                string dir = _settingFile.Read("InstallationDirectory");
+                foreach (var readLine in File.ReadLines(linksPath))
                 {
-                    Log.Debug("CLEANLINKS: Found Server Mod Files to remove {Process}");
-                    string dir = _settingFile.Read("InstallationDirectory");
-                    foreach (var readLine in File.ReadLines(linksPath))
-                    {
-                        var parts = readLine.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                    var parts = readLine.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
-                        if (parts.Length != 2)
+                    if (parts.Length != 2)
+                    {
+                        continue;
+                    }
+
+                    string loc = parts[0];
+                    int type = int.Parse(parts[1]);
+                    string realLoc = Path.Combine(dir, loc);
+                    if (type == 0)
+                    {
+                        if (!File.Exists(realLoc))
                         {
+                            throw new Exception(".links file includes nonexistent file: " + realLoc);
+                        }
+
+                        string origPath = realLoc + ".orig";
+
+                        if (!File.Exists(origPath))
+                        {
+                            File.Delete(realLoc);
                             continue;
                         }
 
-                        string loc = parts[0];
-                        int type = int.Parse(parts[1]);
-                        string realLoc = Path.Combine(dir, loc);
-                        if (type == 0)
+                        try
                         {
-                            if (!File.Exists(realLoc))
-                            {
-                                throw new Exception(".links file includes nonexistent file: " + realLoc);
-                            }
-
-                            string origPath = realLoc + ".orig";
-
-                            if (!File.Exists(origPath))
-                            {
-                                File.Delete(realLoc);
-                                continue;
-                            }
-
-                            try {
-                                File.Delete(realLoc);
-                                File.Move(origPath, realLoc);
-                            } catch {
-                                Log.Error("CLEANLINKS: Error while deleting a file: {realLoc}");
-                            }
+                            File.Delete(realLoc);
+                            File.Move(origPath, realLoc);
                         }
-                        else
+                        catch
                         {
-                            if (!Directory.Exists(realLoc))
-                            {
-                                throw new Exception(".links file includes nonexistent directory: " + realLoc);
-                            }
-                            Directory.Delete(realLoc, true);
+                            Log.Error("CLEANLINKS: Error while deleting a file: {realLoc}");
                         }
                     }
-
-                    File.Delete(linksPath);
+                    else
+                    {
+                        if (!Directory.Exists(realLoc))
+                        {
+                            throw new Exception(".links file includes nonexistent directory: " + realLoc);
+                        }
+                        Directory.Delete(realLoc, true);
+                    }
                 }
+
+                File.Delete(linksPath);
             }
         }
     }
