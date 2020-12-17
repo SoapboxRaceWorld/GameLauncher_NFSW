@@ -31,6 +31,31 @@ namespace GameLauncher
         }
 
         private static void Main2(Arguments args) {
+            if (!DetectLinux.LinuxDetected())
+            {
+                //Check if User has .NETFramework 4.6.2 or later Installed
+                const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
+
+                using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey))
+                {
+                    if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394802)
+                    {
+                        //Nothing
+                    }
+                    else
+                    {
+                        DialogResult frameworkError = MessageBox.Show(null, "This application requires one of the following versions of the .NET Framework:\n" +
+                            " .NETFramework, Version=v4.6.2 \n\nDo you want to install this .NET Framework version now?", "GameLauncher.exe - This application could not be started.", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+
+                        if (frameworkError == DialogResult.Yes)
+                        {
+                            Process.Start("https://dotnet.microsoft.com/download/dotnet-framework");
+                        }
+                        Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                    }
+                }
+            }
+
             File.Delete("communication.log");
             File.Delete("launcher.log");
 
@@ -140,7 +165,7 @@ namespace GameLauncher
                 {
                     MessageBox.Show("This application requires admin priviledge");
                 }
-                
+
                 //Update this text file if a new GameLauncherUpdater.exe has been delployed - DavidCarbon
                 try {
                     var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(Self.secondstaticapiserver + "/Version.txt");
