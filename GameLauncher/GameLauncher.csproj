@@ -150,6 +150,7 @@
       <DependentUpon>AddServer.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\AntiCheat.cs" />
+    <Compile Include="App\Classes\APIStatusChecker.cs" />
     <Compile Include="App\Classes\Auth\ClassicAuth.cs" />
     <Compile Include="App\Classes\Auth\ModernAuth.cs" />
     <Compile Include="App\Classes\Auth\Tokens.cs" />

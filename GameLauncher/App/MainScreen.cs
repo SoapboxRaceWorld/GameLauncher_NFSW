@@ -1722,9 +1722,9 @@ namespace GameLauncher
             TwitterAccountLink.Enabled = false;
             _serverTwitterLink = null;
             //Scenery
-            SceneryGroupText.Text = "Expecting something?";
+            SceneryGroupText.Text = "But It's Me!";
             //Restart Timer
-            ServerShutDown.Text = "But it's me, Game Launcher!";
+            ServerShutDown.Text = "Game Launcher!";
         }
 
         /*  After Successful Login, Hide Login Forms */
@@ -2192,13 +2192,13 @@ namespace GameLauncher
         public void ClearColoredPingStatus()
         {
             //Reset Connection Status Labels - DavidCarbon
-            SettingsMainSrvText.Text = "Main Server List API: PINGING";
+            SettingsMainSrvText.Text = "[API] United: PINGING";
             SettingsMainSrvText.ForeColor = Color.FromArgb(66, 179, 189);
-            SettingsMainCDNText.Text = "Main CDN List API: PINGING";
+            SettingsMainCDNText.Text = "[API] Carbon: PINGING";
             SettingsMainCDNText.ForeColor = Color.FromArgb(66, 179, 189);
-            SettingsBkupSrvText.Text = "Backup Server List API: PINGING";
+            SettingsBkupSrvText.Text = "[API] Carbon (2nd): PINGING";
             SettingsBkupSrvText.ForeColor = Color.FromArgb(66, 179, 189);
-            SettingsBkupCDNText.Text = "Backup CDN List API: PINGING";
+            SettingsBkupCDNText.Text = "[API] WOPL: PINGING";
             SettingsBkupCDNText.ForeColor = Color.FromArgb(66, 179, 189);
         }
 
@@ -2428,86 +2428,72 @@ namespace GameLauncher
         {
             ClearColoredPingStatus();
             Log.Debug("SETTINGS PINGING API: Checking APIs");
-            await Task.Delay(500);
-            HttpWebRequest requestMainServerList = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/serverlist.json");
-            requestMainServerList.AllowAutoRedirect = false; // Find out if this site is up and don't follow a redirector
-            requestMainServerList.Method = "HEAD";
-            requestMainServerList.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            try
-            {
-                HttpWebResponse mainServerListResponse = (HttpWebResponse)requestMainServerList.GetResponse();
-                mainServerListResponse.Close();
-                SettingsMainSrvText.Text = "Main Server List API: ONLINE";
-                SettingsMainSrvText.ForeColor = Color.FromArgb(159, 193, 32);
-                Log.Debug("SETTINGS PINGING API: Main Server List Online");
-                //Do something with response.Headers to find out information about the request
-            }
-            catch (WebException)
-            {
-                SettingsMainSrvText.Text = "Main Server List API: ERROR";
-                SettingsMainSrvText.ForeColor = Color.FromArgb(254, 0, 0);
-                Log.Debug("SETTINGS PINGING API: Main Server List Failed to Connect");
-                //Set flag if there was a timeout or some other issues
-            }
-
             await Task.Delay(1000);
-            HttpWebRequest requestBkupServerList = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/serverlist.json");
-            requestBkupServerList.AllowAutoRedirect = false;
-            requestBkupServerList.Method = "HEAD";
-            requestBkupServerList.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            try
+            switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
             {
-                HttpWebResponse bkupServerListResponse = (HttpWebResponse)requestBkupServerList.GetResponse();
-                bkupServerListResponse.Close();
-                SettingsBkupSrvText.Text = "Backup Server List API: ONLINE";
-                SettingsBkupSrvText.ForeColor = Color.FromArgb(159, 193, 32);
-                Log.Debug("SETTINGS PINGING API: Backup Server List Online");
-            }
-            catch (WebException)
-            {
-                SettingsBkupSrvText.Text = "Backup Server List API: ERROR";
-                SettingsBkupSrvText.ForeColor = Color.FromArgb(254, 0, 0);
-                Log.Debug("SETTINGS PINGING API: Backup Server List failed to Connect");
+                case API.Online:
+                    SettingsMainSrvText.Text = "[API] United: ONLINE";
+                    SettingsMainSrvText.ForeColor = Color.FromArgb(159, 193, 32);
+                    break;
+                case API.Offline:
+                    SettingsMainSrvText.Text = "[API] United: OFFLINE";
+                    SettingsMainSrvText.ForeColor = Color.FromArgb(254, 0, 0);
+                    break;
+                default:
+                    SettingsMainSrvText.Text = "[API] United: ERROR";
+                    SettingsMainSrvText.ForeColor = Color.FromArgb(254, 0, 0);
+                    break;
             }
 
             await Task.Delay(1500);
-            HttpWebRequest requestMainCDNList = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/cdn_list.json");
-            requestMainCDNList.AllowAutoRedirect = false;
-            requestMainCDNList.Method = "HEAD";
-            requestMainCDNList.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            try
+            switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/serverlist.json"))
             {
-                HttpWebResponse mainCDNListResponse = (HttpWebResponse)requestMainCDNList.GetResponse();
-                mainCDNListResponse.Close();
-                SettingsMainCDNText.Text = "Main CDN List API: ONLINE";
-                SettingsMainCDNText.ForeColor = Color.FromArgb(159, 193, 32);
-                Log.Debug("SETTINGS PINGING API: Main CDN List Online");
-            }
-            catch (WebException)
-            {
-                SettingsMainCDNText.Text = "Main CDN List API: ERROR";
-                SettingsMainCDNText.ForeColor = Color.FromArgb(254, 0, 0);
-                Log.Debug("SETTINGS PINGING API: Main CDN List failed to Connect");
+                case API.Online:
+                    SettingsMainCDNText.Text = "[API] Carbon: ONLINE";
+                    SettingsMainCDNText.ForeColor = Color.FromArgb(159, 193, 32);
+                    break;
+                case API.Offline:
+                    SettingsMainCDNText.Text = "[API] Carbon: OFFLINE";
+                    SettingsMainCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                    break;
+                default:
+                    SettingsMainCDNText.Text = "[API] Carbon: ERROR";
+                    SettingsMainCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                    break;
             }
 
             await Task.Delay(2000);
-            HttpWebRequest requestBkupCDNList = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/cdn_list.json");
-            requestBkupCDNList.AllowAutoRedirect = false;
-            requestBkupCDNList.Method = "HEAD";
-            requestBkupCDNList.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            try
+            switch (APIStatusChecker.CheckStatus(Self.secondstaticapiserver + "/serverlist.json"))
             {
-                HttpWebResponse bkupCDNListResponse = (HttpWebResponse)requestBkupCDNList.GetResponse();
-                bkupCDNListResponse.Close();
-                SettingsBkupCDNText.Text = "Backup CDN List API: ONLINE";
-                SettingsBkupCDNText.ForeColor = Color.FromArgb(159, 193, 32);
-                Log.Debug("SETTINGS PINGING API: Backup CDN List Online");
+                case API.Online:
+                    SettingsBkupSrvText.Text = "[API] Carbon (2nd): ONLINE";
+                    SettingsBkupSrvText.ForeColor = Color.FromArgb(159, 193, 32);
+                    break;
+                case API.Offline:
+                    SettingsBkupSrvText.Text = "[API] Carbon (2nd): OFFLINE";
+                    SettingsBkupSrvText.ForeColor = Color.FromArgb(254, 0, 0);
+                    break;
+                default:
+                    SettingsBkupSrvText.Text = "[API] Carbon (2nd): ERROR";
+                    SettingsBkupSrvText.ForeColor = Color.FromArgb(254, 0, 0);
+                    break;
             }
-            catch (WebException)
+
+            await Task.Delay(2500);
+            switch (APIStatusChecker.CheckStatus(Self.woplserver + "/serverlist.json"))
             {
-                SettingsBkupCDNText.Text = "Backup CDN List API: ERROR";
-                SettingsBkupCDNText.ForeColor = Color.FromArgb(254, 0, 0);
-                Log.Debug("SETTINGS PINGING API: Backup CDN List failed to Connect");
+                case API.Online:
+                    SettingsBkupCDNText.Text = "[API] WOPL: ONLINE";
+                    SettingsBkupCDNText.ForeColor = Color.FromArgb(159, 193, 32);
+                    break;
+                case API.Offline:
+                    SettingsBkupCDNText.Text = "[API] WOPL: OFFLINE";
+                    SettingsBkupCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                    break;
+                default:
+                    SettingsBkupCDNText.Text = "[API] WOPL: ERROR";
+                    SettingsBkupCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                    break;
             }
 
         }
@@ -2515,63 +2501,122 @@ namespace GameLauncher
         //Check Serverlist API Status Upon Main Screen load - DavidCarbon
         private async void PingServerListAPIStatus()
         {
-            Log.Debug("PINGING API: Checking API Status");
-            HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/serverlist.json");
-            requestMainServerListAPI.AllowAutoRedirect = false;
-            requestMainServerListAPI.Method = "HEAD";
-            requestMainServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            try
-            {
-                HttpWebResponse mainServerListResponseAPI = (HttpWebResponse)requestMainServerListAPI.GetResponse();
-                mainServerListResponseAPI.Close();
-                APIStatusText.Text = "Main API - Online";
-                APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
-                APIStatusDesc.Text = "Connected to Main API";
-                APIStatusIcon.Image = Properties.Resources.api_success;
-                Log.Debug("PINGING API: Main Server has responded. Its Online!");
-            }
-            catch (WebException)
-            {
-                APIStatusText.Text = "Main API - Offline";
-                APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
-                APIStatusDesc.Text = "Checking to Backup API";
-                APIStatusIcon.Image = Properties.Resources.api_error;
-                Log.Debug("PINGING API: Main Server has responded. Its Offline! Checking Backup...");
+            bool WUGGAPIOffline = false;
+            bool DCAPIOffline = false;
+            bool DC2APIOffline = false;
+            bool AllAPIsOffline = false;
 
-                await Task.Delay(1500);
-                APIStatusText.Text = "Backup API - Pinging";
+            Log.Debug("PINGING API: Checking API Status");
+            switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
+            {
+                case API.Online:
+                    APIStatusText.Text = "United API - Online";
+                    APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+                    APIStatusDesc.Text = "Connected to United API";
+                    APIStatusIcon.Image = Properties.Resources.api_success;
+                    Log.Debug("PINGING API: United API has responded. Its Online!");
+                    break;
+                default:
+                    APIStatusText.Text = "United API - Offline";
+                    APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
+                    APIStatusDesc.Text = "Checking Carbon API";
+                    APIStatusIcon.Image = Properties.Resources.api_error;
+                    Log.Debug("PINGING API: United API has not responded. Checking Backup...");
+                    WUGGAPIOffline = true;
+                    break;
+            }
+
+            if (WUGGAPIOffline == true && DCAPIOffline == false && DC2APIOffline == false && AllAPIsOffline == false)
+            {
+                await Task.Delay(500);
+                APIStatusText.Text = "Carbon API - Pinging";
                 APIStatusText.ForeColor = Color.FromArgb(66, 179, 189);
                 APIStatusIcon.Image = Properties.Resources.api_checking;
-                
-                await Task.Delay(1500);
-                try
+                await Task.Delay(1000);
+                switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/serverlist.json"))
                 {
-                    //Check Using Backup API
-                    HttpWebRequest requestBkupServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/serverlist.json");
-                    requestBkupServerListAPI.AllowAutoRedirect = false;
-                    requestBkupServerListAPI.Method = "HEAD";
-                    requestBkupServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-                    try
-                    {
-                        HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestBkupServerListAPI.GetResponse();
-                        bkupServerListResponseAPI.Close();
-                        APIStatusText.Text = "Backup API - Online";
+                    case API.Online:
+                        APIStatusText.Text = "Carbon API - Online";
                         APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
-                        APIStatusDesc.Text = "Connected to Backup API";
+                        APIStatusDesc.Text = "Connected to Carbon API";
                         APIStatusIcon.Image = Properties.Resources.api_success;
-                        Log.Debug("PINGING API: Backup Server has responded. Its Online!");
-                    }
-                    catch (WebException)
-                    {
-                        APIStatusText.Text = "Connection API - Error";
+                        Log.Debug("PINGING API: Carbon API has responded. Its Online!");
+                        break;
+                    default:
+                        APIStatusText.Text = "Carbon API - Offline";
                         APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
-                        APIStatusDesc.Text = "Failed to Connect to APIs";
+                        APIStatusDesc.Text = "Checking Carbon 2nd API";
                         APIStatusIcon.Image = Properties.Resources.api_error;
-                        Log.Debug("PINGING API: Failed to Connect to APIs! Quick Hide and Bunker Down! (Ask for help)");
-                    }
+                        Log.Debug("PINGING API: Carbon API has not responded. Checking Backup...");
+                        DCAPIOffline = true;
+                        break;
                 }
-                catch { }
             }
+
+            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == false && AllAPIsOffline == false)
+            {
+                await Task.Delay(500);
+                APIStatusText.Text = "Carbon 2nd API - Pinging";
+                APIStatusText.ForeColor = Color.FromArgb(66, 179, 189);
+                APIStatusIcon.Image = Properties.Resources.api_checking;
+                await Task.Delay(1000);
+                switch (APIStatusChecker.CheckStatus(Self.secondstaticapiserver + "/serverlist.json"))
+                {
+                    case API.Online:
+                        APIStatusText.Text = "Carbon 2nd API - Online";
+                        APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+                        APIStatusDesc.Text = "Connected to Carbon 2nd API";
+                        APIStatusIcon.Image = Properties.Resources.api_success;
+                        Log.Debug("PINGING API: Carbon 2nd API has responded. Its Online!");
+                        break;
+                    default:
+                        APIStatusText.Text = "Carbon 2nd API - Offline";
+                        APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
+                        APIStatusDesc.Text = "Checking WOPL API";
+                        APIStatusIcon.Image = Properties.Resources.api_error;
+                        Log.Debug("PINGING API: Carbon 2nd API has not responded. Checking Backup...");
+                        DC2APIOffline = true;
+                        break;
+                }
+            }
+
+            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == true && AllAPIsOffline == false)
+            {
+                await Task.Delay(500);
+                APIStatusText.Text = "WOPL API - Pinging";
+                APIStatusText.ForeColor = Color.FromArgb(66, 179, 189);
+                APIStatusIcon.Image = Properties.Resources.api_checking;
+                await Task.Delay(1000);
+                switch (APIStatusChecker.CheckStatus(Self.woplserver + "/serverlist.json"))
+                {
+                    case API.Online:
+                        APIStatusText.Text = "WOPL API - Online";
+                        APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+                        APIStatusDesc.Text = "Connected to WOPL API";
+                        APIStatusIcon.Image = Properties.Resources.api_success;
+                        Log.Debug("PINGING API: WOPL API has responded. Its Online!");
+                        break;
+                    default:
+                        APIStatusText.Text = "WOPL API - Offline";
+                        APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
+                        APIStatusDesc.Text = "Yikes!";
+                        APIStatusIcon.Image = Properties.Resources.api_error;
+                        Log.Debug("PINGING API: WOPL API has not responded....");
+                        AllAPIsOffline = true;
+                        break;
+                }
+            }
+
+            if (AllAPIsOffline == true)
+            {
+                await Task.Delay(1000);
+                APIStatusText.Text = "Connection API - Error";
+                APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
+                APIStatusDesc.Text = "Failed to Connect to APIs";
+                APIStatusIcon.Image = Properties.Resources.api_error;
+                Log.Debug("PINGING API: Failed to Connect to APIs! Quick Hide and Bunker Down! (Ask for help)");
+            }
+
         }
 
         //CDN Display Playing Game! - DavidCarbon
@@ -2582,21 +2627,17 @@ namespace GameLauncher
                 SettingsCDNCurrent.LinkColor = Color.FromArgb(66, 179, 189);
                 Log.Debug("SETTINGS PINGING CDN: Checking Current CDN from Settings.ini");
                 await Task.Delay(500);
-                HttpWebRequest pingCurrentCDN = (HttpWebRequest)HttpWebRequest.Create(_settingFile.Read("CDN") + "/index.xml");
-                pingCurrentCDN.AllowAutoRedirect = false;
-                pingCurrentCDN.Method = "HEAD";
-                pingCurrentCDN.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-                try
+
+                switch (APIStatusChecker.CheckStatus(_settingFile.Read("CDN") + "/index.xml"))
                 {
-                    HttpWebResponse cdnResponse = (HttpWebResponse)pingCurrentCDN.GetResponse();
-                    cdnResponse.Close();
-                    SettingsCDNCurrent.LinkColor = Color.FromArgb(159, 193, 32);
-                    Log.Debug("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Online!");
-                }
-                catch (WebException)
-                {
-                    SettingsCDNCurrent.LinkColor = Color.FromArgb(254, 0, 0);
-                    Log.Debug("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Offline!");
+                    case API.Online:
+                        SettingsCDNCurrent.LinkColor = Color.FromArgb(159, 193, 32);
+                        Log.Debug("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Online!");
+                        break;
+                    default:
+                        SettingsCDNCurrent.LinkColor = Color.FromArgb(254, 0, 0);
+                        Log.Debug("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Offline!");
+                        break;
                 }
             }
             else
@@ -2606,31 +2647,26 @@ namespace GameLauncher
 
         }
 
-        private async void IsChangedCDNDown()
+        private void IsChangedCDNDown()
         {
             if (!string.IsNullOrEmpty(((CDNObject)SettingsCDNPick.SelectedItem).Url))
             {
                 SettingsCDNText.Text = "CDN: PINGING";
                 SettingsCDNText.ForeColor = Color.FromArgb(66, 179, 189);
                 Log.Debug("SETTINGS PINGING CHANGED CDN: Checking Changed CDN from Drop Down List");
-                await Task.Delay(500);
-                HttpWebRequest pingCurrentCDN = (HttpWebRequest)HttpWebRequest.Create(((CDNObject)SettingsCDNPick.SelectedItem).Url + "/index.xml");
-                pingCurrentCDN.AllowAutoRedirect = false;
-                pingCurrentCDN.Method = "HEAD";
-                pingCurrentCDN.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-                try
+
+                switch (APIStatusChecker.CheckStatus(((CDNObject)SettingsCDNPick.SelectedItem).Url + "/index.xml"))
                 {
-                    HttpWebResponse cdnResponse = (HttpWebResponse)pingCurrentCDN.GetResponse();
-                    cdnResponse.Close();
-                    SettingsCDNText.Text = "CDN: ONLINE";
-                    SettingsCDNText.ForeColor = Color.FromArgb(159, 193, 32);
-                    Log.Debug("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Online!");
-                }
-                catch (WebException)
-                {
-                    SettingsCDNText.Text = "CDN: OFFLINE";
-                    SettingsCDNText.ForeColor = Color.FromArgb(254, 0, 0);
-                    Log.Debug("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Offline!");
+                    case API.Online:
+                        SettingsCDNText.Text = "CDN: ONLINE";
+                        SettingsCDNText.ForeColor = Color.FromArgb(159, 193, 32);
+                        Log.Debug("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Online!");
+                        break;
+                    default:
+                        SettingsCDNText.Text = "CDN: OFFLINE";
+                        SettingsCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                        Log.Debug("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Offline!");
+                        break;
                 }
             }
             else

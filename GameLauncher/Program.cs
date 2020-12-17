@@ -61,36 +61,36 @@ namespace GameLauncher
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
 
-            try
+            bool DCAPIOffline = false;
+            bool AllAPIsOffline = false;
+
+            Log.Debug("PINGING API: Checking API Status");
+            switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/generate_204/"))
             {
-                //Check Using Backup API
-                HttpWebRequest requestBkupServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/generate_204/");
-                requestBkupServerListAPI.AllowAutoRedirect = false;
-                requestBkupServerListAPI.Method = "HEAD";
-                requestBkupServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-                try
-                {
-                    HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestBkupServerListAPI.GetResponse();
-                    bkupServerListResponseAPI.Close();
+                case API.Online:
                     Log.Debug("PRE-CHECK: Internet Check Passed {api-sbrw.davidcarbon.download}");
-                }
-                catch (WebException)
+                    break;
+                default:
+                    Log.Debug("PRE-CHECK: Failed to Connect to {api-sbrw.davidcarbon.download} Checking {api.worldunited.gg}");
+                    DCAPIOffline = true;
+                    break;
+            }
+
+            if (DCAPIOffline == true)
+            {
+                switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
                 {
-                    HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/cdn_list.json");
-                    requestMainServerListAPI.AllowAutoRedirect = false;
-                    requestMainServerListAPI.Method = "HEAD";
-                    requestMainServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-                    try
-                    {
-                        Log.Debug("PRE-CHECK: Failed to Connect to {api-sbrw.davidcarbon.download} Checking {api.worldunited.gg}");
-                        HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestMainServerListAPI.GetResponse();
-                        bkupServerListResponseAPI.Close();
+                    case API.Online:
                         Log.Debug("PRE-CHECK: Internet Check Passed {api.worldunited.gg}");
-                    }
-                    catch { }
+                        break;
+                    default:
+                        Log.Debug("PRE-CHECK: Failed to Connect to {api.worldunited.gg}");
+                        AllAPIsOffline = true;
+                        break;
                 }
             }
-            catch
+
+            if (AllAPIsOffline == true)
             {
                 DialogResult restartAppNoApis = MessageBox.Show(null, "There's no internet connection, Launcher might crash \n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
@@ -104,7 +104,6 @@ namespace GameLauncher
                 {
                     Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                 }
-
             }
 
             /* Set Launcher Directory */
@@ -144,11 +143,21 @@ namespace GameLauncher
                 
                 //Update this text file if a new GameLauncherUpdater.exe has been delployed - DavidCarbon
                 try {
-                    LatestUpdaterBuildVersion = new WebClient().DownloadString(Self.secondstaticapiserver + "/Version.txt");
+                    var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(Self.secondstaticapiserver + "/Version.txt");
+                    if (!string.IsNullOrEmpty(GetLatestUpdaterBuildVersion))
+                    {
+                        Log.Debug("LAUNCHER UPDATER: Latest Version Found!");
+                        LatestUpdaterBuildVersion = GetLatestUpdaterBuildVersion;
+                    }
                     Log.Debug("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
                 }
                 catch {
-                    LatestUpdaterBuildVersion = new WebClient().DownloadString(Self.staticapiserver + "/Version.txt");
+                    var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(Self.staticapiserver + "/Version.txt");
+                    if (!string.IsNullOrEmpty(GetLatestUpdaterBuildVersion))
+                    {
+                        Log.Debug("LAUNCHER UPDATER: Latest Version Found!");
+                        LatestUpdaterBuildVersion = GetLatestUpdaterBuildVersion;
+                    }
                     Log.Debug("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
                 }
             }

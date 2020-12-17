@@ -50,91 +50,135 @@ namespace GameLauncher.App
         }
 
         //Check Serverlist API Status Upon Main Screen load - DavidCarbon
-        private async void PingServerListStatus()
+        private void PingServerListStatus()
         {
-            HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/serverlist.json");
-            requestMainServerListAPI.AllowAutoRedirect = false;
-            requestMainServerListAPI.Method = "HEAD";
-            requestMainServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            try
+            bool WUGGAPIOffline = false;
+            bool DCAPIOffline = false;
+            bool DC2APIOffline = false;
+            bool AllAPIsOffline = false;
+
+            switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
             {
-                HttpWebResponse mainServerListResponseAPI = (HttpWebResponse)requestMainServerListAPI.GetResponse();
-                mainServerListResponseAPI.Close();
-                ServerStatusText.Text = "Main Server List - Online";
-                ServerStatusCheck = true;
+                case API.Online:
+                    ServerStatusText.Text = "United Server List - Online";
+                    ServerStatusCheck = true;
+                    break;
+                default:
+                    WUGGAPIOffline = true;
+                    break;
             }
-            catch (WebException)
+
+            if (WUGGAPIOffline == true && DCAPIOffline == false && DC2APIOffline == false && AllAPIsOffline == false)
             {
-                ServerStatusText.Text = "Main Server List - Offline";
-
-                await Task.Delay(500);
-                ServerStatusText.Text = "Checking Backup API - Pinging";
-
-                await Task.Delay(1000);
-                try
+                switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/serverlist.json"))
                 {
-                    //Check Using Backup API
-                    HttpWebRequest requestBkupServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/serverlist.json");
-                    requestBkupServerListAPI.AllowAutoRedirect = false;
-                    requestBkupServerListAPI.Method = "HEAD";
-                    requestBkupServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-                    try
-                    {
-                        HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestBkupServerListAPI.GetResponse();
-                        bkupServerListResponseAPI.Close();
-                        ServerStatusText.Text = "Backup Server List - Online";
+                    case API.Online:
+                        ServerStatusText.Text = "Carbon Server List - Online";
                         ServerStatusCheck = true;
-                    }
-                    catch (WebException)
-                    {
-                        ServerStatusText.Text = "Server Lists Connection - Error";
-                    }
+                        break;
+                    default:
+                        DCAPIOffline = true;
+                        break;
                 }
-                catch { }
+            }
+
+            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == false && AllAPIsOffline == false)
+            {
+                switch (APIStatusChecker.CheckStatus(Self.secondstaticapiserver + "/serverlist.json"))
+                {
+                    case API.Online:
+                        ServerStatusText.Text = "Carbon 2nd Server List - Online";
+                        ServerStatusCheck = true;
+                        break;
+                    default:
+                        DC2APIOffline = true;
+                        break;
+                }
+            }
+
+            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == true && AllAPIsOffline == false)
+            {
+                switch (APIStatusChecker.CheckStatus(Self.woplserver + "/serverlist.json"))
+                {
+                    case API.Online:
+                        ServerStatusText.Text = "WOPL Server List - Online";
+                        ServerStatusCheck = true;
+                        break;
+                    default:
+                        AllAPIsOffline = true;
+                        break;
+                }
+            }
+
+            if (AllAPIsOffline == true)
+            {
+                ServerStatusText.Text = "Server Lists Connection - Error";
             }
         }
 
-        private async void PingCDNListStatus()
+        private void PingCDNListStatus()
         {
-            HttpWebRequest requestMainServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.mainserver + "/cdn_list.json");
-            requestMainServerListAPI.AllowAutoRedirect = false;
-            requestMainServerListAPI.Method = "HEAD";
-            requestMainServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            try
+            bool WUGGAPIOffline = false;
+            bool DCAPIOffline = false;
+            bool DC2APIOffline = false;
+            bool AllAPIsOffline = false;
+
+            switch (APIStatusChecker.CheckStatus(Self.mainserver + "/cdn_list.json"))
             {
-                HttpWebResponse mainServerListResponseAPI = (HttpWebResponse)requestMainServerListAPI.GetResponse();
-                mainServerListResponseAPI.Close();
-                CDNStatusText.Text = "Main CDN List - Online";
-                CDNStatusCheck = true;
+                case API.Online:
+                    CDNStatusText.Text = "United CDN List - Online";
+                    CDNStatusCheck = true;
+                    break;
+                default:
+                    WUGGAPIOffline = true;
+                    break;
             }
-            catch (WebException)
+
+            if (WUGGAPIOffline == true && DCAPIOffline == false && DC2APIOffline == false && AllAPIsOffline == false)
             {
-                CDNStatusText.Text = "Main CDN List - Offline";
-
-                await Task.Delay(500);
-                CDNStatusText.Text = "Checking Backup API - Pinging";
-
-                await Task.Delay(1000);
-                try
+                switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/cdn_list.json"))
                 {
-                    //Check Using Backup API
-                    HttpWebRequest requestBkupServerListAPI = (HttpWebRequest)HttpWebRequest.Create(Self.staticapiserver + "/cdn_list.json");
-                    requestBkupServerListAPI.AllowAutoRedirect = false;
-                    requestBkupServerListAPI.Method = "HEAD";
-                    requestBkupServerListAPI.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-                    try
-                    {
-                        HttpWebResponse bkupServerListResponseAPI = (HttpWebResponse)requestBkupServerListAPI.GetResponse();
-                        bkupServerListResponseAPI.Close();
-                        CDNStatusText.Text = "Backup CDN List - Online";
+                    case API.Online:
+                        CDNStatusText.Text = "Carbon CDN List - Online";
                         CDNStatusCheck = true;
-                    }
-                    catch (WebException)
-                    {
-                        CDNStatusText.Text = "CDN Lists Connection - Error";
-                    }
+                        break;
+                    default:
+                        DCAPIOffline = true;
+                        break;
                 }
-                catch { }
+            }
+
+            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == false && AllAPIsOffline == false)
+            {
+                switch (APIStatusChecker.CheckStatus(Self.secondstaticapiserver + "/cdn_list.json"))
+                {
+                    case API.Online:
+                        CDNStatusText.Text = "Carbon 2nd Server List - Online";
+                        CDNStatusCheck = true;
+                        break;
+                    default:
+                        DC2APIOffline = true;
+                        break;
+                }
+            }
+
+            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == true && AllAPIsOffline == false)
+            {
+                switch (APIStatusChecker.CheckStatus(Self.woplserver + "/cdn_list.json"))
+                {
+                    case API.Online:
+                        CDNStatusText.Text = "WOPL Server List - Online";
+                        CDNStatusCheck = true;
+                        break;
+                    default:
+                        AllAPIsOffline = true;
+                        break;
+                }
+            }
+
+            if (AllAPIsOffline == true)
+            {
+                CDNStatusText.Text = "CDN Lists Connection - Error";
             }
         }
 
