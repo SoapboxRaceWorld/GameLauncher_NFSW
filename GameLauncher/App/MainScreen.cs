@@ -477,11 +477,11 @@ namespace GameLauncher
 
                     if (_settingFile.KeyExists("InstallationDirectory"))
                     {
-                        string nameOfGame = "Need For Speed World";
+                        string nameOfGame = "Need for Speed World";
                         string localOfGame = Path.Combine(_settingFile.Read("InstallationDirectory") + "nfsw.exe");
 
-                        string groupKeyGame = "Need For Speed: World";
-                        string descriptionGame = "Need For Speed: World";
+                        string groupKeyGame = "Need for Speed: World";
+                        string descriptionGame = "Need for Speed: World";
 
                         //Inbound & Outbound
                         FirewallHelper.CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallDirection.Inbound, FirewallProtocol.Any, "Inbound");
