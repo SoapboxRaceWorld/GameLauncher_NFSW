@@ -10,15 +10,15 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 {
     class FirewallHelper
     {
-        public static void CheckIfIBRuleExists(bool removeFirewallRule, bool firstTimeRun, string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote, EdgeTraversalAction edgeAction)
+        public static void CheckIfRuleExists(bool removeFirewallRule, bool firstTimeRun, string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote, EdgeTraversalAction edgeAction = EdgeTraversalAction.Allow)
         {
             if (removeFirewallRule == true)
             {
                 RemoveRules(nameOfApp, firewallLogNote);
             }
-            else if (firstTimeRun == true) 
+            else if (firstTimeRun == true)
             {
-                AddIBApplicationRule(nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote, edgeAction);
+                AddApplicationRule(nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote, edgeAction);
             }
             else if (removeFirewallRule == false && firstTimeRun == false)
             {
@@ -34,128 +34,60 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             }
         }
 
+        public static void CheckIfIBRuleExists(bool removeFirewallRule, bool firstTimeRun, string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote, EdgeTraversalAction edgeAction)
+        {
+            CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote, edgeAction);
+        }
+
         public static void CheckIfOBRuleExists(bool removeFirewallRule, bool firstTimeRun, string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote)
         {
-            if (removeFirewallRule == true)
+            CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote);
+        }
+
+        public static void AddApplicationRule(string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote, EdgeTraversalAction edgeAction = EdgeTraversalAction.Allow) 
+        {
+            if (Firewall.Instance.IsSupported)
             {
-                RemoveRules(nameOfApp, firewallLogNote);
-            }
-            else if (firstTimeRun == true) 
-            {
-                AddOBApplicationRule(nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote);
-            }
-            else if (removeFirewallRule == false && firstTimeRun == false)
-            {
-                Log.Debug("WINDOWS FIREWALL: Already Exlcuded " + nameOfApp + " {" + firewallLogNote + "}");
-            }
-            else if (RuleExist(nameOfApp) == true)
-            {
-                Log.Debug("WINDOWS FIREWALL: Found " + nameOfApp + " {" + firewallLogNote + "} In Firewall");
+                if (StandardRuleWin7.IsSupported)
+                {
+                    Log.Debug("WINDOWS FIREWALL: 'StandardRuleWin7' Is Supported");
+                    var rule = new StandardRuleWin7(localOfApp, FirewallAction.Allow, direction, FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public)
+                    {
+                        ApplicationName = localOfApp,
+                        Name = nameOfApp,
+                        Grouping = groupKey,
+                        Description = description,
+                        InterfaceTypes = FirewallInterfaceTypes.Lan | FirewallInterfaceTypes.RemoteAccess |
+                                         FirewallInterfaceTypes.Wireless,
+                        Protocol = protocol
+                    };
+
+                    if(direction == FirewallDirection.Inbound) {
+                        rule.EdgeTraversalOptions = edgeAction;
+                    }
+
+                    Firewall.Instance.Rules.Add(rule);
+                    Log.Debug("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
+                }
+                else
+                {
+                    AddDefaultApplicationRule(nameOfApp, localOfApp, direction, protocol, firewallLogNote);
+                }
             }
             else
             {
-                Log.Debug("WINDOWS FIREWALL: Firewall Error - Check With Visual Studio for Error Debuging");
+                AddDefaultApplicationRule(nameOfApp, localOfApp, direction, protocol, firewallLogNote);
             }
         }
 
         public static void AddIBApplicationRule(string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote, EdgeTraversalAction edgeAction)
         {
-            if (Firewall.Instance.IsSupported)
-            {
-                if (StandardRuleWin8.IsSupported)
-                {
-                    Log.Debug("WINDOWS FIREWALL: 'StandardRuleWin8' Is Supported");
-                    var rule = new StandardRuleWin8(localOfApp, FirewallAction.Allow, direction, FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public)
-                    {
-                        ApplicationName = localOfApp,
-                        Name = nameOfApp,
-                        Grouping = groupKey,
-                        Description = description,
-                        InterfaceTypes = FirewallInterfaceTypes.Lan | FirewallInterfaceTypes.RemoteAccess |
-                                         FirewallInterfaceTypes.Wireless,
-                        Protocol = protocol,
-                        EdgeTraversalOptions = edgeAction
-                    };
-
-                    Firewall.Instance.Rules.Add(rule);
-                    Log.Debug("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
-                }
-                else if (StandardRuleWin7.IsSupported)
-                {
-                    Log.Debug("WINDOWS FIREWALL: 'StandardRuleWin7' Is Supported");
-                    var rule = new StandardRuleWin7(localOfApp, FirewallAction.Allow, direction, FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public)
-                    {
-                        ApplicationName = localOfApp,
-                        Name = nameOfApp,
-                        Grouping = groupKey,
-                        Description = description,
-                        InterfaceTypes = FirewallInterfaceTypes.Lan | FirewallInterfaceTypes.RemoteAccess |
-                                         FirewallInterfaceTypes.Wireless,
-                        Protocol = protocol,
-                        EdgeTraversalOptions = edgeAction
-                    };
-
-                    Firewall.Instance.Rules.Add(rule);
-                    Log.Debug("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
-                }
-                else
-                {
-                    AddDefaultApplicationRule(nameOfApp, localOfApp, direction, protocol, firewallLogNote);
-                }
-            }
-            else
-            {
-                AddDefaultApplicationRule(nameOfApp, localOfApp, direction, protocol, firewallLogNote);
-            }
+            AddApplicationRule(nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote, edgeAction);
         }
 
         public static void AddOBApplicationRule(string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote)
         {
-            if (Firewall.Instance.IsSupported)
-            {
-                if (StandardRuleWin8.IsSupported)
-                {
-                    Log.Debug("WINDOWS FIREWALL: 'StandardRuleWin8' Is Supported");
-                    var rule = new StandardRuleWin8(localOfApp, FirewallAction.Allow, direction, FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public)
-                    {
-                        ApplicationName = localOfApp,
-                        Name = nameOfApp,
-                        Grouping = groupKey,
-                        Description = description,
-                        InterfaceTypes = FirewallInterfaceTypes.Lan | FirewallInterfaceTypes.RemoteAccess |
-                                         FirewallInterfaceTypes.Wireless,
-                        Protocol = protocol
-                    };
-
-                    Firewall.Instance.Rules.Add(rule);
-                    Log.Debug("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
-                }
-                else if (StandardRuleWin7.IsSupported)
-                {
-                    Log.Debug("WINDOWS FIREWALL: 'StandardRuleWin7' Is Supported");
-                    var rule = new StandardRuleWin7(localOfApp, FirewallAction.Allow, direction, FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public)
-                    {
-                        ApplicationName = localOfApp,
-                        Name = nameOfApp,
-                        Grouping = groupKey,
-                        Description = description,
-                        InterfaceTypes = FirewallInterfaceTypes.Lan | FirewallInterfaceTypes.RemoteAccess |
-                                         FirewallInterfaceTypes.Wireless,
-                        Protocol = protocol
-                    };
-
-                    Firewall.Instance.Rules.Add(rule);
-                    Log.Debug("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
-                }
-                else
-                {
-                    AddDefaultApplicationRule(nameOfApp, localOfApp, direction, protocol, firewallLogNote);
-                }
-            }
-            else
-            {
-                AddDefaultApplicationRule(nameOfApp, localOfApp, direction, protocol, firewallLogNote);
-            }
+            AddApplicationRule(nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote);
         }
 
         private static void AddDefaultApplicationRule(string nameOfApp, string localOfApp, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote)
