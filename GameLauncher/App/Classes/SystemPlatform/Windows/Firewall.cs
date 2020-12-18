@@ -10,7 +10,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 {
     class FirewallHelper
     {
-        public static void CheckIfRuleExists(bool removeFirewallRule, bool firstTimeRun, string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote)
+        public static void CheckIfRuleExists(bool removeFirewallRule, bool firstTimeRun, string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote, EdgeTraversalAction edgeAction)
         {
             if (removeFirewallRule == true)
             {
@@ -18,7 +18,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             }
             else if (firstTimeRun == true) 
             {
-                AddApplicationRule(nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote);
+                AddApplicationRule(nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote, edgeAction);
             }
             else if (removeFirewallRule == false && firstTimeRun == false)
             {
@@ -34,7 +34,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             }
         }
 
-        public static void AddApplicationRule(string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote)
+        public static void AddApplicationRule(string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote, EdgeTraversalAction edgeAction)
         {
             if (Firewall.Instance.IsSupported)
             {
@@ -49,7 +49,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         Description = description,
                         InterfaceTypes = FirewallInterfaceTypes.Lan | FirewallInterfaceTypes.RemoteAccess |
                                          FirewallInterfaceTypes.Wireless,
-                        Protocol = protocol
+                        Protocol = protocol,
+                        EdgeTraversalOptions = edgeAction
                     };
 
                     Firewall.Instance.Rules.Add(rule);
@@ -66,7 +67,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         Description = description,
                         InterfaceTypes = FirewallInterfaceTypes.Lan | FirewallInterfaceTypes.RemoteAccess |
                                          FirewallInterfaceTypes.Wireless,
-                        Protocol = protocol
+                        Protocol = protocol,
+                        EdgeTraversalOptions = edgeAction
                     };
 
                     Firewall.Instance.Rules.Add(rule);
