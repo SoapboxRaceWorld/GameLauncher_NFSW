@@ -470,8 +470,8 @@ namespace GameLauncher
                     }
 
                     //Inbound & Outbound
-                    FirewallHelper.DoubleCheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
-                    FirewallHelper.DoubleCheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
+                    FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
+                    FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
 
                     if (_settingFile.KeyExists("InstallationDirectory"))
                     {
@@ -482,7 +482,7 @@ namespace GameLauncher
                         string descriptionGame = "Need for Speed: World";
 
                         //Inbound & Outbound
-                        FirewallHelper.DoubleCheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+                        FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
                     }
                 }
             }
