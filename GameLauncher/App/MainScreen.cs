@@ -46,7 +46,7 @@ namespace GameLauncher
         //Insider Build Number and Enabler
         private bool InsiderBuild = true;
         //Future Build number, month, day, and letter! Ex: 2.1.6.5.12-15-A
-        private string InsiderBuildNumber = "2.1.6.5.12-15-A";
+        private string InsiderBuildNumber = Application.ProductVersion+"_12-18-A";
 
         private Point _mouseDownPoint = Point.Empty;
         private bool _loginEnabled;
