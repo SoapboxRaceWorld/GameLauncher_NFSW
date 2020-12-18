@@ -479,7 +479,7 @@ namespace GameLauncher
                     if (_settingFile.KeyExists("InstallationDirectory"))
                     {
                         string nameOfGame = "Need for Speed World";
-                        string localOfGame = Path.Combine(_settingFile.Read("InstallationDirectory") + "\nfsw.exe");
+                        string localOfGame = Path.Combine(_settingFile.Read("InstallationDirectory") + "\\nfsw.exe");
 
                         string groupKeyGame = "Need for Speed: World";
                         string descriptionGame = "Need for Speed: World";
