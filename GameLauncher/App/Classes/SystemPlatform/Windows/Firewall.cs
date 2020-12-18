@@ -18,7 +18,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             }
             else if (firstTimeRun == true)
             {
-                AddApplicationRule(nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote, edgeAction);
+                AddApplicationRule(nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote);
             }
             else if (removeFirewallRule == false && firstTimeRun == false)
             {
@@ -34,17 +34,13 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             }
         }
 
-        public static void CheckIfIBRuleExists(bool removeFirewallRule, bool firstTimeRun, string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote, EdgeTraversalAction edgeAction)
+        public static void DoubleCheckIfRuleExists(bool removeFirewallRule, bool firstTimeRun, string nameOfApp, string localOfApp, string groupKey, string description, FirewallProtocol protocol)
         {
-            CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote, edgeAction);
+            CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfApp, localOfApp, groupKey, description, FirewallDirection.Inbound, protocol, FirewallDirection.Inbound.ToString());
+            CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfApp, localOfApp, groupKey, description, FirewallDirection.Outbound, protocol, FirewallDirection.Outbound.ToString());
         }
 
-        public static void CheckIfOBRuleExists(bool removeFirewallRule, bool firstTimeRun, string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote)
-        {
-            CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote);
-        }
-
-        public static void AddApplicationRule(string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote, EdgeTraversalAction edgeAction = EdgeTraversalAction.Allow) 
+        public static void AddApplicationRule(string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote) 
         {
             if (Firewall.Instance.IsSupported)
             {
@@ -63,7 +59,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     };
 
                     if(direction == FirewallDirection.Inbound) {
-                        rule.EdgeTraversalOptions = edgeAction;
+                        rule.EdgeTraversalOptions = EdgeTraversalAction.Allow;
                     }
 
                     Firewall.Instance.Rules.Add(rule);
@@ -78,16 +74,6 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             {
                 AddDefaultApplicationRule(nameOfApp, localOfApp, direction, protocol, firewallLogNote);
             }
-        }
-
-        public static void AddIBApplicationRule(string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote, EdgeTraversalAction edgeAction)
-        {
-            AddApplicationRule(nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote, edgeAction);
-        }
-
-        public static void AddOBApplicationRule(string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote)
-        {
-            AddApplicationRule(nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote);
         }
 
         private static void AddDefaultApplicationRule(string nameOfApp, string localOfApp, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote)
