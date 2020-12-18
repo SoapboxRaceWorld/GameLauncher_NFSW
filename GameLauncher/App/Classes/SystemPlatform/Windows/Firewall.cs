@@ -10,7 +10,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 {
     class FirewallHelper
     {
-        public static void CheckIfRuleExists(bool removeFirewallRule, bool firstTimeRun, string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote, EdgeTraversalAction edgeAction = EdgeTraversalAction.Allow)
+        public static void CheckIfRuleExists(bool removeFirewallRule, bool firstTimeRun, string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote)
         {
             if (removeFirewallRule == true)
             {
@@ -44,36 +44,30 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             if (Firewall.Instance.IsSupported)
             {
-                if (StandardRuleWin7.IsSupported)
+                Log.Debug("WINDOWS FIREWALL: Supported Firewall Found");
+                var rule = new StandardRuleWin7(localOfApp, FirewallAction.Allow, direction, FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public)
                 {
-                    Log.Debug("WINDOWS FIREWALL: 'StandardRuleWin7' Is Supported");
-                    var rule = new StandardRuleWin7(localOfApp, FirewallAction.Allow, direction, FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public)
-                    {
-                        ApplicationName = localOfApp,
-                        Name = nameOfApp,
-                        Grouping = groupKey,
-                        Description = description,
-                        InterfaceTypes = FirewallInterfaceTypes.Lan | FirewallInterfaceTypes.RemoteAccess |
-                                         FirewallInterfaceTypes.Wireless,
-                        Protocol = protocol
-                    };
+                    ApplicationName = localOfApp,
+                    Name = nameOfApp,
+                    Grouping = groupKey,
+                    Description = description,
+                    InterfaceTypes = FirewallInterfaceTypes.Lan | FirewallInterfaceTypes.RemoteAccess |
+                                     FirewallInterfaceTypes.Wireless,
+                    Protocol = protocol
+                };
 
-                    if(direction == FirewallDirection.Inbound) {
-                        rule.EdgeTraversalOptions = EdgeTraversalAction.Allow;
-                    }
+                if(direction == FirewallDirection.Inbound) {
+                    rule.EdgeTraversalOptions = EdgeTraversalAction.Allow;
+                }
 
-                    Firewall.Instance.Rules.Add(rule);
-                    Log.Debug("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
-                }
-                else
-                {
-                    AddDefaultApplicationRule(nameOfApp, localOfApp, direction, protocol, firewallLogNote);
-                }
+                Firewall.Instance.Rules.Add(rule);
+                Log.Debug("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
             }
             else
             {
                 AddDefaultApplicationRule(nameOfApp, localOfApp, direction, protocol, firewallLogNote);
             }
+
         }
 
         private static void AddDefaultApplicationRule(string nameOfApp, string localOfApp, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote)
