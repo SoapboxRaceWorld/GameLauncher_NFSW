@@ -470,11 +470,11 @@ namespace GameLauncher
                     }
 
                     //Inbound
-                    FirewallHelper.CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallDirection.Inbound, FirewallProtocol.Any, "Inbound", EdgeTraversalAction.Allow);
-                    FirewallHelper.CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallDirection.Inbound, FirewallProtocol.Any, "Inbound", EdgeTraversalAction.Allow);
+                    FirewallHelper.CheckIfIBRuleExists(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallDirection.Inbound, FirewallProtocol.Any, "Inbound", EdgeTraversalAction.Allow);
+                    FirewallHelper.CheckIfIBRuleExists(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallDirection.Inbound, FirewallProtocol.Any, "Inbound", EdgeTraversalAction.Allow);
                     //Outbound
-                    FirewallHelper.CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallDirection.Outbound, FirewallProtocol.Any, "Outbound", EdgeTraversalAction.Allow);
-                    FirewallHelper.CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallDirection.Outbound, FirewallProtocol.Any, "Outbound", EdgeTraversalAction.Allow);
+                    FirewallHelper.CheckIfOBRuleExists(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallDirection.Outbound, FirewallProtocol.Any, "Outbound");
+                    FirewallHelper.CheckIfOBRuleExists(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallDirection.Outbound, FirewallProtocol.Any, "Outbound");
 
                     if (_settingFile.KeyExists("InstallationDirectory"))
                     {
@@ -485,8 +485,8 @@ namespace GameLauncher
                         string descriptionGame = "Need for Speed: World";
 
                         //Inbound & Outbound
-                        FirewallHelper.CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallDirection.Inbound, FirewallProtocol.Any, "Inbound", EdgeTraversalAction.Allow);
-                        FirewallHelper.CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallDirection.Outbound, FirewallProtocol.Any, "Outbound", EdgeTraversalAction.Allow);
+                        FirewallHelper.CheckIfIBRuleExists(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallDirection.Inbound, FirewallProtocol.Any, "Inbound", EdgeTraversalAction.Allow);
+                        FirewallHelper.CheckIfOBRuleExists(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallDirection.Outbound, FirewallProtocol.Any, "Outbound");
                     }
                 }
             }
