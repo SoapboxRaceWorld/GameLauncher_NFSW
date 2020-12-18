@@ -37,6 +37,7 @@ using GameLauncher.App.Classes.SystemPlatform.Windows;
 using System.Management.Automation;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using WindowsFirewallHelper;
 
 namespace GameLauncher
 {
@@ -351,16 +352,6 @@ namespace GameLauncher
                 }).Start();
             };
 
-            if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (_settingFile.Read("WindowsDefender") == "Not Excluded"))
-            {
-                Log.Debug("WINDOWS DEFENDER: Windows 10 Detected! Running Exclusions for Core Folders");
-                WindowsDefenderFirstRun();
-            }
-            else if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && _settingFile.KeyExists("WindowsDefender"))
-            {
-                Log.Debug("WINDOWS DEFENDER: Found 'WindowsDefender' key! Its value is " + _settingFile.Read("WindowsDefender"));
-            }
-
             Log.Debug("CORE: Checking permissions");
             if (!Self.HasWriteAccessToFolder(Directory.GetCurrentDirectory())) {
                 Log.Error("CORE: Check Permission Failed.");
@@ -438,6 +429,65 @@ namespace GameLauncher
                 mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
                 Cursor = mycursor;
                 File.Delete(temporaryFile);
+
+                //Windows Defender (Windows 10)
+                if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (_settingFile.Read("WindowsDefender") == "Not Excluded"))
+                {
+                    Log.Debug("WINDOWS DEFENDER: Windows 10 Detected! Running Exclusions for Core Folders");
+                    WindowsDefenderFirstRun();
+                }
+                else if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && _settingFile.KeyExists("WindowsDefender"))
+                {
+                    Log.Debug("WINDOWS DEFENDER: Found 'WindowsDefender' key! Its value is " + _settingFile.Read("WindowsDefender"));
+                }
+
+
+                //Windows Firewall Runner
+                if (_settingFile.KeyExists("Firewall"))
+                {
+                    string nameOfLauncher = "SBRW - Game Launcher";
+                    string localOfLauncher = Assembly.GetEntryAssembly().Location;
+
+                    string nameOfUpdater = "SBRW - Game Launcher Updater";
+                    string localOfUpdater = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "GameLauncherUpdater.exe");
+
+                    string groupKeyLauncher = "Game Launcher for Windows";
+                    string descriptionLauncher = "Soapbox Race World";
+
+                    bool removeFirewallRule = false;
+                    bool firstTimeRun = false;
+
+                    if (_settingFile.Read("Firewall") == "Not Excluded")
+                    {
+                        firstTimeRun = true;
+                        _settingFile.Write("Firewall", "Excluded");
+                    }
+                    else if (_settingFile.Read("Firewall") == "Reset")
+                    {
+                        removeFirewallRule = true;
+                        _settingFile.Write("Firewall", "Not Excluded");
+                    }
+
+                    //Inbound
+                    FirewallHelper.CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallDirection.Inbound, FirewallProtocol.Any, "Inbound");
+                    FirewallHelper.CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallDirection.Inbound, FirewallProtocol.Any, "Inbound");
+                    //Outbound
+                    FirewallHelper.CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallDirection.Outbound, FirewallProtocol.Any, "Outbound");
+                    FirewallHelper.CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallDirection.Outbound, FirewallProtocol.Any, "Outbound");
+
+                    if (_settingFile.KeyExists("InstallationDirectory"))
+                    {
+                        string nameOfGame = "Need For Speed World";
+                        string localOfGame = Path.Combine(_settingFile.Read("InstallationDirectory") + "nfsw.exe");
+
+                        string groupKeyGame = "Need For Speed: World";
+                        string descriptionGame = "Need For Speed: World";
+
+                        //Inbound & Outbound
+                        FirewallHelper.CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallDirection.Inbound, FirewallProtocol.Any, "Inbound");
+                        FirewallHelper.CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallDirection.Outbound, FirewallProtocol.Any, "Outbound");
+                    }
+                }
             }
 
             Log.Debug("CORE: Doing magic with ImageServerName");
@@ -563,6 +613,10 @@ namespace GameLauncher
             {
                 InsiderBuildNumberText.Visible = true;
                 InsiderBuildNumberText.Text = "Insider Build: v" + InsiderBuildNumber;
+            }
+            else
+            {
+                InsiderBuildNumberText.Visible = false;
             }
 
             _NFSW_Installation_Source = !string.IsNullOrEmpty(_settingFile.Read("CDN")) ? _settingFile.Read("CDN") : "http://localhost";

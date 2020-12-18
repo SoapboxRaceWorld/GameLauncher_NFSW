@@ -89,8 +89,8 @@
     <Reference Include="DiscordRPC, Version=1.0.169.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DiscordRichPresence.1.0.169\lib\net35\DiscordRPC.dll</HintPath>
     </Reference>
-    <Reference Include="Flurl, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.3.0.0\lib\net461\Flurl.dll</HintPath>
+    <Reference Include="Flurl, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.3.0.1\lib\net461\Flurl.dll</HintPath>
     </Reference>
     <Reference Include="Flurl.Http, Version=2.4.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Flurl.Http.2.4.2\lib\net46\Flurl.Http.dll</HintPath>
@@ -140,6 +140,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="INIFileParser">
       <HintPath>..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsFirewallHelper, Version=1.6.3.40, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsFirewallHelper.1.6.3.40\lib\net40\WindowsFirewallHelper.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +206,7 @@
     <Compile Include="App\Classes\ServerListUpdater.cs" />
     <Compile Include="App\Classes\ServerProxy.cs" />
     <Compile Include="App\Classes\Singleton.cs" />
+    <Compile Include="App\Classes\SystemPlatform\Windows\Firewall.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\WindowsProductVersion.cs" />
     <Compile Include="App\Classes\TaskBar.cs" />
     <Compile Include="App\Classes\UriScheme.cs" />

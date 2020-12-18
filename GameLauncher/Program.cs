@@ -379,6 +379,11 @@ namespace GameLauncher
                 _settingFile.Write("WindowsDefender", "Not Excluded");
             }
 
+            if (!DetectLinux.LinuxDetected() && (!_settingFile.KeyExists("Firewall")))
+            {
+                _settingFile.Write("Firewall", "Not Excluded");
+            }
+
             //INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
             //Updated RedTheKitsune Code so it downloads the file if its missing. It also restarts the launcher if the user click on yes on Prompt. - DavidCarbon
             if (!File.Exists("LZMA.dll"))
@@ -442,7 +447,7 @@ namespace GameLauncher
                         string[] files = {
                             "CommandLine.dll - 2.8.0",
                             "DiscordRPC.dll - 1.0.169.0",
-                            "Flurl.dll - 3.0.0",
+                            "Flurl.dll - 3.0.1",
                             "Flurl.Http.dll - 2.4.2",
                             "INIFileParser.dll - 2.5.2",
                             "LZMA.dll - 9.10 beta",
