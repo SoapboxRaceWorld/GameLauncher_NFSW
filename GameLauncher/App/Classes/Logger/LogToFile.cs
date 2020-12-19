@@ -26,12 +26,12 @@ namespace GameLauncher.App.Classes.Logger
 
         public static void Info(string text)
         {
-            _toFile(text, "INFO");
+            _toFile(text, " INFO");
         }
 
         public static void Warning(string text)
         {
-            _toFile(text, "WARN");
+            _toFile(text, " WARN");
         }
 
         public static void Error(string text)
@@ -41,7 +41,32 @@ namespace GameLauncher.App.Classes.Logger
 
         public static void UrlCall(string text)
         {
-            _toFile(text, "URL");
+            _toFile(text, "  URL");
+        }
+
+        public static void System(string text)
+        {
+            _toFile(text, "SYSTM");
+        }
+
+        public static void Build(string text)
+        {
+            _toFile(text, "BUILD");
+        }
+
+        public static void Visuals(string text)
+        {
+            _toFile(text, "VISUL");
+        }
+
+        public static void Api(string text)
+        {
+            _toFile(text, "  API");
+        }
+
+        public static void Core(string text)
+        {
+            _toFile(text, " CORE");
         }
 
         private static async void TaskKernel()

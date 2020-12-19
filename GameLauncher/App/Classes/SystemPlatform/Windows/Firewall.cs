@@ -18,25 +18,37 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
         public static void CheckIfRuleExists(bool removeFirewallRule, bool firstTimeRun, string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote)
         {
-            if (removeFirewallRule == true)
+            //Remove Firewall Rules
+            if (removeFirewallRule == true && firstTimeRun == false)
             {
                 RemoveRules(nameOfApp, firewallLogNote);
             }
-            else if (firstTimeRun == true)
+            //Add Firewall Rules
+            else if (removeFirewallRule == false && firstTimeRun == true)
             {
                 AddApplicationRule(nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote);
             }
+            //Removes a Specific Rule from Firewall (When switching locations)
+            else if (removeFirewallRule == true && firstTimeRun == true)
+            {
+                if (RuleExist(nameOfApp) == true)
+                {
+                    RemoveRules(nameOfApp, firewallLogNote);
+                    Log.Info("WINDOWS FIREWALL: Found " + nameOfApp + " {" + firewallLogNote + "} In Firewall");
+                }
+                else if (RuleExist(nameOfApp) == false)
+                {
+                    AddApplicationRule(nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote);
+                }
+            }
             else if (removeFirewallRule == false && firstTimeRun == false)
             {
-                Log.Debug("WINDOWS FIREWALL: Already Exlcuded " + nameOfApp + " {" + firewallLogNote + "}");
+                Log.Info("WINDOWS FIREWALL: Already Exlcuded " + nameOfApp + " {" + firewallLogNote + "}");
             }
-            else if (RuleExist(nameOfApp) == true)
-            {
-                Log.Debug("WINDOWS FIREWALL: Found " + nameOfApp + " {" + firewallLogNote + "} In Firewall");
-            }
+
             else
             {
-                Log.Debug("WINDOWS FIREWALL: Firewall Error - Check With Visual Studio for Error Debuging");
+                Log.Error("WINDOWS FIREWALL: Firewall Error - Check With Visual Studio for Error Debuging");
             }
         }
 
@@ -44,7 +56,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             if (Firewall.Instance.IsSupported)
             {
-                Log.Debug("WINDOWS FIREWALL: Supported Firewall Found");
+                Log.Info("WINDOWS FIREWALL: Supported Firewall Found");
                 var rule = new StandardRuleWin7(localOfApp, FirewallAction.Allow, direction, FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public)
                 {
                     ApplicationName = localOfApp,
@@ -61,7 +73,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 }
 
                 Firewall.Instance.Rules.Add(rule);
-                Log.Debug("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
+                Log.Info("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
             }
             else
             {
@@ -72,7 +84,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
         private static void AddDefaultApplicationRule(string nameOfApp, string localOfApp, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote)
         {
-            Log.Debug("WINDOWS FIREWALL: Falling back to 'LegacyStandard'");
+            Log.Warning("WINDOWS FIREWALL: Falling back to 'LegacyStandard'");
             var defaultRule = FirewallManager.Instance.CreateApplicationRule(
                 FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public,
                 nameOfApp,
@@ -82,7 +94,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             defaultRule.Direction = direction;
 
             FirewallManager.Instance.Rules.Add(defaultRule);
-            Log.Debug("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
+            Log.Warning("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
         }
 
         public static void RemoveRules(string nameOfApp, string firewallLogNote)
@@ -91,19 +103,19 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             foreach (var rule in myRule)
                 try
                 {
-                    Log.Debug("WINDOWS FIREWALL: Removed " + nameOfApp + " {" + firewallLogNote + "} From Firewall!");
+                    Log.Warning("WINDOWS FIREWALL: Removed " + nameOfApp + " {" + firewallLogNote + "} From Firewall!");
                     FirewallManager.Instance.Rules.Remove(rule);
                 }
                 catch (Exception ex)
                 {
-                    Log.Debug("WINDOWS FIREWALL: " + ex.Message);
+                    Log.Error("WINDOWS FIREWALL: " + ex.Message);
                 }
         }
 
         public static bool RemoveRule(string nameOfApp, string firewallLogNote)
         {
             var myRule = FindRule(nameOfApp);
-            Log.Debug("WINDOWS FIREWALL: Removed " + nameOfApp + " {" + firewallLogNote + "} From Firewall!");
+            Log.Warning("WINDOWS FIREWALL: Removed " + nameOfApp + " {" + firewallLogNote + "} From Firewall!");
             return FirewallManager.Instance.Rules.Remove(myRule);
         }
 
@@ -114,7 +126,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
         public static IEnumerable<IRule> FindRules(string nameOfApp)
         {
-            if (Firewall.Instance.IsSupported && (StandardRuleWin8.IsSupported || StandardRuleWin7.IsSupported))
+            if (Firewall.Instance.IsSupported && StandardRuleWin7.IsSupported)
                 return Firewall.Instance.Rules.Where(r => string.Equals(r.Name, nameOfApp,
                     StringComparison.OrdinalIgnoreCase)).ToArray();
 
@@ -124,7 +136,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
         public static IRule FindRule(string nameOfApp)
         {
-            if (Firewall.Instance.IsSupported && (StandardRuleWin8.IsSupported || StandardRuleWin7.IsSupported))
+            if (Firewall.Instance.IsSupported && StandardRuleWin7.IsSupported)
                 return Firewall.Instance.Rules.FirstOrDefault(r => string.Equals(r.Name, nameOfApp,
                     StringComparison.OrdinalIgnoreCase));
 

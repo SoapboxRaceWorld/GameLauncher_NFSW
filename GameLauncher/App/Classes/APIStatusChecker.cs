@@ -20,7 +20,7 @@ namespace GameLauncher.App.Classes
                     requestAPIStatus.Method = "GET";
                     requestAPIStatus.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
                     serverResponse = (HttpWebResponse)requestAPIStatus.GetResponse();
-                    Log.Debug("CORE: " + APIURI + " is Online!");
+                    Log.Info("CORE: " + APIURI + " is Online!");
                     return API.Online;
                     //Do something with response.Headers to find out information about the request
                 }
@@ -31,7 +31,7 @@ namespace GameLauncher.App.Classes
                         serverResponse = (HttpWebResponse)e.Response;
 
                         Console.Write("Errorcode: {0}\n", (int)serverResponse.StatusCode);
-                        Log.Debug("CORE: " + APIURI + " has an Error! Status Code: " + (int)serverResponse.StatusCode);
+                        Log.Error("CORE: " + APIURI + " has an Error! Status Code: " + (int)serverResponse.StatusCode);
 
                         if ((int)serverResponse.StatusCode == 404)
                         {
@@ -88,7 +88,7 @@ namespace GameLauncher.App.Classes
                         Console.Write("------------");
                         Console.Write("Error: {0}", e.Status);
                         Console.Write("------------\n");
-                        Log.Debug("CORE: " + APIURI + " is Offline!");
+                        Log.Error("CORE: " + APIURI + " is Offline!");
                         return API.Offline;
                     }
                 }

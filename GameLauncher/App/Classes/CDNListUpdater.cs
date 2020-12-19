@@ -20,10 +20,10 @@ namespace GameLauncher.App.Classes
             {
                 try
                 {
-                    Log.Debug("LIST CORE: Loading cdnlist from: " + cdnListURL);
+                    Log.UrlCall("LIST CORE: Loading cdnlist from: " + cdnListURL);
                     var wc = new WebClient();
                     var responseList = wc.DownloadString(cdnListURL);
-                    Log.Debug("LIST CORE: Loaded cdnlist from: " + cdnListURL);
+                    Log.UrlCall("LIST CORE: Loaded cdnlist from: " + cdnListURL);
 
                     try
                     {

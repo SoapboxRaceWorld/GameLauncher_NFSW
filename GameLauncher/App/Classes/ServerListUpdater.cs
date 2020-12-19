@@ -21,10 +21,10 @@ namespace GameLauncher.App.Classes
 
             foreach (var serverListURL in Self.serverlisturl) {
                 try {
-                    Log.Debug("LIST CORE: Loading serverlist from: " + serverListURL);
+                    Log.UrlCall("LIST CORE: Loading serverlist from: " + serverListURL);
                     var wc = new WebClient();
                     var response = wc.DownloadString(serverListURL);
-                    Log.Debug("LIST CORE: Loaded serverlist from: " + serverListURL);
+                    Log.UrlCall("LIST CORE: Loaded serverlist from: " + serverListURL);
 
                     try {
                         serverInfos.AddRange(

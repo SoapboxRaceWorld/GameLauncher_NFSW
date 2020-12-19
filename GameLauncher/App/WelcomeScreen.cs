@@ -197,7 +197,7 @@ namespace GameLauncher.App
 
             CDNListUpdater.UpdateCDNList();
 
-            Log.Debug("WELCOME: Setting CDN list");
+            Log.Info("WELCOME: Setting CDN list");
             finalCDNItems = CDNListUpdater.GetCDNList();
 
             CDNSource.DisplayMember = "Name";
