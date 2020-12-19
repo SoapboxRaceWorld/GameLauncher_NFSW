@@ -863,6 +863,7 @@
             this.SettingsVFilesButton.Text = "Validate Game Files";
             this.SettingsVFilesButton.UseVisualStyleBackColor = false;
             this.SettingsVFilesButton.Visible = false;
+            this.SettingsVFilesButton.Click += new System.EventHandler(this.SettingsVFilesButton_Click);
             // 
             // SettingsGamePathText
             // 

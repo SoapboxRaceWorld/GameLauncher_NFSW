@@ -179,6 +179,7 @@
     <Compile Include="App\Classes\HashPassword\SHA.cs" />
     <Compile Include="App\Classes\HWID.cs" />
     <Compile Include="App\Classes\IniFile.cs" />
+    <Compile Include="App\Classes\InsiderKit\EnableInsider.cs" />
     <Compile Include="App\Classes\Logger\LogToFile.cs" />
     <Compile Include="App\Classes\ModManager.cs" />
     <Compile Include="App\Classes\ModNetReloaded\ModNetReloaded.cs" />
@@ -244,6 +245,12 @@
     <Compile Include="App\UpdatePopup.Designer.cs">
       <DependentUpon>UpdatePopup.cs</DependentUpon>
     </Compile>
+    <Compile Include="App\VerifyHash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\VerifyHash.Designer.cs">
+      <DependentUpon>VerifyHash.cs</DependentUpon>
+    </Compile>
     <Compile Include="App\WelcomeScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -274,6 +281,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="App\UpdatePopup.resx">
       <DependentUpon>UpdatePopup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\VerifyHash.resx">
+      <DependentUpon>VerifyHash.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\WelcomeScreen.resx">
       <DependentUpon>WelcomeScreen.cs</DependentUpon>

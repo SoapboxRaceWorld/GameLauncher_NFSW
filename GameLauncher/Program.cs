@@ -13,6 +13,7 @@ using Microsoft.Win32;
 using CommandLine;
 using System.Globalization;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
+using GameLauncher.App.Classes.InsiderKit;
 
 namespace GameLauncher
 {
@@ -75,7 +76,14 @@ namespace GameLauncher
                 }
             }
 
-            Log.Build("BUILD: GameLauncher " + Application.ProductVersion);
+            if (EnableInsider.ShouldIBeAnInsider() == true) 
+            {
+                Log.Build("INSIDER: GameLauncher " + Application.ProductVersion + "_" + EnableInsider.BuildNumber());
+            }
+            else
+            {
+                Log.Build("BUILD: GameLauncher " + Application.ProductVersion);
+            }
 
             if (Properties.Settings.Default.IsRestarting) {
                 Properties.Settings.Default.IsRestarting = false;

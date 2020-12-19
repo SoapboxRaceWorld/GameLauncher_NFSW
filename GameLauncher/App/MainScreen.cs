@@ -39,14 +39,11 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using WindowsFirewallHelper;
 using WindowsFirewallHelper.FirewallAPIv2;
+using GameLauncher.App.Classes.InsiderKit;
 
 namespace GameLauncher
 {
     public sealed partial class MainScreen : Form {
-        //Insider Build Number and Enabler
-        private bool InsiderBuild = true;
-        //Future Build number, month, day, and letter! Ex: 2.1.6.5.12-15-A
-        private string InsiderBuildNumber = Application.ProductVersion+"_12-18-A";
 
         private Point _mouseDownPoint = Point.Empty;
         private bool _loginEnabled;
@@ -611,14 +608,10 @@ namespace GameLauncher
                 _windowMoved = true;
             }
 
-            if (!string.IsNullOrEmpty(InsiderBuildNumber) && InsiderBuild != false)
+            if (!string.IsNullOrEmpty(EnableInsider.BuildNumber()))
             {
-                InsiderBuildNumberText.Visible = true;
-                InsiderBuildNumberText.Text = "Insider Build: v" + InsiderBuildNumber;
-            }
-            else
-            {
-                InsiderBuildNumberText.Visible = false;
+                InsiderBuildNumberText.Visible = EnableInsider.ShouldIBeAnInsider();
+                InsiderBuildNumberText.Text = "Insider Build Date: " + EnableInsider.BuildNumber();
             }
 
             _NFSW_Installation_Source = !string.IsNullOrEmpty(_settingFile.Read("CDN")) ? _settingFile.Read("CDN") : "http://localhost";
@@ -2183,6 +2176,11 @@ namespace GameLauncher
             if (WindowState == FormWindowState.Minimized)
             {
                 WindowState = FormWindowState.Normal;
+            }
+
+            if (EnableInsider.ShouldIBeAnInsider() == true)
+            {
+                SettingsVFilesButton.Visible = true;
             }
 
             BackgroundImage = Properties.Resources.secondarybackground;
@@ -3937,6 +3935,11 @@ namespace GameLauncher
             Log.Warning("LAUNCHER: User Confirmed to Delete Server Mods Cache");
             MessageBox.Show(null, "Deleted Server Mods Cache", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             SettingsClearServerModCacheButton.Enabled = false;
+        }
+
+        private void SettingsVFilesButton_Click(object sender, EventArgs e)
+        {
+            new VerifyHash().ShowDialog();
         }
     }
     /* Moved 7 Unused Code to Gist */
