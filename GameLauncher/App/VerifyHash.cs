@@ -7,6 +7,8 @@ using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes;
 using GameLauncher.HashPassword;
+using System.ComponentModel;
+using GameLauncher.App.Classes.Logger;
 
 namespace GameLauncher.App
 {
@@ -35,7 +37,7 @@ namespace GameLauncher.App
                     var thread = new Thread(() => {
                     String[] getFilesToCheck = null;
                     try { 
-                        getFilesToCheck = new WebClientWithTimeout().DownloadString("http://cdn.mtntr.pl/gamefiles/checksums.dat").Split('\n');
+                        getFilesToCheck = new WebClientWithTimeout().DownloadString("http://localhost/checksums.dat").Split('\n');
                         scannedHashes = new string[getFilesToCheck.Length][];
                         for (var i = 0; i < getFilesToCheck.Length; i++) {
                             scannedHashes[i] = getFilesToCheck[i].Split(' ');
@@ -54,45 +56,54 @@ namespace GameLauncher.App
                             }
                             totalFilesScanned++;
                         });
-                        StatusText.Text = "Download Completed.".ToUpper();
-                    } catch (Exception) { }
+                            File.WriteAllLines("invalidfiles.dat", invalidFileList);
+                            StatusText.Text = "Download Completed.".ToUpper();
+                        DownloadMissingFiles();
+                    } 
+                    catch (Exception ex) 
+                    { Log.Error(ex.Message); }
                 }){ IsBackground = true };
                 thread.Start();
             } else {
                 StatusText.Text = "Download Completed.".ToUpper();
             }
+            
+            
         }
 
-        public void DownloadMissingFiles (bool downloadFiles)
+        public void DownloadMissingFiles ()
         {
-            if (downloadFiles != false)
+            if (File.Exists("invalidfiles.dat"))
             {
-                if (File.Exists("invalidfiles.dat"))
+                StatusText.Text = "RE-DOWNLOADING INVALID FILES".ToUpper();
+                string[] files = File.ReadAllLines("invalidfiles.dat");
+                foreach (string text in files)
                 {
-                    StatusText.Text = "RE-DOWNLOADING INVALID FILES".ToUpper();
-                    string[] files = File.ReadAllLines("invalidfiles.dat");
-                    foreach (string text in files)
+                    try
                     {
-                        try
+                        string text2 = _settingFile.Read("InstallationDirectory") + text;
+                        string address = "http://mtntr.pl/unpacked" + text.Replace("\\", "/");
+                        if (File.Exists(text2 + ".vhbak"))
                         {
-                            string text2 = _settingFile.Read("InstallationDirectory") + text;
-                            string address = "http://cdn.mtntr.pl/gamefiles/unpacked" + text.Replace("\\", "/");
-                            if (File.Exists(text2 + ".vhbak"))
-                            {
-                                File.Delete(text2 + ".vhbak");
-                            }
-                            File.Move(text2, text2 + ".vhbak");
-                            new WebClientWithTimeout().DownloadFile(address, text2);
-                            Application.DoEvents();
+                            File.Delete(text2 + ".vhbak");
                         }
-                        catch { }
+                        File.Move(text2, text2 + ".vhbak");
+                        new WebClientWithTimeout().DownloadFile(address, text2);
+                        Application.DoEvents();
                     }
+                    catch { }
                 }
             }
             else
             {
-                StatusText.Text = "Download Completed".ToUpper();
+                StatusText.Text = "All Files Validated".ToUpper();
             }
+        }
+
+        private void StartScanner_Click(object sender, EventArgs e)
+        {
+            GameScanner(true);
+            StartScanner.Visible = false;
         }
     }
 }
