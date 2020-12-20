@@ -69,6 +69,7 @@
             this.Name = "VerifyHash";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "VerifyHash";
+            this.TopMost = true;
             this.ResumeLayout(false);
 
         }

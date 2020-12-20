@@ -202,6 +202,12 @@
     <Compile Include="App\Classes\RPC\CarList.cs" />
     <Compile Include="App\Classes\RPC\DiscordGamePresence.cs" />
     <Compile Include="App\Classes\RPC\EventList.cs" />
+    <Compile Include="App\SplashScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\SplashScreen.Designer.cs">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="App\Classes\Self.cs" />
     <Compile Include="App\Classes\CDNListUpdater.cs" />
     <Compile Include="App\Classes\ServerListUpdater.cs" />
@@ -276,6 +282,9 @@
     <EmbeddedResource Include="App\About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="App\SplashScreen.resx">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="App\SelectServer.resx">
       <DependentUpon>SelectServer.cs</DependentUpon>
     </EmbeddedResource>
@@ -324,6 +333,8 @@
     <None Include="Resources\buttons_info.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Run_Check_BG.png" />
+    <None Include="Resources\splash_screen.png" />
     <Content Include="SBRW.ico" />
     <None Include="Resources\progress_warning.png" />
     <None Include="Resources\progress_success.png" />

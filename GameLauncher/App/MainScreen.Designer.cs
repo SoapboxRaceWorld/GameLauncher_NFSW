@@ -117,9 +117,9 @@
             this.FacebookGroupLink = new System.Windows.Forms.LinkLabel();
             this.HomePageLink = new System.Windows.Forms.LinkLabel();
             this.SceneryGroupText = new System.Windows.Forms.Label();
+            this.InsiderBuildNumberText = new System.Windows.Forms.Label();
             this.ExtractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.PlayProgress = new GameLauncherReborn.ProgressBarEx();
-            this.InsiderBuildNumberText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CloseBTN)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).BeginInit();
@@ -1373,6 +1373,19 @@
             this.SceneryGroupText.Text = "Scenery: Normal";
             this.SceneryGroupText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // InsiderBuildNumberText
+            // 
+            this.InsiderBuildNumberText.BackColor = System.Drawing.Color.Transparent;
+            this.InsiderBuildNumberText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.InsiderBuildNumberText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.InsiderBuildNumberText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.InsiderBuildNumberText.Location = new System.Drawing.Point(389, 15);
+            this.InsiderBuildNumberText.Name = "InsiderBuildNumberText";
+            this.InsiderBuildNumberText.Size = new System.Drawing.Size(162, 15);
+            this.InsiderBuildNumberText.TabIndex = 173;
+            this.InsiderBuildNumberText.Text = "Insider Build: vX.X.X.X";
+            this.InsiderBuildNumberText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // ExtractingProgress
             // 
             this.ExtractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -1405,19 +1418,6 @@
             this.PlayProgress.RoundedCorners = false;
             this.PlayProgress.Size = new System.Drawing.Size(519, 13);
             this.PlayProgress.Text = "downloadProgress";
-            // 
-            // InsiderBuildNumberText
-            // 
-            this.InsiderBuildNumberText.BackColor = System.Drawing.Color.Transparent;
-            this.InsiderBuildNumberText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.InsiderBuildNumberText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.InsiderBuildNumberText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.InsiderBuildNumberText.Location = new System.Drawing.Point(389, 15);
-            this.InsiderBuildNumberText.Name = "InsiderBuildNumberText";
-            this.InsiderBuildNumberText.Size = new System.Drawing.Size(162, 15);
-            this.InsiderBuildNumberText.TabIndex = 173;
-            this.InsiderBuildNumberText.Text = "Insider Build: vX.X.X.X";
-            this.InsiderBuildNumberText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // MainScreen
             // 

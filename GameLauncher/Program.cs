@@ -32,6 +32,9 @@ namespace GameLauncher
         }
 
         private static void Main2(Arguments args) {
+            Thread StartSplashScreen = new Thread(new ThreadStart(ShowSplashScreen));
+            StartSplashScreen.Start();
+
             if (!DetectLinux.LinuxDetected())
             {
                 //Check if User has .NETFramework 4.6.2 or later Installed
@@ -436,13 +439,12 @@ namespace GameLauncher
             }
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             if (Debugger.IsAttached) {
-                Log.Debug("DEBUGGER PROXY: Starting Proxy");
-                ServerProxy.Instance.Start();
+                Log.Info("SPLASH SCREEN: Closing Splash Screen");
+                StartSplashScreen.Abort();
 
-                Log.Visuals("DEBUGGER CORE: Starting MainScreen");
-                Application.Run(new MainScreen());
-
+                ShowMainScreen();
             } else {
                 if (NFSW.IsNFSWRunning()) {
                     MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -510,21 +512,10 @@ namespace GameLauncher
 
                             MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         } else {
-                            if (_settingFile.KeyExists("InstallationDirectory"))
-                            {
-                                var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
-                                if (File.Exists(linksPath))
-                                {
-                                    Log.Info("CLEANLINKS: Cleaning Up Mod Files {Startup}");
-                                    CleanLinks(linksPath);
-                                }
-                            }
+                            Log.Info("SPLASH SCREEN: Closing Splash Screen");
+                            StartSplashScreen.Abort();
 
-                            Log.Info("PROXY: Starting Proxy");
-                            ServerProxy.Instance.Start();
-
-                            Log.Visuals("CORE: Starting MainScreen");
-                            Application.Run(new MainScreen());
+                            ShowMainScreen();
                         }
                     } else {
                         MessageBox.Show(null, "An instance of Launcher is already running.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -534,6 +525,30 @@ namespace GameLauncher
                     mutex = null;
                 }
             }
+        }
+
+        private static void ShowSplashScreen()
+        {
+            Application.Run(new SplashScreen());
+        }
+
+        private static void ShowMainScreen()
+        {
+            if (_settingFile.KeyExists("InstallationDirectory"))
+            {
+                var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
+                if (File.Exists(linksPath))
+                {
+                    Log.Info("CLEANLINKS: Cleaning Up Mod Files {Startup}");
+                    CleanLinks(linksPath);
+                }
+            }
+
+            Log.Info("PROXY: Starting Proxy");
+            ServerProxy.Instance.Start();
+
+            Log.Visuals("CORE: Starting MainScreen");
+            Application.Run(new MainScreen());
         }
 
         private static void CleanLinks(string linksPath)

@@ -90,6 +90,7 @@
             this.Name = "DebugWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Debug";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.DebugWindow_Load);
             ((System.ComponentModel.ISupportInitialize)(this.data)).EndInit();
             this.ResumeLayout(false);
