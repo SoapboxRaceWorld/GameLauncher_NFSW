@@ -31,6 +31,7 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.StatusText = new System.Windows.Forms.Label();
             this.StartScanner = new System.Windows.Forms.Button();
+            this.StopScanner = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // progressBar1
@@ -46,7 +47,7 @@
             this.StatusText.Name = "StatusText";
             this.StatusText.Size = new System.Drawing.Size(595, 23);
             this.StatusText.TabIndex = 2;
-            this.StatusText.Text = "label1";
+            this.StatusText.Text = "Failed Scanner (Code)";
             // 
             // StartScanner
             // 
@@ -58,11 +59,23 @@
             this.StartScanner.UseVisualStyleBackColor = true;
             this.StartScanner.Click += new System.EventHandler(this.StartScanner_Click);
             // 
+            // StopScanner
+            // 
+            this.StopScanner.Location = new System.Drawing.Point(357, 301);
+            this.StopScanner.Name = "StopScanner";
+            this.StopScanner.Size = new System.Drawing.Size(75, 23);
+            this.StopScanner.TabIndex = 4;
+            this.StopScanner.Text = "Stop Scan (Kills Launcher)";
+            this.StopScanner.UseVisualStyleBackColor = true;
+            this.StopScanner.Visible = false;
+            this.StopScanner.Click += new System.EventHandler(this.StopScanner_Click);
+            // 
             // VerifyHash
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.StopScanner);
             this.Controls.Add(this.StartScanner);
             this.Controls.Add(this.StatusText);
             this.Controls.Add(this.progressBar1);
@@ -79,5 +92,6 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label StatusText;
         private System.Windows.Forms.Button StartScanner;
+        private System.Windows.Forms.Button StopScanner;
     }
 }

@@ -3932,6 +3932,7 @@ namespace GameLauncher
         private void SettingsClearServerModCacheButton_Click(object sender, EventArgs e)
         {
             Directory.Delete(_settingFile.Read("InstallationDirectory") + "/.data", true);
+            Directory.Delete(_settingFile.Read("InstallationDirectory") + "/MODS", true);
             Log.Warning("LAUNCHER: User Confirmed to Delete Server Mods Cache");
             MessageBox.Show(null, "Deleted Server Mods Cache", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             SettingsClearServerModCacheButton.Enabled = false;
