@@ -32,8 +32,12 @@ namespace GameLauncher
         }
 
         private static void Main2(Arguments args) {
-            Thread StartSplashScreen = new Thread(new ThreadStart(ShowSplashScreen));
-            StartSplashScreen.Start();
+            Thread StartSplashScreen = new Thread(ShowSplashScreen);
+
+            if (!Debugger.IsAttached)
+            {
+                StartSplashScreen.Start();
+            }
 
             if (!DetectLinux.LinuxDetected())
             {
@@ -441,9 +445,6 @@ namespace GameLauncher
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             if (Debugger.IsAttached) {
-                Log.Info("SPLASH SCREEN: Closing Splash Screen");
-                StartSplashScreen.Abort();
-
                 ShowMainScreen();
             } else {
                 if (NFSW.IsNFSWRunning()) {

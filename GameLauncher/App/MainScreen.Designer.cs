@@ -1435,6 +1435,7 @@
             this.Controls.Add(this.CloseBTN);
             this.Controls.Add(this.SettingsPanel);
             this.Controls.Add(this.SelectServerBtn);
+            this.Controls.Add(this.ServerInfoPanel);
             this.Controls.Add(this.translatedBy);
             this.Controls.Add(this.ServerPick);
             this.Controls.Add(this.AddServer);
@@ -1460,7 +1461,6 @@
             this.Controls.Add(this.PlayProgress);
             this.Controls.Add(this.PlayProgressTextTimer);
             this.Controls.Add(this.VerticalBanner);
-            this.Controls.Add(this.ServerInfoPanel);
             this.Controls.Add(this.ImageServerName);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
