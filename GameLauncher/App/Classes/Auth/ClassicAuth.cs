@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Windows;
 using System.Xml;
 
 namespace GameLauncher.App.Classes.Auth

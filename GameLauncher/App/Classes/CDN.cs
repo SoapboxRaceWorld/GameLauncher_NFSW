@@ -1,17 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
+using System;
 
-namespace GameLauncher.App.Classes {
+namespace GameLauncher.App.Classes
+{
     class CDN {
         public static string CDNUrl = String.Empty;
         public static string TrackHigh = String.Empty;
     }
 
-    public class CDNObject {
-        public string name { get; set; }
-        public string url { get; set; }
+    public class CDNObject 
+    {
+        [JsonProperty("category")]
+        public string Category { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("url")]
+        public string Url { get; set; }
+
+        [JsonIgnore]
+        public bool IsSpecial { get; set; }
     }
 }

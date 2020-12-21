@@ -1,9 +1,8 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.IO;
 
-namespace GameLauncher.App.Classes {
+namespace GameLauncher.App.Classes
+{
     class DetectLinux {
         private static string _linuxDistro = null;
 
@@ -19,7 +18,7 @@ namespace GameLauncher.App.Classes {
             return _linuxDistro;
         }
 
-        public static bool isValidWineMonoInstalled() {
+        public static bool IsValidWineMonoInstalled() {
             return true;
         }
 
@@ -41,10 +40,6 @@ namespace GameLauncher.App.Classes {
 
                         if (val[val.Length - 1] == '"') {
                             val = val.Substring(0, val.Length - 1);
-                        }
-
-                        if (val == "Arch Linux" && new Random().NextDouble() < 0.2) {
-                            return "btw i use arch";
                         }
 
                         return val;

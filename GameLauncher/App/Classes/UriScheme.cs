@@ -1,15 +1,9 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using GameLauncher.App;
-using System.Windows.Forms;
 
-namespace GameLauncher.App.Classes {
+namespace GameLauncher.App.Classes
+{
     class UriScheme {
         //Login Param
         public static String Email = String.Empty;

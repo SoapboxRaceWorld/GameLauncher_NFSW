@@ -1,20 +1,16 @@
 ﻿using Nancy.Json;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
-namespace GameLauncher.App.Classes.Auth {
-    public class modernAuthObject {
-        public string token { get; set; }
-        public string userId { get; set; }
-        public string warning { get; set; }
-        public string error { get; set; }
+namespace GameLauncher.App.Classes.Auth
+{
+    public class ModernAuthObject {
+        public string Token { get; set; }
+        public string UserId { get; set; }
+        public string Warning { get; set; }
+        public string Error { get; set; }
     }
 
     class ModernAuth {
@@ -64,23 +60,23 @@ namespace GameLauncher.App.Classes.Auth {
             if(String.IsNullOrEmpty(serverLoginResponse)) {
                 Tokens.Error = "Server seems to be offline.";
             } else {
-                modernAuthObject LoginObjectResponse;
+                ModernAuthObject LoginObjectResponse;
 
                 try {
-                    LoginObjectResponse = JsonConvert.DeserializeObject<modernAuthObject>(serverLoginResponse);
+                    LoginObjectResponse = JsonConvert.DeserializeObject<ModernAuthObject>(serverLoginResponse);
                 } catch {
-                    LoginObjectResponse = JsonConvert.DeserializeObject<modernAuthObject>(_serverErrormsg);
+                    LoginObjectResponse = JsonConvert.DeserializeObject<ModernAuthObject>(_serverErrormsg);
                 }
 
-                if (String.IsNullOrEmpty(LoginObjectResponse.error)) { 
-                    Tokens.UserId = LoginObjectResponse.userId;
-                    Tokens.LoginToken = LoginObjectResponse.token;
+                if (String.IsNullOrEmpty(LoginObjectResponse.Error)) { 
+                    Tokens.UserId = LoginObjectResponse.UserId;
+                    Tokens.LoginToken = LoginObjectResponse.Token;
 
-                    if (!String.IsNullOrEmpty(LoginObjectResponse.warning)) {
-                        Tokens.Warning = LoginObjectResponse.warning;
+                    if (!String.IsNullOrEmpty(LoginObjectResponse.Warning)) {
+                        Tokens.Warning = LoginObjectResponse.Warning;
                     }
                 } else {
-                    Tokens.Error = LoginObjectResponse.error;
+                    Tokens.Error = LoginObjectResponse.Error;
                 }
             }
         }
@@ -121,25 +117,25 @@ namespace GameLauncher.App.Classes.Auth {
             if (String.IsNullOrEmpty(serverLoginResponse)) {
                 Tokens.Error = "Server seems to be offline.";
             } else {
-                modernAuthObject RegisterObjectResponse;
+                ModernAuthObject RegisterObjectResponse;
 
                 try {
-                    RegisterObjectResponse = JsonConvert.DeserializeObject<modernAuthObject>(serverLoginResponse);
+                    RegisterObjectResponse = JsonConvert.DeserializeObject<ModernAuthObject>(serverLoginResponse);
                 } catch {
-                    RegisterObjectResponse = JsonConvert.DeserializeObject<modernAuthObject>(_serverErrormsg);
+                    RegisterObjectResponse = JsonConvert.DeserializeObject<ModernAuthObject>(_serverErrormsg);
                 }
 
-                if (String.IsNullOrEmpty(RegisterObjectResponse.error) || RegisterObjectResponse.error == "SERVER FULL") {
-                    Tokens.UserId = RegisterObjectResponse.userId;
-                    Tokens.LoginToken = RegisterObjectResponse.token;
+                if (String.IsNullOrEmpty(RegisterObjectResponse.Error) || RegisterObjectResponse.Error == "SERVER FULL") {
+                    Tokens.UserId = RegisterObjectResponse.UserId;
+                    Tokens.LoginToken = RegisterObjectResponse.Token;
 
-                    if (RegisterObjectResponse.error == "SERVER FULL") {
+                    if (RegisterObjectResponse.Error == "SERVER FULL") {
                         Tokens.Success = string.Format("Successfully registered on {0}. However, server is actually full, therefore you cannot play it right now.", Tokens.ServerName);
                     } else {
                         Tokens.Success = string.Format("Successfully registered on {0}. You can log in now.", Tokens.ServerName);
                     }
                 } else {
-                    Tokens.Error = RegisterObjectResponse.error;
+                    Tokens.Error = RegisterObjectResponse.Error;
                 }
             }
         }

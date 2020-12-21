@@ -1,8 +1,6 @@
-using System;
-
 namespace GameLauncher
 {
-	public class VerifyCommand : DownloaderCommand
+    public class VerifyCommand : DownloaderCommand
 	{
 		public VerifyCommand(GameLauncher.Downloader downloader) : base(downloader)
 		{

@@ -3,10 +3,11 @@ using GameLauncher.HashPassword;
 using GameLauncherReborn;
 using Newtonsoft.Json;
 using System;
+using System.Net;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Windows;
 
 namespace GameLauncher.App.Classes
 {
@@ -20,19 +21,19 @@ namespace GameLauncher.App.Classes
 
             foreach (var serverListURL in Self.serverlisturl) {
                 try {
-                    Log.Debug("Loading serverlist from: " + serverListURL);
-                    var wc = new WebClientWithTimeout();
+                    Log.UrlCall("LIST CORE: Loading serverlist from: " + serverListURL);
+                    var wc = new WebClient();
                     var response = wc.DownloadString(serverListURL);
-                    Log.Debug("Loaded serverlist from: " + serverListURL);
+                    Log.UrlCall("LIST CORE: Loaded serverlist from: " + serverListURL);
 
                     try {
                         serverInfos.AddRange(
                             JsonConvert.DeserializeObject<List<ServerInfo>>(response));
                     } catch (Exception error) {
-                        Log.Error("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message);
+                        Log.Error("LIST CORE: Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message);
                     }
                 } catch (Exception error) {
-                    Log.Error("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message);
+                    Log.Error("LIST CORE: Error occurred while loading server list from [" + serverListURL + "]: " + error.Message);
                 }
             }
 
@@ -42,13 +43,6 @@ namespace GameLauncher.App.Classes
 
                 if (fileItems.Count > 0)
                 {
-                    serverInfos.Add(new ServerInfo
-                    {
-                        Id = "__category-CUSTOM__",
-                        Name = "<GROUP>Custom Servers",
-                        IsSpecial = true
-                    });
-
                     fileItems.Select(si =>
                     {
                         si.DistributionUrl = "";
@@ -66,13 +60,6 @@ namespace GameLauncher.App.Classes
             {
                 serverInfos.Add(new ServerInfo
                 {
-                    Id = "__category-OFFLINE__",
-                    Name = "<GROUP>Offline Server",
-                    IsSpecial = true
-                });
-
-                serverInfos.Add(new ServerInfo
-                {
                     Name = "Offline Built-In Server",
                     Category = "OFFLINE",
                     DiscordPresenceKey = "",
@@ -80,6 +67,20 @@ namespace GameLauncher.App.Classes
                     DistributionUrl = "",
                     IpAddress = "http://localhost:4416/sbrw/Engine.svc",
                     Id = "OFFLINE"
+                });
+            }
+
+            if (Debugger.IsAttached)
+            {
+                serverInfos.Add(new ServerInfo
+                {
+                    Name = "Local Debug Server",
+                    Category = "DEBUG",
+                    DiscordPresenceKey = "",
+                    IsSpecial = false,
+                    DistributionUrl = "",
+                    IpAddress = "http://localhost:8680",
+                    Id = "DEV"
                 });
             }
 

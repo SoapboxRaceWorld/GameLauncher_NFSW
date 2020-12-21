@@ -103,6 +103,46 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap api_checking {
+            get {
+                object obj = ResourceManager.GetObject("api_checking", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap api_error {
+            get {
+                object obj = ResourceManager.GetObject("api_error", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap api_success {
+            get {
+                object obj = ResourceManager.GetObject("api_success", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap api_unkown {
+            get {
+                object obj = ResourceManager.GetObject("api_unkown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap close {
             get {
                 object obj = ResourceManager.GetObject("close", resourceCulture);
@@ -113,9 +153,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap close_click {
+        internal static System.Drawing.Bitmap email_error_text_border {
             get {
-                object obj = ResourceManager.GetObject("close_click", resourceCulture);
+                object obj = ResourceManager.GetObject("email_error_text_border", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -123,9 +163,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap close_hover {
+        internal static System.Drawing.Bitmap email_text_border {
             get {
-                object obj = ResourceManager.GetObject("close_hover", resourceCulture);
+                object obj = ResourceManager.GetObject("email_text_border", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -133,9 +173,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap errorprogress {
+        internal static System.Drawing.Bitmap eyecatcher {
             get {
-                object obj = ResourceManager.GetObject("errorprogress", resourceCulture);
+                object obj = ResourceManager.GetObject("eyecatcher", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -203,26 +243,6 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap loggedbg {
-            get {
-                object obj = ResourceManager.GetObject("loggedbg", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap loginbg {
-            get {
-                object obj = ResourceManager.GetObject("loginbg", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap logo {
             get {
                 object obj = ResourceManager.GetObject("logo", resourceCulture);
@@ -233,9 +253,39 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap map {
+        internal static System.Drawing.Bitmap logo_hover {
             get {
-                object obj = ResourceManager.GetObject("map", resourceCulture);
+                object obj = ResourceManager.GetObject("logo_hover", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap mainbackground {
+            get {
+                object obj = ResourceManager.GetObject("mainbackground", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap password_error_text_border {
+            get {
+                object obj = ResourceManager.GetObject("password_error_text_border", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap password_text_border {
+            get {
+                object obj = ResourceManager.GetObject("password_text_border", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -273,9 +323,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap progress {
+        internal static System.Drawing.Bitmap progress_error {
             get {
-                object obj = ResourceManager.GetObject("progress", resourceCulture);
+                object obj = ResourceManager.GetObject("progress_error", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -283,9 +333,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap progressgrayscale {
+        internal static System.Drawing.Bitmap progress_preload {
             get {
-                object obj = ResourceManager.GetObject("progressgrayscale", resourceCulture);
+                object obj = ResourceManager.GetObject("progress_preload", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -293,9 +343,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap register_noticket {
+        internal static System.Drawing.Bitmap progress_success {
             get {
-                object obj = ResourceManager.GetObject("register_noticket", resourceCulture);
+                object obj = ResourceManager.GetObject("progress_success", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -303,9 +353,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap register_ticket {
+        internal static System.Drawing.Bitmap progress_warning {
             get {
-                object obj = ResourceManager.GetObject("register_ticket", resourceCulture);
+                object obj = ResourceManager.GetObject("progress_warning", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -323,6 +373,46 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap server_checking {
+            get {
+                object obj = ResourceManager.GetObject("server_checking", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap server_offline {
+            get {
+                object obj = ResourceManager.GetObject("server_offline", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap server_online {
+            get {
+                object obj = ResourceManager.GetObject("server_online", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap server_unknown {
+            get {
+                object obj = ResourceManager.GetObject("server_unknown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap settingsbtn {
             get {
                 object obj = ResourceManager.GetObject("settingsbtn", resourceCulture);
@@ -333,9 +423,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap settingsbtn_click {
+        internal static System.Drawing.Bitmap social_discord {
             get {
-                object obj = ResourceManager.GetObject("settingsbtn_click", resourceCulture);
+                object obj = ResourceManager.GetObject("social_discord", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -343,9 +433,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap settingsbtn_hover {
+        internal static System.Drawing.Bitmap social_discord_disabled {
             get {
-                object obj = ResourceManager.GetObject("settingsbtn_hover", resourceCulture);
+                object obj = ResourceManager.GetObject("social_discord_disabled", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -353,9 +443,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap settingsbtn1 {
+        internal static System.Drawing.Bitmap social_facebook {
             get {
-                object obj = ResourceManager.GetObject("settingsbtn1", resourceCulture);
+                object obj = ResourceManager.GetObject("social_facebook", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -363,9 +453,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap tick {
+        internal static System.Drawing.Bitmap social_facebook_disabled {
             get {
-                object obj = ResourceManager.GetObject("tick", resourceCulture);
+                object obj = ResourceManager.GetObject("social_facebook_disabled", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -373,9 +463,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap warningprogress {
+        internal static System.Drawing.Bitmap social_home_page {
             get {
-                object obj = ResourceManager.GetObject("warningprogress", resourceCulture);
+                object obj = ResourceManager.GetObject("social_home_page", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -383,9 +473,59 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap webicon {
+        internal static System.Drawing.Bitmap social_home_page_disabled {
             get {
-                object obj = ResourceManager.GetObject("webicon", resourceCulture);
+                object obj = ResourceManager.GetObject("social_home_page_disabled", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap social_twitter {
+            get {
+                object obj = ResourceManager.GetObject("social_twitter", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap social_twitter_disabled {
+            get {
+                object obj = ResourceManager.GetObject("social_twitter_disabled", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap splash_screen {
+            get {
+                object obj = ResourceManager.GetObject("splash_screen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ticket_error_text_border {
+            get {
+                object obj = ResourceManager.GetObject("ticket_error_text_border", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ticket_text_border {
+            get {
+                object obj = ResourceManager.GetObject("ticket_text_border", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

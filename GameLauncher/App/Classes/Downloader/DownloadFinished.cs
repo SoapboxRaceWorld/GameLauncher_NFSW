@@ -1,6 +1,4 @@
-using System;
-
 namespace GameLauncher
 {
-	public delegate void DownloadFinished();
+    public delegate void DownloadFinished();
 }

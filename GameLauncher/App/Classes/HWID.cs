@@ -1,16 +1,11 @@
-﻿using System;
-using System.Management;
+﻿using System.Management;
 using System.Security.Cryptography;
-using System.Security;
-using System.Collections;
 using System.Text;
-using System.Windows.Forms;
 using System.IO;
 using GameLauncher.App.Classes;
-using Microsoft.Win32;
-using System.Collections.Generic;
 
-namespace Security {
+namespace Security
+{
     public class FingerPrint {
         private static string fingerPrint = string.Empty;
         public static string Value() {
@@ -27,7 +22,7 @@ namespace Security {
 
         private static string WindowsValue()
         {
-            return GetHash(cpuId() + baseId() + diskId() + videoId());
+            return GetHash(CpuId() + BaseId() + DiskId() + VideoId());
         }
 
         private static string LinuxValue() {
@@ -66,7 +61,7 @@ namespace Security {
             return s;
         }
 
-        private static string identifier(string wmiClass, string wmiProperty, string wmiMustBeTrue)
+        private static string Identifier(string wmiClass, string wmiProperty, string wmiMustBeTrue)
         {
             string result = "";
             ManagementClass mc = new ManagementClass(wmiClass);
@@ -95,7 +90,7 @@ namespace Security {
             return result;
         }
 
-        private static string identifier(string wmiClass, string wmiProperty)
+        private static string Identifier(string wmiClass, string wmiProperty)
         {
             string result = "";
             ManagementClass mc = new ManagementClass(wmiClass);
@@ -118,46 +113,45 @@ namespace Security {
             return result;
         }
 
-        private static string cpuId()
+        private static string CpuId()
         {
-            string retVal = identifier("Win32_Processor", "UniqueId");
+            string retVal = Identifier("Win32_Processor", "UniqueId");
             if (retVal == "")
             {
-                retVal = identifier("Win32_Processor", "ProcessorId");
+                retVal = Identifier("Win32_Processor", "ProcessorId");
                 if (retVal == "")
                 {
-                    retVal = identifier("Win32_Processor", "Name");
+                    retVal = Identifier("Win32_Processor", "Name");
 
                     if (retVal == "")
                     {
-                        retVal = identifier("Win32_Processor", "Manufacturer");
+                        retVal = Identifier("Win32_Processor", "Manufacturer");
                     }
 
-                    retVal += identifier("Win32_Processor", "MaxClockSpeed");
+                    retVal += Identifier("Win32_Processor", "MaxClockSpeed");
                 }
             }
 
             return retVal;
         }
 
-        private static string diskId()
+        private static string DiskId()
         {
-            return identifier("Win32_DiskDrive", "PNPDeviceId");
+            return Identifier("Win32_DiskDrive", "PNPDeviceId");
         }
 
-        private static string baseId()
+        private static string BaseId()
         {
-            return identifier("Win32_BaseBoard", "Product") + " " + identifier("Win32_BaseBoard", "SerialNumber");
+            return Identifier("Win32_BaseBoard", "Product") + " " + Identifier("Win32_BaseBoard", "SerialNumber");
         }
 
-        private static string videoId()
+        private static string VideoId()
         {
-            return identifier("Win32_VideoController", "PNPDeviceId");
+            return Identifier("Win32_VideoController", "PNPDeviceId");
         }
 
-        private static string macId()
-        {
-            return identifier("Win32_NetworkAdapterConfiguration", "MACAddress", "IPEnabled");
-        }
+        /* Moved 1 Private function Code to Gist */
+        /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/dfefd74204f2675cc34a4614fb09a74a23ed6e0e/HWID.cs */
+
     }
 }

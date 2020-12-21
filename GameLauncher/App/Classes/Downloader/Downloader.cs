@@ -3,8 +3,8 @@ using GameLauncherReborn;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Cache;
 using System.Text;
@@ -196,7 +196,7 @@ namespace GameLauncher
                 {
 
                     try {
-                        WebClientWithTimeout webClient = new WebClientWithTimeout();
+                        WebClient webClient = new WebClient();
                         webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.Downloader_DownloadFileCompleted);
                         string tempFileName = Path.GetTempFileName();
                         webClient.DownloadFileAsync(new Uri(url), tempFileName);
@@ -267,7 +267,7 @@ namespace GameLauncher
                         num4 = (long)num;
                     }
                     long num5 = 0L;
-                    WebClientWithTimeout webClient = new WebClientWithTimeout();
+                    WebClient webClient = new WebClient();
                     webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
                     webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
                     webClient.Headers.Add("Accept-Encoding", "gzip,deflate");
@@ -549,16 +549,20 @@ namespace GameLauncher
                                 }
                                 if (this.mProgressUpdated != null)
                                 {
-                                    object[] args3 = new object[]
+                                    try
                                     {
-                                        num2,
-                                        num3,
-                                        num4,
-                                        text6,
-                                        0
-                                    };
+                                        object[] args3 = new object[]
+                                        {
+                                            num2,
+                                            num3,
+                                            num4,
+                                            text6,
+                                            0
+                                        };
 
-                                    this.mFE.BeginInvoke(this.mProgressUpdated, args3);
+                                        this.mFE.BeginInvoke(this.mProgressUpdated, args3);
+                                    }
+                                    catch { Process.GetProcessById(Process.GetCurrentProcess().Id).Kill(); }
                                 }
                             }
                             if (xmlNode3 != null)
@@ -597,8 +601,12 @@ namespace GameLauncher
                                 //TODO: use total file lenght and extracted file length instead of files checked and total array size.
                                 fileschecked =+ num3;
 
-                                object[] xxxxxx = new object[] { text6, fileschecked, num4};
-								this.mFE.BeginInvoke(this.mShowExtract, xxxxxx);
+                                try
+                                {
+                                    object[] xxxxxx = new object[] { text6, fileschecked, num4 };
+                                    this.mFE.BeginInvoke(this.mShowExtract, xxxxxx);
+                                }
+                                catch { Process.GetProcessById(Process.GetCurrentProcess().Id).Kill(); }
 
 								if (num24 != 0)
                                 {
@@ -719,7 +727,7 @@ namespace GameLauncher
                 else
                 {
                     long num = long.Parse(indexFile.SelectSingleNode("/index/header/length").InnerText);
-                    WebClientWithTimeout webClient = new WebClientWithTimeout();
+                    WebClient webClient = new WebClient();
                     webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
                     webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
                     webClient.Headers.Add("Accept-Encoding", "gzip,deflate");
@@ -856,7 +864,7 @@ namespace GameLauncher
 
         public static byte[] GetData(string url)
         {
-            WebClientWithTimeout webClient = new WebClientWithTimeout();
+            WebClient webClient = new WebClient();
             webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
             webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
             webClient.Headers.Add("Accept-Encoding", "gzip");

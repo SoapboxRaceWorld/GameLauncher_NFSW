@@ -1,7 +1,5 @@
 ﻿using GameLauncher.App.Classes;
 using System;
-using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -13,22 +11,30 @@ using Flurl.Http;
 using System.Management;
 using System.Net;
 
-namespace GameLauncherReborn {
+namespace GameLauncherReborn
+{
     class Self {
         public static string mainserver = "https://api.worldunited.gg";
         public static string fileserver = "https://files.worldunited.gg";
         public static string staticapiserver = "http://api-sbrw.davidcarbon.download";
+        public static string secondstaticapiserver = "http://api2-sbrw.davidcarbon.download";
+        public static string woplserver = "http://worldonline.pl";
+        public static string modnetserver = "http://cdn.soapboxrace.world";
 
         public static string[] serverlisturl = new string[] {
             mainserver + "/serverlist.json",
-            staticapiserver + "/serverlist.json"
+            staticapiserver + "/serverlist.json",
+            secondstaticapiserver + "/serverlist.json",
+            woplserver + "/serverlist.json"
+        };
+
+        public static string[] cdnlisturl = new string[] {
+            staticapiserver + "/cdn_list.json",
+            secondstaticapiserver + "/cdn_list.json",
+            woplserver + "/cdn_list.json"
         };
 
         public static string statsurl = mainserver + "/stats";
-        public static string CDNUrlList = mainserver + "/cdn_list.json";
-        public static string CDNUrlStaticList = staticapiserver + "/cdn_list.json";
-
-        private static IniFile SettingFile = new IniFile("Settings.ini");
 
         public static string DiscordRPCID = "540651192179752970";
 
@@ -42,28 +48,10 @@ namespace GameLauncherReborn {
 
         public static string rememberjson = "";
         public static string discordid = String.Empty;
-        public static string MapZoneRPC = String.Empty;
 
-        public static void runAsAdmin() {
-            string[] args = Environment.GetCommandLineArgs();
+        public static string currentLanguage = "EN";
 
-            ProcessStartInfo processStartInfo = new ProcessStartInfo() {
-                Verb = "runas",
-                FileName = Application.ExecutablePath
-            };
-
-            if ((int)args.Length > 0) {
-                processStartInfo.Arguments = args[0];
-            }
-
-            try {
-                Process.Start(processStartInfo);
-            } catch (Exception exception1) {
-                MessageBox.Show("Failed to self-run as admin: " + exception1.Message);
-            }
-        }
-
-        public static long getTimestamp(bool valid = false) {
+        public static long GetTimestamp(bool valid = false) {
             long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
 
             if(valid == true) {
@@ -75,7 +63,7 @@ namespace GameLauncherReborn {
             return ticks;
         }
 
-		public static bool hasWriteAccessToFolder(string path) {
+		public static bool HasWriteAccessToFolder(string path) {
 			try {
 				File.Create(path + "temp.txt").Close();
 				File.Delete(path + "temp.txt");
@@ -110,13 +98,13 @@ namespace GameLauncherReborn {
             return "Unknown";
         }
 
-        public static void centerScreen(Form form) {
+        public static void CenterScreen(Form form) {
             form.StartPosition = FormStartPosition.Manual;
             form.Top = (Screen.PrimaryScreen.Bounds.Height - form.Height) / 2;
             form.Left = (Screen.PrimaryScreen.Bounds.Width - form.Width) / 2;
         }
 
-		public static bool validateEmail(string email) {
+		public static bool ValidateEmail(string email) {
 			String theEmailPattern = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
 								   + "@"
 								   + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
@@ -124,9 +112,16 @@ namespace GameLauncherReborn {
 			return Regex.IsMatch(email, theEmailPattern);
 		}
 
-		public static bool isTempFolder(string directory) {
-			return directory.Contains("Temp");
-		}
+        //Let's actually make it cleaner and nicer - MeTonaTOR
+        public static FolderType CheckFolder(string FolderName) {
+            if (FolderName.Contains("C:\\Users") && FolderName.Contains("Temp"))                                return FolderType.IsTempFolder;
+            if (FolderName.Contains("C:\\Users"))                           return FolderType.IsUsersFolders;
+            if (FolderName.Contains("C:\\Program Files"))                   return FolderType.IsProgramFilesFolder;
+            if (FolderName.Contains("C:\\Windows"))                         return FolderType.IsWindowsFolder;
+            if (FolderName + "\\" == AppDomain.CurrentDomain.BaseDirectory) return FolderType.IsSameAsLauncherFolder;
+
+            return FolderType.Unknown;
+        }
 
         public static string CleanFromUnknownChars(string s) {
             StringBuilder sb = new StringBuilder(s.Length);
@@ -162,7 +157,7 @@ namespace GameLauncherReborn {
             return machineUint == 0x014c;
         }
 
-        public static bool getInstalledHotFix(string identification) {
+        public static bool GetInstalledHotFix(string identification) {
             var search = new ManagementObjectSearcher("SELECT HotFixID FROM Win32_QuickFixEngineering");
             var collection = search.Get();
 
@@ -181,5 +176,18 @@ namespace GameLauncherReborn {
             IPAddress[] addresses = iphost.AddressList;
             return addresses[0].ToString();
         }
+
+        /* Moved "runAsAdmin" Code to Gist */
+        /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/eec2f9f80aa4b350ab98d32383e1ee1f2e1c26fd/Self.cs */
+
+    }
+
+    enum FolderType {
+        IsTempFolder,
+        IsUsersFolders,
+        IsProgramFilesFolder,
+        IsWindowsFolder,
+        IsSameAsLauncherFolder,
+        Unknown
     }
 }

@@ -1,31 +1,53 @@
-﻿using GameLauncher.App.Classes.Events;
+﻿using System.Net;
+using GameLauncher.App.Classes.Events;
 using GameLauncherReborn;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using GameLauncher.Resources;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using GameLauncher.App.Classes;
 
-namespace GameLauncher.App {
-    public partial class UpdatePopup : Form {
-        public UpdatePopup(UpdateCheckResponse updater) {
-            InitializeComponent();
+namespace GameLauncher.App
+{
+    public partial class UpdatePopup : Form
+    {
+        public UpdatePopup(UpdateCheckResponse updater)
+        {
+            IniFile _settingFile = new IniFile("Settings.ini");
 
-            changelogText.Text = new WebClientWithTimeout().DownloadString(Self.mainserver + "/launcher/changelog");
-            changelogText.Select(0, 0);
-            changelogText.SelectionLength = 0;
-            changelogText.TabStop = false;
+            if (_settingFile.Read("IgnoreUpdateVersion") == updater.Payload.LatestVersion)
+            {
+                //No Update Popup
+            }
+            else
+            {
+                InitializeComponent();
+                ApplyEmbeddedFonts();
 
-            Bitmap bitmap1 = Bitmap.FromHicon(SystemIcons.Information.Handle);
-            icon.Image = bitmap1;
+                ChangelogText.Text = new WebClient().DownloadString(Self.mainserver + "/launcher/changelog");
+                ChangelogText.Select(0, 0);
+                ChangelogText.SelectionLength = 0;
+                ChangelogText.TabStop = false;
 
-            updateLabel.Text = "An update is available. Would you like to update?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + updater.Payload.LatestVersion;
+                Bitmap bitmap1 = Bitmap.FromHicon(SystemIcons.Information.Handle);
+                UpdateIcon.Image = bitmap1;
 
-            this.update.DialogResult = DialogResult.OK;
+                UpdateText.Text = "An update is available. Would you like to update?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + updater.Payload.LatestVersion;
+
+                this.UpdateButton.DialogResult = DialogResult.OK;
+                this.IgnoreButton.DialogResult = DialogResult.Cancel;
+                this.SkipButton.DialogResult = DialogResult.Ignore;
+            }
+        }
+
+        private void ApplyEmbeddedFonts()
+        {
+            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
+            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
+            ChangelogText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            UpdateButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            UpdateText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            SkipButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            IgnoreButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
         }
     }
 }

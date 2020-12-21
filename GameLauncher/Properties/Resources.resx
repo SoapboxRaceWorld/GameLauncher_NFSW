@@ -118,26 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="settingsbtn1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\settingsbtn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="webicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\webicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="ac_error" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ac_error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="close_click" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\close_click.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="loggedbg" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\loggedbg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="ac_success" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ac_success.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="settingsbtn_click" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\settingsbtn_click.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ac_warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ac_warning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -145,14 +130,8 @@
   <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="progressgrayscale" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\progressgrayscale.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="settingsbtn" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\settingsbtn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="progress" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\progress.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ac_unknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ac_unknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -160,35 +139,8 @@
   <data name="secondarybackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\secondarybackground.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="map" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\map.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="settingsbtn_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\settingsbtn_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="tick" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\tick.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="close_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\close_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="warningprogress" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\warningprogress.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="errorprogress" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\errorprogress.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="close" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\close.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="loginbg" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\loginbg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="register_noticket" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\register_noticket.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="register_ticket" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\register_ticket.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="graybutton" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\graybutton.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -216,5 +168,95 @@
   </data>
   <data name="playbutton_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\playbutton_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="api_checking" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\api_checking.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="api_error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\api_error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="api_success" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\api_success.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="api_unkown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\api_unkown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="server_checking" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\server_checking.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="server_offline" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\server_offline.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="server_online" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\server_online.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="server_unknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\server_unknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="logo_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logo_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="email_error_text_border" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\email_error_text_border.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="email_text_border" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\email_text_border.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="mainbackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mainbackground.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="password_error_text_border" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\password_error_text_border.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="password_text_border" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\password_text_border.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ticket_error_text_border" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ticket_error_text_border.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ticket_text_border" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ticket_text_border.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="eyecatcher" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\eyecatcher.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="social_discord" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\social_discord.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="social_discord_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\social_discord_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="social_facebook" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\social_facebook.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="social_facebook_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\social_facebook_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="social_twitter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\social_twitter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="social_twitter_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\social_twitter_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="social_home_page" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\social_home_page.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="social_home_page_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\social_home_page_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="progress_error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\progress_error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="progress_preload" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\progress_preload.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="progress_success" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\progress_success.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="progress_warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\progress_warning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="splash_screen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\splash_screen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

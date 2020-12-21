@@ -8,15 +8,15 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>GameLauncher</RootNamespace>
     <AssemblyName>GameLauncher</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <PublishUrl>C:\Users\meton\Desktop\TEST\</PublishUrl>
+    <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -33,7 +33,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>original_icon.ico</ApplicationIcon>
+    <ApplicationIcon>SBRW.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>GameLauncher.Program</StartupObject>
@@ -43,7 +43,8 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>FFBE7FCB82EC0ECA321C4178759DF231AB1CB712</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>
+    </ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>
@@ -53,7 +54,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>GameLauncher_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>
@@ -65,9 +67,10 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\Release\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -83,11 +86,11 @@
     <Reference Include="CommandLine, Version=2.8.0.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
       <HintPath>..\packages\CommandLineParser.2.8.0\lib\net45\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="DiscordRPC, Version=1.0.150.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DiscordRichPresence.1.0.150\lib\net35\DiscordRPC.dll</HintPath>
+    <Reference Include="DiscordRPC, Version=1.0.169.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DiscordRichPresence.1.0.169\lib\net35\DiscordRPC.dll</HintPath>
     </Reference>
-    <Reference Include="Flurl, Version=2.8.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.2.8.2\lib\net40\Flurl.dll</HintPath>
+    <Reference Include="Flurl, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.3.0.1\lib\net461\Flurl.dll</HintPath>
     </Reference>
     <Reference Include="Flurl.Http, Version=2.4.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Flurl.Http.2.4.2\lib\net46\Flurl.Http.dll</HintPath>
@@ -120,17 +123,26 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.PowerShell.5.ReferenceAssemblies.1.1.0\lib\net4\System.Management.Automation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
     <Reference Include="INIFileParser">
       <HintPath>..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsFirewallHelper, Version=1.6.3.40, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsFirewallHelper.1.6.3.40\lib\net40\WindowsFirewallHelper.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +153,7 @@
       <DependentUpon>AddServer.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\AntiCheat.cs" />
+    <Compile Include="App\Classes\APIStatusChecker.cs" />
     <Compile Include="App\Classes\Auth\ClassicAuth.cs" />
     <Compile Include="App\Classes\Auth\ModernAuth.cs" />
     <Compile Include="App\Classes\Auth\Tokens.cs" />
@@ -166,15 +179,15 @@
     <Compile Include="App\Classes\HashPassword\SHA.cs" />
     <Compile Include="App\Classes\HWID.cs" />
     <Compile Include="App\Classes\IniFile.cs" />
-    <Compile Include="App\Classes\Language.cs" />
+    <Compile Include="App\Classes\InsiderKit\EnableInsider.cs" />
     <Compile Include="App\Classes\Logger\LogToFile.cs" />
     <Compile Include="App\Classes\ModManager.cs" />
-    <Compile Include="App\Classes\ModNetReloaded\ElectronModNet.cs" />
     <Compile Include="App\Classes\ModNetReloaded\ModNetReloaded.cs" />
     <Compile Include="App\Classes\NativeFunctions.cs" />
     <Compile Include="App\Classes\Events\Updater.cs" />
     <Compile Include="App\Classes\NFSW.cs" />
     <Compile Include="App\Classes\ParseUri.cs" />
+    <Compile Include="App\Classes\AboutNoteBlock.cs" />
     <Compile Include="App\Classes\ProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -185,21 +198,28 @@
     <Compile Include="App\Classes\Proxy\ProxyException.cs" />
     <Compile Include="App\Classes\Proxy\ProxyHandler.cs" />
     <Compile Include="App\Classes\RedistributablePackage.cs" />
+    <Compile Include="App\Classes\RemovedClasses.cs" />
     <Compile Include="App\Classes\RPC\CarList.cs" />
     <Compile Include="App\Classes\RPC\DiscordGamePresence.cs" />
     <Compile Include="App\Classes\RPC\EventList.cs" />
+    <Compile Include="App\SplashScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\SplashScreen.Designer.cs">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="App\Classes\Self.cs" />
+    <Compile Include="App\Classes\CDNListUpdater.cs" />
     <Compile Include="App\Classes\ServerListUpdater.cs" />
     <Compile Include="App\Classes\ServerProxy.cs" />
     <Compile Include="App\Classes\Singleton.cs" />
-    <Compile Include="App\Classes\Statuses.cs" />
+    <Compile Include="App\Classes\SystemPlatform\Windows\Firewall.cs" />
+    <Compile Include="App\Classes\SystemPlatform\Windows\WindowsProductVersion.cs" />
     <Compile Include="App\Classes\TaskBar.cs" />
-    <Compile Include="App\Classes\UriExtensions.cs" />
     <Compile Include="App\Classes\UriScheme.cs" />
     <Compile Include="App\Classes\WebRequest.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="App\Classes\XMPP\MITM_XMPP.cs" />
     <Compile Include="App\Debug.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -213,6 +233,12 @@
       <DependentUpon>MainScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\JsonScheme.cs" />
+    <Compile Include="App\About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
     <Compile Include="App\SelectServer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -225,6 +251,12 @@
     <Compile Include="App\UpdatePopup.Designer.cs">
       <DependentUpon>UpdatePopup.cs</DependentUpon>
     </Compile>
+    <Compile Include="App\VerifyHash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\VerifyHash.Designer.cs">
+      <DependentUpon>VerifyHash.cs</DependentUpon>
+    </Compile>
     <Compile Include="App\WelcomeScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -232,12 +264,6 @@
       <DependentUpon>WelcomeScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="App\ShowMap.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="App\ShowMap.Designer.cs">
-      <DependentUpon>ShowMap.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App\Classes\FontWrapper.cs" />
     <EmbeddedResource Include="App\AddServer.resx">
@@ -253,14 +279,20 @@
     <EmbeddedResource Include="App\MainScreen.resx">
       <DependentUpon>MainScreen.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="App\About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\SplashScreen.resx">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="App\SelectServer.resx">
       <DependentUpon>SelectServer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\ShowMap.resx">
-      <DependentUpon>ShowMap.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="App\UpdatePopup.resx">
       <DependentUpon>UpdatePopup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\VerifyHash.resx">
+      <DependentUpon>VerifyHash.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\WelcomeScreen.resx">
       <DependentUpon>WelcomeScreen.cs</DependentUpon>
@@ -273,10 +305,8 @@
     <None Include="app.config" />
     <EmbeddedResource Include="App\Classes\RPC\JSON\events.json" />
     <EmbeddedResource Include="App\Classes\RPC\JSON\cars.json" />
-    <EmbeddedResource Include="Fonts\Airport-Cyr.ttf" />
-    <EmbeddedResource Include="Fonts\Akrobat-Regular.ttf" />
-    <EmbeddedResource Include="Fonts\Akrobat-SemiBold.ttf" />
-    <None Include="GameLauncher_TemporaryKey.pfx" />
+    <EmbeddedResource Include="Fonts\DejaVuSans.ttf" />
+    <EmbeddedResource Include="Fonts\DejaVuSansCondensed.ttf" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest">
       <SubType>Designer</SubType>
@@ -299,17 +329,43 @@
     <EmbeddedResource Include="SoapBoxModules\cursor.ani" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\registerButton_en.png" />
     <None Include="Resources\buttons_info.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Run_Check_BG.png" />
+    <None Include="Resources\splash_screen.png" />
+    <Content Include="SBRW.ico" />
+    <None Include="Resources\progress_warning.png" />
+    <None Include="Resources\progress_success.png" />
+    <None Include="Resources\progress_preload.png" />
+    <None Include="Resources\progress_error.png" />
+    <None Include="Resources\social_home_page_disabled.png" />
+    <None Include="Resources\social_home_page.png" />
+    <None Include="Resources\social_twitter_disabled.png" />
+    <None Include="Resources\social_twitter.png" />
+    <None Include="Resources\social_facebook_disabled.png" />
+    <None Include="Resources\social_facebook.png" />
+    <None Include="Resources\social_discord_disabled.png" />
+    <None Include="Resources\social_discord.png" />
+    <None Include="Resources\eyecatcher.png" />
+    <None Include="Resources\ticket_text_border.png" />
+    <None Include="Resources\ticket_error_text_border.png" />
+    <None Include="Resources\password_text_border.png" />
+    <None Include="Resources\password_error_text_border.png" />
+    <None Include="Resources\email_error_text_border.png" />
+    <None Include="Resources\email_text_border.png" />
+    <None Include="Resources\mainbackground.png" />
+    <None Include="Resources\error_text_border.png" />
+    <None Include="Resources\logo_hover.png" />
+    <None Include="Resources\server_unknown.png" />
+    <None Include="Resources\server_online.png" />
+    <None Include="Resources\server_offline.png" />
+    <None Include="Resources\server_checking.png" />
+    <None Include="Resources\api_checking.png" />
+    <None Include="Resources\api_unkown.png" />
+    <None Include="Resources\api_success.png" />
+    <None Include="Resources\api_error.png" />
     <None Include="Resources\playbutton_hover.png" />
     <None Include="Resources\playbutton_click.png" />
     <None Include="Resources\playbutton.png" />
@@ -342,12 +398,17 @@
     <None Include="Resources\close_hover.png" />
     <None Include="Resources\tick.png" />
     <None Include="Resources\map.png" />
-    <Content Include="original_icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <ItemGroup>
     <COMReference Include="stdole">
       <Guid>{00020430-0000-0000-C000-000000000046}</Guid>

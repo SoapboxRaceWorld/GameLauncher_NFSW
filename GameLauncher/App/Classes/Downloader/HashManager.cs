@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -10,7 +9,7 @@ using System.Xml;
 
 namespace GameLauncher
 {
-	internal class HashManager
+    internal class HashManager
 	{
 		private const int MaxWorkers = 3;
 

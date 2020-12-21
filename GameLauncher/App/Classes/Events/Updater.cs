@@ -1,21 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Net;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using GameLauncher.HashPassword;
+using GameLauncher.Properties;
 using GameLauncherReborn;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
 
-namespace GameLauncher.App.Classes.Events {
+namespace GameLauncher.App.Classes.Events
+{
     class LauncherUpdateCheck
     {
         PictureBox status;
@@ -28,14 +22,14 @@ namespace GameLauncher.App.Classes.Events {
             description = statusDescription;
         }
 
-        public void checkAvailability() {
+        public void CheckAvailability() {
             text.Text = "Launcher Status - Checking...";
             description.Text = "Version : v" + Application.ProductVersion;
             status.Image = Properties.Resources.ac_unknown;
             text.ForeColor = Color.FromArgb(0x848484);
 
             try { 
-                WebClientWithTimeout update_data = new WebClientWithTimeout();
+                WebClient update_data = new WebClient();
                 update_data.CancelAsync();
                 update_data.DownloadStringAsync(new Uri(Self.mainserver + "/update.php?version=" + Application.ProductVersion));
                 update_data.DownloadStringCompleted += (sender, e) => {
@@ -64,34 +58,61 @@ namespace GameLauncher.App.Classes.Events {
                             if(updater.Code == 0) { 
                                 if (updater.Payload.UpdateExists == false) {
                                     if(updater.Payload.LatestVersion.CompareTo(updater.Payload.ClientVersion) >= 0) {
-                                        text.Text = "Launcher Status - Updated";
+                                        text.Text = "Launcher Status - Good";
                                         status.Image = Properties.Resources.ac_success;
                                         text.ForeColor = Color.FromArgb(0x9fc120);
                                     } else {
-                                        text.Text = "Launcher Status - Prerelease";
+                                        text.Text = "Launcher Status - Beta";
                                         status.Image = Properties.Resources.ac_warning;
                                         text.ForeColor = Color.Yellow;
                                     }
 
                                     description.Text = "Version : v" + Application.ProductVersion;
                                 } else {
-                                    text.Text = "Launcher Status - Available";
+                                    text.Text = "Update - Available";
                                     status.Image = Properties.Resources.ac_warning;
                                     text.ForeColor = Color.Yellow;
                                     description.Text = "New Version : " + updater.Payload.LatestVersion;
 
-                                    DialogResult updateConfirm = new UpdatePopup(updater).ShowDialog();
+                                    IniFile _settingFile = new IniFile("Settings.ini");
 
-                                    if(updateConfirm == DialogResult.OK) {
-                                        if (File.Exists("GameLauncherUpdater.exe")) {
-                                            Process.Start(@"GameLauncherUpdater.exe", Process.GetCurrentProcess().Id.ToString());
-                                        } else {
-                                            Process.Start(@"https://github.com/worldunitedgg/GameLauncher_NFSW/releases/latest");
-                                        }
-                                    };
+                                    if (_settingFile.Read("IgnoreUpdateVersion") == updater.Payload.LatestVersion)
+                                    {
+                                        //No Update Popup
+                                        //Blame DavidCarbon if this Breaks (to some degree), not Zacam...
+                                    }
+                                    else
+                                    {
+                                        DialogResult updateConfirm = new UpdatePopup(updater).ShowDialog();
+
+                                        if (updateConfirm == DialogResult.OK)
+                                        {
+                                            if (File.Exists("GameLauncherUpdater.exe"))
+                                            {
+                                                Process.Start(@"GameLauncherUpdater.exe", Process.GetCurrentProcess().Id.ToString());
+                                            }
+                                            else
+                                            {
+                                                Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
+                                            }
+                                        };
+
+                                        //Check if User clicked Ignore so it doesn't update "IgnoreUpdateVersion"
+                                        if (updateConfirm == DialogResult.Cancel)
+                                        {
+                                            Settings.Default.IgnoreUpdateVersion = String.Empty;
+                                        };
+
+                                        //Write to Settings.ini to Skip Update
+                                        if (updateConfirm == DialogResult.Ignore)
+                                        {
+                                            Settings.Default.IgnoreUpdateVersion = updater.Payload.LatestVersion;
+                                        };
+                                    }
+                                    Settings.Default.Save();
                                 }
                             } else {
-                                text.Text = "Launcher Status - GitHub Error";
+                                text.Text = "Launcher - GitHub Error";
                                 status.Image = Properties.Resources.ac_error;
                                 text.ForeColor = Color.FromArgb(254, 0, 0);
                                 description.Text = "Version : v" + Application.ProductVersion;
@@ -101,7 +122,7 @@ namespace GameLauncher.App.Classes.Events {
                             {
                                 text.Invoke(new Action(delegate ()
                                 {
-                                    text.Text = "Launcher Status - Backend Error";
+                                    text.Text = "Launcher - Backend Error";
                                     text.ForeColor = Color.FromArgb(254, 0, 0);
                                 }));
                                 status.Invoke(new Action(delegate ()
@@ -115,7 +136,7 @@ namespace GameLauncher.App.Classes.Events {
                             }
                             else
                             {
-                                text.Text = "Launcher Status - Backend Error";
+                                text.Text = "Launcher - Backend Error";
                                 status.Image = Properties.Resources.ac_error;
                                 text.ForeColor = Color.FromArgb(254, 0, 0);
                                 description.Text = "Version : v" + Application.ProductVersion;
@@ -124,7 +145,7 @@ namespace GameLauncher.App.Classes.Events {
                     }
                 };
             } catch {
-                text.Text = "Launcher Status - Internal Error";
+                text.Text = "Launcher - Internal Error";
                 status.Image = Properties.Resources.ac_error;
                 text.ForeColor = Color.FromArgb(254, 0, 0);
                 description.Text = "Version : v" + Application.ProductVersion;
