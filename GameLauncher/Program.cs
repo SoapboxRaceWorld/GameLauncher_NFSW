@@ -563,13 +563,17 @@ namespace GameLauncher
 
                             MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         } else {
-                            Log.Info("SPLASH SCREEN: Closing Splash Screen");
-                            StartSplashScreen.Abort();
-
                             ShowMainScreen();
                         }
                     } else {
+
                         MessageBox.Show(null, "An instance of Launcher is already running.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    if (!Debugger.IsAttached)
+                    {
+                        Log.Info("SPLASH SCREEN: Closing Splash Screen");
+                        StartSplashScreen.Abort();
                     }
                 } finally {
                     mutex.Close();
