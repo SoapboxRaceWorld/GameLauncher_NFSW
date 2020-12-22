@@ -38,7 +38,6 @@ using System.Management.Automation;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using WindowsFirewallHelper;
-using WindowsFirewallHelper.FirewallAPIv2;
 using GameLauncher.App.Classes.InsiderKit;
 
 namespace GameLauncher
@@ -438,55 +437,6 @@ namespace GameLauncher
                 {
                     Log.Core("WINDOWS DEFENDER: Found 'WindowsDefender' key! Its value is " + _settingFile.Read("WindowsDefender"));
                 }
-
-
-                //Windows Firewall Runner
-                if (_settingFile.KeyExists("Firewall"))
-                {
-                    string nameOfLauncher = "SBRW - Game Launcher";
-                    string localOfLauncher = Assembly.GetEntryAssembly().Location;
-
-                    string nameOfUpdater = "SBRW - Game Launcher Updater";
-                    string localOfUpdater = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "GameLauncherUpdater.exe");
-
-                    string groupKeyLauncher = "Game Launcher for Windows";
-                    string descriptionLauncher = "Soapbox Race World";
-
-                    bool removeFirewallRule = false;
-                    bool firstTimeRun = false;
-
-                    if (_settingFile.Read("Firewall") == "Not Excluded")
-                    {
-                        firstTimeRun = true;
-                        _settingFile.Write("Firewall", "Excluded");
-                    }
-                    else if (_settingFile.Read("Firewall") == "Reset")
-                    {
-                        removeFirewallRule = true;
-                        _settingFile.Write("Firewall", "Not Excluded");
-                    }
-
-                    //Inbound & Outbound
-                    FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
-                    FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
-
-                    //This Removes the Game File Exe From Firewall
-                    //To Find the one that Adds the Exe To Firewall -> Search for `OnDownloadFinished()`
-                    string CurrentGameFilesExePath = Path.Combine(_settingFile.Read("InstallationDirectory") + "\\nfsw.exe");
-
-                    if (File.Exists(CurrentGameFilesExePath) && removeFirewallRule == true)
-                    {
-                        string nameOfGame = "SBRW - Game";
-                        string localOfGame = CurrentGameFilesExePath;
-
-                        string groupKeyGame = "Need for Speed: World";
-                        string descriptionGame = groupKeyGame;
-
-                        //Inbound & Outbound
-                        FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
-                    }
-                }
-
             }
 
             Log.Visuals("CORE: Doing magic with ImageServerName");

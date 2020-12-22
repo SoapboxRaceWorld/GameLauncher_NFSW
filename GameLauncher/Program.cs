@@ -14,6 +14,8 @@ using CommandLine;
 using System.Globalization;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.Classes.InsiderKit;
+using System.Reflection;
+using WindowsFirewallHelper;
 
 namespace GameLauncher
 {
@@ -70,7 +72,6 @@ namespace GameLauncher
             Log.StartLogging();
 
             Self.currentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
-
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
 
@@ -98,6 +99,55 @@ namespace GameLauncher
                 Thread.Sleep(3000);
             }
 
+            if (!DetectLinux.LinuxDetected()) {
+               //Windows Firewall Runner
+                if (_settingFile.KeyExists("Firewall"))
+                {
+                    string nameOfLauncher = "SBRW - Game Launcher";
+                    string localOfLauncher = Assembly.GetEntryAssembly().Location;
+
+                    string nameOfUpdater = "SBRW - Game Launcher Updater";
+                    string localOfUpdater = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "GameLauncherUpdater.exe");
+
+                    string groupKeyLauncher = "Game Launcher for Windows";
+                    string descriptionLauncher = "Soapbox Race World";
+
+                    bool removeFirewallRule = false;
+                    bool firstTimeRun = false;
+
+                    if (_settingFile.Read("Firewall") == "Not Excluded")
+                    {
+                        firstTimeRun = true;
+                        _settingFile.Write("Firewall", "Excluded");
+                    }
+                    else if (_settingFile.Read("Firewall") == "Reset")
+                    {
+                        removeFirewallRule = true;
+                        _settingFile.Write("Firewall", "Not Excluded");
+                    }
+
+                    //Inbound & Outbound
+                    FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
+                    FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
+
+                    //This Removes the Game File Exe From Firewall
+                    //To Find the one that Adds the Exe To Firewall -> Search for `OnDownloadFinished()`
+                    string CurrentGameFilesExePath = Path.Combine(_settingFile.Read("InstallationDirectory") + "\\nfsw.exe");
+
+                    if (File.Exists(CurrentGameFilesExePath) && removeFirewallRule == true)
+                    {
+                        string nameOfGame = "SBRW - Game";
+                        string localOfGame = CurrentGameFilesExePath;
+
+                        string groupKeyGame = "Need for Speed: World";
+                        string descriptionGame = groupKeyGame;
+
+                        //Inbound & Outbound
+                        FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+                    }
+                }
+            }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
 
@@ -108,10 +158,10 @@ namespace GameLauncher
             switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/generate_204/"))
             {
                 case API.Online:
-                    Log.Api("PRE-CHECK: Internet Check Passed {api-sbrw.davidcarbon.download}");
+                    Log.UrlCall("PRE-CHECK: Internet Check Passed: {api-sbrw.davidcarbon.download}");
                     break;
                 default:
-                    Log.Error("PRE-CHECK: Failed to Connect to {api-sbrw.davidcarbon.download} Checking {api.worldunited.gg}");
+                    Log.Error("PRE-CHECK: Failed to Connect to: {api-sbrw.davidcarbon.download}, Checking: {api.worldunited.gg}");
                     DCAPIOffline = true;
                     break;
             }
@@ -121,10 +171,10 @@ namespace GameLauncher
                 switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
                 {
                     case API.Online:
-                        Log.Api("PRE-CHECK: Internet Check Passed {api.worldunited.gg}");
+                        Log.UrlCall("PRE-CHECK: Internet Check Passed: {api.worldunited.gg}");
                         break;
                     default:
-                        Log.Error("PRE-CHECK: Failed to Connect to {api.worldunited.gg}");
+                        Log.Error("PRE-CHECK: Failed to Connect to: {api.worldunited.gg}");
                         AllAPIsOffline = true;
                         break;
                 }
@@ -186,7 +236,7 @@ namespace GameLauncher
                     var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(Self.secondstaticapiserver + "/Version.txt");
                     if (!string.IsNullOrEmpty(GetLatestUpdaterBuildVersion))
                     {
-                        Log.Info("LAUNCHER UPDATER: Latest Version Found!");
+                        Log.Info("LAUNCHER UPDATER: Latest Version Check:");
                         LatestUpdaterBuildVersion = GetLatestUpdaterBuildVersion;
                     }
                     Log.Info("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
@@ -195,7 +245,7 @@ namespace GameLauncher
                     var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(Self.staticapiserver + "/Version.txt");
                     if (!string.IsNullOrEmpty(GetLatestUpdaterBuildVersion))
                     {
-                        Log.Info("LAUNCHER UPDATER: Latest Version Found!");
+                        Log.Info("LAUNCHER UPDATER: Latest Version Check:");
                         LatestUpdaterBuildVersion = GetLatestUpdaterBuildVersion;
                     }
                     Log.Info("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
