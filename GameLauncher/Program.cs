@@ -16,6 +16,7 @@ using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.Classes.InsiderKit;
 using System.Reflection;
 using WindowsFirewallHelper;
+using System.Security.Cryptography.X509Certificates;
 
 namespace GameLauncher
 {
@@ -50,7 +51,8 @@ namespace GameLauncher
                 {
                     if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394802)
                     {
-                        //Nothing
+                        //Install Carbon Crew CA
+                        CertificateStore.Check();
                     }
                     else
                     {

@@ -202,6 +202,7 @@
     <Compile Include="App\Classes\RPC\CarList.cs" />
     <Compile Include="App\Classes\RPC\DiscordGamePresence.cs" />
     <Compile Include="App\Classes\RPC\EventList.cs" />
+    <Compile Include="App\Classes\SystemPlatform\Windows\CertificateStore.cs" />
     <Compile Include="App\SplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>
