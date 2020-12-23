@@ -16,7 +16,6 @@ using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.Classes.InsiderKit;
 using System.Reflection;
 using WindowsFirewallHelper;
-using System.Security.Cryptography.X509Certificates;
 
 namespace GameLauncher
 {
