@@ -8,6 +8,9 @@ using System.IO.Compression;
 using System.Threading;
 
 using SimpleJSON;
+using System.Threading.Tasks;
+using GameLauncherUpdater.App.Core;
+using System.Reflection;
 
 namespace GameLauncherUpdater
 {
@@ -45,30 +48,74 @@ namespace GameLauncherUpdater
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-            var client = new WebClient();
-            Uri StringToUri = new Uri("https://api.worldunited.gg/update.php?version=" + version);
-            client.CancelAsync();
-            client.DownloadStringAsync(StringToUri);
-            client.DownloadStringCompleted += (sender2, e2) => {
-                try {
-					JSONNode json = JSON.Parse(e2.Result);
+            try
+            {
+                var client = new WebClient();
+                Uri StringToUri = new Uri("https://api.worldunited.gg/update.php?version=" + version);
+                client.CancelAsync();
+                client.DownloadStringAsync(StringToUri);
+                client.DownloadStringCompleted += (sender2, e2) => {
+                    try
+                    {
+                        JSONNode json = JSON.Parse(e2.Result);
 
-					if (json["payload"]["update_exists"] != false) {
-                        Thread thread = new Thread(() => {
-                            WebClient client2 = new WebClient();
-                            client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
-                            client2.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
-                            client2.DownloadFileAsync(new Uri(json["payload"]["update"]["download_url"]), tempNameZip);
-						});
-                        thread.Start();
-                    } else {
-                        Process.Start(@"GameLauncher.exe");
-                        error("Starting GameLauncher.exe");
+                        if (json["payload"]["update_exists"] != false)
+                        {
+                            Thread thread = new Thread(() => {
+                                WebClient client2 = new WebClient();
+                                client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+                                client2.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
+                                client2.DownloadFileAsync(new Uri(json["payload"]["update"]["download_url"]), tempNameZip);
+                            });
+                            thread.Start();
+                        }
+                        else
+                        {
+                            Process.Start(@"GameLauncher.exe");
+                            error("Starting GameLauncher.exe");
+                        }
                     }
-                } catch(Exception ex) {
-                    error("Failed to update.\n" + ex.Message);    
-                }
-            };
+                    catch (Exception ex)
+                    {
+                        error("Failed to update.\n" + ex.Message);
+                    }
+                };
+            }
+            catch
+            {
+                var client = new WebClient();
+                Uri StringToUri = new Uri("https://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
+                client.CancelAsync();
+                client.DownloadStringAsync(StringToUri);
+                client.DownloadStringCompleted += (sender2, e2) => {
+                    try
+                    {
+                        JSONNode json = JSON.Parse(e2.Result);
+
+                        string LatestVersion = json["tag_name"];
+
+                        if (version != LatestVersion)
+                        {
+                            Thread thread = new Thread(() => {
+                                WebClient client2 = new WebClient();
+                                client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+                                client2.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
+                                client2.DownloadFileAsync(new Uri(json["assets"]["browser_download_url"]), tempNameZip);
+                            });
+                            thread.Start();
+                        }
+                        else
+                        {
+                            Process.Start(@"GameLauncher.exe");
+                            error("Starting GameLauncher.exe");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        error("Failed to update.\n" + ex.Message);
+                    }
+                };
+            }
         }
 
         private string FormatFileSize(long byteCount) {
