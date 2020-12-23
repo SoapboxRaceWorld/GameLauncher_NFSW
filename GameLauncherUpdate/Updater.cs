@@ -12,12 +12,11 @@ using GameLauncherUpdater.App;
 
 namespace GameLauncherUpdater
 {
-    public partial class Form1 : Form {
+    public partial class Updater : Form {
         string tempNameZip = Path.GetTempFileName();
         string version;
-        private static readonly JavaScriptSerializer Serializer = new JavaScriptSerializer();
 
-        public Form1() {
+        public Updater() {
             InitializeComponent();
         }
 
@@ -47,9 +46,9 @@ namespace GameLauncherUpdater
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-            /*
             var client = new WebClient();
-            Uri StringToUri = new Uri("https://api2.worldunited.gg/update.php?version=" + version);
+            Uri StringToUri = new Uri("https://api.worldunited.gg/update.php?version=" + version);
+            client.Headers.Add("user-agent", "GameLauncherUpdater " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
             client.CancelAsync();
             client.DownloadStringAsync(StringToUri);
             client.DownloadStringCompleted += (sender2, e2) => {
@@ -73,27 +72,20 @@ namespace GameLauncherUpdater
                         error("Starting GameLauncher.exe");
                     }
                 }
-                catch (Exception ex)
+                catch 
                 {
-                    error("Failed to update.\n" + ex.Message);
+                    information.Text = "Failed to Connect to Main API --> Connecting to GitHub API";
                 }
             };
-            */
+            
             var client3 = new WebClient();
             Uri StringToUri2 = new Uri("https://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
-            client3.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
+            client3.Headers.Add("user-agent", "GameLauncherUpdater " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
             client3.CancelAsync();
             client3.DownloadStringAsync(StringToUri2);
             client3.DownloadStringCompleted += (sender3, e3) => {
                 try
                 {
-                    /*
-                    var gitHubUri = new Uri("https://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
-
-                    var json = ApiRequest.GetJson(gitHubUri);
-
-                    var jsonObject = Serializer.Deserialize<ReleaseModel>(json);
-                    */
                     ReleaseModel json = new JavaScriptSerializer().Deserialize<ReleaseModel>(e3.Result);
 
                     if (version != json.tag_name)

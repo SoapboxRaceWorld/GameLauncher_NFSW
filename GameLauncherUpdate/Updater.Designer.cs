@@ -1,6 +1,6 @@
 ﻿namespace GameLauncherUpdater
 {
-    partial class Form1
+    partial class Updater
     {
         /// <summary>
         /// Wymagana zmienna projektanta.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Updater));
             this.downloadProgress = new System.Windows.Forms.ProgressBar();
             this.information = new System.Windows.Forms.Label();
             this.SuspendLayout();
