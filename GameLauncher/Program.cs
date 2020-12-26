@@ -234,22 +234,29 @@ namespace GameLauncher
 
                 //Update this text file if a new GameLauncherUpdater.exe has been delployed - DavidCarbon
                 try {
-                    var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(Self.secondstaticapiserver + "/Version.txt");
-                    if (!string.IsNullOrEmpty(GetLatestUpdaterBuildVersion))
+                    try
                     {
-                        Log.Info("LAUNCHER UPDATER: Latest Version Check:");
-                        LatestUpdaterBuildVersion = GetLatestUpdaterBuildVersion;
+                        var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(Self.secondstaticapiserver + "/Version.txt");
+                        if (!string.IsNullOrEmpty(GetLatestUpdaterBuildVersion))
+                        {
+                            Log.Info("LAUNCHER UPDATER: Latest Version Check:");
+                            LatestUpdaterBuildVersion = GetLatestUpdaterBuildVersion;
+                        }
+                    }
+                    catch 
+                    {
+                        var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(Self.staticapiserver + "/Version.txt");
+                        if (!string.IsNullOrEmpty(GetLatestUpdaterBuildVersion))
+                        {
+                            Log.Info("LAUNCHER UPDATER: Latest Version Check:");
+                            LatestUpdaterBuildVersion = GetLatestUpdaterBuildVersion;
+                        }
                     }
                     Log.Info("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
                 }
-                catch {
-                    var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(Self.staticapiserver + "/Version.txt");
-                    if (!string.IsNullOrEmpty(GetLatestUpdaterBuildVersion))
-                    {
-                        Log.Info("LAUNCHER UPDATER: Latest Version Check:");
-                        LatestUpdaterBuildVersion = GetLatestUpdaterBuildVersion;
-                    }
-                    Log.Info("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
+                catch (Exception ex)
+                {
+                    Log.Error("LAUNCHER UPDATER: Failed to get new version file: " + ex.Message);
                 }
             }
 
