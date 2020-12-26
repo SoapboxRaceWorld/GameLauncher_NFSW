@@ -16,6 +16,9 @@ namespace GameLauncher.App.Classes.Events
         Label text;
         Label description;
 
+        private static int CurrentLauncherBuild = Int32.Parse(Application.ProductVersion);
+        private static int NewLauncherBuild;
+
         public LauncherUpdateCheck(PictureBox statusImage, Label statusText, Label statusDescription)  {
             status = statusImage;
             text = statusText;
@@ -144,12 +147,16 @@ namespace GameLauncher.App.Classes.Events
                         }
                     }
                 };
-            } catch {
+            } 
+            catch 
+            {
                 text.Text = "Launcher - Internal Error";
                 status.Image = Properties.Resources.ac_error;
                 text.ForeColor = Color.FromArgb(254, 0, 0);
                 description.Text = "Version : v" + Application.ProductVersion;
             }
+
+            //New Updater Checks
         }
     }
 }
