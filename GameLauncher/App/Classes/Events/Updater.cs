@@ -39,15 +39,7 @@ namespace GameLauncher.App.Classes.Events
                     MainAPI();
                     break;
                 default:
-                    switch (APIStatusChecker.CheckStatus("http://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest"))
-                    {
-                        case API.Online:
-                            GitHubAPI();
-                            break;
-                        default:
-                            Log.Error("UPDATER: Failed to Retrive Latest Build Information from two APIs ");
-                            break;
-                    }
+                    GitHubAPI();
                     break;
             }
 
@@ -151,18 +143,27 @@ namespace GameLauncher.App.Classes.Events
         private void GitHubAPI()
         {
             Log.Warning("UPDATER: Falling back to GitHub API");
-            WebClient update_data = new WebClient();
-            update_data.Headers.Add("user-agent", "GameLauncherUpdater " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-            update_data.DownloadString(new Uri("http://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest"));
-            update_data.DownloadStringCompleted += (sender, e) => {
-                GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(e.Result);
+            switch (APIStatusChecker.CheckStatus("http://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest"))
+            {
+                case API.Online:
+                    WebClient update_data = new WebClient();
+                    update_data.CancelAsync();
+                    update_data.Headers.Add("user-agent", "GameLauncherUpdater " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    update_data.DownloadStringAsync(new Uri("http://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest"));
+                    update_data.DownloadStringCompleted += (sender, e) => {
+                        GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(e.Result);
 
-                if (GHAPI.TagName != null)
-                {
-                    LatestLauncherBuild = GHAPI.TagName;
-                    Log.Info("UPDATER: Latest Version -> " + GHAPI.TagName);
-                }
-            };
+                        if (GHAPI.TagName != null)
+                        {
+                            LatestLauncherBuild = GHAPI.TagName;
+                            Log.Info("UPDATER: Latest Version -> " + GHAPI.TagName);
+                        }
+                    };
+                    break;
+                default:
+                    Log.Error("UPDATER: Failed to Retrive Latest Build Information from two APIs ");
+                    break;
+            }
         }
     }
 }
