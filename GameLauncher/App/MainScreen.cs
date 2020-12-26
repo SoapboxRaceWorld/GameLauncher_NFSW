@@ -792,7 +792,6 @@ namespace GameLauncher
             this.BringToFront();
 
             if(!DetectLinux.LinuxDetected()) {
-                Log.UrlCall("LAUNCHER: Checking for update: " + Self.mainserver + "/update.php?version=" + Application.ProductVersion);
                 new LauncherUpdateCheck(LauncherIconStatus, LauncherStatusText, LauncherStatusDesc).CheckAvailability();
             } else {
                 LauncherIconStatus.Image = Properties.Resources.ac_success;

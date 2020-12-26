@@ -10,11 +10,11 @@ namespace GameLauncher.App
 {
     public partial class UpdatePopup : Form
     {
-        public UpdatePopup(UpdateCheckResponse updater)
+        public UpdatePopup(string LatestLauncherBuild)
         {
             IniFile _settingFile = new IniFile("Settings.ini");
 
-            if (_settingFile.Read("IgnoreUpdateVersion") == updater.Payload.LatestVersion)
+            if (_settingFile.Read("IgnoreUpdateVersion") == LatestLauncherBuild)
             {
                 //No Update Popup
             }
@@ -31,7 +31,7 @@ namespace GameLauncher.App
                 Bitmap bitmap1 = Bitmap.FromHicon(SystemIcons.Information.Handle);
                 UpdateIcon.Image = bitmap1;
 
-                UpdateText.Text = "An update is available. Would you like to update?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + updater.Payload.LatestVersion;
+                UpdateText.Text = "An update is available. Would you like to update?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + LatestLauncherBuild;
 
                 this.UpdateButton.DialogResult = DialogResult.OK;
                 this.IgnoreButton.DialogResult = DialogResult.Cancel;
