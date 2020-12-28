@@ -1097,6 +1097,7 @@ namespace GameLauncher
 
             var serverIp = _serverInfo.IpAddress;
             string numPlayers;
+            string numRegistered;
 
             //Disable Social Panel when switching
             DisableSocialPanelandClearIt();
@@ -1177,6 +1178,7 @@ namespace GameLauncher
                     if (_realServername == "Offline Built-In Server") {
                         DisableSocialPanelandClearIt();
                         numPlayers = "∞";
+                        numRegistered = "∞";
                     } else {
                         if (!serverStatusDictionary.ContainsKey(_serverInfo.Id)) {
                             serverStatusDictionary.Add(_serverInfo.Id, 1);
@@ -1380,9 +1382,12 @@ namespace GameLauncher
                         }
 
                         if (json.MaxUsersAllowed == 0) {
-                            numPlayers = string.Format("{0} / {1}", json.OnlineNumber, json.NumberOfRegistered);
+                            //numPlayers = string.Format("{0} / {1}", json.OnlineNumber, json.NumberOfRegistered);
+                            numPlayers = string.Format("{0}", json.OnlineNumber);
+                            numRegistered = string.Format("{0}", json.NumberOfRegistered);
                         } else {
                             numPlayers = string.Format("{0} / {1}", json.OnlineNumber, json.MaxUsersAllowed.ToString());
+                            numRegistered = string.Format("{0}", json.NumberOfRegistered);
                         }
 
                         _allowRegistration = true;
@@ -1444,12 +1449,12 @@ namespace GameLauncher
                     {
                         ServerStatusDesc.Invoke(new Action(delegate ()
                         {
-                            ServerStatusDesc.Text = string.Format("Players / Registered:\n {0}", numPlayers);
+                            ServerStatusDesc.Text = string.Format("Players Online: {0}\nRegistered: {1}", numPlayers, numRegistered);
                         }));
                     }
                     else
                     {
-                        this.ServerStatusDesc.Text = string.Format("Players / Registered:\n {0}", numPlayers);
+                        this.ServerStatusDesc.Text = string.Format("Players Online: {0}\nRegistered: {1}", numPlayers, numRegistered);
                     }
 
                     _serverEnabled = true;
