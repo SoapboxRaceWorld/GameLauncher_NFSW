@@ -2207,54 +2207,6 @@ namespace GameLauncher
         }
 
         private void SettingsSave_Click(object sender, EventArgs e) {
-
-            //TODO null check
-            _settingFile.Write("Language", SettingsLanguage.SelectedValue.ToString());
-
-            var userSettingsXml = new XmlDocument();
-
-            try { 
-                if (File.Exists(_userSettings)) {
-                    try  {
-                        userSettingsXml.Load(_userSettings);
-                        var language = userSettingsXml.SelectSingleNode("Settings/UI/Language");
-                        language.InnerText = SettingsLanguage.SelectedValue.ToString();
-                    } catch {
-                        File.Delete(_userSettings);
-
-                        var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
-                        var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
-
-                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
-                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
-                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + Self.currentLanguage + "</DefaultChatGroup>";
-                        ui.InnerXml = "<Language Type=\"string\">" + SettingsLanguage.SelectedValue + "</Language>";
-
-                        var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
-                    }
-                } else {
-                    try {
-                        var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
-                        var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
-
-                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
-                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
-                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + Self.currentLanguage + "</DefaultChatGroup>";
-                        ui.InnerXml = "<Language Type=\"string\">" + SettingsLanguage.SelectedValue + "</Language>";
-
-                        var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
-                    } catch (Exception ex) {
-                        MessageBox.Show(null, "There was an error saving your settings to actual file. Restoring default.\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        File.Delete(_userSettings);
-                    }
-                }
-            } catch(Exception ex) {
-                MessageBox.Show(null, "There was an error saving your settings to actual file. Restoring default.\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                File.Delete(_userSettings);
-            }
-
-            userSettingsXml.Save(_userSettings);
-
             if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (_settingFile.Read("InstallationDirectory") != _newGameFilesPath))
             {
                 WindowsDefenderGameFilesDirctoryChange();
@@ -2327,7 +2279,7 @@ namespace GameLauncher
             }
 
             //Actually lets check those 2 files
-            if(File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords") && File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords_dis")) {
+            if (File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords") && File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords_dis")) {
                 File.Delete(_settingFile.Read("InstallationDirectory") + "/profwords_dis");
             }
 
@@ -2337,6 +2289,53 @@ namespace GameLauncher
             } else {
                 if (File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords_dis")) File.Move(_settingFile.Read("InstallationDirectory") + "/profwords_dis", _settingFile.Read("InstallationDirectory") + "/profwords");
             }
+
+            //TODO null check
+            _settingFile.Write("Language", SettingsLanguage.SelectedValue.ToString());
+
+            var userSettingsXml = new XmlDocument();
+
+            try { 
+                if (File.Exists(_userSettings)) {
+                    try  {
+                        userSettingsXml.Load(_userSettings);
+                        var language = userSettingsXml.SelectSingleNode("Settings/UI/Language");
+                        language.InnerText = SettingsLanguage.SelectedValue.ToString();
+                    } catch {
+                        File.Delete(_userSettings);
+
+                        var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
+                        var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
+
+                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
+                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
+                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + Self.currentLanguage + "</DefaultChatGroup>";
+                        ui.InnerXml = "<Language Type=\"string\">" + SettingsLanguage.SelectedValue + "</Language>";
+
+                        var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
+                    }
+                } else {
+                    try {
+                        var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
+                        var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
+
+                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
+                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
+                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + Self.currentLanguage + "</DefaultChatGroup>";
+                        ui.InnerXml = "<Language Type=\"string\">" + SettingsLanguage.SelectedValue + "</Language>";
+
+                        var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
+                    } catch (Exception ex) {
+                        MessageBox.Show(null, "There was an error saving your settings to actual file. Restoring default.\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        File.Delete(_userSettings);
+                    }
+                }
+            } catch(Exception ex) {
+                MessageBox.Show(null, "There was an error saving your settings to actual file. Restoring default.\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                File.Delete(_userSettings);
+            }
+
+            userSettingsXml.Save(_userSettings);
 
             SettingsFormElements(false);
             LoggedInFormElements(false);
