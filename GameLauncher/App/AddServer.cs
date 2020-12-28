@@ -31,15 +31,15 @@ namespace GameLauncher.App
 
         private void ApplyEmbeddedFonts() {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
-            OkBTN.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            CancelBTN.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            ServerNameLabel.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+            OkBTN.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            CancelBTN.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            ServerNameLabel.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             ServerName.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             ServerAddress.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            ServerAddressLabel.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            Error.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            Version.Font= new Font(DejaVuSans, 8.25f, FontStyle.Regular);
+            ServerAddressLabel.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            Error.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            Version.Font= new Font(DejaVuSans, 9f, FontStyle.Regular);
         }
 
         private void OkButton_Click(object sender, EventArgs e) {

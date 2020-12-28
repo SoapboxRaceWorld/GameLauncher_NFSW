@@ -23,8 +23,8 @@ namespace GameLauncher.App
         private void ApplyEmbeddedFonts()
         {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
-            AboutText.Font = new Font(DejaVuSansCondensed, 26.25f, FontStyle.Italic);
+            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+            AboutText.Font = new Font(DejaVuSansBold, 26.25f, FontStyle.Bold);
             PatchTitle1.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
             PatchText1.Font = new Font(DejaVuSans, 9.75f, FontStyle.Regular);
             PatchButton1.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);

@@ -44,22 +44,22 @@ namespace GameLauncher.App
             ServerListRenderer.Columns[0].Width = 1;
 
             ServerListRenderer.Columns.Add("Name");
-            ServerListRenderer.Columns[1].Width = 220;
+            ServerListRenderer.Columns[1].Width = 210;
 
             ServerListRenderer.Columns.Add("Country");
-            ServerListRenderer.Columns[2].Width = 80;
+            ServerListRenderer.Columns[2].Width = 100;
             ServerListRenderer.Columns[2].TextAlign = HorizontalAlignment.Center;
 
-            ServerListRenderer.Columns.Add("Players Online");
-            ServerListRenderer.Columns[3].Width = 80;
+            ServerListRenderer.Columns.Add("Online");
+            ServerListRenderer.Columns[3].Width = 75;
             ServerListRenderer.Columns[3].TextAlign = HorizontalAlignment.Center;
 
-            ServerListRenderer.Columns.Add("Registered Players");
-            ServerListRenderer.Columns[4].Width = 100;
+            ServerListRenderer.Columns.Add("Registered");
+            ServerListRenderer.Columns[4].Width = 85;
             ServerListRenderer.Columns[4].TextAlign = HorizontalAlignment.Center;
 
             ServerListRenderer.Columns.Add("Ping");
-            ServerListRenderer.Columns[5].Width = 55;
+            ServerListRenderer.Columns[5].Width = 60;
             ServerListRenderer.Columns[5].TextAlign = HorizontalAlignment.Center;
 
             //Actually accept JSON instead of old format//
@@ -232,12 +232,13 @@ namespace GameLauncher.App
         private void ApplyEmbeddedFonts()
         {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
-            ServerListRenderer.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
-            BtnAddServer.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            BtnSelectServer.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            BtnClose.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            Version.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
+            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+            ServerListRenderer.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            Loading.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            BtnAddServer.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            BtnSelectServer.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            BtnClose.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            Version.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
         }
 
         private void BtnAddServer_Click(object sender, EventArgs e)

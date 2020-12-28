@@ -29,7 +29,7 @@ namespace GameLauncher.App.Classes.Events
 
         public async void CheckAvailability() {
             text.Text = "Launcher - Checking...";
-            description.Text = "Version : v" + Application.ProductVersion;
+            description.Text = "Version: v" + Application.ProductVersion;
             status.Image = Properties.Resources.ac_unknown;
             text.ForeColor = Color.FromArgb(0x848484);
 
@@ -56,24 +56,24 @@ namespace GameLauncher.App.Classes.Events
 
                 if (Revisions > 0)
                 {
-                    text.Text = "Launcher - Insider";
+                    text.Text = "Launcher Status:\n - Insider Build";
                     status.Image = Properties.Resources.ac_warning;
                     text.ForeColor = Color.Yellow;
-                    description.Text = "Version : v" + Application.ProductVersion;
+                    description.Text = "Version: v" + Application.ProductVersion;
                 }
                 else if (Revisions == 0)
                 {
-                    text.Text = "Launcher Status - Good";
+                    text.Text = "Launcher Status:\n - Current Version";
                     status.Image = Properties.Resources.ac_success;
                     text.ForeColor = Color.FromArgb(0x9fc120);
-                    description.Text = "Version : v" + Application.ProductVersion;
+                    description.Text = "Version: v" + Application.ProductVersion;
                 }
                 else
                 {
-                    text.Text = "Update - Available";
+                    text.Text = "Launcher Status:\n - Update Available";
                     status.Image = Properties.Resources.ac_warning;
                     text.ForeColor = Color.Yellow;
-                    description.Text = "New Version : " + LatestLauncherBuild.ToString();
+                    description.Text = "New Version: " + LatestLauncherBuild.ToString();
 
                     IniFile _settingFile = new IniFile("Settings.ini");
 
@@ -115,10 +115,10 @@ namespace GameLauncher.App.Classes.Events
             }
             else
             {
-                text.Text = "Launcher - Error";
+                text.Text = "Launcher Status:\n - Backend Error";
                 status.Image = Properties.Resources.ac_error;
                 text.ForeColor = Color.FromArgb(254, 0, 0);
-                description.Text = "Version : v" + Application.ProductVersion;
+                description.Text = "Version: v" + Application.ProductVersion;
             }
             //----------------------//
         }

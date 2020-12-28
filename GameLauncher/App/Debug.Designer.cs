@@ -94,7 +94,7 @@
             this.Load += new System.EventHandler(this.DebugWindow_Load);
             ((System.ComponentModel.ISupportInitialize)(this.data)).EndInit();
             this.ResumeLayout(false);
-
+            this.DoubleBuffered = true;
         }
 
         #endregion

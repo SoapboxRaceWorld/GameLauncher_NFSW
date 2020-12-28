@@ -84,7 +84,7 @@
             this.Text = "VerifyHash";
             this.TopMost = true;
             this.ResumeLayout(false);
-
+            this.DoubleBuffered = true;
         }
 
         #endregion

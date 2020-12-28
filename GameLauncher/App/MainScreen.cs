@@ -796,8 +796,8 @@ namespace GameLauncher
             } else {
                 LauncherIconStatus.Image = Properties.Resources.ac_success;
                 LauncherStatusText.ForeColor = Color.FromArgb(0x9fc120);
-                LauncherStatusText.Text = "Launcher Status - Linux";
-                LauncherStatusDesc.Text = "Version : v" + Application.ProductVersion;
+                LauncherStatusText.Text = "Launcher Status:\n - Linux Build";
+                LauncherStatusDesc.Text = "Version: v" + Application.ProductVersion;
             }
             SettingsLauncherVersion.Text = LauncherStatusDesc.Text;
 
@@ -1085,7 +1085,7 @@ namespace GameLauncher
 
 
 
-            ServerStatusText.Text = "Server Status - Pinging";
+            ServerStatusText.Text = "Server Status:\n - Pinging";
             ServerStatusText.ForeColor = Color.FromArgb(66, 179, 189);
             ServerStatusDesc.Text = "";
             ServerStatusIcon.Image = Properties.Resources.server_checking;
@@ -1136,7 +1136,7 @@ namespace GameLauncher
                 if(e2.Cancelled) {
                     //ServerStatusBar(_colorOffline, _startPoint, _endPoint);
 
-                    ServerStatusText.Text = "Server Status - Offline ( OFF )";
+                    ServerStatusText.Text = "Server Status:\n - Offline ( OFF )";
                     ServerStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                     ServerStatusDesc.Text = "Failed to connect to server.";
                     ServerStatusIcon.Image = Properties.Resources.server_offline;
@@ -1156,7 +1156,7 @@ namespace GameLauncher
                 } else if (e2.Error != null) {
                     //ServerStatusBar(_colorOffline, _startPoint, _endPoint);
 
-                    ServerStatusText.Text = "Server Status - Offline ( OFF )";
+                    ServerStatusText.Text = "Server Status:\n - Offline ( OFF )";
                     ServerStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                     ServerStatusDesc.Text = "Server seems to be offline.";
                     ServerStatusIcon.Image = Properties.Resources.server_offline;
@@ -1281,7 +1281,7 @@ namespace GameLauncher
                                 FacebookIcon.BackgroundImage = Properties.Resources.social_facebook;
                                 FacebookGroupLink.Enabled = true;
                                 _serverFacebookLink = json.FacebookUrl;
-                                FacebookGroupLink.Text = "Faceboox Page";
+                                FacebookGroupLink.Text = "Facebook Page";
                             }
                         }
                         catch
@@ -1391,7 +1391,7 @@ namespace GameLauncher
                     }
 
                     try { 
-                        ServerStatusText.Text = "Server Status - Online ( ON )";
+                        ServerStatusText.Text = "Server Status:\n - Online ( ON )";
                         ServerStatusText.ForeColor = Color.FromArgb(159, 193, 32);
                         ServerStatusIcon.Image = Properties.Resources.server_online;
                         _loginEnabled = true;
@@ -1444,12 +1444,12 @@ namespace GameLauncher
                     {
                         ServerStatusDesc.Invoke(new Action(delegate ()
                         {
-                            ServerStatusDesc.Text = string.Format("Players in Game - {0}", numPlayers);
+                            ServerStatusDesc.Text = string.Format("Players / Registered:\n {0}", numPlayers);
                         }));
                     }
                     else
                     {
-                        this.ServerStatusDesc.Text = string.Format("Players in Game - {0}", numPlayers);
+                        this.ServerStatusDesc.Text = string.Format("Players / Registered:\n {0}", numPlayers);
                     }
 
                     _serverEnabled = true;
@@ -1552,82 +1552,83 @@ namespace GameLauncher
         private void ApplyEmbeddedFonts()
         {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
+            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
             /* Front Screen */
-            SelectServerBtn.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
-            translatedBy.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
-            ServerPick.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
-            AddServer.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
+            InsiderBuildNumberText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SelectServerBtn.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            translatedBy.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
+            ServerPick.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            AddServer.Font = new Font(DejaVuSansBold, 8f, FontStyle.Bold);
             ImageServerName.Font = new Font(DejaVuSans, 9.75f, FontStyle.Regular);
-            ShowPlayPanel.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
-            CurrentWindowInfo.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            LauncherStatusText.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Regular);
-            LauncherStatusDesc.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Regular);
-            ServerStatusText.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Regular);
-            ServerStatusDesc.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Regular);
-            APIStatusText.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Regular);
-            APIStatusDesc.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Regular);
-            ExtractingProgress.Font  = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Regular);
+            ShowPlayPanel.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
+            CurrentWindowInfo.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            LauncherStatusText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            LauncherStatusDesc.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            ServerStatusText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            ServerStatusDesc.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            APIStatusText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            APIStatusDesc.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            ExtractingProgress.Font  = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             /* Social Panel */
-            ServerInfoPanel.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
-            HomePageLink.Font = new Font(DejaVuSans, 8.25f, FontStyle.Bold);
-            DiscordInviteLink.Font = new Font(DejaVuSans, 8.25f, FontStyle.Bold);
-            FacebookGroupLink.Font = new Font(DejaVuSans, 8.25f, FontStyle.Bold);
-            TwitterAccountLink.Font = new Font(DejaVuSans, 8.25f, FontStyle.Bold);
-            SceneryGroupText.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
-            ServerShutDown.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
+            //ServerInfoPanel.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
+            HomePageLink.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            DiscordInviteLink.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            FacebookGroupLink.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            TwitterAccountLink.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SceneryGroupText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            ServerShutDown.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             /* Settings */
             SettingsPanel.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
-            SettingsAboutButton.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
-            SettingsGamePathText.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
-            SettingsGameFiles.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            SettingsCDNText.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
-            SettingsCDNPick.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
-            SettingsLanguageText.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
-            SettingsLanguage.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
-            SettingsClearCrashLogsButton.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
-            SettingsClearCommunicationLogButton.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
-            SettingsClearServerModCacheButton.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
-            SettingsWordFilterCheck.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            SettingsProxyCheckbox.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            SettingsDiscordRPCCheckbox.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            SettingsGameFilesCurrentText.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
-            SettingsGameFilesCurrent.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            SettingsCDNCurrentText.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
-            SettingsCDNCurrent.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            SettingsLauncherPathText.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
-            SettingsLauncherPathCurrent.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            SettingsNetworkText.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
-            SettingsMainSrvText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            SettingsMainCDNText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            SettingsBkupSrvText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            SettingsBkupCDNText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            //SettingsVFilesButton.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Bold);
-            SettingsLauncherVersion.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Regular);
-            SettingsSave.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
-            SettingsCancel.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
+            SettingsAboutButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            SettingsGamePathText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            SettingsGameFiles.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            SettingsCDNText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            SettingsCDNPick.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
+            SettingsLanguageText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            SettingsLanguage.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
+            SettingsClearCrashLogsButton.Font = new Font(DejaVuSansBold, 8f, FontStyle.Bold);
+            SettingsClearCommunicationLogButton.Font = new Font(DejaVuSansBold, 8f, FontStyle.Bold);
+            SettingsClearServerModCacheButton.Font = new Font(DejaVuSansBold, 8f, FontStyle.Bold);
+            SettingsWordFilterCheck.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SettingsProxyCheckbox.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SettingsDiscordRPCCheckbox.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SettingsGameFilesCurrentText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            SettingsGameFilesCurrent.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SettingsCDNCurrentText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            SettingsCDNCurrent.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SettingsLauncherPathText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            SettingsLauncherPathCurrent.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SettingsNetworkText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            SettingsMainSrvText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SettingsMainCDNText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SettingsBkupSrvText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SettingsBkupCDNText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            //SettingsVFilesButton.Font = new Font(DejaVuSansBold, 8.25f, FontStyle.Bold);
+            SettingsLauncherVersion.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SettingsSave.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            SettingsCancel.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             /* Log In Panel */
-            MainEmail.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
-            MainPassword.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
-            RememberMe.Font = new Font(DejaVuSans, 8.25f, FontStyle.Bold);
-            ForgotPassword.Font = new Font(DejaVuSansCondensed, 8.25f, FontStyle.Regular);
-            LoginButton.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
-            RegisterText.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
-            ServerPingStatusText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            LogoutButton.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
-            PlayButton.Font = new Font(DejaVuSansCondensed, 14.25f, FontStyle.Bold);
-            PlayProgress.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
-            PlayProgressText.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
+            MainEmail.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            MainPassword.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            RememberMe.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            ForgotPassword.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            LoginButton.Font = new Font(DejaVuSansBold, 10f, FontStyle.Bold);
+            RegisterText.Font = new Font(DejaVuSansBold, 10f, FontStyle.Bold);
+            ServerPingStatusText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            LogoutButton.Font = new Font(DejaVuSansBold, 10f, FontStyle.Bold);
+            PlayButton.Font = new Font(DejaVuSansBold, 14f, FontStyle.Bold);
+            PlayProgress.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            PlayProgressText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             PlayProgressTextTimer.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             /* Registering Panel */
-            RegisterPanel.Font = new Font(DejaVuSans, 8.25f, FontStyle.Bold);
-            RegisterEmail.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
-            RegisterPassword.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
-            RegisterConfirmPassword.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
-            RegisterTicket.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
-            RegisterAgree.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            RegisterButton.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
-            RegisterCancel.Font = new Font(DejaVuSans, 9f, FontStyle.Bold);
+            RegisterPanel.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            RegisterEmail.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            RegisterPassword.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            RegisterConfirmPassword.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            RegisterTicket.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            RegisterAgree.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            RegisterButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            RegisterCancel.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
         }
 
         private void RegisterText_LinkClicked(object sender, EventArgs e)
@@ -2531,14 +2532,14 @@ namespace GameLauncher
             switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
             {
                 case API.Online:
-                    APIStatusText.Text = "United API - Online";
+                    APIStatusText.Text = "United API:\n - Online";
                     APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
-                    APIStatusDesc.Text = "Connected to United API";
+                    APIStatusDesc.Text = "Connected to API";
                     APIStatusIcon.Image = Properties.Resources.api_success;
                     Log.Api("PINGING API: United API has responded. Its Online!");
                     break;
                 default:
-                    APIStatusText.Text = "United API - Offline";
+                    APIStatusText.Text = "United API:\n - Offline";
                     APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                     APIStatusDesc.Text = "Checking Carbon API";
                     APIStatusIcon.Image = Properties.Resources.api_error;
@@ -2550,21 +2551,21 @@ namespace GameLauncher
             if (WUGGAPIOffline == true && DCAPIOffline == false && DC2APIOffline == false && AllAPIsOffline == false)
             {
                 await Task.Delay(500);
-                APIStatusText.Text = "Carbon API - Pinging";
+                APIStatusText.Text = "Carbon API:\n - Pinging";
                 APIStatusText.ForeColor = Color.FromArgb(66, 179, 189);
                 APIStatusIcon.Image = Properties.Resources.api_checking;
                 await Task.Delay(1000);
                 switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/serverlist.json"))
                 {
                     case API.Online:
-                        APIStatusText.Text = "Carbon API - Online";
+                        APIStatusText.Text = "Carbon API:\n - Online";
                         APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
-                        APIStatusDesc.Text = "Connected to Carbon API";
+                        APIStatusDesc.Text = "Connected to API";
                         APIStatusIcon.Image = Properties.Resources.api_success;
                         Log.Api("PINGING API: Carbon API has responded. Its Online!");
                         break;
                     default:
-                        APIStatusText.Text = "Carbon API - Offline";
+                        APIStatusText.Text = "Carbon API:\n - Offline";
                         APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                         APIStatusDesc.Text = "Checking Carbon 2nd API";
                         APIStatusIcon.Image = Properties.Resources.api_error;
@@ -2577,21 +2578,21 @@ namespace GameLauncher
             if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == false && AllAPIsOffline == false)
             {
                 await Task.Delay(500);
-                APIStatusText.Text = "Carbon 2nd API - Pinging";
+                APIStatusText.Text = "Carbon 2nd API:\n - Pinging";
                 APIStatusText.ForeColor = Color.FromArgb(66, 179, 189);
                 APIStatusIcon.Image = Properties.Resources.api_checking;
                 await Task.Delay(1000);
                 switch (APIStatusChecker.CheckStatus(Self.secondstaticapiserver + "/serverlist.json"))
                 {
                     case API.Online:
-                        APIStatusText.Text = "Carbon 2nd API - Online";
+                        APIStatusText.Text = "Carbon 2nd API:\n - Online";
                         APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
-                        APIStatusDesc.Text = "Connected to Carbon 2nd API";
+                        APIStatusDesc.Text = "Connected to API";
                         APIStatusIcon.Image = Properties.Resources.api_success;
                         Log.Api("PINGING API: Carbon 2nd API has responded. Its Online!");
                         break;
                     default:
-                        APIStatusText.Text = "Carbon 2nd API - Offline";
+                        APIStatusText.Text = "Carbon 2nd API:\n - Offline";
                         APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                         APIStatusDesc.Text = "Checking WOPL API";
                         APIStatusIcon.Image = Properties.Resources.api_error;
@@ -2604,21 +2605,21 @@ namespace GameLauncher
             if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == true && AllAPIsOffline == false)
             {
                 await Task.Delay(500);
-                APIStatusText.Text = "WOPL API - Pinging";
+                APIStatusText.Text = "WOPL API:\n - Pinging";
                 APIStatusText.ForeColor = Color.FromArgb(66, 179, 189);
                 APIStatusIcon.Image = Properties.Resources.api_checking;
                 await Task.Delay(1000);
                 switch (APIStatusChecker.CheckStatus(Self.woplserver + "/serverlist.json"))
                 {
                     case API.Online:
-                        APIStatusText.Text = "WOPL API - Online";
+                        APIStatusText.Text = "WOPL API:\n - Online";
                         APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
-                        APIStatusDesc.Text = "Connected to WOPL API";
+                        APIStatusDesc.Text = "Connected to API";
                         APIStatusIcon.Image = Properties.Resources.api_success;
                         Log.Api("PINGING API: WOPL API has responded. Its Online!");
                         break;
                     default:
-                        APIStatusText.Text = "WOPL API - Offline";
+                        APIStatusText.Text = "WOPL API:\n - Offline";
                         APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                         APIStatusDesc.Text = "Yikes!";
                         APIStatusIcon.Image = Properties.Resources.api_error;
@@ -2631,7 +2632,7 @@ namespace GameLauncher
             if (AllAPIsOffline == true)
             {
                 await Task.Delay(1000);
-                APIStatusText.Text = "Connection API - Error";
+                APIStatusText.Text = "Connection API:\n - Error";
                 APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                 APIStatusDesc.Text = "Failed to Connect to APIs";
                 APIStatusIcon.Image = Properties.Resources.api_error;

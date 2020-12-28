@@ -29,15 +29,15 @@ namespace GameLauncher.App
         private void ApplyEmbeddedFonts()
         {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
-            WelcomeText.Font = new Font(DejaVuSans, 9.75f, FontStyle.Bold);
-            DownloadSourceText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            CDNSource.Font = new Font(DejaVuSans, 8.25f, FontStyle.Bold);
-            Save.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            ServerStatusText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            CDNStatusText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            APIErrorButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            VersionLabel.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
+            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+            WelcomeText.Font = new Font(DejaVuSansBold, 10f, FontStyle.Bold);
+            DownloadSourceText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            CDNSource.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            Save.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            ServerStatusText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            CDNStatusText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            APIErrorButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            VersionLabel.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
         }
 
         private void CDNSource_SelectedIndexChanged(object sender, EventArgs e)

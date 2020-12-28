@@ -42,7 +42,7 @@ namespace GameLauncher.App
             // 
             // WelcomeText
             // 
-            this.WelcomeText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.WelcomeText.Font = new System.Drawing.Font("DejaVu Sans", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.WelcomeText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.WelcomeText.Location = new System.Drawing.Point(9, 9);
             this.WelcomeText.Name = "WelcomeText";
@@ -54,7 +54,7 @@ namespace GameLauncher.App
             // DownloadSourceText
             // 
             this.DownloadSourceText.AutoSize = true;
-            this.DownloadSourceText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DownloadSourceText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DownloadSourceText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.DownloadSourceText.Location = new System.Drawing.Point(12, 115);
             this.DownloadSourceText.Name = "DownloadSourceText";
@@ -69,7 +69,7 @@ namespace GameLauncher.App
             this.CDNSource.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.CDNSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CDNSource.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CDNSource.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CDNSource.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CDNSource.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.CDNSource.FormattingEnabled = true;
             this.CDNSource.ItemHeight = 13;
@@ -86,7 +86,7 @@ namespace GameLauncher.App
             this.Save.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.Save.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.Save.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Save.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Save.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Save.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Save.Location = new System.Drawing.Point(15, 158);
             this.Save.Name = "Save";
@@ -98,7 +98,7 @@ namespace GameLauncher.App
             // 
             // ServerStatusText
             // 
-            this.ServerStatusText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ServerStatusText.Location = new System.Drawing.Point(12, 78);
             this.ServerStatusText.Name = "ServerStatusText";
@@ -109,7 +109,7 @@ namespace GameLauncher.App
             // 
             // CDNStatusText
             // 
-            this.CDNStatusText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CDNStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CDNStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.CDNStatusText.Location = new System.Drawing.Point(196, 78);
             this.CDNStatusText.Name = "CDNStatusText";
@@ -125,7 +125,7 @@ namespace GameLauncher.App
             this.APIErrorButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.APIErrorButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.APIErrorButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.APIErrorButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.APIErrorButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.APIErrorButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.APIErrorButton.Location = new System.Drawing.Point(148, 141);
             this.APIErrorButton.Name = "APIErrorButton";
@@ -138,6 +138,7 @@ namespace GameLauncher.App
             // VersionLabel
             // 
             this.VersionLabel.AutoSize = true;
+            this.VersionLabel.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VersionLabel.Location = new System.Drawing.Point(17, 190);
             this.VersionLabel.Name = "VersionLabel";
             this.VersionLabel.Size = new System.Drawing.Size(156, 13);
@@ -172,7 +173,7 @@ namespace GameLauncher.App
             this.Load += new System.EventHandler(this.WelcomeScreen_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
-
+            this.DoubleBuffered = true;
         }
 
         #endregion

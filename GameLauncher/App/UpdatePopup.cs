@@ -42,12 +42,13 @@ namespace GameLauncher.App
         private void ApplyEmbeddedFonts()
         {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
+            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+            ChangelogBox.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             ChangelogText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            UpdateButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            UpdateText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            SkipButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            IgnoreButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            UpdateButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            UpdateText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SkipButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            IgnoreButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
         }
     }
 }
