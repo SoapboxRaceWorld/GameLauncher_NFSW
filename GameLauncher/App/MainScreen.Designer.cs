@@ -1229,9 +1229,9 @@
             this.ServerShutDown.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerShutDown.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.ServerShutDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ServerShutDown.Location = new System.Drawing.Point(310, 42);
+            this.ServerShutDown.Location = new System.Drawing.Point(290, 42);
             this.ServerShutDown.Name = "ServerShutDown";
-            this.ServerShutDown.Size = new System.Drawing.Size(168, 15);
+            this.ServerShutDown.Size = new System.Drawing.Size(220, 15);
             this.ServerShutDown.TabIndex = 169;
             this.ServerShutDown.Text = "Restart Timer: 0 Hours";
             this.ServerShutDown.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

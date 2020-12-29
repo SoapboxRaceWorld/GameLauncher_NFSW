@@ -1325,7 +1325,7 @@ namespace GameLauncher
                         {
                             int serverSecondsToShutDown = (json.SecondsToShutDown != 0) ? json.SecondsToShutDown : 2 * 60 * 60;
                             TimeSpan t = TimeSpan.FromSeconds(serverSecondsToShutDown);
-                            string serverSecondsToShutDownNamed = string.Format("Restart Timer: " + t.Hours + " Hours");
+                            string serverSecondsToShutDownNamed = string.Format("Gameplay Timer: " + t.Hours + " Hours");
 
                              this.ServerShutDown.Text = serverSecondsToShutDownNamed;
                         }
