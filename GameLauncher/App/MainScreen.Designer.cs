@@ -156,9 +156,9 @@
             // 
             this.logo.BackColor = System.Drawing.Color.Transparent;
             this.logo.Image = global::GameLauncher.Properties.Resources.logo;
-            this.logo.Location = new System.Drawing.Point(17, -1);
+            this.logo.Location = new System.Drawing.Point(17, 10);
             this.logo.Name = "logo";
-            this.logo.Size = new System.Drawing.Size(215, 81);
+            this.logo.Size = new System.Drawing.Size(215, 76);
             this.logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.logo.TabIndex = 0;
             this.logo.TabStop = false;
@@ -1239,7 +1239,7 @@
             // ServerInfoPanel
             // 
             this.ServerInfoPanel.BackColor = System.Drawing.Color.Transparent;
-            this.ServerInfoPanel.BackgroundImage = global::GameLauncher.Properties.Resources.eyecatcher;
+            this.ServerInfoPanel.BackgroundImage = global::GameLauncher.Properties.Resources.socialbg;
             this.ServerInfoPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ServerInfoPanel.Controls.Add(this.HomePageIcon);
             this.ServerInfoPanel.Controls.Add(this.DiscordIcon);

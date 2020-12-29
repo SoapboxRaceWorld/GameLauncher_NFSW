@@ -340,6 +340,7 @@
     <None Include="Resources\progress_success.png" />
     <None Include="Resources\progress_preload.png" />
     <None Include="Resources\progress_error.png" />
+    <None Include="Resources\socialdbg.png" />
     <None Include="Resources\social_home_page_disabled.png" />
     <None Include="Resources\social_home_page.png" />
     <None Include="Resources\social_twitter_disabled.png" />
@@ -348,7 +349,6 @@
     <None Include="Resources\social_facebook.png" />
     <None Include="Resources\social_discord_disabled.png" />
     <None Include="Resources\social_discord.png" />
-    <None Include="Resources\eyecatcher.png" />
     <None Include="Resources\ticket_text_border.png" />
     <None Include="Resources\ticket_error_text_border.png" />
     <None Include="Resources\password_text_border.png" />
@@ -381,7 +381,6 @@
     <None Include="Resources\ac_success.png" />
     <None Include="Resources\ac_error.png" />
     <None Include="Resources\logo.png" />
-    <None Include="Resources\loggedbg.png" />
     <None Include="Resources\settingsbtn.png" />
     <None Include="Resources\secondarybackground.png" />
     <None Include="Resources\close.png" />
