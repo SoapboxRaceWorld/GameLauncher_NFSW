@@ -335,7 +335,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Run_Check_BG.png" />
-    <None Include="Resources\splash_screen.png" />
     <Content Include="SBRW.ico" />
     <None Include="Resources\progress_warning.png" />
     <None Include="Resources\progress_success.png" />
@@ -358,7 +357,6 @@
     <None Include="Resources\email_text_border.png" />
     <None Include="Resources\mainbackground.png" />
     <None Include="Resources\error_text_border.png" />
-    <None Include="Resources\logo_hover.png" />
     <None Include="Resources\server_unknown.png" />
     <None Include="Resources\server_online.png" />
     <None Include="Resources\server_offline.png" />
@@ -378,27 +376,15 @@
     <None Include="Resources\greenbutton.png" />
     <None Include="Resources\register_ticket.png" />
     <None Include="Resources\register_noticket.png" />
-    <None Include="Resources\webicon.png" />
     <None Include="Resources\ac_warning.png" />
     <None Include="Resources\ac_unknown.png" />
     <None Include="Resources\ac_success.png" />
     <None Include="Resources\ac_error.png" />
     <None Include="Resources\logo.png" />
     <None Include="Resources\loggedbg.png" />
-    <None Include="Resources\warningprogress.png" />
-    <None Include="Resources\loginbg.png" />
-    <None Include="Resources\errorprogress.png" />
-    <None Include="Resources\progressgrayscale.png" />
-    <None Include="Resources\progress.png" />
-    <None Include="Resources\settingsbtn_click.png" />
     <None Include="Resources\settingsbtn.png" />
-    <None Include="Resources\settingsbtn_hover.png" />
     <None Include="Resources\secondarybackground.png" />
-    <None Include="Resources\close_click.png" />
     <None Include="Resources\close.png" />
-    <None Include="Resources\close_hover.png" />
-    <None Include="Resources\tick.png" />
-    <None Include="Resources\map.png" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

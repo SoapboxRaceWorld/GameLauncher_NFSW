@@ -156,9 +156,9 @@
             // 
             this.logo.BackColor = System.Drawing.Color.Transparent;
             this.logo.Image = global::GameLauncher.Properties.Resources.logo;
-            this.logo.Location = new System.Drawing.Point(27, 9);
+            this.logo.Location = new System.Drawing.Point(17, 10);
             this.logo.Name = "logo";
-            this.logo.Size = new System.Drawing.Size(227, 60);
+            this.logo.Size = new System.Drawing.Size(215, 76);
             this.logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.logo.TabIndex = 0;
             this.logo.TabStop = false;

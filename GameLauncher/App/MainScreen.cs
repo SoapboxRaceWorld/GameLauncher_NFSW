@@ -304,8 +304,6 @@ namespace GameLauncher
             MouseUp += new MouseEventHandler(MoveWindow_MouseUp);
             MouseDown += new MouseEventHandler(MoveWindow_MouseDown);
 
-            logo.MouseEnter += new EventHandler(Logo_MouseEnter);
-            logo.MouseLeave += new EventHandler(Logo_MouseLeave);
             logo.MouseMove += new MouseEventHandler(MoveWindow_MouseMove);
             logo.MouseUp += new MouseEventHandler(MoveWindow_MouseUp);
             logo.MouseDown += new MouseEventHandler(MoveWindow_MouseDown);
@@ -2176,16 +2174,6 @@ namespace GameLauncher
 
         private void SettingsButton_MouseLeave(object sender, EventArgs e) {
             SettingsButton.BackgroundImage = Properties.Resources.settingsbtn;
-        }
-
-        private void Logo_MouseLeave(object sender, EventArgs e)
-        {
-            logo.Image = Properties.Resources.logo;
-        }
-
-        private void Logo_MouseEnter(object sender, EventArgs e)
-        {
-            logo.Image = Properties.Resources.logo_hover;
         }
 
         private void SettingsCancel_Click(object sender, EventArgs e)

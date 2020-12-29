@@ -253,16 +253,6 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap logo_hover {
-            get {
-                object obj = ResourceManager.GetObject("logo_hover", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap mainbackground {
             get {
                 object obj = ResourceManager.GetObject("mainbackground", resourceCulture);
@@ -496,16 +486,6 @@ namespace GameLauncher.Properties {
         internal static System.Drawing.Bitmap social_twitter_disabled {
             get {
                 object obj = ResourceManager.GetObject("social_twitter_disabled", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap splash_screen {
-            get {
-                object obj = ResourceManager.GetObject("splash_screen", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
