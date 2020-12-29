@@ -34,12 +34,6 @@ namespace GameLauncher
         }
 
         private static void Main2(Arguments args) {
-            Thread StartSplashScreen = new Thread(ShowSplashScreen);
-
-            if (!Debugger.IsAttached)
-            {
-                StartSplashScreen.Start();
-            }
 
             if (!DetectLinux.LinuxDetected())
             {
@@ -563,6 +557,8 @@ namespace GameLauncher
                             }
                         }
                         if (missingfiles.Count != 0) {
+                            ShowSplashScreen(false);
+
                             var message = "Cannot launch GameLauncher. The following files are invalid:\n\n";
 
                             foreach (var file in missingfiles) {
@@ -571,13 +567,10 @@ namespace GameLauncher
 
                             MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         } else {
-                            Log.Info("SPLASH SCREEN: Closing Splash Screen");
-                            StartSplashScreen.Abort();
-                            ShowMainScreen();
+                            ShowSplashScreen(true);
                         }
                     } else {
-                        Log.Info("SPLASH SCREEN: Already Running! Closing Splash Screen");
-                        StartSplashScreen.Abort();
+                        ShowSplashScreen(false);
                         MessageBox.Show(null, "An instance of Launcher is already running.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 } finally {
@@ -587,9 +580,31 @@ namespace GameLauncher
             }
         }
 
-        private static void ShowSplashScreen()
+        private static void ShowSplashScreen(bool Status)
         {
-            Application.Run(new SplashScreen());
+            if (!Debugger.IsAttached && !DetectLinux.LinuxDetected())
+            {
+                SplashScreen f = new SplashScreen();
+                f.Shown += new EventHandler((o, e) =>
+                {
+                    Thread ST = new Thread(() =>
+                    {
+                        Log.Info("SPLASH SCREEN: Closing Splash Screen");
+                        Thread.Sleep(1200);
+                        f.Invoke(new Action(() => { f.Close(); }));
+                    })
+                    {
+                        IsBackground = true
+                    };
+                    ST.Start();
+                });
+                Application.Run(f);
+            }
+
+            if (Status == true)
+            {
+                ShowMainScreen();
+            }
         }
 
         private static void ShowMainScreen()
