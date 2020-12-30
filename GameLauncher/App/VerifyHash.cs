@@ -26,7 +26,8 @@ namespace GameLauncher.App
         public int badFiles;
         public int totalFilesScanned;
         public int redownloadedCount;
-        public List<string> invalidFileList = new List<string>();
+        public List<string> InvalidFileList = new List<string>();
+        public List<string> ValidFileList = new List<string>();
 
         public VerifyHash()
         {
@@ -89,7 +90,7 @@ namespace GameLauncher.App
                 File.WriteAllLines("checksums.dat", getFilesToCheck);*/
                 totalFilesScanned = 0;
                 redownloadedCount = 0;
-
+            //Thread.BeginThreadAffinity();
                 foreach (string[] file in scannedHashes)
                 {
                     String FileHash = file[0].Trim();
@@ -98,27 +99,29 @@ namespace GameLauncher.App
 
                     if (!File.Exists(RealPathToFile))
                     {
-                        invalidFileList.Add(FileName);
+                        InvalidFileList.Add(FileName);
                         Log.Debug("File Missing: " + RealPathToFile);
                     }
                     else
                     {
                         if (FileHash != SHA.HashFile(RealPathToFile).Trim())
                         {
-                            invalidFileList.Add(FileName);
+                            InvalidFileList.Add(FileName);
                             Log.Debug("Invalid file found: " + RealPathToFile);
                         }
                         else
                         {
-                            Log.Debug("Vaild file found: " + RealPathToFile);
+                            ValidFileList.Add(RealPathToFile);
+                            File.WriteAllLines("validfiles.dat", ValidFileList);
+                            //Log.Debug("Vaild file found: " + RealPathToFile);
                         }
                     }
                     totalFilesScanned++;
                 }
-
-                if (invalidFileList != null)
+            //Thread.EndThreadAffinity();
+                if (InvalidFileList != null)
                 {
-                    File.WriteAllLines("invalidfiles.dat", invalidFileList);
+                    File.WriteAllLines("invalidfiles.dat", InvalidFileList);
                     CorruptedFilesFound();
                 }
                 else
