@@ -1,16 +1,18 @@
 ﻿using GameLauncherReborn;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes;
-using GameLauncher.HashPassword;
-using System.ComponentModel;
 using GameLauncher.App.Classes.Logger;
-using System.Net;
-using System.Diagnostics;
+using GameLauncher.HashPassword;
+using GameLauncher.Resources;
 
 namespace GameLauncher.App
 {
@@ -29,6 +31,8 @@ namespace GameLauncher.App
         public VerifyHash()
         {
             InitializeComponent();
+            ApplyEmbeddedFonts();
+            VersionLabel.Text = "Version: v" + Application.ProductVersion;
         }
 
         public void GameScanner(bool startScan)
@@ -68,11 +72,10 @@ namespace GameLauncher.App
 
         private void StartGameScanner()
         {
-            String[] getFilesToCheck = null;
             try
             {
                 //getFilesToCheck = new WebClient().DownloadString("http://localhost/checksums.dat").Split('\n');
-                getFilesToCheck = File.ReadAllLines("checksums.dat");
+                String[] getFilesToCheck = File.ReadAllLines("checksums.dat");
                 scannedHashes = new string[getFilesToCheck.Length][];
                 for (var i = 0; i < getFilesToCheck.Length; i++)
                 {
@@ -179,6 +182,16 @@ namespace GameLauncher.App
             GameScanner(false);
             StartScanner.Visible = true;
             StopScanner.Visible = false;
+        }
+
+        private void ApplyEmbeddedFonts() {
+            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
+            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+            ScanProgressText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            InvalidProgressText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            StartScanner.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            StopScanner.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            VersionLabel.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
         }
     }
 }
