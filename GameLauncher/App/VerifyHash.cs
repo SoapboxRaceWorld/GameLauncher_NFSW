@@ -69,74 +69,42 @@ namespace GameLauncher.App
             String[] getFilesToCheck = null;
             try
             {
-                getFilesToCheck = new WebClient().DownloadString("http://localhost/checksums.dat").Split('\n');
+                //getFilesToCheck = new WebClient().DownloadString("http://localhost/checksums.dat").Split('\n');
+                getFilesToCheck = File.ReadAllLines("checksums.dat");
                 scannedHashes = new string[getFilesToCheck.Length][];
                 for (var i = 0; i < getFilesToCheck.Length; i++)
                 {
                     scannedHashes[i] = getFilesToCheck[i].Split(' ');
                 }
                 filesToScan = scannedHashes.Length;
-                if (File.Exists("checksums.dat"))
+                /*if (File.Exists("checksums.dat"))
                 {
                     File.Delete("checksums.dat");
                 }
-                File.WriteAllLines("checksums.dat", getFilesToCheck);
+                File.WriteAllLines("checksums.dat", getFilesToCheck);*/
                 totalFilesScanned = 0;
                 redownloadedCount = 0;
 
                 Directory.EnumerateFiles(_settingFile.Read("InstallationDirectory"), "*.*", SearchOption.AllDirectories).AsParallel().ForAll((file) => {
                     for (var i = 0; i < scannedHashes.Length; i++)
                     {
-                        //if (scannedHashes[i][1].Trim() == file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim())
-                        //{
-                            //Log.Debug("Scanned File: [GAMEDIR] " + file);
-                            if (File.Exists(_settingFile.Read("InstallationDirectory") + scannedHashes[i][1]) && scannedHashes[i][1].Trim() == SHA.HashFile(file.Trim()))
+                        if (scannedHashes[i][1].Trim() == file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim())
+                        {
+                            if (!File.Exists(file))
                             {
-                                Log.Debug("1 - Vaild file found: [GAMEDIR] " + file);
+                                //invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
+                                Log.Debug("File Missing: " + file);
                             }
-                            else if (!File.Exists(_settingFile.Read("InstallationDirectory") + scannedHashes[i][1]) && scannedHashes[i][1].Trim() == SHA.HashFile(file.Trim()))
-                            {
-                                invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-                                Log.Debug("6 - Invalid file found: [GAMEDIR] " + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty));
-                            }
-                            else if (!File.Exists(_settingFile.Read("InstallationDirectory") + scannedHashes[i][1]))
-                            {
-                                invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-                                Log.Debug("7 - Invalid file found: [GAMEDIR] " + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty));
-                            }
-                            else if (scannedHashes[i][1].Trim() == SHA.HashFile(file.Trim()))
-                            {
-                                Log.Debug("2 - Vaild file found: [GAMEDIR] " + file);
-                            }
-                            /*
-                            else
-                            {
-                                invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-                                Log.Debug("5 - Invalid file found: [GAMEDIR] " + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty));
-                            }
-                            /*
                             if (scannedHashes[i][0].Trim() != SHA.HashFile(file).Trim())
                             {
                                 invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-                                Log.Debug("1 - Invalid file found: [GAMEDIR] " + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty));
+                                Log.Debug("Invalid file found: " + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
                             }
-                            else if (scannedHashes[i][0] != SHA.HashFile(file))
+                            else
                             {
-                                invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-                                Log.Debug("2 - Invalid file found: [GAMEDIR] " + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty));
-                            }
-                            else if (scannedHashes[i][0].Trim() != file)
-                            {
-                                invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-                                Log.Debug("3 - Invalid file found: [GAMEDIR] " + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty));
-                            }
-                            else if (scannedHashes[i][0].Trim() != file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty))
-                            {
-                                invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-                                Log.Debug("4 - Invalid file found: [GAMEDIR] " + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty));
-                            }
-                            */
-                        //}
+		                        Log.Debug("Vaild file found: " + file);
+	                        }
+                        }
                     }
                     totalFilesScanned++;
                 });
@@ -152,7 +120,8 @@ namespace GameLauncher.App
                     StartScanner.Visible = true;
                     StopScanner.Visible = false;
                 }
-                //StatusText.Text = "Scan Complete.";
+                StatusText.Text = "Scan Complete.";
+                Log.Info("Scan Completed");
             }
             catch (Exception ex)
             { Log.Error(ex.Message); }
