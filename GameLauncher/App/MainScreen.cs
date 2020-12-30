@@ -1606,7 +1606,7 @@ namespace GameLauncher
             SettingsMainCDNText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             SettingsBkupSrvText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             SettingsBkupCDNText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            //SettingsVFilesButton.Font = new Font(DejaVuSansBold, 8.25f, FontStyle.Bold);
+            SettingsVFilesButton.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             SettingsLauncherVersion.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             SettingsSave.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             SettingsCancel.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);

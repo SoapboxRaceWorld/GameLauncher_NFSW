@@ -852,13 +852,15 @@
             // 
             // SettingsVFilesButton
             // 
-            this.SettingsVFilesButton.AutoSize = true;
-            this.SettingsVFilesButton.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsVFilesButton.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsVFilesButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsVFilesButton.Location = new System.Drawing.Point(26, 390);
+            this.SettingsVFilesButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.SettingsVFilesButton.FlatAppearance.BorderColor = System.Drawing.Color.DarkGoldenrod;
+            this.SettingsVFilesButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.SettingsVFilesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SettingsVFilesButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsVFilesButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
+            this.SettingsVFilesButton.Location = new System.Drawing.Point(26, 391);
             this.SettingsVFilesButton.Name = "SettingsVFilesButton";
-            this.SettingsVFilesButton.Size = new System.Drawing.Size(131, 23);
+            this.SettingsVFilesButton.Size = new System.Drawing.Size(140, 23);
             this.SettingsVFilesButton.TabIndex = 141;
             this.SettingsVFilesButton.Text = "Validate Game Files";
             this.SettingsVFilesButton.UseVisualStyleBackColor = false;
