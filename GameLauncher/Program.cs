@@ -267,7 +267,7 @@ namespace GameLauncher
                                 File.Delete("GameLauncherUpdater.exe");
                             }
                         };
-                        wc.DownloadFileAsync(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
+                        wc.DownloadFile(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
                     }
                 }
                 catch (Exception ex)
