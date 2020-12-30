@@ -23,7 +23,7 @@ namespace GameLauncher.App
 
             CDNSource.DrawItem += new DrawItemEventHandler(CDNSource_DrawItem);
             CDNSource.SelectedIndexChanged += new EventHandler(CDNSource_SelectedIndexChanged);
-            VersionLabel.Text = "Version : v" + Application.ProductVersion;
+            VersionLabel.Text = "Version: v" + Application.ProductVersion;
         }
 
         private void ApplyEmbeddedFonts()
@@ -32,7 +32,7 @@ namespace GameLauncher.App
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
             WelcomeText.Font = new Font(DejaVuSansBold, 10f, FontStyle.Bold);
             DownloadSourceText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            CDNSource.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            CDNSource.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             Save.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             ServerStatusText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             CDNStatusText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
