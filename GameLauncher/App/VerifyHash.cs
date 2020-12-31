@@ -36,6 +36,16 @@ namespace GameLauncher.App
             InitializeComponent();
             ApplyEmbeddedFonts();
             VersionLabel.Text = "Version: v" + Application.ProductVersion;
+            LogVerify.StartVerifyLogging();
+
+            if (File.Exists("validfiles.dat"))
+            {
+                File.Delete("validfiles.dat");
+                File.Delete("invalidfiles.dat");
+                File.Delete("Verify.log");
+                
+            }
+            
         }
 
         public void GameScanner(bool startScan)
@@ -62,13 +72,14 @@ namespace GameLauncher.App
             {
                 StartScan.Abort();
                 //StatusText.Text = "Unkown Status.".ToUpper();
-                Process[] allOfThem = Process.GetProcessesByName("VerifyHash");
+                 Process[] allOfThem = Process.GetProcessesByName("VerifyHash");
                 foreach (var oneProcess in allOfThem)
                 {
                     Process.GetProcessById(oneProcess.Id).Kill();
                 }
                 Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                //Log.Debug("Stopped Scanner");
+                
+                Log.Debug("Stopped Scanner");
             }
            
         }
@@ -86,21 +97,17 @@ namespace GameLauncher.App
 
             try
             {
-                //getFilesToCheck = new WebClient().DownloadString("http://localhost/checksums.dat").Split('\n');
-                String[] getFilesToCheck = File.ReadAllLines("checksums.dat");
+                String[] getFilesToCheck = new WebClient().DownloadString("http://localhost/checksums.dat").Split('\n');
+                //String[] getFilesToCheck = File.ReadAllLines("checksums.dat");
                 scannedHashes = new string[getFilesToCheck.Length][];
                 for (var i = 0; i < getFilesToCheck.Length; i++)
                 {
                     scannedHashes[i] = getFilesToCheck[i].Split(' ');
                 }
                 filesToScan = scannedHashes.Length;
-                /*if (File.Exists("checksums.dat"))
-                {
-                    File.Delete("checksums.dat");
-                }
-                File.WriteAllLines("checksums.dat", getFilesToCheck);*/
+
                 totalFilesScanned = 0;
-                redownloadedCount = 0;
+
 
                 foreach (string[] file in scannedHashes)
                 {
@@ -111,28 +118,32 @@ namespace GameLauncher.App
                     if (!File.Exists(RealPathToFile))
                     {
                         InvalidFileList.Add(FileName);
-                        Log.Debug("File Missing: " + RealPathToFile);
+                        LogVerify.Missing("File: " + RealPathToFile);
                     }
                     else
                     {
                         if (FileHash != SHA.HashFile(RealPathToFile).Trim())
                         {
                             InvalidFileList.Add(FileName);
-                            Log.Debug("Invalid file found: " + RealPathToFile);
+                            LogVerify.Invalid("File: " + RealPathToFile);
                         }
                         else
                         {
                             ValidFileList.Add(RealPathToFile);
                             File.WriteAllLines("validfiles.dat", ValidFileList);
-                            //Log.Debug("Vaild file found: " + RealPathToFile);
+                            LogVerify.Valid("File: " + RealPathToFile);
                         }
                     }
+                    ScanProgressText.Text = "Found Missing Files";
                     totalFilesScanned++;
+                    ScanProgressBar.Value = (getFilesToCheck.Length / filesToScan) * 100;
                 }
 
                 if (InvalidFileList != null)
                 {
+                    ScanProgressText.Text = "Found Missing Files";
                     File.WriteAllLines("invalidfiles.dat", InvalidFileList);
+                    Log.Info("Found Invalid Files and Will Start File Downloader");
                     CorruptedFilesFound();
                 }
                 else
@@ -140,36 +151,40 @@ namespace GameLauncher.App
                     GameScanner(false);
                     StartScanner.Visible = true;
                     StopScanner.Visible = false;
+                    ScanProgressText.Text = "Scan Complete. No Missing Files Where Found";
                 }
-                //StatusText.Text = "Scan Complete.";
-                //Log.Info("Scan Completed");
             }
             catch (Exception ex)
             {
                 Log.Error(ex.Message);
             }
+            Log.Info("Scan Completed");
         }
 
         private void CorruptedFilesFound()
         {
+            redownloadedCount = 0;
+
             if (File.Exists("invalidfiles.dat") && File.ReadAllLines("invalidfiles.dat") != null)
             {
-                //StatusText.Text = "RE-DOWNLOADING INVALID FILES";
+                InvalidProgressText.Text = "RE-DOWNLOADING INVALID FILES";
                 string[] files = File.ReadAllLines("invalidfiles.dat");
+
                 foreach (string text in files) {
                     try {
                         string text2 = _settingFile.Read("InstallationDirectory") + text;
                         string address = "http://mtntr.pl/unpacked" + text.Replace("\\", "/");
                         if (File.Exists(text2))
                         {
-                            Log.Debug("Deleting " + text2);
+                            LogVerify.Deleted("File: " + text2);
                             File.Delete(text2);
                         }
                         new WebClient().DownloadFile(address, text2);
-                        //Log.Debug("Downloaded " + text2);
+                        LogVerify.Downloaded("File: " + text2);
                         Application.DoEvents();
                     }
                     catch { }
+                    //InvalidProgressBar.Value = files.int() * 100;
                 }
                 GameScanner(false);
                 StartScanner.Visible = true;
@@ -177,7 +192,7 @@ namespace GameLauncher.App
             }
             else
             {
-                //StatusText.Text = "All Files Validated";
+                InvalidProgressText.Text = "All Files Validated";
                 GameScanner(false);
                 StartScanner.Visible = true;
                 StopScanner.Visible = false;
