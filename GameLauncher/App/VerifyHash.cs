@@ -30,14 +30,14 @@ namespace GameLauncher.App
         public int redownloadedCount;
         public List<string> InvalidFileList = new List<string>();
         public List<string> ValidFileList = new List<string>();
-        Log launcherLog = new Log("launcher.log");
+        //Log launcherLog = new Log("launcher.log");
 
         public VerifyHash()
         {
             InitializeComponent();
             ApplyEmbeddedFonts();
             VersionLabel.Text = "Version: v" + Application.ProductVersion;
-            launcherLog.Core("VerifyHash Opened");
+            Log.Core("VerifyHash Opened");
             /* Clean up previous logs and start logging */
             string[] filestocheck = new string[] {"validfiles.dat", "invalidfiles.dat", "Verify.log"};
             foreach (String file in filestocheck)
@@ -60,7 +60,7 @@ namespace GameLauncher.App
                 //StatusText.Text = "Validating files on background.".ToUpper();
                 //Threaded CheckFiles
                 StartScan.Start();
-                launcherLog.Debug("Started Scanner");
+                Log.Debug("Started Scanner");
             }
             else if (startScan == false)
             {
@@ -75,7 +75,7 @@ namespace GameLauncher.App
                 }
                 Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                 */
-                launcherLog.Debug("Stopped Scanner");
+                Log.Debug("Stopped Scanner");
             }
         }
 
@@ -140,7 +140,7 @@ namespace GameLauncher.App
                 {
                     ScanProgressText.Text = "Found Missing Files";
                     File.WriteAllLines("invalidfiles.dat", InvalidFileList);
-                    launcherLog.Info("Found Invalid Files and Will Start File Downloader");
+                    Log.Info("Found Invalid Files and Will Start File Downloader");
                     CorruptedFilesFound();
                 }
                 else
@@ -153,9 +153,9 @@ namespace GameLauncher.App
             }
             catch (Exception ex)
             {
-                launcherLog.Error(ex.Message);
+                Log.Error(ex.Message);
             }
-            launcherLog.Info("Scan Completed"); // This isn't logging
+            Log.Info("Scan Completed"); // This isn't logging
         }
 
         private void CorruptedFilesFound()
@@ -167,8 +167,10 @@ namespace GameLauncher.App
                 InvalidProgressText.Text = "RE-DOWNLOADING INVALID FILES";
                 string[] files = File.ReadAllLines("invalidfiles.dat");
 
-                foreach (string text in files) {
-                    try {
+                foreach (string text in files)
+                {
+                    try 
+                    {
                         string text2 = _settingFile.Read("InstallationDirectory") + text;
                         string address = "http://mtntr.pl/unpacked" + text.Replace("\\", "/");
                         if (File.Exists(text2))
@@ -210,7 +212,8 @@ namespace GameLauncher.App
             StopScanner.Visible = false;
         }
 
-        private void ApplyEmbeddedFonts() {
+        private void ApplyEmbeddedFonts() 
+        {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
             ScanProgressText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);

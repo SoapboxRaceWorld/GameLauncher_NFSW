@@ -14,16 +14,16 @@ namespace GameLauncher.App.Classes.Logger
         public void StartLogging() => Task.Run(() => TaskKernel());
         private static void _toFile(string text, string errorname = "DEBUG") => buffer.Enqueue($"[{errorname}] {text}");
 
-        public void Debug(string text) => _toFile(text, "DEBUG");
-        public void Info(string text) => _toFile(text, " INFO");
-        public void Warning(string text) => _toFile(text, " WARN");
-        public void Error(string text) => _toFile(text, "ERROR");
-        public void UrlCall(string text) => _toFile(text, "  URL");
-        public void System(string text) => _toFile(text, "SYSTM");
-        public void Build(string text) => _toFile(text, "BUILD");
-        public void Visuals(string text) => _toFile(text, "VISUL");
-        public void Api(string text) => _toFile(text, "  API");
-        public void Core(string text) => _toFile(text, " CORE");
+        public static void Debug(string text) => _toFile(text, "DEBUG");
+        public static void Info(string text) => _toFile(text, " INFO");
+        public static void Warning(string text) => _toFile(text, " WARN");
+        public static void Error(string text) => _toFile(text, "ERROR");
+        public static void UrlCall(string text) => _toFile(text, "  URL");
+        public static void System(string text) => _toFile(text, "SYSTM");
+        public static void Build(string text) => _toFile(text, "BUILD");
+        public static void Visuals(string text) => _toFile(text, "VISUL");
+        public static void Api(string text) => _toFile(text, "  API");
+        public static void Core(string text) => _toFile(text, " CORE");
 
         private static async void TaskKernel()
         {
@@ -31,14 +31,18 @@ namespace GameLauncher.App.Classes.Logger
             {
                 if (buffer.Count > 0 && buffer.TryDequeue(out string merged))
                 {
-                    try {
+                    try
+                    {
                         File.AppendAllText(filename, merged + Environment.NewLine);
-                    } catch(Exception ex) {
+                    }
+                    catch(Exception ex)
+                    {
                         Log launcherLog = new Log(filename);
-                        launcherLog.Error(ex.Message);
+                        Log.Error(ex.Message);
                     }
                     Console.WriteLine(merged);
-                } else
+                }
+                else
                 {
                     await Task.Delay(30);
                 }

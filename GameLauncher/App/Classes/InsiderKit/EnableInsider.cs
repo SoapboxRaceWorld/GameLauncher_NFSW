@@ -9,7 +9,7 @@
 
         public static bool ShouldIBeAnInsider()
         {
-            return Insider; 
+            return Insider;
         }
 
         public static string BuildNumber()

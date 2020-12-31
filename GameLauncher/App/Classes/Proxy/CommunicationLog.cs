@@ -81,10 +81,16 @@ namespace GameLauncher.App.Classes.Proxy
                 File.Delete(LogFileName);
         }
 
-        public static void RecordEntry(string serverId, string category, CommunicationLogEntryType type,
-            ICommunicationLogData data)
+        public static void RecordEntry(string serverId, string category, CommunicationLogEntryType type, ICommunicationLogData data)
         {
-            CommunicationLogEntry entry = new CommunicationLogEntry { ServerId = serverId, Category = category, Data = data, Type = type, RecordedAt = DateTimeOffset.Now };
+            CommunicationLogEntry entry = new CommunicationLogEntry
+            {
+                ServerId = serverId,
+                Category = category,
+                Data = data,
+                Type = type,
+                RecordedAt = DateTimeOffset.Now
+            };
 
             File.AppendAllLines(LogFileName, new List<string>
             {

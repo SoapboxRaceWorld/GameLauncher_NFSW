@@ -10,7 +10,6 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 {
     class FirewallHelper
     {
-        public static Log launcherLog = new Log("launcher.log");
         public static void DoesRulesExist(bool removeFirewallRule, bool firstTimeRun, string nameOfApp, string localOfApp, string groupKey, string description, FirewallProtocol protocol)
         {
             CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfApp, localOfApp, groupKey, description, FirewallDirection.Inbound, protocol, FirewallDirection.Inbound.ToString());
@@ -35,7 +34,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 if (RuleExist(nameOfApp) == true)
                 {
                     RemoveRules(nameOfApp, firewallLogNote);
-                    launcherLog.Info("WINDOWS FIREWALL: Found " + nameOfApp + " {" + firewallLogNote + "} In Firewall");
+                    Log.Info("WINDOWS FIREWALL: Found " + nameOfApp + " {" + firewallLogNote + "} In Firewall");
                 }
                 else if (RuleExist(nameOfApp) == false)
                 {
@@ -44,12 +43,12 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             }
             else if (removeFirewallRule == false && firstTimeRun == false)
             {
-                launcherLog.Info("WINDOWS FIREWALL: Already Exlcuded " + nameOfApp + " {" + firewallLogNote + "}");
+                Log.Info("WINDOWS FIREWALL: Already Exlcuded " + nameOfApp + " {" + firewallLogNote + "}");
             }
 
             else
             {
-                launcherLog.Error("WINDOWS FIREWALL: Firewall Error - Check With Visual Studio for Error Debuging");
+                Log.Error("WINDOWS FIREWALL: Firewall Error - Check With Visual Studio for Error Debuging");
             }
         }
 
@@ -57,7 +56,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             if (Firewall.Instance.IsSupported)
             {
-                launcherLog.Info("WINDOWS FIREWALL: Supported Firewall Found");
+                Log.Info("WINDOWS FIREWALL: Supported Firewall Found");
                 var rule = new StandardRuleWin7(localOfApp, FirewallAction.Allow, direction, FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public)
                 {
                     ApplicationName = localOfApp,
@@ -69,12 +68,12 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     Protocol = protocol
                 };
 
-                if(direction == FirewallDirection.Inbound) {
+                if (direction == FirewallDirection.Inbound) {
                     rule.EdgeTraversalOptions = EdgeTraversalAction.Allow;
                 }
 
                 Firewall.Instance.Rules.Add(rule);
-                launcherLog.Info("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
+                Log.Info("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
             }
             else
             {
@@ -85,7 +84,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
         private static void AddDefaultApplicationRule(string nameOfApp, string localOfApp, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote)
         {
-            launcherLog.Warning("WINDOWS FIREWALL: Falling back to 'LegacyStandard'");
+            Log.Warning("WINDOWS FIREWALL: Falling back to 'LegacyStandard'");
             var defaultRule = FirewallManager.Instance.CreateApplicationRule(
                 FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public,
                 nameOfApp,
@@ -95,7 +94,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             defaultRule.Direction = direction;
 
             FirewallManager.Instance.Rules.Add(defaultRule);
-            launcherLog.Warning("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
+            Log.Warning("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
         }
 
         public static void RemoveRules(string nameOfApp, string firewallLogNote)
@@ -104,19 +103,19 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             foreach (var rule in myRule)
                 try
                 {
-                    launcherLog.Warning("WINDOWS FIREWALL: Removed " + nameOfApp + " {" + firewallLogNote + "} From Firewall!");
+                    Log.Warning("WINDOWS FIREWALL: Removed " + nameOfApp + " {" + firewallLogNote + "} From Firewall!");
                     FirewallManager.Instance.Rules.Remove(rule);
                 }
                 catch (Exception ex)
                 {
-                    launcherLog.Error("WINDOWS FIREWALL: " + ex.Message);
+                    Log.Error("WINDOWS FIREWALL: " + ex.Message);
                 }
         }
 
         public static bool RemoveRule(string nameOfApp, string firewallLogNote)
         {
             var myRule = FindRule(nameOfApp);
-            launcherLog.Warning("WINDOWS FIREWALL: Removed " + nameOfApp + " {" + firewallLogNote + "} From Firewall!");
+            Log.Warning("WINDOWS FIREWALL: Removed " + nameOfApp + " {" + firewallLogNote + "} From Firewall!");
             return FirewallManager.Instance.Rules.Remove(myRule);
         }
 

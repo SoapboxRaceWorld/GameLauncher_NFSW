@@ -3,11 +3,14 @@ using System.Text;
 
 namespace GameLauncher.App.Classes.HashPassword
 {
-    class MDFive {
-        public static string HashPassword(string input) {
+    class MDFive
+    {
+        public static string HashPassword(string input)
+        {
             HashAlgorithm algorithm = MD5.Create();
             StringBuilder sb = new StringBuilder();
-            foreach (byte b in algorithm.ComputeHash(Encoding.UTF8.GetBytes(input))) {
+            foreach (byte b in algorithm.ComputeHash(Encoding.UTF8.GetBytes(input)))
+            {
                 sb.Append(b.ToString("X2"));
             }
 

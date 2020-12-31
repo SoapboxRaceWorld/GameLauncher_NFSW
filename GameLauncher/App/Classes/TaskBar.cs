@@ -55,15 +55,19 @@ public static class TaskbarProgress
 
     public static void SetState(IntPtr windowHandle, TaskbarStates taskbarState)
     {
-		try {
-			if (taskbarSupported && !DetectLinux.LinuxDetected()) taskbarInstance.SetProgressState(windowHandle, taskbarState);
-		} catch { }
+        try
+        {
+            if (taskbarSupported && !DetectLinux.LinuxDetected()) taskbarInstance.SetProgressState(windowHandle, taskbarState);
+        }
+        catch { }
     }
 
     public static void SetValue(IntPtr windowHandle, double progressValue, double progressMax)
     {
-		try {
+        try
+        {
             if (taskbarSupported && !DetectLinux.LinuxDetected()) taskbarInstance.SetProgressValue(windowHandle, (ulong)progressValue, (ulong)progressMax);
-		} catch { }
+        }
+        catch { }
     }
 }

@@ -11,13 +11,15 @@ using System.Windows.Forms;
 
 namespace GameLauncher.App
 {
-    public partial class WelcomeScreen : Form {
+    public partial class WelcomeScreen : Form
+    {
         private readonly IniFile _settingFile = new IniFile("Settings.ini");
         List<CDNObject> CDNList = new List<CDNObject>();
         private bool CDNStatusCheck = false;
         private bool ServerStatusCheck = false;
-        Log launcherLog = new Log("launcher.log");
-        public WelcomeScreen() {
+
+        public WelcomeScreen()
+        {
             InitializeComponent();
             ApplyEmbeddedFonts();
 
@@ -182,7 +184,8 @@ namespace GameLauncher.App
             }
         }
 
-        private void WelcomeScreen_Load(object sender, EventArgs e) {
+        private void WelcomeScreen_Load(object sender, EventArgs e)
+        {
             SettingsFormElements(false);
             APIErrorFormElements(false);
             PingServerListStatus();
@@ -197,14 +200,15 @@ namespace GameLauncher.App
 
             CDNListUpdater.UpdateCDNList();
 
-            launcherLog.Info("WELCOME: Setting CDN list");
+            Log.Info("WELCOME: Setting CDN list");
             finalCDNItems = CDNListUpdater.GetCDNList();
 
             CDNSource.DisplayMember = "Name";
             CDNSource.DataSource = finalCDNItems;
         }
 
-        private void Save_Click(object sender, EventArgs e) {
+        private void Save_Click(object sender, EventArgs e)
+        {
             if (((CDNObject)CDNSource.SelectedItem).Url != null)
             {
                 CDN.CDNUrl = ((CDNObject)CDNSource.SelectedItem).Url;
@@ -217,7 +221,8 @@ namespace GameLauncher.App
             }
         }
 
-        private void QuitWithoutSaving_Click(object sender, EventArgs e) {
+        private void QuitWithoutSaving_Click(object sender, EventArgs e)
+        {
             this.Close();
         }
 

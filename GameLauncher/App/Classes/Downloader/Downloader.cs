@@ -17,102 +17,65 @@ namespace GameLauncher
     public class Downloader
     {
         private const int LZMAOutPropsSize = 5;
-
         private const int LZMALengthSize = 8;
-
         private const int LZMAHeaderSize = 13;
-
         private const int HashThreads = 3;
-
         private const int DownloadThreads = 3;
-
         private const int DownloadChunks = 16;
-
         private ISynchronizeInvoke mFE;
-
         private Thread mThread;
-
         private ProgressUpdated mProgressUpdated;
-
         private DownloadFinished mDownloadFinished;
-
         private DownloadFailed mDownloadFailed;
-
-		private ShowMessage mShowMessage;
-
-		private ShowExtract mShowExtract;
-
-		private static string mCurrentLocalVersion = string.Empty;
-
+        private ShowMessage mShowMessage;
+        private ShowExtract mShowExtract;
+        private static string mCurrentLocalVersion = string.Empty;
         private static string mCurrentServerVersion = string.Empty;
-
         private bool mDownloading;
-
         private int mHashThreads;
-
         private DownloadManager mDownloadManager;
-
         private static XmlDocument mIndexCached = null;
+        private static bool mStopFlag = false;
+        public static Label label2;
 
-		private static bool mStopFlag = false;
-
-		public static Label label2;
-
-		public bool Downloading {
-            get {
-                return this.mDownloading;
-            }
+        public bool Downloading
+        {
+            get { return this.mDownloading; }
         }
 
-        public ProgressUpdated ProgressUpdated {
-            get {
-                return this.mProgressUpdated;
-            }
-            set {
-                this.mProgressUpdated = value;
-            }
+        public ProgressUpdated ProgressUpdated
+        {
+            get { return this.mProgressUpdated; }
+            set { this.mProgressUpdated = value; }
         }
 
-        public DownloadFinished DownloadFinished {
-            get {
-                return this.mDownloadFinished;
-            }
-            set {
-                this.mDownloadFinished = value;
-            }
+        public DownloadFinished DownloadFinished
+        {
+            get { return this.mDownloadFinished; }
+            set { this.mDownloadFinished = value; }
         }
 
-        public DownloadFailed DownloadFailed {
-            get {
-                return this.mDownloadFailed;
-            }
-            set {
-                this.mDownloadFailed = value;
-            }
+        public DownloadFailed DownloadFailed
+        {
+            get { return this.mDownloadFailed; }
+            set { this.mDownloadFailed = value; }
         }
 
-		public ShowMessage ShowMessage {
-			get {
-				return this.mShowMessage;
-			}
-			set {
-				this.mShowMessage = value;
-			}
-		}
+        public ShowMessage ShowMessage
+        {
+            get { return this.mShowMessage; }
+            set { this.mShowMessage = value; }
+        }
 
-		public ShowExtract ShowExtract {
-			get {
-				return this.mShowExtract;
-			}
-			set {
-				this.mShowExtract = value;
-			}
-		}
+        public ShowExtract ShowExtract
+        {
+            get { return this.mShowExtract; }
+            set { this.mShowExtract = value; }
+        }
 
-		public static string ServerVersion {
-            get {
-                return Downloader.mCurrentServerVersion;
-            }
+        public static string ServerVersion
+        {
+            get { return Downloader.mCurrentServerVersion; }
         }
 
         public Downloader(ISynchronizeInvoke fe) : this(fe, 3, 3, 16)
@@ -179,7 +142,6 @@ namespace GameLauncher
             if (e.Error != null)
             {
                 //MessageBox.Show("Downloader_DownloadFileCompleted Exception: " + e.Error.ToString());
-                
             }
         }
 
@@ -596,7 +558,6 @@ namespace GameLauncher
                                 IntPtr intPtr = new IntPtr(num18);
                                 IntPtr value = new IntPtr(num22);
                                 int num24 = LZMA.LzmaUncompressBuf2File(text6, ref value, array3, ref intPtr, array5, outPropsSize);
-
 
                                 //TODO: use total file lenght and extracted file length instead of files checked and total array size.
                                 fileschecked =+ num3;

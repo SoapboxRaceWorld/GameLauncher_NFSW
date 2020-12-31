@@ -14,14 +14,17 @@ using static System.String;
 
 namespace GameLauncher.App
 {
-    public partial class AddServer : Form {
-        public AddServer() {
+    public partial class AddServer : Form
+    {
+        public AddServer()
+        {
             InitializeComponent();
             ApplyEmbeddedFonts();
             Version.Text = "Version : v" + Application.ProductVersion;
         }
 
-        public void DrawErrorAroundTextBox(TextBox x) {
+        public void DrawErrorAroundTextBox(TextBox x)
+        {
             x.BorderStyle = BorderStyle.Fixed3D;
             Pen p = new Pen(Color.Red);
             Graphics g = this.CreateGraphics();
@@ -29,7 +32,8 @@ namespace GameLauncher.App
             g.DrawRectangle(p, new Rectangle(x.Location.X - variance, x.Location.Y - variance, x.Width + variance, x.Height + variance));
         }
 
-        private void ApplyEmbeddedFonts() {
+        private void ApplyEmbeddedFonts()
+        {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
             OkBTN.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
@@ -42,23 +46,27 @@ namespace GameLauncher.App
             Version.Font= new Font(DejaVuSans, 9f, FontStyle.Regular);
         }
 
-        private void OkButton_Click(object sender, EventArgs e) {
-			if (!File.Exists("servers.json")) {
-				File.Create("servers.json");
-			}
+        private void OkButton_Click(object sender, EventArgs e)
+        {
+            if (!File.Exists("servers.json"))
+            {
+                File.Create("servers.json");
+            }
 
-			bool success = true;
+            bool success = true;
             Error.Visible = false;
             this.Refresh();
 
             String wellFormattedURL = "";
 
-            if (IsNullOrEmpty(ServerAddress.Text)) {
+            if (IsNullOrEmpty(ServerAddress.Text))
+            {
                 DrawErrorAroundTextBox(ServerAddress);
                 success = false;
             }
 
-            if (IsNullOrEmpty(ServerName.Text)) {
+            if (IsNullOrEmpty(ServerName.Text))
+            {
                 DrawErrorAroundTextBox(ServerName);
                 success = false;
             }
@@ -66,10 +74,13 @@ namespace GameLauncher.App
             Uri uriResult;
             bool result = Uri.TryCreate(ServerAddress.Text, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
-            if (!result) {
+            if (!result)
+            {
                 DrawErrorAroundTextBox(ServerAddress);
                 success = false;
-            } else {
+            }
+            else
+            {
                 wellFormattedURL = uriResult.ToString();
             }
 
@@ -78,18 +89,22 @@ namespace GameLauncher.App
             ServerAddress.Enabled = false;
             ServerName.Enabled = false;
 
-            try {
+            try
+            {
                 var client = new WebClient();
                 Uri StringToUri = new Uri(wellFormattedURL + "/GetServerInformation");
                 var serverLoginResponse = client.DownloadString(StringToUri);
 
                 GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(serverLoginResponse);
 
-                if (IsNullOrEmpty(json.ServerName)) {
+                if (IsNullOrEmpty(json.ServerName))
+                {
                     DrawErrorAroundTextBox(ServerAddress);
                     success = false;
                 }
-            } catch {
+            }
+            catch
+            {
                 DrawErrorAroundTextBox(ServerAddress);
                 success = false;
             }
@@ -99,8 +114,10 @@ namespace GameLauncher.App
             ServerAddress.Enabled = true;
             ServerName.Enabled = true;
 
-            if (success == true) {
-                try {
+            if (success == true)
+            {
+                try
+                {
                     StreamReader sr = new StreamReader("servers.json");
                     String oldcontent = sr.ReadToEnd();
                     sr.Close();
@@ -124,17 +141,21 @@ namespace GameLauncher.App
 
                     MessageBox.Show(null, "New server will be added on next start of launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     MessageBox.Show(null, "Failed to add new server. " + ex.Message, "GameLauncher", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
                 }
 
                 CancelButton_Click(sender, e);
-            } else {
+            }
+            else
+            {
                 Error.Visible = true;
             }
         }
 
-        private void CancelButton_Click(object sender, EventArgs e) {
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
             this.Close();
         }
     }

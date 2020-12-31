@@ -81,9 +81,12 @@ namespace GameLauncher.App
             string LauncherPosition = "";
             string OS = "";
 
-            if (DetectLinux.LinuxDetected()) {
+            if (DetectLinux.LinuxDetected())
+            {
                 OS = DetectLinux.Distro();
-            } else {
+            }
+            else
+            {
                 OS = Environment.OSVersion.VersionString;
             }
 
@@ -126,14 +129,15 @@ namespace GameLauncher.App
                 }
 
                 Win32_Processor = (from x in new ManagementObjectSearcher("SELECT Name FROM Win32_Processor").Get().Cast<ManagementObject>()
-                                   select x.GetPropertyValue("Name")).FirstOrDefault().ToString();
+                    select x.GetPropertyValue("Name")).FirstOrDefault().ToString();
 
                 Kernel32.GetDiskFreeSpaceEx(SettingFile.Read("InstallationDirectory"), out lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
             }
 
             var Win32_VideoController = string.Join(" | ", GPUs);
 
-            var settings = new List<ListType> {
+            var settings = new List<ListType>
+            {
                 new ListType{ Name = "InstallationDirectory", Value = SettingFile.Read("InstallationDirectory")},
                 new ListType{ Name = "Launcher Version", Value = Application.ProductVersion},
                 new ListType{ Name = "Credentials Saved", Value = Password},
@@ -152,7 +156,8 @@ namespace GameLauncher.App
 
             if (!DetectLinux.LinuxDetected())
             {
-                settings.AddRange(new[] {
+                settings.AddRange(new[]
+                {
                     new ListType{ Name = "Antivirus", Value = Antivirus },
                     new ListType{ Name = "Firewall", Value = Firewall },
                     new ListType{ Name = "AntiSpyware", Value = AntiSpyware },
@@ -164,7 +169,8 @@ namespace GameLauncher.App
                     new ListType{ Name = "", Value = ""}
                 });
             }
-            settings.AddRange(new[] {
+            settings.AddRange(new[]
+            {
                 new ListType{ Name = "HWID", Value = Security.FingerPrint.Value()},
                 new ListType{ Name = "Operating System", Value = OS},
                 new ListType{ Name = "Environment Version", Value = Environment.OSVersion.Version.ToString() },
@@ -203,8 +209,8 @@ namespace GameLauncher.App
 
         struct ListType
         {
-			public string Name { get; set; }
-			public string Value { get; set; }
+            public string Name { get; set; }
+            public string Value { get; set; }
         }
     }
 }

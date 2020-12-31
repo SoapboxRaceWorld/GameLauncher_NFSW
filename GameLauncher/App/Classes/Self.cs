@@ -13,7 +13,8 @@ using System.Net;
 
 namespace GameLauncherReborn
 {
-    class Self {
+    class Self
+    {
         public static string mainserver = "https://api.worldunited.gg";
         public static string fileserver = "https://files.worldunited.gg";
         public static string staticapiserver = "http://api-sbrw.davidcarbon.download";
@@ -21,14 +22,16 @@ namespace GameLauncherReborn
         public static string woplserver = "http://worldonline.pl";
         public static string modnetserver = "http://cdn.soapboxrace.world";
 
-        public static string[] serverlisturl = new string[] {
+        public static string[] serverlisturl = new string[]
+        {
             mainserver + "/serverlist.json",
             staticapiserver + "/serverlist.json",
             secondstaticapiserver + "/serverlist.json",
             woplserver + "/serverlist.json"
         };
 
-        public static string[] cdnlisturl = new string[] {
+        public static string[] cdnlisturl = new string[]
+        {
             staticapiserver + "/cdn_list.json",
             secondstaticapiserver + "/cdn_list.json",
             woplserver + "/cdn_list.json"
@@ -51,28 +54,36 @@ namespace GameLauncherReborn
 
         public static string currentLanguage = "EN";
 
-        public static long GetTimestamp(bool valid = false) {
+        public static long GetTimestamp(bool valid = false)
+        {
             long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
 
-            if(valid == true) {
+            if (valid == true)
+            {
                 ticks /= 10000000;
-            } else {
+            }
+            else
+            {
                 ticks /= 10000;
             }
 
             return ticks;
         }
 
-		public static bool HasWriteAccessToFolder(string path) {
-			try {
-				File.Create(path + "temp.txt").Close();
-				File.Delete(path + "temp.txt");
-			} catch {
-				return false;
-			}
+        public static bool HasWriteAccessToFolder(string path)
+        {
+            try
+            {
+                File.Create(path + "temp.txt").Close();
+                File.Delete(path + "temp.txt");
+            }
+            catch
+            {
+                return false;
+            }
 
-			return true;
-		}
+            return true;
+        }
 
         public static async Task SubmitError(Exception exception)
         {
@@ -85,12 +96,15 @@ namespace GameLauncherReborn
             });
         }
 
-        public static string CountryName(string twoLetterCountryCode) {
+        public static string CountryName(string twoLetterCountryCode)
+        {
             CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
 
-            foreach (CultureInfo culture in cultures) {
+            foreach (CultureInfo culture in cultures)
+            {
                 RegionInfo region = new RegionInfo(culture.LCID);
-                if (region.TwoLetterISORegionName.ToUpper() == twoLetterCountryCode.ToUpper()) {
+                if (region.TwoLetterISORegionName.ToUpper() == twoLetterCountryCode.ToUpper())
+                {
                     return region.EnglishName;
                 }
             }
@@ -98,44 +112,51 @@ namespace GameLauncherReborn
             return "Unknown";
         }
 
-        public static void CenterScreen(Form form) {
+        public static void CenterScreen(Form form)
+        {
             form.StartPosition = FormStartPosition.Manual;
             form.Top = (Screen.PrimaryScreen.Bounds.Height - form.Height) / 2;
             form.Left = (Screen.PrimaryScreen.Bounds.Width - form.Width) / 2;
         }
 
-		public static bool ValidateEmail(string email) {
-			String theEmailPattern = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
-								   + "@"
-								   + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
+        public static bool ValidateEmail(string email)
+        {
+            String theEmailPattern = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
+               + "@"
+               + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
 
-			return Regex.IsMatch(email, theEmailPattern);
-		}
+            return Regex.IsMatch(email, theEmailPattern);
+        }
 
         //Let's actually make it cleaner and nicer - MeTonaTOR
-        public static FolderType CheckFolder(string FolderName) {
-            if (FolderName.Contains("C:\\Users") && FolderName.Contains("Temp"))                                return FolderType.IsTempFolder;
-            if (FolderName.Contains("C:\\Users"))                           return FolderType.IsUsersFolders;
-            if (FolderName.Contains("C:\\Program Files"))                   return FolderType.IsProgramFilesFolder;
-            if (FolderName.Contains("C:\\Windows"))                         return FolderType.IsWindowsFolder;
-            if (FolderName + "\\" == AppDomain.CurrentDomain.BaseDirectory) return FolderType.IsSameAsLauncherFolder;
+        public static FolderType CheckFolder(string FolderName)
+        {
+            if (FolderName.Contains("C:\\Users") && FolderName.Contains("Temp")) return FolderType.IsTempFolder;
+            if (FolderName.Contains("C:\\Users"))                                return FolderType.IsUsersFolders;
+            if (FolderName.Contains("C:\\Program Files"))                        return FolderType.IsProgramFilesFolder;
+            if (FolderName.Contains("C:\\Windows"))                              return FolderType.IsWindowsFolder;
+            if (FolderName + "\\" == AppDomain.CurrentDomain.BaseDirectory)      return FolderType.IsSameAsLauncherFolder;
 
             return FolderType.Unknown;
         }
 
-        public static string CleanFromUnknownChars(string s) {
+        public static string CleanFromUnknownChars(string s)
+        {
             StringBuilder sb = new StringBuilder(s.Length);
-            foreach (char c in s) {
-                if(
-                    (int)c >= 48 && (int)c <= 57 || 
-                    (int)c == 60 || 
-                    (int)c == 62 || 
-                    (int)c >= 65 && (int)c <= 90 || 
-                    (int)c >= 97 && (int)c <= 122 || 
-                    (int)c == 47 || 
-                    (int)c == 45 ||
-                    (int)c == 46
-                ) {
+            foreach (char c in s)
+            {
+                if
+                 (
+                  (int)c >= 48 && (int)c <= 57 ||
+                  (int)c == 60 ||
+                  (int)c == 62 ||
+                  (int)c >= 65 && (int)c <= 90 ||
+                  (int)c >= 97 && (int)c <= 122 ||
+                  (int)c == 47 ||
+                  (int)c == 45 ||
+                  (int)c == 46
+                 )
+                {
                     sb.Append(c);
                 }
             }
@@ -143,12 +164,14 @@ namespace GameLauncherReborn
             return sb.ToString();
         }
 
-        public static bool CheckArchitectureFile(string fileName) {
+        public static bool CheckArchitectureFile(string fileName)
+        {
             const int PE_POINTER_OFFSET = 60;
             const int MACHINE_OFFSET = 4;
             byte[] data = new byte[4096];
 
-            using (Stream s = new FileStream(fileName, FileMode.Open, FileAccess.Read)) {
+            using (Stream s = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+            {
                 s.Read(data, 0, 4096);
             }
 
@@ -157,13 +180,16 @@ namespace GameLauncherReborn
             return machineUint == 0x014c;
         }
 
-        public static bool GetInstalledHotFix(string identification) {
+        public static bool GetInstalledHotFix(string identification)
+        {
             var search = new ManagementObjectSearcher("SELECT HotFixID FROM Win32_QuickFixEngineering");
             var collection = search.Get();
 
-            foreach (ManagementObject quickFix in collection) {
+            foreach (ManagementObject quickFix in collection)
+            {
                 Console.WriteLine("Updates installed: " + quickFix["HotFixID"].ToString());
-                if(quickFix["HotFixID"].ToString() == identification) {
+                if (quickFix["HotFixID"].ToString() == identification)
+                {
                     return true;
                 }
             }
@@ -171,7 +197,8 @@ namespace GameLauncherReborn
             return false;
         }
 
-        public static string HostName2IP(string hostname) {
+        public static string HostName2IP(string hostname)
+        {
             IPHostEntry iphost = Dns.GetHostEntry(hostname);
             IPAddress[] addresses = iphost.AddressList;
             return addresses[0].ToString();
@@ -182,7 +209,8 @@ namespace GameLauncherReborn
 
     }
 
-    enum FolderType {
+    enum FolderType
+    {
         IsTempFolder,
         IsUsersFolders,
         IsProgramFilesFolder,

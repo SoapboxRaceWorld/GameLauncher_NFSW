@@ -74,13 +74,13 @@ namespace GameLauncher.App.Classes
 
         static string ComputeSha256Hash(byte[] rawData)
         {
-            // Create a SHA256   
+            // Create a SHA256
             using (var sha256Hash = SHA256.Create())
             {
-                // ComputeHash - returns byte array  
+                // ComputeHash - returns byte array
                 var bytes = sha256Hash.ComputeHash(rawData);
 
-                // Convert byte array to a string   
+                // Convert byte array to a string
                 var builder = new StringBuilder();
                 foreach (var t in bytes)
                 {
@@ -151,21 +151,26 @@ namespace GameLauncher.App.Classes
 
                 int moddownloaded = 0;
 
-                if (ModCache.Contains($"{serverKey}::{mod.Id}")) {
-                    foreach (var file in mod.Files) {
-                        if(!File.Exists(Path.Combine(serverModsDirectory, file.Path))) {
+                if (ModCache.Contains($"{serverKey}::{mod.Id}"))
+                {
+                    foreach (var file in mod.Files)
+                    {
+                        if (!File.Exists(Path.Combine(serverModsDirectory, file.Path)))
+                        {
                             Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(serverModsDirectory, file.Path)));
                             File.Create(Path.Combine(serverModsDirectory, file.Path)).Dispose();
                         }
 
                         var computedHash = ComputeSha256Hash(File.ReadAllBytes(Path.Combine(serverModsDirectory, file.Path)));
-                        if (computedHash != file.Hash) {
+                        if (computedHash != file.Hash)
+                        {
                             moddownloaded++;
                             var wc = new WebClient();
                             PlayProgress.Text = ("Downloading " + serverKey + " files: " + file.Path + " (" + moddownloaded + "/" + totalModsCount + ")").ToUpper();
                             var fileData = wc.DownloadData(url + file.Path);
                             using (var fs = File.OpenWrite(Path.Combine(serverModsDirectory, file.Path)))
-                            using (var bw = new BinaryWriter(fs)) {
+                            using (var bw = new BinaryWriter(fs))
+                            {
                                 bw.Write(fileData);
                             }
                         }

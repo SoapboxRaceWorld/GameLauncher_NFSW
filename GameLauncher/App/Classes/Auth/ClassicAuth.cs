@@ -6,33 +6,46 @@ using System.Xml;
 
 namespace GameLauncher.App.Classes.Auth
 {
-    class ClassicAuth {
+    class ClassicAuth
+    {
         private static int _errorcode;
         private static String serverLoginResponse;
 
-        public static void Login(String email, String password) {
-            try {
+        public static void Login(String email, String password)
+        {
+            try
+            {
                 WebClientWithTimeout wc = new WebClientWithTimeout();
                 var buildUrl = Tokens.IPAddress + "/User/authenticateUser?email=" + email + "&password=" + password;
                 serverLoginResponse = wc.DownloadString(buildUrl);
-            } catch (WebException ex) {
+            }
+            catch (WebException ex)
+            {
                 var serverReply = (HttpWebResponse)ex.Response;
 
-                if (serverReply == null) {
+                if (serverReply == null)
+                {
                     _errorcode = 500;
                     serverLoginResponse = "<LoginStatusVO><UserId/><LoginToken/><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
-                } else {
-                    using (var sr = new StreamReader(serverReply.GetResponseStream())) {
+                }
+                else
+                {
+                    using (var sr = new StreamReader(serverReply.GetResponseStream()))
+                    {
                         _errorcode = (int)serverReply.StatusCode;
                         serverLoginResponse = sr.ReadToEnd();
                     }
                 }
             }
 
-            if (string.IsNullOrEmpty(serverLoginResponse)) {
+            if (string.IsNullOrEmpty(serverLoginResponse))
+            {
                 Tokens.Error = "Server seems to be offline.";
-            } else {
-                try {
+            }
+            else
+            {
+                try
+                {
                     var sbrwXml = new XmlDocument();
                     sbrwXml.LoadXml(serverLoginResponse);
 
@@ -44,81 +57,120 @@ namespace GameLauncher.App.Classes.Auth
                     loginTokenNode = sbrwXml.SelectSingleNode("LoginStatusVO/LoginToken");
                     userIdNode = sbrwXml.SelectSingleNode("LoginStatusVO/UserId");
 
-                    if (sbrwXml.SelectSingleNode("LoginStatusVO/Ban") == null) {
-                        if (sbrwXml.SelectSingleNode("LoginStatusVO/Description") == null) {
+                    if (sbrwXml.SelectSingleNode("LoginStatusVO/Ban") == null)
+                    {
+                        if (sbrwXml.SelectSingleNode("LoginStatusVO/Description") == null)
+                        {
                             extraNode = sbrwXml.SelectSingleNode("html/body");
-                        } else {
+                        }
+                        else
+                        {
                             extraNode = sbrwXml.SelectSingleNode("LoginStatusVO/Description");
                         }
-                    } else {
+                    }
+                    else
+                    {
                         extraNode = sbrwXml.SelectSingleNode("LoginStatusVO/Ban");
                     }
 
-                    if (!string.IsNullOrEmpty(extraNode.InnerText)) {
-                        if (extraNode.SelectSingleNode("Expires") != null || extraNode.SelectSingleNode("Reason") != null) {
+                    if (!string.IsNullOrEmpty(extraNode.InnerText))
+                    {
+                        if (extraNode.SelectSingleNode("Expires") != null || extraNode.SelectSingleNode("Reason") != null)
+                        {
                             msgBoxInfo = string.Format("You got banned on {0}.", Tokens.ServerName) + "\n";
 
-                            if(extraNode.SelectSingleNode("Reason") != null){
+                            if (extraNode.SelectSingleNode("Reason") != null)
+                            {
                                 msgBoxInfo += string.Format("Reason: {0}", extraNode.SelectSingleNode("Reason").InnerText);
-                            } else {
+                            }
+                            else
+                            {
                                 msgBoxInfo += "Reason: unknown";
                             }
 
-                            if (extraNode.SelectSingleNode("Expires") != null) {
+                            if (extraNode.SelectSingleNode("Expires") != null)
+                            {
                                 msgBoxInfo += "\n" + string.Format("Ban expires: {0}", extraNode.SelectSingleNode("Expires").InnerText);
-                            } else {
+                            }
+                            else
+                            {
                                 msgBoxInfo += "\n" + "Banned forever.";
                             }
-                        } else {
-                            if (extraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?") {
+                        }
+                        else
+                        {
+                            if (extraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?")
+                            {
                                 msgBoxInfo = "Launcher tampering detected. Please use original build.";
-                            } else {
-                                if (sbrwXml.SelectSingleNode("html/body") == null) {
-                                    if (extraNode.InnerText == "LOGIN ERROR") {
+                            }
+                            else
+                            {
+                                if (sbrwXml.SelectSingleNode("html/body") == null)
+                                {
+                                    if (extraNode.InnerText == "LOGIN ERROR")
+                                    {
                                         msgBoxInfo = "Invalid e-mail or password.";
-                                    } else if (string.IsNullOrEmpty(msgBoxInfo)) {
+                                    }
+                                    else if (string.IsNullOrEmpty(msgBoxInfo))
+                                    {
                                         msgBoxInfo = extraNode.InnerText;
                                     }
-                                } else {
+                                }
+                                else
+                                {
                                     msgBoxInfo = "ERROR " + _errorcode + ": " + extraNode.InnerText;
                                 }
                             }
                         }
                         
                         Tokens.Error = msgBoxInfo;
-                    } else {
+                    }
+                    else
+                    {
                         Tokens.UserId = userIdNode.InnerText;
                         Tokens.LoginToken = loginTokenNode.InnerText;
 
-                        if (sbrwXml.SelectSingleNode("LoginStatusVO/Warning") != null) {
+                        if (sbrwXml.SelectSingleNode("LoginStatusVO/Warning") != null)
+                        {
                             Tokens.Warning = sbrwXml.SelectSingleNode("LoginStatusVO/Warning").InnerText;
                         }
                     }
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     Tokens.Error = "An error occured: " + ex.Message;
                 }
             }
         }
 
-        public static void Register(String email, String password, String token = null) {
-            try {
+        public static void Register(String email, String password, String token = null)
+        {
+            try
+            {
                 WebClientWithTimeout wc = new WebClientWithTimeout();
                 String buildUrl = Tokens.IPAddress + "/User/createUser?email=" + email + "&password=" + password + (!String.IsNullOrEmpty(token) ? "&inviteTicket=" + token : "");
                 serverLoginResponse = wc.DownloadString(buildUrl);
-            } catch (WebException ex) {
+            }
+            catch (WebException ex)
+            {
                 var serverReply = (HttpWebResponse)ex.Response;
-                if (serverReply == null) {
+                if (serverReply == null)
+                {
                     _errorcode = 500;
                     serverLoginResponse = "<LoginStatusVO><UserId/><LoginToken/><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
-                } else {
-                    using (var sr = new StreamReader(serverReply.GetResponseStream())) {
+                }
+                else
+                {
+                    using (var sr = new StreamReader(serverReply.GetResponseStream()))
+                    {
                         _errorcode = (int)serverReply.StatusCode;
                         serverLoginResponse = sr.ReadToEnd();
                     }
                 }
             }
 
-            try {
+            try
+            {
                 var sbrwXml = new XmlDocument();
                 sbrwXml.LoadXml(serverLoginResponse);
 
@@ -130,46 +182,73 @@ namespace GameLauncher.App.Classes.Auth
                 loginTokenNode = sbrwXml.SelectSingleNode("LoginStatusVO/LoginToken");
                 userIdNode = sbrwXml.SelectSingleNode("LoginStatusVO/UserId");
 
-                if (sbrwXml.SelectSingleNode("LoginStatusVO/Ban") == null) {
-                    if (sbrwXml.SelectSingleNode("LoginStatusVO/Description") == null) {
+                if (sbrwXml.SelectSingleNode("LoginStatusVO/Ban") == null)
+                {
+                    if (sbrwXml.SelectSingleNode("LoginStatusVO/Description") == null)
+                    {
                         extraNode = sbrwXml.SelectSingleNode("html/body");
-                    } else {
+                    }
+                    else
+                    {
                         extraNode = sbrwXml.SelectSingleNode("LoginStatusVO/Description");
                     }
-                } else {
+                }
+                else
+                {
                     extraNode = sbrwXml.SelectSingleNode("LoginStatusVO/Ban");
                 }
 
-                if (string.IsNullOrEmpty(extraNode.InnerText) || extraNode.InnerText == "SERVER FULL") {
+                if (string.IsNullOrEmpty(extraNode.InnerText) || extraNode.InnerText == "SERVER FULL")
+                {
                     Tokens.UserId = userIdNode.InnerText;
                     Tokens.LoginToken = loginTokenNode.InnerText;
 
-                    if (extraNode.InnerText == "SERVER FULL") {
+                    if (extraNode.InnerText == "SERVER FULL")
+                    {
                         Tokens.Success = string.Format("Successfully registered on {0}. However, server is actually full, therefore you cannot play it right now.", Tokens.ServerName);
-                    } else {
+                    }
+                    else
+                    {
                         Tokens.Success = string.Format("Successfully registered on {0}. You can log in now.", Tokens.ServerName);
                     }
-                } else {
-                    if (extraNode.SelectSingleNode("Reason") != null) {
+                }
+                else
+                {
+                    if (extraNode.SelectSingleNode("Reason") != null)
+                    {
                         msgBoxInfo = string.Format("You got banned on {0}.", Tokens.ServerName) + "\n";
                         msgBoxInfo += string.Format("Reason: {0}", extraNode.SelectSingleNode("Reason").InnerText);
 
-                        if (extraNode.SelectSingleNode("Expires") != null) {
+                        if (extraNode.SelectSingleNode("Expires") != null)
+                        {
                             msgBoxInfo += "\n" + string.Format("Ban expires {0}", extraNode.SelectSingleNode("Expires").InnerText);
-                        } else {
+                        }
+                        else
+                        {
                             msgBoxInfo += "\n" + "Banned forever.";
                         }
-                    } else {
-                        if (extraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?") {
+                    }
+                    else
+                    {
+                        if (extraNode.InnerText == "Please use MeTonaTOR's launcher. Or, are you tampering?")
+                        {
                             msgBoxInfo = "Launcher tampering detected. Please use original build.";
-                        } else {
-                            if (sbrwXml.SelectSingleNode("html/body") == null) {
-                                if (extraNode.InnerText == "LOGIN ERROR") {
+                        }
+                        else
+                        {
+                            if (sbrwXml.SelectSingleNode("html/body") == null)
+                            {
+                                if (extraNode.InnerText == "LOGIN ERROR")
+                                {
                                     msgBoxInfo = "Invalid e-mail or password.";
-                                } else {
+                                }
+                                else
+                                {
                                     msgBoxInfo = extraNode.InnerText;
                                 }
-                            } else {
+                            }
+                            else
+                            {
                                 msgBoxInfo = "ERROR " + _errorcode + ": " + extraNode.InnerText;
                             }
                         }
@@ -177,7 +256,9 @@ namespace GameLauncher.App.Classes.Auth
 
                     Tokens.Error = msgBoxInfo;
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 Tokens.Error = "An error occured: " + ex.Message;
             }
         }

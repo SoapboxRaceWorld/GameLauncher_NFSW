@@ -3,15 +3,19 @@ using System.IO;
 
 namespace GameLauncher.App.Classes
 {
-    class DetectLinux {
+    class DetectLinux
+    {
         private static string _linuxDistro = null;
 
-		public static bool LinuxDetected() {
+        public static bool LinuxDetected()
+        {
             return Type.GetType("Mono.Runtime") != null;
         }
 
-        public static string Distro() {
-            if(_linuxDistro == null) {
+        public static string Distro()
+        {
+            if (_linuxDistro == null)
+            {
                 _linuxDistro = LinuxDistroInternal();
             }
 
@@ -22,23 +26,30 @@ namespace GameLauncher.App.Classes
             return true;
         }
 
-        private static string LinuxDistroInternal() {
-            if (!File.Exists("/etc/os-release")) {
+        private static string LinuxDistroInternal()
+        {
+            if (!File.Exists("/etc/os-release"))
+            {
                 return "UNIX-Like System";
             }
 
-            using (var stream = new StreamReader("/etc/os-release")) {
+            using (var stream = new StreamReader("/etc/os-release"))
+            {
                 string line;
-                while ((line = stream.ReadLine()) != null) {
+                while ((line = stream.ReadLine()) != null)
+                {
                     var splits = line.Split(new[] { '=' }, 2);
-                    if (splits[0] == "PRETTY_NAME") {
+                    if (splits[0] == "PRETTY_NAME")
+                    {
                         var val = splits[1];
 
-                        if (val[0] == '"') {
+                        if (val[0] == '"')
+                        {
                             val = val.Substring(1);
                         }
 
-                        if (val[val.Length - 1] == '"') {
+                        if (val[val.Length - 1] == '"')
+                        {
                             val = val.Substring(0, val.Length - 1);
                         }
 

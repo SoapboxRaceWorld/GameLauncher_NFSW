@@ -2,9 +2,12 @@
 
 namespace GameLauncher.App.Classes
 {
-    public static class Prompt {
-        public static string ShowDialog(string text, string caption) {
-            Form prompt = new Form() {
+    public static class Prompt
+    {
+        public static string ShowDialog(string text, string caption)
+        {
+            Form prompt = new Form()
+            {
                 Width = 415,
                 Height = 180,
                 FormBorderStyle = FormBorderStyle.FixedDialog,

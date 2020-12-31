@@ -1,19 +1,30 @@
 ﻿using System.Diagnostics;
 using System.Threading;
 
-namespace GameLauncherReborn {
-    class NFSW {
-        public static bool DetectByMutex() {
+namespace GameLauncherReborn
+{
+    class NFSW
+    {
+        public static bool DetectByMutex()
+        {
             Mutex detectRunningNFSW = new Mutex(false, "Global\\{3E34CEFB-7B34-4e62-8034-33256B8BC2F7}");
-            try {
-                if (!detectRunningNFSW.WaitOne(0, false)) {
+            try
+            {
+                if (!detectRunningNFSW.WaitOne(0, false))
+                {
                     return true;
-                } else {
+                }
+                else
+                {
                     return false;
                 }
-            } catch {
+            }
+            catch
+			{
                 return false;
-            } finally {
+            }
+            finally
+            {
                 if (detectRunningNFSW != null)
                 {
                     detectRunningNFSW.Close();
@@ -22,17 +33,22 @@ namespace GameLauncherReborn {
             }
         }
 
-        public static bool DetectByProcess() {
+        public static bool DetectByProcess()
+        {
             Process[] nfswProcess = Process.GetProcessesByName("nfsw");
 
-            if (nfswProcess.Length == 0) {
+            if (nfswProcess.Length == 0)
+            {
                 return false;
-            } else {
+            }
+            else
+            {
                 return true;
             }
         }
 
-        public static bool IsNFSWRunning() {
+        public static bool IsNFSWRunning()
+        {
             return DetectByMutex() || DetectByProcess();
         }
     }

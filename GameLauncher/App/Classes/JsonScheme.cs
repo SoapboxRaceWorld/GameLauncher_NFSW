@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace SoapBox.JsonScheme {
-    public class GetServerInformation {
+namespace SoapBox.JsonScheme
+{
+    public class GetServerInformation
+    {
         public string MessageSrv { get; set; }
         public string HomePageUrl { get; set; }
         public string FacebookUrl { get; set; }

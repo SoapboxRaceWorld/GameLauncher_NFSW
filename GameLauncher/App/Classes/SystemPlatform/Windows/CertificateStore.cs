@@ -9,9 +9,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
     class CertificateStore
     {
         private static bool IsROOTCAInstalled = false;
-
         private static string RootCAName = "Carbon Crew CA";
-        public static Log launcherLog = new Log("launcher.log");
 
         public static void Check()
         {
@@ -27,23 +25,23 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
                 if (certificates != null && certificates.Count > 0)
                 {
-                    launcherLog.Info("CERTIFICATE STORE: Found Root CA [" + RootCAName + "]");
+                    Log.Info("CERTIFICATE STORE: Found Root CA [" + RootCAName + "]");
                     IsROOTCAInstalled = true;
                 }
                 else if (certificates == null && certificates.Count > 0)
                 {
-                    launcherLog.Error("CERTIFICATE STORE: Hey! You don't have any Certificates Installed at All!");
+                    Log.Error("CERTIFICATE STORE: Hey! You don't have any Certificates Installed at All!");
                     IsROOTCAInstalled = false;
                 }
                 else
                 {
-                    launcherLog.Warning("CERTIFICATE STORE: [" + RootCAName + "] Not Found");
+                    Log.Warning("CERTIFICATE STORE: [" + RootCAName + "] Not Found");
                     IsROOTCAInstalled = false;
                 }
             }
             catch (Exception ex)
             {
-                launcherLog.Error("CERTIFICATE STORE: Failed to Run. " + ex.Message);
+                Log.Error("CERTIFICATE STORE: Failed to Run. " + ex.Message);
             }
 
             InstallNewRootCA();
@@ -66,23 +64,23 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     X509Certificate2Collection collection = new X509Certificate2Collection();
                     X509Certificate2 cert = new X509Certificate2(CertSaveLocation);
                     byte[] encodedCert = cert.GetRawCertData();
-                    launcherLog.Info("CERTIFICATE STORE: We are now installing [" + RootCAName + "] certificate into the Trusted Root Certificate store ...");
+                    Log.Info("CERTIFICATE STORE: We are now installing [" + RootCAName + "] certificate into the Trusted Root Certificate store ...");
                     store.Add(cert);
-                    launcherLog.Info("CERTIFICATE STORE: Done! [" + RootCAName + "] certificate was installed successfully.");
+                    Log.Info("CERTIFICATE STORE: Done! [" + RootCAName + "] certificate was installed successfully.");
                     store.Close();
                 }
                 else
                 {
                     if (File.Exists(CertSaveLocation))
                     {
-                        launcherLog.Info("CERTIFICATE STORE: Removed [" + RootCAName + "] certificate from launcher folder.");
+                        Log.Info("CERTIFICATE STORE: Removed [" + RootCAName + "] certificate from launcher folder.");
                         File.Delete(CertSaveLocation);
                     }
                 }
             }
             catch (Exception ex)
             {
-                launcherLog.Error("CERTIFICATE STORE: Failed to Install. " + ex.Message);
+                Log.Error("CERTIFICATE STORE: Failed to Install. " + ex.Message);
             }
         }
     }

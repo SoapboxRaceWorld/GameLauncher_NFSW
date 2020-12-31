@@ -26,8 +26,6 @@ namespace GameLauncher.App
 
         //Used to ping the Server in ms
         public Queue<string> servers = new Queue<string>();
-        Log launcherLog = new Log("launcher.log");
-
         private readonly IniFile _settingFile = new IniFile("Settings.ini");
 
         public SelectServer()
@@ -79,12 +77,12 @@ namespace GameLauncher.App
                     }
                     catch (Exception error)
                     {
-                        launcherLog.Error("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message);
+                        Log.Error("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message);
                     }
                 }
                 catch (Exception error)
                 {
-                    launcherLog.Error("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message);
+                    Log.Error("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message);
                 }
             }
 
@@ -124,7 +122,8 @@ namespace GameLauncher.App
                     servers.Enqueue(ID + "_|||_" + substring.IpAddress + "_|||_" + substring.Name);
 
                     ServerListRenderer.Items.Add(new ListViewItem(
-                        new[] {
+                        new[]
+                        {
                                 ID.ToString(), substring.Name, "", "", "", "", ""
                         }
                     ));
@@ -138,9 +137,11 @@ namespace GameLauncher.App
                 }
             }
 
-            Thread newList = new Thread(() => {
+            Thread newList = new Thread(() =>
+            {
                 Thread.Sleep(200);
-                this.BeginInvoke((MethodInvoker)delegate {
+                this.BeginInvoke((MethodInvoker)delegate
+                {
                     while (servers.Count != 0)
                     {
                         string QueueContent = servers.Dequeue();
@@ -152,10 +153,7 @@ namespace GameLauncher.App
 
                         try
                         {
-
                             WebClient getdata = new WebClient();
-                            //getdata.Timeout(8000);
-
                             GetServerInformation content = JsonConvert.DeserializeObject<GetServerInformation>(getdata.DownloadString(serverurl));
 
                             if (content == null)
@@ -220,12 +218,14 @@ namespace GameLauncher.App
             newList.Start();
 
             ServerListRenderer.AllowColumnReorder = false;
-            ServerListRenderer.ColumnWidthChanging += (handler, args) => {
+            ServerListRenderer.ColumnWidthChanging += (handler, args) =>
+            {
                 args.Cancel = true;
                 args.NewWidth = ServerListRenderer.Columns[args.ColumnIndex].Width;
             };
 
-            ServerListRenderer.DoubleClick += new EventHandler((handler, args) => {
+            ServerListRenderer.DoubleClick += new EventHandler((handler, args) =>
+            {
                 SelectedGameServerToRemember();
             });
         }

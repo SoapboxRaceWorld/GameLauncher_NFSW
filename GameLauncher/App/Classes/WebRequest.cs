@@ -12,23 +12,30 @@ using GameLauncher.App.Classes.Logger;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 
-namespace GameLauncherReborn {
-    public class WebClientWithTimeout : WebClient {
+namespace GameLauncherReborn
+{
+    public class WebClientWithTimeout : WebClient
+    {
         private static string GameLauncherHash = string.Empty;
         private static long addrange = 0;
         private static int timeout = 3000;
-        Log launcherLog = new Log("launcher.log");
-        public static string Value() {
-            if (string.IsNullOrEmpty(GameLauncherHash)) {
+
+        public static string Value()
+        {
+            if (string.IsNullOrEmpty(GameLauncherHash))
+            {
                 GameLauncherHash = SHA.HashFile(AppDomain.CurrentDomain.FriendlyName);
             }
 
             return GameLauncherHash;
         }
 
-        protected override WebRequest GetWebRequest(Uri address) {
-            if(DetectLinux.LinuxDetected()) {
-                address = new UriBuilder(address) {
+        protected override WebRequest GetWebRequest(Uri address)
+        {
+            if (DetectLinux.LinuxDetected())
+            {
+                address = new UriBuilder(address)
+                {
                     Scheme = Uri.UriSchemeHttp,
                     Port = address.IsDefaultPort ? -1 : address.Port // -1 => default port for scheme
                 }.Uri;
@@ -38,9 +45,12 @@ namespace GameLauncherReborn {
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.ServerCertificateValidationCallback = (Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => {
                 bool isOk = true;
-                if (sslPolicyErrors != SslPolicyErrors.None) {
-                    for (int i = 0; i < chain.ChainStatus.Length; i++) {
-                        if (chain.ChainStatus[i].Status == X509ChainStatusFlags.RevocationStatusUnknown) {
+                if (sslPolicyErrors != SslPolicyErrors.None)
+                {
+                    for (int i = 0; i < chain.ChainStatus.Length; i++)
+                    {
+                        if (chain.ChainStatus[i].Status == X509ChainStatusFlags.RevocationStatusUnknown)
+                        {
                             continue;
                         }
                         chain.ChainPolicy.RevocationFlag = X509RevocationFlag.EntireChain;
@@ -48,7 +58,8 @@ namespace GameLauncherReborn {
                         chain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan(0, 1, 0);
                         chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
                         bool chainIsValid = chain.Build((X509Certificate2)certificate);
-                        if (!chainIsValid) {
+                        if (!chainIsValid)
+                        {
                             isOk = false;
                             break;
                         }
@@ -57,7 +68,7 @@ namespace GameLauncherReborn {
                 return isOk;
             };
 
-            if(!address.AbsolutePath.Contains("auth")) launcherLog.UrlCall("Calling URL: " + address);
+            if (!address.AbsolutePath.Contains("auth")) Log.UrlCall("Calling URL: " + address);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
             request.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
@@ -65,8 +76,9 @@ namespace GameLauncherReborn {
             request.Headers["X-UserAgent"] = "GameLauncherReborn "+Application.ProductVersion+ " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = Value();
             request.Headers["X-DiscordID"] = Self.discordid;
-            
-            if(addrange != 0) {
+
+            if (addrange != 0)
+            {
                 request.AddRange(addrange);
             }
 
@@ -76,11 +88,13 @@ namespace GameLauncherReborn {
             return request;
         }
 
-        internal void AddRange(long filesize) {
+        internal void AddRange(long filesize)
+        {
             addrange = filesize;
         }
 
-        internal void Timeout(int time) {
+        internal void Timeout(int time)
+        {
             timeout = time;
         }
     }

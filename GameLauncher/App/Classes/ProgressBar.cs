@@ -75,9 +75,11 @@ namespace GameLauncherReborn
 
         [Category("Appearance"), Description("The foreground color of the ProgressBars text.")]
         [Browsable(true)]
-        public override System.Drawing.Color ForeColor {
+        public override System.Drawing.Color ForeColor
+        {
             get { return base.ForeColor; }
-            set {
+            set
+            {
                 if (value == Color.Transparent)
                 {
                     value = _ForeColorBrush.Color;
@@ -90,9 +92,11 @@ namespace GameLauncherReborn
         [Category("Appearance"), Description("The background color of the ProgressBar.")]
         [Browsable(true)]
         [DefaultValue(typeof(Color), "DarkGray")]
-        public Color BackgroundColor {
+        public Color BackgroundColor
+        {
             get { return _BackColor; }
-            set {
+            set
+            {
                 if (value == Color.Transparent)
                 {
                     value = _BackColor;
@@ -105,9 +109,11 @@ namespace GameLauncherReborn
         [Category("Appearance"), Description("The progress color of the ProgressBar.")]
         [Browsable(true)]
         [DefaultValue(typeof(Color), "Lime")]
-        public Color ProgressColor {
+        public Color ProgressColor
+        {
             get { return _ProgressColor; }
-            set {
+            set
+            {
                 if (value == Color.Transparent)
                 {
                     value = _ProgressColor;
@@ -120,9 +126,11 @@ namespace GameLauncherReborn
         [Category("Appearance"), Description("The gradiant highlight color of the ProgressBar.")]
         [Browsable(true)]
         [DefaultValue(typeof(Color), "White")]
-        public Color GradiantColor {
+        public Color GradiantColor
+        {
             get { return _GradiantColor; }
-            set {
+            set
+            {
                 _GradiantColor = value;
                 this.Refresh();
             }
@@ -131,11 +139,15 @@ namespace GameLauncherReborn
         [Category("Behavior"), Description("The minimum value of the ProgressBar.")]
         [Browsable(true)]
         [DefaultValue(0)]
-        public int Minimum {
+        public int Minimum
+        {
             get { return _Minimum; }
-            set {
+            set
+            {
                 if (value > _Maximum)
+                {
                     value = _Maximum - 1;
+                }
                 _Minimum = value;
                 this.Refresh();
             }
@@ -144,11 +156,15 @@ namespace GameLauncherReborn
         [Category("Behavior"), Description("The maximum value of the ProgressBar.")]
         [Browsable(true)]
         [DefaultValue(100)]
-        public int Maximum {
+        public int Maximum
+        {
             get { return _Maximum; }
-            set {
+            set
+            {
                 if (value <= _Minimum)
+                {
                     value = _Minimum + 1;
+                }
                 _Maximum = value;
                 this.Refresh();
             }
@@ -157,13 +173,19 @@ namespace GameLauncherReborn
         [Category("Behavior"), Description("The current value of the ProgressBar.")]
         [Browsable(true)]
         [DefaultValue(0)]
-        public int Value {
+        public int Value
+        {
             get { return _Value; }
-            set {
+            set
+            {
                 if (value < _Minimum)
+                {
                     value = _Minimum;
+                }
                 if (value > _Maximum)
+                {
                     value = _Maximum;
+                }
                 _Value = value;
                 this.Refresh();
             }
@@ -172,9 +194,11 @@ namespace GameLauncherReborn
         [Category("Appearance"), Description("Draw a border around the ProgressBar.")]
         [Browsable(true)]
         [DefaultValue(true)]
-        public bool Border {
+        public bool Border
+        {
             get { return _Border; }
-            set {
+            set
+            {
                 _Border = value;
                 this.Refresh();
             }
@@ -183,9 +207,11 @@ namespace GameLauncherReborn
         [Category("Appearance"), Description("The color of the border around the ProgressBar.")]
         [Browsable(true)]
         [DefaultValue(typeof(Color), "Black")]
-        public Color BorderColor {
+        public Color BorderColor
+        {
             get { return _BorderColor; }
-            set {
+            set
+            {
                 if (value == Color.Transparent)
                 {
                     value = _BorderColor;
@@ -199,9 +225,11 @@ namespace GameLauncherReborn
         [Category("Appearance"), Description("Shows the progress percentge as text in the ProgressBar.")]
         [Browsable(true)]
         [DefaultValue(false)]
-        public bool ShowPercentage {
+        public bool ShowPercentage
+        {
             get { return _ShowPercentage; }
-            set {
+            set
+            {
                 _ShowPercentage = value;
                 this.Refresh();
             }
@@ -210,9 +238,11 @@ namespace GameLauncherReborn
         [Category("Appearance"), Description("Shows the text of the Text property in the ProgressBar.")]
         [Browsable(true)]
         [DefaultValue(false)]
-        public bool ShowText {
+        public bool ShowText
+        {
             get { return _ShowText; }
-            set {
+            set
+            {
                 _ShowText = value;
                 this.Refresh();
             }
@@ -221,9 +251,11 @@ namespace GameLauncherReborn
         [Category("Appearance"), Description("Determins the position of the gradiant shine in the ProgressBar.")]
         [Browsable(true)]
         [DefaultValue(typeof(GradiantArea), "Top")]
-        public GradiantArea GradiantPosition {
+        public GradiantArea GradiantPosition
+        {
             get { return _GradiantPosition; }
-            set {
+            set
+            {
                 _GradiantPosition = value;
                 if (value == GradiantArea.None)
                 {
@@ -247,9 +279,11 @@ namespace GameLauncherReborn
 
         [Category("Appearance"), Description("An image to display on the ProgressBarEx.")]
         [Browsable(true)]
-        public Bitmap Image {
+        public Bitmap Image
+        {
             get { return _Image; }
-            set {
+            set
+            {
                 _Image = value;
                 this.Refresh();
             }
@@ -258,9 +292,11 @@ namespace GameLauncherReborn
         [Category("Appearance"), Description("Determins how the image is displayed in the ProgressBarEx.")]
         [Browsable(true)]
         [DefaultValue(typeof(ImageLayoutType), "None")]
-        public ImageLayoutType ImageLayout {
+        public ImageLayoutType ImageLayout
+        {
             get { return _ImageLayout; }
-            set {
+            set
+            {
                 _ImageLayout = value;
                 if (_Image != null)
                     this.Refresh();
@@ -270,9 +306,11 @@ namespace GameLauncherReborn
         [Category("Appearance"), Description("True to draw corners rounded. False to draw square corners.")]
         [Browsable(true)]
         [DefaultValue(true)]
-        public bool RoundedCorners {
+        public bool RoundedCorners
+        {
             get { return _RoundedCorners; }
-            set {
+            set
+            {
                 _RoundedCorners = value;
                 this.Refresh();
             }
@@ -281,9 +319,11 @@ namespace GameLauncherReborn
         [Category("Appearance"), Description("Determins the direction of progress displayed in the ProgressBarEx.")]
         [Browsable(true)]
         [DefaultValue(typeof(ProgressDir), "Horizontal")]
-        public ProgressDir ProgressDirection {
+        public ProgressDir ProgressDirection
+        {
             get { return _ProgressDirection; }
-            set {
+            set
+            {
                 _ProgressDirection = value;
                 this.Refresh();
             }
@@ -305,8 +345,9 @@ namespace GameLauncherReborn
                 Rectangle rec = new Rectangle(0, 0, this.Width, this.Height);
                 int rad = Convert.ToInt32(rec.Height / 2.5);
                 if (rec.Width < rec.Height)
+                {
                     rad = Convert.ToInt32(rec.Width / 2.5);
-
+                }
 
                 using (Brush _BackColorBrush = new SolidBrush(Color.FromArgb(0, 0, 0, 0)))
                 {
@@ -400,9 +441,13 @@ namespace GameLauncherReborn
                 {
                     string perc = "";
                     if (_ShowText)
+                    {
                         perc = this.Text;
+                    }
                     if (_ShowPercentage)
+                    {
                         perc += Convert.ToString(Convert.ToInt32(((double)100 / (double)(_Maximum - _Minimum)) * _Value)) + "%";
+                    }
                     using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
                     {
                         e.Graphics.DrawString(perc, this.Font, _ForeColorBrush, new Rectangle(0, 0, this.Width, this.Height), sf);
@@ -444,7 +489,8 @@ namespace GameLauncherReborn
         }
 
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-        public override System.Drawing.Color BackColor {
+        public override System.Drawing.Color BackColor
+        {
             get { return base.BackColor; }
             set { base.BackColor = Color.Transparent; }
         }
@@ -453,44 +499,40 @@ namespace GameLauncherReborn
         [EditorBrowsable(EditorBrowsableState.Never)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [System.Obsolete("BackgroundImageLayout is not implemented.", true)]
-        public new ImageLayout BackgroundImageLayout {
+        public new ImageLayout BackgroundImageLayout
+        {
             get { return base.BackgroundImageLayout; }
-            set {
-                throw new NotImplementedException("BackgroundImageLayout is not implemented.");
-            }
+            set { throw new NotImplementedException("BackgroundImageLayout is not implemented."); }
         }
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [System.Obsolete("BackgroundImage is not implemented.", true)]
-        public new Image BackgroundImage {
+        public new Image BackgroundImage
+        {
             get { return null; }
-            set {
-                throw new NotImplementedException("BackgroundImage is not implemented.");
-            }
+            set { throw new NotImplementedException("BackgroundImage is not implemented."); }
         }
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [System.Obsolete("TabStop is not implemented.", true)]
-        public new bool TabStop {
+        public new bool TabStop
+        {
             get { return false; }
-            set {
-                throw new NotImplementedException("TabStop is not implemented.");
-            }
+            set { throw new NotImplementedException("TabStop is not implemented."); }
         }
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [System.Obsolete("TabIndex is not implemented.", true)]
-        public new int TabIndex {
+        public new int TabIndex
+        {
             get { return base.TabIndex; }
-            set {
-                throw new NotImplementedException("TabIndex is not implemented.");
-            }
+            set { throw new NotImplementedException("TabIndex is not implemented."); }
         }
     }
 }

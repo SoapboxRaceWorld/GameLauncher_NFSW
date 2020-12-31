@@ -21,8 +21,6 @@ namespace GameLauncher.App.Classes.Proxy
 {
     public class ProxyHandler : IApplicationStartup
     {
-
-        Log launcherLog = new Log("launcher.log");
         public void Initialize(IPipelines pipelines)
         {
             pipelines.BeforeRequest += ProxyRequest;
@@ -31,9 +29,9 @@ namespace GameLauncher.App.Classes.Proxy
 
         private async Task<TextResponse> OnError(NancyContext context, Exception exception)
         {
-            launcherLog.Error($"PROXY ERROR [handling {context.Request.Path}]");
-            launcherLog.Error($"\tMESSAGE: {exception.Message}");
-            launcherLog.Error($"\t{exception.StackTrace}");
+            Log.Error($"PROXY ERROR [handling {context.Request.Path}]");
+            Log.Error($"\tMESSAGE: {exception.Message}");
+            Log.Error($"\t{exception.StackTrace}");
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY",
                 CommunicationLogEntryType.Error,
                 new CommunicationLogLauncherError(exception.Message, context.Request.Path,
@@ -130,9 +128,9 @@ namespace GameLauncher.App.Classes.Proxy
             }
             catch (Exception e)
             {
-                launcherLog.Error($"DISCORD RPC ERROR [handling {context.Request.Path}]");
-                launcherLog.Error($"\tMESSAGE: {e.Message}");
-                launcherLog.Error($"\t{e.StackTrace}");
+                Log.Error($"DISCORD RPC ERROR [handling {context.Request.Path}]");
+                Log.Error($"\tMESSAGE: {e.Message}");
+                Log.Error($"\t{e.StackTrace}");
                 await Self.SubmitError(e);
             }
 
