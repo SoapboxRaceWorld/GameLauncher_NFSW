@@ -36,10 +36,14 @@ namespace GameLauncher.App
         {
             InitializeComponent();
             ApplyEmbeddedFonts();
+        }
+
+        private void VerifyHash_Load(object sender, EventArgs e)
+        {
             VersionLabel.Text = "Version: v" + Application.ProductVersion;
             Log.Core("VerifyHash Opened");
             /* Clean up previous logs and start logging */
-            string[] filestocheck = new string[] {"validfiles.dat", "invalidfiles.dat", "Verify.log"};
+            string[] filestocheck = new string[] { "validfiles.dat", "invalidfiles.dat", "Verify.log" };
             foreach (String file in filestocheck)
             {
                 if (File.Exists(file)) File.Delete(file);
@@ -75,7 +79,7 @@ namespace GameLauncher.App
                 }
                 Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                 */
-                Log.Debug("Stopped Scanner");
+                //Log.Debug("Stopped Scanner");
             }
         }
 
@@ -131,10 +135,12 @@ namespace GameLauncher.App
                             LogVerify.Valid("File: " + FileName);
                         }
                     }
-                    ScanProgressText.Text = "Found Missing Files";
                     totalFilesScanned++;
-                    ScanProgressBar.Value = (getFilesToCheck.Length / filesToScan) * 100;
+                    ScanProgressText.Text = "Scanning Files: " + (totalFilesScanned * 100 / getFilesToCheck.Length) + "%";
+                    ScanProgressBar.Value = totalFilesScanned * 100 / getFilesToCheck.Length;
                 }
+
+                Log.Info("Scan Completed"); // This isn't logging
 
                 if (InvalidFileList != null)
                 {
@@ -155,7 +161,7 @@ namespace GameLauncher.App
             {
                 Log.Error(ex.Message);
             }
-            Log.Info("Scan Completed"); // This isn't logging
+            
         }
 
         private void CorruptedFilesFound()
@@ -180,11 +186,14 @@ namespace GameLauncher.App
                         }
                         new WebClient().DownloadFile(address, text2);
                         LogVerify.Downloaded("File: " + text2);
+                        redownloadedCount++;
                         Application.DoEvents();
                     }
                     catch { }
-                    //InvalidProgressBar.Value = files.int() * 100;
+                    InvalidProgressText.Text = "Redownloading Files: " + (redownloadedCount * 100 / files.Length) + "%";
+                    InvalidProgressBar.Value = redownloadedCount / files.Length;
                 }
+                InvalidProgressText.Text = redownloadedCount + " Invalid Files Were Redownloaded";
                 GameScanner(false);
                 StartScanner.Visible = true;
                 StopScanner.Visible = false;
@@ -222,5 +231,6 @@ namespace GameLauncher.App
             StopScanner.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             VersionLabel.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
         }
+
     }
 }

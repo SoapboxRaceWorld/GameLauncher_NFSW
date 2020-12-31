@@ -38,6 +38,13 @@
             this.VersionLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
+            // ScanProgressBar
+            // 
+            this.ScanProgressBar.Location = new System.Drawing.Point(13, 100);
+            this.ScanProgressBar.Name = "ScanProgressBar";
+            this.ScanProgressBar.Size = new System.Drawing.Size(384, 23);
+            this.ScanProgressBar.TabIndex = 0;
+            // 
             // ScanProgressText
             // 
             this.ScanProgressText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -46,13 +53,6 @@
             this.ScanProgressText.Size = new System.Drawing.Size(384, 18);
             this.ScanProgressText.TabIndex = 2;
             this.ScanProgressText.Text = "Scanning: I shall call this ... T(oUpper)im";
-            // 
-            // ScanProgressBar
-            // 
-            this.ScanProgressBar.Location = new System.Drawing.Point(13, 100);
-            this.ScanProgressBar.Name = "ScanProgressBar";
-            this.ScanProgressBar.Size = new System.Drawing.Size(384, 23);
-            this.ScanProgressBar.TabIndex = 0;
             // 
             // InvalidProgressText
             // 
@@ -137,6 +137,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "VerifyHash";
             this.TopMost = true;
+            this.Load += new System.EventHandler(this.VerifyHash_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
