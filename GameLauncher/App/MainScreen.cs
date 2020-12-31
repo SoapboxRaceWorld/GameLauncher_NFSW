@@ -130,6 +130,7 @@ namespace GameLauncher
         }
 
         private static Random random = new Random();
+        Log launcherLog = new Log("launcher.log");
 
         public static string RandomString(int length) {
 			const string chars = "qwertyuiopasdfghjklzxcvbnm1234567890_";
@@ -170,7 +171,7 @@ namespace GameLauncher
                 Notification.Dispose();
             }
 
-            Log.Visuals("CORE: Entered mainScreen");
+            launcherLog.Visuals("CORE: Entered mainScreen");
 
             Random rnd;
             rnd = new Random(Environment.TickCount);
@@ -178,18 +179,18 @@ namespace GameLauncher
             discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID);
 
             discordRpcClient.OnReady += (sender, e) => {
-                Log.Debug("DISCORD: Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
+                launcherLog.Debug("DISCORD: Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
                 Self.discordid = e.User.ID.ToString();
             };
 
             discordRpcClient.OnError += (sender, e) => {
-                Log.Error($"DISCORD: Discord Error\n{e.Message}");
+                launcherLog.Error($"DISCORD: Discord Error\n{e.Message}");
             };
 
             discordRpcClient.Initialize();
 
-            
-            Log.Debug("CORE: Setting SSL Protocol");
+
+            launcherLog.Debug("CORE: Setting SSL Protocol");
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
@@ -197,19 +198,19 @@ namespace GameLauncher
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             }
 
-            Log.Info("LAUNCHER: Detecting OS");
+            launcherLog.Info("LAUNCHER: Detecting OS");
             if (DetectLinux.LinuxDetected()) {
                 _OS = DetectLinux.Distro();
-                Log.System("SYSTEM: Detected OS: " + _OS);
+                launcherLog.System("SYSTEM: Detected OS: " + _OS);
             } else {
                 _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
-                Log.System("SYSTEM: Detected OS: " + _OS);
+                launcherLog.System("SYSTEM: Detected OS: " + _OS);
                 if (Environment.Is64BitOperatingSystem == true) {
-                    Log.Debug("SYSTEM: OS Type: 64 Bit");
+                    launcherLog.Debug("SYSTEM: OS Type: 64 Bit");
                 }
-                Log.System("SYSTEM: OS Details: " + Environment.OSVersion);
-                Log.System("SYSTEM: Video Card: " + GPUHelper.CardName());
-                Log.System("SYSTEM: Driver Version: " + GPUHelper.DriverVersion());
+                launcherLog.System("SYSTEM: OS Details: " + Environment.OSVersion);
+                launcherLog.System("SYSTEM: Video Card: " + GPUHelper.CardName());
+                launcherLog.System("SYSTEM: Driver Version: " + GPUHelper.DriverVersion());
             }
 
             _downloader = new Downloader(this, 3, 2, 16) {
@@ -220,24 +221,24 @@ namespace GameLauncher
 				ShowExtract = new ShowExtract(OnShowExtract)
             };
 
-            Log.Visuals("CORE: InitializeComponent");
+            launcherLog.Visuals("CORE: InitializeComponent");
             InitializeComponent();
 
-            Log.Visuals("CORE: Applying Fonts");
+            launcherLog.Visuals("CORE: Applying Fonts");
             ApplyEmbeddedFonts();
 
             _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1");
             _disableDiscordRPC = (_settingFile.KeyExists("DisableRPC") && _settingFile.Read("DisableRPC") == "1");
-            Log.Debug("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + _disableProxy);
+            launcherLog.Debug("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + _disableProxy);
 
             Self.CenterScreen(this);
 
-            Log.Visuals("CORE: Disabling MaximizeBox");
+            launcherLog.Visuals("CORE: Disabling MaximizeBox");
             MaximizeBox = false;
-            Log.Visuals("CORE: Setting Styles");
+            launcherLog.Visuals("CORE: Setting Styles");
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
 
-            Log.Visuals("CORE: Applying EventHandlers");
+            launcherLog.Visuals("CORE: Applying EventHandlers");
             CloseBTN.MouseEnter += new EventHandler(CloseBTN_MouseEnter);
             CloseBTN.MouseLeave += new EventHandler(CloseBTN_MouseLeave);
             CloseBTN.Click += new EventHandler(CloseBTN_Click);
@@ -347,15 +348,15 @@ namespace GameLauncher
                 }).Start();
             };
 
-            Log.Core("CORE: Checking permissions");
+            launcherLog.Core("CORE: Checking permissions");
             if (!Self.HasWriteAccessToFolder(Directory.GetCurrentDirectory())) {
-                Log.Error("CORE: Check Permission Failed.");
+                launcherLog.Error("CORE: Check Permission Failed.");
                 MessageBox.Show(null, "Failed to write the test file. Make sure you're running the launcher with administrative privileges.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            Log.Core("LAUNCHER: Checking InstallationDirectory: " + _settingFile.Read("InstallationDirectory"));
+            launcherLog.Core("LAUNCHER: Checking InstallationDirectory: " + _settingFile.Read("InstallationDirectory"));
             if (string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory"))) {
-                Log.Core("LAUNCHER: First run!");
+                launcherLog.Core("LAUNCHER: First run!");
 
                 try { 
                     Form welcome = new WelcomeScreen();
@@ -368,10 +369,10 @@ namespace GameLauncher
                         _NFSW_Installation_Source = CDN.CDNUrl;
                     }
                 } catch {
-                    Log.Warning("LAUNCHER: CDN Source URL was Empty! Setting a Null Safe URL 'http://localhost'");
+                    launcherLog.Warning("LAUNCHER: CDN Source URL was Empty! Setting a Null Safe URL 'http://localhost'");
                     _settingFile.Write("CDN", "http://localhost");
                     _NFSW_Installation_Source = "http://localhost";
-                    Log.Core("LAUNCHER: Installation Directory was Empty! Creating and Setting Directory at " + AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
+                    launcherLog.Core("LAUNCHER: Installation Directory was Empty! Creating and Setting Directory at " + AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
                     _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
                 }
 
@@ -385,22 +386,22 @@ namespace GameLauncher
 
                 if (fbd.ShowDialog() == CommonFileDialogResult.Ok) {
                     if (!Self.HasWriteAccessToFolder(fbd.FileName)) {
-                        Log.Error("LAUNCHER: Not enough permissions. Exiting.");
+                        launcherLog.Error("LAUNCHER: Not enough permissions. Exiting.");
                         MessageBox.Show(null, "You don't have enough permission to select this path as installation folder. Please select another directory.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         Environment.Exit(Environment.ExitCode);
                     }
 
                     if (fbd.FileName == AppDomain.CurrentDomain.BaseDirectory) {
                         Directory.CreateDirectory("Game Files");
-                        Log.Warning("LAUNCHER: Installing NFSW in same directory where the launcher resides is disadvised.");
+                        launcherLog.Warning("LAUNCHER: Installing NFSW in same directory where the launcher resides is disadvised.");
                         MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. Instead, we will install it on {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
                     } else {
-                        Log.Core("LAUNCHER: Directory Set: " + fbd.FileName);
+                        launcherLog.Core("LAUNCHER: Directory Set: " + fbd.FileName);
                         _settingFile.Write("InstallationDirectory", fbd.FileName);
                     }
                 } else {
-                    Log.Core("LAUNCHER: Exiting");
+                    launcherLog.Core("LAUNCHER: Exiting");
                     Environment.Exit(Environment.ExitCode);
                 }
                 fbd.Dispose();
@@ -410,13 +411,13 @@ namespace GameLauncher
             {
                 _settingFile.Write("CDN", "http://localhost");
                 _NFSW_Installation_Source = "http://localhost";
-                Log.Warning("LAUNCHER: CDN Source URL was Empty! Setting a Null Safe URL 'http://localhost'");
+                launcherLog.Warning("LAUNCHER: CDN Source URL was Empty! Setting a Null Safe URL 'http://localhost'");
             }
 
             if (!DetectLinux.LinuxDetected()) {
                 CheckGameFilesDirectoryPrevention();
 
-                Log.Visuals("CORE: Setting cursor.");
+                launcherLog.Visuals("CORE: Setting cursor.");
                 string temporaryFile = Path.GetTempFileName();
                 File.WriteAllBytes(temporaryFile, ExtractResource.AsByte("GameLauncher.SoapBoxModules.cursor.ani"));
                 Cursor mycursor = new Cursor(Cursor.Current.Handle);
@@ -428,16 +429,16 @@ namespace GameLauncher
                 //Windows Defender (Windows 10)
                 if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (_settingFile.Read("WindowsDefender") == "Not Excluded"))
                 {
-                    Log.Core("WINDOWS DEFENDER: Windows 10 Detected! Running Exclusions for Core Folders");
+                    launcherLog.Core("WINDOWS DEFENDER: Windows 10 Detected! Running Exclusions for Core Folders");
                     WindowsDefenderFirstRun();
                 }
                 else if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && _settingFile.KeyExists("WindowsDefender"))
                 {
-                    Log.Core("WINDOWS DEFENDER: Found 'WindowsDefender' key! Its value is " + _settingFile.Read("WindowsDefender"));
+                    launcherLog.Core("WINDOWS DEFENDER: Found 'WindowsDefender' key! Its value is " + _settingFile.Read("WindowsDefender"));
                 }
             }
 
-            Log.Visuals("CORE: Doing magic with ImageServerName");
+            launcherLog.Visuals("CORE: Doing magic with ImageServerName");
             var pos = PointToScreen(ImageServerName.Location);
             pos = VerticalBanner.PointToClient(pos);
             ImageServerName.Parent = VerticalBanner;
@@ -447,7 +448,7 @@ namespace GameLauncher
             //Log.Debug("CORE: Setting ServerStatusBar");
             //ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
-            Log.Core("CORE: Loading ModManager Cache");
+            launcherLog.Core("CORE: Loading ModManager Cache");
             ModManager.LoadModCache();
         }
 
@@ -540,17 +541,17 @@ namespace GameLauncher
         }
 
         private void MainScreen_Load(object sender, EventArgs e) {
-            Log.Visuals("CORE: Entering mainScreen_Load");
+            launcherLog.Visuals("CORE: Entering mainScreen_Load");
 
-            Log.Core("LAUNCHER: Updating server list");
+            launcherLog.Core("LAUNCHER: Updating server list");
             ServerListUpdater.UpdateList();
 
-            Log.Visuals("CORE: Setting WindowName");
+            launcherLog.Visuals("CORE: Setting WindowName");
             Text = "GameLauncherReborn v" + Application.ProductVersion;
 
-            Log.Core("CORE: Checking window location");
+            launcherLog.Core("CORE: Checking window location");
             if (Location.X >= Screen.PrimaryScreen.Bounds.Width || Location.Y >= Screen.PrimaryScreen.Bounds.Height || Location.X <= 0 || Location.Y <= 0) {
-                Log.Core("CORE: Window location restored to centerScreen");
+                launcherLog.Core("CORE: Window location restored to centerScreen");
 
                 Self.CenterScreen(this);
                 _windowMoved = true;
@@ -563,9 +564,9 @@ namespace GameLauncher
             }
 
             _NFSW_Installation_Source = !string.IsNullOrEmpty(_settingFile.Read("CDN")) ? _settingFile.Read("CDN") : "http://localhost";
-            Log.Core("LAUNCHER: NFSW Download Source is now: " + _NFSW_Installation_Source);
+            launcherLog.Core("LAUNCHER: NFSW Download Source is now: " + _NFSW_Installation_Source);
 
-            Log.Visuals("CORE: Applyinng ContextMenu");
+            launcherLog.Visuals("CORE: Applyinng ContextMenu");
             translatedBy.Text = "";
             ContextMenu = new ContextMenu();
 
@@ -586,13 +587,13 @@ namespace GameLauncher
             MainEmail.Text = _settingFile.Read("AccountEmail");
             MainPassword.Text = Properties.Settings.Default.PasswordDecoded;
             if (!string.IsNullOrEmpty(_settingFile.Read("AccountEmail")) && !string.IsNullOrEmpty(_settingFile.Read("Password"))) {
-                Log.Core("LAUNCHER: Restoring last saved email and password");
+                launcherLog.Core("LAUNCHER: Restoring last saved email and password");
                 RememberMe.Checked = true;
             }
 
             /* Server Display List */
             ServerPick.DisplayMember = "Name";
-            Log.Core("LAUNCHER: Setting server list");
+            launcherLog.Core("LAUNCHER: Setting server list");
             finalItems = ServerListUpdater.GetList();
             ServerPick.DataSource = finalItems;
 
@@ -609,63 +610,63 @@ namespace GameLauncher
                 }
             }
 
-            Log.Core("SERVERLIST: Checking...");
-            Log.Core("SERVERLIST: Setting first server in list");
-            Log.Core("SERVERLIST: Checking if server is set on INI File");
+            launcherLog.Core("SERVERLIST: Checking...");
+            launcherLog.Core("SERVERLIST: Setting first server in list");
+            launcherLog.Core("SERVERLIST: Checking if server is set on INI File");
             try
             {
                 if (string.IsNullOrEmpty(_settingFile.Read("Server")))
                 {
-                    Log.Warning("SERVERLIST: Failed to find anything... assuming " + ((ServerInfo)ServerPick.SelectedItem).IpAddress);
+                    launcherLog.Warning("SERVERLIST: Failed to find anything... assuming " + ((ServerInfo)ServerPick.SelectedItem).IpAddress);
                     _settingFile.Write("Server", ((ServerInfo)ServerPick.SelectedItem).IpAddress);
                 }
             }
             catch
             {
-                Log.Error("SERVERLIST: Failed to write anything...");
+                launcherLog.Error("SERVERLIST: Failed to write anything...");
                 _settingFile.Write("Server", "");
             }
 
-            Log.Core("SERVERLIST: Re-Checking if server is set on INI File");
+            launcherLog.Core("SERVERLIST: Re-Checking if server is set on INI File");
             if (_settingFile.KeyExists("Server"))
             {
-                Log.Core("SERVERLIST: Found something!");
+                launcherLog.Core("SERVERLIST: Found something!");
                 _skipServerTrigger = true;
 
-                Log.Core("SERVERLIST: Checking if server exists on our database");
+                launcherLog.Core("SERVERLIST: Checking if server exists on our database");
 
                 if (finalItems.FindIndex(i => string.Equals(i.IpAddress, _settingFile.Read("Server"))) != 0 /*_slresponse.Contains(_settingFile.Read("Server"))*/)
                 {
-                    Log.Core("SERVERLIST: Server found! Checking ID");
+                    launcherLog.Core("SERVERLIST: Server found! Checking ID");
                     var index = finalItems.FindIndex(i => string.Equals(i.IpAddress, _settingFile.Read("Server")));
 
-                    Log.Core("SERVERLIST: ID is " + index);
+                    launcherLog.Core("SERVERLIST: ID is " + index);
                     if (index >= 0)
                     {
-                        Log.Core("SERVERLIST: ID set correctly");
+                        launcherLog.Core("SERVERLIST: ID set correctly");
                         ServerPick.SelectedIndex = index;
                     }
                 }
                 else
                 {
-                    Log.Warning("SERVERLIST: Unable to find anything, assuming default");
+                    launcherLog.Warning("SERVERLIST: Unable to find anything, assuming default");
                     ServerPick.SelectedIndex = 1;
-                    Log.Warning("SERVERLIST: Deleting unknown entry");
+                    launcherLog.Warning("SERVERLIST: Deleting unknown entry");
                     _settingFile.DeleteKey("Server");
                 }
 
-                Log.Core("SERVERLIST: Triggering server change");
+                launcherLog.Core("SERVERLIST: Triggering server change");
                 if (ServerPick.SelectedIndex == 1)
                 {
                     ServerPick_SelectedIndexChanged(sender, e);
                 }
-                Log.Core("SERVERLIST: All done");
+                launcherLog.Core("SERVERLIST: All done");
             }
 
             /* NEW CDN Display List */
             CDNListUpdater.UpdateCDNList();
 
-            Log.Core("LAUNCHER: Setting CDN list");
+            launcherLog.Core("LAUNCHER: Setting CDN list");
             finalCDNItems = CDNListUpdater.GetCDNList();
 
             Task.Run(() => {
@@ -677,7 +678,7 @@ namespace GameLauncher
                 }));
             });
 
-            Log.Core("LAUNCHER: Checking for password");
+            launcherLog.Core("LAUNCHER: Checking for password");
             if (_settingFile.KeyExists("Password"))
             {
                 _loginEnabled = true;
@@ -695,7 +696,7 @@ namespace GameLauncher
                 LoginButton.ForeColor = Color.Gray;
             }
 
-            Log.Core("LAUNCHER: Setting game language");
+            launcherLog.Core("LAUNCHER: Setting game language");
 
             SettingsLanguage.DisplayMember = "Text";
             SettingsLanguage.ValueMember = "Value";
@@ -721,14 +722,14 @@ namespace GameLauncher
                 SettingsLanguage.SelectedValue = _settingFile.Read("Language");
             }
 
-            Log.Core("LAUNCHER: Re-checking InstallationDirectory: " + _settingFile.Read("InstallationDirectory"));
+            launcherLog.Core("LAUNCHER: Re-checking InstallationDirectory: " + _settingFile.Read("InstallationDirectory"));
 
             var drive = Path.GetPathRoot(_settingFile.Read("InstallationDirectory"));
             if (!Directory.Exists(drive)) {
                 if (!string.IsNullOrEmpty(drive)) {
                     var newdir = Directory.GetCurrentDirectory() + "\\Game Files";
                     _settingFile.Write("InstallationDirectory", newdir);
-                    Log.Error(string.Format("LAUNCHER: Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir));
+                    launcherLog.Error(string.Format("LAUNCHER: Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir));
 
                     MessageBox.Show(null, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -738,13 +739,13 @@ namespace GameLauncher
             SettingsProxyCheckbox.Checked = _disableProxy;
             SettingsDiscordRPCCheckbox.Checked = _disableDiscordRPC;
 
-            Log.Visuals("CORE: Hiding RegisterFormElements"); RegisterFormElements(false);
-            Log.Visuals("CORE: Hiding SettingsFormElements"); SettingsFormElements(false);
-            Log.Visuals("CORE: Hiding LoggedInFormElements"); LoggedInFormElements(false);
+            launcherLog.Visuals("CORE: Hiding RegisterFormElements"); RegisterFormElements(false);
+            launcherLog.Visuals("CORE: Hiding SettingsFormElements"); SettingsFormElements(false);
+            launcherLog.Visuals("CORE: Hiding LoggedInFormElements"); LoggedInFormElements(false);
 
-            Log.Visuals("CORE: Showing LoginFormElements"); LoginFormElements(true);
+            launcherLog.Visuals("CORE: Showing LoginFormElements"); LoginFormElements(true);
 
-            Log.Core("CORE: Setting Registry Options");
+            launcherLog.Core("CORE: Setting Registry Options");
             try {
                 var gameInstallDirValue = Registry.GetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", RegistryValueKind.String);
                 if (gameInstallDirValue == null || gameInstallDirValue.ToString() != Path.GetFullPath(_settingFile.Read("InstallationDirectory"))) {
@@ -752,14 +753,14 @@ namespace GameLauncher
                         Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", Path.GetFullPath(_settingFile.Read("InstallationDirectory")));
                         Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "LaunchInstallDir", Path.GetFullPath(Application.ExecutablePath));
                     } catch(Exception ex) {
-                        Log.Error(ex.Message);
+                        launcherLog.Error(ex.Message);
                     }
                 }
             } catch(Exception ex) {
-                Log.Error(ex.Message);
+                launcherLog.Error(ex.Message);
             }
 
-            Log.Core("LAUNCHER: Setting configurations");
+            launcherLog.Core("LAUNCHER: Setting configurations");
             _newGameFilesPath = Path.GetFullPath(_settingFile.Read("InstallationDirectory"));
             SettingsGameFilesCurrentText.Text = "CURRENT DIRECTORY:";
             SettingsGameFilesCurrent.Text = _newGameFilesPath;
@@ -770,8 +771,8 @@ namespace GameLauncher
             SettingsLauncherPathText.Text = "LAUNCHER FOLDER:";
             SettingsLauncherPathCurrent.Text = _newLauncherPath;
 
-            Log.Core("DISCORD: Initializing DiscordRPC");
-            Log.Core("DISCORD: Checking if Discord RPC is Disabled from User Settings! It's value is " + _disableDiscordRPC);
+            launcherLog.Core("DISCORD: Initializing DiscordRPC");
+            launcherLog.Core("DISCORD: Checking if Discord RPC is Disabled from User Settings! It's value is " + _disableDiscordRPC);
 
             _presence.State = _OS;
             _presence.Details = "In-Launcher: " + Application.ProductVersion;
@@ -783,7 +784,7 @@ namespace GameLauncher
             if(discordRpcClient != null) discordRpcClient.SetPresence(_presence);
 
             BeginInvoke((MethodInvoker)delegate {
-                Log.Core("CORE: 'GetServerInformation' from all Servers in Server List and Download Selected Server Banners");
+                launcherLog.Core("CORE: 'GetServerInformation' from all Servers in Server List and Download Selected Server Banners");
                 LaunchNfsw();
             });
 
@@ -847,7 +848,7 @@ namespace GameLauncher
             if (Settings.Default.IgnoreUpdateVersion != String.Empty)
             {
                 _settingFile.Write("IgnoreUpdateVersion", Settings.Default.IgnoreUpdateVersion);
-                Log.Info("IGNOREUPDATEVERSION: Skipping Update " + Settings.Default.IgnoreUpdateVersion + " !");
+                launcherLog.Info("IGNOREUPDATEVERSION: Skipping Update " + Settings.Default.IgnoreUpdateVersion + " !");
             }
             else
             {
@@ -856,16 +857,16 @@ namespace GameLauncher
                     if (_settingFile.Read("IgnoreUpdateVersion") == Application.ProductVersion)
                     {
                         _settingFile.Write("IgnoreUpdateVersion", String.Empty);
-                        Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. You're now on the Latest Game Launcher!");
+                        launcherLog.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. You're now on the Latest Game Launcher!");
                     }
                     else
                     {
-                        Log.Info("IGNOREUPDATEVERSION: Manually Skipping Update " + _settingFile.Read("IgnoreUpdateVersion") + " !");
+                        launcherLog.Info("IGNOREUPDATEVERSION: Manually Skipping Update " + _settingFile.Read("IgnoreUpdateVersion") + " !");
                     }
                 }
                 else
                 {
-                    Log.Info("IGNOREUPDATEVERSION: Latest Game Launcher!");
+                    launcherLog.Info("IGNOREUPDATEVERSION: Latest Game Launcher!");
                 }
             }
 
@@ -885,7 +886,7 @@ namespace GameLauncher
             var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
             if (File.Exists(linksPath))
             {
-                Log.Core("CLEANLINKS: Cleaning Up Mod Files {Exiting}");
+                launcherLog.Core("CLEANLINKS: Cleaning Up Mod Files {Exiting}");
                 CleanLinks(linksPath);
             }
 
@@ -1466,7 +1467,7 @@ namespace GameLauncher
                         client2.DownloadProgressChanged += (sender4, e4) => {
                             if (e4.TotalBytesToReceive > 2000000) {
                                 client2.CancelAsync();
-                                Log.Warning("Unable to Cache " + _realServername + " Server Banner! {Over 2MB?}");
+                                launcherLog.Warning("Unable to Cache " + _realServername + " Server Banner! {Over 2MB?}");
                             }
                         };
 
@@ -1505,7 +1506,7 @@ namespace GameLauncher
                                     }
                                 } catch(Exception ex) {
                                     Console.WriteLine(ex.Message);
-                                    Log.Error(ex.Message);
+                                    launcherLog.Error(ex.Message);
                                     VerticalBanner.Image = null;
                                 }
                             }
@@ -2236,7 +2237,7 @@ namespace GameLauncher
                 var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
                 if (File.Exists(linksPath))
                 {
-                    Log.Core("CLEANLINKS: Cleaning Up Mod Files {Settings}");
+                    launcherLog.Core("CLEANLINKS: Cleaning Up Mod Files {Settings}");
                     CleanLinks(linksPath);
                 }
             }
@@ -2385,7 +2386,7 @@ namespace GameLauncher
 
             if(_realServername == "Freeroam Sparkserver") {
                 //Force proxy enabled.
-                Log.Core("LAUNCHER: Forcing Proxified connection for FRSS");
+                launcherLog.Core("LAUNCHER: Forcing Proxified connection for FRSS");
                 _disableProxy = false;
             }
 
@@ -2441,7 +2442,7 @@ namespace GameLauncher
         private async void PingAPIStatus ()
         {
             ClearColoredPingStatus();
-            Log.Api("SETTINGS PINGING API: Checking APIs");
+            launcherLog.Api("SETTINGS PINGING API: Checking APIs");
             await Task.Delay(1000);
             switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
             {
@@ -2520,7 +2521,7 @@ namespace GameLauncher
             bool DC2APIOffline = false;
             bool AllAPIsOffline = false;
 
-            Log.Api("PINGING API: Checking API Status");
+            launcherLog.Api("PINGING API: Checking API Status");
             switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
             {
                 case API.Online:
@@ -2528,14 +2529,14 @@ namespace GameLauncher
                     APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
                     APIStatusDesc.Text = "Connected to API";
                     APIStatusIcon.Image = Properties.Resources.api_success;
-                    Log.Api("PINGING API: United API has responded. Its Online!");
+                    launcherLog.Api("PINGING API: United API has responded. Its Online!");
                     break;
                 default:
                     APIStatusText.Text = "United API:\n - Offline";
                     APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                     APIStatusDesc.Text = "Checking Carbon API";
                     APIStatusIcon.Image = Properties.Resources.api_error;
-                    Log.Api("PINGING API: United API has not responded. Checking Backup...");
+                    launcherLog.Api("PINGING API: United API has not responded. Checking Backup...");
                     WUGGAPIOffline = true;
                     break;
             }
@@ -2554,14 +2555,14 @@ namespace GameLauncher
                         APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
                         APIStatusDesc.Text = "Connected to API";
                         APIStatusIcon.Image = Properties.Resources.api_success;
-                        Log.Api("PINGING API: Carbon API has responded. Its Online!");
+                        launcherLog.Api("PINGING API: Carbon API has responded. Its Online!");
                         break;
                     default:
                         APIStatusText.Text = "Carbon API:\n - Offline";
                         APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                         APIStatusDesc.Text = "Checking Carbon 2nd API";
                         APIStatusIcon.Image = Properties.Resources.api_error;
-                        Log.Api("PINGING API: Carbon API has not responded. Checking Backup...");
+                        launcherLog.Api("PINGING API: Carbon API has not responded. Checking Backup...");
                         DCAPIOffline = true;
                         break;
                 }
@@ -2581,14 +2582,14 @@ namespace GameLauncher
                         APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
                         APIStatusDesc.Text = "Connected to API";
                         APIStatusIcon.Image = Properties.Resources.api_success;
-                        Log.Api("PINGING API: Carbon 2nd API has responded. Its Online!");
+                        launcherLog.Api("PINGING API: Carbon 2nd API has responded. Its Online!");
                         break;
                     default:
                         APIStatusText.Text = "Carbon 2nd API:\n - Offline";
                         APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                         APIStatusDesc.Text = "Checking WOPL API";
                         APIStatusIcon.Image = Properties.Resources.api_error;
-                        Log.Api("PINGING API: Carbon 2nd API has not responded. Checking Backup...");
+                        launcherLog.Api("PINGING API: Carbon 2nd API has not responded. Checking Backup...");
                         DC2APIOffline = true;
                         break;
                 }
@@ -2608,14 +2609,14 @@ namespace GameLauncher
                         APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
                         APIStatusDesc.Text = "Connected to API";
                         APIStatusIcon.Image = Properties.Resources.api_success;
-                        Log.Api("PINGING API: WOPL API has responded. Its Online!");
+                        launcherLog.Api("PINGING API: WOPL API has responded. Its Online!");
                         break;
                     default:
                         APIStatusText.Text = "WOPL API:\n - Offline";
                         APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                         APIStatusDesc.Text = "Yikes!";
                         APIStatusIcon.Image = Properties.Resources.api_error;
-                        Log.Api("PINGING API: WOPL API has not responded....");
+                        launcherLog.Api("PINGING API: WOPL API has not responded....");
                         AllAPIsOffline = true;
                         break;
                 }
@@ -2628,7 +2629,7 @@ namespace GameLauncher
                 APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                 APIStatusDesc.Text = "Failed to Connect to APIs";
                 APIStatusIcon.Image = Properties.Resources.api_error;
-                Log.Api("PINGING API: Failed to Connect to APIs! Quick Hide and Bunker Down! (Ask for help)");
+                launcherLog.Api("PINGING API: Failed to Connect to APIs! Quick Hide and Bunker Down! (Ask for help)");
             }
 
         }
@@ -2639,24 +2640,24 @@ namespace GameLauncher
             if (!string.IsNullOrEmpty(_settingFile.Read("CDN")))
             {
                 SettingsCDNCurrent.LinkColor = Color.FromArgb(66, 179, 189);
-                Log.Info("SETTINGS PINGING CDN: Checking Current CDN from Settings.ini");
+                launcherLog.Info("SETTINGS PINGING CDN: Checking Current CDN from Settings.ini");
                 await Task.Delay(500);
 
                 switch (APIStatusChecker.CheckStatus(_settingFile.Read("CDN") + "/index.xml"))
                 {
                     case API.Online:
                         SettingsCDNCurrent.LinkColor = Color.FromArgb(159, 193, 32);
-                        Log.UrlCall("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Online!");
+                        launcherLog.UrlCall("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Online!");
                         break;
                     default:
                         SettingsCDNCurrent.LinkColor = Color.FromArgb(254, 0, 0);
-                        Log.UrlCall("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Offline!");
+                        launcherLog.UrlCall("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Offline!");
                         break;
                 }
             }
             else
             {
-                Log.Error("SETTINGS PINGING CDN: Settings.ini has an Empty CDN URL");
+                launcherLog.Error("SETTINGS PINGING CDN: Settings.ini has an Empty CDN URL");
             }
 
         }
@@ -2667,25 +2668,25 @@ namespace GameLauncher
             {
                 SettingsCDNText.Text = "CDN: PINGING";
                 SettingsCDNText.ForeColor = Color.FromArgb(66, 179, 189);
-                Log.Info("SETTINGS PINGING CHANGED CDN: Checking Changed CDN from Drop Down List");
+                launcherLog.Info("SETTINGS PINGING CHANGED CDN: Checking Changed CDN from Drop Down List");
 
                 switch (APIStatusChecker.CheckStatus(((CDNObject)SettingsCDNPick.SelectedItem).Url + "/index.xml"))
                 {
                     case API.Online:
                         SettingsCDNText.Text = "CDN: ONLINE";
                         SettingsCDNText.ForeColor = Color.FromArgb(159, 193, 32);
-                        Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Online!");
+                        launcherLog.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Online!");
                         break;
                     default:
                         SettingsCDNText.Text = "CDN: OFFLINE";
                         SettingsCDNText.ForeColor = Color.FromArgb(254, 0, 0);
-                        Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Offline!");
+                        launcherLog.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Offline!");
                         break;
                 }
             }
             else
             {
-                Log.Error("SETTINGS PINGING CHANGED CDN: '((CDNObject)SettingsCDNPick.SelectedItem).Url)' has an Empty CDN URL");
+                launcherLog.Error("SETTINGS PINGING CHANGED CDN: '((CDNObject)SettingsCDNPick.SelectedItem).Url)' has an Empty CDN URL");
             }
 
         }
@@ -2847,7 +2848,7 @@ namespace GameLauncher
 
                 client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged_RELOADED);
                 client2.DownloadFileCompleted += (test, stuff) => {
-                    Log.Core("LAUNCHER: Downloaded: " + FileName);
+                    launcherLog.Core("LAUNCHER: Downloaded: " + FileName);
                     isDownloadingModNetFiles = false;
                     if (modFilesDownloadUrls.Any() == false)
                     {
@@ -2921,7 +2922,7 @@ namespace GameLauncher
 
             PlayButton.BackgroundImage = Properties.Resources.playbutton;
 
-            Log.Core("LAUNCHER: Installing ModNet");
+            launcherLog.Core("LAUNCHER: Installing ModNet");
             PlayProgressText.Text = ("Detecting ModNetSupport for " + _realServernameBanner).ToUpper();
             String jsonModNet = ModNetReloaded.ModNetSupported(_serverIp);
 
@@ -2946,20 +2947,20 @@ namespace GameLauncher
                         CarsList.remoteCarsList = new WebClient().DownloadString(json2.BasePath + "/cars.json");
                     }
                     catch { }
-                    if (CarsList.remoteCarsList != String.Empty) { Log.Info("DISCORD: Found RemoteRPC List for cars.json"); }
-                    if (CarsList.remoteCarsList == String.Empty) { Log.Warning("DISCORD: RemoteRPC List for cars.json does not exist"); }
+                    if (CarsList.remoteCarsList != String.Empty) { launcherLog.Info("DISCORD: Found RemoteRPC List for cars.json"); }
+                    if (CarsList.remoteCarsList == String.Empty) { launcherLog.Warning("DISCORD: RemoteRPC List for cars.json does not exist"); }
 
                     try
                     {
                         EventsList.remoteEventsList = new WebClient().DownloadString(json2.BasePath + "/events.json");
                     }
                      catch { }
-                    if (EventsList.remoteEventsList != String.Empty) { Log.Info("DISCORD: Found RemoteRPC List for events.json"); }
-                    if (EventsList.remoteEventsList == String.Empty) { Log.Warning("DISCORD: RemoteRPC List for events.json does not exist"); }
+                    if (EventsList.remoteEventsList != String.Empty) { launcherLog.Info("DISCORD: Found RemoteRPC List for events.json"); }
+                    if (EventsList.remoteEventsList == String.Empty) { launcherLog.Warning("DISCORD: RemoteRPC List for events.json does not exist"); }
 
                     //get new index
                     Uri newIndexFile = new Uri(json2.BasePath + "/index.json");
-                    Log.Core("CORE: Loading Server Mods List");
+                    launcherLog.Core("CORE: Loading Server Mods List");
                     String jsonindex = new WebClient().DownloadString(newIndexFile);
 
                     IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
@@ -2989,16 +2990,16 @@ namespace GameLauncher
                         var name = Path.GetFileName(file);
 
                         if (json3.Entries.All(en => en.Name != name)) {
-                            Log.Core("LAUNCHER: removing package: " + file);
+                            launcherLog.Core("LAUNCHER: removing package: " + file);
                             try { 
                                 File.Delete(file);
                             } catch(Exception ex) {
-                                Log.Error($"Failed to remove {file}: {ex.Message}");
+                                launcherLog.Error($"Failed to remove {file}: {ex.Message}");
                             }
                         }
                     }
                 } catch(Exception ex) {
-                    Log.Error("LAUNCHER " + ex.Message);
+                    launcherLog.Error("LAUNCHER " + ex.Message);
                     MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{ex.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             } else {
@@ -3015,7 +3016,7 @@ namespace GameLauncher
             {
                 if (File.Exists(linksPath))
                 {
-                    Log.Core("CLEANLINKS: Found Server Mod Files to remove {Process}");
+                    launcherLog.Core("CLEANLINKS: Found Server Mod Files to remove {Process}");
                     string dir = _settingFile.Read("InstallationDirectory");
                     foreach (var readLine in File.ReadLines(linksPath))
                     {
@@ -3549,7 +3550,7 @@ namespace GameLauncher
                 }
                 else
                 {
-                    Log.Core("WINDOWS FIREWALL: Already Exlcuded SBRW - Game {Both}");
+                    launcherLog.Core("WINDOWS FIREWALL: Already Exlcuded SBRW - Game {Both}");
                 }
             }
 
@@ -3741,7 +3742,7 @@ namespace GameLauncher
             // Create Windows Defender Exclusion
             try
             {
-                Log.Info("WINDOWS DEFENDER: Excluding Core Folders");
+                launcherLog.Info("WINDOWS DEFENDER: Excluding Core Folders");
                 //Add Exclusion to Windows Defender
                 using (PowerShell ps = PowerShell.Create())
                 {
@@ -3753,7 +3754,7 @@ namespace GameLauncher
             }
             catch
             {
-                Log.Error("WINDOWS DEFENDER: Failed to Exclude Folders");
+                launcherLog.Error("WINDOWS DEFENDER: Failed to Exclude Folders");
                 _settingFile.Write("WindowsDefender", "Not Excluded");
             }
         }
@@ -3763,9 +3764,9 @@ namespace GameLauncher
             //Remove current Exclusion and Add new location for Exclusion
             using (PowerShell ps = PowerShell.Create())
             {
-                Log.Warning("WINDOWS DEFENDER: Removing OLD Game Files Directory: " + _settingFile.Read("InstallationDirectory"));
+                launcherLog.Warning("WINDOWS DEFENDER: Removing OLD Game Files Directory: " + _settingFile.Read("InstallationDirectory"));
                 ps.AddScript($"Remove-MpPreference -ExclusionPath \"{_settingFile.Read("InstallationDirectory")}\"");
-                Log.Core("WINDOWS DEFENDER: Excluding NEW Game Files Directory: " + _newGameFilesPath);
+                launcherLog.Core("WINDOWS DEFENDER: Excluding NEW Game Files Directory: " + _newGameFilesPath);
                 ps.AddScript($"Add-MpPreference -ExclusionPath \"{_newGameFilesPath}\"");
                 var result = ps.Invoke();
             }
@@ -3800,7 +3801,7 @@ namespace GameLauncher
             var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
             if (File.Exists(linksPath))
             {
-                Log.Core("CLEANLINKS: Cleaning Up Mod Files {Settings}");
+                launcherLog.Core("CLEANLINKS: Cleaning Up Mod Files {Settings}");
                 CleanLinks(linksPath);
             }
         }
@@ -3808,40 +3809,40 @@ namespace GameLauncher
         private void RememberLastCDN()
         {
             /* Last Selected CDN */
-            Log.Core("SETTINGS CDNLIST: Checking...");
-            Log.Core("SETTINGS CDNLIST: Setting first server in list");
-            Log.Core("SETTINGS CDNLIST: Checking if server is set on INI File");
+            launcherLog.Core("SETTINGS CDNLIST: Checking...");
+            launcherLog.Core("SETTINGS CDNLIST: Setting first server in list");
+            launcherLog.Core("SETTINGS CDNLIST: Checking if server is set on INI File");
 
             if (_settingFile.KeyExists("CDN"))
             {
-                Log.Core("SETTINGS CDNLIST: Found something!");
-                Log.Core("SETTINGS CDNLIST: Checking if CDN exists on our database");
+                launcherLog.Core("SETTINGS CDNLIST: Found something!");
+                launcherLog.Core("SETTINGS CDNLIST: Checking if CDN exists on our database");
 
                 if (finalCDNItems.FindIndex(i => string.Equals(i.Url, _settingFile.Read("CDN"))) != 0)
                 {
-                    Log.Core("SETTINGS CDNLIST: CDN found! Checking ID");
+                    launcherLog.Core("SETTINGS CDNLIST: CDN found! Checking ID");
                     var index = finalCDNItems.FindIndex(i => string.Equals(i.Url, _settingFile.Read("CDN")));
 
-                    Log.Core("SETTINGS CDNLIST: ID is " + index);
+                    launcherLog.Core("SETTINGS CDNLIST: ID is " + index);
                     if (index >= 0)
                     {
-                        Log.Core("SETTINGS CDNLIST: ID set correctly");
+                        launcherLog.Core("SETTINGS CDNLIST: ID set correctly");
                         SettingsCDNPick.SelectedIndex = index;
                     }
                     else if (index < 0)
                     {
-                        Log.Warning("SETTINGS CDNLIST: Old CDN URL Standard Detected!");
+                        launcherLog.Warning("SETTINGS CDNLIST: Old CDN URL Standard Detected!");
                         SettingsCDNPick.SelectedIndex = 1;
-                        Log.Warning("SETTINGS CDNLIST: Displaying First CDN in List!");
+                        launcherLog.Warning("SETTINGS CDNLIST: Displaying First CDN in List!");
                     }
                 }
                 else
                 {
-                    Log.Warning("SETTINGS CDNLIST: Unable to find anything, assuming default");
+                    launcherLog.Warning("SETTINGS CDNLIST: Unable to find anything, assuming default");
                     SettingsCDNPick.SelectedIndex = 1;
-                    Log.Warning("SETTINGS CDNLIST: Unknown entry value is " + _settingFile.Read("CDN"));
+                    launcherLog.Warning("SETTINGS CDNLIST: Unknown entry value is " + _settingFile.Read("CDN"));
                 }
-                Log.Core("SETTINGS CDNLIST: All done");
+                launcherLog.Core("SETTINGS CDNLIST: All done");
             }
         }
 
@@ -3850,13 +3851,13 @@ namespace GameLauncher
             switch(Self.CheckFolder(_settingFile.Read("InstallationDirectory"))) {
                 case FolderType.IsSameAsLauncherFolder:
                         Directory.CreateDirectory("Game Files");
-                        Log.Error("LAUNCHER: Installing NFSW in same directory where the launcher resides is disadvised.");
+                        launcherLog.Error("LAUNCHER: Installing NFSW in same directory where the launcher resides is disadvised.");
                         MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
                     break;
                 case FolderType.IsTempFolder:
                         Directory.CreateDirectory("Game Files");
-                        Log.Error("LAUNCHER: (╯°□°）╯︵ ┻━┻ Installing NFSW in the Temp Folder is disadvised!");
+                        launcherLog.Error("LAUNCHER: (╯°□°）╯︵ ┻━┻ Installing NFSW in the Temp Folder is disadvised!");
                         MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is disadvised! Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files" + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
                     break;
@@ -3864,7 +3865,7 @@ namespace GameLauncher
                 case FolderType.IsUsersFolders:
                 case FolderType.IsWindowsFolder:
                         Directory.CreateDirectory("Game Files");
-                        Log.Error("LAUNCHER: Installing NFSW in a Special Directory is disadvised.");
+                        launcherLog.Error("LAUNCHER: Installing NFSW in a Special Directory is disadvised.");
                         MessageBox.Show(null, string.Format("Installing NFSW in a Special Directory is disadvised. Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
                     break;
@@ -3875,7 +3876,7 @@ namespace GameLauncher
         {
             Directory.Delete(_settingFile.Read("InstallationDirectory") + "/.data", true);
             Directory.Delete(_settingFile.Read("InstallationDirectory") + "/MODS", true);
-            Log.Warning("LAUNCHER: User Confirmed to Delete Server Mods Cache");
+            launcherLog.Warning("LAUNCHER: User Confirmed to Delete Server Mods Cache");
             MessageBox.Show(null, "Deleted Server Mods Cache", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             SettingsClearServerModCacheButton.Enabled = false;
         }

@@ -26,6 +26,7 @@ namespace GameLauncher.App
 
         //Used to ping the Server in ms
         public Queue<string> servers = new Queue<string>();
+        Log launcherLog = new Log("launcher.log");
 
         private readonly IniFile _settingFile = new IniFile("Settings.ini");
 
@@ -78,12 +79,12 @@ namespace GameLauncher.App
                     }
                     catch (Exception error)
                     {
-                        Log.Error("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message);
+                        launcherLog.Error("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message);
                     }
                 }
                 catch (Exception error)
                 {
-                    Log.Error("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message);
+                    launcherLog.Error("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message);
                 }
             }
 

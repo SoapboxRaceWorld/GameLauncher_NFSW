@@ -15,15 +15,16 @@ namespace GameLauncher.App.Classes
         public static void UpdateCDNList()
         {
             List<CDNObject> cdnInfos = new List<CDNObject>();
+            Log launcherLog = new Log("launcher.log");
 
             foreach (var cdnListURL in Self.cdnlisturl)
             {
                 try
                 {
-                    Log.UrlCall("LIST CORE: Loading cdnlist from: " + cdnListURL);
+                    launcherLog.UrlCall("LIST CORE: Loading cdnlist from: " + cdnListURL);
                     var wc = new WebClient();
                     var responseList = wc.DownloadString(cdnListURL);
-                    Log.UrlCall("LIST CORE: Loaded cdnlist from: " + cdnListURL);
+                    launcherLog.UrlCall("LIST CORE: Loaded cdnlist from: " + cdnListURL);
 
                     try
                     {
@@ -32,12 +33,12 @@ namespace GameLauncher.App.Classes
                     }
                     catch (Exception error)
                     {
-                        Log.Error("LIST CORE: Error occurred while deserializing cdn list from [" + cdnListURL + "]: " + error.Message);
+                        launcherLog.Error("LIST CORE: Error occurred while deserializing cdn list from [" + cdnListURL + "]: " + error.Message);
                     }
                 }
                 catch (Exception error)
                 {
-                    Log.Error("LIST CORE: Error occurred while loading cdn list from [" + cdnListURL + "]: " + error.Message);
+                    launcherLog.Error("LIST CORE: Error occurred while loading cdn list from [" + cdnListURL + "]: " + error.Message);
                 }
             }
 

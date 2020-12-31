@@ -16,7 +16,7 @@ namespace GameLauncher.App
         List<CDNObject> CDNList = new List<CDNObject>();
         private bool CDNStatusCheck = false;
         private bool ServerStatusCheck = false;
-
+        Log launcherLog = new Log("launcher.log");
         public WelcomeScreen() {
             InitializeComponent();
             ApplyEmbeddedFonts();
@@ -197,7 +197,7 @@ namespace GameLauncher.App
 
             CDNListUpdater.UpdateCDNList();
 
-            Log.Info("WELCOME: Setting CDN list");
+            launcherLog.Info("WELCOME: Setting CDN list");
             finalCDNItems = CDNListUpdater.GetCDNList();
 
             CDNSource.DisplayMember = "Name";

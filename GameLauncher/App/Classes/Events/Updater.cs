@@ -20,6 +20,8 @@ namespace GameLauncher.App.Classes.Events
 
         private static string CurrentLauncherBuild = Application.ProductVersion;
         private static string LatestLauncherBuild;
+        Log launcherLog = new Log("launcher.log");
+
 
         public LauncherUpdateCheck(PictureBox statusImage, Label statusText, Label statusDescription)  {
             status = statusImage;
@@ -135,14 +137,14 @@ namespace GameLauncher.App.Classes.Events
                 if (MAPI.Payload.LatestVersion != null)
                 {
                     LatestLauncherBuild = MAPI.Payload.LatestVersion;
-                    Log.Info("UPDATER: Latest Version -> " + MAPI.Payload.LatestVersion);
+                    launcherLog.Info("UPDATER: Latest Version -> " + MAPI.Payload.LatestVersion);
                 }
             };
         }
 
         private void GitHubAPI()
         {
-            Log.Warning("UPDATER: Falling back to GitHub API");
+            launcherLog.Warning("UPDATER: Falling back to GitHub API");
             switch (APIStatusChecker.CheckStatus("http://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest"))
             {
                 case API.Online:
@@ -156,12 +158,12 @@ namespace GameLauncher.App.Classes.Events
                         if (GHAPI.TagName != null)
                         {
                             LatestLauncherBuild = GHAPI.TagName;
-                            Log.Info("UPDATER: Latest Version -> " + GHAPI.TagName);
+                            launcherLog.Info("UPDATER: Latest Version -> " + GHAPI.TagName);
                         }
                     };
                     break;
                 default:
-                    Log.Error("UPDATER: Failed to Retrive Latest Build Information from two APIs ");
+                    launcherLog.Error("UPDATER: Failed to Retrive Latest Build Information from two APIs ");
                     break;
             }
         }

@@ -30,22 +30,21 @@ namespace GameLauncher.App
         public int redownloadedCount;
         public List<string> InvalidFileList = new List<string>();
         public List<string> ValidFileList = new List<string>();
+        Log verifyLog = new Log("verify.log");
+        Log launcherLog = new Log("launcher.log");
 
         public VerifyHash()
         {
             InitializeComponent();
             ApplyEmbeddedFonts();
             VersionLabel.Text = "Version: v" + Application.ProductVersion;
-            LogVerify.StartVerifyLogging();
 
-            if (File.Exists("validfiles.dat"))
-            {
-                File.Delete("validfiles.dat");
-                File.Delete("invalidfiles.dat");
-                File.Delete("Verify.log");
-                
+            string[] filestocheck = new string[] {"validfiles.dat", "invalidfiles.dat", "verify.log"};
+            foreach (String file in filestocheck) {
+                if(File.Exists(file)) File.Delete(file);
             }
-            
+
+            verifyLog.StartLogging();
         }
 
         public void GameScanner(bool startScan)
@@ -66,20 +65,20 @@ namespace GameLauncher.App
                 //StatusText.Text = "Validating files on background.".ToUpper();
                 //Threaded CheckFiles
                 StartScan.Start();
-                Log.Debug("Started Scanner");
+                launcherLog.Debug("Started Scanner");
             }
             else if (startScan == false)
             {
                 StartScan.Abort();
                 //StatusText.Text = "Unkown Status.".ToUpper();
-                 Process[] allOfThem = Process.GetProcessesByName("VerifyHash");
+                Process[] allOfThem = Process.GetProcessesByName("VerifyHash");
                 foreach (var oneProcess in allOfThem)
                 {
                     Process.GetProcessById(oneProcess.Id).Kill();
                 }
                 Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                
-                Log.Debug("Stopped Scanner");
+
+                launcherLog.Debug("Stopped Scanner");
             }
            
         }
@@ -118,20 +117,20 @@ namespace GameLauncher.App
                     if (!File.Exists(RealPathToFile))
                     {
                         InvalidFileList.Add(FileName);
-                        LogVerify.Missing("File: " + RealPathToFile);
+                        verifyLog.Missing("File: " + RealPathToFile);
                     }
                     else
                     {
                         if (FileHash != SHA.HashFile(RealPathToFile).Trim())
                         {
                             InvalidFileList.Add(FileName);
-                            LogVerify.Invalid("File: " + RealPathToFile);
+                            verifyLog.Invalid("File: " + RealPathToFile);
                         }
                         else
                         {
                             ValidFileList.Add(RealPathToFile);
                             File.WriteAllLines("validfiles.dat", ValidFileList);
-                            LogVerify.Valid("File: " + RealPathToFile);
+                            verifyLog.Valid("File: " + RealPathToFile);
                         }
                     }
                     ScanProgressText.Text = "Found Missing Files";
@@ -143,7 +142,7 @@ namespace GameLauncher.App
                 {
                     ScanProgressText.Text = "Found Missing Files";
                     File.WriteAllLines("invalidfiles.dat", InvalidFileList);
-                    Log.Info("Found Invalid Files and Will Start File Downloader");
+                    launcherLog.Info("Found Invalid Files and Will Start File Downloader");
                     CorruptedFilesFound();
                 }
                 else
@@ -156,9 +155,9 @@ namespace GameLauncher.App
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
+                launcherLog.Error(ex.Message);
             }
-            Log.Info("Scan Completed");
+            launcherLog.Info("Scan Completed");
         }
 
         private void CorruptedFilesFound()
@@ -176,11 +175,11 @@ namespace GameLauncher.App
                         string address = "http://mtntr.pl/unpacked" + text.Replace("\\", "/");
                         if (File.Exists(text2))
                         {
-                            LogVerify.Deleted("File: " + text2);
+                            verifyLog.Deleted("File: " + text2);
                             File.Delete(text2);
                         }
                         new WebClient().DownloadFile(address, text2);
-                        LogVerify.Downloaded("File: " + text2);
+                        verifyLog.Downloaded("File: " + text2);
                         Application.DoEvents();
                     }
                     catch { }

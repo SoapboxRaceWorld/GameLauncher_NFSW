@@ -22,6 +22,8 @@ namespace GameLauncher
     internal static class Program {
         private static IniFile _settingFile = new IniFile("Settings.ini");
         private static string LatestUpdaterBuildVersion = "1.0.0.4";
+        private static Log launcherLog = new Log("launcher.log");
+
 
         internal class Arguments {
             [Option('p', "parse", Required = false, HelpText = "Parses URI")]
@@ -64,7 +66,7 @@ namespace GameLauncher
             File.Delete("communication.log");
             File.Delete("launcher.log");
 
-            Log.StartLogging();
+            launcherLog.StartLogging();
 
             Self.currentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
@@ -81,11 +83,11 @@ namespace GameLauncher
 
             if (EnableInsider.ShouldIBeAnInsider() == true) 
             {
-                Log.Build("INSIDER: GameLauncher " + Application.ProductVersion + "_" + EnableInsider.BuildNumber());
+                launcherLog.Build("INSIDER: GameLauncher " + Application.ProductVersion + "_" + EnableInsider.BuildNumber());
             }
             else
             {
-                Log.Build("BUILD: GameLauncher " + Application.ProductVersion);
+                launcherLog.Build("BUILD: GameLauncher " + Application.ProductVersion);
             }
 
             if (Properties.Settings.Default.IsRestarting) {
@@ -149,14 +151,14 @@ namespace GameLauncher
             bool DCAPIOffline = false;
             bool AllAPIsOffline = false;
 
-            Log.Api("PINGING API: Checking API Status");
+            launcherLog.Api("PINGING API: Checking API Status");
             switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/generate_204/"))
             {
                 case API.Online:
-                    Log.UrlCall("PRE-CHECK: Internet Check Passed: {api-sbrw.davidcarbon.download}");
+                    launcherLog.UrlCall("PRE-CHECK: Internet Check Passed: {api-sbrw.davidcarbon.download}");
                     break;
                 default:
-                    Log.Error("PRE-CHECK: Failed to Connect to: {api-sbrw.davidcarbon.download}, Checking: {api.worldunited.gg}");
+                    launcherLog.Error("PRE-CHECK: Failed to Connect to: {api-sbrw.davidcarbon.download}, Checking: {api.worldunited.gg}");
                     DCAPIOffline = true;
                     break;
             }
@@ -166,10 +168,10 @@ namespace GameLauncher
                 switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
                 {
                     case API.Online:
-                        Log.UrlCall("PRE-CHECK: Internet Check Passed: {api.worldunited.gg}");
+                        launcherLog.UrlCall("PRE-CHECK: Internet Check Passed: {api.worldunited.gg}");
                         break;
                     default:
-                        Log.Error("PRE-CHECK: Failed to Connect to: {api.worldunited.gg}");
+                        launcherLog.Error("PRE-CHECK: Failed to Connect to: {api.worldunited.gg}");
                         AllAPIsOffline = true;
                         break;
                 }
@@ -182,7 +184,7 @@ namespace GameLauncher
                 if (restartAppNoApis == DialogResult.No)
                 {
                     MessageBox.Show("Good Luck... \n No Really \n ...Good Luck", "GameLauncher Will Continue, When It Failed To Connect To API");
-                    Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and Will Continue");
+                    launcherLog.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and Will Continue");
                 }
 
                 if (restartAppNoApis == DialogResult.Yes)
@@ -192,11 +194,11 @@ namespace GameLauncher
             }
 
             /* Set Launcher Directory */
-            Log.Info("CORE: Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
+            launcherLog.Info("CORE: Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 
             if (!DetectLinux.LinuxDetected()) {
-                Log.Info("CORE: Checking current directory");
+                launcherLog.Info("CORE: Checking current directory");
 
                 switch(Self.CheckFolder(Directory.GetCurrentDirectory())) {
                     case FolderType.IsTempFolder:
@@ -233,7 +235,7 @@ namespace GameLauncher
                         var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(Self.secondstaticapiserver + "/Version.txt");
                         if (!string.IsNullOrEmpty(GetLatestUpdaterBuildVersion))
                         {
-                            Log.Info("LAUNCHER UPDATER: Latest Version Check:");
+                            launcherLog.Info("LAUNCHER UPDATER: Latest Version Check:");
                             LatestUpdaterBuildVersion = GetLatestUpdaterBuildVersion;
                         }
                     }
@@ -242,21 +244,21 @@ namespace GameLauncher
                         var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(Self.staticapiserver + "/Version.txt");
                         if (!string.IsNullOrEmpty(GetLatestUpdaterBuildVersion))
                         {
-                            Log.Info("LAUNCHER UPDATER: Latest Version Check:");
+                            launcherLog.Info("LAUNCHER UPDATER: Latest Version Check:");
                             LatestUpdaterBuildVersion = GetLatestUpdaterBuildVersion;
                         }
                     }
-                    Log.Info("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
+                    launcherLog.Info("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("LAUNCHER UPDATER: Failed to get new version file: " + ex.Message);
+                    launcherLog.Error("LAUNCHER UPDATER: Failed to get new version file: " + ex.Message);
                 }
             }
 
             if (!File.Exists("GameLauncherUpdater.exe"))
             {
-                Log.Info("LAUNCHER UPDATER: Starting GameLauncherUpdater downloader");
+                launcherLog.Info("LAUNCHER UPDATER: Starting GameLauncherUpdater downloader");
                 try
                 {
                     using (WebClient wc = new WebClient())
@@ -272,7 +274,7 @@ namespace GameLauncher
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("LAUCHER UPDATER: Failed to download updater. " + ex.Message);
+                    launcherLog.Error("LAUCHER UPDATER: Failed to download updater. " + ex.Message);
                 }
             }
             else if (File.Exists("GameLauncherUpdater.exe"))
@@ -282,19 +284,19 @@ namespace GameLauncher
                 var LauncherUpdaterBuildNumber = LauncherUpdaterBuild.FileVersion;
                 var UpdaterBuildNumberResult = LauncherUpdaterBuildNumber.CompareTo(LatestUpdaterBuildVersion);
 
-                Log.Build("LAUNCHER UPDATER BUILD: GameLauncherUpdater " + LauncherUpdaterBuildNumber);
+                launcherLog.Build("LAUNCHER UPDATER BUILD: GameLauncherUpdater " + LauncherUpdaterBuildNumber);
                 if (UpdaterBuildNumberResult < 0)
                 {
-                    Log.Info("LAUNCHER UPDATER: " + UpdaterBuildNumberResult + " Builds behind latest Updater!");
+                    launcherLog.Info("LAUNCHER UPDATER: " + UpdaterBuildNumberResult + " Builds behind latest Updater!");
                 }
                 else
                 {
-                    Log.Info("LAUNCHER UPDATER: Latest GameLauncherUpdater!");
+                    launcherLog.Info("LAUNCHER UPDATER: Latest GameLauncherUpdater!");
                 }
 
                 if (UpdaterBuildNumberResult < 0)
                 {
-                    Log.Info("LAUNCHER UPDATER: Downloading New GameLauncherUpdater.exe");
+                    launcherLog.Info("LAUNCHER UPDATER: Downloading New GameLauncherUpdater.exe");
                     File.Delete("GameLauncherUpdater.exe");
                     try
                     {
@@ -305,7 +307,7 @@ namespace GameLauncher
                     }
                     catch (Exception ex)
                     {
-                        Log.Error("LAUNCHER UPDATER: Failed to download new updater. " + ex.Message);
+                        launcherLog.Error("LAUNCHER UPDATER: Failed to download new updater. " + ex.Message);
                     }
                 }
             }
@@ -457,7 +459,7 @@ namespace GameLauncher
             {
                 try
                 {
-                    Log.Warning("CORE: Starting LZMA downloader");
+                    launcherLog.Warning("CORE: Starting LZMA downloader");
                     using (WebClient wc = new WebClient())
                     {
                         wc.DownloadFileAsync(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
@@ -476,7 +478,7 @@ namespace GameLauncher
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("CORE: Failed to download LZMA. " + ex.Message);
+                    launcherLog.Error("CORE: Failed to download LZMA. " + ex.Message);
                 }
             }
 
@@ -589,7 +591,7 @@ namespace GameLauncher
                 {
                     Thread ST = new Thread(() =>
                     {
-                        Log.Info("SPLASH SCREEN: Closing Splash Screen");
+                        launcherLog.Info("SPLASH SCREEN: Closing Splash Screen");
                         Thread.Sleep(1200);
                         f.Invoke(new Action(() => { f.Close(); }));
                     })
@@ -614,15 +616,15 @@ namespace GameLauncher
                 var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
                 if (File.Exists(linksPath))
                 {
-                    Log.Info("CLEANLINKS: Cleaning Up Mod Files {Startup}");
+                    launcherLog.Info("CLEANLINKS: Cleaning Up Mod Files {Startup}");
                     CleanLinks(linksPath);
                 }
             }
 
-            Log.Info("PROXY: Starting Proxy");
+            launcherLog.Info("PROXY: Starting Proxy");
             ServerProxy.Instance.Start();
 
-            Log.Visuals("CORE: Starting MainScreen");
+            launcherLog.Visuals("CORE: Starting MainScreen");
             Application.Run(new MainScreen());
         }
 
@@ -630,7 +632,7 @@ namespace GameLauncher
         {
             if (File.Exists(linksPath))
             {
-                Log.Debug("CLEANLINKS: Found Server Mod Files to remove {Process}");
+                launcherLog.Debug("CLEANLINKS: Found Server Mod Files to remove {Process}");
                 string dir = _settingFile.Read("InstallationDirectory");
                 foreach (var readLine in File.ReadLines(linksPath))
                 {
@@ -666,7 +668,7 @@ namespace GameLauncher
                         }
                         catch
                         {
-                            Log.Error("CLEANLINKS: Error while deleting a file: {realLoc}");
+                            launcherLog.Error("CLEANLINKS: Error while deleting a file: {realLoc}");
                         }
                     }
                     else

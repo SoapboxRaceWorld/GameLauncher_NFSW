@@ -17,6 +17,7 @@ namespace GameLauncherReborn {
         private static string GameLauncherHash = string.Empty;
         private static long addrange = 0;
         private static int timeout = 3000;
+        Log launcherLog = new Log("launcher.log");
         public static string Value() {
             if (string.IsNullOrEmpty(GameLauncherHash)) {
                 GameLauncherHash = SHA.HashFile(AppDomain.CurrentDomain.FriendlyName);
@@ -56,7 +57,7 @@ namespace GameLauncherReborn {
                 return isOk;
             };
 
-            if(!address.AbsolutePath.Contains("auth")) Log.UrlCall("Calling URL: " + address);
+            if(!address.AbsolutePath.Contains("auth")) launcherLog.UrlCall("Calling URL: " + address);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
             request.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
