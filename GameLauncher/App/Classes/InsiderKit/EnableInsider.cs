@@ -9,14 +9,7 @@
 
         public static bool ShouldIBeAnInsider()
         {
-            if (Insider == true)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return Insider; 
         }
 
         public static string BuildNumber()
