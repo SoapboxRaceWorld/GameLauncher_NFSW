@@ -1,4 +1,5 @@
 ﻿using GameLauncherReborn;
+using DiscordRPC;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,6 +20,7 @@ namespace GameLauncher.App
     public partial class VerifyHash : Form
     {
         private readonly IniFile _settingFile = new IniFile("Settings.ini");
+        private readonly RichPresence _presence = new RichPresence();
 
         //VerifyHash
         string[][] scannedHashes;
@@ -73,6 +75,15 @@ namespace GameLauncher.App
 
         private void StartGameScanner()
         {
+            _presence.Details = "In-Launcher: " + Application.ProductVersion;
+            _presence.State = "Validating Game Files!";
+            _presence.Assets = new Assets
+            {
+                LargeImageText = "SBRW",
+                LargeImageKey = "nfsw"
+            };
+            if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
+
             try
             {
                 //getFilesToCheck = new WebClient().DownloadString("http://localhost/checksums.dat").Split('\n');
@@ -90,7 +101,7 @@ namespace GameLauncher.App
                 File.WriteAllLines("checksums.dat", getFilesToCheck);*/
                 totalFilesScanned = 0;
                 redownloadedCount = 0;
-            //Thread.BeginThreadAffinity();
+
                 foreach (string[] file in scannedHashes)
                 {
                     String FileHash = file[0].Trim();
@@ -118,7 +129,7 @@ namespace GameLauncher.App
                     }
                     totalFilesScanned++;
                 }
-            //Thread.EndThreadAffinity();
+
                 if (InvalidFileList != null)
                 {
                     File.WriteAllLines("invalidfiles.dat", InvalidFileList);

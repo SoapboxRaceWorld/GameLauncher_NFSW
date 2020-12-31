@@ -300,7 +300,7 @@ namespace GameLauncher
                     {
                         using (WebClient wc = new WebClient())
                         {
-                            wc.DownloadFileAsync(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
+                            wc.DownloadFile(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
                         }
                     }
                     catch (Exception ex)
