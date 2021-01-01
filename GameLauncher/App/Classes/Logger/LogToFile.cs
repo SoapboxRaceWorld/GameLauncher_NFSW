@@ -9,11 +9,9 @@ namespace GameLauncher.App.Classes.Logger
     {
         private static ConcurrentQueue<string> buffer = new ConcurrentQueue<string>();
         private static String filename = String.Empty;
-
         public Log(String file = "launcher.log") => filename = file;
-        public void StartLogging() => Task.Run(() => TaskKernel());
+        public static void StartLogging() => Task.Run(() => TaskKernel());
         private static void _toFile(string text, string errorname = "DEBUG") => buffer.Enqueue($"[{errorname}] {text}");
-
         public static void Debug(string text) => _toFile(text, "DEBUG");
         public static void Info(string text) => _toFile(text, " INFO");
         public static void Warning(string text) => _toFile(text, " WARN");
@@ -33,11 +31,11 @@ namespace GameLauncher.App.Classes.Logger
                 {
                     try
                     {
-                        File.AppendAllText(filename, merged + Environment.NewLine);
+                        File.AppendAllText("launcher.log", merged + Environment.NewLine);
                     }
                     catch(Exception ex)
                     {
-                        Log launcherLog = new Log(filename);
+                        new Log(filename);
                         Log.Error(ex.Message);
                     }
                     Console.WriteLine(merged);
@@ -59,6 +57,7 @@ namespace GameLauncher.App.Classes.Logger
         public static void Deleted(string text) => _toFile(text, " DELETED");
         public static void Missing(string text) => _toFile(text, " MISSING");
         public static void Downloaded(string text) => _toFile(text, "REPLACED");
+ 
         private static async void VerifyTaskKernel()
         {
             while (true)

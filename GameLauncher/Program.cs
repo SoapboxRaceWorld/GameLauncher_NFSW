@@ -23,8 +23,6 @@ namespace GameLauncher
     {
         private static IniFile _settingFile = new IniFile("Settings.ini");
         private static string LatestUpdaterBuildVersion = "1.0.0.4";
-        private static Log launcherLog = new Log("launcher.log");
-
 
         internal class Arguments
         {
@@ -70,7 +68,7 @@ namespace GameLauncher
             File.Delete("communication.log");
             File.Delete("launcher.log");
 
-            launcherLog.StartLogging();
+            Log.StartLogging();
 
             Self.currentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");

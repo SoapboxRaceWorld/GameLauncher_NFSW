@@ -1,5 +1,4 @@
 using GameLauncher.App.Classes;
-using GameLauncherReborn;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

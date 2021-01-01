@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using GameLauncher.App.Classes.Logger;
 
 namespace GameLauncher.App.Classes.RPC
 {

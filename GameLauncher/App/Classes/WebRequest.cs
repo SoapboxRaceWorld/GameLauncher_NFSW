@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
-using System.IO.Compression;
 using System.Windows.Forms;
-using System.IO;
-using System.Security.Cryptography;
 using GameLauncher.App.Classes;
 using GameLauncher.HashPassword;
 using GameLauncher.App.Classes.Logger;

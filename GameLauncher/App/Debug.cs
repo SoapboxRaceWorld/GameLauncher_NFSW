@@ -27,7 +27,6 @@ namespace GameLauncher.App
         private void ApplyEmbeddedFonts()
         {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
             Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
         }
 
@@ -37,12 +36,10 @@ namespace GameLauncher.App
             ManagementObjectCollection data = wmiData.Get();
 
             string virusCheckerName = "";
-            int status = 0;
-
             foreach (ManagementObject virusChecker in data)
             {
                 virusCheckerName = virusChecker["displayName"].ToString();
-                status = Convert.ToInt32(virusChecker["productState"]);
+                int status = Convert.ToInt32(virusChecker["productState"]);
             }
 
             return virusCheckerName;
@@ -179,8 +176,9 @@ namespace GameLauncher.App
 
             data.DataSource = settings;
 
-            DataGridViewCellStyle style = new DataGridViewCellStyle();
-            style.Font = new Font(data.Font, FontStyle.Bold);
+            DataGridViewCellStyle style = new DataGridViewCellStyle {
+                Font = new Font(data.Font, FontStyle.Regular)
+            };
             data.Columns[0].DefaultCellStyle = style;
 
             data.Columns[0].Width += 50;

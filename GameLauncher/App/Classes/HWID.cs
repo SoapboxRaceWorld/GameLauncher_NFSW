@@ -81,7 +81,7 @@ namespace Security
             return s;
         }
 
-        private static string Identifier(string wmiClass, string wmiProperty, string wmiMustBeTrue)
+/*        private static string Identifier(string wmiClass, string wmiProperty, string wmiMustBeTrue)
         {
             string result = "";
             ManagementClass mc = new ManagementClass(wmiClass);
@@ -111,7 +111,7 @@ namespace Security
             }
 
             return result;
-        }
+        }*/
 
         private static string Identifier(string wmiClass, string wmiProperty)
         {

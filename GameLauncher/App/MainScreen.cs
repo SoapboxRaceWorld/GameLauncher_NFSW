@@ -1065,7 +1065,7 @@ namespace GameLauncher
             Tokens.IPAddress = _serverInfo.IpAddress;
             Tokens.ServerName = _serverInfo.Name;
 
-            Self.userAgent = (_serverInfo.ForceUserAgent == null) ? null : _serverInfo.ForceUserAgent;
+            Self.userAgent = _serverInfo.ForceUserAgent ?? null;
 
             if (_modernAuthSupport == false)
             {
@@ -2566,13 +2566,14 @@ namespace GameLauncher
         //Changing GameFiles Location from Settings - DavidCarbon & Zacam
         private void SettingsGameFiles_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.OpenFileDialog changeGameFilesPath = new System.Windows.Forms.OpenFileDialog();
-            changeGameFilesPath.InitialDirectory = "C:\\";
-            changeGameFilesPath.ValidateNames = false;
-            changeGameFilesPath.CheckFileExists = false;
-            changeGameFilesPath.CheckPathExists = true;
-            changeGameFilesPath.Title = "Select the location to Find or Download nfsw.exe";
-            changeGameFilesPath.FileName = "Select Game Files Folder";
+            System.Windows.Forms.OpenFileDialog changeGameFilesPath = new System.Windows.Forms.OpenFileDialog {
+                InitialDirectory = "C:\\",
+                ValidateNames = false,
+                CheckFileExists = false,
+                CheckPathExists = true,
+                Title = "Select the location to Find or Download nfsw.exe",
+                FileName = "Select Game Files Folder"
+            };
             if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
             {
                 _newGameFilesPath = Path.GetDirectoryName(changeGameFilesPath.FileName);

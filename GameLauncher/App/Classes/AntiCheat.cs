@@ -39,16 +39,17 @@ namespace GameLauncher.App.Classes
 
             thread = new Thread(() =>
             {
-                List<int> addresses = new List<int>();
-                addresses.Add(418534);  // GMZ_MULTIHACK
-                addresses.Add(3788216); // FAST_POWERUPS
-                addresses.Add(4552702); // SPEEDHACK
-                addresses.Add(4476396); // SMOOTH_WALLS
-                addresses.Add(4506534); // TANK
-                addresses.Add(4587060); // WALLHACK
-                addresses.Add(4486168); // DRIFTMOD/MULTIHACK
-                addresses.Add(4820249); // PURSUITBOT (NO COPS VARIATION)
-                addresses.Add(8972152); // PROFILEMASKER!
+                List<int> addresses = new List<int> {
+                    418534,  // GMZ_MULTIHACK
+                    3788216, // FAST_POWERUPS
+                    4552702, // SPEEDHACK
+                    4476396, // SMOOTH_WALLS
+                    4506534, // TANK
+                    4587060, // WALLHACK
+                    4486168, // DRIFTMOD/MULTIHACK
+                    4820249, // PURSUITBOT (NO COPS VARIATION)
+                    8972152 // PROFILEMASKER!
+                };
 
                 while (true)
                 {

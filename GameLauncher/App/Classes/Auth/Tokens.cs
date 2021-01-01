@@ -9,7 +9,6 @@ namespace GameLauncher.App.Classes.Auth
         public static String Error      = String.Empty;
         public static String Success    = String.Empty;
         public static String LoginToken = String.Empty;
-
         public static String IPAddress  = String.Empty;
         public static String ServerName = String.Empty;
 

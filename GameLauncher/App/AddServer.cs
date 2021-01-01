@@ -1,5 +1,4 @@
-﻿using GameLauncherReborn;
-using GameLauncher.Resources;
+﻿using GameLauncher.Resources;
 using Newtonsoft.Json;
 using SoapBox.JsonScheme;
 using System;
@@ -71,8 +70,7 @@ namespace GameLauncher.App
                 success = false;
             }
 
-            Uri uriResult;
-            bool result = Uri.TryCreate(ServerAddress.Text, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            bool result = Uri.TryCreate(ServerAddress.Text, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
             if (!result)
             {

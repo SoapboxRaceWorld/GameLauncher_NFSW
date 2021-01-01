@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using GameLauncher.App.Classes.Events;
 using GameLauncherReborn;
 using GameLauncher.Resources;
 using System.Drawing;

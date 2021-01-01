@@ -204,7 +204,6 @@ namespace GameLauncher.App
                             ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
                         }
 
-
                         if (servers.Count == 0)
                         {
                             Loading.Text = "";
@@ -213,8 +212,7 @@ namespace GameLauncher.App
                         Application.DoEvents();
                     }
                 });
-            });
-            newList.IsBackground = true;
+            }) { IsBackground = true };
             newList.Start();
 
             ServerListRenderer.AllowColumnReorder = false;

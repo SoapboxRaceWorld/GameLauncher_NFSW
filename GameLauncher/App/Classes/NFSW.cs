@@ -28,7 +28,7 @@ namespace GameLauncherReborn
                 if (detectRunningNFSW != null)
                 {
                     detectRunningNFSW.Close();
-                    detectRunningNFSW = null;
+                    //detectRunningNFSW = null;
                 }
             }
         }
