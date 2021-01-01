@@ -2470,10 +2470,6 @@ namespace GameLauncher
                 _settingFile.Write("CDN", ((CDNObject)SettingsCDNPick.SelectedItem).Url);
                 _restartRequired = true;
             }
-            else
-            {
-                MessageBox.Show(null, "CDN Settings. \n\nNot Saved. \n\n(╯°□°）╯︵ ┻━┻", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
 
             String disableProxy = (SettingsProxyCheckbox.Checked == true) ? "1" : "0";
             if (_settingFile.Read("DisableProxy") != disableProxy) {

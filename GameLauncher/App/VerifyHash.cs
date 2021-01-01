@@ -144,7 +144,7 @@ namespace GameLauncher.App
 
                 if (InvalidFileList != null)
                 {
-                    ScanProgressText.Text = "Found Missing Files";
+                    ScanProgressText.Text = "Found Invalid Files";
                     File.WriteAllLines("invalidfiles.dat", InvalidFileList);
                     Log.Info("Found Invalid Files and Will Start File Downloader");
                     CorruptedFilesFound();
