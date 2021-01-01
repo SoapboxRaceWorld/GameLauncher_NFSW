@@ -2462,8 +2462,10 @@ namespace GameLauncher
                 }
             }
 
-            if (_settingFile.Read("CDN") != ((CDNObject)SettingsCDNPick.SelectedItem).Url && ((CDNObject)SettingsCDNPick.SelectedItem).Url != null)
-            {
+            Console.WriteLine(_settingFile.Read("CDN"));
+            Console.WriteLine(((CDNObject)SettingsCDNPick.SelectedItem).Url);
+
+            if (_settingFile.Read("CDN") != ((CDNObject)SettingsCDNPick.SelectedItem).Url) {
                 SettingsCDNCurrentText.Text = "CHANGED CDN";
                 SettingsCDNCurrent.Text = ((CDNObject)SettingsCDNPick.SelectedItem).Url;
                 _settingFile.Write("CDN", ((CDNObject)SettingsCDNPick.SelectedItem).Url);
