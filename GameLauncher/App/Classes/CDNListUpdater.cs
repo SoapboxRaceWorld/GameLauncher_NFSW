@@ -10,7 +10,7 @@ namespace GameLauncher.App.Classes
 {
     public class CDNListUpdater
     {
-        private static List<CDNObject> finalCDNItems = new List<CDNObject>();
+        public static List<CDNObject> finalCDNItems = new List<CDNObject>();
 
         public static void UpdateCDNList()
         {

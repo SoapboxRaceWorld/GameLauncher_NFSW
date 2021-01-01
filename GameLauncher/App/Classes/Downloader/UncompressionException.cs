@@ -6,7 +6,7 @@ namespace GameLauncher
     [Serializable]
     public class UncompressionException : Exception
     {
-        private int mErrorCode;
+        public int mErrorCode;
 
         public int ErrorCode
         {

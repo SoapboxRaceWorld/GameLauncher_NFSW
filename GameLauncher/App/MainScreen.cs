@@ -64,8 +64,8 @@ namespace GameLauncher
         public static String getTempNa = Path.GetTempFileName();
 
         //private bool _disableChecks;
-        private bool _disableProxy;
-        private bool _disableDiscordRPC;
+        public bool _disableProxy;
+        public bool _disableDiscordRPC;
 
         private int _lastSelectedServerId;
         private int _lastSelectedCdnId;
@@ -99,10 +99,10 @@ namespace GameLauncher
         private string _NFSW_Installation_Source;
         private string _realServername;
         private string _realServernameBanner;
-        private string _OS;
+        public string _OS;
 
         public static String ModNetFileNameInUse = String.Empty;
-        Queue<Uri> modFilesDownloadUrls = new Queue<Uri>();
+        readonly Queue<Uri> modFilesDownloadUrls = new Queue<Uri>();
         bool isDownloadingModNetFiles = false;
         int CurrentModFileCount = 0;
         int TotalModFileCount = 0;
@@ -117,9 +117,9 @@ namespace GameLauncher
 
         List<ServerInfo> finalItems = new List<ServerInfo>();
         List<CDNObject> finalCDNItems = new List<CDNObject>();
-        Dictionary<string, int> serverStatusDictionary = new Dictionary<string, int>();
+        readonly Dictionary<string, int> serverStatusDictionary = new Dictionary<string, int>();
 
-        String filename_pack = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameFiles.sbrwpack");
+        readonly String filename_pack = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameFiles.sbrwpack");
 
         //UltimateLauncherFunction: SelectServer
         private static ServerInfo _ServerList;
@@ -129,7 +129,7 @@ namespace GameLauncher
             set { _ServerList = value; }
         }
 
-        private static Random random = new Random();
+        public static Random random = new Random();
         //Log launcherLog = new Log("launcher.log");
 
         public static string RandomString(int length)
@@ -794,7 +794,6 @@ namespace GameLauncher
                 }
             }
 
-            //vfilesCheck.Checked = _disableChecks;
             SettingsProxyCheckbox.Checked = _disableProxy;
             SettingsDiscordRPCCheckbox.Checked = _disableDiscordRPC;
 
@@ -3551,6 +3550,7 @@ namespace GameLauncher
             else if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/nfsw.exe"))
             {
                 _downloadStartTime = DateTime.Now;
+                Log.Info("DOWNLOAD: Getting Core Game Files");
                 _downloader.StartDownload(_NFSW_Installation_Source, "", _settingFile.Read("InstallationDirectory"), false, false, 1130632198);
             }
             else
@@ -3570,6 +3570,7 @@ namespace GameLauncher
             if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/Tracks/STREAML5RA_98.BUN"))
             {
                 _downloadStartTime = DateTime.Now;
+                Log.Info("DOWNLOAD: Getting Tracks Folder");
                 _downloader.StartDownload(_NFSW_Installation_Source, "Tracks", _settingFile.Read("InstallationDirectory"), false, false, 615494528);
             }
             else
@@ -3587,7 +3588,7 @@ namespace GameLauncher
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
             string speechFile;
-            ulong speechSize;
+            int speechSize;
 
             try
             {
@@ -3609,7 +3610,7 @@ namespace GameLauncher
                     var speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
 
                     speechFile = _settingFile.Read("Language").ToLower();
-                    speechSize = Convert.ToUInt64(speechSizeNode.InnerText);
+                    speechSize = Convert.ToInt32(speechSizeNode.InnerText);
                     _langInfo = SettingsLanguage.GetItemText(SettingsLanguage.SelectedItem).ToUpper();
                 }
             }
@@ -3625,11 +3626,13 @@ namespace GameLauncher
             if (!File.Exists(_settingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big"))
             {
                 _downloadStartTime = DateTime.Now;
+                Log.Info("DOWNLOAD: Getting Speech/Audio Files");
                 _downloader.StartDownload(_NFSW_Installation_Source, speechFile, _settingFile.Read("InstallationDirectory"), false, false, speechSize);
             }
             else
             {
                 OnDownloadFinished();
+                Log.Info("DOWNLOAD: Game Files Download is Complete!");
             }
         }
 
@@ -3952,12 +3955,6 @@ namespace GameLauncher
             }
 
             _formGraphics.Dispose();
-        }
-
-        //VerifyHash
-        private void VFilesButton_Click(object sender, EventArgs e)
-        {
-            //In Development (Zacam got this)
         }
 
         private void SelectServerBtn_Click(object sender, EventArgs e)

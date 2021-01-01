@@ -5,7 +5,7 @@ namespace GameLauncher.App.Classes
 {
     class ParseUri
     {
-        String[] Uri;
+        public String[] Uri;
 
         public ParseUri(String[] CommandLineUri)
         {

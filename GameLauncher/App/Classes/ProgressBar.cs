@@ -13,18 +13,18 @@ namespace GameLauncherReborn
     [ToolboxBitmap("PBEX.bmp")]
     public class ProgressBarEx : Control
     {
-        private Blend bBlend = new Blend();
+        public Blend bBlend = new Blend();
         private int _Minimum = 0;
         private int _Maximum = 100;
         private int _Value = 0;
         private bool _Border = false;
-        private Pen _BorderPen;
+        public Pen _BorderPen;
         private Color _BorderColor = Color.Black;
         private GradiantArea _GradiantPosition;
         private Color _GradiantColor = Color.White;
         private Color _BackColor = Color.DarkGray;
         private Color _ProgressColor = Color.Lime;
-        private SolidBrush _ForeColorBrush;
+        public SolidBrush _ForeColorBrush;
         private bool _ShowPercentage = false;
         private bool _ShowText = false;
         private ImageLayoutType _ImageLayout = ImageLayoutType.None;

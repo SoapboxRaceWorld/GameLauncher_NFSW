@@ -12,10 +12,10 @@ namespace GameLauncher.App.Classes
         /* Moved 2 Public functions to Gist */
         /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/89c2e19c97be7ebc075203f3d998aa9e701892f6/IniFile.cs */
 
-        string Path;
-        string EXE = Assembly.GetExecutingAssembly().GetName().Name;
-        FileIniDataParser Parser;
-        IniData Data;
+        public string Path;
+        readonly string EXE = Assembly.GetExecutingAssembly().GetName().Name;
+        public FileIniDataParser Parser;
+        public IniData Data;
 
         public IniFile(string IniPath = null)
         {

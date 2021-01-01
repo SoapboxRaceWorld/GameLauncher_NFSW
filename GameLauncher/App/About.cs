@@ -12,7 +12,7 @@ namespace GameLauncher.App
 {
     public partial class About : Form
     {
-        private List<AboutNoteBlock> patchNoteBlocks = new List<AboutNoteBlock>();
+        private readonly List<AboutNoteBlock> patchNoteBlocks = new List<AboutNoteBlock>();
 
         public About()
         {

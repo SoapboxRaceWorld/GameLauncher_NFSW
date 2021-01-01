@@ -12,8 +12,8 @@ namespace GameLauncher.App
 {
     public partial class DebugWindow : Form
     {
-        string ServerIP = String.Empty;
-        string ServerName = String.Empty;
+        public string ServerIP = String.Empty;
+        public string ServerName = String.Empty;
 
         public DebugWindow(string serverIP, string serverName)
         {

@@ -9,7 +9,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
     class CertificateStore
     {
         private static bool IsROOTCAInstalled = false;
-        private static string RootCAName = "Carbon Crew CA";
+        private static readonly string RootCAName = "Carbon Crew CA";
 
         public static void Check()
         {

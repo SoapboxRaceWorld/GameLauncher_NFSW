@@ -14,11 +14,11 @@ namespace GameLauncher.App.Classes.Events
 {
     class LauncherUpdateCheck
     {
-        PictureBox status;
-        Label text;
-        Label description;
+        public PictureBox status;
+        public Label text;
+        public Label description;
 
-        private static string CurrentLauncherBuild = Application.ProductVersion;
+        public static string CurrentLauncherBuild = Application.ProductVersion;
         private static string LatestLauncherBuild;
 
         public LauncherUpdateCheck(PictureBox statusImage, Label statusText, Label statusDescription)

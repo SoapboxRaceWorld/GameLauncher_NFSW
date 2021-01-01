@@ -13,7 +13,7 @@ namespace GameLauncher.App.Classes
 {
     public class ServerListUpdater
     {
-        private static List<ServerInfo> finalItems = new List<ServerInfo>();
+        public static List<ServerInfo> finalItems = new List<ServerInfo>();
 
         public static void UpdateList()
         {

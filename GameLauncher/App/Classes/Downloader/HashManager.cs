@@ -11,14 +11,14 @@ namespace GameLauncher
 {
     internal class HashManager
     {
-        private const int MaxWorkers = 3;
-        private const string HashFileName = "HashFile";
-        private Dictionary<string, HashManager.HashTuple> _fileList;
-        private Queue<string> _queueHash;
+        public const int MaxWorkers = 3;
+        public const string HashFileName = "HashFile";
+        readonly Dictionary<string, HashManager.HashTuple> _fileList;
+        readonly Queue<string> _queueHash;
         private readonly static object _queueHashLock;
         private static int _workerCount;
-        private bool _useCache = true;
-        private static HashManager _instance;
+        readonly bool _useCache = true;
+        readonly static HashManager _instance;
 
         internal static HashManager Instance
         {

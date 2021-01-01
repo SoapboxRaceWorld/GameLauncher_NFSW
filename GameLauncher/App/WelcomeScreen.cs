@@ -12,8 +12,6 @@ namespace GameLauncher.App
 {
     public partial class WelcomeScreen : Form
     {
-        private readonly IniFile _settingFile = new IniFile("Settings.ini");
-        List<CDNObject> CDNList = new List<CDNObject>();
         private bool CDNStatusCheck = false;
         private bool ServerStatusCheck = false;
 
@@ -195,12 +193,12 @@ namespace GameLauncher.App
         private void ShowCDNSources()
         {
             /* NEW CDN Display List */
-            List<CDNObject> finalCDNItems = new List<CDNObject>();
+            //List<CDNObject> finalCDNItems = new List<CDNObject>();
 
             CDNListUpdater.UpdateCDNList();
 
             Log.Info("WELCOME: Setting CDN list");
-            finalCDNItems = CDNListUpdater.GetCDNList();
+            List<CDNObject> finalCDNItems = CDNListUpdater.GetCDNList();
 
             CDNSource.DisplayMember = "Name";
             CDNSource.DataSource = finalCDNItems;

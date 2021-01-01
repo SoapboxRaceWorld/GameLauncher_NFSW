@@ -50,8 +50,8 @@ public static class TaskbarProgress
     {
     }
 
-    private static ITaskbarList3 taskbarInstance = (ITaskbarList3)new TaskbarInstance();
-    private static bool taskbarSupported = Environment.OSVersion.Version >= new Version(6, 1);
+    private static readonly ITaskbarList3 taskbarInstance = (ITaskbarList3)new TaskbarInstance();
+    private static readonly bool taskbarSupported = Environment.OSVersion.Version >= new Version(6, 1);
 
     public static void SetState(IntPtr windowHandle, TaskbarStates taskbarState)
     {

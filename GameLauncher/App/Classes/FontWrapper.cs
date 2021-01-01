@@ -16,9 +16,9 @@ namespace GameLauncher.Resources
             public static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv, [In] ref uint pcFonts);
         }
 
-        private PrivateFontCollection mPrivateFontCollection;
-        private Dictionary<string, int> mFontMapping;
-        private static FontWrapper _instance = new FontWrapper();
+        public PrivateFontCollection mPrivateFontCollection;
+        public Dictionary<string, int> mFontMapping;
+        public static FontWrapper _instance = new FontWrapper();
 
         public static FontWrapper Instance
         {

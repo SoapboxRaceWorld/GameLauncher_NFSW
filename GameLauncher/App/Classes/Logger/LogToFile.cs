@@ -7,7 +7,7 @@ namespace GameLauncher.App.Classes.Logger
 {
     class Log
     {
-        private static ConcurrentQueue<string> buffer = new ConcurrentQueue<string>();
+        readonly static ConcurrentQueue<string> buffer = new ConcurrentQueue<string>();
         private static String filename = String.Empty;
         public Log(String file = "launcher.log") => filename = file;
         public static void StartLogging() => Task.Run(() => TaskKernel());
@@ -49,7 +49,7 @@ namespace GameLauncher.App.Classes.Logger
     }
     class LogVerify
     {
-        private static ConcurrentQueue<string> buffer = new ConcurrentQueue<string>();
+        readonly static ConcurrentQueue<string> buffer = new ConcurrentQueue<string>();
         public static void StartVerifyLogging() => Task.Run(() => VerifyTaskKernel());
         private static void _toFile(string text, string errorname = "DEBUG") => buffer.Enqueue($"[{errorname}] {text}");
         public static void Valid(string text) => _toFile(text, "   VAILD");

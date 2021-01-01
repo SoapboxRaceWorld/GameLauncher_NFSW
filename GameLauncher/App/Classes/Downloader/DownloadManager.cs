@@ -10,13 +10,13 @@ namespace GameLauncher
 {
     internal class DownloadManager
     {
-        private const int MaxWorkers = 3;
-        private const int MaxActiveChunks = 16;
+        public const int MaxWorkers = 3;
+        public const int MaxActiveChunks = 16;
         private static int _workerCount;
         private int _maxWorkers;
-        private Dictionary<string, DownloadManager.DownloadItem> _downloadList;
-        private LinkedList<string> _downloadQueue;
-        private List<BackgroundWorker> _workers;
+        readonly Dictionary<string, DownloadManager.DownloadItem> _downloadList;
+        readonly LinkedList<string> _downloadQueue;
+        readonly List<BackgroundWorker> _workers;
         private int _freeChunks;
         private object _freeChunksLock;
         private bool _managerRunning;

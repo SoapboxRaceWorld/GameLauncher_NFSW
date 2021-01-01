@@ -21,7 +21,7 @@ namespace GameLauncher
 {
     internal static class Program
     {
-        private static IniFile _settingFile = new IniFile("Settings.ini");
+        public static IniFile _settingFile = new IniFile("Settings.ini");
         private static string LatestUpdaterBuildVersion = "1.0.0.4";
 
         internal class Arguments

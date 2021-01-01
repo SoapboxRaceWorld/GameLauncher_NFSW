@@ -19,14 +19,13 @@ namespace GameLauncher.App
 {
     public partial class SelectServer : Form
     {
-        private int ID = 1;
-        Dictionary<int, GetServerInformation> rememberServerInformationID = new Dictionary<int, GetServerInformation>();
-        private GetServerInformation ServerInfo;
-        Dictionary<int, ServerInfo> data = new Dictionary<int, ServerInfo>();
+        private readonly int ID = 1;
+        readonly Dictionary<int, GetServerInformation> rememberServerInformationID = new Dictionary<int, GetServerInformation>();
+        public GetServerInformation ServerInfo;
+        readonly Dictionary<int, ServerInfo> data = new Dictionary<int, ServerInfo>();
 
         //Used to ping the Server in ms
         public Queue<string> servers = new Queue<string>();
-        private readonly IniFile _settingFile = new IniFile("Settings.ini");
 
         public SelectServer()
         {
