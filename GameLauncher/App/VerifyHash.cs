@@ -97,11 +97,11 @@ namespace GameLauncher.App
             try
             {
                 /* Fetch and Read Remote checksums.dat */
-                if (File.Exists("checksums.dat")) File.Delete("checksums.dat");
-                String[] getFilesToCheck = new WebClient().DownloadString("http://localhost/checksums.dat").Split('\n');
-                File.WriteAllLines("checksums.dat", getFilesToCheck);
+                //if (File.Exists("checksums.dat")) File.Delete("checksums.dat");
+                //String[] getFilesToCheck = new WebClient().DownloadString("http://localhost/checksums.dat").Split('\n');
+                //File.WriteAllLines("checksums.dat", getFilesToCheck);
                 /* Read Local checksums.dat */
-                //String[] getFilesToCheck = File.ReadAllLines("checksums.dat");
+                String[] getFilesToCheck = File.ReadAllLines("checksums.dat");
                 scannedHashes = new string[getFilesToCheck.Length][];
                 for (var i = 0; i < getFilesToCheck.Length; i++)
                 {
@@ -130,17 +130,18 @@ namespace GameLauncher.App
                         }
                         else
                         {
-                            //ValidFileList.Add(RealPathToFile);
-                            //File.WriteAllLines("validfiles.dat", ValidFileList);
                             LogVerify.Valid("File: " + FileName);
                         }
                     }
-                    totalFilesScanned++;
+                    StartScanText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
+                    StartScanText.Location = new System.Drawing.Point(61, 292);
+                    StartScanText.Size = new System.Drawing.Size(287, 70);
+                    StartScanText.Text = "Warning:\n Stopping the Scan before it is complete\nWill result in needing to start over!\n Once complete, you will be notified\nto restart the Launcher.";
                     ScanProgressText.Text = "Scanning Files: " + (totalFilesScanned * 100 / getFilesToCheck.Length) + "%";
                     ScanProgressBar.Value = totalFilesScanned * 100 / getFilesToCheck.Length;
                 }
 
-                Log.Info("Scan Completed"); // This isn't logging
+                Log.Info("Scan Completed");
 
                 if (InvalidFileList != null)
                 {
@@ -225,10 +226,12 @@ namespace GameLauncher.App
         {
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+            VerifyHashWelcome.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             ScanProgressText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             InvalidProgressText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             StartScanner.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             StopScanner.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            StartScanText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             VersionLabel.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
         }
 
