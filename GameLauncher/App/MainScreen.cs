@@ -2347,11 +2347,6 @@ namespace GameLauncher
                 WindowState = FormWindowState.Normal;
             }
 
-            if (EnableInsider.ShouldIBeAnInsider() == true)
-            {
-                SettingsVFilesButton.Visible = true;
-            }
-
             BackgroundImage = Properties.Resources.secondarybackground;
             SettingsFormElements(true);
             RegisterFormElements(false);
@@ -2382,6 +2377,34 @@ namespace GameLauncher
             {
                 SettingsClearCrashLogsButton.Enabled = true;
             }
+
+            try
+            {
+                Log.Info("SETTINGS VERIFYHASH: Checking Characters in URL");
+                string SavedCDN = _settingFile.Read("CDN");
+                char[] charsToTrim = { '/', 'n', 'f', 's', 'w' };
+                string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
+                Log.Info("SETTINGS VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
+
+                switch (APIStatusChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat"))
+                {
+                    case API.Online:
+                        SettingsVFilesButton.Visible = true;
+                        SettingsVFilesButton.Enabled = true;
+                        break;
+                    default:
+                        SettingsVFilesButton.Visible = true;
+                        SettingsVFilesButton.Enabled = false;
+                        break;
+                }
+            }
+            catch { }
+            /*
+            if (EnableInsider.ShouldIBeAnInsider() == true)
+            {
+                SettingsVFilesButton.Visible = true;
+            }
+            */
         }
 
         private void SettingsButton_MouseEnter(object sender, EventArgs e)
@@ -4128,13 +4151,17 @@ namespace GameLauncher
 
             if (_settingFile.KeyExists("CDN"))
             {
+                string SavedCDN = _settingFile.Read("CDN");
+                char[] charsToTrim = { '/' };
+                string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
+
                 Log.Core("SETTINGS CDNLIST: Found something!");
                 Log.Core("SETTINGS CDNLIST: Checking if CDN exists on our database");
 
-                if (finalCDNItems.FindIndex(i => string.Equals(i.Url, _settingFile.Read("CDN"))) != 0)
+                if (finalCDNItems.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
                 {
                     Log.Core("SETTINGS CDNLIST: CDN found! Checking ID");
-                    var index = finalCDNItems.FindIndex(i => string.Equals(i.Url, _settingFile.Read("CDN")));
+                    var index = finalCDNItems.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
 
                     Log.Core("SETTINGS CDNLIST: ID is " + index);
                     if (index >= 0)
@@ -4153,7 +4180,7 @@ namespace GameLauncher
                 {
                     Log.Warning("SETTINGS CDNLIST: Unable to find anything, assuming default");
                     SettingsCDNPick.SelectedIndex = 1;
-                    Log.Warning("SETTINGS CDNLIST: Unknown entry value is " + _settingFile.Read("CDN"));
+                    Log.Warning("SETTINGS CDNLIST: Unknown entry value is " + FinalCDNURL);
                 }
                 Log.Core("SETTINGS CDNLIST: All done");
             }

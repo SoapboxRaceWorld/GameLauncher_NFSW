@@ -30,7 +30,7 @@ namespace GameLauncher.App
         public int redownloadedCount;
         public List<string> InvalidFileList = new List<string>();
         public List<string> ValidFileList = new List<string>();
-        //Log launcherLog = new Log("launcher.log");
+        public string FinalCDNURL;
 
         public VerifyHash()
         {
@@ -49,6 +49,12 @@ namespace GameLauncher.App
                 if (File.Exists(file)) File.Delete(file);
             }
             LogVerify.StartVerifyLogging();
+
+            LogVerify.Info("VERIFYHASH: Checking Characters in URL");
+            string SavedCDN = _settingFile.Read("CDN");
+            char[] charsToTrim = { '/', 'n', 'f', 's', 'w' };
+            FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
+            LogVerify.Info("VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
         }
 
         public void GameScanner(bool startScan)
@@ -96,12 +102,20 @@ namespace GameLauncher.App
 
             try
             {
-                /* Fetch and Read Remote checksums.dat */
-                //if (File.Exists("checksums.dat")) File.Delete("checksums.dat");
-                //String[] getFilesToCheck = new WebClient().DownloadString("http://localhost/checksums.dat").Split('\n');
-                //File.WriteAllLines("checksums.dat", getFilesToCheck);
-                /* Read Local checksums.dat */
-                String[] getFilesToCheck = File.ReadAllLines("checksums.dat");
+                String[] getFilesToCheck;
+
+                if (File.Exists("checksums.dat"))
+                {
+                    /* Read Local checksums.dat */
+                    getFilesToCheck = File.ReadAllLines("checksums.dat");
+                }
+                else
+                {
+                    /* Fetch and Read Remote checksums.dat */
+                    ScanProgressText.Text = "Downloading Checksums File";
+                    getFilesToCheck = new WebClient().DownloadString(FinalCDNURL + "/unpacked/checksums.dat").Split('\n');
+                }
+
                 scannedHashes = new string[getFilesToCheck.Length][];
                 for (var i = 0; i < getFilesToCheck.Length; i++)
                 {
@@ -109,6 +123,13 @@ namespace GameLauncher.App
                 }
                 filesToScan = scannedHashes.Length;
                 totalFilesScanned = 0;
+
+                /* START Show Warning Text */
+                StartScanText.ForeColor = Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
+                StartScanText.Location = new Point(61, 292);
+                StartScanText.Size = new Size(287, 70);
+                StartScanText.Text = "Warning:\n Stopping the Scan before it is complete\nWill result in needing to start over!\n Once complete, you will be notified\nto restart the Launcher.";
+                /* END Show Warning Text */
 
                 foreach (string[] file in scannedHashes)
                 {
@@ -133,10 +154,6 @@ namespace GameLauncher.App
                             LogVerify.Valid("File: " + FileName);
                         }
                     }
-                    StartScanText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
-                    StartScanText.Location = new System.Drawing.Point(61, 292);
-                    StartScanText.Size = new System.Drawing.Size(287, 70);
-                    StartScanText.Text = "Warning:\n Stopping the Scan before it is complete\nWill result in needing to start over!\n Once complete, you will be notified\nto restart the Launcher.";
                     ScanProgressText.Text = "Scanning Files: " + (totalFilesScanned * 100 / getFilesToCheck.Length) + "%";
                     ScanProgressBar.Value = totalFilesScanned * 100 / getFilesToCheck.Length;
                 }
@@ -167,6 +184,14 @@ namespace GameLauncher.App
 
         private void CorruptedFilesFound()
         {
+            /* START Show Redownloader Progress */
+            StartScanner.Visible = false;
+
+            StopScanner.Visible = true;
+            InvalidProgressBar.Visible = true;
+            InvalidProgressText.Visible = true;
+            /* END Show Redownloader Progress */
+
             redownloadedCount = 0;
 
             if (File.Exists("invalidfiles.dat") && File.ReadAllLines("invalidfiles.dat") != null)
@@ -179,7 +204,7 @@ namespace GameLauncher.App
                     try 
                     {
                         string text2 = _settingFile.Read("InstallationDirectory") + text;
-                        string address = "http://mtntr.pl/unpacked" + text.Replace("\\", "/");
+                        string address = FinalCDNURL + "/unpacked" + text.Replace("\\", "/");
                         if (File.Exists(text2))
                         {
                             LogVerify.Deleted("File: " + text2);
