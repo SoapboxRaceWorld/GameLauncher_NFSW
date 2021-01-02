@@ -1066,7 +1066,6 @@ namespace GameLauncher
             Tokens.Clear();
 
             String username = MainEmail.Text.ToString();
-            String pass = MainPassword.Text.ToString();
             String realpass;
 
             Tokens.IPAddress = _serverInfo.IpAddress;
@@ -2373,7 +2372,7 @@ namespace GameLauncher
 
             var crashLogFilesDirectory = new DirectoryInfo(_settingFile.Read("InstallationDirectory"));
 
-            foreach (var file in crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp"))
+            if(crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp").Count() != 0)
             {
                 SettingsClearCrashLogsButton.Enabled = true;
             }
