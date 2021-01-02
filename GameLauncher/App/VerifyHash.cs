@@ -1,9 +1,6 @@
-﻿using GameLauncherReborn;
-using DiscordRPC;
+﻿using DiscordRPC;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -165,26 +162,33 @@ namespace GameLauncher.App
 
                 Log.Info("Scan Completed");
 
-                if (InvalidFileList != null)
+                if (InvalidFileList.Count() == 0)
+                {
+                    GameScanner(false);
+                    StartScanner.Visible = false;
+                    StopScanner.Visible = false;
+                    ScanProgressText.Text = "Scan Complete. No Missing Files Where Found";
+                    /* Hide the DownloadProgressBar as un-needed */
+                    DownloadProgressBar.Visible = false;
+                    DownloadProgressText.Visible = false;
+                    /* Update the player messaging that we're done */
+                    VerifyHashText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+                    VerifyHashText.Location = new System.Drawing.Point(99, 300);
+                    VerifyHashText.Size = new System.Drawing.Size(215, 28);
+                    VerifyHashText.Text = "Excellent News! There are ZERO\nmissing or invalid Gamefiles!";
+                }
+                else if (InvalidFileList != null)
                 {
                     ScanProgressText.Text = "Found Invalid or Missing Files";
                     File.WriteAllLines("invalidfiles.dat", InvalidFileList);
-                    Log.Info("Found Invalid Files and Will Start File Downloader");
+                    Log.Info("Found Invalid Files and will Start File Downloader");
                     CorruptedFilesFound();
-                }
-                else
-                {
-                    GameScanner(false);
-                    StartScanner.Visible = true;
-                    StopScanner.Visible = false;
-                    ScanProgressText.Text = "Scan Complete. No Missing Files Where Found";
                 }
             }
             catch (Exception ex)
             {
                 Log.Error(ex.Message);
             }
-            
         }
 
         private void CorruptedFilesFound()
@@ -195,10 +199,6 @@ namespace GameLauncher.App
             VerifyHashText.Location = new Point(99, 300);
             VerifyHashText.Size = new Size(287, 70);
             VerifyHashText.Text = "Currently (re)downloading files\nThis part may take awhile\ndepending on your connection.";
-            /*InvalidProgressBar.Visible = true;
-            InvalidProgressText.Visible = true;
-            END Show Redownloader Progress */
-
             redownloadedCount = 0;
 
             if (File.Exists("invalidfiles.dat") && File.ReadAllLines("invalidfiles.dat") != null)
@@ -227,7 +227,7 @@ namespace GameLauncher.App
                     this.BeginInvoke((MethodInvoker)delegate
                     {
                         DownloadProgressText.Text = "Downloaded File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + text;
-                        InvalidProgressBar.Value = redownloadedCount * 100 / files.Length;
+                        DownloadProgressBar.Value = redownloadedCount * 100 / files.Length;
                     });
                 }
                 DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing Files were Redownloaded";
@@ -274,6 +274,5 @@ namespace GameLauncher.App
             VerifyHashText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             VersionLabel.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
         }
-
     }
 }

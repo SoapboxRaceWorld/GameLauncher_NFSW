@@ -32,7 +32,7 @@
             this.ScanProgressBar = new System.Windows.Forms.ProgressBar();
             this.ScanProgressText = new System.Windows.Forms.Label();
             this.DownloadProgressText = new System.Windows.Forms.Label();
-            this.InvalidProgressBar = new System.Windows.Forms.ProgressBar();
+            this.DownloadProgressBar = new System.Windows.Forms.ProgressBar();
             this.StartScanner = new System.Windows.Forms.Button();
             this.StopScanner = new System.Windows.Forms.Button();
             this.VersionLabel = new System.Windows.Forms.Label();
@@ -71,12 +71,12 @@
             this.DownloadProgressText.Text = "\r\nDownload Progress:";
             this.DownloadProgressText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // InvalidProgressBar
+            // DownloadProgressBar
             // 
-            this.InvalidProgressBar.Location = new System.Drawing.Point(13, 222);
-            this.InvalidProgressBar.Name = "InvalidProgressBar";
-            this.InvalidProgressBar.Size = new System.Drawing.Size(384, 23);
-            this.InvalidProgressBar.TabIndex = 6;
+            this.DownloadProgressBar.Location = new System.Drawing.Point(13, 222);
+            this.DownloadProgressBar.Name = "DownloadProgressBar";
+            this.DownloadProgressBar.Size = new System.Drawing.Size(384, 23);
+            this.DownloadProgressBar.TabIndex = 6;
             // 
             // StartScanner
             // 
@@ -162,7 +162,7 @@
             this.Controls.Add(this.ScanProgressText);
             this.Controls.Add(this.ScanProgressBar);
             this.Controls.Add(this.DownloadProgressText);
-            this.Controls.Add(this.InvalidProgressBar);
+            this.Controls.Add(this.DownloadProgressBar);
             this.Controls.Add(this.StartScanner);
             this.Controls.Add(this.StopScanner);
             this.Controls.Add(this.VersionLabel);
@@ -188,7 +188,7 @@
         private System.Windows.Forms.Label ScanProgressText;
         private System.Windows.Forms.ProgressBar ScanProgressBar;
         private System.Windows.Forms.Label DownloadProgressText;
-        private System.Windows.Forms.ProgressBar InvalidProgressBar;
+        private System.Windows.Forms.ProgressBar DownloadProgressBar;
         private System.Windows.Forms.Button StartScanner;
         private System.Windows.Forms.Button StopScanner;
         private System.Windows.Forms.Label VersionLabel;
