@@ -89,17 +89,7 @@ namespace GameLauncher.App
             else if (startScan == false)
             {
                 StartScan.Abort();
-                //StatusText.Text = "Unkown Status.".ToUpper();
-                /*
-                // This terminating this way is truncating logging
-                Process[] allOfThem = Process.GetProcessesByName("VerifyHash");
-                foreach (var oneProcess in allOfThem)
-                {
-                    Process.GetProcessById(oneProcess.Id).Kill();
-                }
-                Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                */
-                //Log.Debug("Stopped Scanner");
+                Log.Debug("Stopped Scanner");
             }
         }
 
@@ -139,10 +129,10 @@ namespace GameLauncher.App
                 totalFilesScanned = 0;
 
                 /* START Show Warning Text */
-                StartScanText.ForeColor = Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
-                StartScanText.Location = new Point(61, 292);
-                StartScanText.Size = new Size(287, 70);
-                StartScanText.Text = "Warning:\n Stopping the Scan before it is complete\nWill result in needing to start over!";
+                VerifyHashText.ForeColor = Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
+                VerifyHashText.Location = new Point(61, 292);
+                VerifyHashText.Size = new Size(287, 70);
+                VerifyHashText.Text = "Warning:\n Stopping the Scan before it is complete\nWill result in needing to start over!";
                 /* END Show Warning Text */
 
                 foreach (string[] file in scannedHashes)
@@ -199,11 +189,13 @@ namespace GameLauncher.App
 
         private void CorruptedFilesFound()
         {
-            /* START Show Redownloader Progress
+            /* START Show Redownloader Progress*/
             StartScanner.Visible = false;
-
-            StopScanner.Visible = true;
-            InvalidProgressBar.Visible = true;
+            StopScanner.Visible = false;
+            VerifyHashText.Location = new Point(99, 300);
+            VerifyHashText.Size = new Size(287, 70);
+            VerifyHashText.Text = "Currently (re)downloading files\nThis part may take awhile\ndepending on your connection.";
+            /*InvalidProgressBar.Visible = true;
             InvalidProgressText.Visible = true;
             END Show Redownloader Progress */
 
@@ -211,7 +203,7 @@ namespace GameLauncher.App
 
             if (File.Exists("invalidfiles.dat") && File.ReadAllLines("invalidfiles.dat") != null)
             {
-                InvalidProgressText.Text = "\nPreparing to Download Files";
+                DownloadProgressText.Text = "\nPreparing to Download Files";
                 string[] files = File.ReadAllLines("invalidfiles.dat");
 
                 foreach (string text in files)
@@ -234,20 +226,24 @@ namespace GameLauncher.App
                     catch { }
                     this.BeginInvoke((MethodInvoker)delegate
                     {
-                        InvalidProgressText.Text = "Downloaded File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + text;
+                        DownloadProgressText.Text = "Downloaded File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + text;
                         InvalidProgressBar.Value = redownloadedCount * 100 / files.Length;
                     });
                 }
-                InvalidProgressText.Text = "\n" + redownloadedCount + " Invalid Files Were Redownloaded";
+                DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing Files were Redownloaded";
+                VerifyHashText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+                VerifyHashText.Location = new System.Drawing.Point(99, 300);
+                VerifyHashText.Size = new System.Drawing.Size(215, 28);
+                VerifyHashText.Text = "Yay! Scanning and Downloading \nis now completed on Gamefiles";
                 GameScanner(false);
-                StartScanner.Visible = true;
+                StartScanner.Visible = false;
                 StopScanner.Visible = false;
             }
             else
             {
-                InvalidProgressText.Text = "All Files Validated";
+                DownloadProgressText.Text = "All Files Validated";
                 GameScanner(false);
-                StartScanner.Visible = true;
+                StartScanner.Visible = false;
                 StopScanner.Visible = false;
             }
         }
@@ -272,10 +268,10 @@ namespace GameLauncher.App
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
             VerifyHashWelcome.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             ScanProgressText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            InvalidProgressText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            DownloadProgressText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             StartScanner.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             StopScanner.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            StartScanText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            VerifyHashText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             VersionLabel.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
         }
 

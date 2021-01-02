@@ -31,13 +31,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VerifyHash));
             this.ScanProgressBar = new System.Windows.Forms.ProgressBar();
             this.ScanProgressText = new System.Windows.Forms.Label();
-            this.InvalidProgressText = new System.Windows.Forms.Label();
+            this.DownloadProgressText = new System.Windows.Forms.Label();
             this.InvalidProgressBar = new System.Windows.Forms.ProgressBar();
             this.StartScanner = new System.Windows.Forms.Button();
             this.StopScanner = new System.Windows.Forms.Button();
             this.VersionLabel = new System.Windows.Forms.Label();
             this.VerifyHashWelcome = new System.Windows.Forms.Label();
-            this.StartScanText = new System.Windows.Forms.Label();
+            this.VerifyHashText = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // ScanProgressBar
@@ -51,21 +51,25 @@
             // 
             this.ScanProgressText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ScanProgressText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.ScanProgressText.Location = new System.Drawing.Point(13, 128);
+            this.ScanProgressText.Location = new System.Drawing.Point(6, 128);
+            this.ScanProgressText.Margin = new System.Windows.Forms.Padding(0);
             this.ScanProgressText.Name = "ScanProgressText";
-            this.ScanProgressText.Size = new System.Drawing.Size(384, 18);
+            this.ScanProgressText.Size = new System.Drawing.Size(396, 18);
             this.ScanProgressText.TabIndex = 2;
             this.ScanProgressText.Text = "Scanning Progress:";
+            this.ScanProgressText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // InvalidProgressText
+            // DownloadProgressText
             // 
-            this.InvalidProgressText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.InvalidProgressText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.InvalidProgressText.Location = new System.Drawing.Point(13, 185);
-            this.InvalidProgressText.Name = "InvalidProgressText";
-            this.InvalidProgressText.Size = new System.Drawing.Size(384, 26);
-            this.InvalidProgressText.TabIndex = 7;
-            this.InvalidProgressText.Text = "\r\nDownload Progress:";
+            this.DownloadProgressText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DownloadProgressText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.DownloadProgressText.Location = new System.Drawing.Point(1, 186);
+            this.DownloadProgressText.Margin = new System.Windows.Forms.Padding(0);
+            this.DownloadProgressText.Name = "DownloadProgressText";
+            this.DownloadProgressText.Size = new System.Drawing.Size(408, 30);
+            this.DownloadProgressText.TabIndex = 7;
+            this.DownloadProgressText.Text = "\r\nDownload Progress:";
+            this.DownloadProgressText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // InvalidProgressBar
             // 
@@ -133,19 +137,19 @@
     "w it to complete fully!";
             this.VerifyHashWelcome.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // StartScanText
+            // VerifyHashText
             // 
-            this.StartScanText.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.StartScanText.AutoSize = true;
-            this.StartScanText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StartScanText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.StartScanText.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.StartScanText.Location = new System.Drawing.Point(99, 300);
-            this.StartScanText.Name = "StartScanText";
-            this.StartScanText.Size = new System.Drawing.Size(215, 28);
-            this.StartScanText.TabIndex = 9;
-            this.StartScanText.Text = "Please select \"Start Scan\"\r\nTo begin Validating Gamefiles";
-            this.StartScanText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.VerifyHashText.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.VerifyHashText.AutoSize = true;
+            this.VerifyHashText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VerifyHashText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.VerifyHashText.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.VerifyHashText.Location = new System.Drawing.Point(99, 300);
+            this.VerifyHashText.Name = "VerifyHashText";
+            this.VerifyHashText.Size = new System.Drawing.Size(215, 28);
+            this.VerifyHashText.TabIndex = 9;
+            this.VerifyHashText.Text = "Please select \"Start Scan\"\r\nTo begin Validating Gamefiles";
+            this.VerifyHashText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // VerifyHash
             // 
@@ -153,11 +157,11 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(410, 391);
-            this.Controls.Add(this.StartScanText);
+            this.Controls.Add(this.VerifyHashText);
             this.Controls.Add(this.VerifyHashWelcome);
             this.Controls.Add(this.ScanProgressText);
             this.Controls.Add(this.ScanProgressBar);
-            this.Controls.Add(this.InvalidProgressText);
+            this.Controls.Add(this.DownloadProgressText);
             this.Controls.Add(this.InvalidProgressBar);
             this.Controls.Add(this.StartScanner);
             this.Controls.Add(this.StopScanner);
@@ -183,12 +187,12 @@
 
         private System.Windows.Forms.Label ScanProgressText;
         private System.Windows.Forms.ProgressBar ScanProgressBar;
-        private System.Windows.Forms.Label InvalidProgressText;
+        private System.Windows.Forms.Label DownloadProgressText;
         private System.Windows.Forms.ProgressBar InvalidProgressBar;
         private System.Windows.Forms.Button StartScanner;
         private System.Windows.Forms.Button StopScanner;
         private System.Windows.Forms.Label VersionLabel;
         private System.Windows.Forms.Label VerifyHashWelcome;
-        private System.Windows.Forms.Label StartScanText;
+        private System.Windows.Forms.Label VerifyHashText;
     }
 }
