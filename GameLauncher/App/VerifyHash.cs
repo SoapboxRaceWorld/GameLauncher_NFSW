@@ -32,10 +32,22 @@ namespace GameLauncher.App
         public List<string> InvalidFileList = new List<string>();
         public List<string> ValidFileList = new List<string>();
         public string FinalCDNURL;
+        public bool isScanning = false;
 
         public VerifyHash()
         {
             InitializeComponent();
+
+            this.Closing += (x, y) => {
+                if(isScanning) {
+                    if (MessageBox.Show("Do you really wanna quit VerifyHash process?", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.No) {
+                        y.Cancel = true;
+                    } else {
+                        GameScanner(false);
+                    }
+                }
+            };
+
             ApplyEmbeddedFonts();
         }
 
@@ -72,6 +84,7 @@ namespace GameLauncher.App
                 //Threaded CheckFiles
                 StartScan.Start();
                 Log.Debug("Started Scanner");
+                isScanning = true;
             }
             else if (startScan == false)
             {
