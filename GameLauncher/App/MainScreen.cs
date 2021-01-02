@@ -2386,25 +2386,28 @@ namespace GameLauncher
                 string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
                 Log.Info("SETTINGS VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
 
-                switch (APIStatusChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat"))
+                if (EnableInsider.ShouldIBeAnInsider() == true)
                 {
-                    case API.Online:
-                        SettingsVFilesButton.Visible = true;
-                        SettingsVFilesButton.Enabled = true;
-                        break;
-                    default:
-                        SettingsVFilesButton.Visible = true;
-                        SettingsVFilesButton.Enabled = false;
-                        break;
+                    SettingsVFilesButton.Visible = true;
+                    SettingsVFilesButton.Enabled = true;
+                }
+                else
+                {
+
+                    switch (APIStatusChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat"))
+                    {
+                        case API.Online:
+                            SettingsVFilesButton.Visible = true;
+                            SettingsVFilesButton.Enabled = true;
+                            break;
+                        default:
+                            SettingsVFilesButton.Visible = true;
+                            SettingsVFilesButton.Enabled = false;
+                            break;
+                    }
                 }
             }
             catch { }
-            /*
-            if (EnableInsider.ShouldIBeAnInsider() == true)
-            {
-                SettingsVFilesButton.Visible = true;
-            }
-            */
         }
 
         private void SettingsButton_MouseEnter(object sender, EventArgs e)

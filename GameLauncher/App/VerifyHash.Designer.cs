@@ -55,18 +55,17 @@
             this.ScanProgressText.Name = "ScanProgressText";
             this.ScanProgressText.Size = new System.Drawing.Size(384, 18);
             this.ScanProgressText.TabIndex = 2;
-            this.ScanProgressText.Text = "Scanning:";
+            this.ScanProgressText.Text = "Scanning Progress:";
             // 
             // InvalidProgressText
             // 
             this.InvalidProgressText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.InvalidProgressText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.InvalidProgressText.Location = new System.Drawing.Point(13, 200);
+            this.InvalidProgressText.Location = new System.Drawing.Point(13, 185);
             this.InvalidProgressText.Name = "InvalidProgressText";
-            this.InvalidProgressText.Size = new System.Drawing.Size(384, 18);
+            this.InvalidProgressText.Size = new System.Drawing.Size(384, 26);
             this.InvalidProgressText.TabIndex = 7;
-            this.InvalidProgressText.Text = "Re-Downloading:";
-            this.InvalidProgressText.Visible = false;
+            this.InvalidProgressText.Text = "\r\nDownload Progress:";
             // 
             // InvalidProgressBar
             // 
@@ -74,7 +73,6 @@
             this.InvalidProgressBar.Name = "InvalidProgressBar";
             this.InvalidProgressBar.Size = new System.Drawing.Size(384, 23);
             this.InvalidProgressBar.TabIndex = 6;
-            this.InvalidProgressBar.Visible = false;
             // 
             // StartScanner
             // 
@@ -128,7 +126,7 @@
             this.VerifyHashWelcome.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.VerifyHashWelcome.Location = new System.Drawing.Point(74, 9);
             this.VerifyHashWelcome.Name = "VerifyHashWelcome";
-            this.VerifyHashWelcome.Size = new System.Drawing.Size(278, 98);
+            this.VerifyHashWelcome.Size = new System.Drawing.Size(274, 98);
             this.VerifyHashWelcome.TabIndex = 8;
             this.VerifyHashWelcome.Text = "Welcome!\r\n\r\nThe scanning process is pretty quick,\r\nbut may still take a while.\r\nD" +
     "epending on your connection,\r\nre-downloading will take the longest.\r\nPlease allo" +
@@ -144,7 +142,7 @@
             this.StartScanText.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.StartScanText.Location = new System.Drawing.Point(99, 300);
             this.StartScanText.Name = "StartScanText";
-            this.StartScanText.Size = new System.Drawing.Size(217, 28);
+            this.StartScanText.Size = new System.Drawing.Size(215, 28);
             this.StartScanText.TabIndex = 9;
             this.StartScanText.Text = "Please select \"Start Scan\"\r\nTo begin Validating Gamefiles";
             this.StartScanText.TextAlign = System.Drawing.ContentAlignment.TopCenter;

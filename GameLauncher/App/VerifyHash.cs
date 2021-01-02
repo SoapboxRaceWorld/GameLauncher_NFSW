@@ -128,7 +128,7 @@ namespace GameLauncher.App
                 StartScanText.ForeColor = Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
                 StartScanText.Location = new Point(61, 292);
                 StartScanText.Size = new Size(287, 70);
-                StartScanText.Text = "Warning:\n Stopping the Scan before it is complete\nWill result in needing to start over!\n Once complete, you will be notified\nto restart the Launcher.";
+                StartScanText.Text = "Warning:\n Stopping the Scan before it is complete\nWill result in needing to start over!";
                 /* END Show Warning Text */
 
                 foreach (string[] file in scannedHashes)
@@ -154,6 +154,7 @@ namespace GameLauncher.App
                             LogVerify.Valid("File: " + FileName);
                         }
                     }
+                    totalFilesScanned++;
                     ScanProgressText.Text = "Scanning Files: " + (totalFilesScanned * 100 / getFilesToCheck.Length) + "%";
                     ScanProgressBar.Value = totalFilesScanned * 100 / getFilesToCheck.Length;
                 }
@@ -162,7 +163,7 @@ namespace GameLauncher.App
 
                 if (InvalidFileList != null)
                 {
-                    ScanProgressText.Text = "Found Invalid Files";
+                    ScanProgressText.Text = "Found Invalid or Missing Files";
                     File.WriteAllLines("invalidfiles.dat", InvalidFileList);
                     Log.Info("Found Invalid Files and Will Start File Downloader");
                     CorruptedFilesFound();
@@ -184,19 +185,19 @@ namespace GameLauncher.App
 
         private void CorruptedFilesFound()
         {
-            /* START Show Redownloader Progress */
+            /* START Show Redownloader Progress
             StartScanner.Visible = false;
 
             StopScanner.Visible = true;
             InvalidProgressBar.Visible = true;
             InvalidProgressText.Visible = true;
-            /* END Show Redownloader Progress */
+            END Show Redownloader Progress */
 
             redownloadedCount = 0;
 
             if (File.Exists("invalidfiles.dat") && File.ReadAllLines("invalidfiles.dat") != null)
             {
-                InvalidProgressText.Text = "RE-DOWNLOADING INVALID FILES";
+                InvalidProgressText.Text = "\nRE-DOWNLOADING INVALID FILES";
                 string[] files = File.ReadAllLines("invalidfiles.dat");
 
                 foreach (string text in files)
@@ -216,10 +217,13 @@ namespace GameLauncher.App
                         Application.DoEvents();
                     }
                     catch { }
-                    InvalidProgressText.Text = "Redownloading Files: " + (redownloadedCount * 100 / files.Length) + "%";
-                    InvalidProgressBar.Value = redownloadedCount / files.Length;
+                    this.BeginInvoke((MethodInvoker)delegate
+                    {
+                        InvalidProgressText.Text = "Downloading File:\n" + text;
+                        InvalidProgressBar.Value = redownloadedCount * 100 / files.Length;
+                    });
                 }
-                InvalidProgressText.Text = redownloadedCount + " Invalid Files Were Redownloaded";
+                InvalidProgressText.Text = "\n" + redownloadedCount + " Invalid Files Were Redownloaded";
                 GameScanner(false);
                 StartScanner.Visible = true;
                 StopScanner.Visible = false;
