@@ -37,7 +37,7 @@ namespace GameLauncher.App
 
             this.Closing += (x, y) => {
                 if(isScanning) {
-                    if (MessageBox.Show("Do you really wanna quit VerifyHash process?", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.No) {
+                    if (MessageBox.Show("Do you really want to exit the VerifyHash process?", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.No) {
                         y.Cancel = true;
                     } else {
                         GameScanner(false);
@@ -167,7 +167,7 @@ namespace GameLauncher.App
                     GameScanner(false);
                     StartScanner.Visible = false;
                     StopScanner.Visible = false;
-                    ScanProgressText.Text = "Scan Complete. No Missing Files Where Found";
+                    ScanProgressText.Text = "Scan Complete. No Files Missing or Invalid!";
                     /* Hide the DownloadProgressBar as un-needed */
                     DownloadProgressBar.Visible = false;
                     DownloadProgressText.Visible = false;
@@ -181,7 +181,7 @@ namespace GameLauncher.App
                 {
                     ScanProgressText.Text = "Found Invalid or Missing Files";
                     File.WriteAllLines("invalidfiles.dat", InvalidFileList);
-                    Log.Info("Found Invalid Files and will Start File Downloader");
+                    Log.Info("Found Invalid or Missing Files and will Start File Downloader");
                     CorruptedFilesFound();
                 }
             }
@@ -230,7 +230,7 @@ namespace GameLauncher.App
                         DownloadProgressBar.Value = redownloadedCount * 100 / files.Length;
                     });
                 }
-                DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing Files were Redownloaded";
+                DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
                 VerifyHashText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
                 VerifyHashText.Location = new System.Drawing.Point(99, 300);
                 VerifyHashText.Size = new System.Drawing.Size(215, 28);
@@ -241,7 +241,7 @@ namespace GameLauncher.App
             }
             else
             {
-                DownloadProgressText.Text = "All Files Validated";
+                DownloadProgressText.Text = "All Files Validated!";
                 GameScanner(false);
                 StartScanner.Visible = false;
                 StopScanner.Visible = false;
