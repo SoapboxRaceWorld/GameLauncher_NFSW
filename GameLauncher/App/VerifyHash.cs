@@ -27,6 +27,7 @@ namespace GameLauncher.App
         public int filesToScan;
         public int badFiles;
         public int totalFilesScanned;
+        public int currentCount;
         public int redownloadedCount;
         public List<string> InvalidFileList = new List<string>();
         public List<string> ValidFileList = new List<string>();
@@ -197,11 +198,12 @@ namespace GameLauncher.App
 
             if (File.Exists("invalidfiles.dat") && File.ReadAllLines("invalidfiles.dat") != null)
             {
-                InvalidProgressText.Text = "\nRE-DOWNLOADING INVALID FILES";
+                InvalidProgressText.Text = "\nPreparing to Download Files";
                 string[] files = File.ReadAllLines("invalidfiles.dat");
 
                 foreach (string text in files)
                 {
+                    currentCount = files.Count();
                     try 
                     {
                         string text2 = _settingFile.Read("InstallationDirectory") + text;
@@ -219,7 +221,7 @@ namespace GameLauncher.App
                     catch { }
                     this.BeginInvoke((MethodInvoker)delegate
                     {
-                        InvalidProgressText.Text = "Downloading File:\n" + text;
+                        InvalidProgressText.Text = "Downloaded File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + text;
                         InvalidProgressBar.Value = redownloadedCount * 100 / files.Length;
                     });
                 }
