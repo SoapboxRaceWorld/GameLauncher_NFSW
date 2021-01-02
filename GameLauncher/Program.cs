@@ -277,7 +277,7 @@ namespace GameLauncher
                                 File.Delete("GameLauncherUpdater.exe");
                             }
                         };
-                        wc.DownloadFile(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
+                        wc.DownloadFile(new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
                     }
                 }
                 catch (Exception ex)
@@ -306,11 +306,12 @@ namespace GameLauncher
                 {
                     Log.Info("LAUNCHER UPDATER: Downloading New GameLauncherUpdater.exe");
                     File.Delete("GameLauncherUpdater.exe");
+
                     try
                     {
                         using (WebClient wc = new WebClient())
                         {
-                            wc.DownloadFile(new Uri(Self.fileserver + "/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
+                            wc.DownloadFile(new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
                         }
                     }
                     catch (Exception ex)

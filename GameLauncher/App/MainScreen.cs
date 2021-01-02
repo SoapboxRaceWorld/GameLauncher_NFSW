@@ -3667,7 +3667,7 @@ namespace GameLauncher
         private async void LocalGameFiles()
         {
             await Task.Delay(5000);
-            if (SHA.HashFile("GameFiles.sbrwpack") == "B42E00939DC656C14BF5A05644080AD015522C8C")
+            if (SHA.HashFile("GameFiles.sbrwpack") == "88C886B6D131C052365C3D6D14E14F67A4E2C253")
             {
                 TaskbarProgress.SetValue(Handle, 100, 100);
                 PlayProgress.Value = 100;
