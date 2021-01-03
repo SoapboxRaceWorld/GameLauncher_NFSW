@@ -181,7 +181,7 @@ namespace GameLauncher.App
 
                 Log.Info("VERIFY HASH: Scan Completed");
 
-                if (InvalidFileList.Count() == 0)
+                if (InvalidFileList.Any() != true)
                 {
                     GameScanner(false);
                     StartScanner.Visible = false;
@@ -196,7 +196,7 @@ namespace GameLauncher.App
                     VerifyHashText.Size = new System.Drawing.Size(215, 28);
                     VerifyHashText.Text = "Excellent News! There are ZERO\nmissing or invalid Gamefiles!";
                 }
-                else if (InvalidFileList != null)
+                else
                 {
                     ScanProgressText.Text = "Found Invalid or Missing Files";
                     File.WriteAllLines("invalidfiles.dat", InvalidFileList);

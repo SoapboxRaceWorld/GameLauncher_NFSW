@@ -39,6 +39,7 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using WindowsFirewallHelper;
 using GameLauncher.App.Classes.InsiderKit;
+using System.Net.Http;
 
 namespace GameLauncher
 {
@@ -3138,7 +3139,7 @@ namespace GameLauncher
             }
         }
 
-        private void PlayButton_Click(object sender, EventArgs e)
+        private async void PlayButton_Click(object sender, EventArgs e)
         {
             if (UriScheme.ForceGame != true)
             {
@@ -3210,12 +3211,56 @@ namespace GameLauncher
                 try
                 {
                     string[] newFiles = ModNetReloadedFiles.ToArray();
-                    WebClient newModNetFilesDownload = new WebClient();
+
                     foreach (string file in newFiles)
                     {
-                        PlayProgressText.Text = ("Fetching ModNetReloaded Files: " + file).ToUpper();
+                        var url = Self.modnetserver + "/modules-v2/" + file;
+                        string fileETAG = null;
+                        if (EnableInsider.ShouldIBeAnInsider() == true)
+                        {
+                            Log.Debug(url);
+                        }
+                        using (var client = new HttpClient())
+                        {
+                            var response = await client.GetAsync(url);
+                            var etag1 = response.Headers.ETag;
+                            if (EnableInsider.ShouldIBeAnInsider() == true)
+                            {
+                                Log.Debug("ETAG: " + etag1);
+                            }
+                            string FinalETagHash = etag1.ToString().TrimStart('"').TrimEnd('"');
+                            fileETAG = FinalETagHash.ToUpper();
+                            var content = await response.Content.ReadAsStringAsync();
+                        }
+
+                        if (EnableInsider.ShouldIBeAnInsider() == true)
+                        {
+                            Log.Debug("ETAG FINAL: " + fileETAG);
+                        }
+
+                        if (MDFive.HashFile(_settingFile.Read("InstallationDirectory") + "/" + file) != fileETAG || !File.Exists(_settingFile.Read("InstallationDirectory") + "/" + file))
+                        {
+                            PlayProgressText.Text = ("ModNetReloaded: Downloading " + file).ToUpper();
+
+                            Log.Warning("MODNET CORE: " + file + " Does not match MD5 Hash on File Server -> Online Hash: '" + fileETAG + "'");
+
+                            if (File.Exists(_settingFile.Read("InstallationDirectory") + "/" + file))
+                            {
+                                File.Delete(_settingFile.Read("InstallationDirectory") + "/" + file);
+                            }
+
+                            WebClient newModNetFilesDownload = new WebClient();
+                            newModNetFilesDownload.DownloadFile(Self.modnetserver + "/modules-v2/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                        }
+                        else
+                        {
+                            PlayProgressText.Text = ("ModNetReloaded: Up to Date " + file).ToUpper();
+
+                            Log.Debug("MODNET CORE: " + file + " Is Up to Date!");
+                        }
+
                         Application.DoEvents();
-                        newModNetFilesDownload.DownloadFile(Self.modnetserver + "/modules-v2/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+
                     }
 
                     //get files now
