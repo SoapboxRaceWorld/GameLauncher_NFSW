@@ -3567,7 +3567,7 @@ namespace GameLauncher
                 {
                     if (d.Name == Path.GetPathRoot(_settingFile.Read("InstallationDirectory")))
                     {
-                        if (d.TotalFreeSpace <= 10000000000)
+                        if (d.TotalFreeSpace < 8589934592)
                         {
 
                             ExtractingProgress.Value = 100;
@@ -3575,7 +3575,7 @@ namespace GameLauncher
                             ExtractingProgress.Image = Properties.Resources.progress_warning;
                             ExtractingProgress.ProgressColor = Color.Orange;
 
-                            PlayProgressText.Text = "Please make sure you have at least 10GB free space on hard drive.".ToUpper();
+                            PlayProgressText.Text = "Please make sure you have at least 8GB free space on hard drive.".ToUpper();
 
                             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
                             TaskbarProgress.SetValue(Handle, 100, 100);
