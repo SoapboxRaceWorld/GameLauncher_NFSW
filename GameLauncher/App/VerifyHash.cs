@@ -35,11 +35,16 @@ namespace GameLauncher.App
         {
             InitializeComponent();
 
-            this.Closing += (x, y) => {
-                if(isScanning) {
-                    if (MessageBox.Show("Do you really want to exit the VerifyHash process?", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.No) {
+            this.Closing += (x, y) =>
+            {
+                if (isScanning)
+                {
+                    if (MessageBox.Show("Do you really want to exit the VerifyHash process?", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.No)
+                    {
                         y.Cancel = true;
-                    } else {
+                    }
+                    else
+                    {
                         GameScanner(false);
                     }
                 }
@@ -119,6 +124,7 @@ namespace GameLauncher.App
                     file.Delete();
                 }
             }
+            Log.Info("VERIFY HASH: Completed check for '.orig' Files");
 
             try
             {
