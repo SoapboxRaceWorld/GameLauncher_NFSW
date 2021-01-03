@@ -1945,6 +1945,7 @@ namespace GameLauncher
             ServerPingStatusText.Visible = hideElements;
             ShowPlayPanel.Visible = hideElements;
             ExtractingProgress.Visible = hideElements;
+            ProgressBarOutline.Visible = hideElements;
             PlayProgressText.Visible = hideElements;
             PlayProgressTextTimer.Visible = hideElements;
             PlayButton.Visible = hideElements;
@@ -1993,6 +1994,7 @@ namespace GameLauncher
             PlayProgressTextTimer.Visible = hideElements;
             PlayProgress.Visible = hideElements;
             ExtractingProgress.Visible = hideElements;
+            ProgressBarOutline.Visible = hideElements;
             AddServer.Visible = hideElements;
             AddServer.Enabled = true;
             //allowedCountriesLabel.Visible = hideElements;

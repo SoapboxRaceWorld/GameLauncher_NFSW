@@ -313,6 +313,16 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap progress_outline {
+            get {
+                object obj = ResourceManager.GetObject("progress_outline", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap progress_preload {
             get {
                 object obj = ResourceManager.GetObject("progress_preload", resourceCulture);
@@ -403,16 +413,6 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap socialbg {
-            get {
-                object obj = ResourceManager.GetObject("socialbg", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap social_discord {
             get {
                 object obj = ResourceManager.GetObject("social_discord", resourceCulture);
@@ -486,6 +486,16 @@ namespace GameLauncher.Properties {
         internal static System.Drawing.Bitmap social_twitter_disabled {
             get {
                 object obj = ResourceManager.GetObject("social_twitter_disabled", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap socialbg {
+            get {
+                object obj = ResourceManager.GetObject("socialbg", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

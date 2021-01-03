@@ -330,17 +330,13 @@
     <EmbeddedResource Include="SoapBoxModules\cursor.ani" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\registerButton_en.png" />
-    <None Include="Resources\buttons_info.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\Run_Check_BG.png" />
+    <None Include="Resources\progress_outline.png" />
     <Content Include="SBRW.ico" />
     <None Include="Resources\progress_warning.png" />
     <None Include="Resources\progress_success.png" />
     <None Include="Resources\progress_preload.png" />
     <None Include="Resources\progress_error.png" />
-    <None Include="Resources\socialdbg.png" />
     <None Include="Resources\social_home_page_disabled.png" />
     <None Include="Resources\social_home_page.png" />
     <None Include="Resources\social_twitter_disabled.png" />
@@ -356,7 +352,6 @@
     <None Include="Resources\email_error_text_border.png" />
     <None Include="Resources\email_text_border.png" />
     <None Include="Resources\mainbackground.png" />
-    <None Include="Resources\error_text_border.png" />
     <None Include="Resources\server_unknown.png" />
     <None Include="Resources\server_online.png" />
     <None Include="Resources\server_offline.png" />
@@ -374,8 +369,6 @@
     <None Include="Resources\greenbutton_click.png" />
     <None Include="Resources\greenbutton_hover.png" />
     <None Include="Resources\greenbutton.png" />
-    <None Include="Resources\register_ticket.png" />
-    <None Include="Resources\register_noticket.png" />
     <None Include="Resources\ac_warning.png" />
     <None Include="Resources\ac_unknown.png" />
     <None Include="Resources\ac_success.png" />

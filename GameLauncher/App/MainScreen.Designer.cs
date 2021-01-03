@@ -118,8 +118,9 @@
             this.HomePageLink = new System.Windows.Forms.LinkLabel();
             this.SceneryGroupText = new System.Windows.Forms.Label();
             this.InsiderBuildNumberText = new System.Windows.Forms.Label();
-            this.ExtractingProgress = new GameLauncherReborn.ProgressBarEx();
+            this.ProgressBarOutline = new System.Windows.Forms.PictureBox();
             this.PlayProgress = new GameLauncherReborn.ProgressBarEx();
+            this.ExtractingProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CloseBTN)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).BeginInit();
@@ -141,6 +142,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.DiscordIcon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FacebookIcon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TwitterIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ProgressBarOutline)).BeginInit();
             this.SuspendLayout();
             // 
             // Timeout
@@ -264,7 +266,7 @@
             this.PlayProgressText.BackColor = System.Drawing.Color.Transparent;
             this.PlayProgressText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayProgressText.ForeColor = System.Drawing.Color.White;
-            this.PlayProgressText.Location = new System.Drawing.Point(42, 401);
+            this.PlayProgressText.Location = new System.Drawing.Point(42, 389);
             this.PlayProgressText.Name = "PlayProgressText";
             this.PlayProgressText.Size = new System.Drawing.Size(96, 14);
             this.PlayProgressText.TabIndex = 10;
@@ -302,7 +304,7 @@
             this.LauncherStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.LauncherStatusDesc.Location = new System.Drawing.Point(53, 485);
             this.LauncherStatusDesc.Name = "LauncherStatusDesc";
-            this.LauncherStatusDesc.Size = new System.Drawing.Size(127, 14);
+            this.LauncherStatusDesc.Size = new System.Drawing.Size(124, 14);
             this.LauncherStatusDesc.TabIndex = 5;
             this.LauncherStatusDesc.Text = "Version: vX.X.X.X";
             this.LauncherStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -338,7 +340,7 @@
             this.ServerStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ServerStatusDesc.Location = new System.Drawing.Point(242, 485);
             this.ServerStatusDesc.Name = "ServerStatusDesc";
-            this.ServerStatusDesc.Size = new System.Drawing.Size(122, 14);
+            this.ServerStatusDesc.Size = new System.Drawing.Size(124, 14);
             this.ServerStatusDesc.TabIndex = 8;
             this.ServerStatusDesc.Text = "Checking Status";
             this.ServerStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -376,7 +378,7 @@
             this.APIStatusDesc.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.APIStatusDesc.Location = new System.Drawing.Point(426, 485);
             this.APIStatusDesc.Name = "APIStatusDesc";
-            this.APIStatusDesc.Size = new System.Drawing.Size(122, 14);
+            this.APIStatusDesc.Size = new System.Drawing.Size(124, 14);
             this.APIStatusDesc.TabIndex = 120;
             this.APIStatusDesc.Text = "Checking Status";
             this.APIStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -456,7 +458,7 @@
             this.RememberMe.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.RememberMe.Location = new System.Drawing.Point(645, 260);
             this.RememberMe.Name = "RememberMe";
-            this.RememberMe.Size = new System.Drawing.Size(162, 17);
+            this.RememberMe.Size = new System.Drawing.Size(163, 17);
             this.RememberMe.TabIndex = 6;
             this.RememberMe.Text = "REMEMBER MY LOGIN";
             this.RememberMe.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -568,7 +570,7 @@
             this.PlayProgressTextTimer.BackColor = System.Drawing.Color.Transparent;
             this.PlayProgressTextTimer.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.PlayProgressTextTimer.ForeColor = System.Drawing.Color.White;
-            this.PlayProgressTextTimer.Location = new System.Drawing.Point(431, 399);
+            this.PlayProgressTextTimer.Location = new System.Drawing.Point(431, 389);
             this.PlayProgressTextTimer.Name = "PlayProgressTextTimer";
             this.PlayProgressTextTimer.Size = new System.Drawing.Size(120, 19);
             this.PlayProgressTextTimer.TabIndex = 135;
@@ -875,7 +877,7 @@
             this.SettingsGamePathText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsGamePathText.Location = new System.Drawing.Point(24, 67);
             this.SettingsGamePathText.Name = "SettingsGamePathText";
-            this.SettingsGamePathText.Size = new System.Drawing.Size(121, 14);
+            this.SettingsGamePathText.Size = new System.Drawing.Size(122, 14);
             this.SettingsGamePathText.TabIndex = 135;
             this.SettingsGamePathText.Text = "GAMEFILES PATH";
             this.SettingsGamePathText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -925,7 +927,7 @@
             this.SettingsCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsCDNText.Location = new System.Drawing.Point(24, 111);
             this.SettingsCDNText.Name = "SettingsCDNText";
-            this.SettingsCDNText.Size = new System.Drawing.Size(102, 14);
+            this.SettingsCDNText.Size = new System.Drawing.Size(103, 14);
             this.SettingsCDNText.TabIndex = 137;
             this.SettingsCDNText.Text = "CDN: PINGING";
             this.SettingsCDNText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -953,7 +955,7 @@
             this.SettingsLanguageText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsLanguageText.Location = new System.Drawing.Point(24, 158);
             this.SettingsLanguageText.Name = "SettingsLanguageText";
-            this.SettingsLanguageText.Size = new System.Drawing.Size(124, 14);
+            this.SettingsLanguageText.Size = new System.Drawing.Size(125, 14);
             this.SettingsLanguageText.TabIndex = 131;
             this.SettingsLanguageText.Text = "GAME LANGUAGE";
             this.SettingsLanguageText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -980,7 +982,7 @@
             this.SettingsWordFilterCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsWordFilterCheck.Location = new System.Drawing.Point(26, 324);
             this.SettingsWordFilterCheck.Name = "SettingsWordFilterCheck";
-            this.SettingsWordFilterCheck.Size = new System.Drawing.Size(252, 18);
+            this.SettingsWordFilterCheck.Size = new System.Drawing.Size(253, 18);
             this.SettingsWordFilterCheck.TabIndex = 135;
             this.SettingsWordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.SettingsWordFilterCheck.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -995,7 +997,7 @@
             this.SettingsProxyCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsProxyCheckbox.Location = new System.Drawing.Point(26, 344);
             this.SettingsProxyCheckbox.Name = "SettingsProxyCheckbox";
-            this.SettingsProxyCheckbox.Size = new System.Drawing.Size(108, 18);
+            this.SettingsProxyCheckbox.Size = new System.Drawing.Size(109, 18);
             this.SettingsProxyCheckbox.TabIndex = 136;
             this.SettingsProxyCheckbox.Text = "Disable Proxy";
             this.SettingsProxyCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -1010,7 +1012,7 @@
             this.SettingsDiscordRPCCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsDiscordRPCCheckbox.Location = new System.Drawing.Point(26, 364);
             this.SettingsDiscordRPCCheckbox.Name = "SettingsDiscordRPCCheckbox";
-            this.SettingsDiscordRPCCheckbox.Size = new System.Drawing.Size(150, 18);
+            this.SettingsDiscordRPCCheckbox.Size = new System.Drawing.Size(151, 18);
             this.SettingsDiscordRPCCheckbox.TabIndex = 137;
             this.SettingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
             this.SettingsDiscordRPCCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -1024,7 +1026,7 @@
             this.SettingsGameFilesCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsGameFilesCurrentText.Location = new System.Drawing.Point(313, 82);
             this.SettingsGameFilesCurrentText.Name = "SettingsGameFilesCurrentText";
-            this.SettingsGameFilesCurrentText.Size = new System.Drawing.Size(153, 14);
+            this.SettingsGameFilesCurrentText.Size = new System.Drawing.Size(154, 14);
             this.SettingsGameFilesCurrentText.TabIndex = 149;
             this.SettingsGameFilesCurrentText.Text = "CURRENT DIRECTORY:";
             this.SettingsGameFilesCurrentText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -1054,7 +1056,7 @@
             this.SettingsCDNCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsCDNCurrentText.Location = new System.Drawing.Point(313, 120);
             this.SettingsCDNCurrentText.Name = "SettingsCDNCurrentText";
-            this.SettingsCDNCurrentText.Size = new System.Drawing.Size(108, 14);
+            this.SettingsCDNCurrentText.Size = new System.Drawing.Size(110, 14);
             this.SettingsCDNCurrentText.TabIndex = 150;
             this.SettingsCDNCurrentText.Text = "CURRENT CDN:";
             this.SettingsCDNCurrentText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -1218,7 +1220,7 @@
             this.DiscordInviteLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.DiscordInviteLink.Location = new System.Drawing.Point(154, 12);
             this.DiscordInviteLink.Name = "DiscordInviteLink";
-            this.DiscordInviteLink.Size = new System.Drawing.Size(95, 13);
+            this.DiscordInviteLink.Size = new System.Drawing.Size(98, 13);
             this.DiscordInviteLink.TabIndex = 172;
             this.DiscordInviteLink.TabStop = true;
             this.DiscordInviteLink.Text = "Discord Invite";
@@ -1307,7 +1309,7 @@
             this.TwitterAccountLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.TwitterAccountLink.Location = new System.Drawing.Point(437, 12);
             this.TwitterAccountLink.Name = "TwitterAccountLink";
-            this.TwitterAccountLink.Size = new System.Drawing.Size(88, 13);
+            this.TwitterAccountLink.Size = new System.Drawing.Size(86, 13);
             this.TwitterAccountLink.TabIndex = 174;
             this.TwitterAccountLink.TabStop = true;
             this.TwitterAccountLink.Text = "Twitter Feed";
@@ -1337,7 +1339,7 @@
             this.FacebookGroupLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.FacebookGroupLink.Location = new System.Drawing.Point(292, 12);
             this.FacebookGroupLink.Name = "FacebookGroupLink";
-            this.FacebookGroupLink.Size = new System.Drawing.Size(110, 13);
+            this.FacebookGroupLink.Size = new System.Drawing.Size(112, 13);
             this.FacebookGroupLink.TabIndex = 173;
             this.FacebookGroupLink.TabStop = true;
             this.FacebookGroupLink.Text = "Facebook Group";
@@ -1355,7 +1357,7 @@
             this.HomePageLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.HomePageLink.Location = new System.Drawing.Point(36, 12);
             this.HomePageLink.Name = "HomePageLink";
-            this.HomePageLink.Size = new System.Drawing.Size(79, 13);
+            this.HomePageLink.Size = new System.Drawing.Size(81, 13);
             this.HomePageLink.TabIndex = 171;
             this.HomePageLink.TabStop = true;
             this.HomePageLink.Text = "Home Page";
@@ -1388,21 +1390,19 @@
             this.InsiderBuildNumberText.Text = "Insider Build: vX.X.X.X";
             this.InsiderBuildNumberText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // ExtractingProgress
+            // ProgressBarOutline
             // 
-            this.ExtractingProgress.BackColor = System.Drawing.Color.Transparent;
-            this.ExtractingProgress.BackgroundColor = System.Drawing.Color.Black;
-            this.ExtractingProgress.Border = false;
-            this.ExtractingProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.ExtractingProgress.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ExtractingProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.ExtractingProgress.Image = global::GameLauncher.Properties.Resources.progress_success;
-            this.ExtractingProgress.Location = new System.Drawing.Point(30, 425);
-            this.ExtractingProgress.Name = "ExtractingProgress";
-            this.ExtractingProgress.ProgressColor = System.Drawing.Color.Green;
-            this.ExtractingProgress.RoundedCorners = false;
-            this.ExtractingProgress.Size = new System.Drawing.Size(519, 13);
-            this.ExtractingProgress.Text = "downloadProgress";
+            this.ProgressBarOutline.BackColor = System.Drawing.Color.Transparent;
+            this.ProgressBarOutline.BackgroundImage = global::GameLauncher.Properties.Resources.progress_outline;
+            this.ProgressBarOutline.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ProgressBarOutline.ErrorImage = null;
+            this.ProgressBarOutline.InitialImage = null;
+            this.ProgressBarOutline.Location = new System.Drawing.Point(25, 389);
+            this.ProgressBarOutline.Name = "ProgressBarOutline";
+            this.ProgressBarOutline.Size = new System.Drawing.Size(529, 42);
+            this.ProgressBarOutline.TabIndex = 174;
+            this.ProgressBarOutline.TabStop = false;
+            this.ProgressBarOutline.Visible = false;
             // 
             // PlayProgress
             // 
@@ -1414,12 +1414,28 @@
             this.PlayProgress.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.PlayProgress.Image = global::GameLauncher.Properties.Resources.progress_preload;
-            this.PlayProgress.Location = new System.Drawing.Point(30, 425);
+            this.PlayProgress.Location = new System.Drawing.Point(30, 414);
             this.PlayProgress.Name = "PlayProgress";
             this.PlayProgress.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(84)))), ((int)(((byte)(92)))));
             this.PlayProgress.RoundedCorners = false;
             this.PlayProgress.Size = new System.Drawing.Size(519, 13);
             this.PlayProgress.Text = "downloadProgress";
+            // 
+            // ExtractingProgress
+            // 
+            this.ExtractingProgress.BackColor = System.Drawing.Color.Transparent;
+            this.ExtractingProgress.BackgroundColor = System.Drawing.Color.Black;
+            this.ExtractingProgress.Border = false;
+            this.ExtractingProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.ExtractingProgress.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ExtractingProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.ExtractingProgress.Image = global::GameLauncher.Properties.Resources.progress_success;
+            this.ExtractingProgress.Location = new System.Drawing.Point(30, 414);
+            this.ExtractingProgress.Name = "ExtractingProgress";
+            this.ExtractingProgress.ProgressColor = System.Drawing.Color.Green;
+            this.ExtractingProgress.RoundedCorners = false;
+            this.ExtractingProgress.Size = new System.Drawing.Size(519, 13);
+            this.ExtractingProgress.Text = "downloadProgress";
             // 
             // MainScreen
             // 
@@ -1441,8 +1457,6 @@
             this.Controls.Add(this.translatedBy);
             this.Controls.Add(this.ServerPick);
             this.Controls.Add(this.AddServer);
-            this.Controls.Add(this.PlayProgressText);
-            this.Controls.Add(this.ExtractingProgress);
             this.Controls.Add(this.LauncherIconStatus);
             this.Controls.Add(this.APIStatusIcon);
             this.Controls.Add(this.ServerStatusIcon);
@@ -1460,8 +1474,11 @@
             this.Controls.Add(this.ForgotPassword);
             this.Controls.Add(this.LoginButton);
             this.Controls.Add(this.RegisterText);
-            this.Controls.Add(this.PlayProgress);
             this.Controls.Add(this.PlayProgressTextTimer);
+            this.Controls.Add(this.PlayProgressText);
+            this.Controls.Add(this.ExtractingProgress);
+            this.Controls.Add(this.PlayProgress);
+            this.Controls.Add(this.ProgressBarOutline);
             this.Controls.Add(this.VerticalBanner);
             this.Controls.Add(this.ImageServerName);
             this.DoubleBuffered = true;
@@ -1497,6 +1514,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.DiscordIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FacebookIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TwitterIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ProgressBarOutline)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1594,5 +1612,6 @@
         private System.Windows.Forms.Label SceneryGroupText;
         private System.Windows.Forms.Button SettingsClearServerModCacheButton;
         private System.Windows.Forms.Label InsiderBuildNumberText;
+        private System.Windows.Forms.PictureBox ProgressBarOutline;
     }
 }
