@@ -101,7 +101,7 @@ namespace GameLauncher.App
             };
             if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
-            Log.Info("VERIFY HASH: Checking and Deleting Files with '.orig' Files");
+            Log.Info("VERIFY HASH: Checking and Deleting '.orig' Files");
 
             DirectoryInfo InstallationDirectory = new DirectoryInfo(_settingFile.Read("InstallationDirectory"));
 
@@ -257,14 +257,14 @@ namespace GameLauncher.App
                 GameScanner(false);
                 StartScanner.Visible = false;
                 StopScanner.Visible = false;
-            }
+            }/* This is never called to, preserving for testing, to-be-removed
             else
             {
                 DownloadProgressText.Text = "All Files Validated!";
                 GameScanner(false);
                 StartScanner.Visible = false;
                 StopScanner.Visible = false;
-            }
+            }*/
         }
 
         private void StartScanner_Click(object sender, EventArgs e)
