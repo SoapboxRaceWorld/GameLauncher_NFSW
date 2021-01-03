@@ -80,13 +80,13 @@ namespace GameLauncher.App
                 //StatusText.Text = "Validating files on background.".ToUpper();
                 //Threaded CheckFiles
                 StartScan.Start();
-                Log.Debug("Started Scanner");
+                Log.Info("VERIFY HASH: Started Scanner");
                 isScanning = true;
             }
             else if (startScan == false)
             {
                 StartScan.Abort();
-                Log.Debug("Stopped Scanner");
+                Log.Info("VERIFY HASH: Stopped Scanner");
             }
         }
 
@@ -100,6 +100,25 @@ namespace GameLauncher.App
                 LargeImageKey = "nfsw"
             };
             if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
+
+            Log.Info("VERIFY HASH: Checking and Deleting Files with '.orig' Files");
+
+            DirectoryInfo InstallationDirectory = new DirectoryInfo(_settingFile.Read("InstallationDirectory"));
+
+            foreach (var foundFolders in InstallationDirectory.GetDirectories())
+            {
+                foreach (var file in InstallationDirectory.EnumerateFiles("*.orig"))
+                {
+                    LogVerify.Deleted("File: " + file);
+                    file.Delete();
+                }
+
+                foreach (var file in foundFolders.EnumerateFiles("*.orig"))
+                {
+                    LogVerify.Deleted("File: " + file);
+                    file.Delete();
+                }
+            }
 
             try
             {
@@ -160,7 +179,7 @@ namespace GameLauncher.App
                     ScanProgressBar.Value = totalFilesScanned * 100 / getFilesToCheck.Length;
                 }
 
-                Log.Info("Scan Completed");
+                Log.Info("VERIFY HASH: Scan Completed");
 
                 if (InvalidFileList.Count() == 0)
                 {
