@@ -33,6 +33,7 @@ namespace GameLauncher.App.Classes
                         serverInfos.AddRange(
                             JsonConvert.DeserializeObject<List<ServerInfo>>(response));
                     }
+                        break;
                     catch (Exception error)
                     {
                         Log.Error("LIST CORE: Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message);
