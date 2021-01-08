@@ -29,6 +29,7 @@ namespace GameLauncher.App.Classes
                     {
                         cdnInfos.AddRange(
                             JsonConvert.DeserializeObject<List<CDNObject>>(responseList));
+                        break;
                     }
                     catch (Exception error)
                     {

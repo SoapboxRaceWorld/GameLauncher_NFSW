@@ -32,10 +32,10 @@ namespace GameLauncherReborn
 
         public static string[] cdnlisturl = new string[]
         {
-            secondstaticapiserver + "/cdn_list.json",
+            mainserver + "/cdn_list.json",
             staticapiserver + "/cdn_list.json",
-            woplserver + "/cdn_list.json",
-            mainserver + "/cdn_list.json"
+            secondstaticapiserver + "/cdn_list.json",
+            woplserver + "/cdn_list.json"
         };
 
         public static string statsurl = mainserver + "/stats";
