@@ -2382,14 +2382,17 @@ namespace GameLauncher
 
             try
             {
-                Log.Info("SETTINGS VERIFYHASH: Checking Characters in URL");
+                if (EnableInsider.ShouldIBeAnInsider() == true)
+                {
+                    Log.Info("SETTINGS VERIFYHASH: Checking Characters in URL");
+                }
                 string SavedCDN = _settingFile.Read("CDN");
                 char[] charsToTrim = { '/', 'n', 'f', 's', 'w' };
                 string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
-                Log.Info("SETTINGS VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
 
                 if (EnableInsider.ShouldIBeAnInsider() == true)
                 {
+                    Log.Info("SETTINGS VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
                     SettingsVFilesButton.Visible = true;
                     SettingsVFilesButton.Enabled = true;
                 }
@@ -2433,6 +2436,9 @@ namespace GameLauncher
 
         public void ClearColoredPingStatus()
         {
+            SettingsMainCDNText.Visible = false;
+            SettingsBkupSrvText.Visible = false;
+            SettingsBkupCDNText.Visible = false;
             //Reset Connection Status Labels - DavidCarbon
             SettingsMainSrvText.Text = "[API] United: PINGING";
             SettingsMainSrvText.ForeColor = Color.FromArgb(66, 179, 189);
@@ -2713,72 +2719,100 @@ namespace GameLauncher
         {
             ClearColoredPingStatus();
             Log.Api("SETTINGS PINGING API: Checking APIs");
+
+            bool WUGG = true;
+
             await Task.Delay(1000);
             switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
             {
                 case API.Online:
                     SettingsMainSrvText.Text = "[API] United: ONLINE";
                     SettingsMainSrvText.ForeColor = Color.FromArgb(159, 193, 32);
+                    WUGG = true;
                     break;
                 case API.Offline:
                     SettingsMainSrvText.Text = "[API] United: OFFLINE";
                     SettingsMainSrvText.ForeColor = Color.FromArgb(254, 0, 0);
+                    WUGG = false;
                     break;
                 default:
                     SettingsMainSrvText.Text = "[API] United: ERROR";
                     SettingsMainSrvText.ForeColor = Color.FromArgb(254, 0, 0);
+                    WUGG = false;
                     break;
             }
 
-            await Task.Delay(1500);
-            switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/serverlist.json"))
+            bool DC = true;
+
+            if (WUGG == false)
             {
-                case API.Online:
-                    SettingsMainCDNText.Text = "[API] Carbon: ONLINE";
-                    SettingsMainCDNText.ForeColor = Color.FromArgb(159, 193, 32);
-                    break;
-                case API.Offline:
-                    SettingsMainCDNText.Text = "[API] Carbon: OFFLINE";
-                    SettingsMainCDNText.ForeColor = Color.FromArgb(254, 0, 0);
-                    break;
-                default:
-                    SettingsMainCDNText.Text = "[API] Carbon: ERROR";
-                    SettingsMainCDNText.ForeColor = Color.FromArgb(254, 0, 0);
-                    break;
+                SettingsMainCDNText.Visible = true;
+                await Task.Delay(1500);
+                switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/serverlist.json"))
+                {
+                    case API.Online:
+                        SettingsMainCDNText.Text = "[API] Carbon: ONLINE";
+                        SettingsMainCDNText.ForeColor = Color.FromArgb(159, 193, 32);
+                        DC = true;
+                        break;
+                    case API.Offline:
+                        SettingsMainCDNText.Text = "[API] Carbon: OFFLINE";
+                        SettingsMainCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                        DC = false;
+                        break;
+                    default:
+                        SettingsMainCDNText.Text = "[API] Carbon: ERROR";
+                        SettingsMainCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                        DC = false;
+                        break;
+                }
             }
 
-            await Task.Delay(2000);
-            switch (APIStatusChecker.CheckStatus(Self.secondstaticapiserver + "/serverlist.json"))
+            bool DC2 = true;
+
+            if (DC == false)
             {
-                case API.Online:
-                    SettingsBkupSrvText.Text = "[API] Carbon (2nd): ONLINE";
-                    SettingsBkupSrvText.ForeColor = Color.FromArgb(159, 193, 32);
-                    break;
-                case API.Offline:
-                    SettingsBkupSrvText.Text = "[API] Carbon (2nd): OFFLINE";
-                    SettingsBkupSrvText.ForeColor = Color.FromArgb(254, 0, 0);
-                    break;
-                default:
-                    SettingsBkupSrvText.Text = "[API] Carbon (2nd): ERROR";
-                    SettingsBkupSrvText.ForeColor = Color.FromArgb(254, 0, 0);
-                    break;
+                SettingsBkupSrvText.Visible = true;
+                await Task.Delay(2000);
+                switch (APIStatusChecker.CheckStatus(Self.secondstaticapiserver + "/serverlist.json"))
+                {
+                    case API.Online:
+                        SettingsBkupSrvText.Text = "[API] Carbon (2nd): ONLINE";
+                        SettingsBkupSrvText.ForeColor = Color.FromArgb(159, 193, 32);
+                        DC2 = true;
+                        break;
+                    case API.Offline:
+                        SettingsBkupSrvText.Text = "[API] Carbon (2nd): OFFLINE";
+                        SettingsBkupSrvText.ForeColor = Color.FromArgb(254, 0, 0);
+                        DC2 = false;
+                        break;
+                    default:
+                        SettingsBkupSrvText.Text = "[API] Carbon (2nd): ERROR";
+                        SettingsBkupSrvText.ForeColor = Color.FromArgb(254, 0, 0);
+                        DC2 = false;
+                        break;
+                }
             }
 
-            await Task.Delay(2500);
-            switch (APIStatusChecker.CheckStatus(Self.woplserver + "/serverlist.json"))
+            if (DC2 == false)
             {
-                case API.Online:
-                    SettingsBkupCDNText.Text = "[API] WOPL: ONLINE";
-                    SettingsBkupCDNText.ForeColor = Color.FromArgb(159, 193, 32);
-                    break;
-                case API.Offline:
-                    SettingsBkupCDNText.Text = "[API] WOPL: OFFLINE";
-                    SettingsBkupCDNText.ForeColor = Color.FromArgb(254, 0, 0);
-                    break;
-                default:
-                    SettingsBkupCDNText.Text = "[API] WOPL: ERROR";
-                    SettingsBkupCDNText.ForeColor = Color.FromArgb(254, 0, 0);
-                    break;
+                SettingsBkupCDNText.Visible = true;
+                await Task.Delay(2500);
+                switch (APIStatusChecker.CheckStatus(Self.woplserver + "/serverlist.json"))
+                {
+                    case API.Online:
+                        SettingsBkupCDNText.Text = "[API] WOPL: ONLINE";
+                        SettingsBkupCDNText.ForeColor = Color.FromArgb(159, 193, 32);
+                        break;
+                    case API.Offline:
+                        SettingsBkupCDNText.Text = "[API] WOPL: OFFLINE";
+                        SettingsBkupCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                        break;
+                    default:
+                        SettingsBkupCDNText.Text = "[API] WOPL: ERROR";
+                        SettingsBkupCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                        break;
+                }
             }
         }
 

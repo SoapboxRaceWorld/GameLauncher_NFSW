@@ -16,6 +16,8 @@ using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.Classes.InsiderKit;
 using System.Reflection;
 using WindowsFirewallHelper;
+using GameLauncher.App.Classes.Events;
+using Newtonsoft.Json;
 
 namespace GameLauncher
 {
@@ -152,30 +154,30 @@ namespace GameLauncher
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
 
-            bool DCAPIOffline = false;
+            bool WUGGAPIOffline = false;
             bool AllAPIsOffline = false;
 
             Log.Api("PINGING API: Checking API Status");
-            switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/generate_204/"))
+            switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
             {
                 case API.Online:
-                    Log.UrlCall("PRE-CHECK: Internet Check Passed: {api-sbrw.davidcarbon.download}");
+                    Log.UrlCall("PRE-CHECK: Internet Check Passed: {api.worldunited.gg}");
                     break;
                 default:
-                    Log.Error("PRE-CHECK: Failed to Connect to: {api-sbrw.davidcarbon.download}, Checking: {api.worldunited.gg}");
-                    DCAPIOffline = true;
+                    Log.Error("PRE-CHECK: Failed to Connect to: {api.worldunited.gg}, Checking: {api-sbrw.davidcarbon.download}");
+                    WUGGAPIOffline = true;
                     break;
             }
 
-            if (DCAPIOffline == true)
+            if (WUGGAPIOffline == true)
             {
-                switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
+                switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/generate_204/"))
                 {
                     case API.Online:
-                        Log.UrlCall("PRE-CHECK: Internet Check Passed: {api.worldunited.gg}");
+                        Log.UrlCall("PRE-CHECK: Internet Check Passed: {api-sbrw.davidcarbon.download}");
                         break;
                     default:
-                        Log.Error("PRE-CHECK: Failed to Connect to: {api.worldunited.gg}");
+                        Log.Error("PRE-CHECK: Failed to Connect to: {api-sbrw.davidcarbon.download}");
                         AllAPIsOffline = true;
                         break;
                 }
@@ -239,85 +241,43 @@ namespace GameLauncher
                 {
                     try
                     {
-                        var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(Self.secondstaticapiserver + "/Version.txt");
-                        if (!string.IsNullOrEmpty(GetLatestUpdaterBuildVersion))
+                        switch (APIStatusChecker.CheckStatus("http://api.github.com/repos/SoapboxRaceWorld/GameLauncherUpdater/releases/latest"))
                         {
-                            Log.Info("LAUNCHER UPDATER: Latest Version Check:");
-                            LatestUpdaterBuildVersion = GetLatestUpdaterBuildVersion;
+                            case API.Online:
+                                WebClient update_data = new WebClient();
+                                update_data.CancelAsync();
+                                update_data.Headers.Add("user-agent", "GameLauncherUpdater " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                update_data.DownloadStringAsync(new Uri("http://api.github.com/repos/SoapboxRaceWorld/GameLauncherUpdater/releases/latest"));
+                                update_data.DownloadStringCompleted += (sender, e) => {
+                                    GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(e.Result);
+
+                                    if (GHAPI.TagName != null)
+                                    {
+                                        Log.Info("LAUNCHER UPDATER: Setting Latest Version -> " + GHAPI.TagName);
+                                        LatestUpdaterBuildVersion = GHAPI.TagName;
+                                    }
+                                    Log.Info("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
+                                };
+                                break;
+                            default:
+                                Log.Error("LAUNCHER UPDATER: Failed to Retrive Latest Updater Information from GitHub");
+                                break;
                         }
                     }
                     catch
                     {
-                        var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(Self.staticapiserver + "/Version.txt");
+                        var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(Self.secondstaticapiserver + "/Version.txt");
                         if (!string.IsNullOrEmpty(GetLatestUpdaterBuildVersion))
                         {
-                            Log.Info("LAUNCHER UPDATER: Latest Version Check:");
+                            Log.Info("LAUNCHER UPDATER: Setting Latest Version -> " + GetLatestUpdaterBuildVersion);
                             LatestUpdaterBuildVersion = GetLatestUpdaterBuildVersion;
                         }
                     }
-                    Log.Info("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
+                    Log.Info("LAUNCHER UPDATER: Fail Safe Latest Version -> " + LatestUpdaterBuildVersion);
                 }
                 catch (Exception ex)
                 {
                     Log.Error("LAUNCHER UPDATER: Failed to get new version file: " + ex.Message);
-                }
-            }
-
-            if (!File.Exists("GameLauncherUpdater.exe"))
-            {
-                Log.Info("LAUNCHER UPDATER: Starting GameLauncherUpdater downloader");
-                try
-                {
-                    using (WebClient wc = new WebClient())
-                    {
-                        wc.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
-                        {
-                            if (new FileInfo("GameLauncherUpdater.exe").Length == 0)
-                            {
-                                File.Delete("GameLauncherUpdater.exe");
-                            }
-                        };
-                        wc.DownloadFile(new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("LAUCHER UPDATER: Failed to download updater. " + ex.Message);
-                }
-            }
-            else if (File.Exists("GameLauncherUpdater.exe"))
-            {
-                String GameLauncherUpdaterLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameLauncherUpdater.exe");
-                var LauncherUpdaterBuild = FileVersionInfo.GetVersionInfo(GameLauncherUpdaterLocation);
-                var LauncherUpdaterBuildNumber = LauncherUpdaterBuild.FileVersion;
-                var UpdaterBuildNumberResult = LauncherUpdaterBuildNumber.CompareTo(LatestUpdaterBuildVersion);
-
-                Log.Build("LAUNCHER UPDATER BUILD: GameLauncherUpdater " + LauncherUpdaterBuildNumber);
-                if (UpdaterBuildNumberResult < 0)
-                {
-                    Log.Info("LAUNCHER UPDATER: " + UpdaterBuildNumberResult + " Builds behind latest Updater!");
-                }
-                else
-                {
-                    Log.Info("LAUNCHER UPDATER: Latest GameLauncherUpdater!");
-                }
-
-                if (UpdaterBuildNumberResult < 0)
-                {
-                    Log.Info("LAUNCHER UPDATER: Downloading New GameLauncherUpdater.exe");
-                    File.Delete("GameLauncherUpdater.exe");
-
-                    try
-                    {
-                        using (WebClient wc = new WebClient())
-                        {
-                            wc.DownloadFile(new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error("LAUNCHER UPDATER: Failed to download new updater. " + ex.Message);
-                    }
                 }
             }
 
@@ -468,6 +428,19 @@ namespace GameLauncher
             if (!DetectLinux.LinuxDetected() && (!_settingFile.KeyExists("Firewall")))
             {
                 _settingFile.Write("Firewall", "Not Excluded");
+            }
+
+            if (_settingFile.KeyExists("CDN"))
+            {
+                string SavedCDN = _settingFile.Read("CDN");
+
+                if (SavedCDN.EndsWith("/"))
+                {
+                    char[] charsToTrim = { '/' };
+                    string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
+
+                    _settingFile.Write("CDN", FinalCDNURL);
+                }
             }
 
             //INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
@@ -660,6 +633,67 @@ namespace GameLauncher
 
         private static void ShowMainScreen()
         {
+            if (!DetectLinux.LinuxDetected())
+            {
+                if (!File.Exists("GameLauncherUpdater.exe"))
+                {
+                    Log.Info("LAUNCHER UPDATER: Starting GameLauncherUpdater downloader");
+                    try
+                    {
+                        using (WebClient wc = new WebClient())
+                        {
+                            wc.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
+                            {
+                                if (new FileInfo("GameLauncherUpdater.exe").Length == 0)
+                                {
+                                    File.Delete("GameLauncherUpdater.exe");
+                                }
+                            };
+                            wc.DownloadFile(new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("LAUCHER UPDATER: Failed to download updater. " + ex.Message);
+                    }
+                }
+                else if (File.Exists("GameLauncherUpdater.exe"))
+                {
+                    String GameLauncherUpdaterLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameLauncherUpdater.exe");
+                    var LauncherUpdaterBuild = FileVersionInfo.GetVersionInfo(GameLauncherUpdaterLocation);
+                    var LauncherUpdaterBuildNumber = LauncherUpdaterBuild.FileVersion;
+                    var UpdaterBuildNumberResult = LauncherUpdaterBuildNumber.CompareTo(LatestUpdaterBuildVersion);
+
+                    Log.Build("LAUNCHER UPDATER BUILD: GameLauncherUpdater " + LauncherUpdaterBuildNumber);
+                    if (UpdaterBuildNumberResult < 0)
+                    {
+                        Log.Info("LAUNCHER UPDATER: " + UpdaterBuildNumberResult + " Builds behind latest Updater!");
+                    }
+                    else
+                    {
+                        Log.Info("LAUNCHER UPDATER: Latest GameLauncherUpdater!");
+                    }
+
+                    if (UpdaterBuildNumberResult < 0)
+                    {
+                        Log.Info("LAUNCHER UPDATER: Downloading New GameLauncherUpdater.exe");
+                        File.Delete("GameLauncherUpdater.exe");
+
+                        try
+                        {
+                            using (WebClient wc = new WebClient())
+                            {
+                                wc.DownloadFile(new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error("LAUNCHER UPDATER: Failed to download new updater. " + ex.Message);
+                        }
+                    }
+                }
+            }
+
             if (_settingFile.KeyExists("InstallationDirectory"))
             {
                 var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");

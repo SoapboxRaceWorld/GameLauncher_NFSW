@@ -208,7 +208,11 @@ namespace GameLauncher.App
         {
             if (((CDNObject)CDNSource.SelectedItem).Url != null)
             {
-                CDN.CDNUrl = ((CDNObject)CDNSource.SelectedItem).Url;
+                string ChoosenCDN = ((CDNObject)CDNSource.SelectedItem).Url;
+                char[] charsToTrim = { '/' };
+                string FinalCDNURL = ChoosenCDN.TrimEnd(charsToTrim);
+
+                CDN.CDNUrl = FinalCDNURL;
 
                 QuitWithoutSaving_Click(sender, e);
             }
