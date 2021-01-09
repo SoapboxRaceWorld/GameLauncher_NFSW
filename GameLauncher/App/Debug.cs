@@ -64,7 +64,7 @@ namespace GameLauncher.App
                 try
                 {
                     Antivirus = (String.IsNullOrEmpty(AntivirusInstalled())) ? "---" : AntivirusInstalled();
-                    Firewall = (String.IsNullOrEmpty(AntivirusInstalled("FirewallProduct"))) ? "---" : AntivirusInstalled("FirewallProduct");
+                    Firewall = (String.IsNullOrEmpty(AntivirusInstalled("FirewallProduct"))) ? "Built-In" : AntivirusInstalled("FirewallProduct");
                     AntiSpyware = (String.IsNullOrEmpty(AntivirusInstalled("AntiSpywareProduct"))) ? "---" : AntivirusInstalled("AntiSpywareProduct");
                 }
                 catch
@@ -107,6 +107,17 @@ namespace GameLauncher.App
                 UpdateSkip = SettingFile.Read("IgnoreUpdateVersion");
             }
 
+            string FirewallRuleStatus = "";
+
+            if (String.IsNullOrEmpty(SettingFile.Read("Firewall")))
+            {
+                FirewallRuleStatus = "Not Exlcuded";
+            }
+            else
+            {
+                FirewallRuleStatus = SettingFile.Read("Firewall");
+            }
+
             long memKb = 0;
             ulong lpFreeBytesAvailable = 0;
             List<string> GPUs = new List<string>();
@@ -143,7 +154,7 @@ namespace GameLauncher.App
                 new ListType{ Name = "Skipping Update", Value = UpdateSkip},
                 new ListType{ Name = "Disable Proxy", Value = ProxyStatus},
                 new ListType{ Name = "Disable RPC", Value = RPCStatus},
-                new ListType{ Name = "Firewall", Value =  SettingFile.Read("Firewall")},
+                new ListType{ Name = "Firewall Rule", Value =  FirewallRuleStatus},
                 new ListType{ Name = "", Value = "" },
                 new ListType{ Name = "Server Name", Value = ServerName},
                 new ListType{ Name = "Server Address", Value = ServerIP},
@@ -157,7 +168,7 @@ namespace GameLauncher.App
                 settings.AddRange(new[]
                 {
                     new ListType{ Name = "Antivirus", Value = Antivirus },
-                    new ListType{ Name = "Firewall", Value = Firewall },
+                    new ListType{ Name = "Firewall Application", Value = Firewall },
                     new ListType{ Name = "AntiSpyware", Value = AntiSpyware },
                     new ListType{ Name = "", Value = "" },
                     new ListType{ Name = "CPU", Value = Win32_Processor },
