@@ -140,6 +140,7 @@ namespace GameLauncher.App
                     /* Fetch and Read Remote checksums.dat */
                     ScanProgressText.Text = "Downloading Checksums File";
                     getFilesToCheck = new WebClient().DownloadString(FinalCDNURL + "/unpacked/checksums.dat").Split('\n');
+                    File.WriteAllLines("checksums.dat", getFilesToCheck);
                 }
 
                 scannedHashes = new string[getFilesToCheck.Length][];
