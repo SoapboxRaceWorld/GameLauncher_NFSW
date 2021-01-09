@@ -75,7 +75,6 @@ namespace GameLauncher.App
                 }
             }
 
-            string LauncherPosition = "";
             string OS = "";
 
             if (DetectLinux.LinuxDetected())
@@ -85,15 +84,6 @@ namespace GameLauncher.App
             else
             {
                 OS = Environment.OSVersion.VersionString;
-            }
-
-            if (SettingFile.Read("LauncherPosX") + "x" + SettingFile.Read("LauncherPosY") == "x")
-            {
-                LauncherPosition = "Windows Default Position";
-            }
-            else
-            {
-                LauncherPosition = SettingFile.Read("LauncherPosX") + "x" + SettingFile.Read("LauncherPosY");
             }
 
             string UpdateSkip = "";
@@ -150,7 +140,6 @@ namespace GameLauncher.App
                 new ListType{ Name = "Launcher Version", Value = Application.ProductVersion},
                 new ListType{ Name = "Credentials Saved", Value = Password},
                 new ListType{ Name = "Language", Value =  SettingFile.Read("Language")},
-                new ListType{ Name = "LauncherPos", Value = LauncherPosition},
                 new ListType{ Name = "Skipping Update", Value = UpdateSkip},
                 new ListType{ Name = "Disable Proxy", Value = ProxyStatus},
                 new ListType{ Name = "Disable RPC", Value = RPCStatus},

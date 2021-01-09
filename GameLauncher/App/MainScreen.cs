@@ -52,7 +52,6 @@ namespace GameLauncher
         private bool _useSavedPassword;
         private bool _skipServerTrigger;
         private bool _ticketRequired;
-        private bool _windowMoved;
         private bool _playenabled;
         private bool _loggedIn;
         private bool _restartRequired;
@@ -156,7 +155,6 @@ namespace GameLauncher
             if (_mouseDownPoint.IsEmpty) { return; }
             var f = this as Form;
             f.Location = new Point(f.Location.X + (e.X - _mouseDownPoint.X), f.Location.Y + (e.Y - _mouseDownPoint.Y));
-            _windowMoved = true;
             Opacity = 0.9;
         }
 
@@ -475,16 +473,6 @@ namespace GameLauncher
                 }
             }
 
-            Log.Visuals("CORE: Doing magic with ImageServerName");
-            var pos = PointToScreen(ImageServerName.Location);
-            pos = VerticalBanner.PointToClient(pos);
-            ImageServerName.Parent = VerticalBanner;
-            ImageServerName.Location = pos;
-            ImageServerName.BackColor = Color.Transparent;
-
-            //Log.Debug("CORE: Setting ServerStatusBar");
-            //ServerStatusBar(_colorLoading, _startPoint, _endPoint);
-
             Log.Core("CORE: Loading ModManager Cache");
             ModManager.LoadModCache();
         }
@@ -600,14 +588,8 @@ namespace GameLauncher
             Log.Visuals("CORE: Setting WindowName");
             Text = "GameLauncherReborn v" + Application.ProductVersion;
 
-            Log.Core("CORE: Checking window location");
-            if (Location.X >= Screen.PrimaryScreen.Bounds.Width || Location.Y >= Screen.PrimaryScreen.Bounds.Height || Location.X <= 0 || Location.Y <= 0) 
-            {
-                Log.Core("CORE: Window location restored to centerScreen");
-
-                Self.CenterScreen(this);
-                _windowMoved = true;
-            }
+            Log.Core("CORE: Centering Window location");
+            Self.CenterScreen(this);
 
             if (!string.IsNullOrEmpty(EnableInsider.BuildNumber()))
             {
@@ -909,12 +891,6 @@ namespace GameLauncher
             {
             }
 
-            if (_windowMoved)
-            {
-                _settingFile.Write("LauncherPosX", Location.X.ToString());
-                _settingFile.Write("LauncherPosY", Location.Y.ToString());
-            }
-
             try
             { 
                 _settingFile.Write("InstallationDirectory", Path.GetFullPath(_settingFile.Read("InstallationDirectory")));
@@ -1195,8 +1171,6 @@ namespace GameLauncher
 
             //Disable Social Panel when switching
             DisableSocialPanelandClearIt();
-
-            ImageServerName.Text = ((ServerInfo)ServerPick.SelectedItem).Name;
 
             if (ServerPick.GetItemText(ServerPick.SelectedItem) == "Offline Built-In Server")
             {
@@ -1664,12 +1638,9 @@ namespace GameLauncher
                                         {
                                             File.WriteAllBytes(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin", memoryStream.ToArray());
                                         }
-
-                                        ImageServerName.Text = String.Empty; //_realServernameBanner;
                                     }
                                     else
                                     {
-                                        ImageServerName.Text = "WebLogin";
                                         VerticalBanner.Image = null;
                                         VerticalBanner.BackColor = Color.Black;
                                     }
@@ -1742,7 +1713,6 @@ namespace GameLauncher
             translatedBy.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
             ServerPick.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             AddServer.Font = new Font(DejaVuSansBold, 8f, FontStyle.Bold);
-            ImageServerName.Font = new Font(DejaVuSans, 9.75f, FontStyle.Regular);
             ShowPlayPanel.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
             CurrentWindowInfo.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             LauncherStatusText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
@@ -3192,7 +3162,6 @@ namespace GameLauncher
             else
             {
                 //set background black
-                ImageServerName.Text = "WebLogin";
                 VerticalBanner.Image = null;
 
                 _userId = UriScheme.UserID;

@@ -39,7 +39,6 @@
             this.SettingsButton = new System.Windows.Forms.PictureBox();
             this.ServerPick = new System.Windows.Forms.ComboBox();
             this.AddServer = new System.Windows.Forms.Button();
-            this.ImageServerName = new System.Windows.Forms.Label();
             this.VerticalBanner = new System.Windows.Forms.PictureBox();
             this.PlayProgressText = new System.Windows.Forms.Label();
             this.LauncherIconStatus = new System.Windows.Forms.PictureBox();
@@ -233,22 +232,6 @@
             this.AddServer.TabIndex = 3;
             this.AddServer.Text = "+";
             this.AddServer.UseVisualStyleBackColor = true;
-            // 
-            // ImageServerName
-            // 
-            this.ImageServerName.BackColor = System.Drawing.Color.Transparent;
-            this.ImageServerName.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ImageServerName.Font = new System.Drawing.Font("DejaVu Sans", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ImageServerName.ForeColor = System.Drawing.Color.Transparent;
-            this.ImageServerName.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.ImageServerName.Location = new System.Drawing.Point(30, 301);
-            this.ImageServerName.Name = "ImageServerName";
-            this.ImageServerName.Size = new System.Drawing.Size(519, 43);
-            this.ImageServerName.TabIndex = 19;
-            this.ImageServerName.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.ImageServerName.UseCompatibleTextRendering = true;
-            this.ImageServerName.UseMnemonic = false;
-            this.ImageServerName.Visible = false;
             // 
             // VerticalBanner
             // 
@@ -1480,7 +1463,6 @@
             this.Controls.Add(this.PlayProgress);
             this.Controls.Add(this.ProgressBarOutline);
             this.Controls.Add(this.VerticalBanner);
-            this.Controls.Add(this.ImageServerName);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -1531,7 +1513,6 @@
         private System.Windows.Forms.PictureBox SettingsButton;
         private System.Windows.Forms.ComboBox ServerPick;
         private System.Windows.Forms.Button AddServer;
-        private System.Windows.Forms.Label ImageServerName;
         private System.Windows.Forms.PictureBox VerticalBanner;
         internal System.Windows.Forms.Label PlayProgressText;
         private GameLauncherReborn.ProgressBarEx ExtractingProgress;
