@@ -158,6 +158,7 @@
     <Compile Include="App\Classes\LauncherCore\Client\Auth\ModernAuth.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\Tokens.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\CDN.cs" />
+    <Compile Include="App\Classes\LauncherCore\ModNet\ModNetLinksCleanup.cs" />
     <Compile Include="App\Classes\LauncherCore\Visuals\Delay.cs" />
     <Compile Include="App\Classes\SystemPlatform\Linux\DetectLinux.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\Downloader.cs" />
@@ -203,6 +204,12 @@
     <Compile Include="App\Classes\LauncherCore\RPC\DiscordGamePresence.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\EventList.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\CertificateStore.cs" />
+    <Compile Include="App\SettingsScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\SettingsScreen.Designer.cs">
+      <DependentUpon>SettingsScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="App\SplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -221,11 +228,11 @@
     <Compile Include="App\Classes\LauncherCore\Client\WebRequest.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="App\Debug.cs">
+    <Compile Include="App\DebugScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App\Debug.Designer.cs">
-      <DependentUpon>Debug.cs</DependentUpon>
+    <Compile Include="App\DebugScreen.Designer.cs">
+      <DependentUpon>DebugScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="App\MainScreen.cs">
       <SubType>Form</SubType>
@@ -274,14 +281,17 @@
     <EmbeddedResource Include="App\Classes\LauncherCore\Client\WebRequest.resx">
       <DependentUpon>WebRequest.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="App\Debug.resx">
-      <DependentUpon>Debug.cs</DependentUpon>
+    <EmbeddedResource Include="App\DebugScreen.resx">
+      <DependentUpon>DebugScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\MainScreen.resx">
       <DependentUpon>MainScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\About.resx">
       <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\SettingsScreen.resx">
+      <DependentUpon>SettingsScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\SplashScreen.resx">
       <DependentUpon>SplashScreen.cs</DependentUpon>
