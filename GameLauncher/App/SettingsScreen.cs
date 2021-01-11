@@ -194,6 +194,34 @@ namespace GameLauncher.App
             SettingsCDNPick.DataSource = finalCDNItems;
 
             /*******************************/
+            /* Read Settings.ini            /
+            /*******************************/
+
+            if (!string.IsNullOrEmpty(FileSettingsSave.Lang))
+            {
+                SettingsLanguage.SelectedValue = FileSettingsSave.Lang;
+            }
+
+            _disableProxy = (FileSettingsSave.Proxy == "1");
+            _disableDiscordRPC = (FileSettingsSave.RPC == "1");
+
+            if (File.Exists(FileSettingsSave.GameInstallation + "/profwords") || File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis"))
+            {
+                try
+                {
+                    SettingsWordFilterCheck.Checked = !File.Exists(FileSettingsSave.GameInstallation + "/profwords");
+                }
+                catch
+                {
+                    SettingsWordFilterCheck.Checked = false;
+                }
+            }
+            else
+            {
+                SettingsWordFilterCheck.Enabled = false;
+            }
+
+            /*******************************/
             /* Folder Locations             /
             /*******************************/
 
@@ -222,34 +250,6 @@ namespace GameLauncher.App
             };
 
             SettingsLanguage.DataSource = languages;
-
-            /*******************************/
-            /* Read Settings.ini            /
-            /*******************************/
-
-            if (!string.IsNullOrEmpty(FileSettingsSave.Lang))
-            {
-                SettingsLanguage.SelectedValue = FileSettingsSave.Lang;
-            }
-
-            _disableProxy = (FileSettingsSave.Proxy == "1");
-            _disableDiscordRPC = (FileSettingsSave.RPC == "1");
-
-            if (File.Exists(FileSettingsSave.GameInstallation + "/profwords") || File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis"))
-            {
-                try
-                {
-                    SettingsWordFilterCheck.Checked = !File.Exists(FileSettingsSave.GameInstallation + "/profwords");
-                }
-                catch
-                {
-                    SettingsWordFilterCheck.Checked = false;
-                }
-            }
-            else
-            {
-                SettingsWordFilterCheck.Enabled = false;
-            }
 
             /*******************************/
             /* Enable/Disable Visuals       /
