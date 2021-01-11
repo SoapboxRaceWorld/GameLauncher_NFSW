@@ -903,7 +903,6 @@
             this.ProgressBarOutline.Size = new System.Drawing.Size(529, 42);
             this.ProgressBarOutline.TabIndex = 174;
             this.ProgressBarOutline.TabStop = false;
-            this.ProgressBarOutline.Visible = false;
             // 
             // ExtractingProgress
             // 
