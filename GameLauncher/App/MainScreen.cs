@@ -869,8 +869,6 @@ namespace GameLauncher
             ServerProxy.Instance.Stop();
             Notification.Dispose();
 
-
-            Log.Debug("Closing Launcher");
             var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
             ModNetLinksCleanup.CleanLinks(linksPath);
 

@@ -351,8 +351,8 @@ namespace GameLauncher.App
                 FileSettingsSave.GameInstallation = _newGameFilesPath;
 
                 //Clean Mods Files from New Dirctory (If it has .links in directory)
-                var linksPath = Path.Combine(_newGameFilesPath, ".links");
-                CleanLinks(linksPath);
+                var linksPath = Path.Combine(_newGameFilesPath, "\\.links");
+                ModNetLinksCleanup.CleanLinks(linksPath);
 
                 _restartRequired = true;
             }
@@ -656,8 +656,8 @@ namespace GameLauncher.App
             FileSettingsSave.GameInstallation = _newGameFilesPath;
 
             //Clean Mods Files from New Dirctory (If it has .links in directory)
-            var linksPath = Path.Combine(_newGameFilesPath, ".links");
-            CleanLinks(linksPath);
+            var linksPath = Path.Combine(_newGameFilesPath, "\\.links");
+            ModNetLinksCleanup.CleanLinks(linksPath);
 
             _restartRequired = true;
         }
@@ -879,61 +879,6 @@ namespace GameLauncher.App
             else
             {
                 Log.Error("SETTINGS PINGING CDN: Settings.ini has an Empty CDN URL");
-            }
-        }
-
-        private static readonly object LinkCleanerLock = new object();
-
-        private void CleanLinks(string linksPath)
-        {
-            lock (LinkCleanerLock)
-            {
-                if (File.Exists(linksPath))
-                {
-                    Log.Core("CLEANLINKS: Found Server Mod Files to remove {Process}");
-                    string dir = FileSettingsSave.GameInstallation;
-                    foreach (var readLine in File.ReadLines(linksPath))
-                    {
-                        var parts = readLine.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
-
-                        if (parts.Length != 2)
-                        {
-                            continue;
-                        }
-
-                        string loc = parts[0];
-                        int type = int.Parse(parts[1]);
-                        string realLoc = Path.Combine(dir, loc);
-                        if (type == 0)
-                        {
-                            if (!File.Exists(realLoc))
-                            {
-                                throw new Exception(".links file includes nonexistent file: " + realLoc);
-                            }
-
-                            string origPath = realLoc + ".orig";
-
-                            if (!File.Exists(origPath))
-                            {
-                                File.Delete(realLoc);
-                                continue;
-                            }
-
-                            File.Delete(realLoc);
-                            File.Move(origPath, realLoc);
-                        }
-                        else
-                        {
-                            if (!Directory.Exists(realLoc))
-                            {
-                                throw new Exception(".links file includes nonexistent directory: " + realLoc);
-                            }
-                            Directory.Delete(realLoc, true);
-                        }
-                    }
-
-                    File.Delete(linksPath);
-                }
             }
         }
     }

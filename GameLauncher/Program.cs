@@ -18,6 +18,8 @@ using System.Reflection;
 using WindowsFirewallHelper;
 using GameLauncher.App.Classes.Events;
 using Newtonsoft.Json;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.ModNet;
 
 namespace GameLauncher
 {
@@ -696,12 +698,8 @@ namespace GameLauncher
 
             if (_settingFile.KeyExists("InstallationDirectory"))
             {
-                var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
-                if (File.Exists(linksPath))
-                {
-                    Log.Info("CLEANLINKS: Cleaning Up Mod Files {Startup}");
-                    CleanLinks(linksPath);
-                }
+                var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
+                ModNetLinksCleanup.CleanLinks(linksPath);
             }
 
             Log.Info("PROXY: Starting Proxy");
@@ -709,56 +707,6 @@ namespace GameLauncher
 
             Log.Visuals("CORE: Starting MainScreen");
             Application.Run(new MainScreen());
-        }
-
-        private static void CleanLinks(string linksPath)
-        {
-            if (File.Exists(linksPath))
-            {
-                Log.Debug("CLEANLINKS: Found Server Mod Files to remove {Process}");
-                string dir = _settingFile.Read("InstallationDirectory");
-                foreach (var readLine in File.ReadLines(linksPath))
-                {
-                    var parts = readLine.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    if (parts.Length != 2)
-                    {
-                        continue;
-                    }
-
-                    string loc = parts[0];
-                    int type = int.Parse(parts[1]);
-                    string realLoc = Path.Combine(dir, loc);
-                    if (type == 0)
-                    {
-                        if (!File.Exists(realLoc))
-                        {
-                            throw new Exception(".links file includes nonexistent file: " + realLoc);
-                        }
-
-                        string origPath = realLoc + ".orig";
-
-                        if (!File.Exists(origPath))
-                        {
-                            File.Delete(realLoc);
-                            continue;
-                        }
-
-                        File.Delete(realLoc);
-                        File.Move(origPath, realLoc);
-                    }
-                    else
-                    {
-                        if (!Directory.Exists(realLoc))
-                        {
-                            throw new Exception(".links file includes nonexistent directory: " + realLoc);
-                        }
-                        Directory.Delete(realLoc, true);
-                    }
-                }
-
-                File.Delete(linksPath);
-            }
         }
     }
 }
