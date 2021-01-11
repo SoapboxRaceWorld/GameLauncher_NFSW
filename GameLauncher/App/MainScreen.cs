@@ -1837,7 +1837,6 @@ namespace GameLauncher
             PlayProgressTextTimer.Visible = hideElements;
             PlayProgress.Visible = hideElements;
             ExtractingProgress.Visible = hideElements;
-            ProgressBarOutline.Visible = hideElements;
             AddServer.Visible = hideElements;
             AddServer.Enabled = true;
             //allowedCountriesLabel.Visible = hideElements;
