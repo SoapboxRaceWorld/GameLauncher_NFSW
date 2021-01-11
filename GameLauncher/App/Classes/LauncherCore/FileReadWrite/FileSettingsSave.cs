@@ -46,7 +46,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             }
             else if (settingFile.KeyExists("CDN"))
             {
-                string SavedCDN = CDN;
+                string SavedCDN = settingFile.Read("CDN");
 
                 if (SavedCDN.EndsWith("/"))
                 {
@@ -105,7 +105,19 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         {
             if (settingFile.Read("CDN") != CDN)
             {
-                settingFile.Write("CDN", CDN);
+                string SavedCDN = CDN;
+
+                if (SavedCDN.EndsWith("/"))
+                {
+                    char[] charsToTrim = { '/' };
+                    string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
+
+                    settingFile.Write("CDN", FinalCDNURL);
+                }
+                else
+                {
+                    settingFile.Write("CDN", CDN);
+                }
             }
 
             if (settingFile.Read("Language") != Lang)

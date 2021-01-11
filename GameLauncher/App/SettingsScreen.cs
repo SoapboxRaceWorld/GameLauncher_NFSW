@@ -55,6 +55,7 @@ namespace GameLauncher.App
             /*******************************/
             /* Set Initial position         /
             /*******************************/
+
             this.StartPosition = FormStartPosition.CenterParent;
 
             /*******************************/
@@ -118,6 +119,7 @@ namespace GameLauncher.App
             /********************************/
             /* Events                        /
             /********************************/
+
             SettingsCDNPick.DrawItem += new DrawItemEventHandler(SettingsCDNPick_DrawItem);
             /*
             SettingsSave.MouseEnter += new EventHandler(Greenbutton_hover_MouseEnter);
@@ -130,6 +132,13 @@ namespace GameLauncher.App
             SettingsCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
             SettingsCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
             */
+
+            /********************************/
+            /* Get CDN List                  /
+            /********************************/
+
+            CDNListUpdater.UpdateCDNList();
+            finalCDNItems = CDNListUpdater.GetCDNList();
         }
 
         /********************************/
@@ -181,18 +190,6 @@ namespace GameLauncher.App
 
         private void SettingsScreen_Load(object sender, EventArgs e)
         {
-            /********************************/
-            /* Get CDN List                  /
-            /********************************/
-
-            CDNListUpdater.UpdateCDNList();
-
-            Log.Info("WELCOME: Setting CDN list");
-            List<CDNObject> finalCDNItems = CDNListUpdater.GetCDNList();
-
-            SettingsCDNPick.DisplayMember = "Name";
-            SettingsCDNPick.DataSource = finalCDNItems;
-
             /*******************************/
             /* Read Settings.ini            /
             /*******************************/
@@ -303,6 +300,9 @@ namespace GameLauncher.App
             /********************************/
             /* CDN, APIs, & Restore Last CDN /
             /********************************/
+
+            SettingsCDNPick.DisplayMember = "Name";
+            SettingsCDNPick.DataSource = finalCDNItems;
 
             RememberLastCDN();
             IsCDNDownGame();
@@ -840,9 +840,8 @@ namespace GameLauncher.App
                     }
                     else if (index < 0)
                     {
-                        Log.Warning("SETTINGS CDNLIST: Old CDN URL Standard Detected!");
-                        SettingsCDNPick.SelectedIndex = 1;
-                        Log.Warning("SETTINGS CDNLIST: Displaying First CDN in List!");
+                        Log.Warning("SETTINGS CDNLIST: Checking ID Against OLD Standard");
+                        RememberLastCDNOldStandard();
                     }
                 }
                 else
@@ -852,6 +851,39 @@ namespace GameLauncher.App
                     Log.Warning("SETTINGS CDNLIST: Unknown entry value is " + FinalCDNURL);
                 }
                 Log.Core("SETTINGS CDNLIST: All done");
+            }
+        }
+
+        /* This is for Main API which still includes a trailing slash - DavidCarbon */
+        private void RememberLastCDNOldStandard()
+        {
+            /* Last Selected CDN */
+
+            if (!string.IsNullOrEmpty(FileSettingsSave.CDN))
+            {
+                string FinalCDNURL = FileSettingsSave.CDN + "/";
+                Log.Debug(FinalCDNURL);
+
+                if (finalCDNItems.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
+                {
+                    var index = finalCDNItems.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
+
+                    if (index >= 0)
+                    {
+                        Log.Warning("SETTINGS CDNLIST: Found ID Based on OLD Standard");
+                        SettingsCDNPick.SelectedIndex = index;
+                    }
+                    else if (index < 0)
+                    {
+                        Log.Warning("SETTINGS CDNLIST: Failed to Detect Standard!");
+                        SettingsCDNPick.SelectedIndex = 1;
+                        Log.Warning("SETTINGS CDNLIST: Displaying First CDN in List!");
+                    }
+                }
+                else
+                {
+                    SettingsCDNPick.SelectedIndex = 1;
+                }
             }
         }
 
