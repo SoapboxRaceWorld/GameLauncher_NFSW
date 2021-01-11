@@ -66,7 +66,7 @@ namespace GameLauncher.App
 
             LogVerify.Info("VERIFYHASH: Checking Characters in URL");
             string SavedCDN = FileSettingsSave.CDN;
-            char[] charsToTrim = { '/', 'n', 'f', 's', 'w' };
+            char[] charsToTrim = { '/' };
             FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
             LogVerify.Info("VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
         }

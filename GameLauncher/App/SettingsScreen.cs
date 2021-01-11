@@ -272,7 +272,7 @@ namespace GameLauncher.App
             try
             {
                 string SavedCDN = FileSettingsSave.CDN;
-                char[] charsToTrim = { '/', 'n', 'f', 's', 'w' };
+                char[] charsToTrim = { '/' };
                 string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
 
                 if (EnableInsider.ShouldIBeAnInsider() == true)
