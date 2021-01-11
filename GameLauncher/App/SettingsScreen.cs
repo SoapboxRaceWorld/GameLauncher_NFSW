@@ -26,7 +26,7 @@ namespace GameLauncher.App
         /* Global Functions             /
         /*******************************/
 
-        private IniFile _settingFile = new IniFile("Settings.ini");
+        //private IniFile _settingFile = new IniFile("Settings.ini");
         private string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
 
         private int _lastSelectedCdnId;
@@ -227,13 +227,13 @@ namespace GameLauncher.App
             /* Read Settings.ini            /
             /*******************************/
 
-            if (_settingFile.KeyExists("Language"))
+            if (!string.IsNullOrEmpty(FileSettingsSave.Lang))
             {
-                SettingsLanguage.SelectedValue = _settingFile.Read("Language");
+                SettingsLanguage.SelectedValue = FileSettingsSave.Lang;
             }
 
-            _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1");
-            _disableDiscordRPC = (_settingFile.KeyExists("DisableRPC") && _settingFile.Read("DisableRPC") == "1");
+            _disableProxy = (FileSettingsSave.Proxy == "1");
+            _disableDiscordRPC = (FileSettingsSave.RPC == "1");
 
             if (File.Exists(FileSettingsSave.GameInstallation + "/profwords") || File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis"))
             {
@@ -352,7 +352,7 @@ namespace GameLauncher.App
 
                 //Clean Mods Files from New Dirctory (If it has .links in directory)
                 var linksPath = Path.Combine(_newGameFilesPath, ".links");
-                ModNetLinksCleanup.CleanLinks(linksPath);
+                CleanLinks(linksPath);
 
                 _restartRequired = true;
             }
@@ -459,14 +459,14 @@ namespace GameLauncher.App
             /* Save XML Settings */
             userSettingsXml.Save(_userSettings);
 
-            DialogResult = DialogResult.OK;
+            //DialogResult = DialogResult.OK;
             Close();
         }
 
         /* Settings Cancel */
         private void SettingsCancel_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;
+            //DialogResult = DialogResult.Cancel;
             Close();
         }
 
@@ -657,7 +657,7 @@ namespace GameLauncher.App
 
             //Clean Mods Files from New Dirctory (If it has .links in directory)
             var linksPath = Path.Combine(_newGameFilesPath, ".links");
-            ModNetLinksCleanup.CleanLinks(linksPath);
+            CleanLinks(linksPath);
 
             _restartRequired = true;
         }
@@ -689,6 +689,7 @@ namespace GameLauncher.App
                         FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                         break;
                 }
+                FileSettingsSave.SaveSettings();
             }
         }
 
@@ -867,17 +868,72 @@ namespace GameLauncher.App
                 {
                     case API.Online:
                         SettingsCDNCurrent.LinkColor = Color.FromArgb(159, 193, 32);
-                        Log.UrlCall("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Online!");
+                        Log.UrlCall("SETTINGS PINGING CDN: " + FileSettingsSave.CDN + " Is Online!");
                         break;
                     default:
                         SettingsCDNCurrent.LinkColor = Color.FromArgb(254, 0, 0);
-                        Log.UrlCall("SETTINGS PINGING CDN: " + _settingFile.Read("CDN") + " Is Offline!");
+                        Log.UrlCall("SETTINGS PINGING CDN: " + FileSettingsSave.CDN + " Is Offline!");
                         break;
                 }
             }
             else
             {
                 Log.Error("SETTINGS PINGING CDN: Settings.ini has an Empty CDN URL");
+            }
+        }
+
+        private static readonly object LinkCleanerLock = new object();
+
+        private void CleanLinks(string linksPath)
+        {
+            lock (LinkCleanerLock)
+            {
+                if (File.Exists(linksPath))
+                {
+                    Log.Core("CLEANLINKS: Found Server Mod Files to remove {Process}");
+                    string dir = FileSettingsSave.GameInstallation;
+                    foreach (var readLine in File.ReadLines(linksPath))
+                    {
+                        var parts = readLine.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        if (parts.Length != 2)
+                        {
+                            continue;
+                        }
+
+                        string loc = parts[0];
+                        int type = int.Parse(parts[1]);
+                        string realLoc = Path.Combine(dir, loc);
+                        if (type == 0)
+                        {
+                            if (!File.Exists(realLoc))
+                            {
+                                throw new Exception(".links file includes nonexistent file: " + realLoc);
+                            }
+
+                            string origPath = realLoc + ".orig";
+
+                            if (!File.Exists(origPath))
+                            {
+                                File.Delete(realLoc);
+                                continue;
+                            }
+
+                            File.Delete(realLoc);
+                            File.Move(origPath, realLoc);
+                        }
+                        else
+                        {
+                            if (!Directory.Exists(realLoc))
+                            {
+                                throw new Exception(".links file includes nonexistent directory: " + realLoc);
+                            }
+                            Directory.Delete(realLoc, true);
+                        }
+                    }
+
+                    File.Delete(linksPath);
+                }
             }
         }
     }

@@ -744,15 +744,8 @@ namespace GameLauncher
                             continue;
                         }
 
-                        try
-                        {
-                            File.Delete(realLoc);
-                            File.Move(origPath, realLoc);
-                        }
-                        catch
-                        {
-                            Log.Error("CLEANLINKS: Error while deleting a file: {realLoc}");
-                        }
+                        File.Delete(realLoc);
+                        File.Move(origPath, realLoc);
                     }
                     else
                     {

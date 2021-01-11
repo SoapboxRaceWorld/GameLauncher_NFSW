@@ -41,6 +41,7 @@ using WindowsFirewallHelper;
 using GameLauncher.App.Classes.InsiderKit;
 using System.Net.Http;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 
 namespace GameLauncher
 {
@@ -230,8 +231,8 @@ namespace GameLauncher
             Log.Visuals("CORE: Applying Fonts");
             ApplyEmbeddedFonts();
 
-            _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1");
-            _disableDiscordRPC = (_settingFile.KeyExists("DisableRPC") && _settingFile.Read("DisableRPC") == "1");
+            _disableProxy = (FileSettingsSave.Proxy == "1");
+            _disableDiscordRPC = (FileSettingsSave.RPC == "1");
             Log.Debug("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + _disableProxy);
 
             Self.CenterScreen(this);
@@ -350,8 +351,8 @@ namespace GameLauncher
                 MessageBox.Show(null, "Failed to write the test file. Make sure you're running the launcher with administrative privileges.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            Log.Core("LAUNCHER: Checking InstallationDirectory: " + _settingFile.Read("InstallationDirectory"));
-            if (string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory"))) 
+            Log.Core("LAUNCHER: Checking InstallationDirectory: " + FileSettingsSave.GameInstallation);
+            if (string.IsNullOrEmpty(FileSettingsSave.GameInstallation)) 
             {
                 Log.Core("LAUNCHER: First run!");
 
@@ -366,17 +367,19 @@ namespace GameLauncher
                     }
                     else
                     {
-                        _settingFile.Write("CDN", CDN.CDNUrl);
+                        FileSettingsSave.CDN = CDN.CDNUrl;
                         _NFSW_Installation_Source = CDN.CDNUrl;
+                        FileSettingsSave.SaveSettings();
                     }
                 }
                 catch
                 {
                     Log.Warning("LAUNCHER: CDN Source URL was Empty! Setting a Null Safe URL 'http://localhost'");
-                    _settingFile.Write("CDN", "http://localhost");
+                    FileSettingsSave.CDN = "http://localhost";
                     _NFSW_Installation_Source = "http://localhost";
                     Log.Core("LAUNCHER: Installation Directory was Empty! Creating and Setting Directory at " + AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
-                    _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
+                    FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
+                    FileSettingsSave.SaveSettings();
                 }
 
                 var fbd = new CommonOpenFileDialog 
@@ -402,12 +405,14 @@ namespace GameLauncher
                         Directory.CreateDirectory("Game Files");
                         Log.Warning("LAUNCHER: Installing NFSW in same directory where the launcher resides is disadvised.");
                         MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. Instead, we will install it on {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
+                        FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
+                        FileSettingsSave.SaveSettings();
                     }
                     else
                     {
                         Log.Core("LAUNCHER: Directory Set: " + fbd.FileName);
-                        _settingFile.Write("InstallationDirectory", fbd.FileName);
+                        FileSettingsSave.GameInstallation = fbd.FileName;
+                        FileSettingsSave.SaveSettings();
                     }
                 } 
                 else
@@ -417,13 +422,17 @@ namespace GameLauncher
                 }
                 fbd.Dispose();
             }
- 
+    
+            /* Mental Note! Remind me to add a Second NullSafe Check for Settings.ini Thanks! - DavidCarbon
+             * 
+            /*
             if (!_settingFile.KeyExists("CDN") || string.IsNullOrEmpty(_settingFile.Read("CDN")))
             {
                 _settingFile.Write("CDN", "http://localhost");
                 _NFSW_Installation_Source = "http://localhost";
                 Log.Warning("LAUNCHER: CDN Source URL was Empty! Setting a Null Safe URL 'http://localhost'");
             }
+            */
 
             if (!DetectLinux.LinuxDetected())
             {
@@ -439,14 +448,14 @@ namespace GameLauncher
                 File.Delete(temporaryFile);
 
                 //Windows Defender (Windows 10)
-                if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (_settingFile.Read("WindowsDefender") == "Not Excluded"))
+                if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.WindowsDefenderStatus == "Not Excluded"))
                 {
                     Log.Core("WINDOWS DEFENDER: Windows 10 Detected! Running Exclusions for Core Folders");
                     WindowsDefenderFirstRun();
                 }
-                else if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && _settingFile.KeyExists("WindowsDefender"))
+                else if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && !string.IsNullOrEmpty(FileSettingsSave.WindowsDefenderStatus))
                 {
-                    Log.Core("WINDOWS DEFENDER: Found 'WindowsDefender' key! Its value is " + _settingFile.Read("WindowsDefender"));
+                    Log.Core("WINDOWS DEFENDER: Found 'WindowsDefender' key! Its value is " + FileSettingsSave.WindowsDefenderStatus);
                 }
             }
 
@@ -574,7 +583,7 @@ namespace GameLauncher
                 InsiderBuildNumberText.Text = "Insider Build Date: " + EnableInsider.BuildNumber();
             }
 
-            _NFSW_Installation_Source = !string.IsNullOrEmpty(_settingFile.Read("CDN")) ? _settingFile.Read("CDN") : "http://localhost";
+            _NFSW_Installation_Source = !string.IsNullOrEmpty(FileSettingsSave.CDN) ? FileSettingsSave.CDN : "http://localhost";
             Log.Core("LAUNCHER: NFSW Download Source is now: " + _NFSW_Installation_Source);
 
             Log.Visuals("CORE: Applyinng ContextMenu");
@@ -595,9 +604,9 @@ namespace GameLauncher
 
             ContextMenu = null;
 
-            MainEmail.Text = _settingFile.Read("AccountEmail");
+            MainEmail.Text = FileAccountSave.UserRawEmail;
             MainPassword.Text = Properties.Settings.Default.PasswordDecoded;
-            if (!string.IsNullOrEmpty(_settingFile.Read("AccountEmail")) && !string.IsNullOrEmpty(_settingFile.Read("Password")))
+            if (!string.IsNullOrEmpty(FileAccountSave.UserRawEmail) && !string.IsNullOrEmpty(FileAccountSave.UserHashedPassword))
             {
                 Log.Core("LAUNCHER: Restoring last saved email and password");
                 RememberMe.Checked = true;
@@ -610,7 +619,7 @@ namespace GameLauncher
             ServerPick.DataSource = finalItems;
 
             //ForceSelectServer
-            if (string.IsNullOrEmpty(_settingFile.Read("Server")))
+            if (string.IsNullOrEmpty(FileAccountSave.ChoosenGameServer))
             {
                 //SelectServerBtn_Click(null, null);
                 new SelectServer().ShowDialog();
@@ -618,7 +627,8 @@ namespace GameLauncher
                 if (ServerName != null)
                 {
                     this.SelectServerBtn.Text = "[...] " + ServerName.Name;
-                    _settingFile.Write("Server", ServerName.IpAddress);
+                    FileAccountSave.ChoosenGameServer = ServerName.IpAddress;
+                    FileAccountSave.SaveAccount();
                 }
                 else
                 {
@@ -631,30 +641,32 @@ namespace GameLauncher
             Log.Core("SERVERLIST: Checking if server is set on INI File");
             try
             {
-                if (string.IsNullOrEmpty(_settingFile.Read("Server")))
+                if (string.IsNullOrEmpty(FileAccountSave.ChoosenGameServer))
                 {
                     Log.Warning("SERVERLIST: Failed to find anything... assuming " + ((ServerInfo)ServerPick.SelectedItem).IpAddress);
-                    _settingFile.Write("Server", ((ServerInfo)ServerPick.SelectedItem).IpAddress);
+                    FileAccountSave.ChoosenGameServer = ((ServerInfo)ServerPick.SelectedItem).IpAddress;
+                    FileAccountSave.SaveAccount();
                 }
             }
             catch
             {
                 Log.Error("SERVERLIST: Failed to write anything...");
-                _settingFile.Write("Server", "");
+                FileAccountSave.ChoosenGameServer = string.Empty;
+                FileAccountSave.SaveAccount();
             }
 
             Log.Core("SERVERLIST: Re-Checking if server is set on INI File");
-            if (_settingFile.KeyExists("Server"))
+            if (!string.IsNullOrEmpty(FileAccountSave.ChoosenGameServer))
             {
                 Log.Core("SERVERLIST: Found something!");
                 _skipServerTrigger = true;
 
                 Log.Core("SERVERLIST: Checking if server exists on our database");
 
-                if (finalItems.FindIndex(i => string.Equals(i.IpAddress, _settingFile.Read("Server"))) != 0 /*_slresponse.Contains(_settingFile.Read("Server"))*/)
+                if (finalItems.FindIndex(i => string.Equals(i.IpAddress, FileAccountSave.ChoosenGameServer)) != 0 /*_slresponse.Contains(_settingFile.Read("Server"))*/)
                 {
                     Log.Core("SERVERLIST: Server found! Checking ID");
-                    var index = finalItems.FindIndex(i => string.Equals(i.IpAddress, _settingFile.Read("Server")));
+                    var index = finalItems.FindIndex(i => string.Equals(i.IpAddress, FileAccountSave.ChoosenGameServer));
 
                     Log.Core("SERVERLIST: ID is " + index);
                     if (index >= 0)
@@ -668,7 +680,8 @@ namespace GameLauncher
                     Log.Warning("SERVERLIST: Unable to find anything, assuming default");
                     ServerPick.SelectedIndex = 1;
                     Log.Warning("SERVERLIST: Deleting unknown entry");
-                    _settingFile.DeleteKey("Server");
+                    FileAccountSave.ChoosenGameServer = string.Empty;
+                    FileAccountSave.SaveAccount();
                 }
 
                 Log.Core("SERVERLIST: Triggering server change");
@@ -680,7 +693,7 @@ namespace GameLauncher
             }
 
             Log.Core("LAUNCHER: Checking for password");
-            if (_settingFile.KeyExists("Password"))
+            if (!string.IsNullOrEmpty(FileAccountSave.UserHashedPassword))
             {
                 _loginEnabled = true;
                 _serverEnabled = true;
@@ -697,7 +710,7 @@ namespace GameLauncher
                 LoginButton.ForeColor = Color.Gray;
             }
 
-            /* Fix this - DavidCarbon */
+            /* Fix this at a later date - DavidCarbon */
             /*
             Log.Core("LAUNCHER: Setting game language");
 
@@ -707,15 +720,16 @@ namespace GameLauncher
             }
             */
 
-            Log.Core("LAUNCHER: Re-checking InstallationDirectory: " + _settingFile.Read("InstallationDirectory"));
+            Log.Core("LAUNCHER: Re-checking InstallationDirectory: " + FileSettingsSave.GameInstallation);
 
-            var drive = Path.GetPathRoot(_settingFile.Read("InstallationDirectory"));
+            var drive = Path.GetPathRoot(FileSettingsSave.GameInstallation);
             if (!Directory.Exists(drive))
             {
                 if (!string.IsNullOrEmpty(drive))
                 {
-                    var newdir = Directory.GetCurrentDirectory() + "\\Game Files";
-                    _settingFile.Write("InstallationDirectory", newdir);
+                    var newdir = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
+                    FileSettingsSave.GameInstallation = newdir;
+                    FileSettingsSave.SaveSettings();
                     Log.Error(string.Format("LAUNCHER: Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir));
 
                     MessageBox.Show(null, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -732,11 +746,11 @@ namespace GameLauncher
             try
             {
                 var gameInstallDirValue = Registry.GetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", RegistryValueKind.String);
-                if (gameInstallDirValue == null || gameInstallDirValue.ToString() != Path.GetFullPath(_settingFile.Read("InstallationDirectory")))
+                if (gameInstallDirValue == null || gameInstallDirValue.ToString() != Path.GetFullPath(FileSettingsSave.GameInstallation))
                 {
                     try
                     {
-                        Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", Path.GetFullPath(_settingFile.Read("InstallationDirectory")));
+                        Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", Path.GetFullPath(FileSettingsSave.GameInstallation));
                         Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "LaunchInstallDir", Path.GetFullPath(Application.ExecutablePath));
                     }
                     catch(Exception ex)
@@ -794,24 +808,22 @@ namespace GameLauncher
         {
             //CloseBTN.BackgroundImage = Properties.Resources.close_click;
 
+            /* Check if This is nessary in the long term - DavidCarbon
+             * 
+            /* 
             try
             {
-                if (!(ServerPick.SelectedItem is ServerInfo server)) return;
-                _settingFile.Write("Server", server.IpAddress); 
-            }
-            catch
-            {
-            }
-
-            try
-            { 
                 _settingFile.Write("InstallationDirectory", Path.GetFullPath(_settingFile.Read("InstallationDirectory")));
             }
             catch
             {
                 _settingFile.Write("InstallationDirectory", _settingFile.Read("InstallationDirectory"));
             }
+            */
 
+            //Remind Me to Move This to another Location Thanks! - DavidCarbon
+
+            /*
             //DavidCarbon
             //This Saves the update the was skipped or to remind the user at next launch
             if (Settings.Default.IgnoreUpdateVersion != String.Empty)
@@ -838,6 +850,9 @@ namespace GameLauncher
                     Log.Info("IGNOREUPDATEVERSION: Latest Game Launcher!");
                 }
             }
+            */
+            FileSettingsSave.SaveSettings();
+            FileAccountSave.SaveAccount();
 
             Process[] allOfThem = Process.GetProcessesByName("nfsw");
             foreach (var oneProcess in allOfThem)
@@ -854,7 +869,9 @@ namespace GameLauncher
             ServerProxy.Instance.Stop();
             Notification.Dispose();
 
-            var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
+
+            Log.Debug("Closing Launcher");
+            var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
             ModNetLinksCleanup.CleanLinks(linksPath);
 
             //Leave this here. Its to properly close the launcher from Visual Studio (And Close the Launcher a well)
@@ -961,30 +978,41 @@ namespace GameLauncher
             if (_modernAuthSupport == false)
             {
                 //ClassicAuth sends password in SHA1
-                realpass = (_useSavedPassword) ? _settingFile.Read("Password") : SHA.HashPassword(MainPassword.Text.ToString()).ToLower();
+                realpass = (_useSavedPassword) ? FileAccountSave.UserHashedPassword : SHA.HashPassword(MainPassword.Text.ToString()).ToLower();
                 ClassicAuth.Login(username, realpass);
             } 
             else
             {
                 //ModernAuth sends passwords in plaintext, but is POST request
-                realpass = (_useSavedPassword) ? _settingFile.Read("Password") : MainPassword.Text.ToString();
+                realpass = (_useSavedPassword) ? FileAccountSave.UserHashedPassword : MainPassword.Text.ToString();
                 ModernAuth.Login(username, realpass);
             }
 
             if (RememberMe.Checked) 
             {
-                _settingFile.Write("AccountEmail", username);
-                _settingFile.Write("Password", realpass);
+                FileAccountSave.UserRawEmail = username;
+                FileAccountSave.UserHashedPassword = realpass;
+                FileAccountSave.SaveAccount();
                 Properties.Settings.Default.PasswordDecoded = MainPassword.Text.ToString();
             }
             else
             {
-                _settingFile.DeleteKey("AccountEmail");
-                _settingFile.DeleteKey("Password");
+                FileAccountSave.UserRawEmail = string.Empty;
+                FileAccountSave.UserHashedPassword = string.Empty;
+                FileAccountSave.SaveAccount();
                 Properties.Settings.Default.PasswordDecoded = String.Empty;
             }
 
             Properties.Settings.Default.Save();
+
+            try
+            {
+                if (!(ServerPick.SelectedItem is ServerInfo server)) return;
+                FileAccountSave.ChoosenGameServer = server.IpAddress;
+            }
+            catch
+            {
+            }
 
             if (String.IsNullOrEmpty(Tokens.Error))
             {
@@ -2186,6 +2214,7 @@ namespace GameLauncher
         {
             if (!(ServerPick.SelectedItem is ServerInfo server)) return;
 
+            /*
             Form settingScreen = new SettingsScreen(server.IpAddress, server.Name);
 
             if(settingScreen.ShowDialog(this) == DialogResult.OK) {
@@ -2194,8 +2223,9 @@ namespace GameLauncher
             }
 
             settingScreen.Dispose();
+            */
 
-            //new SettingsScreen(server.IpAddress, server.Name).ShowDialog();
+            new SettingsScreen(server.IpAddress, server.Name).ShowDialog();
         }
 
         private void SettingsButton_MouseEnter(object sender, EventArgs e)
@@ -2404,7 +2434,7 @@ namespace GameLauncher
 
         private void LaunchGame(string userId, string loginToken, string serverIp, Form x)
         {
-            var oldfilename = _settingFile.Read("InstallationDirectory") + "/nfsw.exe";
+            var oldfilename = FileSettingsSave.GameInstallation + "/nfsw.exe";
 
             var args = _serverInfo.Id.ToUpper() + " " + serverIp + " " + loginToken + " " + userId;
             var psi = new ProcessStartInfo();
@@ -2414,7 +2444,7 @@ namespace GameLauncher
                 psi.UseShellExecute = false;
             }
 
-            psi.WorkingDirectory = _settingFile.Read("InstallationDirectory");
+            psi.WorkingDirectory = FileSettingsSave.GameInstallation;
             psi.FileName = oldfilename;
             psi.Arguments = args;
 
@@ -2615,7 +2645,7 @@ namespace GameLauncher
 
             if (!DetectLinux.LinuxDetected())
             {
-                var installDir = _settingFile.Read("InstallationDirectory");
+                var installDir = FileSettingsSave.GameInstallation;
                 DriveInfo driveInfo = new DriveInfo(installDir);
 
                 if (!string.Equals(driveInfo.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
@@ -2629,10 +2659,10 @@ namespace GameLauncher
                 }
             }
 
-            ModManager.ResetModDat(_settingFile.Read("InstallationDirectory"));
+            ModManager.ResetModDat(FileSettingsSave.GameInstallation);
 
-            if (Directory.Exists(_settingFile.Read("InstallationDirectory") + "/modules")) Directory.Delete(_settingFile.Read("InstallationDirectory") + "/modules", true);
-            if (!Directory.Exists(_settingFile.Read("InstallationDirectory") + "/scripts")) Directory.CreateDirectory(_settingFile.Read("InstallationDirectory") + "/scripts");
+            if (Directory.Exists(FileSettingsSave.GameInstallation + "/modules")) Directory.Delete(FileSettingsSave.GameInstallation + "/modules", true);
+            if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
             String[] ModNetReloadedFiles = new string[]
             {
                 "dinput8.dll",
@@ -2684,19 +2714,19 @@ namespace GameLauncher
                             Log.Debug("ETAG FINAL: " + fileETAG);
                         }
 
-                        if (MDFive.HashFile(_settingFile.Read("InstallationDirectory") + "/" + file) != fileETAG || !File.Exists(_settingFile.Read("InstallationDirectory") + "/" + file))
+                        if (MDFive.HashFile(FileSettingsSave.GameInstallation + "/" + file) != fileETAG || !File.Exists(FileSettingsSave.GameInstallation + "/" + file))
                         {
                             PlayProgressText.Text = ("ModNetReloaded: Downloading " + file).ToUpper();
 
                             Log.Warning("MODNET CORE: " + file + " Does not match MD5 Hash on File Server -> Online Hash: '" + fileETAG + "'");
 
-                            if (File.Exists(_settingFile.Read("InstallationDirectory") + "/" + file))
+                            if (File.Exists(FileSettingsSave.GameInstallation + "/" + file))
                             {
-                                File.Delete(_settingFile.Read("InstallationDirectory") + "/" + file);
+                                File.Delete(FileSettingsSave.GameInstallation + "/" + file);
                             }
 
                             WebClient newModNetFilesDownload = new WebClient();
-                            newModNetFilesDownload.DownloadFile(Self.modnetserver + "/modules-v2/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                            newModNetFilesDownload.DownloadFile(Self.modnetserver + "/modules-v2/" + file, FileSettingsSave.GameInstallation + "/" + file);
                         }
                         else
                         {
@@ -2739,7 +2769,7 @@ namespace GameLauncher
                     int CountFilesTotal = 0;
                     CountFilesTotal = json3.Entries.Count;
 
-                    String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", MDFive.HashPassword(json2.ServerID).ToLower());
+                    String path = Path.Combine(FileSettingsSave.GameInstallation, "MODS", MDFive.HashPassword(json2.ServerID).ToLower());
                     if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
                     foreach (IndexJsonEntry modfile in json3.Entries)
@@ -2828,9 +2858,9 @@ namespace GameLauncher
             {
                 if
                   (
-                    SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
-                    SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
-                    SHA.HashFile(_settingFile.Read("InstallationDirectory") + "/nfsw.exe") == "E69890D31919DE1649D319956560269DB88B8F22"
+                    SHA.HashFile(FileSettingsSave.GameInstallation + "/nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
+                    SHA.HashFile(FileSettingsSave.GameInstallation + "/nfsw.exe") == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
+                    SHA.HashFile(FileSettingsSave.GameInstallation + "/nfsw.exe") == "E69890D31919DE1649D319956560269DB88B8F22"
                   )
                 {
                     ServerProxy.Instance.SetServerUrl(_serverIp);
@@ -2942,25 +2972,24 @@ namespace GameLauncher
 
             try
             {
-                speechFile = string.IsNullOrEmpty(_settingFile.Read("Language")) ? "en" : _settingFile.Read("Language").ToLower();
+                speechFile = string.IsNullOrEmpty(FileSettingsSave.Lang) ? "en" : FileSettingsSave.Lang.ToLower();
             }
             catch (Exception)
             {
                 speechFile = "en";
             }
 
-            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/Sound/Speech/copspeechhdr_" + speechFile + ".big"))
+            if (!File.Exists(FileSettingsSave.GameInstallation + "/Sound/Speech/copspeechhdr_" + speechFile + ".big"))
             {
                 PlayProgressText.Text = "Loading list of files to download...".ToUpper();
 
                 DriveInfo[] allDrives = DriveInfo.GetDrives();
                 foreach (DriveInfo d in allDrives)
                 {
-                    if (d.Name == Path.GetPathRoot(_settingFile.Read("InstallationDirectory")))
+                    if (d.Name == Path.GetPathRoot(FileSettingsSave.GameInstallation))
                     {
                         if (d.TotalFreeSpace < 8589934592)
                         {
-
                             ExtractingProgress.Value = 100;
                             ExtractingProgress.Width = 519;
                             ExtractingProgress.Image = Properties.Resources.progress_warning;
@@ -2986,9 +3015,9 @@ namespace GameLauncher
 
         public void RemoveTracksHighFiles()
         {
-            if (File.Exists(_settingFile.Read("InstallationDirectory") + "/TracksHigh/STREAML5RA_98.BUN"))
+            if (File.Exists(FileSettingsSave.GameInstallation + "/TracksHigh/STREAML5RA_98.BUN"))
             {
-                Directory.Delete(_settingFile.Read("InstallationDirectory") + "/TracksHigh", true);
+                Directory.Delete(FileSettingsSave.GameInstallation + "/TracksHigh", true);
             }
         }
 
@@ -3010,11 +3039,11 @@ namespace GameLauncher
                 //GameFiles.sbrwpack
                 LocalGameFiles();
             }
-            else if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/nfsw.exe"))
+            else if (!File.Exists(FileSettingsSave.GameInstallation + "/nfsw.exe"))
             {
                 _downloadStartTime = DateTime.Now;
                 Log.Info("DOWNLOAD: Getting Core Game Files");
-                _downloader.StartDownload(_NFSW_Installation_Source, "", _settingFile.Read("InstallationDirectory"), false, false, 1130632198);
+                _downloader.StartDownload(_NFSW_Installation_Source, "", FileSettingsSave.GameInstallation, false, false, 1130632198);
             }
             else
             {
@@ -3030,11 +3059,11 @@ namespace GameLauncher
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
-            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "/Tracks/STREAML5RA_98.BUN"))
+            if (!File.Exists(FileSettingsSave.GameInstallation + "/Tracks/STREAML5RA_98.BUN"))
             {
                 _downloadStartTime = DateTime.Now;
                 Log.Info("DOWNLOAD: Getting Tracks Folder");
-                _downloader.StartDownload(_NFSW_Installation_Source, "Tracks", _settingFile.Read("InstallationDirectory"), false, false, 615494528);
+                _downloader.StartDownload(_NFSW_Installation_Source, "Tracks", FileSettingsSave.GameInstallation, false, false, 615494528);
             }
             else
             {
@@ -3055,7 +3084,7 @@ namespace GameLauncher
 
             try
             {
-                if (string.IsNullOrEmpty(_settingFile.Read("Language")))
+                if (string.IsNullOrEmpty(FileSettingsSave.Lang))
                 {
                     speechFile = "en";
                     speechSize = 141805935;
@@ -3064,7 +3093,7 @@ namespace GameLauncher
                 else
                 {
                     WebClient wc = new WebClient();
-                    var response = wc.DownloadString(_NFSW_Installation_Source + "/" + _settingFile.Read("Language").ToLower() + "/index.xml");
+                    var response = wc.DownloadString(_NFSW_Installation_Source + "/" + FileSettingsSave.Lang.ToLower() + "/index.xml");
 
                     response = response.Substring(3, response.Length - 3);
 
@@ -3072,7 +3101,7 @@ namespace GameLauncher
                     speechFileXml.LoadXml(response);
                     var speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
 
-                    speechFile = _settingFile.Read("Language").ToLower();
+                    speechFile = FileSettingsSave.Lang.ToLower();
                     speechSize = Convert.ToInt32(speechSizeNode.InnerText);
                     /* Fix this issue - DavidCarbon */
                     //_langInfo = SettingsLanguage.GetItemText(SettingsLanguage.SelectedItem).ToUpper();
@@ -3087,11 +3116,11 @@ namespace GameLauncher
 
             PlayProgressText.Text = string.Format("Checking for {0} Speech Files.", _langInfo).ToUpper();
 
-            if (!File.Exists(_settingFile.Read("InstallationDirectory") + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big"))
+            if (!File.Exists(FileSettingsSave.GameInstallation + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big"))
             {
                 _downloadStartTime = DateTime.Now;
                 Log.Info("DOWNLOAD: Getting Speech/Audio Files");
-                _downloader.StartDownload(_NFSW_Installation_Source, speechFile, _settingFile.Read("InstallationDirectory"), false, false, speechSize);
+                _downloader.StartDownload(_NFSW_Installation_Source, speechFile, FileSettingsSave.GameInstallation, false, false, speechSize);
             }
             else
             {
@@ -3135,7 +3164,7 @@ namespace GameLauncher
 
                             TaskbarProgress.SetValue(Handle, (int)(100 * current / numFiles), 100);
 
-                            if (!File.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), fullName.Replace(".sbrw", String.Empty))))
+                            if (!File.Exists(Path.Combine(FileSettingsSave.GameInstallation, fullName.Replace(".sbrw", String.Empty))))
                             {
                                 PlayProgressText.Text = ("Unpacking " + fullName.Replace(".sbrw", String.Empty)).ToUpper();
                                 PlayProgressTextTimer.Text = "[" + current + " / " + archive.Entries.Count + "]";
@@ -3145,12 +3174,12 @@ namespace GameLauncher
                                 {
                                     //Is a directory, create it!
                                     string folderName = fullName.Remove(fullName.Length - 1);
-                                    if (Directory.Exists(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName)))
+                                    if (Directory.Exists(Path.Combine(FileSettingsSave.GameInstallation, folderName)))
                                     {
-                                        Directory.Delete(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName), true);
+                                        Directory.Delete(Path.Combine(FileSettingsSave.GameInstallation, folderName), true);
                                     }
 
-                                    Directory.CreateDirectory(Path.Combine(_settingFile.Read("InstallationDirectory"), folderName));
+                                    Directory.CreateDirectory(Path.Combine(FileSettingsSave.GameInstallation, folderName));
                                 }
                                 else
                                 {
@@ -3179,7 +3208,7 @@ namespace GameLauncher
                                         IV = Encoding.ASCII.GetBytes(IV)
                                     };
 
-                                    FileStream fileStream = new FileStream(Path.Combine(_settingFile.Read("InstallationDirectory"), oldFileName), FileMode.Create);
+                                    FileStream fileStream = new FileStream(Path.Combine(FileSettingsSave.GameInstallation, oldFileName), FileMode.Create);
                                     CryptoStream cryptoStream = new CryptoStream(fileStream, dESCryptoServiceProvider.CreateDecryptor(), CryptoStreamMode.Write);
                                     BinaryWriter binaryFile = new BinaryWriter(cryptoStream);
 
@@ -3295,17 +3324,17 @@ namespace GameLauncher
         {
             try
             {
-                File.WriteAllBytes(_settingFile.Read("InstallationDirectory") + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
+                File.WriteAllBytes(FileSettingsSave.GameInstallation + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
             }
             catch
             {
                 // ignored
             }
 
-            if (_settingFile.KeyExists("InstallationDirectory"))
+            if (!string.IsNullOrEmpty(FileSettingsSave.GameInstallation))
             {
                 //Remove current Firewall for the Game Files 
-                string CurrentGameFilesExePath = Path.Combine(_settingFile.Read("InstallationDirectory") + "\\nfsw.exe");
+                string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
 
                 if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.RuleExist("SBRW - Game") == false)
                 {
@@ -3467,33 +3496,34 @@ namespace GameLauncher
                 using (PowerShell ps = PowerShell.Create())
                 {
                     ps.AddScript($"Add-MpPreference -ExclusionPath \"{AppDomain.CurrentDomain.BaseDirectory}\"");
-                    ps.AddScript($"Add-MpPreference -ExclusionPath \"{_settingFile.Read("InstallationDirectory")}\"");
+                    ps.AddScript($"Add-MpPreference -ExclusionPath \"{FileSettingsSave.GameInstallation}\"");
                     var result = ps.Invoke();
                 }
-                _settingFile.Write("WindowsDefender", "Excluded");
+                FileSettingsSave.FirewallStatus = "Excluded";
+                FileSettingsSave.SaveSettings();
             }
             catch
             {
-                Log.Error("WINDOWS DEFENDER: Failed to Exclude Folders");
-                _settingFile.Write("WindowsDefender", "Not Excluded");
+                FileSettingsSave.FirewallStatus = "Not Excluded";
+                FileSettingsSave.SaveSettings();
             }
         }
 
         private void CheckGameFilesDirectoryPrevention()
         {
-            switch (Self.CheckFolder(_settingFile.Read("InstallationDirectory"))) 
+            switch (Self.CheckFolder(FileSettingsSave.GameInstallation)) 
             {
                 case FolderType.IsSameAsLauncherFolder:
                         Directory.CreateDirectory("Game Files");
                         Log.Error("LAUNCHER: Installing NFSW in same directory where the launcher resides is disadvised.");
                         MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
+                        FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                     break;
                 case FolderType.IsTempFolder:
                         Directory.CreateDirectory("Game Files");
                         Log.Error("LAUNCHER: (╯°□°）╯︵ ┻━┻ Installing NFSW in the Temp Folder is disadvised!");
                         MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is disadvised! Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files" + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
+                        FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                     break;
                 case FolderType.IsProgramFilesFolder:
                 case FolderType.IsUsersFolders:
@@ -3501,9 +3531,10 @@ namespace GameLauncher
                         Directory.CreateDirectory("Game Files");
                         Log.Error("LAUNCHER: Installing NFSW in a Special Directory is disadvised.");
                         MessageBox.Show(null, string.Format("Installing NFSW in a Special Directory is disadvised. Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
+                        FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                     break;
             }
+            FileSettingsSave.SaveSettings();
         }
     }
     /* Moved 7 Unused Code to Gist */

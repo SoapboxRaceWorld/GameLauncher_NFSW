@@ -10,11 +10,21 @@
 
         public static string ChoosenGameServer = accountFile.Read("Server");
 
-        public static void SaveChoosenServer()
+        public static void NullSafeAccount()
         {
-            if (accountFile.Read("Server") != ChoosenGameServer)
+            if (!accountFile.KeyExists("Server"))
             {
-                accountFile.Write("Server", ChoosenGameServer);
+                accountFile.Write("Server", string.Empty);
+            }
+
+            if (!accountFile.KeyExists("AccountEmail"))
+            {
+                accountFile.Write("AccountEmail", string.Empty);
+            }
+
+            if (!accountFile.KeyExists("Password"))
+            {
+                accountFile.Write("Password", string.Empty);
             }
 
             accountFile = new IniFile("Account.ini");
@@ -22,12 +32,17 @@
 
         public static void SaveAccount()
         {
-            if (accountFile.Read("AccountEmail") != UserRawEmail)
+            if (!accountFile.KeyExists("Server") || accountFile.Read("Server") != ChoosenGameServer)
+            {
+                accountFile.Write("Server", ChoosenGameServer);
+            }
+
+            if (!accountFile.KeyExists("AccountEmail") || accountFile.Read("AccountEmail") != UserRawEmail)
             {
                 accountFile.Write("AccountEmail", UserRawEmail);
             }
 
-            if (accountFile.Read("Password") != UserHashedPassword)
+            if (!accountFile.KeyExists("Password") || accountFile.Read("Password") != UserHashedPassword)
             {
                 accountFile.Write("Password", UserHashedPassword);
             }
