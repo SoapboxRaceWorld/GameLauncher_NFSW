@@ -25,7 +25,6 @@ namespace GameLauncher
 {
     internal static class Program
     {
-        public static IniFile _settingFile = new IniFile("Settings.ini");
         private static string LatestUpdaterBuildVersion = "1.0.0.4";
 
         internal class Arguments
@@ -106,7 +105,7 @@ namespace GameLauncher
             if (!DetectLinux.LinuxDetected())
             {
                //Windows Firewall Runner
-                if (_settingFile.KeyExists("Firewall"))
+                if (!string.IsNullOrEmpty(FileSettingsSave.FirewallStatus))
                 {
                     string nameOfLauncher = "SBRW - Game Launcher";
                     string localOfLauncher = Assembly.GetEntryAssembly().Location;
@@ -120,16 +119,18 @@ namespace GameLauncher
                     bool removeFirewallRule = false;
                     bool firstTimeRun = false;
 
-                    if (_settingFile.Read("Firewall") == "Not Excluded")
+                    if (FileSettingsSave.FirewallStatus == "Not Excluded")
                     {
                         firstTimeRun = true;
-                        _settingFile.Write("Firewall", "Excluded");
+                        FileSettingsSave.FirewallStatus = "Excluded";
                     }
-                    else if (_settingFile.Read("Firewall") == "Reset")
+                    else if (FileSettingsSave.FirewallStatus == "Reset")
                     {
                         removeFirewallRule = true;
-                        _settingFile.Write("Firewall", "Not Excluded");
+                        FileSettingsSave.FirewallStatus = "Not Excluded";
                     }
+
+                    FileSettingsSave.SaveSettings();
 
                     //Inbound & Outbound
                     FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
@@ -137,7 +138,7 @@ namespace GameLauncher
 
                     //This Removes the Game File Exe From Firewall
                     //To Find the one that Adds the Exe To Firewall -> Search for `OnDownloadFinished()`
-                    string CurrentGameFilesExePath = Path.Combine(_settingFile.Read("InstallationDirectory") + "\\nfsw.exe");
+                    string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
 
                     if (File.Exists(CurrentGameFilesExePath) && removeFirewallRule == true)
                     {
@@ -286,7 +287,7 @@ namespace GameLauncher
             if (!DetectLinux.LinuxDetected())
             {
                 //Windows 7 Fix
-                if (!_settingFile.KeyExists("PatchesApplied") && WindowsProductVersion.GetWindowsNumber() == 6.1)
+                if (FileSettingsSave.Win7UpdatePatches == "0")
                 {
                     if (Self.GetInstalledHotFix("KB3020369") == false || Self.GetInstalledHotFix("KB3125574") == false)
                     {
@@ -317,7 +318,8 @@ namespace GameLauncher
                             MessageBox.Show(null, "Roger that, There may be some issues connecting to the servers.", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
 
-                        _settingFile.Write("PatchesApplied", "1");
+                        FileSettingsSave.Win7UpdatePatches = "1";
+                        FileSettingsSave.SaveSettings();
                     }
                 }
 
@@ -391,57 +393,11 @@ namespace GameLauncher
 
             Console.WriteLine("Application path: " + Path.GetDirectoryName(Application.ExecutablePath));
 
-            if (DetectLinux.LinuxDetected())
+            if (!string.IsNullOrEmpty(FileSettingsSave.GameInstallation))
             {
-                if (!_settingFile.KeyExists("InstallationDirectory")) 
-                {
-                    _settingFile.Write("InstallationDirectory", "GameFiles");
-                }
-            }
-
-            if (!string.IsNullOrEmpty(_settingFile.Read("InstallationDirectory")))
-            {
-                Console.WriteLine("Game path: " + _settingFile.Read("InstallationDirectory"));
-
-                if (!Self.HasWriteAccessToFolder(_settingFile.Read("InstallationDirectory")))
+                if (!Self.HasWriteAccessToFolder(FileSettingsSave.GameInstallation))
                 {
                     MessageBox.Show("This application requires admin priviledge. Restarting...");
-                }
-            }
-
-            if (_settingFile.KeyExists("InstallationDirectory"))
-            {
-                if (!File.Exists(_settingFile.Read("InstallationDirectory")))
-                {
-                    Directory.CreateDirectory(_settingFile.Read("InstallationDirectory"));
-                }
-            }
-
-            if (!_settingFile.KeyExists("IgnoreUpdateVersion"))
-            {
-                _settingFile.Write("IgnoreUpdateVersion", String.Empty);
-            }
-
-            if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (!_settingFile.KeyExists("WindowsDefender")))
-            {
-                _settingFile.Write("WindowsDefender", "Not Excluded");
-            }
-
-            if (!DetectLinux.LinuxDetected() && (!_settingFile.KeyExists("Firewall")))
-            {
-                _settingFile.Write("Firewall", "Not Excluded");
-            }
-
-            if (_settingFile.KeyExists("CDN"))
-            {
-                string SavedCDN = _settingFile.Read("CDN");
-
-                if (SavedCDN.EndsWith("/"))
-                {
-                    char[] charsToTrim = { '/' };
-                    string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
-
-                    _settingFile.Write("CDN", FinalCDNURL);
                 }
             }
 
@@ -696,7 +652,7 @@ namespace GameLauncher
                 }
             }
 
-            if (_settingFile.KeyExists("InstallationDirectory"))
+            if (!string.IsNullOrEmpty(FileSettingsSave.GameInstallation))
             {
                 var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
                 ModNetLinksCleanup.CleanLinks(linksPath);

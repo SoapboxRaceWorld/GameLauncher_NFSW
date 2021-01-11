@@ -1,4 +1,5 @@
 ﻿using GameLauncher.App.Classes.SystemPlatform.Windows;
+using System.IO;
 
 namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 {
@@ -22,11 +23,38 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public static string WindowsDefenderStatus = settingFile.Read("WindowsDefender");
 
+        public static string Win7UpdatePatches = settingFile.Read("PatchesApplied");
+
         public static void NullSafeSettings()
         {
+            if (DetectLinux.LinuxDetected() && !settingFile.KeyExists("InstallationDirectory"))
+            {
+                settingFile.Write("InstallationDirectory", "GameFiles");
+            }
+            else if (!settingFile.KeyExists("InstallationDirectory"))
+            {
+                settingFile.Write("InstallationDirectory", "");
+            }
+            else if (!File.Exists(settingFile.Read("InstallationDirectory")))
+            {
+                Directory.CreateDirectory(settingFile.Read("InstallationDirectory"));
+            }
+
             if (!settingFile.KeyExists("CDN") || string.IsNullOrEmpty(settingFile.Read("CDN")))
             {
                 settingFile.Write("CDN", "http://localhost");
+            }
+            else if (settingFile.KeyExists("CDN"))
+            {
+                string SavedCDN = CDN;
+
+                if (SavedCDN.EndsWith("/"))
+                {
+                    char[] charsToTrim = { '/' };
+                    string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
+
+                    settingFile.Write("CDN", FinalCDNURL);
+                }
             }
 
             if (!settingFile.KeyExists("Language") || string.IsNullOrEmpty(settingFile.Read("Language")))
@@ -51,6 +79,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             
             if (!DetectLinux.LinuxDetected())
             {
+                if (!settingFile.KeyExists("PatchesApplied") && WindowsProductVersion.GetWindowsNumber() == 6.1)
+                {
+                    settingFile.Write("PatchesApplied", "0");
+                }
+
                 if (!settingFile.KeyExists("Firewall") || string.IsNullOrEmpty(settingFile.Read("Firewall")))
                 {
                     settingFile.Write("Firewall", "Not Excluded");
@@ -102,6 +135,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
             if (!DetectLinux.LinuxDetected())
             {
+                if ((settingFile.Read("PatchesApplied") != Win7UpdatePatches) && WindowsProductVersion.GetWindowsNumber() == 6.1)
+                {
+                    settingFile.Write("PatchesApplied", Win7UpdatePatches);
+                }
+
                 if (settingFile.Read("Firewall") != FirewallStatus)
                 {
                     settingFile.Write("Firewall", FirewallStatus);
