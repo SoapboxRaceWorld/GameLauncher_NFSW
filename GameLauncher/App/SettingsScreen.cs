@@ -1,5 +1,6 @@
 ﻿using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
@@ -54,7 +55,6 @@ namespace GameLauncher.App
             /*******************************/
             /* Set Initial position         /
             /*******************************/
-
             this.StartPosition = FormStartPosition.CenterParent;
 
             /*******************************/
@@ -74,7 +74,9 @@ namespace GameLauncher.App
             /* Set Hardcoded Text           /
             /*******************************/
 
-            SettingsCDNCurrent.Text = _settingFile.Read("CDN");
+            SettingsCDNCurrent.Text = FileSettingsSave.CDN;
+            SettingsGameFilesCurrent.Text = FileSettingsSave.GameInstallation;
+            SettingsLauncherPathCurrent.Text = AppDomain.CurrentDomain.BaseDirectory;
             SettingsLauncherVersion.Text = "Version: v" + Application.ProductVersion;
 
             /*******************************/
@@ -195,7 +197,7 @@ namespace GameLauncher.App
             /* Folder Locations             /
             /*******************************/
 
-            _newGameFilesPath = Path.GetFullPath(_settingFile.Read("InstallationDirectory"));
+            _newGameFilesPath = Path.GetFullPath(FileSettingsSave.GameInstallation);
             _newLauncherPath = AppDomain.CurrentDomain.BaseDirectory;
 
             SettingsProxyCheckbox.Checked = _disableProxy;
@@ -233,11 +235,11 @@ namespace GameLauncher.App
             _disableProxy = (_settingFile.KeyExists("DisableProxy") && _settingFile.Read("DisableProxy") == "1");
             _disableDiscordRPC = (_settingFile.KeyExists("DisableRPC") && _settingFile.Read("DisableRPC") == "1");
 
-            if (File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords") || File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords_dis"))
+            if (File.Exists(FileSettingsSave.GameInstallation + "/profwords") || File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis"))
             {
                 try
                 {
-                    SettingsWordFilterCheck.Checked = !File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords");
+                    SettingsWordFilterCheck.Checked = !File.Exists(FileSettingsSave.GameInstallation + "/profwords");
                 }
                 catch
                 {
@@ -253,17 +255,17 @@ namespace GameLauncher.App
             /* Enable/Disable Visuals       /
             /*******************************/
 
-            if (File.Exists(_settingFile.Read("InstallationDirectory") + "/NFSWO_COMMUNICATION_LOG.txt"))
+            if (File.Exists(FileSettingsSave.GameInstallation + "/NFSWO_COMMUNICATION_LOG.txt"))
             {
                 SettingsClearCommunicationLogButton.Enabled = true;
             }
 
-            if (Directory.Exists(_settingFile.Read("InstallationDirectory") + "/.data"))
+            if (Directory.Exists(FileSettingsSave.GameInstallation + "/.data"))
             {
                 SettingsClearServerModCacheButton.Enabled = true;
             }
 
-            var crashLogFilesDirectory = new DirectoryInfo(_settingFile.Read("InstallationDirectory"));
+            var crashLogFilesDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
 
             if (crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp").Count() != 0)
             {
@@ -272,7 +274,7 @@ namespace GameLauncher.App
 
             try
             {
-                string SavedCDN = _settingFile.Read("CDN");
+                string SavedCDN = FileSettingsSave.CDN;
                 char[] charsToTrim = { '/', 'n', 'f', 's', 'w' };
                 string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
 
@@ -315,20 +317,20 @@ namespace GameLauncher.App
         private void SettingsSave_Click(object sender, EventArgs e)
         {
             //TODO null check
-            _settingFile.Write("Language", SettingsLanguage.SelectedValue.ToString());
+            FileSettingsSave.Lang = SettingsLanguage.SelectedValue.ToString();
 
-            if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (_settingFile.Read("InstallationDirectory") != _newGameFilesPath) && !DetectLinux.LinuxDetected())
+            if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !DetectLinux.LinuxDetected())
             {
                 WindowsDefenderGameFilesDirctoryChange();
             }
-            else if (_settingFile.Read("InstallationDirectory") != _newGameFilesPath)
+            else if (FileSettingsSave.GameInstallation != _newGameFilesPath)
             {
                 CheckGameFilesDirectoryPrevention();
 
                 if (!DetectLinux.LinuxDetected())
                 {
                     //Remove current Firewall for the Game Files 
-                    string CurrentGameFilesExePath = Path.Combine(_settingFile.Read("InstallationDirectory") + "\\nfsw.exe");
+                    string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
 
                     if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.RuleExist("SBRW - Game") == true)
                     {
@@ -346,37 +348,34 @@ namespace GameLauncher.App
                     }
                 }
 
-                _settingFile.Write("InstallationDirectory", _newGameFilesPath);
+                FileSettingsSave.GameInstallation = _newGameFilesPath;
 
                 //Clean Mods Files from New Dirctory (If it has .links in directory)
-                var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
+                var linksPath = Path.Combine(_newGameFilesPath, ".links");
                 ModNetLinksCleanup.CleanLinks(linksPath);
 
                 _restartRequired = true;
             }
 
-            Console.WriteLine(_settingFile.Read("CDN"));
-            Console.WriteLine(((CDNObject)SettingsCDNPick.SelectedItem).Url);
-
-            if (_settingFile.Read("CDN") != ((CDNObject)SettingsCDNPick.SelectedItem).Url)
+            if (FileSettingsSave.CDN != ((CDNObject)SettingsCDNPick.SelectedItem).Url)
             {
                 SettingsCDNCurrentText.Text = "CHANGED CDN";
                 SettingsCDNCurrent.Text = ((CDNObject)SettingsCDNPick.SelectedItem).Url;
-                _settingFile.Write("CDN", ((CDNObject)SettingsCDNPick.SelectedItem).Url);
+                FileSettingsSave.CDN = ((CDNObject)SettingsCDNPick.SelectedItem).Url;
                 _restartRequired = true;
             }
 
             String disableProxy = (SettingsProxyCheckbox.Checked == true) ? "1" : "0";
-            if (_settingFile.Read("DisableProxy") != disableProxy)
+            if (FileSettingsSave.Proxy != disableProxy)
             {
-                _settingFile.Write("DisableProxy", (SettingsProxyCheckbox.Checked == true) ? "1" : "0");
+                FileSettingsSave.Proxy = (SettingsProxyCheckbox.Checked == true) ? "1" : "0";
                 _restartRequired = true;
             }
 
             String disableRPC = (SettingsDiscordRPCCheckbox.Checked == true) ? "1" : "0";
-            if (_settingFile.Read("DisableRPC") != disableRPC)
+            if (FileSettingsSave.RPC != disableRPC)
             {
-                _settingFile.Write("DisableRPC", (SettingsDiscordRPCCheckbox.Checked == true) ? "1" : "0");
+                FileSettingsSave.RPC = (SettingsDiscordRPCCheckbox.Checked == true) ? "1" : "0";
                 _restartRequired = true;
             }
 
@@ -386,20 +385,23 @@ namespace GameLauncher.App
             }
 
             //Actually lets check those 2 files
-            if (File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords") && File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords_dis"))
+            if (File.Exists(FileSettingsSave.GameInstallation + "/profwords") && File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis"))
             {
-                File.Delete(_settingFile.Read("InstallationDirectory") + "/profwords_dis");
+                File.Delete(FileSettingsSave.GameInstallation + "/profwords_dis");
             }
 
             //Delete/Enable profwords filter here
             if (SettingsWordFilterCheck.Checked)
             {
-                if (File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords")) File.Move(_settingFile.Read("InstallationDirectory") + "/profwords", _settingFile.Read("InstallationDirectory") + "/profwords_dis");
+                if (File.Exists(FileSettingsSave.GameInstallation + "/profwords")) File.Move(FileSettingsSave.GameInstallation + "/profwords", FileSettingsSave.GameInstallation + "/profwords_dis");
             }
             else
             {
-                if (File.Exists(_settingFile.Read("InstallationDirectory") + "/profwords_dis")) File.Move(_settingFile.Read("InstallationDirectory") + "/profwords_dis", _settingFile.Read("InstallationDirectory") + "/profwords");
+                if (File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis")) File.Move(FileSettingsSave.GameInstallation + "/profwords_dis", FileSettingsSave.GameInstallation + "/profwords");
             }
+
+            /* Save Settings by Calling Back to MainScreen.cs */
+            //MainScreen.ForceSaveSettings();
 
             var userSettingsXml = new XmlDocument();
             try
@@ -453,6 +455,8 @@ namespace GameLauncher.App
                 MessageBox.Show(null, "There was an error saving your settings to actual file. Restoring default.\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 File.Delete(_userSettings);
             }
+
+            /* Save XML Settings */
             userSettingsXml.Save(_userSettings);
 
             DialogResult = DialogResult.OK;
@@ -475,8 +479,8 @@ namespace GameLauncher.App
         /* Settings Clear ModNet Cache */
         private void SettingsClearServerModCacheButton_Click(object sender, EventArgs e)
         {
-            Directory.Delete(_settingFile.Read("InstallationDirectory") + "/.data", true);
-            Directory.Delete(_settingFile.Read("InstallationDirectory") + "/MODS", true);
+            Directory.Delete(FileSettingsSave.GameInstallation + "/.data", true);
+            Directory.Delete(FileSettingsSave.GameInstallation + "/MODS", true);
             Log.Warning("LAUNCHER: User Confirmed to Delete Server Mods Cache");
             MessageBox.Show(null, "Deleted Server Mods Cache", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             SettingsClearServerModCacheButton.Enabled = false;
@@ -485,7 +489,7 @@ namespace GameLauncher.App
         /* Settings Clear Communication Logs */
         private void SettingsClearCommunicationLogButton_Click(object sender, EventArgs e)
         {
-            File.Delete(_settingFile.Read("InstallationDirectory") + "/NFSWO_COMMUNICATION_LOG.txt");
+            File.Delete(FileSettingsSave.GameInstallation + "/NFSWO_COMMUNICATION_LOG.txt");
             MessageBox.Show(null, "Deleted NFSWO Communication Log", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             SettingsClearCommunicationLogButton.Enabled = false;
         }
@@ -493,7 +497,7 @@ namespace GameLauncher.App
         /* Settings Clear Game Crash Logs */
         private void SettingsClearCrashLogsButton_Click(object sender, EventArgs e)
         {
-            var crashLogFilesDirectory = new DirectoryInfo(_settingFile.Read("InstallationDirectory"));
+            var crashLogFilesDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
 
             foreach (var file in crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp"))
             {
@@ -537,7 +541,7 @@ namespace GameLauncher.App
         /* Settings Open Current CDN in Browser */
         private void SettingsCDNCurrent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(_settingFile.Read("CDN"));
+            Process.Start(FileSettingsSave.CDN);
         }
 
         /* Settings Open Current Launcher Path in Explorer */
@@ -624,15 +628,15 @@ namespace GameLauncher.App
             //Remove current Exclusion and Add new location for Exclusion
             using (PowerShell ps = PowerShell.Create())
             {
-                Log.Warning("WINDOWS DEFENDER: Removing OLD Game Files Directory: " + _settingFile.Read("InstallationDirectory"));
-                ps.AddScript($"Remove-MpPreference -ExclusionPath \"{_settingFile.Read("InstallationDirectory")}\"");
+                Log.Warning("WINDOWS DEFENDER: Removing OLD Game Files Directory: " + FileSettingsSave.GameInstallation);
+                ps.AddScript($"Remove-MpPreference -ExclusionPath \"{FileSettingsSave.GameInstallation}\"");
                 Log.Core("WINDOWS DEFENDER: Excluding NEW Game Files Directory: " + _newGameFilesPath);
                 ps.AddScript($"Add-MpPreference -ExclusionPath \"{_newGameFilesPath}\"");
                 var result = ps.Invoke();
             }
 
             //Remove current Firewall for the Game Files 
-            string CurrentGameFilesExePath = Path.Combine(_settingFile.Read("InstallationDirectory") + "\\nfsw.exe");
+            string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
 
             if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.RuleExist("SBRW - Game") == true)
             {
@@ -649,10 +653,10 @@ namespace GameLauncher.App
                 FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
             }
 
-            _settingFile.Write("InstallationDirectory", _newGameFilesPath);
+            FileSettingsSave.GameInstallation = _newGameFilesPath;
 
             //Clean Mods Files from New Dirctory (If it has .links in directory)
-            var linksPath = Path.Combine(_settingFile.Read("InstallationDirectory"), ".links");
+            var linksPath = Path.Combine(_newGameFilesPath, ".links");
             ModNetLinksCleanup.CleanLinks(linksPath);
 
             _restartRequired = true;
@@ -662,19 +666,19 @@ namespace GameLauncher.App
         {
             if (!DetectLinux.LinuxDetected())
             {
-                switch (Self.CheckFolder(_settingFile.Read("InstallationDirectory")))
+                switch (Self.CheckFolder(_newGameFilesPath))
                 {
                     case FolderType.IsSameAsLauncherFolder:
                         Directory.CreateDirectory("Game Files");
                         Log.Error("LAUNCHER: Installing NFSW in same directory where the launcher resides is disadvised.");
                         MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
+                        FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                         break;
                     case FolderType.IsTempFolder:
                         Directory.CreateDirectory("Game Files");
                         Log.Error("LAUNCHER: (╯°□°）╯︵ ┻━┻ Installing NFSW in the Temp Folder is disadvised!");
                         MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is disadvised! Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files" + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
+                        FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                         break;
                     case FolderType.IsProgramFilesFolder:
                     case FolderType.IsUsersFolders:
@@ -682,7 +686,7 @@ namespace GameLauncher.App
                         Directory.CreateDirectory("Game Files");
                         Log.Error("LAUNCHER: Installing NFSW in a Special Directory is disadvised.");
                         MessageBox.Show(null, string.Format("Installing NFSW in a Special Directory is disadvised. Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        _settingFile.Write("InstallationDirectory", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
+                        FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                         break;
                 }
             }
@@ -813,9 +817,9 @@ namespace GameLauncher.App
             Log.Core("SETTINGS CDNLIST: Setting first server in list");
             Log.Core("SETTINGS CDNLIST: Checking if server is set on INI File");
 
-            if (_settingFile.KeyExists("CDN"))
+            if (!string.IsNullOrEmpty(FileSettingsSave.CDN))
             {
-                string SavedCDN = _settingFile.Read("CDN");
+                string SavedCDN = FileSettingsSave.CDN;
                 char[] charsToTrim = { '/' };
                 string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
 
@@ -853,13 +857,13 @@ namespace GameLauncher.App
         //CDN Display Playing Game! - DavidCarbon
         private async void IsCDNDownGame()
         {
-            if (!string.IsNullOrEmpty(_settingFile.Read("CDN")))
+            if (!string.IsNullOrEmpty(FileSettingsSave.CDN))
             {
                 SettingsCDNCurrent.LinkColor = Color.FromArgb(66, 179, 189);
                 Log.Info("SETTINGS PINGING CDN: Checking Current CDN from Settings.ini");
                 await Task.Delay(500);
 
-                switch (APIStatusChecker.CheckStatus(_settingFile.Read("CDN") + "/index.xml"))
+                switch (APIStatusChecker.CheckStatus(FileSettingsSave.CDN + "/index.xml"))
                 {
                     case API.Online:
                         SettingsCDNCurrent.LinkColor = Color.FromArgb(159, 193, 32);
