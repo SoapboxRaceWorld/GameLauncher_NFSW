@@ -52,6 +52,12 @@ namespace GameLauncher.App
         private void SetVisuals()
         {
             /*******************************/
+            /* Set Initial position         /
+            /*******************************/
+
+            this.StartPosition = FormStartPosition.CenterParent;
+
+            /*******************************/
             /* Set Background Image         /
             /*******************************/
 

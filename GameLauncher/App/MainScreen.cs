@@ -2185,6 +2185,7 @@ namespace GameLauncher
         private void SettingsPanelDisplay()
         {
             if (!(ServerPick.SelectedItem is ServerInfo server)) return;
+
             Form settingScreen = new SettingsScreen(server.IpAddress, server.Name);
 
             if(settingScreen.ShowDialog(this) == DialogResult.OK) {
