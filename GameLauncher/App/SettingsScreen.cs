@@ -449,12 +449,14 @@ namespace GameLauncher.App
             }
             userSettingsXml.Save(_userSettings);
 
-            SettingsCancel_Click(sender, e);
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         /* Settings Cancel */
         private void SettingsCancel_Click(object sender, EventArgs e)
         {
+            DialogResult = DialogResult.Cancel;
             Close();
         }
 

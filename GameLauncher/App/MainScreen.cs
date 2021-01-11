@@ -90,7 +90,7 @@ namespace GameLauncher
         //private readonly Pen _colorOnline = new Pen(Color.FromArgb(0, 128, 0));
         //private readonly Pen _colorLoading = new Pen(Color.FromArgb(0, 0, 0));
 
-        private readonly IniFile _settingFile = new IniFile("Settings.ini");
+        private IniFile _settingFile = new IniFile("Settings.ini");
         private string _presenceImageKey;
         private string _NFSW_Installation_Source;
         private string _realServername;
@@ -2185,8 +2185,16 @@ namespace GameLauncher
         private void SettingsPanelDisplay()
         {
             if (!(ServerPick.SelectedItem is ServerInfo server)) return;
+            Form settingScreen = new SettingsScreen(server.IpAddress, server.Name);
 
-            new SettingsScreen(server.IpAddress, server.Name).ShowDialog();
+            if(settingScreen.ShowDialog(this) == DialogResult.OK) {
+                //Reload INI File
+                _settingFile = new IniFile("Settings.ini");
+            }
+
+            settingScreen.Dispose();
+
+            //new SettingsScreen(server.IpAddress, server.Name).ShowDialog();
         }
 
         private void SettingsButton_MouseEnter(object sender, EventArgs e)
