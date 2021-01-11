@@ -73,6 +73,9 @@ namespace GameLauncher
 
             Log.StartLogging();
 
+            FileSettingsSave.NullSafeSettings();
+            FileAccountSave.NullSafeAccount();
+
             Self.currentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
