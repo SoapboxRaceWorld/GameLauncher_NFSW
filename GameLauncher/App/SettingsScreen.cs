@@ -400,8 +400,8 @@ namespace GameLauncher.App
                 if (File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis")) File.Move(FileSettingsSave.GameInstallation + "/profwords_dis", FileSettingsSave.GameInstallation + "/profwords");
             }
 
-            /* Save Settings by Calling Back to MainScreen.cs */
-            //MainScreen.ForceSaveSettings();
+            /* Save Settings */
+            FileSettingsSave.SaveSettings();
 
             var userSettingsXml = new XmlDocument();
             try

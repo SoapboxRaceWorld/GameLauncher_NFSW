@@ -290,7 +290,7 @@ namespace GameLauncher
             if (!DetectLinux.LinuxDetected())
             {
                 //Windows 7 Fix
-                if (string.IsNullOrEmpty(FileSettingsSave.Win7UpdatePatches) || FileSettingsSave.Win7UpdatePatches == "0")
+                if ((string.IsNullOrEmpty(FileSettingsSave.Win7UpdatePatches) && WindowsProductVersion.GetWindowsNumber() == 6.1) || FileSettingsSave.Win7UpdatePatches == "0")
                 {
                     if (Self.GetInstalledHotFix("KB3020369") == false || Self.GetInstalledHotFix("KB3125574") == false)
                     {
