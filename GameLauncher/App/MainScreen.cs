@@ -821,36 +821,6 @@ namespace GameLauncher
             }
             */
 
-            //Remind Me to Move This to another Location Thanks! - DavidCarbon
-
-            /*
-            //DavidCarbon
-            //This Saves the update the was skipped or to remind the user at next launch
-            if (Settings.Default.IgnoreUpdateVersion != String.Empty)
-            {
-                _settingFile.Write("IgnoreUpdateVersion", Settings.Default.IgnoreUpdateVersion);
-                Log.Info("IGNOREUPDATEVERSION: Skipping Update " + Settings.Default.IgnoreUpdateVersion + " !");
-            }
-            else
-            {
-                if (_settingFile.Read("IgnoreUpdateVersion") != String.Empty)
-                {
-                    if (_settingFile.Read("IgnoreUpdateVersion") == Application.ProductVersion)
-                    {
-                        _settingFile.Write("IgnoreUpdateVersion", String.Empty);
-                        Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. You're now on the Latest Game Launcher!");
-                    }
-                    else
-                    {
-                        Log.Info("IGNOREUPDATEVERSION: Manually Skipping Update " + _settingFile.Read("IgnoreUpdateVersion") + " !");
-                    }
-                }
-                else
-                {
-                    Log.Info("IGNOREUPDATEVERSION: Latest Game Launcher!");
-                }
-            }
-            */
             FileSettingsSave.SaveSettings();
             FileAccountSave.SaveAccount();
 
@@ -1819,7 +1789,6 @@ namespace GameLauncher
             ServerPingStatusText.Visible = hideElements;
             ShowPlayPanel.Visible = hideElements;
             ExtractingProgress.Visible = hideElements;
-            ProgressBarOutline.Visible = hideElements;
             PlayProgressText.Visible = hideElements;
             PlayProgressTextTimer.Visible = hideElements;
             PlayButton.Visible = hideElements;
