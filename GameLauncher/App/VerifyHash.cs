@@ -7,16 +7,15 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.HashPassword;
 using GameLauncher.Resources;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 
 namespace GameLauncher.App
 {
     public partial class VerifyHash : Form
     {
-        private readonly IniFile _settingFile = new IniFile("Settings.ini");
         private readonly RichPresence _presence = new RichPresence();
 
         //VerifyHash
@@ -66,7 +65,7 @@ namespace GameLauncher.App
             LogVerify.StartVerifyLogging();
 
             LogVerify.Info("VERIFYHASH: Checking Characters in URL");
-            string SavedCDN = _settingFile.Read("CDN");
+            string SavedCDN = FileSettingsSave.CDN;
             char[] charsToTrim = { '/', 'n', 'f', 's', 'w' };
             FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
             LogVerify.Info("VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
@@ -108,7 +107,7 @@ namespace GameLauncher.App
 
             Log.Info("VERIFY HASH: Checking and Deleting '.orig' Files");
 
-            DirectoryInfo InstallationDirectory = new DirectoryInfo(_settingFile.Read("InstallationDirectory"));
+            DirectoryInfo InstallationDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
 
             foreach (var foundFolders in InstallationDirectory.GetDirectories())
             {
@@ -162,7 +161,7 @@ namespace GameLauncher.App
                 {
                     String FileHash = file[0].Trim();
                     String FileName = file[1].Trim();
-                    String RealPathToFile = _settingFile.Read("InstallationDirectory") + FileName;
+                    String RealPathToFile = FileSettingsSave.GameInstallation + FileName;
 
                     if (!File.Exists(RealPathToFile))
                     {
@@ -237,7 +236,7 @@ namespace GameLauncher.App
                     currentCount = files.Count();
                     try 
                     {
-                        string text2 = _settingFile.Read("InstallationDirectory") + text;
+                        string text2 = FileSettingsSave.GameInstallation + text;
                         string address = FinalCDNURL + "/unpacked" + text.Replace("\\", "/");
                         if (File.Exists(text2))
                         {

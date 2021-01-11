@@ -9,6 +9,7 @@ using GameLauncherReborn;
 using Newtonsoft.Json;
 using GameLauncher.App.Classes.Logger;
 using System.Threading.Tasks;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 
 namespace GameLauncher.App.Classes.Events
 {
@@ -69,6 +70,13 @@ namespace GameLauncher.App.Classes.Events
                     status.Image = Properties.Resources.ac_success;
                     text.ForeColor = Color.FromArgb(0x9fc120);
                     description.Text = "Version: v" + Application.ProductVersion;
+
+                    if (FileSettingsSave.IgnoreVersion == Application.ProductVersion)
+                    {
+                        FileSettingsSave.IgnoreVersion = String.Empty;
+                        FileSettingsSave.SaveSettings();
+                        Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. You're now on the Latest Game Launcher!");
+                    }
                 }
                 else
                 {
@@ -77,9 +85,7 @@ namespace GameLauncher.App.Classes.Events
                     text.ForeColor = Color.Yellow;
                     description.Text = "New Version: " + LatestLauncherBuild.ToString();
 
-                    IniFile _settingFile = new IniFile("Settings.ini");
-
-                    if (_settingFile.Read("IgnoreUpdateVersion") == LatestLauncherBuild.ToString())
+                    if (FileSettingsSave.IgnoreVersion == LatestLauncherBuild.ToString())
                     {
                         //No Update Popup
                         //Blame DavidCarbon if this Breaks (to some degree), not Zacam...
@@ -103,16 +109,16 @@ namespace GameLauncher.App.Classes.Events
                         //Check if User clicked Ignore so it doesn't update "IgnoreUpdateVersion"
                         if (updateConfirm == DialogResult.Cancel)
                         {
-                            Settings.Default.IgnoreUpdateVersion = String.Empty;
+                            FileSettingsSave.IgnoreVersion = String.Empty;
                         };
 
                         //Write to Settings.ini to Skip Update
                         if (updateConfirm == DialogResult.Ignore)
                         {
-                            Settings.Default.IgnoreUpdateVersion = LatestLauncherBuild.ToString();
+                            FileSettingsSave.IgnoreVersion = LatestLauncherBuild.ToString();
                         };
                     }
-                    Settings.Default.Save();
+                    FileSettingsSave.SaveSettings();
                 }
             }
             else

@@ -3,7 +3,7 @@ using GameLauncherReborn;
 using GameLauncher.Resources;
 using System.Drawing;
 using System.Windows.Forms;
-using GameLauncher.App.Classes;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 
 namespace GameLauncher.App
 {
@@ -11,9 +11,7 @@ namespace GameLauncher.App
     {
         public UpdatePopup(string LatestLauncherBuild)
         {
-            IniFile _settingFile = new IniFile("Settings.ini");
-
-            if (_settingFile.Read("IgnoreUpdateVersion") == LatestLauncherBuild)
+            if (FileSettingsSave.IgnoreVersion == LatestLauncherBuild)
             {
                 //No Update Popup
             }

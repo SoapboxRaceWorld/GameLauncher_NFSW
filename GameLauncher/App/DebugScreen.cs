@@ -7,6 +7,7 @@ using System.Management;
 using System.Windows.Forms;
 using GameLauncherReborn;
 using GameLauncher.Resources;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 
 namespace GameLauncher.App
 {
@@ -49,11 +50,9 @@ namespace GameLauncher.App
         {
             data.AutoGenerateColumns = true;
 
-            IniFile SettingFile = new IniFile("Settings.ini");
-
-            string Password = (!String.IsNullOrEmpty(SettingFile.Read("Password"))) ? "True" : "False";
-            string ProxyStatus = (!String.IsNullOrEmpty(SettingFile.Read("DisableProxy"))) ? "False" : "True";
-            string RPCStatus = (!String.IsNullOrEmpty(SettingFile.Read("DisableRPC"))) ? "False" : "True";
+            string Password = (!String.IsNullOrEmpty(FileAccountSave.UserHashedPassword)) ? "True" : "False";
+            string ProxyStatus = (!String.IsNullOrEmpty(FileSettingsSave.Proxy)) ? "False" : "True";
+            string RPCStatus = (!String.IsNullOrEmpty(FileSettingsSave.RPC)) ? "False" : "True";
 
             string Antivirus = String.Empty;
             string Firewall = String.Empty;
@@ -88,24 +87,24 @@ namespace GameLauncher.App
 
             string UpdateSkip = "";
 
-            if (SettingFile.Read("IgnoreUpdateVersion") == Application.ProductVersion || SettingFile.Read("IgnoreUpdateVersion") == String.Empty)
+            if (FileSettingsSave.IgnoreVersion == Application.ProductVersion || FileSettingsSave.IgnoreVersion == String.Empty)
             {
                     UpdateSkip = "False";
             }
             else
             {
-                UpdateSkip = SettingFile.Read("IgnoreUpdateVersion");
+                UpdateSkip = FileSettingsSave.IgnoreVersion;
             }
 
             string FirewallRuleStatus = "";
 
-            if (String.IsNullOrEmpty(SettingFile.Read("Firewall")))
+            if (String.IsNullOrEmpty(FileSettingsSave.FirewallStatus))
             {
                 FirewallRuleStatus = "Not Exlcuded";
             }
             else
             {
-                FirewallRuleStatus = SettingFile.Read("Firewall");
+                FirewallRuleStatus = FileSettingsSave.FirewallStatus;
             }
 
             long memKb = 0;
@@ -129,17 +128,17 @@ namespace GameLauncher.App
                 Win32_Processor = (from x in new ManagementObjectSearcher("SELECT Name FROM Win32_Processor").Get().Cast<ManagementObject>()
                     select x.GetPropertyValue("Name")).FirstOrDefault().ToString();
 
-                Kernel32.GetDiskFreeSpaceEx(SettingFile.Read("InstallationDirectory"), out lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
+                Kernel32.GetDiskFreeSpaceEx(FileSettingsSave.GameInstallation, out lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
             }
 
             var Win32_VideoController = string.Join(" | ", GPUs);
 
             var settings = new List<ListType>
             {
-                new ListType{ Name = "InstallationDirectory", Value = SettingFile.Read("InstallationDirectory")},
+                new ListType{ Name = "InstallationDirectory", Value = FileSettingsSave.GameInstallation},
                 new ListType{ Name = "Launcher Version", Value = Application.ProductVersion},
                 new ListType{ Name = "Credentials Saved", Value = Password},
-                new ListType{ Name = "Language", Value =  SettingFile.Read("Language")},
+                new ListType{ Name = "Language", Value =  FileSettingsSave.Lang},
                 new ListType{ Name = "Skipping Update", Value = UpdateSkip},
                 new ListType{ Name = "Disable Proxy", Value = ProxyStatus},
                 new ListType{ Name = "Disable RPC", Value = RPCStatus},
@@ -147,7 +146,7 @@ namespace GameLauncher.App
                 new ListType{ Name = "", Value = "" },
                 new ListType{ Name = "Server Name", Value = ServerName},
                 new ListType{ Name = "Server Address", Value = ServerIP},
-                new ListType{ Name = "CDN Address", Value = SettingFile.Read("CDN")},
+                new ListType{ Name = "CDN Address", Value = FileSettingsSave.CDN},
                 new ListType{ Name = "ProxyPort", Value = Self.ProxyPort.ToString()},
                 new ListType{ Name = "", Value = "" },
             };
