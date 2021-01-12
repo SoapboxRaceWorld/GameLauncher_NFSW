@@ -417,6 +417,7 @@ namespace GameLauncher.App
             this.SettingsMainCDNText.Size = new System.Drawing.Size(172, 14);
             this.SettingsMainCDNText.TabIndex = 182;
             this.SettingsMainCDNText.Text = "Main CDN List API: PINGING";
+            this.SettingsMainCDNText.Visible = false;
             // 
             // SettingsBkupSrvText
             // 
@@ -429,6 +430,7 @@ namespace GameLauncher.App
             this.SettingsBkupSrvText.Size = new System.Drawing.Size(203, 14);
             this.SettingsBkupSrvText.TabIndex = 180;
             this.SettingsBkupSrvText.Text = "Backup Server List API: PINGING";
+            this.SettingsBkupSrvText.Visible = false;
             // 
             // SettingsBkupCDNText
             // 
@@ -441,6 +443,7 @@ namespace GameLauncher.App
             this.SettingsBkupCDNText.Size = new System.Drawing.Size(189, 14);
             this.SettingsBkupCDNText.TabIndex = 181;
             this.SettingsBkupCDNText.Text = "Backup CDN List API: PINGING";
+            this.SettingsBkupCDNText.Visible = false;
             // 
             // SettingsSave
             // 

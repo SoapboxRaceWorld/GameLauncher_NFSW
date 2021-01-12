@@ -20,6 +20,7 @@ using GameLauncher.App.Classes.Events;
 using Newtonsoft.Json;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 
 namespace GameLauncher
 {
@@ -160,50 +161,7 @@ namespace GameLauncher
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
 
-            bool WUGGAPIOffline = false;
-            bool AllAPIsOffline = false;
-
-            Log.Api("PINGING API: Checking API Status");
-            switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
-            {
-                case API.Online:
-                    Log.UrlCall("PRE-CHECK: Internet Check Passed: {api.worldunited.gg}");
-                    break;
-                default:
-                    Log.Error("PRE-CHECK: Failed to Connect to: {api.worldunited.gg}, Checking: {api-sbrw.davidcarbon.download}");
-                    WUGGAPIOffline = true;
-                    break;
-            }
-
-            if (WUGGAPIOffline == true)
-            {
-                switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/generate_204/"))
-                {
-                    case API.Online:
-                        Log.UrlCall("PRE-CHECK: Internet Check Passed: {api-sbrw.davidcarbon.download}");
-                        break;
-                    default:
-                        Log.Error("PRE-CHECK: Failed to Connect to: {api-sbrw.davidcarbon.download}");
-                        AllAPIsOffline = true;
-                        break;
-                }
-            }
-
-            if (AllAPIsOffline == true)
-            {
-                DialogResult restartAppNoApis = MessageBox.Show(null, "There's no internet connection, Launcher might crash \n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (restartAppNoApis == DialogResult.No)
-                {
-                    MessageBox.Show("Good Luck... \n No Really \n ...Good Luck", "GameLauncher Will Continue, When It Failed To Connect To API");
-                    Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and Will Continue");
-                }
-
-                if (restartAppNoApis == DialogResult.Yes)
-                {
-                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                }
-            }
+            VisualsAPIChecker.PingAPIStatus();
 
             /* Set Launcher Directory */
             Log.Info("CORE: Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
@@ -594,6 +552,22 @@ namespace GameLauncher
 
         private static void ShowMainScreen()
         {
+            if (VisualsAPIChecker.WOPLAPI == false)
+            {
+                DialogResult restartAppNoApis = MessageBox.Show(null, "There's no internet connection, Launcher might crash \n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (restartAppNoApis == DialogResult.No)
+                {
+                    MessageBox.Show("Good Luck... \n No Really \n ...Good Luck", "GameLauncher Will Continue, When It Failed To Connect To API");
+                    Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and Will Continue");
+                }
+
+                if (restartAppNoApis == DialogResult.Yes)
+                {
+                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                }
+            }
+
             if (!DetectLinux.LinuxDetected())
             {
                 if (!File.Exists("GameLauncherUpdater.exe"))

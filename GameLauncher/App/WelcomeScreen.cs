@@ -1,19 +1,17 @@
 ﻿using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Logger;
-using GameLauncherReborn;
 using GameLauncher.Resources;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 
 namespace GameLauncher.App
 {
     public partial class WelcomeScreen : Form
     {
-        private bool CDNStatusCheck = false;
-        private bool ServerStatusCheck = false;
+        private bool StatusCheck = false;
 
         public WelcomeScreen()
         {
@@ -48,136 +46,56 @@ namespace GameLauncher.App
             }
         }
 
-        //Check Serverlist API Status Upon Main Screen load - DavidCarbon
-        private void PingServerListStatus()
+        private void CheckListStatus()
         {
-            bool WUGGAPIOffline = false;
-            bool DCAPIOffline = false;
-            bool DC2APIOffline = false;
-            bool AllAPIsOffline = false;
-
-            switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
+            if (VisualsAPIChecker.UnitedAPI != false)
             {
-                case API.Online:
-                    ServerStatusText.Text = "United Server List - Online";
-                    ServerStatusCheck = true;
-                    break;
-                default:
-                    WUGGAPIOffline = true;
-                    break;
+                CDNStatusText.Text = "United List - Online";
+                StatusCheck = true;
             }
-
-            if (WUGGAPIOffline == true && DCAPIOffline == false && DC2APIOffline == false && AllAPIsOffline == false)
+            
+            if (VisualsAPIChecker.UnitedAPI == false)
             {
-                switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/serverlist.json"))
+                if (VisualsAPIChecker.CarbonAPI == true)
                 {
-                    case API.Online:
-                        ServerStatusText.Text = "Carbon Server List - Online";
-                        ServerStatusCheck = true;
-                        break;
-                    default:
-                        DCAPIOffline = true;
-                        break;
+                    CDNStatusText.Text = "Carbon List - Online";
+                    StatusCheck = true;
                 }
             }
 
-            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == false && AllAPIsOffline == false)
+            if (VisualsAPIChecker.CarbonAPI != false)
             {
-                switch (APIStatusChecker.CheckStatus(Self.secondstaticapiserver + "/serverlist.json"))
+                if (VisualsAPIChecker.CarbonAPITwo == true)
                 {
-                    case API.Online:
-                        ServerStatusText.Text = "Carbon 2nd Server List - Online";
-                        ServerStatusCheck = true;
-                        break;
-                    default:
-                        DC2APIOffline = true;
-                        break;
+                    CDNStatusText.Text = "Carbon 2nd List - Online";
+                    StatusCheck = true;
                 }
             }
 
-            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == true && AllAPIsOffline == false)
+            if (VisualsAPIChecker.CarbonAPITwo != false)
             {
-                switch (APIStatusChecker.CheckStatus(Self.woplserver + "/serverlist.json"))
+                if (VisualsAPIChecker.WOPLAPI == true)
                 {
-                    case API.Online:
-                        ServerStatusText.Text = "WOPL Server List - Online";
-                        ServerStatusCheck = true;
-                        break;
-                    default:
-                        AllAPIsOffline = true;
-                        break;
+                    CDNStatusText.Text = "WOPL List - Online";
+                    StatusCheck = true;
                 }
             }
 
-            if (AllAPIsOffline == true)
+            if (VisualsAPIChecker.WOPLAPI == false)
             {
-                ServerStatusText.Text = "Server Lists Connection - Error";
-            }
-        }
-
-        private void PingCDNListStatus()
-        {
-            bool WUGGAPIOffline = false;
-            bool DCAPIOffline = false;
-            bool DC2APIOffline = false;
-            bool AllAPIsOffline = false;
-
-            switch (APIStatusChecker.CheckStatus(Self.mainserver + "/cdn_list.json"))
-            {
-                case API.Online:
-                    CDNStatusText.Text = "United CDN List - Online";
-                    CDNStatusCheck = true;
-                    break;
-                default:
-                    WUGGAPIOffline = true;
-                    break;
+                CDNStatusText.Text = "API Lists Connection - Error";
             }
 
-            if (WUGGAPIOffline == true && DCAPIOffline == false && DC2APIOffline == false && AllAPIsOffline == false)
+            if (StatusCheck == false)
             {
-                switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/cdn_list.json"))
-                {
-                    case API.Online:
-                        CDNStatusText.Text = "Carbon CDN List - Online";
-                        CDNStatusCheck = true;
-                        break;
-                    default:
-                        DCAPIOffline = true;
-                        break;
-                }
+                WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
+                APIErrorFormElements();
             }
-
-            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == false && AllAPIsOffline == false)
+            else
             {
-                switch (APIStatusChecker.CheckStatus(Self.secondstaticapiserver + "/cdn_list.json"))
-                {
-                    case API.Online:
-                        CDNStatusText.Text = "Carbon 2nd Server List - Online";
-                        CDNStatusCheck = true;
-                        break;
-                    default:
-                        DC2APIOffline = true;
-                        break;
-                }
-            }
-
-            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == true && AllAPIsOffline == false)
-            {
-                switch (APIStatusChecker.CheckStatus(Self.woplserver + "/cdn_list.json"))
-                {
-                    case API.Online:
-                        CDNStatusText.Text = "WOPL Server List - Online";
-                        CDNStatusCheck = true;
-                        break;
-                    default:
-                        AllAPIsOffline = true;
-                        break;
-                }
-            }
-
-            if (AllAPIsOffline == true)
-            {
-                CDNStatusText.Text = "CDN Lists Connection - Error";
+                APIErrorFormElements(false);
+                SettingsFormElements(true);
+                WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
             }
         }
 
@@ -185,9 +103,7 @@ namespace GameLauncher.App
         {
             SettingsFormElements(false);
             APIErrorFormElements(false);
-            PingServerListStatus();
-            PingCDNListStatus();
-            CheckFinalAPIStatus();
+            CheckListStatus();
         }
 
         private void ShowCDNSources()
@@ -232,38 +148,6 @@ namespace GameLauncher.App
             APIErrorFormElements(false);
             SettingsFormElements();
             WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
-        }
-
-        private async void CheckFinalAPIStatus()
-        {
-            await Task.Delay(2000);
-            if (ServerStatusCheck == true && CDNStatusCheck == false)
-            {
-                WelcomeText.Text = "Looks like the Game Launcher failed to Reach CDN APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
-                APIErrorFormElements();
-            }
-
-            await Task.Delay(2000);
-            if (ServerStatusCheck == false && CDNStatusCheck == true)
-            {
-                WelcomeText.Text = "Looks like the Game Launcher failed to Reach Server Lists APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
-                APIErrorFormElements();
-            }
-
-            await Task.Delay(1000);
-            if (ServerStatusCheck == false && CDNStatusCheck == false)
-            {
-                WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
-                APIErrorFormElements();
-            }
-
-            await Task.Delay(1000);
-            if (ServerStatusCheck == true && CDNStatusCheck == true)
-            {
-                APIErrorFormElements(false);
-                SettingsFormElements(true);
-                WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
-            }
         }
 
         private void APIErrorFormElements(bool hideElements = true)

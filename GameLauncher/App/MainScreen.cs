@@ -42,6 +42,7 @@ using GameLauncher.App.Classes.InsiderKit;
 using System.Net.Http;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 
 namespace GameLauncher
 {
@@ -2279,117 +2280,36 @@ namespace GameLauncher
         }
 
         //Check Serverlist API Status Upon Main Screen load - DavidCarbon
-        private async void PingServerListAPIStatus()
+        private void PingServerListAPIStatus()
         {
-            bool WUGGAPIOffline = false;
-            bool DCAPIOffline = false;
-            bool DC2APIOffline = false;
-            bool AllAPIsOffline = false;
+            APIStatusText.Text = "United API:\n - Online";
+            APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+            APIStatusDesc.Text = "Connected to API";
+            APIStatusIcon.Image = Properties.Resources.api_success;
 
-            Log.Api("PINGING API: Checking API Status");
-            switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
+            if (VisualsAPIChecker.UnitedAPI != true)
             {
-                case API.Online:
-                    APIStatusText.Text = "United API:\n - Online";
-                    APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
-                    APIStatusDesc.Text = "Connected to API";
-                    APIStatusIcon.Image = Properties.Resources.api_success;
-                    Log.Api("PINGING API: United API has responded. Its Online!");
-                    break;
-                default:
-                    APIStatusText.Text = "United API:\n - Offline";
-                    APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
-                    APIStatusDesc.Text = "Checking Carbon API";
-                    APIStatusIcon.Image = Properties.Resources.api_error;
-                    Log.Api("PINGING API: United API has not responded. Checking Backup...");
-                    WUGGAPIOffline = true;
-                    break;
+                APIStatusText.Text = "Carbon API:\n - Online";
+                APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+                APIStatusDesc.Text = "Connected to API";
+                APIStatusIcon.Image = Properties.Resources.api_success;
             }
-
-            if (WUGGAPIOffline == true && DCAPIOffline == false && DC2APIOffline == false && AllAPIsOffline == false)
+            else if (VisualsAPIChecker.CarbonAPI != true)
             {
-                await Task.Delay(500);
-                APIStatusText.Text = "Carbon API:\n - Pinging";
-                APIStatusText.ForeColor = Color.FromArgb(66, 179, 189);
-                APIStatusIcon.Image = Properties.Resources.api_checking;
-                await Task.Delay(1000);
-                switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/serverlist.json"))
-                {
-                    case API.Online:
-                        APIStatusText.Text = "Carbon API:\n - Online";
-                        APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
-                        APIStatusDesc.Text = "Connected to API";
-                        APIStatusIcon.Image = Properties.Resources.api_success;
-                        Log.Api("PINGING API: Carbon API has responded. Its Online!");
-                        break;
-                    default:
-                        APIStatusText.Text = "Carbon API:\n - Offline";
-                        APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
-                        APIStatusDesc.Text = "Checking Carbon 2nd API";
-                        APIStatusIcon.Image = Properties.Resources.api_error;
-                        Log.Api("PINGING API: Carbon API has not responded. Checking Backup...");
-                        DCAPIOffline = true;
-                        break;
-                }
+                APIStatusText.Text = "Carbon 2nd API:\n - Online";
+                APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+                APIStatusDesc.Text = "Connected to API";
+                APIStatusIcon.Image = Properties.Resources.api_success;
             }
-
-            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == false && AllAPIsOffline == false)
+            else if (VisualsAPIChecker.CarbonAPITwo != true)
             {
-                await Task.Delay(500);
-                APIStatusText.Text = "Carbon 2nd API:\n - Pinging";
-                APIStatusText.ForeColor = Color.FromArgb(66, 179, 189);
-                APIStatusIcon.Image = Properties.Resources.api_checking;
-                await Task.Delay(1000);
-                switch (APIStatusChecker.CheckStatus(Self.secondstaticapiserver + "/serverlist.json"))
-                {
-                    case API.Online:
-                        APIStatusText.Text = "Carbon 2nd API:\n - Online";
-                        APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
-                        APIStatusDesc.Text = "Connected to API";
-                        APIStatusIcon.Image = Properties.Resources.api_success;
-                        Log.Api("PINGING API: Carbon 2nd API has responded. Its Online!");
-                        break;
-                    default:
-                        APIStatusText.Text = "Carbon 2nd API:\n - Offline";
-                        APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
-                        APIStatusDesc.Text = "Checking WOPL API";
-                        APIStatusIcon.Image = Properties.Resources.api_error;
-                        Log.Api("PINGING API: Carbon 2nd API has not responded. Checking Backup...");
-                        DC2APIOffline = true;
-                        break;
-                }
+                APIStatusText.Text = "WOPL API:\n - Online";
+                APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+                APIStatusDesc.Text = "Connected to API";
+                APIStatusIcon.Image = Properties.Resources.api_success;
             }
-
-            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == true && AllAPIsOffline == false)
+            else if (VisualsAPIChecker.WOPLAPI != true)
             {
-                await Task.Delay(500);
-                APIStatusText.Text = "WOPL API:\n - Pinging";
-                APIStatusText.ForeColor = Color.FromArgb(66, 179, 189);
-                APIStatusIcon.Image = Properties.Resources.api_checking;
-                await Task.Delay(1000);
-                switch (APIStatusChecker.CheckStatus(Self.woplserver + "/serverlist.json"))
-                {
-                    case API.Online:
-                        APIStatusText.Text = "WOPL API:\n - Online";
-                        APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
-                        APIStatusDesc.Text = "Connected to API";
-                        APIStatusIcon.Image = Properties.Resources.api_success;
-                        Log.Api("PINGING API: WOPL API has responded. Its Online!");
-                        break;
-                    default:
-                        APIStatusText.Text = "WOPL API:\n - Offline";
-                        APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
-                        APIStatusDesc.Text = "Yikes!";
-                        APIStatusIcon.Image = Properties.Resources.api_error;
-                        Log.Api("PINGING API: WOPL API has not responded....");
-                        AllAPIsOffline = true;
-                        break;
-                }
-            }
-
-            if (AllAPIsOffline == true)
-            {
-                await Task.Delay(1000);
                 APIStatusText.Text = "Connection API:\n - Error";
                 APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
                 APIStatusDesc.Text = "Failed to Connect to APIs";

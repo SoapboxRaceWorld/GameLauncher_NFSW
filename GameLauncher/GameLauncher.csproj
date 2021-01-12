@@ -153,7 +153,8 @@
       <DependentUpon>AddServer.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\LauncherCore\AntiCheat.cs" />
-    <Compile Include="App\Classes\LauncherCore\API\APIStatusChecker.cs" />
+    <Compile Include="App\Classes\LauncherCore\APICheckers\APIStatusChecker.cs" />
+    <Compile Include="App\Classes\LauncherCore\APICheckers\VisualsAPIChecker.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\ClassicAuth.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\ModernAuth.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\Tokens.cs" />

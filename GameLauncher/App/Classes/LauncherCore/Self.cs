@@ -15,12 +15,12 @@ namespace GameLauncherReborn
 {
     class Self
     {
-        public static string mainserver             = "https://api.worldunited.gg";
-        public static string fileserver             = "https://files.worldunited.gg";
-        public static string staticapiserver        = "http://api-sbrw.davidcarbon.download";
-        public static string secondstaticapiserver  = "http://api2-sbrw.davidcarbon.download";
-        public static string woplserver             = "http://worldonline.pl";
-        public static string modnetserver           = "http://cdn.soapboxrace.world";
+        public static string mainserver = "https://api.worldunited.gg";
+        public static string fileserver = "https://files.worldunited.gg";
+        public static string staticapiserver = "http://api-sbrw.davidcarbon.download";
+        public static string secondstaticapiserver = "http://api2-sbrw.davidcarbon.download";
+        public static string woplserver = "http://worldonline.pl";
+        public static string modnetserver = "http://cdn.soapboxrace.world";
 
         public static string[] serverlisturl = new string[]
         {
