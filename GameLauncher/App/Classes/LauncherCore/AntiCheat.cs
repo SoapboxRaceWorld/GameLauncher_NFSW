@@ -114,22 +114,25 @@ namespace GameLauncher.App.Classes
                 String responseString;
                 try
                 {
-                    Uri sendReport = new Uri(Self.mainserver + "/report");
+                    foreach(string report_url in Self.anticheatreporting) 
+                    { 
+                        Uri sendReport = new Uri(report_url);
 
-                    var request = (HttpWebRequest)WebRequest.Create(sendReport);
-                    var postData = "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + Security.FingerPrint.Value();
-                    var data = Encoding.ASCII.GetBytes(postData);
-                    request.Method = "POST";
-                    request.ContentType = "application/x-www-form-urlencoded";
-                    request.ContentLength = data.Length;
+                        var request = (HttpWebRequest)WebRequest.Create(sendReport);
+                        var postData = "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + Security.FingerPrint.Value();
+                        var data = Encoding.ASCII.GetBytes(postData);
+                        request.Method = "POST";
+                        request.ContentType = "application/x-www-form-urlencoded";
+                        request.ContentLength = data.Length;
 
-                    using (var stream = request.GetRequestStream())
-                    {
-                        stream.Write(data, 0, data.Length);
+                        using (var stream = request.GetRequestStream())
+                        {
+                            stream.Write(data, 0, data.Length);
+                        }
+
+                        var response = (HttpWebResponse)request.GetResponse();
+                        responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
                     }
-
-                    var response = (HttpWebResponse)request.GetResponse();
-                    responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
 
                     Console.WriteLine("Detected: " + AntiCheat.cheats_detected);
                 }
