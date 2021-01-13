@@ -533,7 +533,7 @@ namespace GameLauncher
                     Thread ST = new Thread(() =>
                     {
                         Log.Info("SPLASH SCREEN: Closing Splash Screen");
-                        Thread.Sleep(1200);
+                        Thread.Sleep(4000);
                         f.Invoke(new Action(() => { f.Close(); }));
                     })
                     {
