@@ -60,9 +60,6 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                         break;
                 }
             }
-
-            /* Increase ProgressStatus for Splash Screen */
-            SplashScreen.SucessfulProgress();
         }
     }
 }

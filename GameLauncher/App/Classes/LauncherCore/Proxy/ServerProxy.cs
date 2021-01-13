@@ -37,9 +37,6 @@ namespace GameLauncher.App.Classes
                 RewriteLocalhost = false
             });
             _host.Start();
-
-            /* Increase ProgressStatus for Splash Screen */
-            SplashScreen.SucessfulProgress();
         }
 
         public void Stop()
