@@ -10,9 +10,11 @@ namespace GameLauncher.App.Classes
 {
     public class CDNListUpdater
     {
-        public static List<CDNObject> finalCDNItems = new List<CDNObject>();
+        public static List<CDNObject> NoCategoryList = new List<CDNObject>();
 
-        public static void UpdateCDNList()
+        public static List<CDNObject> CleanList = new List<CDNObject>();
+
+        public static void GetList()
         {
             List<CDNObject> cdnInfos = new List<CDNObject>();
 
@@ -42,32 +44,39 @@ namespace GameLauncher.App.Classes
                 }
             }
 
+            /* Create Final CDN List without Categories */
+            foreach (CDNObject NoCatList in cdnInfos)
+            {
+                if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
+                {
+                    NoCategoryList.Add(NoCatList);
+                }
+            }
+
+            /* Create Rough Draft CDN List with Categories */
+            List<CDNObject> RawList = new List<CDNObject>();
+
             foreach (var cdnItemGroup in cdnInfos.GroupBy(s => s.Category))
             {
-                if (finalCDNItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{cdnItemGroup.Key} Mirrors")) == -1)
+                if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{cdnItemGroup.Key} Mirrors")) == -1)
                 {
-                    finalCDNItems.Add(new CDNObject
+                    RawList.Add(new CDNObject
                     {
                         Name = $"<GROUP>{cdnItemGroup.Key} Mirrors",
                         IsSpecial = true
                     });
                 }
-                finalCDNItems.AddRange(cdnItemGroup.ToList());
+                RawList.AddRange(cdnItemGroup.ToList());
             }
-        }
 
-        public static List<CDNObject> GetCDNList()
-        {
-            List<CDNObject> newFinalCDNItems = new List<CDNObject>();
-
-            foreach (CDNObject xCDN in finalCDNItems)
+            /* Create Final CDN List with Categories */
+            foreach (CDNObject CList in RawList)
             {
-                if (newFinalCDNItems.FindIndex(i => string.Equals(i.Name, xCDN.Name)) == -1)
+                if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
                 {
-                    newFinalCDNItems.Add(xCDN);
+                    CleanList.Add(CList);
                 }
             }
-            return newFinalCDNItems;
         }
     }
 }

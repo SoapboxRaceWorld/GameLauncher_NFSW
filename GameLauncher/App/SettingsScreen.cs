@@ -8,7 +8,6 @@ using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.Resources;
 using GameLauncherReborn;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -39,8 +38,6 @@ namespace GameLauncher.App
 
         public string ServerIP = String.Empty;
         public string ServerName = String.Empty;
-
-        List<CDNObject> finalCDNItems = new List<CDNObject>();
 
         public SettingsScreen(string serverIP, string serverName)
         {
@@ -133,13 +130,6 @@ namespace GameLauncher.App
             SettingsCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
             SettingsCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
             */
-
-            /********************************/
-            /* Get CDN List                  /
-            /********************************/
-
-            CDNListUpdater.UpdateCDNList();
-            finalCDNItems = CDNListUpdater.GetCDNList();
         }
 
         /********************************/
@@ -303,7 +293,7 @@ namespace GameLauncher.App
             /********************************/
 
             SettingsCDNPick.DisplayMember = "Name";
-            SettingsCDNPick.DataSource = finalCDNItems;
+            SettingsCDNPick.DataSource = CDNListUpdater.CleanList;
 
             RememberLastCDN();
             IsCDNDownGame();
@@ -761,10 +751,10 @@ namespace GameLauncher.App
                 Log.Core("SETTINGS CDNLIST: Found something!");
                 Log.Core("SETTINGS CDNLIST: Checking if CDN exists on our database");
 
-                if (finalCDNItems.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
+                if (CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
                 {
                     Log.Core("SETTINGS CDNLIST: CDN found! Checking ID");
-                    var index = finalCDNItems.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
+                    var index = CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
 
                     Log.Core("SETTINGS CDNLIST: ID is " + index);
                     if (index >= 0)
@@ -798,9 +788,9 @@ namespace GameLauncher.App
                 string FinalCDNURL = FileSettingsSave.CDN + "/";
                 Log.Debug(FinalCDNURL);
 
-                if (finalCDNItems.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
+                if (CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
                 {
-                    var index = finalCDNItems.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
+                    var index = CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
 
                     if (index >= 0)
                     {

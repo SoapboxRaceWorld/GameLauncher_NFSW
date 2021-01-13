@@ -1,6 +1,4 @@
 ﻿using GameLauncher.App.Classes;
-using GameLauncher.App.Classes.Logger;
-using GameLauncher.HashPassword;
 using GameLauncherReborn;
 using GameLauncher.Resources;
 using Newtonsoft.Json;
@@ -9,8 +7,6 @@ using System;
 using System.Net;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading;
 using System.Windows.Forms;
@@ -60,61 +56,7 @@ namespace GameLauncher.App
             ServerListRenderer.Columns[5].Width = 60;
             ServerListRenderer.Columns[5].TextAlign = HorizontalAlignment.Center;
 
-            //Actually accept JSON instead of old format//
-            List<ServerInfo> serverInfos = new List<ServerInfo>();
-
-            foreach (var serverListURL in Self.serverlisturl)
-            {
-                try
-                {
-                    var wc = new WebClient();
-                    var response = wc.DownloadString(serverListURL);
-
-                    try
-                    {
-                        serverInfos.AddRange(JsonConvert.DeserializeObject<List<ServerInfo>>(response));
-                    }
-                    catch (Exception error)
-                    {
-                        Log.Error("Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message);
-                    }
-                }
-                catch (Exception error)
-                {
-                    Log.Error("Error occurred while loading server list from [" + serverListURL + "]: " + error.Message);
-                }
-            }
-
-            if (File.Exists("servers.json"))
-            {
-                var fileItems = JsonConvert.DeserializeObject<List<ServerInfo>>(File.ReadAllText("servers.json"));
-
-                if (fileItems.Count > 0)
-                {
-                    fileItems.Select(si => {
-                        si.DistributionUrl = "";
-                        si.DiscordPresenceKey = "";
-                        si.Id = SHA.HashPassword($"{si.Name}:{si.Id}:{si.IpAddress}");
-                        si.IsSpecial = false;
-                        si.Category = "CUSTOM";
-
-                        return si;
-                    }).ToList().ForEach(si => serverInfos.Add(si));
-                }
-            }
-
-            List<ServerInfo> newFinalItems = new List<ServerInfo>();
-            foreach (ServerInfo xServ in serverInfos)
-            {
-                if (newFinalItems.FindIndex(i => string.Equals(i.Name, xServ.Name)) == -1)
-                {
-                    newFinalItems.Add(xServ);
-                }
-            }
-            Console.Write(newFinalItems);
-
-
-            foreach (var substring in newFinalItems)
+            foreach (var substring in ServerListUpdater.NoCategoryList)
             {
                 try
                 {

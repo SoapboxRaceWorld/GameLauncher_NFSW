@@ -568,6 +568,9 @@ namespace GameLauncher
                 }
             }
 
+            ServerListUpdater.GetList();
+            CDNListUpdater.GetList();
+
             if (!DetectLinux.LinuxDetected())
             {
                 if (!File.Exists("GameLauncherUpdater.exe"))

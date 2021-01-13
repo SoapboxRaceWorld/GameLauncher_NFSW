@@ -32,7 +32,6 @@ using GameLauncher.App.Classes.ModNetReloaded;
 using GameLauncher.App.Classes.HashPassword;
 using GameLauncher.App.Classes.RPC;
 using GameLauncher.App.Classes.GPU;
-using GameLauncher.Properties;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using System.Management.Automation;
 using System.Drawing.Imaging;
@@ -113,7 +112,6 @@ namespace GameLauncher
 
         public static DiscordRpcClient discordRpcClient;
 
-        List<ServerInfo> finalItems = new List<ServerInfo>();
         readonly Dictionary<string, int> serverStatusDictionary = new Dictionary<string, int>();
 
         readonly String filename_pack = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameFiles.sbrwpack");
@@ -322,7 +320,7 @@ namespace GameLauncher
                     discordRpcClient.Invoke();
 
                     //Let's fetch all servers
-                    List<ServerInfo> allServs = finalItems.FindAll(i => string.Equals(i.IsSpecial, false));
+                    List<ServerInfo> allServs = ServerListUpdater.CleanList.FindAll(i => string.Equals(i.IsSpecial, false));
                     allServs.ForEach(delegate(ServerInfo server) {
                         try
                         {
@@ -569,9 +567,6 @@ namespace GameLauncher
         {
             Log.Visuals("CORE: Entering mainScreen_Load");
 
-            Log.Core("LAUNCHER: Updating server list");
-            ServerListUpdater.UpdateList();
-
             Log.Visuals("CORE: Setting WindowName");
             Text = "GameLauncherReborn v" + Application.ProductVersion;
 
@@ -616,8 +611,7 @@ namespace GameLauncher
             /* Server Display List */
             ServerPick.DisplayMember = "Name";
             Log.Core("LAUNCHER: Setting server list");
-            finalItems = ServerListUpdater.GetList();
-            ServerPick.DataSource = finalItems;
+            ServerPick.DataSource = ServerListUpdater.CleanList;
 
             //ForceSelectServer
             if (string.IsNullOrEmpty(FileAccountSave.ChoosenGameServer))
@@ -664,10 +658,10 @@ namespace GameLauncher
 
                 Log.Core("SERVERLIST: Checking if server exists on our database");
 
-                if (finalItems.FindIndex(i => string.Equals(i.IpAddress, FileAccountSave.ChoosenGameServer)) != 0 /*_slresponse.Contains(_settingFile.Read("Server"))*/)
+                if (ServerListUpdater.CleanList.FindIndex(i => string.Equals(i.IpAddress, FileAccountSave.ChoosenGameServer)) != 0 /*_slresponse.Contains(_settingFile.Read("Server"))*/)
                 {
                     Log.Core("SERVERLIST: Server found! Checking ID");
-                    var index = finalItems.FindIndex(i => string.Equals(i.IpAddress, FileAccountSave.ChoosenGameServer));
+                    var index = ServerListUpdater.CleanList.FindIndex(i => string.Equals(i.IpAddress, FileAccountSave.ChoosenGameServer));
 
                     Log.Core("SERVERLIST: ID is " + index);
                     if (index >= 0)
@@ -3344,7 +3338,7 @@ namespace GameLauncher
             {
                 this.SelectServerBtn.Text = "[...] " + ServerName.Name;
 
-                var index = finalItems.FindIndex(i => string.Equals(i.IpAddress, ServerName.IpAddress));
+                var index = ServerListUpdater.CleanList.FindIndex(i => string.Equals(i.IpAddress, ServerName.IpAddress));
                 ServerPick.SelectedIndex = index;
             }
         }

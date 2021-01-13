@@ -1,8 +1,6 @@
 ﻿using GameLauncher.App.Classes;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.Resources;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
@@ -31,8 +29,7 @@ namespace GameLauncher.App
             DownloadSourceText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             CDNSource.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             Save.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            ServerStatusText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            CDNStatusText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            ListStatusText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             APIErrorButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             VersionLabel.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
         }
@@ -50,7 +47,7 @@ namespace GameLauncher.App
         {
             if (VisualsAPIChecker.UnitedAPI != false)
             {
-                CDNStatusText.Text = "United List - Online";
+                ListStatusText.Text = "United List - Online";
                 StatusCheck = true;
             }
             
@@ -58,7 +55,7 @@ namespace GameLauncher.App
             {
                 if (VisualsAPIChecker.CarbonAPI == true)
                 {
-                    CDNStatusText.Text = "Carbon List - Online";
+                    ListStatusText.Text = "Carbon List - Online";
                     StatusCheck = true;
                 }
             }
@@ -67,7 +64,7 @@ namespace GameLauncher.App
             {
                 if (VisualsAPIChecker.CarbonAPITwo == true)
                 {
-                    CDNStatusText.Text = "Carbon 2nd List - Online";
+                    ListStatusText.Text = "Carbon 2nd List - Online";
                     StatusCheck = true;
                 }
             }
@@ -76,14 +73,14 @@ namespace GameLauncher.App
             {
                 if (VisualsAPIChecker.WOPLAPI == true)
                 {
-                    CDNStatusText.Text = "WOPL List - Online";
+                    ListStatusText.Text = "WOPL List - Online";
                     StatusCheck = true;
                 }
             }
 
             if (VisualsAPIChecker.WOPLAPI == false)
             {
-                CDNStatusText.Text = "API Lists Connection - Error";
+                ListStatusText.Text = "API Lists Connection - Error";
             }
 
             if (StatusCheck == false)
@@ -104,20 +101,6 @@ namespace GameLauncher.App
             SettingsFormElements(false);
             APIErrorFormElements(false);
             CheckListStatus();
-        }
-
-        private void ShowCDNSources()
-        {
-            /* NEW CDN Display List */
-            //List<CDNObject> finalCDNItems = new List<CDNObject>();
-
-            CDNListUpdater.UpdateCDNList();
-
-            Log.Info("WELCOME: Setting CDN list");
-            List<CDNObject> finalCDNItems = CDNListUpdater.GetCDNList();
-
-            CDNSource.DisplayMember = "Name";
-            CDNSource.DataSource = finalCDNItems;
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -157,7 +140,9 @@ namespace GameLauncher.App
 
         private void SettingsFormElements(bool hideElements = true)
         {
-            ShowCDNSources();
+            CDNSource.DisplayMember = "Name";
+            CDNSource.DataSource = CDNListUpdater.CleanList;
+
             DownloadSourceText.Visible = hideElements;
             CDNSource.Visible = hideElements;
             Save.Visible = hideElements;

@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using GameLauncher.Properties;
 using GameLauncherReborn;
 using Newtonsoft.Json;
 using GameLauncher.App.Classes.Logger;

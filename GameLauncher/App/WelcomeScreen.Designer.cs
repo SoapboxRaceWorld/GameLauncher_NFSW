@@ -34,8 +34,7 @@ namespace GameLauncher.App
             this.DownloadSourceText = new System.Windows.Forms.Label();
             this.CDNSource = new System.Windows.Forms.ComboBox();
             this.Save = new System.Windows.Forms.Button();
-            this.ServerStatusText = new System.Windows.Forms.Label();
-            this.CDNStatusText = new System.Windows.Forms.Label();
+            this.ListStatusText = new System.Windows.Forms.Label();
             this.APIErrorButton = new System.Windows.Forms.Button();
             this.VersionLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -58,7 +57,7 @@ namespace GameLauncher.App
             this.DownloadSourceText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.DownloadSourceText.Location = new System.Drawing.Point(9, 115);
             this.DownloadSourceText.Name = "DownloadSourceText";
-            this.DownloadSourceText.Size = new System.Drawing.Size(177, 14);
+            this.DownloadSourceText.Size = new System.Drawing.Size(180, 14);
             this.DownloadSourceText.TabIndex = 2;
             this.DownloadSourceText.Text = "CDN / Download Source:";
             this.DownloadSourceText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -91,35 +90,23 @@ namespace GameLauncher.App
             this.Save.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Save.Location = new System.Drawing.Point(9, 164);
             this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(392, 32);
+            this.Save.Size = new System.Drawing.Size(399, 32);
             this.Save.TabIndex = 5;
             this.Save.Text = "Save Settings and Select Download / Install Location";
             this.Save.UseVisualStyleBackColor = false;
             this.Save.Click += new System.EventHandler(this.Save_Click);
             // 
-            // ServerStatusText
+            // ListStatusText
             // 
-            this.ServerStatusText.AutoSize = true;
-            this.ServerStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ServerStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ServerStatusText.Location = new System.Drawing.Point(12, 78);
-            this.ServerStatusText.Name = "ServerStatusText";
-            this.ServerStatusText.Size = new System.Drawing.Size(173, 14);
-            this.ServerStatusText.TabIndex = 6;
-            this.ServerStatusText.Text = "Server API Status - Pinging";
-            this.ServerStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // CDNStatusText
-            // 
-            this.CDNStatusText.AutoSize = true;
-            this.CDNStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CDNStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.CDNStatusText.Location = new System.Drawing.Point(220, 78);
-            this.CDNStatusText.Name = "CDNStatusText";
-            this.CDNStatusText.Size = new System.Drawing.Size(159, 14);
-            this.CDNStatusText.TabIndex = 7;
-            this.CDNStatusText.Text = "CDN API Status - Pinging";
-            this.CDNStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ListStatusText.AutoSize = true;
+            this.ListStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ListStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.ListStatusText.Location = new System.Drawing.Point(124, 75);
+            this.ListStatusText.Name = "ListStatusText";
+            this.ListStatusText.Size = new System.Drawing.Size(129, 14);
+            this.ListStatusText.TabIndex = 7;
+            this.ListStatusText.Text = "API Status - Pinging";
+            this.ListStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // APIErrorButton
             // 
@@ -156,8 +143,7 @@ namespace GameLauncher.App
             this.ClientSize = new System.Drawing.Size(410, 227);
             this.Controls.Add(this.VersionLabel);
             this.Controls.Add(this.APIErrorButton);
-            this.Controls.Add(this.CDNStatusText);
-            this.Controls.Add(this.ServerStatusText);
+            this.Controls.Add(this.ListStatusText);
             this.Controls.Add(this.Save);
             this.Controls.Add(this.CDNSource);
             this.Controls.Add(this.DownloadSourceText);
@@ -186,8 +172,7 @@ namespace GameLauncher.App
         private System.Windows.Forms.Label DownloadSourceText;
         private System.Windows.Forms.ComboBox CDNSource;
         private System.Windows.Forms.Button Save;
-        private System.Windows.Forms.Label ServerStatusText;
-        private System.Windows.Forms.Label CDNStatusText;
+        private System.Windows.Forms.Label ListStatusText;
         private System.Windows.Forms.Button APIErrorButton;
         private System.Windows.Forms.Label VersionLabel;
     }

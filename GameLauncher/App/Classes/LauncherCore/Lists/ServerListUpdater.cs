@@ -13,9 +13,11 @@ namespace GameLauncher.App.Classes
 {
     public class ServerListUpdater
     {
-        public static List<ServerInfo> finalItems = new List<ServerInfo>();
+        public static List<ServerInfo> NoCategoryList = new List<ServerInfo>();
 
-        public static void UpdateList()
+        public static List<ServerInfo> CleanList = new List<ServerInfo>();
+
+        public static void GetList()
         {
             List<ServerInfo> serverInfos = new List<ServerInfo>();
 
@@ -92,33 +94,40 @@ namespace GameLauncher.App.Classes
                 });
             }
 
+            /* Create Final Server List without Categories */
+            foreach (ServerInfo NoCatList in serverInfos)
+            {
+                if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
+                {
+                    NoCategoryList.Add(NoCatList);
+                }
+            }
+
+            /* Create Rough Draft Server List with Categories */
+            List<ServerInfo> RawList = new List<ServerInfo>();
+
             foreach (var serverItemGroup in serverInfos.GroupBy(s => s.Category))
             {
-                if (finalItems.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
+                if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
                 {
-                    finalItems.Add(new ServerInfo
+                    RawList.Add(new ServerInfo
                     {
                         Id = $"__category-{serverItemGroup.Key}__",
                         Name = $"<GROUP>{serverItemGroup.Key} Servers",
                         IsSpecial = true
                     });
                 }
-                finalItems.AddRange(serverItemGroup.ToList());
+                RawList.AddRange(serverItemGroup.ToList());
             }
-        }
 
-        public static List<ServerInfo> GetList()
-        {
-            List<ServerInfo> newFinalItems = new List<ServerInfo>();
-
-            foreach (ServerInfo xServ in finalItems)
+            /* Create Final Server List with Categories */
+            foreach (ServerInfo CList in RawList)
             {
-                if (newFinalItems.FindIndex(i => string.Equals(i.Name, xServ.Name)) == -1)
+                if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
                 {
-                    newFinalItems.Add(xServ);
+                    CleanList.Add(CList);
                 }
             }
-            return newFinalItems;
         }
     }
 }
