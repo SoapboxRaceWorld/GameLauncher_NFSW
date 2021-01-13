@@ -27,6 +27,27 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public static void NullSafeSettings()
         {
+            if (settingFile.KeyExists("Server"))
+            {
+                FileAccountSave.ChoosenGameServer = settingFile.Read("Server");
+                settingFile.DeleteKey("Server");
+                FileAccountSave.SaveAccount();
+            }
+
+            if (settingFile.KeyExists("AccountEmail"))
+            {
+                FileAccountSave.UserRawEmail = settingFile.Read("AccountEmail");
+                settingFile.DeleteKey("AccountEmail");
+                FileAccountSave.SaveAccount();
+            }
+
+            if (settingFile.KeyExists("Password"))
+            {
+                FileAccountSave.UserHashedPassword = settingFile.Read("Password");
+                settingFile.DeleteKey("Password");
+                FileAccountSave.SaveAccount();
+            }
+
             if (DetectLinux.LinuxDetected() && !settingFile.KeyExists("InstallationDirectory"))
             {
                 settingFile.Write("InstallationDirectory", "GameFiles");
@@ -35,7 +56,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             {
                 settingFile.Write("InstallationDirectory", "");
             }
-            else if (!File.Exists(settingFile.Read("InstallationDirectory")))
+            else if (!File.Exists(settingFile.Read("InstallationDirectory")) && !string.IsNullOrEmpty(settingFile.Read("InstallationDirectory")))
             {
                 Directory.CreateDirectory(settingFile.Read("InstallationDirectory"));
             }

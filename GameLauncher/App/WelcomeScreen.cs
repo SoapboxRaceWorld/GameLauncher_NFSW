@@ -51,7 +51,7 @@ namespace GameLauncher.App
                 StatusCheck = true;
             }
             
-            if (VisualsAPIChecker.UnitedAPI == false)
+            if (VisualsAPIChecker.UnitedAPI != true)
             {
                 if (VisualsAPIChecker.CarbonAPI == true)
                 {
@@ -60,7 +60,7 @@ namespace GameLauncher.App
                 }
             }
 
-            if (VisualsAPIChecker.CarbonAPI != false)
+            if (VisualsAPIChecker.CarbonAPI != true)
             {
                 if (VisualsAPIChecker.CarbonAPITwo == true)
                 {
@@ -69,7 +69,7 @@ namespace GameLauncher.App
                 }
             }
 
-            if (VisualsAPIChecker.CarbonAPITwo != false)
+            if (VisualsAPIChecker.CarbonAPITwo != true)
             {
                 if (VisualsAPIChecker.WOPLAPI == true)
                 {
@@ -78,7 +78,7 @@ namespace GameLauncher.App
                 }
             }
 
-            if (VisualsAPIChecker.WOPLAPI == false)
+            if (VisualsAPIChecker.WOPLAPI != true)
             {
                 ListStatusText.Text = "API Lists Connection - Error";
             }
