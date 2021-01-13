@@ -42,6 +42,7 @@ using System.Net.Http;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 
 namespace GameLauncher
 {
@@ -421,17 +422,6 @@ namespace GameLauncher
                 }
                 fbd.Dispose();
             }
-    
-            /* Mental Note! Remind me to add a Second NullSafe Check for Settings.ini Thanks! - DavidCarbon
-             * 
-            /*
-            if (!_settingFile.KeyExists("CDN") || string.IsNullOrEmpty(_settingFile.Read("CDN")))
-            {
-                _settingFile.Write("CDN", "http://localhost");
-                _NFSW_Installation_Source = "http://localhost";
-                Log.Warning("LAUNCHER: CDN Source URL was Empty! Setting a Null Safe URL 'http://localhost'");
-            }
-            */
 
             if (!DetectLinux.LinuxDetected())
             {
@@ -517,49 +507,6 @@ namespace GameLauncher
 
                 e.Graphics.FillRectangle(backgroundColor, e.Bounds);
                 e.Graphics.DrawString("    " + serverListText, font, textColor, e.Bounds);
-            }
-        }
-
-        private void SettingsCDNPick_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            var font = (sender as ComboBox).Font;
-            Brush backgroundColor;
-            Brush textColor;
-            Brush customTextColor = new SolidBrush(Color.FromArgb(178, 210, 255));
-            Brush customBGColor = new SolidBrush(Color.FromArgb(44, 58, 76));
-
-            var cdnListText = "";
-
-            if (sender is ComboBox cb)
-            {
-                if (cb.Items[e.Index] is CDNObject si)
-                {
-                    cdnListText = si.Name;
-                }
-            }
-
-            if (cdnListText.StartsWith("<GROUP>"))
-            {
-                font = new Font(font, FontStyle.Bold);
-                e.Graphics.FillRectangle(Brushes.White, e.Bounds);
-                e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, Brushes.Black, e.Bounds);
-            }
-            else
-            {
-                font = new Font(font, FontStyle.Bold);
-                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
-                {
-                    backgroundColor = SystemBrushes.Highlight;
-                    textColor = SystemBrushes.HighlightText;
-                }
-                else
-                {
-                    backgroundColor = customBGColor;
-                    textColor = customTextColor;
-                }
-
-                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                e.Graphics.DrawString(cdnListText, font, textColor, e.Bounds);
             }
         }
 
@@ -1979,20 +1926,20 @@ namespace GameLauncher
 
         private void Graybutton_click_MouseDown(object sender, EventArgs e)
         {
-            LogoutButton.Image = Properties.Resources.graybutton_click;
-            RegisterCancel.Image = Properties.Resources.graybutton_click;
+            LogoutButton.Image = Theming.GrayButtonClick;
+            RegisterCancel.Image = Theming.GrayButtonClick;
         }
 
         private void Graybutton_hover_MouseEnter(object sender, EventArgs e)
         {
-            LogoutButton.Image = Properties.Resources.graybutton_hover;
-            RegisterCancel.Image = Properties.Resources.graybutton_hover;
+            LogoutButton.Image = Theming.GrayButtonHover;
+            RegisterCancel.Image = Theming.GrayButtonHover;
         }
 
         private void Graybutton_MouseLeave(object sender, EventArgs e)
         {
-            LogoutButton.Image = Properties.Resources.graybutton;
-            RegisterCancel.Image = Properties.Resources.graybutton;
+            LogoutButton.Image = Theming.GrayButton;
+            RegisterCancel.Image = Theming.GrayButton;
         }
 
         private void Graybutton_hover_MouseUp(object sender, EventArgs e)

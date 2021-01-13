@@ -3,6 +3,7 @@ using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.Resources;
@@ -26,7 +27,6 @@ namespace GameLauncher.App
         /* Global Functions             /
         /*******************************/
 
-        //private IniFile _settingFile = new IniFile("Settings.ini");
         public string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
 
         private int _lastSelectedCdnId;
@@ -60,14 +60,7 @@ namespace GameLauncher.App
             /* Set Background Image         /
             /*******************************/
 
-            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\Theme\\Settings\\Settings.png"))
-            {
-                BackgroundImage = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + "\\Theme\\Settings\\Settings.png");
-            }
-            else
-            {
-                BackgroundImage = Properties.Resources.secondarybackground;
-            }
+            BackgroundImage = Theming.SettingsScreen;
 
             /*******************************/
             /* Set Hardcoded Text           /

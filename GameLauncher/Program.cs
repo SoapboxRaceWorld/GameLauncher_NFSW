@@ -21,6 +21,7 @@ using Newtonsoft.Json;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 
 namespace GameLauncher
 {
@@ -571,6 +572,7 @@ namespace GameLauncher
             ServerListUpdater.GetList();
             CDNListUpdater.GetList();
             LauncherUpdateCheck.CheckAvailability();
+            Theming.CheckIfThemeExists();
 
             if (!DetectLinux.LinuxDetected())
             {

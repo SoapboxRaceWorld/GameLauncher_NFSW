@@ -163,6 +163,7 @@
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\CDN.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\ModNetLinksCleanup.cs" />
     <Compile Include="App\Classes\LauncherCore\Visuals\Delay.cs" />
+    <Compile Include="App\Classes\LauncherCore\Visuals\Theming.cs" />
     <Compile Include="App\Classes\SystemPlatform\Linux\DetectLinux.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\Downloader.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderCommand.cs" />

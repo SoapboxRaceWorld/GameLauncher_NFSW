@@ -1,6 +1,4 @@
-﻿using GameLauncher.App.Classes.Logger;
-using GameLauncherReborn;
-using System.Threading.Tasks;
+﻿using GameLauncherReborn;
 
 namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 {
