@@ -27,7 +27,7 @@ namespace GameLauncher.App
         /*******************************/
 
         //private IniFile _settingFile = new IniFile("Settings.ini");
-        private string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
+        public string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
 
         private int _lastSelectedCdnId;
         private bool _disableProxy;

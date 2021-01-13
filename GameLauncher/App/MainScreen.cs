@@ -91,7 +91,7 @@ namespace GameLauncher
         //private readonly Pen _colorOnline = new Pen(Color.FromArgb(0, 128, 0));
         //private readonly Pen _colorLoading = new Pen(Color.FromArgb(0, 0, 0));
 
-        private IniFile _settingFile = new IniFile("Settings.ini");
+        //private IniFile _settingFile = new IniFile("Settings.ini");
         private string _presenceImageKey;
         private string _NFSW_Installation_Source;
         private string _realServername;
