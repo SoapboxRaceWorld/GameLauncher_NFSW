@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using GameLauncherReborn;
 using Newtonsoft.Json;
 using GameLauncher.App.Classes.Logger;
-using System.Threading.Tasks;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 
 namespace GameLauncher.App.Classes.Events
@@ -28,29 +27,23 @@ namespace GameLauncher.App.Classes.Events
             description = statusDescription;
         }
 
-        public async void CheckAvailability()
+        public static void CheckAvailability()
         {
-            text.Text = "Launcher - Checking...";
-            description.Text = "Version: v" + Application.ProductVersion;
-            status.Image = Properties.Resources.ac_unknown;
-            text.ForeColor = Color.FromArgb(0x848484);
-
-            switch (APIStatusChecker.CheckStatus(Self.mainserver + "/update.php?version=" + Application.ProductVersion))
+            if (!DetectLinux.LinuxDetected())
             {
-                case API.Online:
-                    MainAPI();
-                    break;
-                default:
-                    GitHubAPI();
-                    break;
+                switch (APIStatusChecker.CheckStatus(Self.mainserver + "/update.php?version=" + Application.ProductVersion))
+                {
+                    case API.Online:
+                        MainAPI();
+                        break;
+                    default:
+                        GitHubAPI();
+                        break;
+                }
             }
-
-            await Task.Delay(2000);
-            //Set Visual Status
-            ChangeVisualStatus();
         }
 
-        private void ChangeVisualStatus()
+        public void ChangeVisualStatus()
         {
             if (!string.IsNullOrEmpty(LatestLauncherBuild))
             {
@@ -62,6 +55,13 @@ namespace GameLauncher.App.Classes.Events
                     status.Image = Properties.Resources.ac_warning;
                     text.ForeColor = Color.Yellow;
                     description.Text = "Version: v" + Application.ProductVersion;
+
+                    if (!string.IsNullOrEmpty(FileSettingsSave.IgnoreVersion))
+                    {
+                        FileSettingsSave.IgnoreVersion = String.Empty;
+                        FileSettingsSave.SaveSettings();
+                        Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. You're now on the Insider Build Branch!");
+                    }
                 }
                 else if (Revisions == 0)
                 {
@@ -130,7 +130,7 @@ namespace GameLauncher.App.Classes.Events
             //----------------------//
         }
 
-        private void MainAPI()
+        public static void MainAPI()
         {
             WebClient update_data = new WebClient();
             update_data.CancelAsync();
@@ -147,7 +147,7 @@ namespace GameLauncher.App.Classes.Events
             };
         }
 
-        private void GitHubAPI()
+        public static void GitHubAPI()
         {
             Log.Warning("UPDATER: Falling back to GitHub API");
             switch (APIStatusChecker.CheckStatus("http://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest"))

@@ -228,7 +228,7 @@
             // LauncherIconStatus
             // 
             this.LauncherIconStatus.BackColor = System.Drawing.Color.Transparent;
-            this.LauncherIconStatus.Image = global::GameLauncher.Properties.Resources.ac_success;
+            this.LauncherIconStatus.Image = global::GameLauncher.Properties.Resources.ac_unknown;
             this.LauncherIconStatus.Location = new System.Drawing.Point(27, 456);
             this.LauncherIconStatus.Name = "LauncherIconStatus";
             this.LauncherIconStatus.Size = new System.Drawing.Size(21, 24);
@@ -239,13 +239,13 @@
             // 
             this.LauncherStatusText.BackColor = System.Drawing.Color.Transparent;
             this.LauncherStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LauncherStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
+            this.LauncherStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(132)))), ((int)(((byte)(132)))));
             this.LauncherStatusText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LauncherStatusText.Location = new System.Drawing.Point(53, 453);
             this.LauncherStatusText.Name = "LauncherStatusText";
             this.LauncherStatusText.Size = new System.Drawing.Size(130, 32);
             this.LauncherStatusText.TabIndex = 4;
-            this.LauncherStatusText.Text = "Anti-Cheat System";
+            this.LauncherStatusText.Text = "Launcher\n - Checking";
             this.LauncherStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LauncherStatusText.UseCompatibleTextRendering = true;
             // 

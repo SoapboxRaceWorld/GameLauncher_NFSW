@@ -781,7 +781,7 @@ namespace GameLauncher
 
             if (!DetectLinux.LinuxDetected())
             {
-                new LauncherUpdateCheck(LauncherIconStatus, LauncherStatusText, LauncherStatusDesc).CheckAvailability();
+                new LauncherUpdateCheck(LauncherIconStatus, LauncherStatusText, LauncherStatusDesc).ChangeVisualStatus();
             }
             else
             {

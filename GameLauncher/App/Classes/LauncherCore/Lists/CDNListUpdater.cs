@@ -22,10 +22,10 @@ namespace GameLauncher.App.Classes
             {
                 try
                 {
-                    Log.UrlCall("LIST CORE: Loading cdnlist from: " + cdnListURL);
+                    Log.UrlCall("LIST CORE: Loading CDN List from: " + cdnListURL);
                     var wc = new WebClient();
                     var responseList = wc.DownloadString(cdnListURL);
-                    Log.UrlCall("LIST CORE: Loaded cdnlist from: " + cdnListURL);
+                    Log.UrlCall("LIST CORE: Loaded CDN List from: " + cdnListURL);
 
                     try
                     {
@@ -35,12 +35,12 @@ namespace GameLauncher.App.Classes
                     }
                     catch (Exception error)
                     {
-                        Log.Error("LIST CORE: Error occurred while deserializing cdn list from [" + cdnListURL + "]: " + error.Message);
+                        Log.Error("LIST CORE: Error occurred while deserializing CDN List from [" + cdnListURL + "]: " + error.Message);
                     }
                 }
                 catch (Exception error)
                 {
-                    Log.Error("LIST CORE: Error occurred while loading cdn list from [" + cdnListURL + "]: " + error.Message);
+                    Log.Error("LIST CORE: Error occurred while loading CDN List from [" + cdnListURL + "]: " + error.Message);
                 }
             }
 

@@ -25,10 +25,10 @@ namespace GameLauncher.App.Classes
             {
                 try
                 {
-                    Log.UrlCall("LIST CORE: Loading serverlist from: " + serverListURL);
+                    Log.UrlCall("LIST CORE: Loading Server List from: " + serverListURL);
                     var wc = new WebClient();
                     var response = wc.DownloadString(serverListURL);
-                    Log.UrlCall("LIST CORE: Loaded serverlist from: " + serverListURL);
+                    Log.UrlCall("LIST CORE: Loaded Server List from: " + serverListURL);
 
                     try
                     {
@@ -38,12 +38,12 @@ namespace GameLauncher.App.Classes
                     }
                     catch (Exception error)
                     {
-                        Log.Error("LIST CORE: Error occurred while deserializing server list from [" + serverListURL + "]: " + error.Message);
+                        Log.Error("LIST CORE: Error occurred while deserializing Server List from [" + serverListURL + "]: " + error.Message);
                     }
                 }
                 catch (Exception error)
                 {
-                    Log.Error("LIST CORE: Error occurred while loading server list from [" + serverListURL + "]: " + error.Message);
+                    Log.Error("LIST CORE: Error occurred while loading Server List from [" + serverListURL + "]: " + error.Message);
                 }
             }
 
