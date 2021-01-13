@@ -128,6 +128,9 @@ namespace GameLauncher.App.Classes
                     CleanList.Add(CList);
                 }
             }
+
+            /* Increase ProgressStatus for Splash Screen */
+            SplashScreen.SucessfulProgress();
         }
     }
 }
