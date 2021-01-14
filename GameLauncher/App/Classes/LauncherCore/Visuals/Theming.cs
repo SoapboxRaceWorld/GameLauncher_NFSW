@@ -57,7 +57,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         public static Bitmap ServerIconOffline = Properties.Resources.server_offline;
 
-        public static Bitmap AServerIconSuccess = Properties.Resources.server_online;
+        public static Bitmap ServerIconSuccess = Properties.Resources.server_online;
 
         public static Bitmap ServerIconUnkown = Properties.Resources.server_unknown;
 
@@ -88,11 +88,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Bitmap GrayButtonHover = Properties.Resources.graybutton_hover;
 
 
-        public static Bitmap GreenButton = Properties.Resources.graybutton;
+        public static Bitmap GreenButton = Properties.Resources.greenbutton;
 
-        public static Bitmap GreenButtonClick = Properties.Resources.graybutton_click;
+        public static Bitmap GreenButtonClick = Properties.Resources.greenbutton_click;
 
-        public static Bitmap GreenButtonHover = Properties.Resources.graybutton_hover;
+        public static Bitmap GreenButtonHover = Properties.Resources.greenbutton_hover;
 
 
         public static Bitmap CloseButton = Properties.Resources.close;
@@ -177,6 +177,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Color Sucess = Color.FromArgb(159, 193, 32);
         /* Red */
         public static Color Error = Color.FromArgb(254, 0, 0);
+
+
+        /* Vertical Banner */
+
+        public static Color VerticalBannerBackColor = Color.FromArgb(0, 0, 0);
 
 
         /* Read Theme File and Check Values */
@@ -284,11 +289,35 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 }
             }
 
-            if (!string.IsNullOrEmpty(ThemeFile.Read("APIUnkownIcon")))
+            if (!string.IsNullOrEmpty(ThemeFile.Read("ServerCheckingIcon")))
             {
-                if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("APIUnkownIcon")))
+                if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerCheckingIcon")))
                 {
-                    APIIconUnkown = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("APIUnkownIcon"));
+                    ServerIconChecking = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerCheckingIcon"));
+                }
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("ServerOfflineIcon")))
+            {
+                if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerOfflineIcon")))
+                {
+                    ServerIconOffline = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerOfflineIcon"));
+                }
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("ServerSuccessIcon")))
+            {
+                if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerSuccessIcon")))
+                {
+                    ServerIconSuccess = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerSuccessIcon"));
+                }
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("ServerUnknownIcon")))
+            {
+                if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerUnknownIcon")))
+                {
+                    ServerIconUnkown = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerUnknownIcon"));
                 }
             }
 
@@ -618,6 +647,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
             {
                 Error = ToColor(ThemeFile.Read("ErrorForeColor"));
             }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("VerticalBannerBackColor")))
+            {
+                VerticalBannerBackColor = ToColor(ThemeFile.Read("VerticalBannerBackColor"));
+            }
+            
         }
 
 

@@ -726,8 +726,8 @@ namespace GameLauncher
             }
             else
             {
-                LauncherIconStatus.Image = Properties.Resources.ac_success;
-                LauncherStatusText.ForeColor = Color.FromArgb(0x9fc120);
+                LauncherIconStatus.Image = Theming.UpdateIconSuccess;
+                LauncherStatusText.ForeColor = Theming.Sucess;
                 LauncherStatusText.Text = "Launcher Status:\n - Linux Build";
                 LauncherStatusDesc.Text = "Version: v" + Application.ProductVersion;
             }
@@ -787,7 +787,7 @@ namespace GameLauncher
 
         private void CloseBTN_MouseLeave(object sender, EventArgs e)
         {
-            CloseBTN.BackgroundImage = Properties.Resources.close;
+            CloseBTN.BackgroundImage = Theming.CloseButton;
         }
 
         private void LoginEnter(object sender, KeyEventArgs e)
@@ -804,14 +804,14 @@ namespace GameLauncher
             if (string.IsNullOrEmpty(MainEmail.Text) || string.IsNullOrEmpty(MainPassword.Text))
             {
                 _loginEnabled = false;
-                LoginButton.Image = Properties.Resources.graybutton;
-                LoginButton.ForeColor = Color.Gray;
+                LoginButton.Image = Theming.GrayButton;
+                LoginButton.ForeColor = Theming.SixTextForeColor;
             }
             else
             {
                 _loginEnabled = true;
-                LoginButton.Image = Properties.Resources.graybutton;
-                LoginButton.ForeColor = Color.White;
+                LoginButton.Image = Theming.GrayButton;
+                LoginButton.ForeColor = Theming.FivithTextForeColor;
             }
 
             _useSavedPassword = false;
@@ -821,11 +821,11 @@ namespace GameLauncher
         {
             if (_loginEnabled || _builtinserver)
             {
-                LoginButton.Image = Properties.Resources.graybutton_hover;
+                LoginButton.Image = Theming.GrayButtonHover;
             }
             else
             {
-                LoginButton.Image = Properties.Resources.graybutton;
+                LoginButton.Image = Theming.GrayButton;
             }
         }
 
@@ -833,11 +833,11 @@ namespace GameLauncher
         {
             if (_loginEnabled || _builtinserver)
             {
-                LoginButton.Image = Properties.Resources.graybutton_click;
+                LoginButton.Image = Theming.GrayButtonClick;
             }
             else
             {
-                LoginButton.Image = Properties.Resources.graybutton;
+                LoginButton.Image = Theming.GrayButton;
             }
         }
 
@@ -921,8 +921,8 @@ namespace GameLauncher
             else
             {
                 //Main Screen Login
-                MainEmailBorder.Image = Properties.Resources.email_error_text_border;
-                MainPasswordBorder.Image = Properties.Resources.password_error_text_border;
+                MainEmailBorder.Image = Theming.BorderEmailError;
+                MainPasswordBorder.Image = Theming.BorderPasswordError;
                 MessageBox.Show(null, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -931,13 +931,13 @@ namespace GameLauncher
         {
             if (_loginEnabled || _builtinserver)
             {
-                LoginButton.Image = Properties.Resources.graybutton_hover;
-                LoginButton.ForeColor = Color.White;
+                LoginButton.Image = Theming.GrayButtonHover;
+                LoginButton.ForeColor = Theming.FivithTextForeColor;
             }
             else
             {
-                LoginButton.Image = Properties.Resources.graybutton;
-                LoginButton.ForeColor = Color.Gray;
+                LoginButton.Image = Theming.GrayButton;
+                LoginButton.ForeColor = Theming.SixTextForeColor;
             }
         }
 
@@ -945,20 +945,20 @@ namespace GameLauncher
         {
             if (_loginEnabled || _builtinserver)
             {
-                LoginButton.Image = Properties.Resources.graybutton;
-                LoginButton.ForeColor = Color.White;
+                LoginButton.Image = Theming.GrayButton;
+                LoginButton.ForeColor = Theming.FivithTextForeColor;
             }
             else
             {
-                LoginButton.Image = Properties.Resources.graybutton;
-                LoginButton.ForeColor = Color.Gray;
+                LoginButton.Image = Theming.GrayButton;
+                LoginButton.ForeColor = Theming.SixTextForeColor;
             }
         }
 
         private void ServerPick_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MainEmailBorder.Image = Properties.Resources.email_text_border;
-            MainPasswordBorder.Image = Properties.Resources.password_text_border;
+            MainEmailBorder.Image = Theming.BorderEmail;
+            MainPasswordBorder.Image = Theming.BorderPassword;
 
             //ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
@@ -980,14 +980,14 @@ namespace GameLauncher
             _loginEnabled = false;
 
             ServerStatusText.Text = "Server Status:\n - Pinging";
-            ServerStatusText.ForeColor = Color.FromArgb(66, 179, 189);
+            ServerStatusText.ForeColor = Theming.SecondaryTextForeColor;
             ServerStatusDesc.Text = "";
-            ServerStatusIcon.Image = Properties.Resources.server_checking;
+            ServerStatusIcon.Image = Theming.ServerIconChecking;
 
-            LoginButton.ForeColor = Color.Gray;
+            LoginButton.ForeColor = Theming.SixTextForeColor;
             var verticalImageUrl = "";
             VerticalBanner.Image = GrayscaleMe(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
-            VerticalBanner.BackColor = Color.Black;
+            VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
 
             var serverIp = _serverInfo.IpAddress;
             string numPlayers;
@@ -999,17 +999,17 @@ namespace GameLauncher
             if (ServerPick.GetItemText(ServerPick.SelectedItem) == "Offline Built-In Server")
             {
                 _builtinserver = true;
-                LoginButton.Image = Properties.Resources.graybutton;
+                LoginButton.Image = Theming.GrayButton;
                 LoginButton.Text = "Launch".ToUpper();
-                LoginButton.ForeColor = Color.White;
+                LoginButton.ForeColor = Theming.FivithTextForeColor;
                 ServerInfoPanel.Visible = false;
             }
             else
             {
                 _builtinserver = false;
-                LoginButton.Image = Properties.Resources.graybutton;
+                LoginButton.Image = Theming.GrayButton;
                 LoginButton.Text = "Login".ToUpper();
-                LoginButton.ForeColor = Color.Gray;
+                LoginButton.ForeColor = Theming.SixTextForeColor;
                 ServerInfoPanel.Visible = false;
             }
 
@@ -1035,9 +1035,9 @@ namespace GameLauncher
                     //ServerStatusBar(_colorOffline, _startPoint, _endPoint);
 
                     ServerStatusText.Text = "Server Status:\n - Offline ( OFF )";
-                    ServerStatusText.ForeColor = Color.FromArgb(254, 0, 0);
+                    ServerStatusText.ForeColor = Theming.Error;
                     ServerStatusDesc.Text = "Failed to connect to server.";
-                    ServerStatusIcon.Image = Properties.Resources.server_offline;
+                    ServerStatusIcon.Image = Theming.ServerIconOffline;
                     _serverEnabled = false;
                     _allowRegistration = false;
                     //Disable Login & Register Button
@@ -1060,9 +1060,9 @@ namespace GameLauncher
                     //ServerStatusBar(_colorOffline, _startPoint, _endPoint);
 
                     ServerStatusText.Text = "Server Status:\n - Offline ( OFF )";
-                    ServerStatusText.ForeColor = Color.FromArgb(254, 0, 0);
+                    ServerStatusText.ForeColor = Theming.Error;
                     ServerStatusDesc.Text = "Server seems to be offline.";
-                    ServerStatusIcon.Image = Properties.Resources.server_offline;
+                    ServerStatusIcon.Image = Theming.ServerIconOffline;
                     _serverEnabled = false;
                     _allowRegistration = false;
                     //Disable Login & Register Button
@@ -1146,14 +1146,14 @@ namespace GameLauncher
                         {
                             if (string.IsNullOrEmpty(json.DiscordUrl))
                             {
-                                DiscordIcon.BackgroundImage = Properties.Resources.social_discord_disabled;
+                                DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled;
                                 DiscordInviteLink.Enabled = false;
                                 _serverDiscordLink = null;
                                 DiscordInviteLink.Text = "";
                             }
                             else
                             {
-                                DiscordIcon.BackgroundImage = Properties.Resources.social_discord;
+                                DiscordIcon.BackgroundImage = Theming.DiscordIcon;
                                 DiscordInviteLink.Enabled = true;
                                 _serverDiscordLink = json.DiscordUrl;
                                 DiscordInviteLink.Text = "Discord Invite";
@@ -1161,7 +1161,7 @@ namespace GameLauncher
                         }
                         catch
                         {
-                            DiscordIcon.BackgroundImage = Properties.Resources.social_discord_disabled;
+                            DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled;
                             DiscordInviteLink.Enabled = false;
                             _serverDiscordLink = null;
                             DiscordInviteLink.Text = "";
@@ -1172,14 +1172,14 @@ namespace GameLauncher
                         {
                             if (string.IsNullOrEmpty(json.HomePageUrl))
                             {
-                                HomePageIcon.BackgroundImage = Properties.Resources.social_home_page_disabled;
+                                HomePageIcon.BackgroundImage = Theming.HomeIconDisabled;
                                 HomePageLink.Enabled = false;
                                 _serverWebsiteLink = null;
                                 HomePageLink.Text = "";
                             }
                             else
                             {
-                                HomePageIcon.BackgroundImage = Properties.Resources.social_home_page;
+                                HomePageIcon.BackgroundImage = Theming.HomeIcon;
                                 HomePageLink.Enabled = true;
                                 _serverWebsiteLink = json.HomePageUrl;
                                 HomePageLink.Text = "Home Page";
@@ -1187,7 +1187,7 @@ namespace GameLauncher
                         }
                         catch
                         {
-                            HomePageIcon.BackgroundImage = Properties.Resources.social_home_page_disabled;
+                            HomePageIcon.BackgroundImage = Theming.HomeIconDisabled;
                             HomePageLink.Enabled = false;
                             _serverWebsiteLink = null;
                             HomePageLink.Text = "";
@@ -1198,14 +1198,14 @@ namespace GameLauncher
                         {
                             if (string.IsNullOrEmpty(json.FacebookUrl) || json.FacebookUrl == "Your facebook page url")
                             {
-                                FacebookIcon.BackgroundImage = Properties.Resources.social_facebook_disabled;
+                                FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled;
                                 FacebookGroupLink.Enabled = false;
                                 _serverFacebookLink = null;
                                 FacebookGroupLink.Text = "";
                             }
                             else
                             {
-                                FacebookIcon.BackgroundImage = Properties.Resources.social_facebook;
+                                FacebookIcon.BackgroundImage = Theming.FacebookIcon;
                                 FacebookGroupLink.Enabled = true;
                                 _serverFacebookLink = json.FacebookUrl;
                                 FacebookGroupLink.Text = "Facebook Page";
@@ -1213,7 +1213,7 @@ namespace GameLauncher
                         }
                         catch
                         {
-                            FacebookIcon.BackgroundImage = Properties.Resources.social_facebook_disabled;
+                            FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled;
                             FacebookGroupLink.Enabled = false;
                             _serverFacebookLink = null;
                             FacebookGroupLink.Text = "";
@@ -1224,14 +1224,14 @@ namespace GameLauncher
                         {
                             if (string.IsNullOrEmpty(json.TwitterUrl))
                             {
-                                TwitterIcon.BackgroundImage = Properties.Resources.social_twitter_disabled;
+                                TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled;
                                 TwitterAccountLink.Enabled = false;
                                 _serverTwitterLink = null;
                                 TwitterAccountLink.Text = "";
                             }
                             else
                             {
-                                TwitterIcon.BackgroundImage = Properties.Resources.social_twitter;
+                                TwitterIcon.BackgroundImage = Theming.TwitterIcon;
                                 TwitterAccountLink.Enabled = true;
                                 _serverTwitterLink = json.TwitterUrl;
                                 TwitterAccountLink.Text = "Twitter Feed";
@@ -1239,7 +1239,7 @@ namespace GameLauncher
                         }
                         catch
                         {
-                            TwitterIcon.BackgroundImage = Properties.Resources.social_twitter_disabled;
+                            TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled;
                             TwitterAccountLink.Enabled = false;
                             _serverTwitterLink = null;
                             TwitterAccountLink.Text = "";
@@ -1328,7 +1328,6 @@ namespace GameLauncher
 
                         if (json.MaxUsersAllowed == 0)
                         {
-                            //numPlayers = string.Format("{0} / {1}", json.OnlineNumber, json.NumberOfRegistered);
                             numPlayers = string.Format("{0}", json.OnlineNumber);
                             numRegistered = string.Format("{0}", json.NumberOfRegistered);
                         }
@@ -1346,11 +1345,11 @@ namespace GameLauncher
                     try
                     {
                         ServerStatusText.Text = "Server Status:\n - Online ( ON )";
-                        ServerStatusText.ForeColor = Color.FromArgb(159, 193, 32);
-                        ServerStatusIcon.Image = Properties.Resources.server_online;
+                        ServerStatusText.ForeColor = Theming.Sucess;
+                        ServerStatusIcon.Image = Theming.ServerIconSuccess;
                         _loginEnabled = true;
                         //Enable Login & Register Button
-                        LoginButton.ForeColor = Color.White;
+                        LoginButton.ForeColor = Theming.FivithTextForeColor;
                         LoginButton.Enabled = true;
                         RegisterText.Enabled = true;
 
@@ -1433,14 +1432,14 @@ namespace GameLauncher
                             {
                                 //Load cached banner!
                                 VerticalBanner.Image = GrayscaleMe(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
-                                VerticalBanner.BackColor = Color.Black;
+                                VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                 return;
                             }
                             else if (e4.Error != null)
                             {
                                 //Load cached banner!
                                 VerticalBanner.Image = GrayscaleMe(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
-                                VerticalBanner.BackColor = Color.Black;
+                                VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                 return;
                             } 
                             else
@@ -1454,7 +1453,7 @@ namespace GameLauncher
                                         image = Image.FromStream(memoryStream);
 
                                         VerticalBanner.Image = image;
-                                        VerticalBanner.BackColor = Color.Black;
+                                        VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
 
                                         Console.WriteLine(GetFileExtension(verticalImageUrl));
 
@@ -1466,7 +1465,7 @@ namespace GameLauncher
                                     else
                                     {
                                         VerticalBanner.Image = null;
-                                        VerticalBanner.BackColor = Color.Black;
+                                        VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                     }
                                 }
                                 catch(Exception ex)
@@ -1482,7 +1481,7 @@ namespace GameLauncher
                     {
                         //Load cached banner!
                         VerticalBanner.Image = GrayscaleMe(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
-                        VerticalBanner.BackColor = Color.Black;
+                        VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                     }
                 }
             };
@@ -1580,7 +1579,7 @@ namespace GameLauncher
 
         private void RegisterText_LinkClicked(object sender, EventArgs e)
         {
-            RegisterButton.Image = Properties.Resources.greenbutton_click;
+            RegisterButton.Image = Theming.GreenButton;
             if (_allowRegistration) 
             {
                 if (!string.IsNullOrEmpty(json.WebSignupUrl)) 
@@ -1659,19 +1658,19 @@ namespace GameLauncher
             //Hides Social Panel
             ServerInfoPanel.Visible = false;
             //Home
-            HomePageIcon.BackgroundImage = Properties.Resources.social_home_page_disabled;
+            HomePageIcon.BackgroundImage = Theming.HomeIconDisabled;
             HomePageLink.Enabled = false;
             _serverWebsiteLink = null;
             //Discord
-            DiscordIcon.BackgroundImage = Properties.Resources.social_discord_disabled;
+            DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled;
             DiscordInviteLink.Enabled = false;
             _serverDiscordLink = null;
             //Facebook
-            FacebookIcon.BackgroundImage = Properties.Resources.social_facebook_disabled;
+            FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled;
             FacebookGroupLink.Enabled = false;
             _serverFacebookLink = null;
             //Twitter
-            TwitterIcon.BackgroundImage = Properties.Resources.social_twitter_disabled;
+            TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled;
             TwitterAccountLink.Enabled = false;
             _serverTwitterLink = null;
             //Scenery
@@ -2720,7 +2719,7 @@ namespace GameLauncher
                         {
                             ExtractingProgress.Value = 100;
                             ExtractingProgress.Width = 519;
-                            ExtractingProgress.Image = Properties.Resources.progress_warning;
+                            ExtractingProgress.Image = Theming.ProgressBarWarning;
                             ExtractingProgress.ProgressColor = Color.Orange;
 
                             PlayProgressText.Text = "Please make sure you have at least 8GB free space on hard drive.".ToUpper();
