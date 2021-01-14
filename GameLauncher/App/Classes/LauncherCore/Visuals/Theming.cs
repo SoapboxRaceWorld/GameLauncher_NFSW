@@ -157,13 +157,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         /* Main Text Colors */
 
+        /* Silver */
         public static Color MainTextForeColor = Color.FromArgb(224, 224, 224);
-
+        /* Light Blue */
         public static Color SecondaryTextForeColor = Color.FromArgb(66, 179, 189);
-
+        /* Gray */
         public static Color ThirdTextForeColor = Color.FromArgb(132, 132, 132);
-
+        /* Dark Blue */
         public static Color FourthTextForeColor = Color.FromArgb(44, 58, 76);
+        /* White */
+        public static Color FivithTextForeColor = Color.FromArgb(255, 255, 255);
+        /* Grey */
+        public static Color SixTextForeColor = Color.FromArgb(128, 128, 128);
 
 
         /* Read Theme File and Check Values */
@@ -194,6 +199,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 if (File.Exists(ThemeFolder + "\\MainScreen\\" + ThemeFile.Read("MainScreenBG")))
                 {
                     SettingsScreen = new Bitmap(ThemeFolder + "\\MainScreen\\" + ThemeFile.Read("MainScreenBG"));
+                }
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("SocialPanelBG")))
+            {
+                if (File.Exists(ThemeFolder + "\\MainScreen\\" + ThemeFile.Read("SocialPanelBG")))
+                {
+                    SocialPanel = new Bitmap(ThemeFolder + "\\MainScreen\\" + ThemeFile.Read("SocialPanelBG"));
                 }
             }
 
@@ -583,6 +596,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 FourthTextForeColor = ToColor(ThemeFile.Read("FourthTextForeColor"));
             }
 
+            if (!string.IsNullOrEmpty(ThemeFile.Read("FivithTextForeColor")))
+            {
+                FivithTextForeColor = ToColor(ThemeFile.Read("FivithTextForeColor"));
+            }
+            
         }
 
 

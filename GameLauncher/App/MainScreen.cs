@@ -640,16 +640,16 @@ namespace GameLauncher
                 _loginEnabled = true;
                 _serverEnabled = true;
                 _useSavedPassword = true;
-                LoginButton.Image = Properties.Resources.graybutton;
-                LoginButton.ForeColor = Color.White;
+                LoginButton.Image = Theming.GrayButton;
+                LoginButton.ForeColor = Theming.FivithTextForeColor;
             }
             else
             {
                 _loginEnabled = false;
                 _serverEnabled = false;
                 _useSavedPassword = false;
-                LoginButton.Image = Properties.Resources.graybutton;
-                LoginButton.ForeColor = Color.Gray;
+                LoginButton.Image = Theming.GrayButton;
+                LoginButton.ForeColor = Theming.SixTextForeColor;
             }
 
             /* Fix this at a later date - DavidCarbon */
@@ -677,12 +677,6 @@ namespace GameLauncher
                     MessageBox.Show(null, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-
-            Log.Visuals("CORE: Hiding RegisterFormElements"); RegisterFormElements(false);
-            Log.Visuals("CORE: Hiding SettingsFormElements"); SettingsFormElements(false);
-            Log.Visuals("CORE: Hiding LoggedInFormElements"); LoggedInFormElements(false);
-
-            Log.Visuals("CORE: Showing LoginFormElements"); LoginFormElements(true);
 
             Log.Core("CORE: Setting Registry Options");
             try
