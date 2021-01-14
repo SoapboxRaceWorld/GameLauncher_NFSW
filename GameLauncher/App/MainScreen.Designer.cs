@@ -374,7 +374,6 @@
             this.MainEmailBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.MainEmailBorder.TabIndex = 144;
             this.MainEmailBorder.TabStop = false;
-            this.MainEmailBorder.Visible = false;
             // 
             // MainPassword
             // 
@@ -400,7 +399,6 @@
             this.MainPasswordBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.MainPasswordBorder.TabIndex = 145;
             this.MainPasswordBorder.TabStop = false;
-            this.MainPasswordBorder.Visible = false;
             // 
             // RememberMe
             // 
@@ -474,7 +472,7 @@
             this.ServerPingStatusText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ServerPingStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerPingStatusText.ForeColor = System.Drawing.Color.White;
-            this.ServerPingStatusText.Location = new System.Drawing.Point(607, 280);
+            this.ServerPingStatusText.Location = new System.Drawing.Point(5, 0);
             this.ServerPingStatusText.Name = "ServerPingStatusText";
             this.ServerPingStatusText.Size = new System.Drawing.Size(230, 61);
             this.ServerPingStatusText.TabIndex = 148;
@@ -675,6 +673,7 @@
             this.ShowPlayPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ShowPlayPanel.BackColor = System.Drawing.Color.Transparent;
             this.ShowPlayPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ShowPlayPanel.Controls.Add(this.ServerPingStatusText);
             this.ShowPlayPanel.Controls.Add(this.LogoutButton);
             this.ShowPlayPanel.Controls.Add(this.PlayButton);
             this.ShowPlayPanel.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -684,6 +683,7 @@
             this.ShowPlayPanel.Name = "ShowPlayPanel";
             this.ShowPlayPanel.Size = new System.Drawing.Size(237, 164);
             this.ShowPlayPanel.TabIndex = 153;
+            this.ShowPlayPanel.Visible = false;
             // 
             // RegisterPanel
             // 
@@ -945,7 +945,6 @@
             this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.InsiderBuildNumberText);
             this.Controls.Add(this.CurrentWindowInfo);
-            this.Controls.Add(this.ServerPingStatusText);
             this.Controls.Add(this.logo);
             this.Controls.Add(this.RegisterPanel);
             this.Controls.Add(this.SettingsButton);

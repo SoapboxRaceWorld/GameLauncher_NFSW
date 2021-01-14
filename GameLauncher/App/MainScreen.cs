@@ -742,21 +742,6 @@ namespace GameLauncher
 
         private void CloseBTN_Click(object sender, EventArgs e)
         {
-            //CloseBTN.BackgroundImage = Properties.Resources.close_click;
-
-            /* Check if This is nessary in the long term - DavidCarbon
-             * 
-            /* 
-            try
-            {
-                _settingFile.Write("InstallationDirectory", Path.GetFullPath(_settingFile.Read("InstallationDirectory")));
-            }
-            catch
-            {
-                _settingFile.Write("InstallationDirectory", _settingFile.Read("InstallationDirectory"));
-            }
-            */
-
             FileSettingsSave.SaveSettings();
             FileAccountSave.SaveAccount();
 
@@ -932,7 +917,6 @@ namespace GameLauncher
 
                 LoginFormElements(false);
                 LoggedInFormElements(true);
-                SettingsButton.Visible = false;
             }
             else
             {
@@ -1699,7 +1683,7 @@ namespace GameLauncher
         /*  After Successful Login, Hide Login Forms */
         private void LoggedInFormElements(bool hideElements)
         {
-            if (hideElements)
+            if (hideElements == true)
             {
                 DateTime currentTime = DateTime.Now;
 
@@ -1722,100 +1706,60 @@ namespace GameLauncher
                 CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", MainEmail.Text).ToUpper();
             }
 
-            ServerPingStatusText.Visible = hideElements;
             ShowPlayPanel.Visible = hideElements;
-            ExtractingProgress.Visible = hideElements;
-            PlayProgressText.Visible = hideElements;
-            PlayProgressTextTimer.Visible = hideElements;
-            PlayButton.Visible = hideElements;
-            SettingsButton.Visible = hideElements;
-            VerticalBanner.Visible = hideElements;
-            ServerStatusText.Visible = hideElements;
-            ServerStatusIcon.Visible = hideElements;
-            ServerStatusDesc.Visible = hideElements;
-            LauncherIconStatus.Visible = hideElements;
-            LauncherStatusDesc.Visible = hideElements;
-            LauncherStatusText.Visible = hideElements;
-            //allowedCountriesLabel.Visible = hideElements;
-            APIStatusText.Visible = hideElements;
-            APIStatusDesc.Visible = hideElements;
-            APIStatusIcon.Visible = hideElements;
         }
 
-        private void LoginFormElements(bool hideElements = false)
+        private void LoginFormElements(bool hideElements)
         {
-            if (hideElements)
-            {
+            if (hideElements == true)
                 CurrentWindowInfo.Text = "Enter Your Account Information to Log In".ToUpper();
-            }
 
             RememberMe.Visible = hideElements;
             LoginButton.Visible = hideElements;
-            ServerStatusText.Visible = hideElements;
-            ServerStatusIcon.Visible = hideElements;
-            ServerStatusDesc.Visible = hideElements;
-            LauncherIconStatus.Visible = hideElements;
-            LauncherStatusDesc.Visible = hideElements;
-            LauncherStatusText.Visible = hideElements;
-
-            APIStatusText.Visible = hideElements;
-            APIStatusDesc.Visible = hideElements;
-            APIStatusIcon.Visible = hideElements;
 
             RegisterText.Visible = hideElements;
-            ServerPick.Visible = hideElements;
             MainEmail.Visible = hideElements;
             MainPassword.Visible = hideElements;
             ForgotPassword.Visible = hideElements;
             SettingsButton.Visible = hideElements;
-            VerticalBanner.Visible = hideElements;
-            PlayProgressText.Visible = hideElements;
-            PlayProgressTextTimer.Visible = hideElements;
-            PlayProgress.Visible = hideElements;
-            ExtractingProgress.Visible = hideElements;
-            AddServer.Visible = hideElements;
-            AddServer.Enabled = true;
-            //allowedCountriesLabel.Visible = hideElements;
-            ServerPick.Enabled = true;
+
+            AddServer.Enabled = hideElements;
+            ServerPick.Enabled = hideElements;
 
             //Input Strokes
             MainEmailBorder.Visible = hideElements;
-            MainEmailBorder.Image = Properties.Resources.email_text_border;
+            MainEmailBorder.Image = Theming.BorderEmail;
             MainPasswordBorder.Visible = hideElements;
-            MainPasswordBorder.Image = Properties.Resources.password_text_border;
+            MainPasswordBorder.Image = Theming.BorderPassword;
         }
 
-        private void RegisterFormElements(bool hideElements = true)
+        private void RegisterFormElements(bool hideElements)
         {
+            bool CertainElemnts;
+
+            if (hideElements == true)
+                CertainElemnts = false;
+            else
+                CertainElemnts = true;
+
             RegisterPanel.Visible = hideElements;
             RegisterTicket.Visible = _ticketRequired && hideElements;
 
-            VerticalBanner.Visible = hideElements;
-            ExtractingProgress.Visible = hideElements;
-            PlayProgress.Visible = hideElements;
-            PlayProgressText.Visible = hideElements;
-
-            ServerStatusText.Visible = hideElements;
-            ServerStatusIcon.Visible = hideElements;
-            ServerStatusDesc.Visible = hideElements;
-            LauncherIconStatus.Visible = hideElements;
-            LauncherStatusDesc.Visible = hideElements;
-            LauncherStatusText.Visible = hideElements;
-
-            APIStatusText.Visible = hideElements;
-            APIStatusDesc.Visible = hideElements;
-            APIStatusIcon.Visible = hideElements;
-
-            AddServer.Visible = hideElements;
-            AddServer.Enabled = false;
-            ServerPick.Visible = hideElements;
-            ServerPick.Enabled = false;
+            AddServer.Enabled = CertainElemnts;
+            ServerPick.Enabled = CertainElemnts;
 
             // Reset fields
             RegisterEmail.Text = "";
             RegisterPassword.Text = "";
             RegisterConfirmPassword.Text = "";
             RegisterAgree.Checked = false;
+
+            RegisterAgree.ForeColor = Theming.FivithTextForeColor;
+            //Reset Input Stroke Images
+            RegisterEmailBorder.Image = Theming.BorderEmail;
+            RegisterPasswordBorder.Image = Theming.BorderPassword;
+            RegisterConfirmPasswordBorder.Image = Theming.BorderPassword;
+            RegisterTicketBorder.Image = Theming.BorderTicket;
 
             //Input Strokes
             RegisterEmailBorder.Visible = hideElements;
@@ -1830,7 +1774,7 @@ namespace GameLauncher
             {
                 return;
             }
-            BackgroundImage = Properties.Resources.mainbackground;
+
             _loggedIn = false;
             LoggedInFormElements(false);
             LoginFormElements(true);
@@ -1841,81 +1785,68 @@ namespace GameLauncher
 
         private void Greenbutton_hover_MouseEnter(object sender, EventArgs e)
         {
-            RegisterText.Image = Properties.Resources.greenbutton_hover;
-            RegisterButton.Image = Properties.Resources.greenbutton_hover;
+            RegisterText.Image = Theming.GreenButtonHover;
+            RegisterButton.Image = Theming.GreenButtonHover;
         }
 
         private void Greenbutton_MouseLeave(object sender, EventArgs e)
         {
-            RegisterText.Image = Properties.Resources.greenbutton;
-            RegisterButton.Image = Properties.Resources.greenbutton;
+            RegisterText.Image = Theming.GreenButton;
+            RegisterButton.Image = Theming.GreenButton;
         }
 
         private void Greenbutton_hover_MouseUp(object sender, EventArgs e)
         {
-            RegisterText.Image = Properties.Resources.greenbutton_hover;
-            RegisterButton.Image = Properties.Resources.greenbutton_hover;
+            RegisterText.Image = Theming.GreenButtonHover;
+            RegisterButton.Image = Theming.GreenButtonHover;
         }
 
         private void Greenbutton_click_MouseDown(object sender, EventArgs e)
         {
-            RegisterText.Image = Properties.Resources.greenbutton_click;
-            RegisterButton.Image = Properties.Resources.greenbutton_click;
+            RegisterText.Image = Theming.GreenButtonClick;
+            RegisterButton.Image = Theming.GreenButtonClick;
         }
 
         private void RegisterCancel_Click(object sender, EventArgs e)
         {
-            BackgroundImage = Properties.Resources.mainbackground;
-            CurrentWindowInfo.Text = "Enter your account information to Log In:".ToUpper();
             RegisterFormElements(false);
             LoginFormElements(true);
-            ResetRegisterErrorColors();
-        }
-
-        private void ResetRegisterErrorColors()
-        {
-            RegisterAgree.ForeColor = Color.White;
-            //Reset Input Stroke Images
-            RegisterEmailBorder.Image = Properties.Resources.email_text_border;
-            RegisterPasswordBorder.Image = Properties.Resources.password_text_border;
-            RegisterConfirmPasswordBorder.Image = Properties.Resources.password_text_border;
-            RegisterTicketBorder.Image = Properties.Resources.ticket_text_border;
         }
 
         private void RegisterAgree_CheckedChanged(object sender, EventArgs e)
         {
-            RegisterAgree.ForeColor = Color.White;
+            RegisterAgree.ForeColor = Theming.FivithTextForeColor;
         }
 
         private void RegisterEmail_TextChanged(object sender, EventArgs e)
         {
-            RegisterEmailBorder.Image = Properties.Resources.email_text_border;
+            RegisterEmailBorder.Image = Theming.BorderEmail;
         }
 
         private void RegisterTicket_TextChanged(object sender, EventArgs e)
         {
-            RegisterTicketBorder.Image = Properties.Resources.ticket_text_border;
+            RegisterTicketBorder.Image = Theming.BorderTicket;
         }
 
         private void RegisterConfirmPassword_TextChanged(object sender, EventArgs e)
         {
-            RegisterConfirmPasswordBorder.Image = Properties.Resources.password_text_border;
+            RegisterConfirmPasswordBorder.Image = Theming.BorderPassword;
         }
 
         private void RegisterPassword_TextChanged(object sender, EventArgs e)
         {
-            RegisterPasswordBorder.Image = Properties.Resources.password_text_border;
+            RegisterPasswordBorder.Image = Theming.BorderPassword;
         }
 
         private void Email_TextChanged(object sender, EventArgs e)
         {
-            MainEmailBorder.Image = Properties.Resources.email_text_border;
+            MainEmailBorder.Image = Theming.BorderEmail;
         }
 
         private void Password_TextChanged(object sender, EventArgs e)
         {
-            MainEmailBorder.Image = Properties.Resources.email_text_border;
-            MainPasswordBorder.Image = Properties.Resources.password_text_border;
+            MainEmailBorder.Image = Theming.BorderEmail;
+            MainPasswordBorder.Image = Theming.BorderPassword;
         }
 
         private void Graybutton_click_MouseDown(object sender, EventArgs e)
@@ -1938,8 +1869,8 @@ namespace GameLauncher
 
         private void Graybutton_hover_MouseUp(object sender, EventArgs e)
         {
-            LogoutButton.Image = Properties.Resources.graybutton_hover;
-            RegisterCancel.Image = Properties.Resources.graybutton_hover;
+            LogoutButton.Image = Theming.GrayButtonHover;
+            RegisterCancel.Image = Theming.GrayButtonHover;
         }
 
         public void DrawErrorAroundTextBox(TextBox x)
@@ -1960,44 +1891,43 @@ namespace GameLauncher
             if (string.IsNullOrEmpty(RegisterEmail.Text))
             {
                 registerErrors.Add("Please enter your e-mail.");
-                RegisterEmailBorder.Image = Properties.Resources.email_error_text_border;
+                RegisterEmailBorder.Image = Theming.BorderEmailError;
 
             }
             else if (Self.ValidateEmail(RegisterEmail.Text) == false)
             {
                 registerErrors.Add("Please enter a valid e-mail address.");
-                RegisterEmailBorder.Image = Properties.Resources.email_error_text_border;
+                RegisterEmailBorder.Image = Theming.BorderEmailError;
             }
 
             if (string.IsNullOrEmpty(RegisterTicket.Text) && _ticketRequired)
             {
                 registerErrors.Add("Please enter your ticket.");
-                RegisterTicketBorder.Image = Properties.Resources.ticket_error_text_border;
+                RegisterTicketBorder.Image = Theming.BorderTicketError;
             }
 
             if (string.IsNullOrEmpty(RegisterPassword.Text))
             {
                 registerErrors.Add("Please enter your password.");
-                RegisterPasswordBorder.Image = Properties.Resources.password_error_text_border;
+                RegisterPasswordBorder.Image = Theming.BorderPasswordError;
             }
 
             if (string.IsNullOrEmpty(RegisterConfirmPassword.Text)) 
             {
                 registerErrors.Add("Please confirm your password.");
-                RegisterConfirmPasswordBorder.Image = Properties.Resources.password_error_text_border;
+                RegisterConfirmPasswordBorder.Image = Theming.BorderPasswordError;
             }
 
             if (RegisterConfirmPassword.Text != RegisterPassword.Text)
             {
                 registerErrors.Add("Passwords don't match.");
-                RegisterPasswordBorder.Visible = true;
-                RegisterConfirmPasswordBorder.Image = Properties.Resources.password_error_text_border;
+                RegisterConfirmPasswordBorder.Image = Theming.BorderPasswordError;
             }
 
             if (!RegisterAgree.Checked)
             {
                 registerErrors.Add("You have not agreed to the Terms of Service.");
-                RegisterAgree.ForeColor = Color.FromArgb(254, 0, 0);
+                RegisterAgree.ForeColor = Theming.Error;
             }
 
             if (registerErrors.Count == 0)
@@ -2073,10 +2003,6 @@ namespace GameLauncher
 
                         MessageBox.Show(null, Tokens.Success, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                        ResetRegisterErrorColors();
-
-                        BackgroundImage = Properties.Resources.mainbackground;
-
                         RegisterFormElements(false);
                         LoginFormElements(true);
 
@@ -2116,17 +2042,6 @@ namespace GameLauncher
         {
             if (!(ServerPick.SelectedItem is ServerInfo server)) return;
 
-            /*
-            Form settingScreen = new SettingsScreen(server.IpAddress, server.Name);
-
-            if(settingScreen.ShowDialog(this) == DialogResult.OK) {
-                //Reload INI File
-                _settingFile = new IniFile("Settings.ini");
-            }
-
-            settingScreen.Dispose();
-            */
-
             new SettingsScreen(server.IpAddress, server.Name).ShowDialog();
         }
 
@@ -2136,15 +2051,7 @@ namespace GameLauncher
 
         private void SettingsButton_MouseLeave(object sender, EventArgs e)
         {
-            SettingsButton.BackgroundImage = Properties.Resources.settingsbtn;
-        }
-
-        private void SettingsFormElements(bool hideElements = true)
-        {
-            if (hideElements)
-            {
-                CurrentWindowInfo.Text = "";
-            }
+            SettingsButton.BackgroundImage = Theming.GearButton;
         }
 
         private void StartGame(string userId, string loginToken)
@@ -2218,37 +2125,37 @@ namespace GameLauncher
         private void PingServerListAPIStatus()
         {
             APIStatusText.Text = "United API:\n - Online";
-            APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+            APIStatusText.ForeColor = Theming.Sucess;
             APIStatusDesc.Text = "Connected to API";
-            APIStatusIcon.Image = Properties.Resources.api_success;
+            APIStatusIcon.Image = Theming.APIIconSuccess;
 
             if (VisualsAPIChecker.UnitedAPI != true)
             {
                 APIStatusText.Text = "Carbon API:\n - Online";
-                APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+                APIStatusText.ForeColor = Theming.Sucess;
                 APIStatusDesc.Text = "Connected to API";
-                APIStatusIcon.Image = Properties.Resources.api_success;
+                APIStatusIcon.Image = Theming.APIIconSuccess;
             }
             else if (VisualsAPIChecker.CarbonAPI != true)
             {
                 APIStatusText.Text = "Carbon 2nd API:\n - Online";
-                APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+                APIStatusText.ForeColor = Theming.Sucess;
                 APIStatusDesc.Text = "Connected to API";
-                APIStatusIcon.Image = Properties.Resources.api_success;
+                APIStatusIcon.Image = Theming.APIIconSuccess;
             }
             else if (VisualsAPIChecker.CarbonAPITwo != true)
             {
                 APIStatusText.Text = "WOPL API:\n - Online";
-                APIStatusText.ForeColor = Color.FromArgb(159, 193, 32);
+                APIStatusText.ForeColor = Theming.Sucess;
                 APIStatusDesc.Text = "Connected to API";
-                APIStatusIcon.Image = Properties.Resources.api_success;
+                APIStatusIcon.Image = Theming.APIIconSuccess;
             }
             else if (VisualsAPIChecker.WOPLAPI != true)
             {
                 APIStatusText.Text = "Connection API:\n - Error";
-                APIStatusText.ForeColor = Color.FromArgb(254, 0, 0);
+                APIStatusText.ForeColor = Theming.Error;
                 APIStatusDesc.Text = "Failed to Connect to APIs";
-                APIStatusIcon.Image = Properties.Resources.api_error;
+                APIStatusIcon.Image = Theming.APIIconError;
                 Log.Api("PINGING API: Failed to Connect to APIs! Quick Hide and Bunker Down! (Ask for help)");
             }
         }
@@ -2379,7 +2286,7 @@ namespace GameLauncher
                             if (exitCode == 4)              errorMsg = "ModNet: An Unhandled Error Appeared";
                             PlayProgressText.Text = errorMsg.ToUpper();
                             PlayProgress.Value = 100;
-                            PlayProgress.ForeColor = Color.Red;
+                            PlayProgress.ForeColor = Theming.Error;
                             if (_nfswPid != 0)
                             {
                                 try
@@ -2747,7 +2654,7 @@ namespace GameLauncher
                 return;
             }
 
-            PlayButton.BackgroundImage = Properties.Resources.playbutton_hover;
+            PlayButton.BackgroundImage = Theming.PlayButtonHover;
         }
 
         private void PlayButton_MouseDown(object sender, EventArgs e)
@@ -2757,7 +2664,7 @@ namespace GameLauncher
                 return;
             }
 
-            PlayButton.BackgroundImage = Properties.Resources.playbutton_click;
+            PlayButton.BackgroundImage = Theming.PlayButtonClick;
         }
 
         private void PlayButton_MouseEnter(object sender, EventArgs e)
@@ -2767,7 +2674,7 @@ namespace GameLauncher
                 return;
             }
 
-            PlayButton.BackgroundImage = Properties.Resources.playbutton_hover;
+            PlayButton.BackgroundImage = Theming.PlayButtonHover;
         }
 
         private void PlayButton_MouseLeave(object sender, EventArgs e)
@@ -2782,8 +2689,8 @@ namespace GameLauncher
 
         private void LaunchNfsw()
         {
-            PlayButton.BackgroundImage = Properties.Resources.playbutton;
-            PlayButton.ForeColor = Color.Gray;
+            PlayButton.BackgroundImage = Theming.PlayButton;
+            PlayButton.ForeColor = Theming.ThirdTextForeColor;
 
             PlayProgressText.Text = "Checking up all files".ToUpper();
             PlayProgress.Width = 0;
@@ -3197,8 +3104,8 @@ namespace GameLauncher
             ExtractingProgress.Value = 100;
             ExtractingProgress.Width = 519;
 
-            PlayButton.BackgroundImage = Properties.Resources.playbutton;
-            PlayButton.ForeColor = Color.White;
+            PlayButton.BackgroundImage = Theming.PlayButton;
+            PlayButton.ForeColor = Theming.FivithTextForeColor;
         }
 
         private void DisablePlayButton()
@@ -3206,13 +3113,11 @@ namespace GameLauncher
             _isDownloading = false;
             _playenabled = false;
 
-            ShowPlayPanel.Visible = false;
-
             ExtractingProgress.Value = 100;
             ExtractingProgress.Width = 519;
 
-            PlayButton.BackgroundImage = Properties.Resources.graybutton;
-            PlayButton.ForeColor = Color.White;
+            PlayButton.BackgroundImage = Theming.GrayButton;
+            PlayButton.ForeColor = Theming.FivithTextForeColor;
         }
 
         private void OnDownloadFailed(Exception ex)
@@ -3235,8 +3140,8 @@ namespace GameLauncher
 
             ExtractingProgress.Value = 100;
             ExtractingProgress.Width = 519;
-            ExtractingProgress.Image = Properties.Resources.progress_error;
-            ExtractingProgress.ProgressColor = Color.FromArgb(254,0,0);
+            ExtractingProgress.Image = Theming.ProgressBarError;
+            ExtractingProgress.ProgressColor = Theming.Error;
 
             PlayProgressText.Text = failureMessage.ToUpper();
 

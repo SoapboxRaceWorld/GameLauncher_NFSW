@@ -159,7 +159,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         /* Silver */
         public static Color MainTextForeColor = Color.FromArgb(224, 224, 224);
-        /* Light Blue */
+        /* Pinging Blue */
         public static Color SecondaryTextForeColor = Color.FromArgb(66, 179, 189);
         /* Gray */
         public static Color ThirdTextForeColor = Color.FromArgb(132, 132, 132);
@@ -167,8 +167,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Color FourthTextForeColor = Color.FromArgb(44, 58, 76);
         /* White */
         public static Color FivithTextForeColor = Color.FromArgb(255, 255, 255);
-        /* Grey */
+        /* Grey (Slightly Darker) */
         public static Color SixTextForeColor = Color.FromArgb(128, 128, 128);
+
+
+        /* Status Colors */
+
+        /* Green-ish */
+        public static Color Sucess = Color.FromArgb(159, 193, 32);
+        /* Red */
+        public static Color Error = Color.FromArgb(254, 0, 0);
 
 
         /* Read Theme File and Check Values */
@@ -600,7 +608,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
             {
                 FivithTextForeColor = ToColor(ThemeFile.Read("FivithTextForeColor"));
             }
-            
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("SucessForeColor")))
+            {
+                Sucess = ToColor(ThemeFile.Read("SucessForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("ErrorForeColor")))
+            {
+                Error = ToColor(ThemeFile.Read("ErrorForeColor"));
+            }
         }
 
 

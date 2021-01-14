@@ -566,7 +566,7 @@ namespace GameLauncher.App
             else
             {
                 SettingsCDNText.Text = "CDN:";
-                SettingsCDNText.ForeColor = Color.FromArgb(224, 224, 224);
+                SettingsCDNText.ForeColor = Theming.FivithTextForeColor;
             }
 
             _lastSelectedCdnId = SettingsCDNPick.SelectedIndex;
@@ -581,19 +581,19 @@ namespace GameLauncher.App
             if (!string.IsNullOrEmpty(((CDNObject)SettingsCDNPick.SelectedItem).Url))
             {
                 SettingsCDNText.Text = "CDN: PINGING";
-                SettingsCDNText.ForeColor = Color.FromArgb(66, 179, 189);
+                SettingsCDNText.ForeColor = Theming.SecondaryTextForeColor;
                 Log.Info("SETTINGS PINGING CHANGED CDN: Checking Changed CDN from Drop Down List");
 
                 switch (APIStatusChecker.CheckStatus(((CDNObject)SettingsCDNPick.SelectedItem).Url + "/index.xml"))
                 {
                     case API.Online:
                         SettingsCDNText.Text = "CDN: ONLINE";
-                        SettingsCDNText.ForeColor = Color.FromArgb(159, 193, 32);
+                        SettingsCDNText.ForeColor = Theming.Sucess;
                         Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Online!");
                         break;
                     default:
                         SettingsCDNText.Text = "CDN: OFFLINE";
-                        SettingsCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                        SettingsCDNText.ForeColor = Theming.Error;
                         Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Offline!");
                         break;
                 }
@@ -683,48 +683,48 @@ namespace GameLauncher.App
             if (VisualsAPIChecker.UnitedAPI != false)
             {
                 SettingsMainSrvText.Text = "[API] United: ONLINE";
-                SettingsMainSrvText.ForeColor = Color.FromArgb(159, 193, 32);
+                SettingsMainSrvText.ForeColor = Theming.Sucess;
             }
             else
             {
                 SettingsMainSrvText.Text = "[API] United: ERROR";
-                SettingsMainSrvText.ForeColor = Color.FromArgb(254, 0, 0);
+                SettingsMainSrvText.ForeColor = Theming.Error;
                 SettingsMainCDNText.Visible = true;
             }
 
             if (VisualsAPIChecker.CarbonAPI != false)
             {
                 SettingsMainCDNText.Text = "[API] Carbon: ONLINE";
-                SettingsMainCDNText.ForeColor = Color.FromArgb(159, 193, 32);
+                SettingsMainCDNText.ForeColor = Theming.Sucess;
             }
             else
             {
                 SettingsMainCDNText.Text = "[API] Carbon: ERROR";
-                SettingsMainCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                SettingsMainCDNText.ForeColor = Theming.Error;
                 SettingsBkupSrvText.Visible = true;
             }
 
             if (VisualsAPIChecker.CarbonAPITwo != false)
             {
                 SettingsBkupSrvText.Text = "[API] Carbon (2nd): ONLINE";
-                SettingsBkupSrvText.ForeColor = Color.FromArgb(159, 193, 32);
+                SettingsBkupSrvText.ForeColor = Theming.Sucess;
             }
             else
             {
                 SettingsBkupSrvText.Text = "[API] Carbon (2nd): ERROR";
-                SettingsBkupSrvText.ForeColor = Color.FromArgb(254, 0, 0);
+                SettingsBkupSrvText.ForeColor = Theming.Error;
                 SettingsBkupCDNText.Visible = true;
             }
 
             if (VisualsAPIChecker.WOPLAPI != false)
             {
                 SettingsBkupCDNText.Text = "[API] WOPL: ONLINE";
-                SettingsBkupCDNText.ForeColor = Color.FromArgb(159, 193, 32);
+                SettingsBkupCDNText.ForeColor = Theming.Sucess;
             }
             else
             {
                 SettingsBkupCDNText.Text = "[API] WOPL: ERROR";
-                SettingsBkupCDNText.ForeColor = Color.FromArgb(254, 0, 0);
+                SettingsBkupCDNText.ForeColor = Theming.Error;
             }
         }
 
@@ -809,18 +809,18 @@ namespace GameLauncher.App
         {
             if (!string.IsNullOrEmpty(FileSettingsSave.CDN))
             {
-                SettingsCDNCurrent.LinkColor = Color.FromArgb(66, 179, 189);
+                SettingsCDNCurrent.LinkColor = Theming.SecondaryTextForeColor;
                 Log.Info("SETTINGS PINGING CDN: Checking Current CDN from Settings.ini");
                 await Task.Delay(500);
 
                 switch (APIStatusChecker.CheckStatus(FileSettingsSave.CDN + "/index.xml"))
                 {
                     case API.Online:
-                        SettingsCDNCurrent.LinkColor = Color.FromArgb(159, 193, 32);
+                        SettingsCDNCurrent.LinkColor = Theming.Sucess;
                         Log.UrlCall("SETTINGS PINGING CDN: " + FileSettingsSave.CDN + " Is Online!");
                         break;
                     default:
-                        SettingsCDNCurrent.LinkColor = Color.FromArgb(254, 0, 0);
+                        SettingsCDNCurrent.LinkColor = Theming.Error;
                         Log.UrlCall("SETTINGS PINGING CDN: " + FileSettingsSave.CDN + " Is Offline!");
                         break;
                 }
