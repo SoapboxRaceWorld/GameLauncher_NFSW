@@ -81,8 +81,6 @@ namespace GameLauncher.App
 
             if (startScan == true)
             {
-                //StatusText.Text = "Validating files on background.".ToUpper();
-                //Threaded CheckFiles
                 StartScan.Start();
                 Log.Info("VERIFY HASH: Started Scanner");
                 isScanning = true;
@@ -263,14 +261,7 @@ namespace GameLauncher.App
                 GameScanner(false);
                 StartScanner.Visible = false;
                 StopScanner.Visible = false;
-            }/* This is never called to, preserving for testing, to-be-removed
-            else
-            {
-                DownloadProgressText.Text = "All Files Validated!";
-                GameScanner(false);
-                StartScanner.Visible = false;
-                StopScanner.Visible = false;
-            }*/
+            }
         }
 
         private void StartScanner_Click(object sender, EventArgs e)

@@ -227,7 +227,7 @@
             this.PlayProgressText.BackColor = System.Drawing.Color.Transparent;
             this.PlayProgressText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayProgressText.ForeColor = System.Drawing.Color.White;
-            this.PlayProgressText.Location = new System.Drawing.Point(42, 406);
+            this.PlayProgressText.Location = new System.Drawing.Point(42, 405);
             this.PlayProgressText.Name = "PlayProgressText";
             this.PlayProgressText.Size = new System.Drawing.Size(96, 14);
             this.PlayProgressText.TabIndex = 10;
@@ -303,7 +303,7 @@
             this.ServerStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ServerStatusDesc.Location = new System.Drawing.Point(242, 485);
             this.ServerStatusDesc.Name = "ServerStatusDesc";
-            this.ServerStatusDesc.Size = new System.Drawing.Size(124, 14);
+            this.ServerStatusDesc.Size = new System.Drawing.Size(122, 14);
             this.ServerStatusDesc.TabIndex = 8;
             this.ServerStatusDesc.Text = "Checking Status";
             this.ServerStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -342,7 +342,7 @@
             this.APIStatusDesc.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.APIStatusDesc.Location = new System.Drawing.Point(426, 485);
             this.APIStatusDesc.Name = "APIStatusDesc";
-            this.APIStatusDesc.Size = new System.Drawing.Size(124, 14);
+            this.APIStatusDesc.Size = new System.Drawing.Size(122, 14);
             this.APIStatusDesc.TabIndex = 120;
             this.APIStatusDesc.Text = "Checking Status";
             this.APIStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -422,7 +422,7 @@
             this.RememberMe.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.RememberMe.Location = new System.Drawing.Point(645, 260);
             this.RememberMe.Name = "RememberMe";
-            this.RememberMe.Size = new System.Drawing.Size(163, 17);
+            this.RememberMe.Size = new System.Drawing.Size(162, 17);
             this.RememberMe.TabIndex = 6;
             this.RememberMe.Text = "REMEMBER MY LOGIN";
             this.RememberMe.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -533,7 +533,7 @@
             this.PlayProgressTextTimer.BackColor = System.Drawing.Color.Transparent;
             this.PlayProgressTextTimer.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.PlayProgressTextTimer.ForeColor = System.Drawing.Color.White;
-            this.PlayProgressTextTimer.Location = new System.Drawing.Point(431, 402);
+            this.PlayProgressTextTimer.Location = new System.Drawing.Point(432, 380);
             this.PlayProgressTextTimer.Name = "PlayProgressTextTimer";
             this.PlayProgressTextTimer.Size = new System.Drawing.Size(120, 19);
             this.PlayProgressTextTimer.TabIndex = 135;
@@ -737,7 +737,7 @@
             this.DiscordInviteLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.DiscordInviteLink.Location = new System.Drawing.Point(154, 12);
             this.DiscordInviteLink.Name = "DiscordInviteLink";
-            this.DiscordInviteLink.Size = new System.Drawing.Size(98, 13);
+            this.DiscordInviteLink.Size = new System.Drawing.Size(95, 13);
             this.DiscordInviteLink.TabIndex = 172;
             this.DiscordInviteLink.TabStop = true;
             this.DiscordInviteLink.Text = "Discord Invite";
@@ -856,7 +856,7 @@
             this.FacebookGroupLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.FacebookGroupLink.Location = new System.Drawing.Point(292, 12);
             this.FacebookGroupLink.Name = "FacebookGroupLink";
-            this.FacebookGroupLink.Size = new System.Drawing.Size(112, 13);
+            this.FacebookGroupLink.Size = new System.Drawing.Size(110, 13);
             this.FacebookGroupLink.TabIndex = 173;
             this.FacebookGroupLink.TabStop = true;
             this.FacebookGroupLink.Text = "Facebook Group";
@@ -874,7 +874,7 @@
             this.HomePageLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.HomePageLink.Location = new System.Drawing.Point(36, 12);
             this.HomePageLink.Name = "HomePageLink";
-            this.HomePageLink.Size = new System.Drawing.Size(81, 13);
+            this.HomePageLink.Size = new System.Drawing.Size(79, 13);
             this.HomePageLink.TabIndex = 171;
             this.HomePageLink.TabStop = true;
             this.HomePageLink.Text = "Home Page";
