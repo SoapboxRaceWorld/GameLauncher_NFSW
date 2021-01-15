@@ -43,6 +43,7 @@ using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.Client.Sensitive;
 
 namespace GameLauncher
 {
@@ -1705,7 +1706,8 @@ namespace GameLauncher
                 {
                     _loginWelcomeTime = "Good Night";
                 }
-                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", MainEmail.Text).ToUpper();
+
+                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", Email.Mask(FileAccountSave.UserRawEmail)).ToUpper();
 
                 LogoutButton.BackgroundImage = Theming.GrayButton;
             }
@@ -1915,7 +1917,7 @@ namespace GameLauncher
                 RegisterEmailBorder.Image = Theming.BorderEmailError;
 
             }
-            else if (Self.ValidateEmail(RegisterEmail.Text) == false)
+            else if (Email.Validate(RegisterEmail.Text) == false)
             {
                 registerErrors.Add("Please enter a valid e-mail address.");
                 RegisterEmailBorder.Image = Theming.BorderEmailError;

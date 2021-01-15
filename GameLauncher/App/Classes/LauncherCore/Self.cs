@@ -3,7 +3,6 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Flurl;
@@ -124,15 +123,6 @@ namespace GameLauncherReborn
             form.StartPosition = FormStartPosition.Manual;
             form.Top = (Screen.PrimaryScreen.Bounds.Height - form.Height) / 2;
             form.Left = (Screen.PrimaryScreen.Bounds.Width - form.Width) / 2;
-        }
-
-        public static bool ValidateEmail(string email)
-        {
-            String theEmailPattern = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
-               + "@"
-               + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
-
-            return Regex.IsMatch(email, theEmailPattern);
         }
 
         //Let's actually make it cleaner and nicer - MeTonaTOR
