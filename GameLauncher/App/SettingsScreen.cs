@@ -106,6 +106,76 @@ namespace GameLauncher.App
             SettingsLauncherVersion.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             SettingsSave.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             SettingsCancel.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            ThemeName.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            ThemeAuthor.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+
+            /********************************/
+            /* Set Theme Colors & Images     /
+            /********************************/
+
+            /* Buttons */
+            SettingsGameFiles.ForeColor = Theming.BlueForeColorButton;
+            SettingsGameFiles.BackColor = Theming.BlueBackColorButton;
+            SettingsGameFiles.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            SettingsGameFiles.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            SettingsAboutButton.ForeColor = Theming.BlueForeColorButton;
+            SettingsAboutButton.BackColor = Theming.BlueBackColorButton;
+            SettingsAboutButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            SettingsAboutButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            SettingsVFilesButton.ForeColor = Theming.YellowForeColorButton;
+            SettingsVFilesButton.BackColor = Theming.YellowBackColorButton;
+            SettingsVFilesButton.FlatAppearance.BorderColor = Theming.YellowBorderColorButton;
+            SettingsVFilesButton.FlatAppearance.MouseOverBackColor = Theming.YellowMouseOverBackColorButton;
+
+            SettingsClearCrashLogsButton.ForeColor = Theming.BlueForeColorButton;
+            SettingsClearCrashLogsButton.BackColor = Theming.BlueBackColorButton;
+            SettingsClearCrashLogsButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            SettingsClearCrashLogsButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            SettingsClearCommunicationLogButton.ForeColor = Theming.BlueForeColorButton;
+            SettingsClearCommunicationLogButton.BackColor = Theming.BlueBackColorButton;
+            SettingsClearCommunicationLogButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            SettingsClearCommunicationLogButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            SettingsClearServerModCacheButton.ForeColor = Theming.BlueForeColorButton;
+            SettingsClearServerModCacheButton.BackColor = Theming.BlueBackColorButton;
+            SettingsClearServerModCacheButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            SettingsClearServerModCacheButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            /* Label Links */
+            SettingsGameFilesCurrent.LinkColor = Theming.SettingsLink;
+            SettingsGameFilesCurrent.ActiveLinkColor = Theming.SettingsActiveLink;
+            SettingsCDNCurrent.LinkColor = Theming.SettingsLink;
+            SettingsCDNCurrent.ActiveLinkColor = Theming.SettingsActiveLink;
+            SettingsLauncherPathCurrent.LinkColor = Theming.SettingsLink;
+            SettingsLauncherPathCurrent.ActiveLinkColor = Theming.SettingsActiveLink;
+
+            /* Labels */
+            SettingsGamePathText.ForeColor = Theming.FivithTextForeColor;
+            SettingsGameFilesCurrentText.ForeColor = Theming.FivithTextForeColor;
+            SettingsCDNCurrentText.ForeColor = Theming.FivithTextForeColor;
+            SettingsLauncherPathText.ForeColor = Theming.FivithTextForeColor;
+            SettingsCDNText.ForeColor = Theming.FivithTextForeColor;
+            SettingsLanguageText.ForeColor = Theming.FivithTextForeColor;
+            SettingsNetworkText.ForeColor = Theming.FivithTextForeColor;
+
+            /* Check boxes */
+            SettingsWordFilterCheck.ForeColor = Theming.SettingsCheckBoxes;
+            SettingsProxyCheckbox.ForeColor = Theming.SettingsCheckBoxes;
+            SettingsDiscordRPCCheckbox.ForeColor = Theming.SettingsCheckBoxes;
+
+            /* Bottom Left */
+            SettingsLauncherVersion.ForeColor = Theming.FivithTextForeColor;
+            ThemeName.ForeColor = Theming.FivithTextForeColor;
+            ThemeAuthor.ForeColor = Theming.FivithTextForeColor;
+
+            /* Main Settings Buttons (Save or Cancel) */
+            SettingsSave.ForeColor = Theming.Sucess;
+            SettingsSave.Image = Theming.GreenButton;
+            SettingsCancel.Image = Theming.GrayButton;
+            SettingsCancel.ForeColor = Theming.MainTextForeColor;
 
             /********************************/
             /* Events                        /
@@ -134,8 +204,8 @@ namespace GameLauncher.App
             var font = (sender as ComboBox).Font;
             Brush backgroundColor;
             Brush textColor;
-            Brush customTextColor = new SolidBrush(Color.FromArgb(178, 210, 255));
-            Brush customBGColor = new SolidBrush(Color.FromArgb(44, 58, 76));
+            Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
+            Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
 
             var cdnListText = "";
 
@@ -200,6 +270,17 @@ namespace GameLauncher.App
             else
             {
                 SettingsWordFilterCheck.Enabled = false;
+            }
+
+            if (File.Exists("Theme.ini"))
+            {
+                ThemeName.Text = "Theme Name: " + Theming.ThemeName;
+                ThemeAuthor.Text = "Theme Author: " + Theming.ThemeAuthor;
+            }
+            else
+            {
+                ThemeName.Text = "Theme Name: Default";
+                ThemeAuthor.Text = "Theme Author: Launcher - Division";
             }
 
             /*******************************/

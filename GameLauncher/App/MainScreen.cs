@@ -513,6 +513,7 @@ namespace GameLauncher
         private void MainScreen_Load(object sender, EventArgs e)
         {
             Log.Visuals("CORE: Entering mainScreen_Load");
+            RenderTheme();
 
             Log.Visuals("CORE: Setting WindowName");
             Text = "GameLauncherReborn v" + Application.ProductVersion;
@@ -640,7 +641,7 @@ namespace GameLauncher
                 _loginEnabled = true;
                 _serverEnabled = true;
                 _useSavedPassword = true;
-                LoginButton.Image = Theming.GrayButton;
+                LoginButton.BackgroundImage = Theming.GrayButton;
                 LoginButton.ForeColor = Theming.FivithTextForeColor;
             }
             else
@@ -648,7 +649,7 @@ namespace GameLauncher
                 _loginEnabled = false;
                 _serverEnabled = false;
                 _useSavedPassword = false;
-                LoginButton.Image = Theming.GrayButton;
+                LoginButton.BackgroundImage = Theming.GrayButton;
                 LoginButton.ForeColor = Theming.SixTextForeColor;
             }
 
@@ -726,7 +727,7 @@ namespace GameLauncher
             }
             else
             {
-                LauncherIconStatus.Image = Theming.UpdateIconSuccess;
+                LauncherIconStatus.BackgroundImage = Theming.UpdateIconSuccess;
                 LauncherStatusText.ForeColor = Theming.Sucess;
                 LauncherStatusText.Text = "Launcher Status:\n - Linux Build";
                 LauncherStatusDesc.Text = "Version: v" + Application.ProductVersion;
@@ -804,13 +805,13 @@ namespace GameLauncher
             if (string.IsNullOrEmpty(MainEmail.Text) || string.IsNullOrEmpty(MainPassword.Text))
             {
                 _loginEnabled = false;
-                LoginButton.Image = Theming.GrayButton;
+                LoginButton.BackgroundImage = Theming.GrayButton;
                 LoginButton.ForeColor = Theming.SixTextForeColor;
             }
             else
             {
                 _loginEnabled = true;
-                LoginButton.Image = Theming.GrayButton;
+                LoginButton.BackgroundImage = Theming.GrayButton;
                 LoginButton.ForeColor = Theming.FivithTextForeColor;
             }
 
@@ -821,11 +822,11 @@ namespace GameLauncher
         {
             if (_loginEnabled || _builtinserver)
             {
-                LoginButton.Image = Theming.GrayButtonHover;
+                LoginButton.BackgroundImage = Theming.GrayButtonHover;
             }
             else
             {
-                LoginButton.Image = Theming.GrayButton;
+                LoginButton.BackgroundImage = Theming.GrayButton;
             }
         }
 
@@ -833,11 +834,11 @@ namespace GameLauncher
         {
             if (_loginEnabled || _builtinserver)
             {
-                LoginButton.Image = Theming.GrayButtonClick;
+                LoginButton.BackgroundImage = Theming.GrayButtonClick;
             }
             else
             {
-                LoginButton.Image = Theming.GrayButton;
+                LoginButton.BackgroundImage = Theming.GrayButton;
             }
         }
 
@@ -931,12 +932,12 @@ namespace GameLauncher
         {
             if (_loginEnabled || _builtinserver)
             {
-                LoginButton.Image = Theming.GrayButtonHover;
+                LoginButton.BackgroundImage = Theming.GrayButtonHover;
                 LoginButton.ForeColor = Theming.FivithTextForeColor;
             }
             else
             {
-                LoginButton.Image = Theming.GrayButton;
+                LoginButton.BackgroundImage = Theming.GrayButton;
                 LoginButton.ForeColor = Theming.SixTextForeColor;
             }
         }
@@ -945,12 +946,12 @@ namespace GameLauncher
         {
             if (_loginEnabled || _builtinserver)
             {
-                LoginButton.Image = Theming.GrayButton;
+                LoginButton.BackgroundImage = Theming.GrayButton;
                 LoginButton.ForeColor = Theming.FivithTextForeColor;
             }
             else
             {
-                LoginButton.Image = Theming.GrayButton;
+                LoginButton.BackgroundImage = Theming.GrayButton;
                 LoginButton.ForeColor = Theming.SixTextForeColor;
             }
         }
@@ -982,7 +983,7 @@ namespace GameLauncher
             ServerStatusText.Text = "Server Status:\n - Pinging";
             ServerStatusText.ForeColor = Theming.SecondaryTextForeColor;
             ServerStatusDesc.Text = "";
-            ServerStatusIcon.Image = Theming.ServerIconChecking;
+            ServerStatusIcon.BackgroundImage = Theming.ServerIconChecking;
 
             LoginButton.ForeColor = Theming.SixTextForeColor;
             var verticalImageUrl = "";
@@ -999,7 +1000,7 @@ namespace GameLauncher
             if (ServerPick.GetItemText(ServerPick.SelectedItem) == "Offline Built-In Server")
             {
                 _builtinserver = true;
-                LoginButton.Image = Theming.GrayButton;
+                LoginButton.BackgroundImage = Theming.GrayButton;
                 LoginButton.Text = "Launch".ToUpper();
                 LoginButton.ForeColor = Theming.FivithTextForeColor;
                 ServerInfoPanel.Visible = false;
@@ -1007,7 +1008,7 @@ namespace GameLauncher
             else
             {
                 _builtinserver = false;
-                LoginButton.Image = Theming.GrayButton;
+                LoginButton.BackgroundImage = Theming.GrayButton;
                 LoginButton.Text = "Login".ToUpper();
                 LoginButton.ForeColor = Theming.SixTextForeColor;
                 ServerInfoPanel.Visible = false;
@@ -1037,7 +1038,7 @@ namespace GameLauncher
                     ServerStatusText.Text = "Server Status:\n - Offline ( OFF )";
                     ServerStatusText.ForeColor = Theming.Error;
                     ServerStatusDesc.Text = "Failed to connect to server.";
-                    ServerStatusIcon.Image = Theming.ServerIconOffline;
+                    ServerStatusIcon.BackgroundImage = Theming.ServerIconOffline;
                     _serverEnabled = false;
                     _allowRegistration = false;
                     //Disable Login & Register Button
@@ -1062,7 +1063,7 @@ namespace GameLauncher
                     ServerStatusText.Text = "Server Status:\n - Offline ( OFF )";
                     ServerStatusText.ForeColor = Theming.Error;
                     ServerStatusDesc.Text = "Server seems to be offline.";
-                    ServerStatusIcon.Image = Theming.ServerIconOffline;
+                    ServerStatusIcon.BackgroundImage = Theming.ServerIconOffline;
                     _serverEnabled = false;
                     _allowRegistration = false;
                     //Disable Login & Register Button
@@ -1346,7 +1347,7 @@ namespace GameLauncher
                     {
                         ServerStatusText.Text = "Server Status:\n - Online ( ON )";
                         ServerStatusText.ForeColor = Theming.Sucess;
-                        ServerStatusIcon.Image = Theming.ServerIconSuccess;
+                        ServerStatusIcon.BackgroundImage = Theming.ServerIconSuccess;
                         _loginEnabled = true;
                         //Enable Login & Register Button
                         LoginButton.ForeColor = Theming.FivithTextForeColor;
@@ -1366,6 +1367,8 @@ namespace GameLauncher
 
                     if (!DetectLinux.LinuxDetected())
                     {
+                        ServerPingStatusText.ForeColor = Theming.FivithTextForeColor;
+
                         Ping pingSender = new Ping();
                         pingSender.SendAsync(stringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
                         pingSender.PingCompleted += (sender3, e3) => {
@@ -1579,7 +1582,7 @@ namespace GameLauncher
 
         private void RegisterText_LinkClicked(object sender, EventArgs e)
         {
-            RegisterButton.Image = Theming.GreenButton;
+            RegisterButton.BackgroundImage = Theming.GreenButton;
             if (_allowRegistration) 
             {
                 if (!string.IsNullOrEmpty(json.WebSignupUrl)) 
@@ -1703,7 +1706,11 @@ namespace GameLauncher
                     _loginWelcomeTime = "Good Night";
                 }
                 CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", MainEmail.Text).ToUpper();
+
+                LogoutButton.BackgroundImage = Theming.GrayButton;
             }
+
+            LogoutButton.ForeColor = Theming.FivithTextForeColor;
 
             ShowPlayPanel.Visible = hideElements;
         }
@@ -1737,7 +1744,22 @@ namespace GameLauncher
             bool CertainElemnts;
 
             if (hideElements == true)
+            {
                 CertainElemnts = false;
+                RegisterEmail.BackColor = Theming.Input;
+                RegisterPassword.BackColor = Theming.Input;
+                RegisterConfirmPassword.BackColor = Theming.Input;
+                RegisterTicket.BackColor = Theming.Input;
+
+                RegisterCancel.BackgroundImage = Theming.GrayButton;
+                RegisterCancel.ForeColor = Theming.FivithTextForeColor;
+                RegisterAgree.ForeColor = Theming.FivithTextForeColor;
+
+                RegisterEmail.ForeColor = Theming.FivithTextForeColor;
+                RegisterPassword.ForeColor = Theming.FivithTextForeColor;
+                RegisterConfirmPassword.ForeColor = Theming.FivithTextForeColor;
+                RegisterTicket.ForeColor = Theming.FivithTextForeColor;
+            }
             else
                 CertainElemnts = true;
 
@@ -1784,26 +1806,26 @@ namespace GameLauncher
 
         private void Greenbutton_hover_MouseEnter(object sender, EventArgs e)
         {
-            RegisterText.Image = Theming.GreenButtonHover;
-            RegisterButton.Image = Theming.GreenButtonHover;
+            RegisterText.BackgroundImage = Theming.GreenButtonHover;
+            RegisterButton.BackgroundImage = Theming.GreenButtonHover;
         }
 
         private void Greenbutton_MouseLeave(object sender, EventArgs e)
         {
-            RegisterText.Image = Theming.GreenButton;
-            RegisterButton.Image = Theming.GreenButton;
+            RegisterText.BackgroundImage = Theming.GreenButton;
+            RegisterButton.BackgroundImage = Theming.GreenButton;
         }
 
         private void Greenbutton_hover_MouseUp(object sender, EventArgs e)
         {
-            RegisterText.Image = Theming.GreenButtonHover;
-            RegisterButton.Image = Theming.GreenButtonHover;
+            RegisterText.BackgroundImage = Theming.GreenButtonHover;
+            RegisterButton.BackgroundImage = Theming.GreenButtonHover;
         }
 
         private void Greenbutton_click_MouseDown(object sender, EventArgs e)
         {
-            RegisterText.Image = Theming.GreenButtonClick;
-            RegisterButton.Image = Theming.GreenButtonClick;
+            RegisterText.BackgroundImage = Theming.GreenButtonClick;
+            RegisterButton.BackgroundImage = Theming.GreenButtonClick;
         }
 
         private void RegisterCancel_Click(object sender, EventArgs e)
@@ -1850,26 +1872,26 @@ namespace GameLauncher
 
         private void Graybutton_click_MouseDown(object sender, EventArgs e)
         {
-            LogoutButton.Image = Theming.GrayButtonClick;
-            RegisterCancel.Image = Theming.GrayButtonClick;
+            LogoutButton.BackgroundImage = Theming.GrayButtonClick;
+            RegisterCancel.BackgroundImage = Theming.GrayButtonClick;
         }
 
         private void Graybutton_hover_MouseEnter(object sender, EventArgs e)
         {
-            LogoutButton.Image = Theming.GrayButtonHover;
-            RegisterCancel.Image = Theming.GrayButtonHover;
+            LogoutButton.BackgroundImage = Theming.GrayButtonHover;
+            RegisterCancel.BackgroundImage = Theming.GrayButtonHover;
         }
 
         private void Graybutton_MouseLeave(object sender, EventArgs e)
         {
-            LogoutButton.Image = Theming.GrayButton;
-            RegisterCancel.Image = Theming.GrayButton;
+            LogoutButton.BackgroundImage = Theming.GrayButton;
+            RegisterCancel.BackgroundImage = Theming.GrayButton;
         }
 
         private void Graybutton_hover_MouseUp(object sender, EventArgs e)
         {
-            LogoutButton.Image = Theming.GrayButtonHover;
-            RegisterCancel.Image = Theming.GrayButtonHover;
+            LogoutButton.BackgroundImage = Theming.GrayButtonHover;
+            RegisterCancel.BackgroundImage = Theming.GrayButtonHover;
         }
 
         public void DrawErrorAroundTextBox(TextBox x)
@@ -2029,16 +2051,6 @@ namespace GameLauncher
         /* SETTINGS PAGE LAYOUT */
         private void SettingsButton_Click(object sender, EventArgs e)
         {
-            SettingsPanelDisplay();
-        }
-
-        private void CDN_Offline_Switch()
-        {
-            SettingsPanelDisplay();
-        }
-
-        private void SettingsPanelDisplay()
-        {
             if (!(ServerPick.SelectedItem is ServerInfo server)) return;
 
             new SettingsScreen(server.IpAddress, server.Name).ShowDialog();
@@ -2126,35 +2138,35 @@ namespace GameLauncher
             APIStatusText.Text = "United API:\n - Online";
             APIStatusText.ForeColor = Theming.Sucess;
             APIStatusDesc.Text = "Connected to API";
-            APIStatusIcon.Image = Theming.APIIconSuccess;
+            APIStatusIcon.BackgroundImage = Theming.APIIconSuccess;
 
             if (VisualsAPIChecker.UnitedAPI != true)
             {
                 APIStatusText.Text = "Carbon API:\n - Online";
                 APIStatusText.ForeColor = Theming.Sucess;
                 APIStatusDesc.Text = "Connected to API";
-                APIStatusIcon.Image = Theming.APIIconSuccess;
+                APIStatusIcon.BackgroundImage = Theming.APIIconSuccess;
             }
             else if (VisualsAPIChecker.CarbonAPI != true)
             {
                 APIStatusText.Text = "Carbon 2nd API:\n - Online";
                 APIStatusText.ForeColor = Theming.Sucess;
                 APIStatusDesc.Text = "Connected to API";
-                APIStatusIcon.Image = Theming.APIIconSuccess;
+                APIStatusIcon.BackgroundImage = Theming.APIIconSuccess;
             }
             else if (VisualsAPIChecker.CarbonAPITwo != true)
             {
                 APIStatusText.Text = "WOPL API:\n - Online";
                 APIStatusText.ForeColor = Theming.Sucess;
                 APIStatusDesc.Text = "Connected to API";
-                APIStatusIcon.Image = Theming.APIIconSuccess;
+                APIStatusIcon.BackgroundImage = Theming.APIIconSuccess;
             }
             else if (VisualsAPIChecker.WOPLAPI != true)
             {
                 APIStatusText.Text = "Connection API:\n - Error";
                 APIStatusText.ForeColor = Theming.Error;
                 APIStatusDesc.Text = "Failed to Connect to APIs";
-                APIStatusIcon.Image = Theming.APIIconError;
+                APIStatusIcon.BackgroundImage = Theming.APIIconError;
                 Log.Api("PINGING API: Failed to Connect to APIs! Quick Hide and Bunker Down! (Ask for help)");
             }
         }
@@ -2683,7 +2695,7 @@ namespace GameLauncher
                 return;
             }
 
-            PlayButton.BackgroundImage = Properties.Resources.playbutton;
+            PlayButton.BackgroundImage = Theming.PlayButton;
         }
 
         private void LaunchNfsw()
@@ -2720,7 +2732,7 @@ namespace GameLauncher
                             ExtractingProgress.Value = 100;
                             ExtractingProgress.Width = 519;
                             ExtractingProgress.Image = Theming.ProgressBarWarning;
-                            ExtractingProgress.ProgressColor = Color.Orange;
+                            ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
 
                             PlayProgressText.Text = "Please make sure you have at least 8GB free space on hard drive.".ToUpper();
 
@@ -3125,7 +3137,7 @@ namespace GameLauncher
             MessageBox.Show(null, "Failed to download gamefiles. \n\nCDN might be offline. \n\nPlease select a different CDN on Next Screen", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             //CDN Went Offline Screen switch - DavidCarbon
-            CDN_Offline_Switch();
+            SettingsButton_Click(null, null);
 
             try
             {
@@ -3260,6 +3272,61 @@ namespace GameLauncher
                     break;
             }
             FileSettingsSave.SaveSettings();
+        }
+
+        private void RenderTheme()
+        {
+            /* Set Background with Transparent Key */
+            BackgroundImage = Theming.MainScreen;
+            TransparencyKey = Theming.MainScreenTransparencyKey;
+
+            logo.BackgroundImage = Theming.Logo;
+            SettingsButton.BackgroundImage = Theming.GearButton;
+            CloseBTN.BackgroundImage = Theming.CloseButton;
+
+            ProgressBarOutline.BackgroundImage = Theming.ProgressBarOutline;
+            PlayProgress.Image = Theming.ProgressBarPreload;
+            ExtractingProgress.Image = Theming.ProgressBarSuccess;
+
+            PlayProgressText.ForeColor = Theming.FivithTextForeColor;
+            PlayProgressTextTimer.ForeColor = Theming.FivithTextForeColor;
+
+            MainEmailBorder.Image = Theming.BorderEmail;
+            MainPasswordBorder.Image = Theming.BorderPassword;
+
+            CurrentWindowInfo.ForeColor = Theming.FivithTextForeColor;
+
+            LauncherStatusDesc.ForeColor = Theming.FivithTextForeColor;
+            ServerStatusDesc.ForeColor = Theming.FivithTextForeColor;
+            APIStatusDesc.ForeColor = Theming.FivithTextForeColor;
+
+            RegisterText.BackgroundImage = Theming.GreenButton;
+            LoginButton.BackgroundImage = Theming.GrayButton;
+
+            RememberMe.ForeColor = Theming.FivithTextForeColor;
+
+            ForgotPassword.ActiveLinkColor = Theming.ActiveLink;
+            ForgotPassword.LinkColor = Theming.Link;
+
+            MainEmail.BackColor = Theming.Input;
+            MainEmail.ForeColor = Theming.FivithTextForeColor;
+            MainPassword.BackColor = Theming.Input;
+            MainPassword.ForeColor = Theming.FivithTextForeColor;
+
+            ServerShutDown.ForeColor = Theming.FivithTextForeColor;
+            SceneryGroupText.ForeColor = Theming.FivithTextForeColor;
+
+            TwitterAccountLink.LinkColor = Theming.SecondaryTextForeColor;
+            FacebookGroupLink.LinkColor = Theming.SecondaryTextForeColor;
+            DiscordInviteLink.LinkColor = Theming.SecondaryTextForeColor;
+            HomePageLink.LinkColor = Theming.SecondaryTextForeColor;
+
+            TwitterAccountLink.ActiveLinkColor = Theming.FivithTextForeColor;
+            FacebookGroupLink.ActiveLinkColor = Theming.FivithTextForeColor;
+            DiscordInviteLink.ActiveLinkColor = Theming.FivithTextForeColor;
+            HomePageLink.ActiveLinkColor = Theming.FivithTextForeColor;
+
+            InsiderBuildNumberText.ForeColor = Theming.FivithTextForeColor;
         }
     }
     /* Moved 7 Unused Code to Gist */

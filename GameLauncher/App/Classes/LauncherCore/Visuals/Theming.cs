@@ -14,21 +14,27 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         /* Theme Name & Author */
 
-        public static string ThemeName = "Default";
+        public static string ThemeName = "Custom";
 
-        public static string ThemeAuthor = "Launcher Divison";
+        public static string ThemeAuthor = "Unknown - Check File";
 
 
         /* Logo */
 
-        public static Bitmap Logo = Properties.Resources.mainbackground;
+        public static Bitmap Logo = Properties.Resources.logo;
 
 
         /* Main Backgrounds */
 
         public static Bitmap MainScreen = Properties.Resources.mainbackground;
 
+        public static Color MainScreenTransparencyKey = Color.FromArgb(255, 0, 255);
+
         public static Bitmap SettingsScreen = Properties.Resources.secondarybackground;
+
+        public static Color SettingsScreenTransparencyKey = Color.FromArgb(255, 0, 255);
+
+        public static Color SplashScreenTransparencyKey = Color.FromArgb(0, 0, 25);
 
         public static Bitmap SocialPanel = Properties.Resources.socialbg;
 
@@ -121,6 +127,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         public static Bitmap BorderPasswordError = Properties.Resources.password_error_text_border;
 
+        public static Color Input = Color.FromArgb(22, 32, 42);
+
+        public static Color Link = Color.FromArgb(224, 200, 0);
+
+        public static Color ActiveLink = Color.FromArgb(255, 228, 0);
+
 
         /* ProgressBar & Outline */
 
@@ -133,6 +145,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Bitmap ProgressBarWarning = Properties.Resources.progress_warning;
 
         public static Bitmap ProgressBarError = Properties.Resources.progress_error;
+
+        public static Color ExtractingProgressColor = Color.FromArgb(255, 165, 0);
 
 
         /* WinForm Buttons */
@@ -150,7 +164,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         public static Color YellowBorderColorButton = Color.FromArgb(184, 134, 11);
 
-        public static Color YellowForeColorButton = Color.FromArgb(44, 58, 76);
+        public static Color YellowForeColorButton = Color.FromArgb(224, 200, 0);
 
         public static Color YellowMouseOverBackColorButton = Color.FromArgb(44, 58, 76);
 
@@ -171,17 +185,36 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Color SixTextForeColor = Color.FromArgb(128, 128, 128);
 
 
+        /* CDN Drop Down Menu */
+
+        public static Color CDNMenuTextForeColor = Color.FromArgb(178, 210, 255);
+
+        public static Color CDNMenuBGForeColor = Color.FromArgb(44, 58, 76);
+
+
         /* Status Colors */
 
         /* Green-ish */
         public static Color Sucess = Color.FromArgb(159, 193, 32);
         /* Red */
         public static Color Error = Color.FromArgb(254, 0, 0);
-
+        /* Yellow */
+        public static Color Alert = Color.FromArgb(255, 255, 0);
+        
 
         /* Vertical Banner */
 
         public static Color VerticalBannerBackColor = Color.FromArgb(0, 0, 0);
+
+
+        /* Settings Label Links */
+
+        /* LawnGreen */
+        public static Color SettingsLink = Color.FromArgb(124, 252, 0);
+        /* Silver */
+        public static Color SettingsActiveLink = Color.FromArgb(224, 224, 224);
+        /* Dark Goldenrod */
+        public static Color SettingsCheckBoxes = Color.FromArgb(184, 134, 11);
 
 
         /* Read Theme File and Check Values */
@@ -648,11 +681,65 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 Error = ToColor(ThemeFile.Read("ErrorForeColor"));
             }
 
+            if (!string.IsNullOrEmpty(ThemeFile.Read("AlertForeColor")))
+            {
+                Alert = ToColor(ThemeFile.Read("AlertForeColor"));
+            }
+
             if (!string.IsNullOrEmpty(ThemeFile.Read("VerticalBannerBackColor")))
             {
                 VerticalBannerBackColor = ToColor(ThemeFile.Read("VerticalBannerBackColor"));
             }
-            
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("ExtractingProgressColor")))
+            {
+                ExtractingProgressColor = ToColor(ThemeFile.Read("ExtractingProgressColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("MainScreenTransparencyKey")))
+            {
+                MainScreenTransparencyKey = ToColor(ThemeFile.Read("MainScreenTransparencyKey"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("SettingsScreenTransparencyKey")))
+            {
+                SettingsScreenTransparencyKey = ToColor(ThemeFile.Read("SettingsScreenTransparencyKey"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("SplashScreenTransparencyKey")))
+            {
+                SplashScreenTransparencyKey = ToColor(ThemeFile.Read("SplashScreenTransparencyKey"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("InputForeColor")))
+            {
+                Input = ToColor(ThemeFile.Read("InputForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("LinkForeColor")))
+            {
+                Link = ToColor(ThemeFile.Read("LinkForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("ActiveLinkForeColor")))
+            {
+                ActiveLink = ToColor(ThemeFile.Read("ActiveLinkForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("SettingsLinkForeColor")))
+            {
+                SettingsLink = ToColor(ThemeFile.Read("SettingsLinkForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("SettingsActiveLinkForeColor")))
+            {
+                SettingsActiveLink = ToColor(ThemeFile.Read("SettingsActiveLinkForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("SettingsCheckBoxesForeColor")))
+            {
+                SettingsCheckBoxes = ToColor(ThemeFile.Read("SettingsCheckBoxesForeColor"));
+            }
         }
 
 

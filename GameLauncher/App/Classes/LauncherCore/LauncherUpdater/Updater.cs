@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Net;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using GameLauncherReborn;
 using Newtonsoft.Json;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 
 namespace GameLauncher.App.Classes.Events
 {
@@ -52,8 +52,8 @@ namespace GameLauncher.App.Classes.Events
                 if (Revisions > 0)
                 {
                     text.Text = "Launcher Status:\n - Insider Build";
-                    status.Image = Properties.Resources.ac_warning;
-                    text.ForeColor = Color.Yellow;
+                    status.BackgroundImage = Theming.UpdateIconWarning;
+                    text.ForeColor = Theming.Alert;
                     description.Text = "Version: v" + Application.ProductVersion;
 
                     if (!string.IsNullOrEmpty(FileSettingsSave.IgnoreVersion))
@@ -66,8 +66,8 @@ namespace GameLauncher.App.Classes.Events
                 else if (Revisions == 0)
                 {
                     text.Text = "Launcher Status:\n - Current Version";
-                    status.Image = Properties.Resources.ac_success;
-                    text.ForeColor = Color.FromArgb(0x9fc120);
+                    status.BackgroundImage = Theming.UpdateIconSuccess;
+                    text.ForeColor = Theming.Sucess;
                     description.Text = "Version: v" + Application.ProductVersion;
 
                     if (FileSettingsSave.IgnoreVersion == Application.ProductVersion)
@@ -80,8 +80,8 @@ namespace GameLauncher.App.Classes.Events
                 else
                 {
                     text.Text = "Launcher Status:\n - Update Available";
-                    status.Image = Properties.Resources.ac_warning;
-                    text.ForeColor = Color.Yellow;
+                    status.BackgroundImage = Theming.UpdateIconWarning;
+                    text.ForeColor = Theming.Alert;
                     description.Text = "New Version: " + LatestLauncherBuild.ToString();
 
                     if (FileSettingsSave.IgnoreVersion == LatestLauncherBuild.ToString())
@@ -123,8 +123,8 @@ namespace GameLauncher.App.Classes.Events
             else
             {
                 text.Text = "Launcher Status:\n - Backend Error";
-                status.Image = Properties.Resources.ac_error;
-                text.ForeColor = Color.FromArgb(254, 0, 0);
+                status.BackgroundImage = Theming.UpdateIconError;
+                text.ForeColor = Theming.Error;
                 description.Text = "Version: v" + Application.ProductVersion;
             }
             //----------------------//

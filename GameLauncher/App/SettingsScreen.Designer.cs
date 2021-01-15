@@ -58,6 +58,8 @@ namespace GameLauncher.App
             this.SettingsBkupCDNText = new System.Windows.Forms.Label();
             this.SettingsSave = new System.Windows.Forms.Button();
             this.SettingsCancel = new System.Windows.Forms.Button();
+            this.ThemeAuthor = new System.Windows.Forms.Label();
+            this.ThemeName = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // SettingsClearServerModCacheButton
@@ -481,12 +483,38 @@ namespace GameLauncher.App
             this.SettingsCancel.UseVisualStyleBackColor = false;
             this.SettingsCancel.Click += new System.EventHandler(this.SettingsCancel_Click);
             // 
+            // ThemeAuthor
+            // 
+            this.ThemeAuthor.AutoSize = true;
+            this.ThemeAuthor.BackColor = System.Drawing.Color.Transparent;
+            this.ThemeAuthor.Font = new System.Drawing.Font("DejaVu Sans", 9F);
+            this.ThemeAuthor.Location = new System.Drawing.Point(35, 454);
+            this.ThemeAuthor.Name = "ThemeAuthor";
+            this.ThemeAuthor.Size = new System.Drawing.Size(220, 14);
+            this.ThemeAuthor.TabIndex = 190;
+            this.ThemeAuthor.Text = "Theme Author: Launcher - Division";
+            this.ThemeAuthor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // ThemeName
+            // 
+            this.ThemeName.AutoSize = true;
+            this.ThemeName.BackColor = System.Drawing.Color.Transparent;
+            this.ThemeName.Font = new System.Drawing.Font("DejaVu Sans", 9F);
+            this.ThemeName.Location = new System.Drawing.Point(35, 428);
+            this.ThemeName.Name = "ThemeName";
+            this.ThemeName.Size = new System.Drawing.Size(142, 14);
+            this.ThemeName.TabIndex = 191;
+            this.ThemeName.Text = "Theme Name: Default";
+            this.ThemeName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // SettingsScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.ThemeName);
+            this.Controls.Add(this.ThemeAuthor);
             this.Controls.Add(this.SettingsClearServerModCacheButton);
             this.Controls.Add(this.SettingsLauncherVersion);
             this.Controls.Add(this.SettingsAboutButton);
@@ -561,5 +589,7 @@ namespace GameLauncher.App
         private System.Windows.Forms.Label SettingsMainCDNText;
         private System.Windows.Forms.Label SettingsBkupSrvText;
         private System.Windows.Forms.Label SettingsBkupCDNText;
+        private System.Windows.Forms.Label ThemeAuthor;
+        private System.Windows.Forms.Label ThemeName;
     }
 }

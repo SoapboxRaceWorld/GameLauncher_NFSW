@@ -126,7 +126,8 @@
             // logo
             // 
             this.logo.BackColor = System.Drawing.Color.Transparent;
-            this.logo.Image = global::GameLauncher.Properties.Resources.logo;
+            this.logo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.logo.InitialImage = null;
             this.logo.Location = new System.Drawing.Point(17, 10);
             this.logo.Name = "logo";
             this.logo.Size = new System.Drawing.Size(215, 71);
@@ -137,7 +138,8 @@
             // CloseBTN
             // 
             this.CloseBTN.BackColor = System.Drawing.Color.Transparent;
-            this.CloseBTN.BackgroundImage = global::GameLauncher.Properties.Resources.close;
+            this.CloseBTN.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.CloseBTN.InitialImage = null;
             this.CloseBTN.Location = new System.Drawing.Point(841, 15);
             this.CloseBTN.Name = "CloseBTN";
             this.CloseBTN.Size = new System.Drawing.Size(24, 24);
@@ -172,7 +174,8 @@
             // SettingsButton
             // 
             this.SettingsButton.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("SettingsButton.BackgroundImage")));
+            this.SettingsButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.SettingsButton.InitialImage = null;
             this.SettingsButton.Location = new System.Drawing.Point(807, 15);
             this.SettingsButton.Name = "SettingsButton";
             this.SettingsButton.Size = new System.Drawing.Size(24, 24);
@@ -184,6 +187,7 @@
             this.ServerPick.BackColor = System.Drawing.Color.White;
             this.ServerPick.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.ServerPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ServerPick.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ServerPick.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerPick.ForeColor = System.Drawing.Color.Black;
             this.ServerPick.FormattingEnabled = true;
@@ -194,18 +198,22 @@
             // 
             // AddServer
             // 
+            this.AddServer.BackColor = System.Drawing.SystemColors.Control;
             this.AddServer.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.AddServer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AddServer.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AddServer.ForeColor = System.Drawing.Color.Black;
             this.AddServer.Location = new System.Drawing.Point(833, 49);
             this.AddServer.Name = "AddServer";
             this.AddServer.Size = new System.Drawing.Size(24, 24);
             this.AddServer.TabIndex = 3;
             this.AddServer.Text = "+";
-            this.AddServer.UseVisualStyleBackColor = true;
+            this.AddServer.UseVisualStyleBackColor = false;
             // 
             // VerticalBanner
             // 
             this.VerticalBanner.BackColor = System.Drawing.Color.Transparent;
+            this.VerticalBanner.InitialImage = null;
             this.VerticalBanner.Location = new System.Drawing.Point(28, 81);
             this.VerticalBanner.Name = "VerticalBanner";
             this.VerticalBanner.Size = new System.Drawing.Size(523, 223);
@@ -228,7 +236,8 @@
             // LauncherIconStatus
             // 
             this.LauncherIconStatus.BackColor = System.Drawing.Color.Transparent;
-            this.LauncherIconStatus.Image = global::GameLauncher.Properties.Resources.ac_unknown;
+            this.LauncherIconStatus.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.LauncherIconStatus.InitialImage = null;
             this.LauncherIconStatus.Location = new System.Drawing.Point(27, 456);
             this.LauncherIconStatus.Name = "LauncherIconStatus";
             this.LauncherIconStatus.Size = new System.Drawing.Size(21, 24);
@@ -265,7 +274,8 @@
             // ServerStatusIcon
             // 
             this.ServerStatusIcon.BackColor = System.Drawing.Color.Transparent;
-            this.ServerStatusIcon.Image = ((System.Drawing.Image)(resources.GetObject("ServerStatusIcon.Image")));
+            this.ServerStatusIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ServerStatusIcon.InitialImage = null;
             this.ServerStatusIcon.Location = new System.Drawing.Point(212, 456);
             this.ServerStatusIcon.Name = "ServerStatusIcon";
             this.ServerStatusIcon.Size = new System.Drawing.Size(24, 24);
@@ -301,7 +311,8 @@
             // APIStatusIcon
             // 
             this.APIStatusIcon.BackColor = System.Drawing.Color.Transparent;
-            this.APIStatusIcon.Image = ((System.Drawing.Image)(resources.GetObject("APIStatusIcon.Image")));
+            this.APIStatusIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.APIStatusIcon.InitialImage = null;
             this.APIStatusIcon.Location = new System.Drawing.Point(398, 455);
             this.APIStatusIcon.Name = "APIStatusIcon";
             this.APIStatusIcon.Size = new System.Drawing.Size(24, 24);
@@ -368,6 +379,7 @@
             // 
             this.MainEmailBorder.BackColor = System.Drawing.Color.Transparent;
             this.MainEmailBorder.Image = global::GameLauncher.Properties.Resources.email_text_border;
+            this.MainEmailBorder.InitialImage = null;
             this.MainEmailBorder.Location = new System.Drawing.Point(606, 161);
             this.MainEmailBorder.Name = "MainEmailBorder";
             this.MainEmailBorder.Size = new System.Drawing.Size(231, 37);
@@ -393,6 +405,7 @@
             // 
             this.MainPasswordBorder.BackColor = System.Drawing.Color.Transparent;
             this.MainPasswordBorder.Image = global::GameLauncher.Properties.Resources.password_text_border;
+            this.MainPasswordBorder.InitialImage = null;
             this.MainPasswordBorder.Location = new System.Drawing.Point(606, 210);
             this.MainPasswordBorder.Name = "MainPasswordBorder";
             this.MainPasswordBorder.Size = new System.Drawing.Size(231, 37);
@@ -434,13 +447,13 @@
             // LoginButton
             // 
             this.LoginButton.BackColor = System.Drawing.Color.Transparent;
+            this.LoginButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.LoginButton.FlatAppearance.BorderSize = 0;
             this.LoginButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.LoginButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.LoginButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.LoginButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LoginButton.ForeColor = System.Drawing.Color.White;
-            this.LoginButton.Image = global::GameLauncher.Properties.Resources.graybutton;
             this.LoginButton.Location = new System.Drawing.Point(605, 362);
             this.LoginButton.Name = "LoginButton";
             this.LoginButton.Size = new System.Drawing.Size(231, 35);
@@ -451,13 +464,13 @@
             // RegisterText
             // 
             this.RegisterText.BackColor = System.Drawing.Color.Transparent;
+            this.RegisterText.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.RegisterText.FlatAppearance.BorderSize = 0;
             this.RegisterText.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.RegisterText.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.RegisterText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RegisterText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RegisterText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
-            this.RegisterText.Image = global::GameLauncher.Properties.Resources.greenbutton;
             this.RegisterText.Location = new System.Drawing.Point(605, 409);
             this.RegisterText.Name = "RegisterText";
             this.RegisterText.Size = new System.Drawing.Size(231, 35);
@@ -484,14 +497,14 @@
             // LogoutButton
             // 
             this.LogoutButton.BackColor = System.Drawing.Color.Transparent;
+            this.LogoutButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.LogoutButton.FlatAppearance.BorderSize = 0;
             this.LogoutButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.LogoutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.LogoutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.LogoutButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LogoutButton.ForeColor = System.Drawing.Color.White;
-            this.LogoutButton.Image = global::GameLauncher.Properties.Resources.graybutton;
-            this.LogoutButton.Location = new System.Drawing.Point(6, 60);
+            this.LogoutButton.Location = new System.Drawing.Point(6, 64);
             this.LogoutButton.Name = "LogoutButton";
             this.LogoutButton.Size = new System.Drawing.Size(231, 35);
             this.LogoutButton.TabIndex = 9;
@@ -501,15 +514,14 @@
             // PlayButton
             // 
             this.PlayButton.BackColor = System.Drawing.Color.Transparent;
-            this.PlayButton.BackgroundImage = global::GameLauncher.Properties.Resources.playbutton;
-            this.PlayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.PlayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.PlayButton.FlatAppearance.BorderSize = 0;
             this.PlayButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.PlayButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.PlayButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PlayButton.Font = new System.Drawing.Font("DejaVu Sans", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayButton.ForeColor = System.Drawing.Color.Transparent;
-            this.PlayButton.Location = new System.Drawing.Point(7, 94);
+            this.PlayButton.Location = new System.Drawing.Point(7, 103);
             this.PlayButton.Name = "PlayButton";
             this.PlayButton.Size = new System.Drawing.Size(230, 63);
             this.PlayButton.TabIndex = 15;
@@ -521,7 +533,7 @@
             this.PlayProgressTextTimer.BackColor = System.Drawing.Color.Transparent;
             this.PlayProgressTextTimer.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.PlayProgressTextTimer.ForeColor = System.Drawing.Color.White;
-            this.PlayProgressTextTimer.Location = new System.Drawing.Point(431, 389);
+            this.PlayProgressTextTimer.Location = new System.Drawing.Point(431, 402);
             this.PlayProgressTextTimer.Name = "PlayProgressTextTimer";
             this.PlayProgressTextTimer.Size = new System.Drawing.Size(120, 19);
             this.PlayProgressTextTimer.TabIndex = 135;
@@ -543,6 +555,7 @@
             // 
             this.RegisterEmailBorder.BackColor = System.Drawing.Color.Transparent;
             this.RegisterEmailBorder.Image = global::GameLauncher.Properties.Resources.email_text_border;
+            this.RegisterEmailBorder.InitialImage = null;
             this.RegisterEmailBorder.Location = new System.Drawing.Point(19, 68);
             this.RegisterEmailBorder.Name = "RegisterEmailBorder";
             this.RegisterEmailBorder.Size = new System.Drawing.Size(231, 37);
@@ -567,6 +580,7 @@
             // 
             this.RegisterPasswordBorder.BackColor = System.Drawing.Color.Transparent;
             this.RegisterPasswordBorder.Image = global::GameLauncher.Properties.Resources.password_text_border;
+            this.RegisterPasswordBorder.InitialImage = null;
             this.RegisterPasswordBorder.Location = new System.Drawing.Point(19, 117);
             this.RegisterPasswordBorder.Name = "RegisterPasswordBorder";
             this.RegisterPasswordBorder.Size = new System.Drawing.Size(231, 37);
@@ -591,6 +605,7 @@
             // 
             this.RegisterConfirmPasswordBorder.BackColor = System.Drawing.Color.Transparent;
             this.RegisterConfirmPasswordBorder.Image = global::GameLauncher.Properties.Resources.password_text_border;
+            this.RegisterConfirmPasswordBorder.InitialImage = null;
             this.RegisterConfirmPasswordBorder.Location = new System.Drawing.Point(19, 166);
             this.RegisterConfirmPasswordBorder.Name = "RegisterConfirmPasswordBorder";
             this.RegisterConfirmPasswordBorder.Size = new System.Drawing.Size(231, 37);
@@ -614,6 +629,7 @@
             // 
             this.RegisterTicketBorder.BackColor = System.Drawing.Color.Transparent;
             this.RegisterTicketBorder.Image = global::GameLauncher.Properties.Resources.ticket_text_border;
+            this.RegisterTicketBorder.InitialImage = null;
             this.RegisterTicketBorder.Location = new System.Drawing.Point(19, 215);
             this.RegisterTicketBorder.Name = "RegisterTicketBorder";
             this.RegisterTicketBorder.Size = new System.Drawing.Size(230, 37);
@@ -637,13 +653,13 @@
             // RegisterButton
             // 
             this.RegisterButton.BackColor = System.Drawing.Color.Transparent;
+            this.RegisterButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.RegisterButton.FlatAppearance.BorderSize = 0;
             this.RegisterButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.RegisterButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.RegisterButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RegisterButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RegisterButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
-            this.RegisterButton.Image = global::GameLauncher.Properties.Resources.greenbutton;
             this.RegisterButton.Location = new System.Drawing.Point(18, 296);
             this.RegisterButton.Name = "RegisterButton";
             this.RegisterButton.Size = new System.Drawing.Size(231, 35);
@@ -654,13 +670,13 @@
             // RegisterCancel
             // 
             this.RegisterCancel.BackColor = System.Drawing.Color.Transparent;
+            this.RegisterCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.RegisterCancel.FlatAppearance.BorderSize = 0;
             this.RegisterCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.RegisterCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.RegisterCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RegisterCancel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RegisterCancel.ForeColor = System.Drawing.Color.White;
-            this.RegisterCancel.Image = global::GameLauncher.Properties.Resources.graybutton;
             this.RegisterCancel.Location = new System.Drawing.Point(18, 336);
             this.RegisterCancel.Name = "RegisterCancel";
             this.RegisterCancel.Size = new System.Drawing.Size(231, 35);
@@ -679,9 +695,9 @@
             this.ShowPlayPanel.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ShowPlayPanel.ForeColor = System.Drawing.Color.Transparent;
             this.ShowPlayPanel.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.ShowPlayPanel.Location = new System.Drawing.Point(600, 290);
+            this.ShowPlayPanel.Location = new System.Drawing.Point(600, 281);
             this.ShowPlayPanel.Name = "ShowPlayPanel";
-            this.ShowPlayPanel.Size = new System.Drawing.Size(237, 164);
+            this.ShowPlayPanel.Size = new System.Drawing.Size(237, 173);
             this.ShowPlayPanel.TabIndex = 153;
             this.ShowPlayPanel.Visible = false;
             // 
@@ -760,14 +776,14 @@
             this.ServerInfoPanel.ForeColor = System.Drawing.Color.Transparent;
             this.ServerInfoPanel.Location = new System.Drawing.Point(27, 305);
             this.ServerInfoPanel.Name = "ServerInfoPanel";
-            this.ServerInfoPanel.Size = new System.Drawing.Size(524, 68);
+            this.ServerInfoPanel.Size = new System.Drawing.Size(525, 68);
             this.ServerInfoPanel.TabIndex = 172;
             // 
             // HomePageIcon
             // 
             this.HomePageIcon.BackColor = System.Drawing.Color.Transparent;
-            this.HomePageIcon.BackgroundImage = global::GameLauncher.Properties.Resources.social_home_page;
             this.HomePageIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.HomePageIcon.InitialImage = null;
             this.HomePageIcon.Location = new System.Drawing.Point(7, 8);
             this.HomePageIcon.Name = "HomePageIcon";
             this.HomePageIcon.Size = new System.Drawing.Size(24, 24);
@@ -778,8 +794,8 @@
             // DiscordIcon
             // 
             this.DiscordIcon.BackColor = System.Drawing.Color.Transparent;
-            this.DiscordIcon.BackgroundImage = global::GameLauncher.Properties.Resources.social_discord;
             this.DiscordIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.DiscordIcon.InitialImage = null;
             this.DiscordIcon.Location = new System.Drawing.Point(127, 8);
             this.DiscordIcon.Name = "DiscordIcon";
             this.DiscordIcon.Size = new System.Drawing.Size(24, 24);
@@ -790,8 +806,8 @@
             // FacebookIcon
             // 
             this.FacebookIcon.BackColor = System.Drawing.Color.Transparent;
-            this.FacebookIcon.BackgroundImage = global::GameLauncher.Properties.Resources.social_facebook;
             this.FacebookIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.FacebookIcon.InitialImage = null;
             this.FacebookIcon.Location = new System.Drawing.Point(263, 8);
             this.FacebookIcon.Name = "FacebookIcon";
             this.FacebookIcon.Size = new System.Drawing.Size(24, 24);
@@ -820,8 +836,8 @@
             // TwitterIcon
             // 
             this.TwitterIcon.BackColor = System.Drawing.Color.Transparent;
-            this.TwitterIcon.BackgroundImage = global::GameLauncher.Properties.Resources.social_twitter;
             this.TwitterIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.TwitterIcon.InitialImage = null;
             this.TwitterIcon.Location = new System.Drawing.Point(407, 8);
             this.TwitterIcon.Name = "TwitterIcon";
             this.TwitterIcon.Size = new System.Drawing.Size(24, 24);
@@ -940,7 +956,7 @@
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackgroundImage = global::GameLauncher.Properties.Resources.mainbackground;
+            this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.InsiderBuildNumberText);
