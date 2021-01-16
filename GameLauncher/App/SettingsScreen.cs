@@ -860,7 +860,6 @@ namespace GameLauncher.App
             if (!string.IsNullOrEmpty(FileSettingsSave.CDN))
             {
                 string FinalCDNURL = FileSettingsSave.CDN + "/";
-                Log.Debug(FinalCDNURL);
 
                 if (CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
                 {
