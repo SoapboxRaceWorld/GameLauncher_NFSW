@@ -507,6 +507,7 @@ namespace GameLauncher
                         }
                         else
                         {
+                            Theming.CheckIfThemeExists();
                             ShowSplashScreen(true);
                         }
                     } 
@@ -572,7 +573,6 @@ namespace GameLauncher
             ServerListUpdater.GetList();
             CDNListUpdater.GetList();
             LauncherUpdateCheck.CheckAvailability();
-            Theming.CheckIfThemeExists();
 
             if (!DetectLinux.LinuxDetected())
             {

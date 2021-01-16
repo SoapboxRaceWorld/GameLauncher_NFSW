@@ -232,6 +232,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 ThemeAuthor = ThemeFile.Read("ThemeAuthor");
             }
 
+            /* Logo */
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("Logo")))
+            {
+                if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("Logo")))
+                {
+                    Logo = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("Logo"));
+                }
+            }
+
             /* Main Backgrounds */
 
             if (!string.IsNullOrEmpty(ThemeFile.Read("SettingsScreenBG")))
@@ -752,7 +762,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         /* Convert User Inputed String into a Valid RBG Spectrum Values */
 
-        private static Color ToColor(string color)
+        public static Color ToColor(string color)
         {
             var arrColorFragments = color?.Split(',').Select(sFragment => { int.TryParse(sFragment, out int fragment); return fragment; }).ToArray();
 
