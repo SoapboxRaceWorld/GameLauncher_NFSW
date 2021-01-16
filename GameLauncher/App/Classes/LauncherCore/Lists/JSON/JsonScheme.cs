@@ -16,24 +16,26 @@ namespace SoapBox.JsonScheme
         public string AdminList { get; set; }
         public string OwnerList { get; set; }
         public int NumberOfRegistered { get; set; }
+        public int SecondsToShutDown { get; set; }
+        public string AllowedCountries { get; set; }
+        public string ModsUrl { get; set; }
         public List<string> ActivatedHolidaySceneryGroups { get; set; }
         public List<string> DisactivatedHolidaySceneryGroups { get; set; }
         public int OnlineNumber { get; set; }
         public string RequireTicket { get; set; }
-        public string ServerVersion { get; set; }
-        public int MaxUsersAllowed { get; set; }
-        public string AllowedCountries { get; set; }
-        public string FreeroamMapSocket { get; set; }
-        public List<string> FreeroamServers { get; set; }
-        public string ModernAuthSupport { get; set; }
-        public int SecondsToShutDown { get; set; }
-        public string ModsUrl { get; set; }
-        public string WebSignupUrl { get; set; }
-        public string WebRecoveryUrl { get; set; }
-        public bool RWACallow { get; set; }
         public string PlayerCountRewardMultiplier { get; set; }
         public bool HappyHourEnabled { get; set; }
         public string HappyHourMultipler { get; set; }
+        public string ServerVersion { get; set; }
+        public int MaxUsersAllowed { get; set; }
+        public bool RWACallow { get; set; }
+        public string ModernAuthSupport { get; set; }
+        public string WebSignupUrl { get; set; }
+        public string PasswordResetUrl { get; set; }
+        public string IconUrl { get; set; }
+        public string WebRecoveryUrl { get; set; }
+        public string FreeroamMapSocket { get; set; }
+        public List<string> FreeroamServers { get; set; }
     }
 
     /* Moved "FreeroamObject" to Gist */
