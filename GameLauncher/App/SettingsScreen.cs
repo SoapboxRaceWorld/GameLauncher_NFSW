@@ -172,7 +172,7 @@ namespace GameLauncher.App
             ThemeAuthor.ForeColor = Theming.FivithTextForeColor;
 
             /* Main Settings Buttons (Save or Cancel) */
-            SettingsSave.ForeColor = Theming.Sucess;
+            SettingsSave.ForeColor = Theming.SeventhTextForeColor;
             SettingsSave.Image = Theming.GreenButton;
             SettingsCancel.Image = Theming.GrayButton;
             SettingsCancel.ForeColor = Theming.MainTextForeColor;
