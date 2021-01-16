@@ -1583,7 +1583,6 @@ namespace GameLauncher
 
         private void RegisterText_LinkClicked(object sender, EventArgs e)
         {
-            RegisterButton.BackgroundImage = Theming.GreenButton;
             if (_allowRegistration) 
             {
                 if (!string.IsNullOrEmpty(json.WebSignupUrl)) 
@@ -1707,12 +1706,14 @@ namespace GameLauncher
                     _loginWelcomeTime = "Good Night";
                 }
 
-                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", Email.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", MainEmail.Text).ToUpper();
+
+                PlayButton.BackgroundImage = Theming.PlayButton;
+                PlayButton.ForeColor = Theming.FivithTextForeColor;
 
                 LogoutButton.BackgroundImage = Theming.GrayButton;
+                LogoutButton.ForeColor = Theming.FivithTextForeColor;
             }
-
-            LogoutButton.ForeColor = Theming.FivithTextForeColor;
 
             ShowPlayPanel.Visible = hideElements;
         }
@@ -1753,8 +1754,12 @@ namespace GameLauncher
                 RegisterConfirmPassword.BackColor = Theming.Input;
                 RegisterTicket.BackColor = Theming.Input;
 
+                RegisterButton.BackgroundImage = Theming.GreenButton;
+                RegisterButton.ForeColor = Theming.SeventhTextForeColor;
+
                 RegisterCancel.BackgroundImage = Theming.GrayButton;
                 RegisterCancel.ForeColor = Theming.FivithTextForeColor;
+
                 RegisterAgree.ForeColor = Theming.FivithTextForeColor;
 
                 RegisterEmail.ForeColor = Theming.FivithTextForeColor;
@@ -2274,6 +2279,8 @@ namespace GameLauncher
                     }
                     else
                     {
+                        CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", Email.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+
                         x.BeginInvoke(new Action(() =>
                         {
                             x.WindowState = FormWindowState.Normal;
@@ -2335,30 +2342,42 @@ namespace GameLauncher
 
                 ModNetFileNameInUse = FileName;
 
-                WebClient client2 = new WebClient();
-
-                client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged_RELOADED);
-                client2.DownloadFileCompleted += (test, stuff) =>
+                try
                 {
-                    Log.Core("LAUNCHER: Downloaded: " + FileName);
-                    isDownloadingModNetFiles = false;
-                    if (modFilesDownloadUrls.Any() == false)
+                    WebClient client2 = new WebClient();
+
+                    client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged_RELOADED);
+                    client2.DownloadFileCompleted += (test, stuff) =>
                     {
-                        LaunchGame();
-                    }
-                    else
-                    {
-                        //Redownload other file
-                        DownloadModNetFilesRightNow(path);
-                    }
-                };
-                client2.DownloadFileAsync(url, path + "/" + FileName);
+                        Log.Core("LAUNCHER: Downloaded: " + FileName);
+                        isDownloadingModNetFiles = false;
+                        if (modFilesDownloadUrls.Any() == false)
+                        {
+                            LaunchGame();
+                        }
+                        else
+                        {
+                            //Redownload other file
+                            DownloadModNetFilesRightNow(path);
+                        }
+                    };
+                    client2.DownloadFileAsync(url, path + "/" + FileName);
+                }
+                catch
+                {
+                    CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", Email.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                }
+
                 isDownloadingModNetFiles = true;
             }
         }
 
         private async void PlayButton_Click(object sender, EventArgs e)
         {
+            /* Disable Play Button and Logout Buttons */
+            PlayButton.Visible = false;
+            LogoutButton.Visible = false;
+
             if (UriScheme.ForceGame != true)
             {
                 if (_loggedIn == false)
@@ -2415,8 +2434,6 @@ namespace GameLauncher
                 "ModLoader.asi"
             };
 
-            PlayButton.BackgroundImage = Properties.Resources.playbutton;
-
             Log.Core("LAUNCHER: Installing ModNet");
             PlayProgressText.Text = ("Detecting ModNetSupport for " + _realServernameBanner).ToUpper();
             String jsonModNet = ModNetReloaded.ModNetSupported(_serverIp);
@@ -2439,14 +2456,19 @@ namespace GameLauncher
                         }
                         using (var client = new HttpClient())
                         {
+                            string FinalETagHash = null;
                             var response = await client.GetAsync(url);
                             var etag1 = response.Headers.ETag;
                             if (EnableInsider.ShouldIBeAnInsider() == true)
                             {
                                 Log.Debug("ETAG: " + etag1);
                             }
-                            string FinalETagHash = etag1.ToString().TrimStart('"').TrimEnd('"');
-                            fileETAG = FinalETagHash.ToUpper();
+
+                            if (etag1 != null)
+                            {
+                                FinalETagHash = etag1.ToString().TrimStart('"').TrimEnd('"');
+                                fileETAG = FinalETagHash.ToUpper();
+                            }
                             var content = await response.Content.ReadAsStringAsync();
                         }
 
@@ -2455,7 +2477,13 @@ namespace GameLauncher
                             Log.Debug("ETAG FINAL: " + fileETAG);
                         }
 
-                        if (MDFive.HashFile(FileSettingsSave.GameInstallation + "/" + file) != fileETAG || !File.Exists(FileSettingsSave.GameInstallation + "/" + file))
+                        if (fileETAG == null && File.Exists(FileSettingsSave.GameInstallation + "/" + file))
+                        {
+                            PlayProgressText.Text = ("ModNetReloaded: Fail Safe -> Found " + file).ToUpper();
+
+                            Log.Debug("MODNET CORE: Using Local " + file + " File! (Unable to get ETAG for File)");
+                        }
+                        else if (MDFive.HashFile(FileSettingsSave.GameInstallation + "/" + file) != fileETAG || !File.Exists(FileSettingsSave.GameInstallation + "/" + file))
                         {
                             PlayProgressText.Text = ("ModNetReloaded: Downloading " + file).ToUpper();
 
@@ -2554,6 +2582,7 @@ namespace GameLauncher
                 catch(Exception ex)
                 {
                     Log.Error("LAUNCHER " + ex.Message);
+                    CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", Email.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                     MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{ex.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -3116,9 +3145,6 @@ namespace GameLauncher
 
             ExtractingProgress.Value = 100;
             ExtractingProgress.Width = 519;
-
-            PlayButton.BackgroundImage = Theming.PlayButton;
-            PlayButton.ForeColor = Theming.FivithTextForeColor;
         }
 
         private void DisablePlayButton()
@@ -3128,9 +3154,6 @@ namespace GameLauncher
 
             ExtractingProgress.Value = 100;
             ExtractingProgress.Width = 519;
-
-            PlayButton.BackgroundImage = Theming.GrayButton;
-            PlayButton.ForeColor = Theming.FivithTextForeColor;
         }
 
         private void OnDownloadFailed(Exception ex)
@@ -3302,8 +3325,11 @@ namespace GameLauncher
             ServerStatusDesc.ForeColor = Theming.FivithTextForeColor;
             APIStatusDesc.ForeColor = Theming.FivithTextForeColor;
 
-            RegisterText.BackgroundImage = Theming.GreenButton;
+            LoginButton.ForeColor = Theming.FivithTextForeColor;
             LoginButton.BackgroundImage = Theming.GrayButton;
+
+            RegisterText.ForeColor = Theming.SeventhTextForeColor;
+            RegisterText.BackgroundImage = Theming.GreenButton;
 
             RememberMe.ForeColor = Theming.FivithTextForeColor;
 
@@ -3315,8 +3341,8 @@ namespace GameLauncher
             MainPassword.BackColor = Theming.Input;
             MainPassword.ForeColor = Theming.FivithTextForeColor;
 
-            ServerShutDown.ForeColor = Theming.FivithTextForeColor;
-            SceneryGroupText.ForeColor = Theming.FivithTextForeColor;
+            ServerShutDown.ForeColor = Theming.SecondaryTextForeColor;
+            SceneryGroupText.ForeColor = Theming.SecondaryTextForeColor;
 
             TwitterAccountLink.LinkColor = Theming.SecondaryTextForeColor;
             FacebookGroupLink.LinkColor = Theming.SecondaryTextForeColor;

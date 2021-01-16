@@ -183,6 +183,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Color FivithTextForeColor = Color.FromArgb(255, 255, 255);
         /* Grey (Slightly Darker) */
         public static Color SixTextForeColor = Color.FromArgb(128, 128, 128);
+        /* Successful Green */
+        public static Color SeventhTextForeColor = Color.FromArgb(159, 193, 32);
 
 
         /* CDN Drop Down Menu */
@@ -194,7 +196,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         /* Status Colors */
 
-        /* Green-ish */
+        /* Successful Green*/
         public static Color Sucess = Color.FromArgb(159, 193, 32);
         /* Red */
         public static Color Error = Color.FromArgb(254, 0, 0);
@@ -739,6 +741,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
             if (!string.IsNullOrEmpty(ThemeFile.Read("SettingsCheckBoxesForeColor")))
             {
                 SettingsCheckBoxes = ToColor(ThemeFile.Read("SettingsCheckBoxesForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("SeventhTextForeColorForeColor")))
+            {
+                SeventhTextForeColor = ToColor(ThemeFile.Read("SeventhTextForeColorForeColor"));
             }
         }
 
