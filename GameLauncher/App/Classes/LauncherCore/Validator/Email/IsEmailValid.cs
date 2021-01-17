@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace GameLauncher.App.Classes.LauncherCore.Client.Sensitive
+namespace GameLauncher.App.Classes.LauncherCore.Validator.Email
 {
-    class Email
+    class IsEmailValid
     {
         public static bool Validate(string email)
         {

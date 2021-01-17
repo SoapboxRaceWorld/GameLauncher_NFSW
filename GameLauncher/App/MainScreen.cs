@@ -43,7 +43,8 @@ using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.LauncherCore.Client.Sensitive;
+using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
+using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 
 namespace GameLauncher
 {
@@ -1922,7 +1923,7 @@ namespace GameLauncher
                 RegisterEmailBorder.Image = Theming.BorderEmailError;
 
             }
-            else if (Email.Validate(RegisterEmail.Text) == false)
+            else if (IsEmailValid.Validate(RegisterEmail.Text) == false)
             {
                 registerErrors.Add("Please enter a valid e-mail address.");
                 RegisterEmailBorder.Image = Theming.BorderEmailError;
@@ -2279,7 +2280,7 @@ namespace GameLauncher
                     }
                     else
                     {
-                        CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", Email.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                        CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
 
                         x.BeginInvoke(new Action(() =>
                         {
@@ -2365,7 +2366,7 @@ namespace GameLauncher
                 }
                 catch
                 {
-                    CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", Email.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                    CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                 }
 
                 isDownloadingModNetFiles = true;
@@ -2512,21 +2513,42 @@ namespace GameLauncher
                     MainJson json2 = JsonConvert.DeserializeObject<MainJson>(jsonModNet);
 
                     //metonator was here!
+                    String remoteCarsFile = String.Empty;
+                    String remoteEventsFile = String.Empty;
                     try
                     {
-                        CarsList.remoteCarsList = new WebClient().DownloadString(json2.BasePath + "/cars.json");
+                        remoteCarsFile = new WebClient().DownloadString(json2.BasePath + "/cars.json");
                     }
                     catch { }
-                    if (CarsList.remoteCarsList != String.Empty) { Log.Info("DISCORD: Found RemoteRPC List for cars.json"); }
-                    if (CarsList.remoteCarsList == String.Empty) { Log.Warning("DISCORD: RemoteRPC List for cars.json does not exist"); }
 
                     try
                     {
-                        EventsList.remoteEventsList = new WebClient().DownloadString(json2.BasePath + "/events.json");
+                        remoteEventsFile = new WebClient().DownloadString(json2.BasePath + "/events.json");
                     }
                     catch { }
-                    if (EventsList.remoteEventsList != String.Empty) { Log.Info("DISCORD: Found RemoteRPC List for events.json"); }
-                    if (EventsList.remoteEventsList == String.Empty) { Log.Warning("DISCORD: RemoteRPC List for events.json does not exist"); }
+
+                    //Version 1.3 @metonator - DavidCarbon
+                    if (IsJSONValid.EmptyJson(remoteCarsFile) == false)
+                    {
+                        Log.Info("DISCORD: Found RemoteRPC List for cars.json");
+                        CarsList.remoteCarsList = remoteCarsFile;
+                    }
+                    else
+                    {
+                        Log.Warning("DISCORD: RemoteRPC List for cars.json does not exist");
+                        CarsList.remoteCarsList = String.Empty;
+                    }
+
+                    if (IsJSONValid.EmptyJson(remoteEventsFile) == false)
+                    {
+                        Log.Info("DISCORD: Found RemoteRPC List for events.json");
+                        EventsList.remoteEventsList = remoteEventsFile;
+                    }
+                    else
+                    {
+                        Log.Warning("DISCORD: RemoteRPC List for events.json does not exist");
+                        EventsList.remoteEventsList = String.Empty;
+                    }
 
                     //get new index
                     Uri newIndexFile = new Uri(json2.BasePath + "/index.json");
@@ -2582,7 +2604,7 @@ namespace GameLauncher
                 catch(Exception ex)
                 {
                     Log.Error("LAUNCHER " + ex.Message);
-                    CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", Email.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                    CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                     MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{ex.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }

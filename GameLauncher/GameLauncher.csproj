@@ -158,11 +158,12 @@
     <Compile Include="App\Classes\LauncherCore\Client\Auth\ClassicAuth.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\ModernAuth.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\Tokens.cs" />
-    <Compile Include="App\Classes\LauncherCore\Client\Sensitive\Email.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileAccountSave.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileSettingsSave.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\CDN.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\ModNetLinksCleanup.cs" />
+    <Compile Include="App\Classes\LauncherCore\Validator\Email\IsEmailValid.cs" />
+    <Compile Include="App\Classes\LauncherCore\Validator\JSON\IsJSONValid.cs" />
     <Compile Include="App\Classes\LauncherCore\Visuals\Delay.cs" />
     <Compile Include="App\Classes\LauncherCore\Visuals\Theming.cs" />
     <Compile Include="App\Classes\SystemPlatform\Linux\DetectLinux.cs" />
