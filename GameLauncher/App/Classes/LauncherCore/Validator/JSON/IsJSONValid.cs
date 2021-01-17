@@ -44,6 +44,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.JSON
             }
         }
 
+        /* Fun Fact the code below is broken - DavidCarbon */
+
+        /* Bug: JSON Always Reports back as Being Empty for Non Empty JSON strings */
         public static bool EmptyJson(string strInput)
         {
             if (ValidJson(strInput) == true)

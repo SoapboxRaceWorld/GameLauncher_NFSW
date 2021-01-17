@@ -2528,7 +2528,7 @@ namespace GameLauncher
                     catch { }
 
                     //Version 1.3 @metonator - DavidCarbon
-                    if (IsJSONValid.EmptyJson(remoteCarsFile) == false)
+                    if (IsJSONValid.ValidJson(remoteCarsFile) == true)
                     {
                         Log.Info("DISCORD: Found RemoteRPC List for cars.json");
                         CarsList.remoteCarsList = remoteCarsFile;
@@ -2539,7 +2539,7 @@ namespace GameLauncher
                         CarsList.remoteCarsList = String.Empty;
                     }
 
-                    if (IsJSONValid.EmptyJson(remoteEventsFile) == false)
+                    if (IsJSONValid.ValidJson(remoteEventsFile) == true)
                     {
                         Log.Info("DISCORD: Found RemoteRPC List for events.json");
                         EventsList.remoteEventsList = remoteEventsFile;
