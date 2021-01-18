@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GameLauncherReborn;
 using GameLauncher.Resources;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 
 namespace GameLauncher.App
 {
@@ -27,8 +28,22 @@ namespace GameLauncher.App
 
         private void ApplyEmbeddedFonts()
         {
+            /*******************************/
+            /* Set Font                     /
+            /*******************************/
+
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
+
+            /********************************/
+            /* Set Theme Colors              /
+            /********************************/
+
+            ForeColor = Theming.WinFormSecondaryTextForeColor;
+            BackColor = Theming.WinFormTBGForeColor;
+
+            data.ForeColor = Theming.WinFormTBGForeColor;
+            data.GridColor = Theming.WinFormGridForeColor;
         }
 
         public static string AntivirusInstalled(string caller = "AntiVirusProduct")

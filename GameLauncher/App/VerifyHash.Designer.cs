@@ -130,7 +130,7 @@
             this.VerifyHashWelcome.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.VerifyHashWelcome.Location = new System.Drawing.Point(74, 9);
             this.VerifyHashWelcome.Name = "VerifyHashWelcome";
-            this.VerifyHashWelcome.Size = new System.Drawing.Size(274, 98);
+            this.VerifyHashWelcome.Size = new System.Drawing.Size(278, 98);
             this.VerifyHashWelcome.TabIndex = 8;
             this.VerifyHashWelcome.Text = "Welcome!\r\n\r\nThe scanning process is pretty quick,\r\nbut may still take a while.\r\nD" +
     "epending on your connection,\r\nre-downloading will take the longest.\r\nPlease allo" +
@@ -146,7 +146,7 @@
             this.VerifyHashText.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.VerifyHashText.Location = new System.Drawing.Point(99, 300);
             this.VerifyHashText.Name = "VerifyHashText";
-            this.VerifyHashText.Size = new System.Drawing.Size(215, 28);
+            this.VerifyHashText.Size = new System.Drawing.Size(217, 28);
             this.VerifyHashText.TabIndex = 9;
             this.VerifyHashText.Text = "Please select \"Start Scan\"\r\nTo begin Validating Gamefiles";
             this.VerifyHashText.TextAlign = System.Drawing.ContentAlignment.TopCenter;

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using GameLauncher.App.Classes;
 using GameLauncher.HashPassword;
 using static System.String;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 
 namespace GameLauncher.App
 {
@@ -18,8 +19,7 @@ namespace GameLauncher.App
         public AddServer()
         {
             InitializeComponent();
-            ApplyEmbeddedFonts();
-            Version.Text = "Version : v" + Application.ProductVersion;
+            SetVisuals();
         }
 
         public void DrawErrorAroundTextBox(TextBox x)
@@ -31,8 +31,18 @@ namespace GameLauncher.App
             g.DrawRectangle(p, new Rectangle(x.Location.X - variance, x.Location.Y - variance, x.Width + variance, x.Height + variance));
         }
 
-        private void ApplyEmbeddedFonts()
+        private void SetVisuals()
         {
+            /*******************************/
+            /* Set Hardcoded Text           /
+            /*******************************/
+
+            Version.Text = "Version : v" + Application.ProductVersion;
+
+            /*******************************/
+            /* Set Font                     /
+            /*******************************/
+
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
             OkBTN.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
@@ -43,6 +53,35 @@ namespace GameLauncher.App
             ServerAddressLabel.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             Error.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             Version.Font= new Font(DejaVuSans, 9f, FontStyle.Regular);
+
+            /********************************/
+            /* Set Theme Colors              /
+            /********************************/
+
+            BackColor = Theming.WinFormTBGForeColor;
+            ForeColor = Theming.WinFormTextForeColor;
+
+            ServerName.BackColor = Theming.WinFormTBGDarkerForeColor;
+            ServerName.ForeColor = Theming.WinFormSecondaryTextForeColor;
+
+            ServerAddress.BackColor = Theming.WinFormTBGDarkerForeColor;
+            ServerAddress.ForeColor = Theming.WinFormSecondaryTextForeColor;
+
+            Error.ForeColor = Theming.WinFormWarningTextForeColor;
+
+            ServerNameLabel.ForeColor = Theming.WinFormTextForeColor;
+            ServerAddressLabel.ForeColor = Theming.WinFormTextForeColor;
+            Version.ForeColor = Theming.WinFormTextForeColor;
+
+            CancelBTN.ForeColor = Theming.BlueForeColorButton;
+            CancelBTN.BackColor = Theming.BlueBackColorButton;
+            CancelBTN.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            CancelBTN.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            OkBTN.ForeColor = Theming.BlueForeColorButton;
+            OkBTN.BackColor = Theming.BlueBackColorButton;
+            OkBTN.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            OkBTN.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
         }
 
         private void OkButton_Click(object sender, EventArgs e)

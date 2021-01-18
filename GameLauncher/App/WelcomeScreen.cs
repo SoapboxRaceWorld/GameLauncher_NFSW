@@ -4,6 +4,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 
 namespace GameLauncher.App
 {
@@ -14,15 +15,21 @@ namespace GameLauncher.App
         public WelcomeScreen()
         {
             InitializeComponent();
-            ApplyEmbeddedFonts();
-
-            CDNSource.DrawItem += new DrawItemEventHandler(CDNSource_DrawItem);
-            CDNSource.SelectedIndexChanged += new EventHandler(CDNSource_SelectedIndexChanged);
-            VersionLabel.Text = "Version: v" + Application.ProductVersion;
+            SetVisuals();
         }
 
-        private void ApplyEmbeddedFonts()
+        private void SetVisuals()
         {
+            /*******************************/
+            /* Set Hardcoded Text           /
+            /*******************************/
+
+            VersionLabel.Text = "Version: v" + Application.ProductVersion;
+
+            /*******************************/
+            /* Set Font                     /
+            /*******************************/
+
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
             WelcomeText.Font = new Font(DejaVuSansBold, 10f, FontStyle.Bold);
@@ -32,6 +39,37 @@ namespace GameLauncher.App
             ListStatusText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             APIErrorButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             VersionLabel.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+
+            /********************************/
+            /* Set Theme Colors & Images     /
+            /********************************/
+
+            BackColor = Theming.WinFormTBGForeColor;
+            ForeColor = Theming.WinFormTextForeColor;
+
+            ListStatusText.ForeColor = Theming.WinFormTextForeColor;
+            WelcomeText.ForeColor = Theming.WinFormSecondaryTextForeColor;
+
+            DownloadSourceText.ForeColor = Theming.WinFormTextForeColor;
+
+            APIErrorButton.ForeColor = Theming.BlueForeColorButton;
+            APIErrorButton.BackColor = Theming.BlueBackColorButton;
+            APIErrorButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            APIErrorButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            Save.ForeColor = Theming.BlueForeColorButton;
+            Save.BackColor = Theming.BlueBackColorButton;
+            Save.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            Save.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            VersionLabel.ForeColor = Theming.WinFormTextForeColor;
+
+            /********************************/
+            /* Events                        /
+            /********************************/
+
+            CDNSource.DrawItem += new DrawItemEventHandler(CDNSource_DrawItem);
+            CDNSource.SelectedIndexChanged += new EventHandler(CDNSource_SelectedIndexChanged);
         }
 
         private void CDNSource_SelectedIndexChanged(object sender, EventArgs e)
@@ -153,8 +191,8 @@ namespace GameLauncher.App
             var font = (sender as ComboBox).Font;
             Brush backgroundColor;
             Brush textColor;
-            Brush customTextColor = new SolidBrush(Color.FromArgb(178, 210, 255));
-            Brush customBGColor = new SolidBrush(Color.FromArgb(44, 58, 76));
+            Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
+            Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
 
             var cdnListText = "";
 

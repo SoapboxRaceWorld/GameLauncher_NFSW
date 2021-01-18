@@ -187,6 +187,32 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Color SeventhTextForeColor = Color.FromArgb(159, 193, 32);
 
 
+        /* WinForm (Screens) Text and Background Colors */
+
+        public static Color WinFormTextForeColor = Color.FromArgb(224, 224, 224);
+
+        public static Color WinFormSecondaryTextForeColor = Color.FromArgb(178, 210, 255);
+
+        public static Color WinFormTBGForeColor = Color.FromArgb(29, 36, 45);
+
+        public static Color WinFormTBGDarkerForeColor = Color.FromArgb(22, 29, 38);
+
+        public static Color WinFormSuccessTextForeColor = Color.FromArgb(0, 192, 0);
+
+        public static Color WinFormWarningTextForeColor = Color.FromArgb(224, 200, 0);
+
+        public static Color WinFormErrorTextForeColor = Color.FromArgb(0, 192, 0);
+
+        public static Color WinFormGridForeColor = Color.FromArgb(77, 181, 191);
+
+
+        /* WinForm (About) Unique Text and Background Colors */
+
+        public static Color AboutBGForeColor = Color.FromArgb(15, 21, 28);
+
+        public static Color AboutTextForeColor = Color.FromArgb(178, 210, 255);
+
+
         /* CDN Drop Down Menu */
 
         public static Color CDNMenuTextForeColor = Color.FromArgb(178, 210, 255);
@@ -756,6 +782,56 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
             if (!string.IsNullOrEmpty(ThemeFile.Read("SeventhTextForeColorForeColor")))
             {
                 SeventhTextForeColor = ToColor(ThemeFile.Read("SeventhTextForeColorForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormTextForeColor")))
+            {
+                WinFormTextForeColor = ToColor(ThemeFile.Read("WinFormTextForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormSecondaryTextForeColor")))
+            {
+                WinFormSecondaryTextForeColor = ToColor(ThemeFile.Read("WinFormSecondaryTextForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormBGForeColor")))
+            {
+                WinFormTBGForeColor = ToColor(ThemeFile.Read("WinFormBGForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormBGDarkerForeColor")))
+            {
+                WinFormTBGDarkerForeColor = ToColor(ThemeFile.Read("WinFormBGDarkerForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormSuccessTextForeColor")))
+            {
+                WinFormSuccessTextForeColor = ToColor(ThemeFile.Read("WinFormSuccessTextForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormWarningTextForeColor")))
+            {
+                WinFormWarningTextForeColor = ToColor(ThemeFile.Read("WinFormWarningTextForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormErrorTextForeColor")))
+            {
+                WinFormErrorTextForeColor = ToColor(ThemeFile.Read("WinFormErrorTextForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormGridForeColor")))
+            {
+                WinFormGridForeColor = ToColor(ThemeFile.Read("WinFormGridForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("AboutBGForeColor")))
+            {
+                AboutBGForeColor = ToColor(ThemeFile.Read("AboutBGForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("AboutTextForeColor")))
+            {
+                AboutTextForeColor = ToColor(ThemeFile.Read("AboutTextForeColor"));
             }
         }
 

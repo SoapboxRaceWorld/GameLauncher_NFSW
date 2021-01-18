@@ -11,6 +11,7 @@ using GameLauncher.App.Classes.Logger;
 using GameLauncher.HashPassword;
 using GameLauncher.Resources;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 
 namespace GameLauncher.App
 {
@@ -49,7 +50,7 @@ namespace GameLauncher.App
                 }
             };
 
-            ApplyEmbeddedFonts();
+            SetVisuals();
         }
 
         private void VerifyHash_Load(object sender, EventArgs e)
@@ -149,7 +150,7 @@ namespace GameLauncher.App
                 totalFilesScanned = 0;
 
                 /* START Show Warning Text */
-                VerifyHashText.ForeColor = Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
+                VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
                 VerifyHashText.Location = new Point(61, 292);
                 VerifyHashText.Size = new Size(287, 70);
                 VerifyHashText.Text = "Warning:\n Stopping the Scan before it is complete\nWill result in needing to start over!";
@@ -195,7 +196,7 @@ namespace GameLauncher.App
                     DownloadProgressBar.Visible = false;
                     DownloadProgressText.Visible = false;
                     /* Update the player messaging that we're done */
-                    VerifyHashText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+                    VerifyHashText.ForeColor = Theming.WinFormSuccessTextForeColor;
                     VerifyHashText.Location = new System.Drawing.Point(99, 300);
                     VerifyHashText.Size = new System.Drawing.Size(215, 28);
                     VerifyHashText.Text = "Excellent News! There are ZERO\nmissing or invalid Gamefiles!";
@@ -254,7 +255,7 @@ namespace GameLauncher.App
                     });
                 }
                 DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
-                VerifyHashText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+                VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
                 VerifyHashText.Location = new System.Drawing.Point(99, 300);
                 VerifyHashText.Size = new System.Drawing.Size(215, 28);
                 VerifyHashText.Text = "Yay! Scanning and Downloading \nis now completed on Gamefiles";
@@ -278,8 +279,12 @@ namespace GameLauncher.App
             StopScanner.Visible = false;
         }
 
-        private void ApplyEmbeddedFonts() 
+        private void SetVisuals() 
         {
+            /*******************************/
+            /* Set Font                     /
+            /*******************************/
+
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
             VerifyHashWelcome.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
@@ -289,6 +294,31 @@ namespace GameLauncher.App
             StopScanner.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             VerifyHashText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             VersionLabel.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+
+            /********************************/
+            /* Set Theme Colors              /
+            /********************************/
+
+            ForeColor = Theming.WinFormTextForeColor;
+            BackColor = Theming.WinFormTBGForeColor;
+
+            DownloadProgressText.ForeColor = Theming.WinFormTextForeColor;
+            ScanProgressText.ForeColor = Theming.WinFormTextForeColor;
+
+            VerifyHashWelcome.ForeColor = Theming.WinFormSecondaryTextForeColor;
+            VerifyHashText.ForeColor = Theming.WinFormSuccessTextForeColor;
+
+            VersionLabel.ForeColor = Theming.WinFormTextForeColor;
+
+            StartScanner.ForeColor = Theming.WinFormSuccessTextForeColor;
+            StartScanner.BackColor = Theming.BlueBackColorButton;
+            StartScanner.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            StartScanner.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            StopScanner.ForeColor = Theming.WinFormWarningTextForeColor;
+            StopScanner.BackColor = Theming.BlueBackColorButton;
+            StopScanner.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            StopScanner.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
         }
     }
 }

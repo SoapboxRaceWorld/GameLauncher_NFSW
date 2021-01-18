@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Net.NetworkInformation;
 using System.Threading;
 using System.Windows.Forms;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 
 namespace GameLauncher.App
 {
@@ -26,7 +27,7 @@ namespace GameLauncher.App
         public SelectServer()
         {
             InitializeComponent();
-            ApplyEmbeddedFonts();
+            SetVisuals();
 
             Version.Text = "Version : v" + Application.ProductVersion;
 
@@ -169,8 +170,12 @@ namespace GameLauncher.App
             });
         }
 
-        private void ApplyEmbeddedFonts()
+        private void SetVisuals()
         {
+            /*******************************/
+            /* Set Font                     /
+            /*******************************/
+
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
             ServerListRenderer.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
@@ -179,6 +184,33 @@ namespace GameLauncher.App
             BtnSelectServer.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             BtnClose.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             Version.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+
+            /********************************/
+            /* Set Theme Colors & Images     /
+            /********************************/
+
+            ForeColor = Theming.WinFormTextForeColor;
+            BackColor = Theming.WinFormTBGForeColor;
+
+            Loading.ForeColor = Theming.WinFormWarningTextForeColor;
+            Version.ForeColor = Theming.WinFormTextForeColor;
+
+            ServerListRenderer.ForeColor = Theming.WinFormTBGDarkerForeColor;
+
+            BtnAddServer.ForeColor = Theming.BlueForeColorButton;
+            BtnAddServer.BackColor = Theming.BlueBackColorButton;
+            BtnAddServer.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            BtnAddServer.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            BtnSelectServer.ForeColor = Theming.BlueForeColorButton;
+            BtnSelectServer.BackColor = Theming.BlueBackColorButton;
+            BtnSelectServer.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            BtnSelectServer.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            BtnClose.ForeColor = Theming.BlueForeColorButton;
+            BtnClose.BackColor = Theming.BlueBackColorButton;
+            BtnClose.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            BtnClose.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
         }
 
         private void BtnAddServer_Click(object sender, EventArgs e)

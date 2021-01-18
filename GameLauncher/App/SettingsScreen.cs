@@ -51,7 +51,7 @@ namespace GameLauncher.App
         private void SetVisuals()
         {
             /*******************************/
-            /* Set Initial position         /
+            /* Set Initial position & Icon  /
             /*******************************/
 
             this.StartPosition = FormStartPosition.CenterParent;
@@ -193,6 +193,8 @@ namespace GameLauncher.App
             SettingsCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
             SettingsCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
             */
+
+
         }
 
         /********************************/

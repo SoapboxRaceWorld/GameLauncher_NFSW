@@ -4,6 +4,7 @@ using GameLauncher.Resources;
 using System.Drawing;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 
 namespace GameLauncher.App
 {
@@ -18,7 +19,7 @@ namespace GameLauncher.App
             else
             {
                 InitializeComponent();
-                ApplyEmbeddedFonts();
+                SetVisuals();
 
                 ChangelogText.Text = new WebClient().DownloadString(Self.mainserver + "/launcher/changelog");
                 ChangelogText.Select(0, 0);
@@ -36,8 +37,12 @@ namespace GameLauncher.App
             }
         }
 
-        private void ApplyEmbeddedFonts()
+        private void SetVisuals()
         {
+            /*******************************/
+            /* Set Font                     /
+            /*******************************/
+
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
             ChangelogBox.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
@@ -46,6 +51,33 @@ namespace GameLauncher.App
             UpdateText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             SkipButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
             IgnoreButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+
+            /********************************/
+            /* Set Theme Colors              /
+            /********************************/
+
+            ForeColor = Theming.WinFormTextForeColor;
+            BackColor = Theming.WinFormTBGForeColor;
+
+            ChangelogText.ForeColor = Theming.WinFormSecondaryTextForeColor;
+            ChangelogBox.ForeColor = Theming.WinFormTextForeColor;
+
+            UpdateText.ForeColor = Theming.WinFormTextForeColor;
+
+            UpdateButton.ForeColor = Theming.BlueForeColorButton;
+            UpdateButton.BackColor = Theming.BlueBackColorButton;
+            UpdateButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            UpdateButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            IgnoreButton.ForeColor = Theming.BlueForeColorButton;
+            IgnoreButton.BackColor = Theming.BlueBackColorButton;
+            IgnoreButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            IgnoreButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            SkipButton.ForeColor = Theming.BlueForeColorButton;
+            SkipButton.BackColor = Theming.BlueBackColorButton;
+            SkipButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            SkipButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
         }
     }
 }
