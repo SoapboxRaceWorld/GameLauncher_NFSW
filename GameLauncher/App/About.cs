@@ -7,24 +7,29 @@ using System.Drawing;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Xml;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 
 namespace GameLauncher.App
 {
     public partial class About : Form
     {
-        private List<AboutNoteBlock> patchNoteBlocks = new List<AboutNoteBlock>();
+        private readonly List<AboutNoteBlock> patchNoteBlocks = new List<AboutNoteBlock>();
 
         public About()
         {
             InitializeComponent();
-            ApplyEmbeddedFonts();
+            SetVisuals();
         }
 
-        private void ApplyEmbeddedFonts()
+        private void SetVisuals()
         {
+            /*******************************/
+            /* Set Font                     /
+            /*******************************/
+
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
-            AboutText.Font = new Font(DejaVuSansCondensed, 26.25f, FontStyle.Italic);
+            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+            AboutText.Font = new Font(DejaVuSansBold, 26.25f, FontStyle.Bold);
             PatchTitle1.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
             PatchText1.Font = new Font(DejaVuSans, 9.75f, FontStyle.Regular);
             PatchButton1.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
@@ -34,6 +39,43 @@ namespace GameLauncher.App
             PatchTitle3.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
             PatchText3.Font = new Font(DejaVuSans, 9.75f, FontStyle.Regular);
             PatchButton3.Font = new Font(DejaVuSans, 15f, FontStyle.Regular);
+
+            /********************************/
+            /* Set Theme Colors              /
+            /********************************/
+
+            AboutText.ForeColor = Theming.WinFormTextForeColor;
+
+            BackColor = Theming.WinFormTBGForeColor;
+            ForeColor = Theming.WinFormTextForeColor;
+
+            PatchContainerPanel.BackColor = Theming.WinFormTBGForeColor;
+            PatchContainerPanel.ForeColor = Theming.WinFormTextForeColor;
+
+            PatchText1.BackColor = Theming.AboutBGForeColor;
+            PatchText1.ForeColor = Theming.AboutTextForeColor;
+
+            PatchText2.BackColor = Theming.AboutBGForeColor;
+            PatchText2.ForeColor = Theming.AboutTextForeColor;
+
+            PatchText3.BackColor = Theming.AboutBGForeColor;
+            PatchText3.ForeColor = Theming.AboutTextForeColor;
+
+            PatchButton1.ForeColor = Theming.BlueForeColorButton;
+            PatchButton1.BackColor = Theming.BlueBackColorButton;
+            PatchButton1.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            PatchButton1.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            PatchButton2.ForeColor = Theming.BlueForeColorButton;
+            PatchButton2.BackColor = Theming.BlueBackColorButton;
+            PatchButton2.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            PatchButton2.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            PatchButton3.ForeColor = Theming.BlueForeColorButton;
+            PatchButton3.BackColor = Theming.BlueBackColorButton;
+            PatchButton3.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            PatchButton3.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
         }
 
         private void FetchPatchNotes()

@@ -287,5 +287,6 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 
-# SIGN KEY
-GameLauncher_TemporaryKey.pfx
+# SIGN KEYS
+*.pfx
+*.p12

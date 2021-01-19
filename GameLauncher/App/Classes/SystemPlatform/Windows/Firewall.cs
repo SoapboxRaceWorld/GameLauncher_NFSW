@@ -68,7 +68,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     Protocol = protocol
                 };
 
-                if(direction == FirewallDirection.Inbound) {
+                if (direction == FirewallDirection.Inbound) {
                     rule.EdgeTraversalOptions = EdgeTraversalAction.Allow;
                 }
 

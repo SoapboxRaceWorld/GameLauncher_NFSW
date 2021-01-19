@@ -39,7 +39,6 @@
             this.SettingsButton = new System.Windows.Forms.PictureBox();
             this.ServerPick = new System.Windows.Forms.ComboBox();
             this.AddServer = new System.Windows.Forms.Button();
-            this.ImageServerName = new System.Windows.Forms.Label();
             this.VerticalBanner = new System.Windows.Forms.PictureBox();
             this.PlayProgressText = new System.Windows.Forms.Label();
             this.LauncherIconStatus = new System.Windows.Forms.PictureBox();
@@ -75,35 +74,6 @@
             this.RegisterAgree = new System.Windows.Forms.CheckBox();
             this.RegisterButton = new System.Windows.Forms.Button();
             this.RegisterCancel = new System.Windows.Forms.Button();
-            this.SettingsPanel = new System.Windows.Forms.Panel();
-            this.SettingsClearServerModCacheButton = new System.Windows.Forms.Button();
-            this.SettingsLauncherVersion = new System.Windows.Forms.Label();
-            this.SettingsAboutButton = new System.Windows.Forms.Button();
-            this.SettingsGameFiles = new System.Windows.Forms.Button();
-            this.SettingsClearCommunicationLogButton = new System.Windows.Forms.Button();
-            this.SettingsClearCrashLogsButton = new System.Windows.Forms.Button();
-            this.SettingsVFilesButton = new System.Windows.Forms.Button();
-            this.SettingsGamePathText = new System.Windows.Forms.Label();
-            this.SettingsSave = new System.Windows.Forms.Button();
-            this.SettingsCancel = new System.Windows.Forms.Button();
-            this.SettingsCDNText = new System.Windows.Forms.Label();
-            this.SettingsCDNPick = new System.Windows.Forms.ComboBox();
-            this.SettingsLanguageText = new System.Windows.Forms.Label();
-            this.SettingsLanguage = new System.Windows.Forms.ComboBox();
-            this.SettingsWordFilterCheck = new System.Windows.Forms.CheckBox();
-            this.SettingsProxyCheckbox = new System.Windows.Forms.CheckBox();
-            this.SettingsDiscordRPCCheckbox = new System.Windows.Forms.CheckBox();
-            this.SettingsGameFilesCurrentText = new System.Windows.Forms.Label();
-            this.SettingsGameFilesCurrent = new System.Windows.Forms.LinkLabel();
-            this.SettingsCDNCurrentText = new System.Windows.Forms.Label();
-            this.SettingsCDNCurrent = new System.Windows.Forms.LinkLabel();
-            this.SettingsLauncherPathText = new System.Windows.Forms.Label();
-            this.SettingsLauncherPathCurrent = new System.Windows.Forms.LinkLabel();
-            this.SettingsNetworkText = new System.Windows.Forms.Label();
-            this.SettingsMainSrvText = new System.Windows.Forms.Label();
-            this.SettingsMainCDNText = new System.Windows.Forms.Label();
-            this.SettingsBkupSrvText = new System.Windows.Forms.Label();
-            this.SettingsBkupCDNText = new System.Windows.Forms.Label();
             this.ShowPlayPanel = new System.Windows.Forms.Panel();
             this.RegisterPanel = new System.Windows.Forms.Panel();
             this.DiscordInviteLink = new System.Windows.Forms.LinkLabel();
@@ -118,6 +88,7 @@
             this.HomePageLink = new System.Windows.Forms.LinkLabel();
             this.SceneryGroupText = new System.Windows.Forms.Label();
             this.InsiderBuildNumberText = new System.Windows.Forms.Label();
+            this.ProgressBarOutline = new System.Windows.Forms.PictureBox();
             this.ExtractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.PlayProgress = new GameLauncherReborn.ProgressBarEx();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
@@ -133,7 +104,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.RegisterPasswordBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterConfirmPasswordBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterTicketBorder)).BeginInit();
-            this.SettingsPanel.SuspendLayout();
             this.ShowPlayPanel.SuspendLayout();
             this.RegisterPanel.SuspendLayout();
             this.ServerInfoPanel.SuspendLayout();
@@ -141,6 +111,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.DiscordIcon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FacebookIcon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TwitterIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ProgressBarOutline)).BeginInit();
             this.SuspendLayout();
             // 
             // Timeout
@@ -155,10 +126,11 @@
             // logo
             // 
             this.logo.BackColor = System.Drawing.Color.Transparent;
-            this.logo.Image = global::GameLauncher.Properties.Resources.logo;
-            this.logo.Location = new System.Drawing.Point(27, 9);
+            this.logo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.logo.InitialImage = null;
+            this.logo.Location = new System.Drawing.Point(17, 10);
             this.logo.Name = "logo";
-            this.logo.Size = new System.Drawing.Size(227, 60);
+            this.logo.Size = new System.Drawing.Size(215, 71);
             this.logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.logo.TabIndex = 0;
             this.logo.TabStop = false;
@@ -166,7 +138,8 @@
             // CloseBTN
             // 
             this.CloseBTN.BackColor = System.Drawing.Color.Transparent;
-            this.CloseBTN.BackgroundImage = global::GameLauncher.Properties.Resources.close;
+            this.CloseBTN.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.CloseBTN.InitialImage = null;
             this.CloseBTN.Location = new System.Drawing.Point(841, 15);
             this.CloseBTN.Name = "CloseBTN";
             this.CloseBTN.Size = new System.Drawing.Size(24, 24);
@@ -201,7 +174,8 @@
             // SettingsButton
             // 
             this.SettingsButton.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("SettingsButton.BackgroundImage")));
+            this.SettingsButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.SettingsButton.InitialImage = null;
             this.SettingsButton.Location = new System.Drawing.Point(807, 15);
             this.SettingsButton.Name = "SettingsButton";
             this.SettingsButton.Size = new System.Drawing.Size(24, 24);
@@ -213,6 +187,7 @@
             this.ServerPick.BackColor = System.Drawing.Color.White;
             this.ServerPick.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.ServerPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ServerPick.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ServerPick.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerPick.ForeColor = System.Drawing.Color.Black;
             this.ServerPick.FormattingEnabled = true;
@@ -223,34 +198,22 @@
             // 
             // AddServer
             // 
+            this.AddServer.BackColor = System.Drawing.SystemColors.Control;
             this.AddServer.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.AddServer.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AddServer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AddServer.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AddServer.ForeColor = System.Drawing.Color.Black;
             this.AddServer.Location = new System.Drawing.Point(833, 49);
             this.AddServer.Name = "AddServer";
             this.AddServer.Size = new System.Drawing.Size(24, 24);
             this.AddServer.TabIndex = 3;
             this.AddServer.Text = "+";
-            this.AddServer.UseVisualStyleBackColor = true;
-            // 
-            // ImageServerName
-            // 
-            this.ImageServerName.BackColor = System.Drawing.Color.Transparent;
-            this.ImageServerName.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ImageServerName.Font = new System.Drawing.Font("DejaVu Sans", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ImageServerName.ForeColor = System.Drawing.Color.Transparent;
-            this.ImageServerName.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.ImageServerName.Location = new System.Drawing.Point(30, 301);
-            this.ImageServerName.Name = "ImageServerName";
-            this.ImageServerName.Size = new System.Drawing.Size(519, 43);
-            this.ImageServerName.TabIndex = 19;
-            this.ImageServerName.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.ImageServerName.UseCompatibleTextRendering = true;
-            this.ImageServerName.UseMnemonic = false;
-            this.ImageServerName.Visible = false;
+            this.AddServer.UseVisualStyleBackColor = false;
             // 
             // VerticalBanner
             // 
             this.VerticalBanner.BackColor = System.Drawing.Color.Transparent;
+            this.VerticalBanner.InitialImage = null;
             this.VerticalBanner.Location = new System.Drawing.Point(28, 81);
             this.VerticalBanner.Name = "VerticalBanner";
             this.VerticalBanner.Size = new System.Drawing.Size(523, 223);
@@ -264,7 +227,7 @@
             this.PlayProgressText.BackColor = System.Drawing.Color.Transparent;
             this.PlayProgressText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayProgressText.ForeColor = System.Drawing.Color.White;
-            this.PlayProgressText.Location = new System.Drawing.Point(42, 401);
+            this.PlayProgressText.Location = new System.Drawing.Point(42, 405);
             this.PlayProgressText.Name = "PlayProgressText";
             this.PlayProgressText.Size = new System.Drawing.Size(96, 14);
             this.PlayProgressText.TabIndex = 10;
@@ -273,7 +236,8 @@
             // LauncherIconStatus
             // 
             this.LauncherIconStatus.BackColor = System.Drawing.Color.Transparent;
-            this.LauncherIconStatus.Image = global::GameLauncher.Properties.Resources.ac_success;
+            this.LauncherIconStatus.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.LauncherIconStatus.InitialImage = null;
             this.LauncherIconStatus.Location = new System.Drawing.Point(27, 456);
             this.LauncherIconStatus.Name = "LauncherIconStatus";
             this.LauncherIconStatus.Size = new System.Drawing.Size(21, 24);
@@ -283,14 +247,14 @@
             // LauncherStatusText
             // 
             this.LauncherStatusText.BackColor = System.Drawing.Color.Transparent;
-            this.LauncherStatusText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LauncherStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
+            this.LauncherStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LauncherStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(132)))), ((int)(((byte)(132)))));
             this.LauncherStatusText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LauncherStatusText.Location = new System.Drawing.Point(53, 453);
             this.LauncherStatusText.Name = "LauncherStatusText";
-            this.LauncherStatusText.Size = new System.Drawing.Size(130, 16);
+            this.LauncherStatusText.Size = new System.Drawing.Size(130, 32);
             this.LauncherStatusText.TabIndex = 4;
-            this.LauncherStatusText.Text = "Anti-Cheat System";
+            this.LauncherStatusText.Text = "Launcher\n - Checking";
             this.LauncherStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LauncherStatusText.UseCompatibleTextRendering = true;
             // 
@@ -298,20 +262,21 @@
             // 
             this.LauncherStatusDesc.AutoSize = true;
             this.LauncherStatusDesc.BackColor = System.Drawing.Color.Transparent;
-            this.LauncherStatusDesc.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LauncherStatusDesc.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LauncherStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.LauncherStatusDesc.Location = new System.Drawing.Point(54, 469);
+            this.LauncherStatusDesc.Location = new System.Drawing.Point(53, 485);
             this.LauncherStatusDesc.Name = "LauncherStatusDesc";
-            this.LauncherStatusDesc.Size = new System.Drawing.Size(95, 13);
+            this.LauncherStatusDesc.Size = new System.Drawing.Size(127, 14);
             this.LauncherStatusDesc.TabIndex = 5;
-            this.LauncherStatusDesc.Text = "Version : vX.X.X.X";
+            this.LauncherStatusDesc.Text = "Version: vX.X.X.X";
             this.LauncherStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ServerStatusIcon
             // 
             this.ServerStatusIcon.BackColor = System.Drawing.Color.Transparent;
-            this.ServerStatusIcon.Image = ((System.Drawing.Image)(resources.GetObject("ServerStatusIcon.Image")));
-            this.ServerStatusIcon.Location = new System.Drawing.Point(189, 456);
+            this.ServerStatusIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ServerStatusIcon.InitialImage = null;
+            this.ServerStatusIcon.Location = new System.Drawing.Point(212, 456);
             this.ServerStatusIcon.Name = "ServerStatusIcon";
             this.ServerStatusIcon.Size = new System.Drawing.Size(24, 24);
             this.ServerStatusIcon.TabIndex = 6;
@@ -320,25 +285,25 @@
             // ServerStatusText
             // 
             this.ServerStatusText.BackColor = System.Drawing.Color.Transparent;
-            this.ServerStatusText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.ServerStatusText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ServerStatusText.Location = new System.Drawing.Point(220, 453);
+            this.ServerStatusText.Location = new System.Drawing.Point(242, 453);
             this.ServerStatusText.Name = "ServerStatusText";
-            this.ServerStatusText.Size = new System.Drawing.Size(162, 15);
+            this.ServerStatusText.Size = new System.Drawing.Size(130, 32);
             this.ServerStatusText.TabIndex = 7;
-            this.ServerStatusText.Text = "Server Status - Pinging";
+            this.ServerStatusText.Text = "Server Status\n - Pinging";
             this.ServerStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ServerStatusDesc
             // 
             this.ServerStatusDesc.AutoSize = true;
             this.ServerStatusDesc.BackColor = System.Drawing.Color.Transparent;
-            this.ServerStatusDesc.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerStatusDesc.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ServerStatusDesc.Location = new System.Drawing.Point(220, 469);
+            this.ServerStatusDesc.Location = new System.Drawing.Point(242, 485);
             this.ServerStatusDesc.Name = "ServerStatusDesc";
-            this.ServerStatusDesc.Size = new System.Drawing.Size(86, 13);
+            this.ServerStatusDesc.Size = new System.Drawing.Size(122, 14);
             this.ServerStatusDesc.TabIndex = 8;
             this.ServerStatusDesc.Text = "Checking Status";
             this.ServerStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -346,7 +311,8 @@
             // APIStatusIcon
             // 
             this.APIStatusIcon.BackColor = System.Drawing.Color.Transparent;
-            this.APIStatusIcon.Image = ((System.Drawing.Image)(resources.GetObject("APIStatusIcon.Image")));
+            this.APIStatusIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.APIStatusIcon.InitialImage = null;
             this.APIStatusIcon.Location = new System.Drawing.Point(398, 455);
             this.APIStatusIcon.Name = "APIStatusIcon";
             this.APIStatusIcon.Size = new System.Drawing.Size(24, 24);
@@ -357,26 +323,26 @@
             // APIStatusText
             // 
             this.APIStatusText.BackColor = System.Drawing.Color.Transparent;
-            this.APIStatusText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.APIStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.APIStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.APIStatusText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.APIStatusText.Location = new System.Drawing.Point(426, 453);
             this.APIStatusText.Name = "APIStatusText";
-            this.APIStatusText.Size = new System.Drawing.Size(162, 15);
+            this.APIStatusText.Size = new System.Drawing.Size(162, 32);
             this.APIStatusText.TabIndex = 116;
-            this.APIStatusText.Text = "Main API - Pinging";
+            this.APIStatusText.Text = "Main API\n - Pinging";
             this.APIStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // APIStatusDesc
             // 
             this.APIStatusDesc.AutoSize = true;
             this.APIStatusDesc.BackColor = System.Drawing.Color.Transparent;
-            this.APIStatusDesc.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.APIStatusDesc.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.APIStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.APIStatusDesc.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.APIStatusDesc.Location = new System.Drawing.Point(427, 469);
+            this.APIStatusDesc.Location = new System.Drawing.Point(426, 485);
             this.APIStatusDesc.Name = "APIStatusDesc";
-            this.APIStatusDesc.Size = new System.Drawing.Size(86, 13);
+            this.APIStatusDesc.Size = new System.Drawing.Size(122, 14);
             this.APIStatusDesc.TabIndex = 120;
             this.APIStatusDesc.Text = "Checking Status";
             this.APIStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -386,13 +352,13 @@
             this.CurrentWindowInfo.BackColor = System.Drawing.Color.Transparent;
             this.CurrentWindowInfo.Cursor = System.Windows.Forms.Cursors.Default;
             this.CurrentWindowInfo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CurrentWindowInfo.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CurrentWindowInfo.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CurrentWindowInfo.ForeColor = System.Drawing.Color.White;
-            this.CurrentWindowInfo.Location = new System.Drawing.Point(638, 82);
+            this.CurrentWindowInfo.Location = new System.Drawing.Point(625, 82);
             this.CurrentWindowInfo.Name = "CurrentWindowInfo";
-            this.CurrentWindowInfo.Size = new System.Drawing.Size(184, 60);
+            this.CurrentWindowInfo.Size = new System.Drawing.Size(211, 60);
             this.CurrentWindowInfo.TabIndex = 16;
-            this.CurrentWindowInfo.Text = "ENTER ACCOUNT INFORMATION\n TO LOG IN";
+            this.CurrentWindowInfo.Text = "ENTER YOUR ACCOUNT INFORMATION\n TO LOG IN";
             this.CurrentWindowInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.CurrentWindowInfo.UseCompatibleTextRendering = true;
             this.CurrentWindowInfo.UseMnemonic = false;
@@ -413,13 +379,13 @@
             // 
             this.MainEmailBorder.BackColor = System.Drawing.Color.Transparent;
             this.MainEmailBorder.Image = global::GameLauncher.Properties.Resources.email_text_border;
+            this.MainEmailBorder.InitialImage = null;
             this.MainEmailBorder.Location = new System.Drawing.Point(606, 161);
             this.MainEmailBorder.Name = "MainEmailBorder";
             this.MainEmailBorder.Size = new System.Drawing.Size(231, 37);
             this.MainEmailBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.MainEmailBorder.TabIndex = 144;
             this.MainEmailBorder.TabStop = false;
-            this.MainEmailBorder.Visible = false;
             // 
             // MainPassword
             // 
@@ -439,13 +405,13 @@
             // 
             this.MainPasswordBorder.BackColor = System.Drawing.Color.Transparent;
             this.MainPasswordBorder.Image = global::GameLauncher.Properties.Resources.password_text_border;
+            this.MainPasswordBorder.InitialImage = null;
             this.MainPasswordBorder.Location = new System.Drawing.Point(606, 210);
             this.MainPasswordBorder.Name = "MainPasswordBorder";
             this.MainPasswordBorder.Size = new System.Drawing.Size(231, 37);
             this.MainPasswordBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.MainPasswordBorder.TabIndex = 145;
             this.MainPasswordBorder.TabStop = false;
-            this.MainPasswordBorder.Visible = false;
             // 
             // RememberMe
             // 
@@ -456,7 +422,7 @@
             this.RememberMe.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.RememberMe.Location = new System.Drawing.Point(645, 260);
             this.RememberMe.Name = "RememberMe";
-            this.RememberMe.Size = new System.Drawing.Size(163, 17);
+            this.RememberMe.Size = new System.Drawing.Size(162, 17);
             this.RememberMe.TabIndex = 6;
             this.RememberMe.Text = "REMEMBER MY LOGIN";
             this.RememberMe.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -467,11 +433,11 @@
             this.ForgotPassword.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(228)))), ((int)(((byte)(0)))));
             this.ForgotPassword.AutoSize = true;
             this.ForgotPassword.BackColor = System.Drawing.Color.Transparent;
-            this.ForgotPassword.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ForgotPassword.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForgotPassword.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
             this.ForgotPassword.Location = new System.Drawing.Point(659, 281);
             this.ForgotPassword.Name = "ForgotPassword";
-            this.ForgotPassword.Size = new System.Drawing.Size(134, 13);
+            this.ForgotPassword.Size = new System.Drawing.Size(147, 13);
             this.ForgotPassword.TabIndex = 7;
             this.ForgotPassword.TabStop = true;
             this.ForgotPassword.Text = "I FORGOT MY PASSWORD";
@@ -481,13 +447,13 @@
             // LoginButton
             // 
             this.LoginButton.BackColor = System.Drawing.Color.Transparent;
+            this.LoginButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.LoginButton.FlatAppearance.BorderSize = 0;
             this.LoginButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.LoginButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.LoginButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.LoginButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LoginButton.ForeColor = System.Drawing.Color.White;
-            this.LoginButton.Image = global::GameLauncher.Properties.Resources.graybutton;
             this.LoginButton.Location = new System.Drawing.Point(605, 362);
             this.LoginButton.Name = "LoginButton";
             this.LoginButton.Size = new System.Drawing.Size(231, 35);
@@ -498,13 +464,13 @@
             // RegisterText
             // 
             this.RegisterText.BackColor = System.Drawing.Color.Transparent;
+            this.RegisterText.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.RegisterText.FlatAppearance.BorderSize = 0;
             this.RegisterText.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.RegisterText.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.RegisterText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RegisterText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RegisterText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
-            this.RegisterText.Image = global::GameLauncher.Properties.Resources.greenbutton;
             this.RegisterText.Location = new System.Drawing.Point(605, 409);
             this.RegisterText.Name = "RegisterText";
             this.RegisterText.Size = new System.Drawing.Size(231, 35);
@@ -517,11 +483,11 @@
             this.ServerPingStatusText.BackColor = System.Drawing.Color.Transparent;
             this.ServerPingStatusText.Cursor = System.Windows.Forms.Cursors.Default;
             this.ServerPingStatusText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ServerPingStatusText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerPingStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerPingStatusText.ForeColor = System.Drawing.Color.White;
-            this.ServerPingStatusText.Location = new System.Drawing.Point(625, 290);
+            this.ServerPingStatusText.Location = new System.Drawing.Point(5, 0);
             this.ServerPingStatusText.Name = "ServerPingStatusText";
-            this.ServerPingStatusText.Size = new System.Drawing.Size(194, 61);
+            this.ServerPingStatusText.Size = new System.Drawing.Size(230, 61);
             this.ServerPingStatusText.TabIndex = 148;
             this.ServerPingStatusText.Text = "Your Ping to the Server";
             this.ServerPingStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -531,14 +497,14 @@
             // LogoutButton
             // 
             this.LogoutButton.BackColor = System.Drawing.Color.Transparent;
+            this.LogoutButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.LogoutButton.FlatAppearance.BorderSize = 0;
             this.LogoutButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.LogoutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.LogoutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.LogoutButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LogoutButton.ForeColor = System.Drawing.Color.White;
-            this.LogoutButton.Image = global::GameLauncher.Properties.Resources.graybutton;
-            this.LogoutButton.Location = new System.Drawing.Point(6, 60);
+            this.LogoutButton.Location = new System.Drawing.Point(6, 64);
             this.LogoutButton.Name = "LogoutButton";
             this.LogoutButton.Size = new System.Drawing.Size(231, 35);
             this.LogoutButton.TabIndex = 9;
@@ -548,15 +514,14 @@
             // PlayButton
             // 
             this.PlayButton.BackColor = System.Drawing.Color.Transparent;
-            this.PlayButton.BackgroundImage = global::GameLauncher.Properties.Resources.playbutton;
-            this.PlayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.PlayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.PlayButton.FlatAppearance.BorderSize = 0;
             this.PlayButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.PlayButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.PlayButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PlayButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PlayButton.Font = new System.Drawing.Font("DejaVu Sans", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayButton.ForeColor = System.Drawing.Color.Transparent;
-            this.PlayButton.Location = new System.Drawing.Point(7, 94);
+            this.PlayButton.Location = new System.Drawing.Point(7, 104);
             this.PlayButton.Name = "PlayButton";
             this.PlayButton.Size = new System.Drawing.Size(230, 63);
             this.PlayButton.TabIndex = 15;
@@ -568,12 +533,11 @@
             this.PlayProgressTextTimer.BackColor = System.Drawing.Color.Transparent;
             this.PlayProgressTextTimer.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.PlayProgressTextTimer.ForeColor = System.Drawing.Color.White;
-            this.PlayProgressTextTimer.Location = new System.Drawing.Point(431, 399);
+            this.PlayProgressTextTimer.Location = new System.Drawing.Point(432, 380);
             this.PlayProgressTextTimer.Name = "PlayProgressTextTimer";
             this.PlayProgressTextTimer.Size = new System.Drawing.Size(120, 19);
             this.PlayProgressTextTimer.TabIndex = 135;
             this.PlayProgressTextTimer.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.PlayProgressTextTimer.Visible = false;
             // 
             // RegisterEmail
             // 
@@ -591,6 +555,7 @@
             // 
             this.RegisterEmailBorder.BackColor = System.Drawing.Color.Transparent;
             this.RegisterEmailBorder.Image = global::GameLauncher.Properties.Resources.email_text_border;
+            this.RegisterEmailBorder.InitialImage = null;
             this.RegisterEmailBorder.Location = new System.Drawing.Point(19, 68);
             this.RegisterEmailBorder.Name = "RegisterEmailBorder";
             this.RegisterEmailBorder.Size = new System.Drawing.Size(231, 37);
@@ -615,6 +580,7 @@
             // 
             this.RegisterPasswordBorder.BackColor = System.Drawing.Color.Transparent;
             this.RegisterPasswordBorder.Image = global::GameLauncher.Properties.Resources.password_text_border;
+            this.RegisterPasswordBorder.InitialImage = null;
             this.RegisterPasswordBorder.Location = new System.Drawing.Point(19, 117);
             this.RegisterPasswordBorder.Name = "RegisterPasswordBorder";
             this.RegisterPasswordBorder.Size = new System.Drawing.Size(231, 37);
@@ -639,6 +605,7 @@
             // 
             this.RegisterConfirmPasswordBorder.BackColor = System.Drawing.Color.Transparent;
             this.RegisterConfirmPasswordBorder.Image = global::GameLauncher.Properties.Resources.password_text_border;
+            this.RegisterConfirmPasswordBorder.InitialImage = null;
             this.RegisterConfirmPasswordBorder.Location = new System.Drawing.Point(19, 166);
             this.RegisterConfirmPasswordBorder.Name = "RegisterConfirmPasswordBorder";
             this.RegisterConfirmPasswordBorder.Size = new System.Drawing.Size(231, 37);
@@ -662,6 +629,7 @@
             // 
             this.RegisterTicketBorder.BackColor = System.Drawing.Color.Transparent;
             this.RegisterTicketBorder.Image = global::GameLauncher.Properties.Resources.ticket_text_border;
+            this.RegisterTicketBorder.InitialImage = null;
             this.RegisterTicketBorder.Location = new System.Drawing.Point(19, 215);
             this.RegisterTicketBorder.Name = "RegisterTicketBorder";
             this.RegisterTicketBorder.Size = new System.Drawing.Size(230, 37);
@@ -672,7 +640,7 @@
             // RegisterAgree
             // 
             this.RegisterAgree.BackColor = System.Drawing.Color.Transparent;
-            this.RegisterAgree.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RegisterAgree.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RegisterAgree.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
             this.RegisterAgree.Location = new System.Drawing.Point(27, 257);
             this.RegisterAgree.Name = "RegisterAgree";
@@ -685,13 +653,13 @@
             // RegisterButton
             // 
             this.RegisterButton.BackColor = System.Drawing.Color.Transparent;
+            this.RegisterButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.RegisterButton.FlatAppearance.BorderSize = 0;
             this.RegisterButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.RegisterButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.RegisterButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RegisterButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RegisterButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
-            this.RegisterButton.Image = global::GameLauncher.Properties.Resources.greenbutton;
             this.RegisterButton.Location = new System.Drawing.Point(18, 296);
             this.RegisterButton.Name = "RegisterButton";
             this.RegisterButton.Size = new System.Drawing.Size(231, 35);
@@ -702,13 +670,13 @@
             // RegisterCancel
             // 
             this.RegisterCancel.BackColor = System.Drawing.Color.Transparent;
+            this.RegisterCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.RegisterCancel.FlatAppearance.BorderSize = 0;
             this.RegisterCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.RegisterCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.RegisterCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RegisterCancel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RegisterCancel.ForeColor = System.Drawing.Color.White;
-            this.RegisterCancel.Image = global::GameLauncher.Properties.Resources.graybutton;
             this.RegisterCancel.Location = new System.Drawing.Point(18, 336);
             this.RegisterCancel.Name = "RegisterCancel";
             this.RegisterCancel.Size = new System.Drawing.Size(231, 35);
@@ -716,470 +684,22 @@
             this.RegisterCancel.Text = "CANCEL";
             this.RegisterCancel.UseVisualStyleBackColor = false;
             // 
-            // SettingsPanel
-            // 
-            this.SettingsPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.SettingsPanel.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsPanel.Controls.Add(this.SettingsClearServerModCacheButton);
-            this.SettingsPanel.Controls.Add(this.SettingsLauncherVersion);
-            this.SettingsPanel.Controls.Add(this.SettingsAboutButton);
-            this.SettingsPanel.Controls.Add(this.SettingsGameFiles);
-            this.SettingsPanel.Controls.Add(this.SettingsClearCommunicationLogButton);
-            this.SettingsPanel.Controls.Add(this.SettingsClearCrashLogsButton);
-            this.SettingsPanel.Controls.Add(this.SettingsVFilesButton);
-            this.SettingsPanel.Controls.Add(this.SettingsGamePathText);
-            this.SettingsPanel.Controls.Add(this.SettingsSave);
-            this.SettingsPanel.Controls.Add(this.SettingsCancel);
-            this.SettingsPanel.Controls.Add(this.SettingsCDNText);
-            this.SettingsPanel.Controls.Add(this.SettingsCDNPick);
-            this.SettingsPanel.Controls.Add(this.SettingsLanguageText);
-            this.SettingsPanel.Controls.Add(this.SettingsLanguage);
-            this.SettingsPanel.Controls.Add(this.SettingsWordFilterCheck);
-            this.SettingsPanel.Controls.Add(this.SettingsProxyCheckbox);
-            this.SettingsPanel.Controls.Add(this.SettingsDiscordRPCCheckbox);
-            this.SettingsPanel.Controls.Add(this.SettingsGameFilesCurrentText);
-            this.SettingsPanel.Controls.Add(this.SettingsGameFilesCurrent);
-            this.SettingsPanel.Controls.Add(this.SettingsCDNCurrentText);
-            this.SettingsPanel.Controls.Add(this.SettingsCDNCurrent);
-            this.SettingsPanel.Controls.Add(this.SettingsLauncherPathText);
-            this.SettingsPanel.Controls.Add(this.SettingsLauncherPathCurrent);
-            this.SettingsPanel.Controls.Add(this.SettingsNetworkText);
-            this.SettingsPanel.Controls.Add(this.SettingsMainSrvText);
-            this.SettingsPanel.Controls.Add(this.SettingsMainCDNText);
-            this.SettingsPanel.Controls.Add(this.SettingsBkupSrvText);
-            this.SettingsPanel.Controls.Add(this.SettingsBkupCDNText);
-            this.SettingsPanel.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsPanel.ForeColor = System.Drawing.Color.Transparent;
-            this.SettingsPanel.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.SettingsPanel.Location = new System.Drawing.Point(27, 50);
-            this.SettingsPanel.Name = "SettingsPanel";
-            this.SettingsPanel.Size = new System.Drawing.Size(837, 452);
-            this.SettingsPanel.TabIndex = 150;
-            // 
-            // SettingsClearServerModCacheButton
-            // 
-            this.SettingsClearServerModCacheButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.SettingsClearServerModCacheButton.Enabled = false;
-            this.SettingsClearServerModCacheButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.SettingsClearServerModCacheButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.SettingsClearServerModCacheButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsClearServerModCacheButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsClearServerModCacheButton.ForeColor = System.Drawing.Color.Silver;
-            this.SettingsClearServerModCacheButton.Location = new System.Drawing.Point(26, 290);
-            this.SettingsClearServerModCacheButton.Name = "SettingsClearServerModCacheButton";
-            this.SettingsClearServerModCacheButton.Size = new System.Drawing.Size(131, 25);
-            this.SettingsClearServerModCacheButton.TabIndex = 161;
-            this.SettingsClearServerModCacheButton.Text = "Clear Server Mods";
-            this.SettingsClearServerModCacheButton.UseVisualStyleBackColor = false;
-            this.SettingsClearServerModCacheButton.Click += new System.EventHandler(this.SettingsClearServerModCacheButton_Click);
-            // 
-            // SettingsLauncherVersion
-            // 
-            this.SettingsLauncherVersion.AutoSize = true;
-            this.SettingsLauncherVersion.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsLauncherVersion.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsLauncherVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsLauncherVersion.Location = new System.Drawing.Point(27, 419);
-            this.SettingsLauncherVersion.Name = "SettingsLauncherVersion";
-            this.SettingsLauncherVersion.Size = new System.Drawing.Size(92, 13);
-            this.SettingsLauncherVersion.TabIndex = 160;
-            this.SettingsLauncherVersion.Text = "Version: vX.X.X.X";
-            this.SettingsLauncherVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // SettingsAboutButton
-            // 
-            this.SettingsAboutButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.SettingsAboutButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.SettingsAboutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.SettingsAboutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsAboutButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsAboutButton.Location = new System.Drawing.Point(756, 5);
-            this.SettingsAboutButton.Name = "SettingsAboutButton";
-            this.SettingsAboutButton.Size = new System.Drawing.Size(75, 23);
-            this.SettingsAboutButton.TabIndex = 159;
-            this.SettingsAboutButton.Text = "About";
-            this.SettingsAboutButton.UseVisualStyleBackColor = true;
-            this.SettingsAboutButton.Click += new System.EventHandler(this.PatchNotes_Click);
-            // 
-            // SettingsGameFiles
-            // 
-            this.SettingsGameFiles.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.SettingsGameFiles.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.SettingsGameFiles.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.SettingsGameFiles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsGameFiles.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsGameFiles.ForeColor = System.Drawing.Color.Silver;
-            this.SettingsGameFiles.Location = new System.Drawing.Point(26, 89);
-            this.SettingsGameFiles.Name = "SettingsGameFiles";
-            this.SettingsGameFiles.Size = new System.Drawing.Size(220, 23);
-            this.SettingsGameFiles.TabIndex = 130;
-            this.SettingsGameFiles.Text = "Change GameFiles Path";
-            this.SettingsGameFiles.UseVisualStyleBackColor = false;
-            // 
-            // SettingsClearCommunicationLogButton
-            // 
-            this.SettingsClearCommunicationLogButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.SettingsClearCommunicationLogButton.Enabled = false;
-            this.SettingsClearCommunicationLogButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.SettingsClearCommunicationLogButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.SettingsClearCommunicationLogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsClearCommunicationLogButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsClearCommunicationLogButton.ForeColor = System.Drawing.Color.Silver;
-            this.SettingsClearCommunicationLogButton.Location = new System.Drawing.Point(26, 253);
-            this.SettingsClearCommunicationLogButton.Name = "SettingsClearCommunicationLogButton";
-            this.SettingsClearCommunicationLogButton.Size = new System.Drawing.Size(131, 25);
-            this.SettingsClearCommunicationLogButton.TabIndex = 134;
-            this.SettingsClearCommunicationLogButton.Text = "Clear NFSWO Log";
-            this.SettingsClearCommunicationLogButton.UseVisualStyleBackColor = false;
-            this.SettingsClearCommunicationLogButton.Click += new System.EventHandler(this.SettingsClearCommunicationLogButton_Click);
-            // 
-            // SettingsClearCrashLogsButton
-            // 
-            this.SettingsClearCrashLogsButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.SettingsClearCrashLogsButton.Enabled = false;
-            this.SettingsClearCrashLogsButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.SettingsClearCrashLogsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.SettingsClearCrashLogsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsClearCrashLogsButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsClearCrashLogsButton.ForeColor = System.Drawing.Color.Silver;
-            this.SettingsClearCrashLogsButton.Location = new System.Drawing.Point(26, 216);
-            this.SettingsClearCrashLogsButton.Name = "SettingsClearCrashLogsButton";
-            this.SettingsClearCrashLogsButton.Size = new System.Drawing.Size(131, 25);
-            this.SettingsClearCrashLogsButton.TabIndex = 133;
-            this.SettingsClearCrashLogsButton.Text = "Clear Crash Logs";
-            this.SettingsClearCrashLogsButton.UseVisualStyleBackColor = false;
-            this.SettingsClearCrashLogsButton.Click += new System.EventHandler(this.SettingsClearCrashLogsButton_Click);
-            // 
-            // SettingsVFilesButton
-            // 
-            this.SettingsVFilesButton.AutoSize = true;
-            this.SettingsVFilesButton.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsVFilesButton.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsVFilesButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsVFilesButton.Location = new System.Drawing.Point(26, 390);
-            this.SettingsVFilesButton.Name = "SettingsVFilesButton";
-            this.SettingsVFilesButton.Size = new System.Drawing.Size(131, 23);
-            this.SettingsVFilesButton.TabIndex = 141;
-            this.SettingsVFilesButton.Text = "Validate Game Files";
-            this.SettingsVFilesButton.UseVisualStyleBackColor = false;
-            this.SettingsVFilesButton.Visible = false;
-            this.SettingsVFilesButton.Click += new System.EventHandler(this.SettingsVFilesButton_Click);
-            // 
-            // SettingsGamePathText
-            // 
-            this.SettingsGamePathText.AutoSize = true;
-            this.SettingsGamePathText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsGamePathText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsGamePathText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsGamePathText.Location = new System.Drawing.Point(24, 67);
-            this.SettingsGamePathText.Name = "SettingsGamePathText";
-            this.SettingsGamePathText.Size = new System.Drawing.Size(122, 14);
-            this.SettingsGamePathText.TabIndex = 135;
-            this.SettingsGamePathText.Text = "GAMEFILES PATH";
-            this.SettingsGamePathText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // SettingsSave
-            // 
-            this.SettingsSave.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsSave.FlatAppearance.BorderSize = 0;
-            this.SettingsSave.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.SettingsSave.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.SettingsSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsSave.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsSave.ForeColor = System.Drawing.Color.White;
-            this.SettingsSave.Image = global::GameLauncher.Properties.Resources.greenbutton;
-            this.SettingsSave.Location = new System.Drawing.Point(561, 392);
-            this.SettingsSave.Name = "SettingsSave";
-            this.SettingsSave.Size = new System.Drawing.Size(130, 50);
-            this.SettingsSave.TabIndex = 151;
-            this.SettingsSave.Text = "SAVE";
-            this.SettingsSave.UseVisualStyleBackColor = false;
-            // 
-            // SettingsCancel
-            // 
-            this.SettingsCancel.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsCancel.FlatAppearance.BorderSize = 0;
-            this.SettingsCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.SettingsCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.SettingsCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsCancel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsCancel.ForeColor = System.Drawing.Color.White;
-            this.SettingsCancel.Image = global::GameLauncher.Properties.Resources.graybutton;
-            this.SettingsCancel.Location = new System.Drawing.Point(697, 392);
-            this.SettingsCancel.Name = "SettingsCancel";
-            this.SettingsCancel.Size = new System.Drawing.Size(130, 50);
-            this.SettingsCancel.TabIndex = 152;
-            this.SettingsCancel.Text = "CANCEL";
-            this.SettingsCancel.UseVisualStyleBackColor = false;
-            // 
-            // SettingsCDNText
-            // 
-            this.SettingsCDNText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SettingsCDNText.AutoSize = true;
-            this.SettingsCDNText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsCDNText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsCDNText.Location = new System.Drawing.Point(24, 111);
-            this.SettingsCDNText.Name = "SettingsCDNText";
-            this.SettingsCDNText.Size = new System.Drawing.Size(103, 14);
-            this.SettingsCDNText.TabIndex = 137;
-            this.SettingsCDNText.Text = "CDN: PINGING";
-            this.SettingsCDNText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // SettingsCDNPick
-            // 
-            this.SettingsCDNPick.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.SettingsCDNPick.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.SettingsCDNPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SettingsCDNPick.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsCDNPick.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsCDNPick.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
-            this.SettingsCDNPick.FormattingEnabled = true;
-            this.SettingsCDNPick.Location = new System.Drawing.Point(26, 133);
-            this.SettingsCDNPick.Name = "SettingsCDNPick";
-            this.SettingsCDNPick.Size = new System.Drawing.Size(220, 21);
-            this.SettingsCDNPick.TabIndex = 133;
-            this.SettingsCDNPick.SelectedIndexChanged += new System.EventHandler(this.SettingsCDNPick_SelectedIndexChanged);
-            // 
-            // SettingsLanguageText
-            // 
-            this.SettingsLanguageText.AutoSize = true;
-            this.SettingsLanguageText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsLanguageText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsLanguageText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsLanguageText.Location = new System.Drawing.Point(24, 158);
-            this.SettingsLanguageText.Name = "SettingsLanguageText";
-            this.SettingsLanguageText.Size = new System.Drawing.Size(125, 14);
-            this.SettingsLanguageText.TabIndex = 131;
-            this.SettingsLanguageText.Text = "GAME LANGUAGE";
-            this.SettingsLanguageText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // SettingsLanguage
-            // 
-            this.SettingsLanguage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.SettingsLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SettingsLanguage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsLanguage.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsLanguage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
-            this.SettingsLanguage.FormattingEnabled = true;
-            this.SettingsLanguage.Location = new System.Drawing.Point(26, 180);
-            this.SettingsLanguage.Name = "SettingsLanguage";
-            this.SettingsLanguage.Size = new System.Drawing.Size(131, 21);
-            this.SettingsLanguage.TabIndex = 133;
-            // 
-            // SettingsWordFilterCheck
-            // 
-            this.SettingsWordFilterCheck.AutoSize = true;
-            this.SettingsWordFilterCheck.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsWordFilterCheck.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsWordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
-            this.SettingsWordFilterCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsWordFilterCheck.Location = new System.Drawing.Point(26, 324);
-            this.SettingsWordFilterCheck.Name = "SettingsWordFilterCheck";
-            this.SettingsWordFilterCheck.Size = new System.Drawing.Size(226, 18);
-            this.SettingsWordFilterCheck.TabIndex = 135;
-            this.SettingsWordFilterCheck.Text = "Disable Word Filtering on Game Chat";
-            this.SettingsWordFilterCheck.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            this.SettingsWordFilterCheck.UseVisualStyleBackColor = false;
-            // 
-            // SettingsProxyCheckbox
-            // 
-            this.SettingsProxyCheckbox.AutoSize = true;
-            this.SettingsProxyCheckbox.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsProxyCheckbox.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsProxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
-            this.SettingsProxyCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsProxyCheckbox.Location = new System.Drawing.Point(26, 344);
-            this.SettingsProxyCheckbox.Name = "SettingsProxyCheckbox";
-            this.SettingsProxyCheckbox.Size = new System.Drawing.Size(100, 18);
-            this.SettingsProxyCheckbox.TabIndex = 136;
-            this.SettingsProxyCheckbox.Text = "Disable Proxy";
-            this.SettingsProxyCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            this.SettingsProxyCheckbox.UseVisualStyleBackColor = false;
-            // 
-            // SettingsDiscordRPCCheckbox
-            // 
-            this.SettingsDiscordRPCCheckbox.AutoSize = true;
-            this.SettingsDiscordRPCCheckbox.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsDiscordRPCCheckbox.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
-            this.SettingsDiscordRPCCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsDiscordRPCCheckbox.Location = new System.Drawing.Point(26, 364);
-            this.SettingsDiscordRPCCheckbox.Name = "SettingsDiscordRPCCheckbox";
-            this.SettingsDiscordRPCCheckbox.Size = new System.Drawing.Size(137, 18);
-            this.SettingsDiscordRPCCheckbox.TabIndex = 137;
-            this.SettingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
-            this.SettingsDiscordRPCCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            this.SettingsDiscordRPCCheckbox.UseVisualStyleBackColor = false;
-            // 
-            // SettingsGameFilesCurrentText
-            // 
-            this.SettingsGameFilesCurrentText.AutoSize = true;
-            this.SettingsGameFilesCurrentText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsGameFilesCurrentText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsGameFilesCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsGameFilesCurrentText.Location = new System.Drawing.Point(313, 82);
-            this.SettingsGameFilesCurrentText.Name = "SettingsGameFilesCurrentText";
-            this.SettingsGameFilesCurrentText.Size = new System.Drawing.Size(154, 14);
-            this.SettingsGameFilesCurrentText.TabIndex = 149;
-            this.SettingsGameFilesCurrentText.Text = "CURRENT DIRECTORY:";
-            this.SettingsGameFilesCurrentText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // SettingsGameFilesCurrent
-            // 
-            this.SettingsGameFilesCurrent.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsGameFilesCurrent.AutoSize = true;
-            this.SettingsGameFilesCurrent.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsGameFilesCurrent.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsGameFilesCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.SettingsGameFilesCurrent.LinkColor = System.Drawing.Color.LawnGreen;
-            this.SettingsGameFilesCurrent.Location = new System.Drawing.Point(314, 99);
-            this.SettingsGameFilesCurrent.Name = "SettingsGameFilesCurrent";
-            this.SettingsGameFilesCurrent.Size = new System.Drawing.Size(200, 14);
-            this.SettingsGameFilesCurrent.TabIndex = 138;
-            this.SettingsGameFilesCurrent.TabStop = true;
-            this.SettingsGameFilesCurrent.Text = "C:\\Soapbox Race World\\Game Files";
-            this.SettingsGameFilesCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsGameFilesCurrent.VisitedLinkColor = System.Drawing.Color.White;
-            // 
-            // SettingsCDNCurrentText
-            // 
-            this.SettingsCDNCurrentText.AutoSize = true;
-            this.SettingsCDNCurrentText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsCDNCurrentText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsCDNCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsCDNCurrentText.Location = new System.Drawing.Point(313, 120);
-            this.SettingsCDNCurrentText.Name = "SettingsCDNCurrentText";
-            this.SettingsCDNCurrentText.Size = new System.Drawing.Size(110, 14);
-            this.SettingsCDNCurrentText.TabIndex = 150;
-            this.SettingsCDNCurrentText.Text = "CURRENT CDN:";
-            this.SettingsCDNCurrentText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // SettingsCDNCurrent
-            // 
-            this.SettingsCDNCurrent.ActiveLinkColor = System.Drawing.Color.Transparent;
-            this.SettingsCDNCurrent.AutoSize = true;
-            this.SettingsCDNCurrent.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsCDNCurrent.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsCDNCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.SettingsCDNCurrent.LinkColor = System.Drawing.Color.LawnGreen;
-            this.SettingsCDNCurrent.Location = new System.Drawing.Point(314, 137);
-            this.SettingsCDNCurrent.Name = "SettingsCDNCurrent";
-            this.SettingsCDNCurrent.Size = new System.Drawing.Size(91, 14);
-            this.SettingsCDNCurrent.TabIndex = 139;
-            this.SettingsCDNCurrent.TabStop = true;
-            this.SettingsCDNCurrent.Text = "http://localhost";
-            this.SettingsCDNCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsCDNCurrent.VisitedLinkColor = System.Drawing.Color.White;
-            this.SettingsCDNCurrent.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.SettingsCDNCurrent_LinkClicked);
-            // 
-            // SettingsLauncherPathText
-            // 
-            this.SettingsLauncherPathText.AutoSize = true;
-            this.SettingsLauncherPathText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsLauncherPathText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsLauncherPathText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsLauncherPathText.Location = new System.Drawing.Point(313, 158);
-            this.SettingsLauncherPathText.Name = "SettingsLauncherPathText";
-            this.SettingsLauncherPathText.Size = new System.Drawing.Size(143, 14);
-            this.SettingsLauncherPathText.TabIndex = 136;
-            this.SettingsLauncherPathText.Text = "LAUNCHER FOLDER:";
-            this.SettingsLauncherPathText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // SettingsLauncherPathCurrent
-            // 
-            this.SettingsLauncherPathCurrent.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsLauncherPathCurrent.AutoSize = true;
-            this.SettingsLauncherPathCurrent.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsLauncherPathCurrent.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsLauncherPathCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.SettingsLauncherPathCurrent.LinkColor = System.Drawing.Color.LawnGreen;
-            this.SettingsLauncherPathCurrent.Location = new System.Drawing.Point(314, 176);
-            this.SettingsLauncherPathCurrent.Name = "SettingsLauncherPathCurrent";
-            this.SettingsLauncherPathCurrent.Size = new System.Drawing.Size(191, 14);
-            this.SettingsLauncherPathCurrent.TabIndex = 140;
-            this.SettingsLauncherPathCurrent.TabStop = true;
-            this.SettingsLauncherPathCurrent.Text = "C:\\Soapbox Race World\\Launcher";
-            this.SettingsLauncherPathCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsLauncherPathCurrent.VisitedLinkColor = System.Drawing.Color.White;
-            // 
-            // SettingsNetworkText
-            // 
-            this.SettingsNetworkText.AutoSize = true;
-            this.SettingsNetworkText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsNetworkText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsNetworkText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsNetworkText.Location = new System.Drawing.Point(313, 206);
-            this.SettingsNetworkText.Name = "SettingsNetworkText";
-            this.SettingsNetworkText.Size = new System.Drawing.Size(157, 14);
-            this.SettingsNetworkText.TabIndex = 142;
-            this.SettingsNetworkText.Text = "CONNECTION STATUS:";
-            this.SettingsNetworkText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // SettingsMainSrvText
-            // 
-            this.SettingsMainSrvText.AutoSize = true;
-            this.SettingsMainSrvText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsMainSrvText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsMainSrvText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.SettingsMainSrvText.Location = new System.Drawing.Point(312, 228);
-            this.SettingsMainSrvText.Name = "SettingsMainSrvText";
-            this.SettingsMainSrvText.Size = new System.Drawing.Size(165, 14);
-            this.SettingsMainSrvText.TabIndex = 143;
-            this.SettingsMainSrvText.Text = "Main Server List API: PINGING";
-            // 
-            // SettingsMainCDNText
-            // 
-            this.SettingsMainCDNText.AutoSize = true;
-            this.SettingsMainCDNText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsMainCDNText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsMainCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.SettingsMainCDNText.Location = new System.Drawing.Point(312, 248);
-            this.SettingsMainCDNText.Name = "SettingsMainCDNText";
-            this.SettingsMainCDNText.Size = new System.Drawing.Size(154, 14);
-            this.SettingsMainCDNText.TabIndex = 146;
-            this.SettingsMainCDNText.Text = "Main CDN List API: PINGING";
-            // 
-            // SettingsBkupSrvText
-            // 
-            this.SettingsBkupSrvText.AutoSize = true;
-            this.SettingsBkupSrvText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsBkupSrvText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsBkupSrvText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.SettingsBkupSrvText.Location = new System.Drawing.Point(312, 268);
-            this.SettingsBkupSrvText.Name = "SettingsBkupSrvText";
-            this.SettingsBkupSrvText.Size = new System.Drawing.Size(179, 14);
-            this.SettingsBkupSrvText.TabIndex = 144;
-            this.SettingsBkupSrvText.Text = "Backup Server List API: PINGING";
-            // 
-            // SettingsBkupCDNText
-            // 
-            this.SettingsBkupCDNText.AutoSize = true;
-            this.SettingsBkupCDNText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsBkupCDNText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsBkupCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.SettingsBkupCDNText.Location = new System.Drawing.Point(312, 288);
-            this.SettingsBkupCDNText.Name = "SettingsBkupCDNText";
-            this.SettingsBkupCDNText.Size = new System.Drawing.Size(168, 14);
-            this.SettingsBkupCDNText.TabIndex = 145;
-            this.SettingsBkupCDNText.Text = "Backup CDN List API: PINGING";
-            // 
             // ShowPlayPanel
             // 
             this.ShowPlayPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ShowPlayPanel.BackColor = System.Drawing.Color.Transparent;
             this.ShowPlayPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ShowPlayPanel.Controls.Add(this.ServerPingStatusText);
             this.ShowPlayPanel.Controls.Add(this.LogoutButton);
             this.ShowPlayPanel.Controls.Add(this.PlayButton);
             this.ShowPlayPanel.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ShowPlayPanel.ForeColor = System.Drawing.Color.Transparent;
             this.ShowPlayPanel.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.ShowPlayPanel.Location = new System.Drawing.Point(600, 290);
+            this.ShowPlayPanel.Location = new System.Drawing.Point(600, 281);
             this.ShowPlayPanel.Name = "ShowPlayPanel";
-            this.ShowPlayPanel.Size = new System.Drawing.Size(237, 164);
+            this.ShowPlayPanel.Size = new System.Drawing.Size(237, 173);
             this.ShowPlayPanel.TabIndex = 153;
+            this.ShowPlayPanel.Visible = false;
             // 
             // RegisterPanel
             // 
@@ -1204,6 +724,7 @@
             this.RegisterPanel.Name = "RegisterPanel";
             this.RegisterPanel.Size = new System.Drawing.Size(263, 374);
             this.RegisterPanel.TabIndex = 156;
+            this.RegisterPanel.Visible = false;
             // 
             // DiscordInviteLink
             // 
@@ -1216,7 +737,7 @@
             this.DiscordInviteLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.DiscordInviteLink.Location = new System.Drawing.Point(154, 12);
             this.DiscordInviteLink.Name = "DiscordInviteLink";
-            this.DiscordInviteLink.Size = new System.Drawing.Size(98, 13);
+            this.DiscordInviteLink.Size = new System.Drawing.Size(95, 13);
             this.DiscordInviteLink.TabIndex = 172;
             this.DiscordInviteLink.TabStop = true;
             this.DiscordInviteLink.Text = "Discord Invite";
@@ -1229,9 +750,9 @@
             this.ServerShutDown.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerShutDown.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.ServerShutDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ServerShutDown.Location = new System.Drawing.Point(310, 42);
+            this.ServerShutDown.Location = new System.Drawing.Point(290, 42);
             this.ServerShutDown.Name = "ServerShutDown";
-            this.ServerShutDown.Size = new System.Drawing.Size(168, 15);
+            this.ServerShutDown.Size = new System.Drawing.Size(220, 15);
             this.ServerShutDown.TabIndex = 169;
             this.ServerShutDown.Text = "Restart Timer: 0 Hours";
             this.ServerShutDown.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1239,7 +760,7 @@
             // ServerInfoPanel
             // 
             this.ServerInfoPanel.BackColor = System.Drawing.Color.Transparent;
-            this.ServerInfoPanel.BackgroundImage = global::GameLauncher.Properties.Resources.eyecatcher;
+            this.ServerInfoPanel.BackgroundImage = global::GameLauncher.Properties.Resources.socialbg;
             this.ServerInfoPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ServerInfoPanel.Controls.Add(this.HomePageIcon);
             this.ServerInfoPanel.Controls.Add(this.DiscordIcon);
@@ -1255,14 +776,14 @@
             this.ServerInfoPanel.ForeColor = System.Drawing.Color.Transparent;
             this.ServerInfoPanel.Location = new System.Drawing.Point(27, 305);
             this.ServerInfoPanel.Name = "ServerInfoPanel";
-            this.ServerInfoPanel.Size = new System.Drawing.Size(524, 68);
+            this.ServerInfoPanel.Size = new System.Drawing.Size(525, 68);
             this.ServerInfoPanel.TabIndex = 172;
             // 
             // HomePageIcon
             // 
             this.HomePageIcon.BackColor = System.Drawing.Color.Transparent;
-            this.HomePageIcon.BackgroundImage = global::GameLauncher.Properties.Resources.social_home_page;
             this.HomePageIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.HomePageIcon.InitialImage = null;
             this.HomePageIcon.Location = new System.Drawing.Point(7, 8);
             this.HomePageIcon.Name = "HomePageIcon";
             this.HomePageIcon.Size = new System.Drawing.Size(24, 24);
@@ -1273,8 +794,8 @@
             // DiscordIcon
             // 
             this.DiscordIcon.BackColor = System.Drawing.Color.Transparent;
-            this.DiscordIcon.BackgroundImage = global::GameLauncher.Properties.Resources.social_discord;
             this.DiscordIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.DiscordIcon.InitialImage = null;
             this.DiscordIcon.Location = new System.Drawing.Point(127, 8);
             this.DiscordIcon.Name = "DiscordIcon";
             this.DiscordIcon.Size = new System.Drawing.Size(24, 24);
@@ -1285,8 +806,8 @@
             // FacebookIcon
             // 
             this.FacebookIcon.BackColor = System.Drawing.Color.Transparent;
-            this.FacebookIcon.BackgroundImage = global::GameLauncher.Properties.Resources.social_facebook;
             this.FacebookIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.FacebookIcon.InitialImage = null;
             this.FacebookIcon.Location = new System.Drawing.Point(263, 8);
             this.FacebookIcon.Name = "FacebookIcon";
             this.FacebookIcon.Size = new System.Drawing.Size(24, 24);
@@ -1305,7 +826,7 @@
             this.TwitterAccountLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.TwitterAccountLink.Location = new System.Drawing.Point(437, 12);
             this.TwitterAccountLink.Name = "TwitterAccountLink";
-            this.TwitterAccountLink.Size = new System.Drawing.Size(86, 13);
+            this.TwitterAccountLink.Size = new System.Drawing.Size(88, 13);
             this.TwitterAccountLink.TabIndex = 174;
             this.TwitterAccountLink.TabStop = true;
             this.TwitterAccountLink.Text = "Twitter Feed";
@@ -1315,8 +836,8 @@
             // TwitterIcon
             // 
             this.TwitterIcon.BackColor = System.Drawing.Color.Transparent;
-            this.TwitterIcon.BackgroundImage = global::GameLauncher.Properties.Resources.social_twitter;
             this.TwitterIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.TwitterIcon.InitialImage = null;
             this.TwitterIcon.Location = new System.Drawing.Point(407, 8);
             this.TwitterIcon.Name = "TwitterIcon";
             this.TwitterIcon.Size = new System.Drawing.Size(24, 24);
@@ -1335,7 +856,7 @@
             this.FacebookGroupLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.FacebookGroupLink.Location = new System.Drawing.Point(292, 12);
             this.FacebookGroupLink.Name = "FacebookGroupLink";
-            this.FacebookGroupLink.Size = new System.Drawing.Size(112, 13);
+            this.FacebookGroupLink.Size = new System.Drawing.Size(110, 13);
             this.FacebookGroupLink.TabIndex = 173;
             this.FacebookGroupLink.TabStop = true;
             this.FacebookGroupLink.Text = "Facebook Group";
@@ -1353,7 +874,7 @@
             this.HomePageLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.HomePageLink.Location = new System.Drawing.Point(36, 12);
             this.HomePageLink.Name = "HomePageLink";
-            this.HomePageLink.Size = new System.Drawing.Size(81, 13);
+            this.HomePageLink.Size = new System.Drawing.Size(79, 13);
             this.HomePageLink.TabIndex = 171;
             this.HomePageLink.TabStop = true;
             this.HomePageLink.Text = "Home Page";
@@ -1376,15 +897,28 @@
             // InsiderBuildNumberText
             // 
             this.InsiderBuildNumberText.BackColor = System.Drawing.Color.Transparent;
-            this.InsiderBuildNumberText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.InsiderBuildNumberText.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.InsiderBuildNumberText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.InsiderBuildNumberText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.InsiderBuildNumberText.Location = new System.Drawing.Point(389, 15);
+            this.InsiderBuildNumberText.Location = new System.Drawing.Point(364, 65);
             this.InsiderBuildNumberText.Name = "InsiderBuildNumberText";
-            this.InsiderBuildNumberText.Size = new System.Drawing.Size(162, 15);
+            this.InsiderBuildNumberText.Size = new System.Drawing.Size(192, 15);
             this.InsiderBuildNumberText.TabIndex = 173;
             this.InsiderBuildNumberText.Text = "Insider Build: vX.X.X.X";
             this.InsiderBuildNumberText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ProgressBarOutline
+            // 
+            this.ProgressBarOutline.BackColor = System.Drawing.Color.Transparent;
+            this.ProgressBarOutline.BackgroundImage = global::GameLauncher.Properties.Resources.progress_outline;
+            this.ProgressBarOutline.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ProgressBarOutline.ErrorImage = null;
+            this.ProgressBarOutline.InitialImage = null;
+            this.ProgressBarOutline.Location = new System.Drawing.Point(25, 405);
+            this.ProgressBarOutline.Name = "ProgressBarOutline";
+            this.ProgressBarOutline.Size = new System.Drawing.Size(529, 42);
+            this.ProgressBarOutline.TabIndex = 174;
+            this.ProgressBarOutline.TabStop = false;
             // 
             // ExtractingProgress
             // 
@@ -1392,10 +926,10 @@
             this.ExtractingProgress.BackgroundColor = System.Drawing.Color.Black;
             this.ExtractingProgress.Border = false;
             this.ExtractingProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.ExtractingProgress.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ExtractingProgress.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ExtractingProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.ExtractingProgress.Image = global::GameLauncher.Properties.Resources.progress_success;
-            this.ExtractingProgress.Location = new System.Drawing.Point(30, 425);
+            this.ExtractingProgress.Location = new System.Drawing.Point(30, 430);
             this.ExtractingProgress.Name = "ExtractingProgress";
             this.ExtractingProgress.ProgressColor = System.Drawing.Color.Green;
             this.ExtractingProgress.RoundedCorners = false;
@@ -1412,7 +946,7 @@
             this.PlayProgress.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.PlayProgress.Image = global::GameLauncher.Properties.Resources.progress_preload;
-            this.PlayProgress.Location = new System.Drawing.Point(30, 425);
+            this.PlayProgress.Location = new System.Drawing.Point(30, 430);
             this.PlayProgress.Name = "PlayProgress";
             this.PlayProgress.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(84)))), ((int)(((byte)(92)))));
             this.PlayProgress.RoundedCorners = false;
@@ -1422,24 +956,21 @@
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackgroundImage = global::GameLauncher.Properties.Resources.mainbackground;
+            this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.InsiderBuildNumberText);
             this.Controls.Add(this.CurrentWindowInfo);
-            this.Controls.Add(this.ServerPingStatusText);
             this.Controls.Add(this.logo);
             this.Controls.Add(this.RegisterPanel);
             this.Controls.Add(this.SettingsButton);
             this.Controls.Add(this.ShowPlayPanel);
             this.Controls.Add(this.CloseBTN);
-            this.Controls.Add(this.SettingsPanel);
             this.Controls.Add(this.SelectServerBtn);
+            this.Controls.Add(this.ServerInfoPanel);
             this.Controls.Add(this.translatedBy);
             this.Controls.Add(this.ServerPick);
             this.Controls.Add(this.AddServer);
-            this.Controls.Add(this.PlayProgressText);
-            this.Controls.Add(this.ExtractingProgress);
             this.Controls.Add(this.LauncherIconStatus);
             this.Controls.Add(this.APIStatusIcon);
             this.Controls.Add(this.ServerStatusIcon);
@@ -1457,11 +988,12 @@
             this.Controls.Add(this.ForgotPassword);
             this.Controls.Add(this.LoginButton);
             this.Controls.Add(this.RegisterText);
-            this.Controls.Add(this.PlayProgress);
             this.Controls.Add(this.PlayProgressTextTimer);
+            this.Controls.Add(this.PlayProgressText);
+            this.Controls.Add(this.ExtractingProgress);
+            this.Controls.Add(this.PlayProgress);
+            this.Controls.Add(this.ProgressBarOutline);
             this.Controls.Add(this.VerticalBanner);
-            this.Controls.Add(this.ServerInfoPanel);
-            this.Controls.Add(this.ImageServerName);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -1484,8 +1016,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.RegisterPasswordBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterConfirmPasswordBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterTicketBorder)).EndInit();
-            this.SettingsPanel.ResumeLayout(false);
-            this.SettingsPanel.PerformLayout();
             this.ShowPlayPanel.ResumeLayout(false);
             this.RegisterPanel.ResumeLayout(false);
             this.RegisterPanel.PerformLayout();
@@ -1495,6 +1025,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.DiscordIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FacebookIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TwitterIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ProgressBarOutline)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1511,7 +1042,6 @@
         private System.Windows.Forms.PictureBox SettingsButton;
         private System.Windows.Forms.ComboBox ServerPick;
         private System.Windows.Forms.Button AddServer;
-        private System.Windows.Forms.Label ImageServerName;
         private System.Windows.Forms.PictureBox VerticalBanner;
         internal System.Windows.Forms.Label PlayProgressText;
         private GameLauncherReborn.ProgressBarEx ExtractingProgress;
@@ -1549,36 +1079,8 @@
         private System.Windows.Forms.CheckBox RegisterAgree;
         private System.Windows.Forms.Button RegisterButton;
         private System.Windows.Forms.Button RegisterCancel;
-        private System.Windows.Forms.Panel SettingsPanel;
-        private System.Windows.Forms.Button SettingsSave;
-        private System.Windows.Forms.Button SettingsCancel;
-        private System.Windows.Forms.Label SettingsGamePathText;
-        private System.Windows.Forms.Button SettingsGameFiles;
-        private System.Windows.Forms.Label SettingsCDNText;
-        private System.Windows.Forms.ComboBox SettingsCDNPick;
-        private System.Windows.Forms.Label SettingsLanguageText;
-        private System.Windows.Forms.ComboBox SettingsLanguage;
-        private System.Windows.Forms.CheckBox SettingsWordFilterCheck;
-        private System.Windows.Forms.CheckBox SettingsProxyCheckbox;
-        private System.Windows.Forms.CheckBox SettingsDiscordRPCCheckbox;
-        private System.Windows.Forms.Button SettingsClearCrashLogsButton;
-        private System.Windows.Forms.Label SettingsGameFilesCurrentText;
-        private System.Windows.Forms.LinkLabel SettingsGameFilesCurrent;
-        private System.Windows.Forms.Label SettingsCDNCurrentText;
-        private System.Windows.Forms.LinkLabel SettingsCDNCurrent;
-        private System.Windows.Forms.Label SettingsLauncherPathText;
-        private System.Windows.Forms.LinkLabel SettingsLauncherPathCurrent;
-        private System.Windows.Forms.Label SettingsNetworkText;
-        private System.Windows.Forms.Label SettingsMainSrvText;
-        private System.Windows.Forms.Label SettingsMainCDNText;
-        private System.Windows.Forms.Label SettingsBkupSrvText;
-        private System.Windows.Forms.Label SettingsBkupCDNText;
         private System.Windows.Forms.Panel ShowPlayPanel;
         private System.Windows.Forms.Panel RegisterPanel;
-        private System.Windows.Forms.Button SettingsVFilesButton;
-        private System.Windows.Forms.Button SettingsClearCommunicationLogButton;
-        private System.Windows.Forms.Button SettingsAboutButton;
-        private System.Windows.Forms.Label SettingsLauncherVersion;
         private System.Windows.Forms.LinkLabel DiscordInviteLink;
         private System.Windows.Forms.Label ServerShutDown;
         private System.Windows.Forms.Panel ServerInfoPanel;
@@ -1590,7 +1092,7 @@
         private System.Windows.Forms.PictureBox DiscordIcon;
         private System.Windows.Forms.PictureBox FacebookIcon;
         private System.Windows.Forms.Label SceneryGroupText;
-        private System.Windows.Forms.Button SettingsClearServerModCacheButton;
         private System.Windows.Forms.Label InsiderBuildNumberText;
+        private System.Windows.Forms.PictureBox ProgressBarOutline;
     }
 }

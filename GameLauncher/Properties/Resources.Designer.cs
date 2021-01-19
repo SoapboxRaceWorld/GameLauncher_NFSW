@@ -173,16 +173,6 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap eyecatcher {
-            get {
-                object obj = ResourceManager.GetObject("eyecatcher", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap graybutton {
             get {
                 object obj = ResourceManager.GetObject("graybutton", resourceCulture);
@@ -253,16 +243,6 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap logo_hover {
-            get {
-                object obj = ResourceManager.GetObject("logo_hover", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap mainbackground {
             get {
                 object obj = ResourceManager.GetObject("mainbackground", resourceCulture);
@@ -326,6 +306,16 @@ namespace GameLauncher.Properties {
         internal static System.Drawing.Bitmap progress_error {
             get {
                 object obj = ResourceManager.GetObject("progress_error", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap progress_outline {
+            get {
+                object obj = ResourceManager.GetObject("progress_outline", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -503,9 +493,9 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap splash_screen {
+        internal static System.Drawing.Bitmap socialbg {
             get {
-                object obj = ResourceManager.GetObject("splash_screen", resourceCulture);
+                object obj = ResourceManager.GetObject("socialbg", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

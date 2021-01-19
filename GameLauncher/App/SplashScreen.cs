@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using GameLauncher.App.Classes.LauncherCore.Visuals;
+using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes
 {
@@ -7,6 +8,9 @@ namespace GameLauncher.App.Classes
         public SplashScreen()
         {
             InitializeComponent();
+
+            TransparencyKey = Theming.SplashScreenTransparencyKey;
+            BackgroundImage = Theming.Logo;
         }
     }
 }

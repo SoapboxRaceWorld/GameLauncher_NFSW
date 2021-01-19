@@ -64,7 +64,7 @@
             // AboutText
             // 
             this.AboutText.BackColor = System.Drawing.Color.Transparent;
-            this.AboutText.Font = new System.Drawing.Font("DejaVu Sans Condensed", 26.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AboutText.Font = new System.Drawing.Font("DejaVu Sans", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AboutText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.AboutText.Location = new System.Drawing.Point(0, 0);
             this.AboutText.Name = "AboutText";
@@ -251,7 +251,7 @@
             this.PatchPanel1.ResumeLayout(false);
             this.PatchPanel3.ResumeLayout(false);
             this.ResumeLayout(false);
-
+            this.DoubleBuffered = true;
         }
 
         #endregion

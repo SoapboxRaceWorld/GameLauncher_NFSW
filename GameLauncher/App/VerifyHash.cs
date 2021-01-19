@@ -1,34 +1,75 @@
-﻿using GameLauncherReborn;
+﻿using DiscordRPC;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using GameLauncher.App.Classes;
-using GameLauncher.HashPassword;
-using System.ComponentModel;
 using GameLauncher.App.Classes.Logger;
-using System.Net;
-using System.Diagnostics;
+using GameLauncher.HashPassword;
+using GameLauncher.Resources;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 
 namespace GameLauncher.App
 {
     public partial class VerifyHash : Form
     {
-        private readonly IniFile _settingFile = new IniFile("Settings.ini");
+        private readonly RichPresence _presence = new RichPresence();
 
         //VerifyHash
         string[][] scannedHashes;
         public int filesToScan;
         public int badFiles;
         public int totalFilesScanned;
+        public int currentCount;
         public int redownloadedCount;
-        public List<string> invalidFileList = new List<string>();
+        public List<string> InvalidFileList = new List<string>();
+        public List<string> ValidFileList = new List<string>();
+        public string FinalCDNURL;
+        public bool isScanning = false;
 
         public VerifyHash()
         {
             InitializeComponent();
+
+            this.Closing += (x, y) =>
+            {
+                if (isScanning)
+                {
+                    if (MessageBox.Show("Do you really want to exit the VerifyHash process?", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.No)
+                    {
+                        y.Cancel = true;
+                    }
+                    else
+                    {
+                        GameScanner(false);
+                    }
+                }
+            };
+
+            SetVisuals();
+        }
+
+        private void VerifyHash_Load(object sender, EventArgs e)
+        {
+            VersionLabel.Text = "Version: v" + Application.ProductVersion;
+            Log.Core("VerifyHash Opened");
+            /* Clean up previous logs and start logging */
+            string[] filestocheck = new string[] { "validfiles.dat", "invalidfiles.dat", "Verify.log" };
+            foreach (String file in filestocheck)
+            {
+                if (File.Exists(file)) File.Delete(file);
+            }
+            LogVerify.StartVerifyLogging();
+
+            LogVerify.Info("VERIFYHASH: Checking Characters in URL");
+            string SavedCDN = FileSettingsSave.CDN;
+            char[] charsToTrim = { '/' };
+            FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
+            LogVerify.Info("VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
         }
 
         public void GameScanner(bool startScan)
@@ -39,158 +80,187 @@ namespace GameLauncher.App
                 Name = "FileScanner"
             };
 
-            if (File.Exists("invalidfiles.dat"))
+            if (startScan == true)
             {
-                File.Delete("invalidfiles.dat");
-            }
-
-            if (startScan == true) {
-                //StatusText.Text = "Validating files on background.".ToUpper();
-                //Threaded CheckFiles
                 StartScan.Start();
-                Log.Debug("Started Scanner");
+                Log.Info("VERIFY HASH: Started Scanner");
+                isScanning = true;
             }
-            else {
+            else if (startScan == false)
+            {
                 StartScan.Abort();
-                //StatusText.Text = "Unkown Status.".ToUpper();
-                Process[] allOfThem = Process.GetProcessesByName("VerifyHash");
-                foreach (var oneProcess in allOfThem)
-                {
-                    Process.GetProcessById(oneProcess.Id).Kill();
-                }
-                Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                Log.Debug("Stopped Scanner");
+                Log.Info("VERIFY HASH: Stopped Scanner");
             }
-           
         }
 
         private void StartGameScanner()
         {
-            String[] getFilesToCheck = null;
+            _presence.Details = "In-Launcher: " + Application.ProductVersion;
+            _presence.State = "Validating Game Files!";
+            _presence.Assets = new Assets
+            {
+                LargeImageText = "SBRW",
+                LargeImageKey = "nfsw"
+            };
+            if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
+
+            Log.Info("VERIFY HASH: Checking and Deleting '.orig' Files");
+
+            DirectoryInfo InstallationDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
+
+            foreach (var foundFolders in InstallationDirectory.GetDirectories())
+            {
+                foreach (var file in InstallationDirectory.EnumerateFiles("*.orig"))
+                {
+                    LogVerify.Deleted("File: " + file);
+                    file.Delete();
+                }
+
+                foreach (var file in foundFolders.EnumerateFiles("*.orig"))
+                {
+                    LogVerify.Deleted("File: " + file);
+                    file.Delete();
+                }
+            }
+            Log.Info("VERIFY HASH: Completed check for '.orig' Files");
+
             try
             {
-                getFilesToCheck = new WebClient().DownloadString("http://localhost/checksums.dat").Split('\n');
+                String[] getFilesToCheck;
+
+                if (File.Exists("checksums.dat"))
+                {
+                    /* Read Local checksums.dat */
+                    getFilesToCheck = File.ReadAllLines("checksums.dat");
+                }
+                else
+                {
+                    /* Fetch and Read Remote checksums.dat */
+                    ScanProgressText.Text = "Downloading Checksums File";
+                    getFilesToCheck = new WebClient().DownloadString(FinalCDNURL + "/unpacked/checksums.dat").Split('\n');
+                    File.WriteAllLines("checksums.dat", getFilesToCheck);
+                }
+
                 scannedHashes = new string[getFilesToCheck.Length][];
                 for (var i = 0; i < getFilesToCheck.Length; i++)
                 {
                     scannedHashes[i] = getFilesToCheck[i].Split(' ');
                 }
                 filesToScan = scannedHashes.Length;
-                if (File.Exists("checksums.dat"))
-                {
-                    File.Delete("checksums.dat");
-                }
-                File.WriteAllLines("checksums.dat", getFilesToCheck);
                 totalFilesScanned = 0;
-                redownloadedCount = 0;
 
-                Directory.EnumerateFiles(_settingFile.Read("InstallationDirectory"), "*.*", SearchOption.AllDirectories).AsParallel().ForAll((file) => {
-                    for (var i = 0; i < scannedHashes.Length; i++)
+                /* START Show Warning Text */
+                VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
+                VerifyHashText.Location = new Point(61, 292);
+                VerifyHashText.Size = new Size(287, 70);
+                VerifyHashText.Text = "Warning:\n Stopping the Scan before it is complete\nWill result in needing to start over!";
+                /* END Show Warning Text */
+
+                foreach (string[] file in scannedHashes)
+                {
+                    String FileHash = file[0].Trim();
+                    String FileName = file[1].Trim();
+                    String RealPathToFile = FileSettingsSave.GameInstallation + FileName;
+
+                    if (!File.Exists(RealPathToFile))
                     {
-                        //if (scannedHashes[i][1].Trim() == file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim())
-                        //{
-                            //Log.Debug("Scanned File: [GAMEDIR] " + file);
-                            if (File.Exists(_settingFile.Read("InstallationDirectory") + scannedHashes[i][1]) && scannedHashes[i][1].Trim() == SHA.HashFile(file.Trim()))
-                            {
-                                Log.Debug("1 - Vaild file found: [GAMEDIR] " + file);
-                            }
-                            else if (!File.Exists(_settingFile.Read("InstallationDirectory") + scannedHashes[i][1]) && scannedHashes[i][1].Trim() == SHA.HashFile(file.Trim()))
-                            {
-                                invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-                                Log.Debug("6 - Invalid file found: [GAMEDIR] " + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty));
-                            }
-                            else if (!File.Exists(_settingFile.Read("InstallationDirectory") + scannedHashes[i][1]))
-                            {
-                                invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-                                Log.Debug("7 - Invalid file found: [GAMEDIR] " + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty));
-                            }
-                            else if (scannedHashes[i][1].Trim() == SHA.HashFile(file.Trim()))
-                            {
-                                Log.Debug("2 - Vaild file found: [GAMEDIR] " + file);
-                            }
-                            /*
-                            else
-                            {
-                                invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-                                Log.Debug("5 - Invalid file found: [GAMEDIR] " + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty));
-                            }
-                            /*
-                            if (scannedHashes[i][0].Trim() != SHA.HashFile(file).Trim())
-                            {
-                                invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-                                Log.Debug("1 - Invalid file found: [GAMEDIR] " + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty));
-                            }
-                            else if (scannedHashes[i][0] != SHA.HashFile(file))
-                            {
-                                invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-                                Log.Debug("2 - Invalid file found: [GAMEDIR] " + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty));
-                            }
-                            else if (scannedHashes[i][0].Trim() != file)
-                            {
-                                invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-                                Log.Debug("3 - Invalid file found: [GAMEDIR] " + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty));
-                            }
-                            else if (scannedHashes[i][0].Trim() != file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty))
-                            {
-                                invalidFileList.Add(file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty).Trim());
-                                Log.Debug("4 - Invalid file found: [GAMEDIR] " + file.Replace(_settingFile.Read("InstallationDirectory"), string.Empty));
-                            }
-                            */
-                        //}
+                        InvalidFileList.Add(FileName);
+                        LogVerify.Missing("File: " + FileName);
+                    }
+                    else
+                    {
+                        if (FileHash != SHA.HashFile(RealPathToFile).Trim())
+                        {
+                            InvalidFileList.Add(FileName);
+                            LogVerify.Invalid("File: " + FileName);
+                        }
+                        else
+                        {
+                            LogVerify.Valid("File: " + FileName);
+                        }
                     }
                     totalFilesScanned++;
-                });
+                    ScanProgressText.Text = "Scanning Files: " + (totalFilesScanned * 100 / getFilesToCheck.Length) + "%";
+                    ScanProgressBar.Value = totalFilesScanned * 100 / getFilesToCheck.Length;
+                }
 
-                if (invalidFileList != null)
+                Log.Info("VERIFY HASH: Scan Completed");
+
+                if (InvalidFileList.Any() != true)
                 {
-                    File.WriteAllLines("invalidfiles.dat", invalidFileList);
-                    CorruptedFilesFound();
+                    GameScanner(false);
+                    StartScanner.Visible = false;
+                    StopScanner.Visible = false;
+                    ScanProgressText.Text = "Scan Complete. No Files Missing or Invalid!";
+                    /* Hide the DownloadProgressBar as un-needed */
+                    DownloadProgressBar.Visible = false;
+                    DownloadProgressText.Visible = false;
+                    /* Update the player messaging that we're done */
+                    VerifyHashText.ForeColor = Theming.WinFormSuccessTextForeColor;
+                    VerifyHashText.Location = new System.Drawing.Point(99, 300);
+                    VerifyHashText.Size = new System.Drawing.Size(215, 28);
+                    VerifyHashText.Text = "Excellent News! There are ZERO\nmissing or invalid Gamefiles!";
                 }
                 else
                 {
-                    GameScanner(false);
-                    StartScanner.Visible = true;
-                    StopScanner.Visible = false;
+                    ScanProgressText.Text = "Found Invalid or Missing Files";
+                    File.WriteAllLines("invalidfiles.dat", InvalidFileList);
+                    Log.Info("Found Invalid or Missing Files and will Start File Downloader");
+                    CorruptedFilesFound();
                 }
-                //StatusText.Text = "Scan Complete.";
             }
             catch (Exception ex)
-            { Log.Error(ex.Message); }
+            {
+                Log.Error(ex.Message);
+            }
         }
 
         private void CorruptedFilesFound()
         {
+            /* START Show Redownloader Progress*/
+            StartScanner.Visible = false;
+            StopScanner.Visible = false;
+            VerifyHashText.Location = new Point(99, 300);
+            VerifyHashText.Size = new Size(287, 70);
+            VerifyHashText.Text = "Currently (re)downloading files\nThis part may take awhile\ndepending on your connection.";
+            redownloadedCount = 0;
+
             if (File.Exists("invalidfiles.dat") && File.ReadAllLines("invalidfiles.dat") != null)
             {
-                //StatusText.Text = "RE-DOWNLOADING INVALID FILES";
+                DownloadProgressText.Text = "\nPreparing to Download Files";
                 string[] files = File.ReadAllLines("invalidfiles.dat");
+
                 foreach (string text in files)
                 {
-                    try
+                    currentCount = files.Count();
+                    try 
                     {
-                        string text2 = _settingFile.Read("InstallationDirectory") + text;
-                        string address = "http://mtntr.pl/unpacked" + text.Replace("\\", "/");
+                        string text2 = FileSettingsSave.GameInstallation + text;
+                        string address = FinalCDNURL + "/unpacked" + text.Replace("\\", "/");
                         if (File.Exists(text2))
                         {
-                            Log.Debug("Deleting " + text2);
+                            LogVerify.Deleted("File: " + text2);
                             File.Delete(text2);
                         }
                         new WebClient().DownloadFile(address, text2);
-                        Log.Debug("Downloaded " + text2);
+                        LogVerify.Downloaded("File: " + text2);
+                        redownloadedCount++;
                         Application.DoEvents();
                     }
                     catch { }
+                    this.BeginInvoke((MethodInvoker)delegate
+                    {
+                        DownloadProgressText.Text = "Downloaded File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + text;
+                        DownloadProgressBar.Value = redownloadedCount * 100 / files.Length;
+                    });
                 }
+                DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
+                VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
+                VerifyHashText.Location = new System.Drawing.Point(99, 300);
+                VerifyHashText.Size = new System.Drawing.Size(215, 28);
+                VerifyHashText.Text = "Yay! Scanning and Downloading \nis now completed on Gamefiles";
                 GameScanner(false);
-                StartScanner.Visible = true;
-                StopScanner.Visible = false;
-
-            }
-            else
-            {
-                //StatusText.Text = "All Files Validated";
-                GameScanner(false);
-                StartScanner.Visible = true;
+                StartScanner.Visible = false;
                 StopScanner.Visible = false;
             }
         }
@@ -207,6 +277,48 @@ namespace GameLauncher.App
             GameScanner(false);
             StartScanner.Visible = true;
             StopScanner.Visible = false;
+        }
+
+        private void SetVisuals() 
+        {
+            /*******************************/
+            /* Set Font                     /
+            /*******************************/
+
+            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
+            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+            VerifyHashWelcome.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            ScanProgressText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            DownloadProgressText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            StartScanner.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            StopScanner.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            VerifyHashText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            VersionLabel.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+
+            /********************************/
+            /* Set Theme Colors              /
+            /********************************/
+
+            ForeColor = Theming.WinFormTextForeColor;
+            BackColor = Theming.WinFormTBGForeColor;
+
+            DownloadProgressText.ForeColor = Theming.WinFormTextForeColor;
+            ScanProgressText.ForeColor = Theming.WinFormTextForeColor;
+
+            VerifyHashWelcome.ForeColor = Theming.WinFormSecondaryTextForeColor;
+            VerifyHashText.ForeColor = Theming.WinFormSuccessTextForeColor;
+
+            VersionLabel.ForeColor = Theming.WinFormTextForeColor;
+
+            StartScanner.ForeColor = Theming.WinFormSuccessTextForeColor;
+            StartScanner.BackColor = Theming.BlueBackColorButton;
+            StartScanner.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            StartScanner.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            StopScanner.ForeColor = Theming.WinFormWarningTextForeColor;
+            StopScanner.BackColor = Theming.BlueBackColorButton;
+            StopScanner.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            StopScanner.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
         }
     }
 }

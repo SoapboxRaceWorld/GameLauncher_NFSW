@@ -1,27 +1,25 @@
 ﻿using System.Net;
-using GameLauncher.App.Classes.Events;
 using GameLauncherReborn;
 using GameLauncher.Resources;
 using System.Drawing;
 using System.Windows.Forms;
-using GameLauncher.App.Classes;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 
 namespace GameLauncher.App
 {
     public partial class UpdatePopup : Form
     {
-        public UpdatePopup(UpdateCheckResponse updater)
+        public UpdatePopup(string LatestLauncherBuild)
         {
-            IniFile _settingFile = new IniFile("Settings.ini");
-
-            if (_settingFile.Read("IgnoreUpdateVersion") == updater.Payload.LatestVersion)
+            if (FileSettingsSave.IgnoreVersion == LatestLauncherBuild)
             {
                 //No Update Popup
             }
             else
             {
                 InitializeComponent();
-                ApplyEmbeddedFonts();
+                SetVisuals();
 
                 ChangelogText.Text = new WebClient().DownloadString(Self.mainserver + "/launcher/changelog");
                 ChangelogText.Select(0, 0);
@@ -31,7 +29,7 @@ namespace GameLauncher.App
                 Bitmap bitmap1 = Bitmap.FromHicon(SystemIcons.Information.Handle);
                 UpdateIcon.Image = bitmap1;
 
-                UpdateText.Text = "An update is available. Would you like to update?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + updater.Payload.LatestVersion;
+                UpdateText.Text = "An update is available. Would you like to update?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + LatestLauncherBuild;
 
                 this.UpdateButton.DialogResult = DialogResult.OK;
                 this.IgnoreButton.DialogResult = DialogResult.Cancel;
@@ -39,15 +37,47 @@ namespace GameLauncher.App
             }
         }
 
-        private void ApplyEmbeddedFonts()
+        private void SetVisuals()
         {
+            /*******************************/
+            /* Set Font                     /
+            /*******************************/
+
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
+            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+            ChangelogBox.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
             ChangelogText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            UpdateButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            UpdateText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            SkipButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            IgnoreButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
+            UpdateButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            UpdateText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SkipButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            IgnoreButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+
+            /********************************/
+            /* Set Theme Colors              /
+            /********************************/
+
+            ForeColor = Theming.WinFormTextForeColor;
+            BackColor = Theming.WinFormTBGForeColor;
+
+            ChangelogText.ForeColor = Theming.WinFormSecondaryTextForeColor;
+            ChangelogBox.ForeColor = Theming.WinFormTextForeColor;
+
+            UpdateText.ForeColor = Theming.WinFormTextForeColor;
+
+            UpdateButton.ForeColor = Theming.BlueForeColorButton;
+            UpdateButton.BackColor = Theming.BlueBackColorButton;
+            UpdateButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            UpdateButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            IgnoreButton.ForeColor = Theming.BlueForeColorButton;
+            IgnoreButton.BackColor = Theming.BlueBackColorButton;
+            IgnoreButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            IgnoreButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            SkipButton.ForeColor = Theming.BlueForeColorButton;
+            SkipButton.BackColor = Theming.BlueBackColorButton;
+            SkipButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            SkipButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
         }
     }
 }

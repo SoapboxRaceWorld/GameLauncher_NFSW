@@ -43,7 +43,7 @@ namespace GameLauncher.App
             this.ServerListRenderer.AutoArrange = false;
             this.ServerListRenderer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
             this.ServerListRenderer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ServerListRenderer.Font = new System.Drawing.Font("DejaVu Sans Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerListRenderer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerListRenderer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.ServerListRenderer.GridLines = true;
             this.ServerListRenderer.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
@@ -59,7 +59,9 @@ namespace GameLauncher.App
             // Loading
             // 
             this.Loading.AutoSize = true;
-            this.Loading.Location = new System.Drawing.Point(232, 242);
+            this.Loading.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Loading.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
+            this.Loading.Location = new System.Drawing.Point(220, 242);
             this.Loading.Name = "Loading";
             this.Loading.Size = new System.Drawing.Size(111, 13);
             this.Loading.TabIndex = 4;
@@ -71,11 +73,11 @@ namespace GameLauncher.App
             this.BtnAddServer.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.BtnAddServer.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.BtnAddServer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnAddServer.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BtnAddServer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnAddServer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.BtnAddServer.Location = new System.Drawing.Point(15, 247);
             this.BtnAddServer.Name = "BtnAddServer";
-            this.BtnAddServer.Size = new System.Drawing.Size(82, 23);
+            this.BtnAddServer.Size = new System.Drawing.Size(92, 23);
             this.BtnAddServer.TabIndex = 8;
             this.BtnAddServer.Text = "Add Server";
             this.BtnAddServer.UseVisualStyleBackColor = false;
@@ -87,7 +89,7 @@ namespace GameLauncher.App
             this.BtnSelectServer.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.BtnSelectServer.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.BtnSelectServer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnSelectServer.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BtnSelectServer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnSelectServer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.BtnSelectServer.Location = new System.Drawing.Point(399, 247);
             this.BtnSelectServer.Name = "BtnSelectServer";
@@ -103,7 +105,7 @@ namespace GameLauncher.App
             this.BtnClose.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.BtnClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.BtnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnClose.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BtnClose.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.BtnClose.Location = new System.Drawing.Point(480, 247);
             this.BtnClose.Name = "BtnClose";
@@ -117,7 +119,9 @@ namespace GameLauncher.App
             // 
             this.Version.AutoSize = true;
             this.Version.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.Version.Location = new System.Drawing.Point(232, 257);
+            this.Version.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Version.ForeColor = System.Drawing.Color.White;
+            this.Version.Location = new System.Drawing.Point(220, 257);
             this.Version.Name = "Version";
             this.Version.Size = new System.Drawing.Size(156, 13);
             this.Version.TabIndex = 9;
@@ -126,8 +130,7 @@ namespace GameLauncher.App
             // 
             // SelectServer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.ClientSize = new System.Drawing.Size(570, 275);
             this.Controls.Add(this.Version);
@@ -144,11 +147,11 @@ namespace GameLauncher.App
             this.MinimizeBox = false;
             this.Name = "SelectServer";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "GameLauncher - Please select a Server";
+            this.Text = "GameLauncher - Please Select a Server";
             this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
-
+            this.DoubleBuffered = true;
         }
 
         #endregion

@@ -1,43 +1,75 @@
 ﻿using GameLauncher.App.Classes;
-using GameLauncher.App.Classes.Logger;
-using GameLauncherReborn;
 using GameLauncher.Resources;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Net;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 
 namespace GameLauncher.App
 {
-    public partial class WelcomeScreen : Form {
-        private readonly IniFile _settingFile = new IniFile("Settings.ini");
-        List<CDNObject> CDNList = new List<CDNObject>();
-        private bool CDNStatusCheck = false;
-        private bool ServerStatusCheck = false;
+    public partial class WelcomeScreen : Form
+    {
+        private bool StatusCheck = false;
 
-        public WelcomeScreen() {
+        public WelcomeScreen()
+        {
             InitializeComponent();
-            ApplyEmbeddedFonts();
+            SetVisuals();
+        }
+
+        private void SetVisuals()
+        {
+            /*******************************/
+            /* Set Hardcoded Text           /
+            /*******************************/
+
+            VersionLabel.Text = "Version: v" + Application.ProductVersion;
+
+            /*******************************/
+            /* Set Font                     /
+            /*******************************/
+
+            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
+            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+            WelcomeText.Font = new Font(DejaVuSansBold, 10f, FontStyle.Bold);
+            DownloadSourceText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            CDNSource.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            Save.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            ListStatusText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            APIErrorButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            VersionLabel.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+
+            /********************************/
+            /* Set Theme Colors & Images     /
+            /********************************/
+
+            BackColor = Theming.WinFormTBGForeColor;
+            ForeColor = Theming.WinFormTextForeColor;
+
+            ListStatusText.ForeColor = Theming.WinFormTextForeColor;
+            WelcomeText.ForeColor = Theming.WinFormSecondaryTextForeColor;
+
+            DownloadSourceText.ForeColor = Theming.WinFormTextForeColor;
+
+            APIErrorButton.ForeColor = Theming.BlueForeColorButton;
+            APIErrorButton.BackColor = Theming.BlueBackColorButton;
+            APIErrorButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            APIErrorButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            Save.ForeColor = Theming.BlueForeColorButton;
+            Save.BackColor = Theming.BlueBackColorButton;
+            Save.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            Save.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            VersionLabel.ForeColor = Theming.WinFormTextForeColor;
+
+            /********************************/
+            /* Events                        /
+            /********************************/
 
             CDNSource.DrawItem += new DrawItemEventHandler(CDNSource_DrawItem);
             CDNSource.SelectedIndexChanged += new EventHandler(CDNSource_SelectedIndexChanged);
-            VersionLabel.Text = "Version : v" + Application.ProductVersion;
-        }
-
-        private void ApplyEmbeddedFonts()
-        {
-            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            FontFamily DejaVuSansCondensed = FontWrapper.Instance.GetFontFamily("DejaVuSansCondensed.ttf");
-            WelcomeText.Font = new Font(DejaVuSans, 9.75f, FontStyle.Bold);
-            DownloadSourceText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            CDNSource.Font = new Font(DejaVuSans, 8.25f, FontStyle.Bold);
-            Save.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            ServerStatusText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            CDNStatusText.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Regular);
-            APIErrorButton.Font = new Font(DejaVuSansCondensed, 9f, FontStyle.Bold);
-            VersionLabel.Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
         }
 
         private void CDNSource_SelectedIndexChanged(object sender, EventArgs e)
@@ -49,165 +81,75 @@ namespace GameLauncher.App
             }
         }
 
-        //Check Serverlist API Status Upon Main Screen load - DavidCarbon
-        private void PingServerListStatus()
+        private void CheckListStatus()
         {
-            bool WUGGAPIOffline = false;
-            bool DCAPIOffline = false;
-            bool DC2APIOffline = false;
-            bool AllAPIsOffline = false;
-
-            switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
+            if (VisualsAPIChecker.UnitedAPI != false)
             {
-                case API.Online:
-                    ServerStatusText.Text = "United Server List - Online";
-                    ServerStatusCheck = true;
-                    break;
-                default:
-                    WUGGAPIOffline = true;
-                    break;
+                ListStatusText.Text = "United List - Online";
+                StatusCheck = true;
             }
-
-            if (WUGGAPIOffline == true && DCAPIOffline == false && DC2APIOffline == false && AllAPIsOffline == false)
+            
+            if (VisualsAPIChecker.UnitedAPI != true)
             {
-                switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/serverlist.json"))
+                if (VisualsAPIChecker.CarbonAPI == true)
                 {
-                    case API.Online:
-                        ServerStatusText.Text = "Carbon Server List - Online";
-                        ServerStatusCheck = true;
-                        break;
-                    default:
-                        DCAPIOffline = true;
-                        break;
+                    ListStatusText.Text = "Carbon List - Online";
+                    StatusCheck = true;
                 }
             }
 
-            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == false && AllAPIsOffline == false)
+            if (VisualsAPIChecker.CarbonAPI != true)
             {
-                switch (APIStatusChecker.CheckStatus(Self.secondstaticapiserver + "/serverlist.json"))
+                if (VisualsAPIChecker.CarbonAPITwo == true)
                 {
-                    case API.Online:
-                        ServerStatusText.Text = "Carbon 2nd Server List - Online";
-                        ServerStatusCheck = true;
-                        break;
-                    default:
-                        DC2APIOffline = true;
-                        break;
+                    ListStatusText.Text = "Carbon 2nd List - Online";
+                    StatusCheck = true;
                 }
             }
 
-            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == true && AllAPIsOffline == false)
+            if (VisualsAPIChecker.CarbonAPITwo != true)
             {
-                switch (APIStatusChecker.CheckStatus(Self.woplserver + "/serverlist.json"))
+                if (VisualsAPIChecker.WOPLAPI == true)
                 {
-                    case API.Online:
-                        ServerStatusText.Text = "WOPL Server List - Online";
-                        ServerStatusCheck = true;
-                        break;
-                    default:
-                        AllAPIsOffline = true;
-                        break;
+                    ListStatusText.Text = "WOPL List - Online";
+                    StatusCheck = true;
                 }
             }
 
-            if (AllAPIsOffline == true)
+            if (VisualsAPIChecker.WOPLAPI != true)
             {
-                ServerStatusText.Text = "Server Lists Connection - Error";
+                ListStatusText.Text = "API Lists Connection - Error";
+            }
+
+            if (StatusCheck == false)
+            {
+                WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
+                APIErrorFormElements();
+            }
+            else
+            {
+                APIErrorFormElements(false);
+                SettingsFormElements(true);
+                WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
             }
         }
 
-        private void PingCDNListStatus()
+        private void WelcomeScreen_Load(object sender, EventArgs e)
         {
-            bool WUGGAPIOffline = false;
-            bool DCAPIOffline = false;
-            bool DC2APIOffline = false;
-            bool AllAPIsOffline = false;
-
-            switch (APIStatusChecker.CheckStatus(Self.mainserver + "/cdn_list.json"))
-            {
-                case API.Online:
-                    CDNStatusText.Text = "United CDN List - Online";
-                    CDNStatusCheck = true;
-                    break;
-                default:
-                    WUGGAPIOffline = true;
-                    break;
-            }
-
-            if (WUGGAPIOffline == true && DCAPIOffline == false && DC2APIOffline == false && AllAPIsOffline == false)
-            {
-                switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/cdn_list.json"))
-                {
-                    case API.Online:
-                        CDNStatusText.Text = "Carbon CDN List - Online";
-                        CDNStatusCheck = true;
-                        break;
-                    default:
-                        DCAPIOffline = true;
-                        break;
-                }
-            }
-
-            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == false && AllAPIsOffline == false)
-            {
-                switch (APIStatusChecker.CheckStatus(Self.secondstaticapiserver + "/cdn_list.json"))
-                {
-                    case API.Online:
-                        CDNStatusText.Text = "Carbon 2nd Server List - Online";
-                        CDNStatusCheck = true;
-                        break;
-                    default:
-                        DC2APIOffline = true;
-                        break;
-                }
-            }
-
-            if (WUGGAPIOffline == true && DCAPIOffline == true && DC2APIOffline == true && AllAPIsOffline == false)
-            {
-                switch (APIStatusChecker.CheckStatus(Self.woplserver + "/cdn_list.json"))
-                {
-                    case API.Online:
-                        CDNStatusText.Text = "WOPL Server List - Online";
-                        CDNStatusCheck = true;
-                        break;
-                    default:
-                        AllAPIsOffline = true;
-                        break;
-                }
-            }
-
-            if (AllAPIsOffline == true)
-            {
-                CDNStatusText.Text = "CDN Lists Connection - Error";
-            }
-        }
-
-        private void WelcomeScreen_Load(object sender, EventArgs e) {
             SettingsFormElements(false);
             APIErrorFormElements(false);
-            PingServerListStatus();
-            PingCDNListStatus();
-            CheckFinalAPIStatus();
+            CheckListStatus();
         }
 
-        private void ShowCDNSources()
+        private void Save_Click(object sender, EventArgs e)
         {
-            /* NEW CDN Display List */
-            List<CDNObject> finalCDNItems = new List<CDNObject>();
-
-            CDNListUpdater.UpdateCDNList();
-
-            Log.Info("WELCOME: Setting CDN list");
-            finalCDNItems = CDNListUpdater.GetCDNList();
-
-            CDNSource.DisplayMember = "Name";
-            CDNSource.DataSource = finalCDNItems;
-        }
-
-        private void Save_Click(object sender, EventArgs e) {
             if (((CDNObject)CDNSource.SelectedItem).Url != null)
             {
-                CDN.CDNUrl = ((CDNObject)CDNSource.SelectedItem).Url;
+                string ChoosenCDN = ((CDNObject)CDNSource.SelectedItem).Url;
+                char[] charsToTrim = { '/' };
+                string FinalCDNURL = ChoosenCDN.TrimEnd(charsToTrim);
+
+                CDN.CDNUrl = FinalCDNURL;
 
                 QuitWithoutSaving_Click(sender, e);
             }
@@ -217,7 +159,8 @@ namespace GameLauncher.App
             }
         }
 
-        private void QuitWithoutSaving_Click(object sender, EventArgs e) {
+        private void QuitWithoutSaving_Click(object sender, EventArgs e)
+        {
             this.Close();
         }
 
@@ -228,38 +171,6 @@ namespace GameLauncher.App
             WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
         }
 
-        private async void CheckFinalAPIStatus()
-        {
-            await Task.Delay(2000);
-            if (ServerStatusCheck == true && CDNStatusCheck == false)
-            {
-                WelcomeText.Text = "Looks like the Game Launcher failed to Reach CDN APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
-                APIErrorFormElements();
-            }
-
-            await Task.Delay(2000);
-            if (ServerStatusCheck == false && CDNStatusCheck == true)
-            {
-                WelcomeText.Text = "Looks like the Game Launcher failed to Reach Server Lists APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
-                APIErrorFormElements();
-            }
-
-            await Task.Delay(1000);
-            if (ServerStatusCheck == false && CDNStatusCheck == false)
-            {
-                WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
-                APIErrorFormElements();
-            }
-
-            await Task.Delay(1000);
-            if (ServerStatusCheck == true && CDNStatusCheck == true)
-            {
-                APIErrorFormElements(false);
-                SettingsFormElements(true);
-                WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
-            }
-        }
-
         private void APIErrorFormElements(bool hideElements = true)
         {
             APIErrorButton.Visible = hideElements;
@@ -267,7 +178,9 @@ namespace GameLauncher.App
 
         private void SettingsFormElements(bool hideElements = true)
         {
-            ShowCDNSources();
+            CDNSource.DisplayMember = "Name";
+            CDNSource.DataSource = CDNListUpdater.CleanList;
+
             DownloadSourceText.Visible = hideElements;
             CDNSource.Visible = hideElements;
             Save.Visible = hideElements;
@@ -278,8 +191,8 @@ namespace GameLauncher.App
             var font = (sender as ComboBox).Font;
             Brush backgroundColor;
             Brush textColor;
-            Brush customTextColor = new SolidBrush(Color.FromArgb(178, 210, 255));
-            Brush customBGColor = new SolidBrush(Color.FromArgb(44, 58, 76));
+            Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
+            Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
 
             var cdnListText = "";
 

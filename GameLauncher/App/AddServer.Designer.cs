@@ -46,7 +46,7 @@ namespace GameLauncher.App
             this.OkBTN.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.OkBTN.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.OkBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OkBTN.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OkBTN.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OkBTN.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.OkBTN.Location = new System.Drawing.Point(309, 108);
             this.OkBTN.Name = "OkBTN";
@@ -62,7 +62,7 @@ namespace GameLauncher.App
             this.CancelBTN.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.CancelBTN.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.CancelBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CancelBTN.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CancelBTN.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CancelBTN.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.CancelBTN.Location = new System.Drawing.Point(224, 108);
             this.CancelBTN.Name = "CancelBTN";
@@ -75,7 +75,7 @@ namespace GameLauncher.App
             // ServerNameLabel
             // 
             this.ServerNameLabel.AutoSize = true;
-            this.ServerNameLabel.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerNameLabel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerNameLabel.Location = new System.Drawing.Point(13, 13);
             this.ServerNameLabel.Name = "ServerNameLabel";
             this.ServerNameLabel.Size = new System.Drawing.Size(94, 14);
@@ -107,7 +107,7 @@ namespace GameLauncher.App
             // ServerAddressLabel
             // 
             this.ServerAddressLabel.AutoSize = true;
-            this.ServerAddressLabel.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerAddressLabel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerAddressLabel.Location = new System.Drawing.Point(13, 62);
             this.ServerAddressLabel.Name = "ServerAddressLabel";
             this.ServerAddressLabel.Size = new System.Drawing.Size(108, 14);
@@ -118,7 +118,7 @@ namespace GameLauncher.App
             // Error
             // 
             this.Error.AutoSize = true;
-            this.Error.Font = new System.Drawing.Font("DejaVu Sans Condensed", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Error.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
             this.Error.Location = new System.Drawing.Point(12, 104);
             this.Error.Name = "Error";
@@ -131,6 +131,7 @@ namespace GameLauncher.App
             // Version
             // 
             this.Version.AutoSize = true;
+            this.ServerAddress.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Version.Location = new System.Drawing.Point(14, 124);
             this.Version.Name = "Version";
             this.Version.Size = new System.Drawing.Size(156, 13);
@@ -164,7 +165,7 @@ namespace GameLauncher.App
             this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
-
+            this.DoubleBuffered = true;
         }
 
         #endregion
