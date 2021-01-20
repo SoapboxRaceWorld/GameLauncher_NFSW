@@ -60,7 +60,6 @@ namespace GameLauncher.App
             this.SettingsCancel = new System.Windows.Forms.Button();
             this.ThemeAuthor = new System.Windows.Forms.Label();
             this.ThemeName = new System.Windows.Forms.Label();
-            this.SettingsXMLButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // SettingsClearServerModCacheButton
@@ -508,24 +507,12 @@ namespace GameLauncher.App
             this.ThemeName.Text = "Theme Name: Default";
             this.ThemeName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // SettingsXMLButton
-            // 
-            this.SettingsXMLButton.BackColor = System.Drawing.Color.Black;
-            this.SettingsXMLButton.Location = new System.Drawing.Point(365, 325);
-            this.SettingsXMLButton.Name = "SettingsXMLButton";
-            this.SettingsXMLButton.Size = new System.Drawing.Size(75, 23);
-            this.SettingsXMLButton.TabIndex = 192;
-            this.SettingsXMLButton.Text = "XML";
-            this.SettingsXMLButton.UseVisualStyleBackColor = false;
-            this.SettingsXMLButton.Click += new System.EventHandler(this.SettingsXMLButton_Click);
-            // 
             // SettingsScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
-            this.Controls.Add(this.SettingsXMLButton);
             this.Controls.Add(this.ThemeName);
             this.Controls.Add(this.ThemeAuthor);
             this.Controls.Add(this.SettingsClearServerModCacheButton);
@@ -604,6 +591,5 @@ namespace GameLauncher.App
         private System.Windows.Forms.Label SettingsBkupCDNText;
         private System.Windows.Forms.Label ThemeAuthor;
         private System.Windows.Forms.Label ThemeName;
-        private System.Windows.Forms.Button SettingsXMLButton;
     }
 }

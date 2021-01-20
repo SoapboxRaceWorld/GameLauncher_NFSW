@@ -912,10 +912,5 @@ namespace GameLauncher.App
                 Log.Error("SETTINGS PINGING CDN: Settings.ini has an Empty CDN URL");
             }
         }
-
-        private void SettingsXMLButton_Click(object sender, EventArgs e)
-        {
-            new SettingsXMLScreen().ShowDialog();
-        }
     }
 }
