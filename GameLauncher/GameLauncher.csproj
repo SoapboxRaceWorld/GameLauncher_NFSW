@@ -159,6 +159,7 @@
     <Compile Include="App\Classes\LauncherCore\Client\Auth\ModernAuth.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\Tokens.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileAccountSave.cs" />
+    <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileGameSettings.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileSettingsSave.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\CDN.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\ModNetLinksCleanup.cs" />
@@ -215,6 +216,12 @@
     </Compile>
     <Compile Include="App\SettingsScreen.Designer.cs">
       <DependentUpon>SettingsScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="App\SettingsXMLScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\SettingsXMLScreen.Designer.cs">
+      <DependentUpon>SettingsXMLScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="App\SplashScreen.cs">
       <SubType>Form</SubType>
