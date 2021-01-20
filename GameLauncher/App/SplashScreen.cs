@@ -9,6 +9,7 @@ namespace GameLauncher.App.Classes
         {
             InitializeComponent();
 
+            BackColor = Theming.SplashScreenTransparencyKey;
             TransparencyKey = Theming.SplashScreenTransparencyKey;
             BackgroundImage = Theming.Logo;
         }
