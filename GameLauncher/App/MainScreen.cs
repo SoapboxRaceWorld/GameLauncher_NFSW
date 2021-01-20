@@ -34,8 +34,6 @@ using GameLauncher.App.Classes.RPC;
 using GameLauncher.App.Classes.GPU;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using System.Management.Automation;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 using WindowsFirewallHelper;
 using GameLauncher.App.Classes.InsiderKit;
 using System.Net.Http;
@@ -67,7 +65,6 @@ namespace GameLauncher
 
         public static String getTempNa = Path.GetTempFileName();
 
-        //private bool _disableChecks;
         public bool _disableProxy;
         public bool _disableDiscordRPC;
 
@@ -90,11 +87,6 @@ namespace GameLauncher
 
         private readonly RichPresence _presence = new RichPresence();
 
-        //private readonly Pen _colorOffline = new Pen(Color.FromArgb(128, 0, 0));
-        //private readonly Pen _colorOnline = new Pen(Color.FromArgb(0, 128, 0));
-        //private readonly Pen _colorLoading = new Pen(Color.FromArgb(0, 0, 0));
-
-        //private IniFile _settingFile = new IniFile("Settings.ini");
         private string _presenceImageKey;
         private string _NFSW_Installation_Source;
         private string _realServername;
@@ -106,9 +98,6 @@ namespace GameLauncher
         bool isDownloadingModNetFiles = false;
         int CurrentModFileCount = 0;
         int TotalModFileCount = 0;
-
-        //private Point _startPoint = new Point(28, 308);
-        //private Point _endPoint = new Point(549, 308);
 
         ServerInfo _serverInfo = null;
         GetServerInformation json = new GetServerInformation();
@@ -128,14 +117,6 @@ namespace GameLauncher
         }
 
         public static Random random = new Random();
-        //Log launcherLog = new Log("launcher.log");
-
-        public static string RandomString(int length)
-        {
-            const string chars = "qwertyuiopasdfghjklzxcvbnm1234567890_";
-            return new string(Enumerable.Repeat(chars, length)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
 
         private void MoveWindow_MouseDown(object sender, MouseEventArgs e)
         {
@@ -230,8 +211,8 @@ namespace GameLauncher
             Log.Visuals("CORE: InitializeComponent");
             InitializeComponent();
 
-            Log.Visuals("CORE: Applying Fonts");
-            ApplyEmbeddedFonts();
+            Log.Visuals("CORE: Applying Fonts & Theme");
+            SetVisuals();
 
             _disableProxy = (FileSettingsSave.Proxy == "1");
             _disableDiscordRPC = (FileSettingsSave.RPC == "1");
@@ -243,71 +224,6 @@ namespace GameLauncher
             MaximizeBox = false;
             Log.Visuals("CORE: Setting Styles");
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
-
-            Log.Visuals("CORE: Applying EventHandlers");
-            CloseBTN.MouseEnter += new EventHandler(CloseBTN_MouseEnter);
-            CloseBTN.MouseLeave += new EventHandler(CloseBTN_MouseLeave);
-            CloseBTN.Click += new EventHandler(CloseBTN_Click);
-
-            SettingsButton.MouseEnter += new EventHandler(SettingsButton_MouseEnter);
-            SettingsButton.MouseLeave += new EventHandler(SettingsButton_MouseLeave);
-            SettingsButton.Click += new EventHandler(SettingsButton_Click);
-
-            LoginButton.MouseEnter += new EventHandler(LoginButton_MouseEnter);
-            LoginButton.MouseLeave += new EventHandler(LoginButton_MouseLeave);
-            LoginButton.MouseUp += new MouseEventHandler(LoginButton_MouseUp);
-            LoginButton.MouseDown += new MouseEventHandler(LoginButton_MouseDown);
-            LoginButton.Click += new EventHandler(LoginButton_Click);
-
-            RegisterButton.MouseEnter += Greenbutton_hover_MouseEnter;
-            RegisterButton.MouseLeave += Greenbutton_MouseLeave;
-            RegisterButton.MouseUp += Greenbutton_hover_MouseUp;
-            RegisterButton.MouseDown += Greenbutton_click_MouseDown;
-            RegisterButton.Click += RegisterButton_Click;
-
-            RegisterCancel.MouseEnter += new EventHandler(Graybutton_hover_MouseEnter);
-            RegisterCancel.MouseLeave += new EventHandler(Graybutton_MouseLeave);
-            RegisterCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
-            RegisterCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
-            RegisterCancel.Click += new EventHandler(RegisterCancel_Click);
-
-            LogoutButton.MouseEnter += new EventHandler(Graybutton_hover_MouseEnter);
-            LogoutButton.MouseLeave += new EventHandler(Graybutton_MouseLeave);
-            LogoutButton.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
-            LogoutButton.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
-            LogoutButton.Click += new EventHandler(LogoutButton_Click);
-
-            AddServer.Click += new EventHandler(AddServer_Click);
-
-            MainEmail.KeyUp += new KeyEventHandler(Loginbuttonenabler);
-            MainEmail.KeyDown += new KeyEventHandler(LoginEnter);
-            MainPassword.KeyUp += new KeyEventHandler(Loginbuttonenabler);
-            MainPassword.KeyDown += new KeyEventHandler(LoginEnter);
-
-            ServerPick.SelectedIndexChanged += new EventHandler(ServerPick_SelectedIndexChanged);
-            ServerPick.DrawItem += new DrawItemEventHandler(ComboBox1_DrawItem);
-
-            ForgotPassword.LinkClicked += new LinkLabelLinkClickedEventHandler(ForgotPassword_LinkClicked);
-
-            MouseMove += new MouseEventHandler(MoveWindow_MouseMove);
-            MouseUp += new MouseEventHandler(MoveWindow_MouseUp);
-            MouseDown += new MouseEventHandler(MoveWindow_MouseDown);
-
-            logo.MouseMove += new MouseEventHandler(MoveWindow_MouseMove);
-            logo.MouseUp += new MouseEventHandler(MoveWindow_MouseUp);
-            logo.MouseDown += new MouseEventHandler(MoveWindow_MouseDown);
-
-            PlayButton.MouseEnter += new EventHandler(PlayButton_MouseEnter);
-            PlayButton.MouseLeave += new EventHandler(PlayButton_MouseLeave);
-            PlayButton.MouseUp += new MouseEventHandler(PlayButton_MouseUp);
-            PlayButton.MouseDown += new MouseEventHandler(PlayButton_MouseDown);
-            PlayButton.Click += new EventHandler(PlayButton_Click);
-
-            RegisterText.MouseEnter += new EventHandler(Greenbutton_hover_MouseEnter);
-            RegisterText.MouseLeave += new EventHandler(Greenbutton_MouseLeave);
-            RegisterText.MouseUp += new MouseEventHandler(Greenbutton_hover_MouseUp);
-            RegisterText.MouseDown += new MouseEventHandler(Greenbutton_click_MouseDown);
-            RegisterText.Click += new EventHandler(RegisterText_LinkClicked);
 
             this.Load += new EventHandler(MainScreen_Load);
 
@@ -515,7 +431,6 @@ namespace GameLauncher
         private void MainScreen_Load(object sender, EventArgs e)
         {
             Log.Visuals("CORE: Entering mainScreen_Load");
-            RenderTheme();
 
             Log.Visuals("CORE: Setting WindowName");
             Text = "GameLauncherReborn v" + Application.ProductVersion;
@@ -989,7 +904,7 @@ namespace GameLauncher
 
             LoginButton.ForeColor = Theming.SixTextForeColor;
             var verticalImageUrl = "";
-            VerticalBanner.Image = GrayscaleMe(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+            VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
             VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
 
             var serverIp = _serverInfo.IpAddress;
@@ -1436,14 +1351,14 @@ namespace GameLauncher
                             if (e4.Cancelled)
                             {
                                 //Load cached banner!
-                                VerticalBanner.Image = GrayscaleMe(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
                                 VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                 return;
                             }
                             else if (e4.Error != null)
                             {
                                 //Load cached banner!
-                                VerticalBanner.Image = GrayscaleMe(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
                                 VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                 return;
                             } 
@@ -1460,9 +1375,9 @@ namespace GameLauncher
                                         VerticalBanner.Image = image;
                                         VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
 
-                                        Console.WriteLine(GetFileExtension(verticalImageUrl));
+                                        Console.WriteLine(VerticalBanners.GetFileExtension(verticalImageUrl));
 
-                                        if (GetFileExtension(verticalImageUrl) != "gif")
+                                        if (VerticalBanners.GetFileExtension(verticalImageUrl) != "gif")
                                         {
                                             File.WriteAllBytes(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin", memoryStream.ToArray());
                                         }
@@ -1485,101 +1400,11 @@ namespace GameLauncher
                     else
                     {
                         //Load cached banner!
-                        VerticalBanner.Image = GrayscaleMe(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+                        VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
                         VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                     }
                 }
             };
-        }
-
-        public string GetFileExtension(String filename)
-        {
-            return filename.Split('.').Last();
-        }
-
-        public Image GrayscaleMe(String filename)
-        {
-            if (!File.Exists(filename)) return null;
-
-            try
-            {
-                using (var fs = new FileStream(filename, FileMode.Open)) 
-                {
-                    var bmp = new Bitmap(fs);
-                    Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
-                    BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.ReadWrite, bmp.PixelFormat);
-                    IntPtr ptr = bmpData.Scan0;
-                    int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
-                    byte[] rgbValues = new byte[bytes];
-                    Marshal.Copy(ptr, rgbValues, 0, bytes);
-
-                    for (int i = 0; i < rgbValues.Length; i += 3)
-                    {
-                        byte gray = (byte)(rgbValues[i] * .21 + rgbValues[i + 1] * .71 + rgbValues[i + 2] * .071);
-                        rgbValues[i] = rgbValues[i + 1] = rgbValues[i + 2] = gray;
-                    }
-
-                    Marshal.Copy(rgbValues, 0, ptr, bytes);
-                    bmp.UnlockBits(bmpData);
-                    return (Bitmap)bmp.Clone();
-                }
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        /* Font for all Systems */
-        private void ApplyEmbeddedFonts()
-        {
-            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
-            /* Front Screen */
-            InsiderBuildNumberText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            SelectServerBtn.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            translatedBy.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
-            ServerPick.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            AddServer.Font = new Font(DejaVuSansBold, 8f, FontStyle.Bold);
-            ShowPlayPanel.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
-            CurrentWindowInfo.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            LauncherStatusText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            LauncherStatusDesc.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            ServerStatusText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            ServerStatusDesc.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            APIStatusText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            APIStatusDesc.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            ExtractingProgress.Font  = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            /* Social Panel */
-            //ServerInfoPanel.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
-            HomePageLink.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            DiscordInviteLink.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            FacebookGroupLink.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            TwitterAccountLink.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            SceneryGroupText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            ServerShutDown.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            /* Log In Panel */
-            MainEmail.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            MainPassword.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            RememberMe.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            ForgotPassword.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            LoginButton.Font = new Font(DejaVuSansBold, 10f, FontStyle.Bold);
-            RegisterText.Font = new Font(DejaVuSansBold, 10f, FontStyle.Bold);
-            ServerPingStatusText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            LogoutButton.Font = new Font(DejaVuSansBold, 10f, FontStyle.Bold);
-            PlayButton.Font = new Font(DejaVuSansBold, 14f, FontStyle.Bold);
-            PlayProgress.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            PlayProgressText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            PlayProgressTextTimer.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            /* Registering Panel */
-            RegisterPanel.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            RegisterEmail.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            RegisterPassword.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            RegisterConfirmPassword.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            RegisterTicket.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            RegisterAgree.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            RegisterButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            RegisterCancel.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
         }
 
         private void RegisterText_LinkClicked(object sender, EventArgs e)
@@ -2622,7 +2447,7 @@ namespace GameLauncher
                 double bytesIn = double.Parse(e.BytesReceived.ToString());
                 double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
                 double percentage = bytesIn / totalBytes * 100;
-                PlayProgressText.Text = ("["+CurrentModFileCount+" / "+TotalModFileCount+"] Downloading " + ModNetFileNameInUse + ": " + FormatFileSize(e.BytesReceived) + " of " + FormatFileSize(e.TotalBytesToReceive)).ToUpper();
+                PlayProgressText.Text = ("["+CurrentModFileCount+" / "+TotalModFileCount+"] Downloading " + ModNetFileNameInUse + ": " + TimeConversions.FormatFileSize(e.BytesReceived) + " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive)).ToUpper();
 
                 ExtractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
                 ExtractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
@@ -3047,49 +2872,11 @@ namespace GameLauncher
             unpacker.Start();
         }
 
-        private string FormatFileSize(long byteCount, bool si = true)
-        {
-            int unit = si ? 1000 : 1024;
-            if (byteCount < unit) return byteCount + " B";
-            int exp = (int)(Math.Log(byteCount) / Math.Log(unit));
-            String pre = (si ? "kMGTPE" : "KMGTPE")[exp - 1] + (si ? "" : "i");
-            return String.Format("{0}{1}B", Convert.ToDecimal(byteCount / Math.Pow(unit, exp)).ToString("0.##"), pre);
-        }
-
-        private string EstimateFinishTime(long current, long total)
-        {
-            try
-            {
-                var num = current / (double)total;
-                if (num < 0.00185484899838312)
-                {
-                    return "Calculating";
-                }
-
-                var now = DateTime.Now - _downloadStartTime;
-                var timeSpan = TimeSpan.FromTicks((long)(now.Ticks / num)) - now;
-
-                int rHours = Convert.ToInt32(timeSpan.Hours.ToString()) + 1;
-                int rMinutes = Convert.ToInt32(timeSpan.Minutes.ToString()) + 1;
-                int rSeconds = Convert.ToInt32(timeSpan.Seconds.ToString()) + 1;
-
-                if (rHours > 1) return rHours.ToString() + " hours remaining";
-                if (rMinutes > 1) return rMinutes.ToString() + " minutes remaining";
-                if (rSeconds > 1) return rSeconds.ToString() + " seconds remaining";
-
-                return "Just now";
-            }
-            catch
-            {
-                return "N/A";
-            }
-        }
-
         private void OnDownloadProgress(long downloadLength, long downloadCurrent, long compressedLength, string filename, int skiptime = 0)
         {
             if (downloadCurrent < compressedLength)
             {
-                PlayProgressText.Text = String.Format("Downloading — {0} of {1} ({3}%) — {2}", FormatFileSize(downloadCurrent), FormatFileSize(compressedLength), EstimateFinishTime(downloadCurrent, compressedLength), (int)(100 * downloadCurrent / compressedLength)).ToUpper();
+                PlayProgressText.Text = String.Format("Downloading — {0} of {1} ({3}%) — {2}", TimeConversions.FormatFileSize(downloadCurrent), TimeConversions.FormatFileSize(compressedLength), TimeConversions.EstimateFinishTime(downloadCurrent, compressedLength, _downloadStartTime), (int)(100 * downloadCurrent / compressedLength)).ToUpper();
             }
 
             try
@@ -3210,7 +2997,7 @@ namespace GameLauncher
         private void OnShowExtract(string filename, long currentCount, long allFilesCount) {
             if (PlayProgress.Value == 100)
             {
-                PlayProgressText.Text = String.Format("Extracting — {0} of {1} ({3}%) — {2}", FormatFileSize(currentCount), FormatFileSize(allFilesCount), EstimateFinishTime(currentCount, allFilesCount), (int)(100 * currentCount / allFilesCount)).ToUpper();
+                PlayProgressText.Text = String.Format("Extracting — {0} of {1} ({3}%) — {2}", TimeConversions.FormatFileSize(currentCount), TimeConversions.FormatFileSize(allFilesCount), TimeConversions.EstimateFinishTime(currentCount, allFilesCount, _downloadStartTime), (int)(100 * currentCount / allFilesCount)).ToUpper();
             }
 
             ExtractingProgress.Value = (int)(100 * currentCount / allFilesCount);
@@ -3321,8 +3108,64 @@ namespace GameLauncher
             FileSettingsSave.SaveSettings();
         }
 
-        private void RenderTheme()
+        private void SetVisuals()
         {
+            /*******************************/
+            /* Set Font                     /
+            /*******************************/
+
+            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
+            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+            /* Front Screen */
+            InsiderBuildNumberText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SelectServerBtn.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            translatedBy.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
+            ServerPick.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            AddServer.Font = new Font(DejaVuSansBold, 8f, FontStyle.Bold);
+            ShowPlayPanel.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
+            CurrentWindowInfo.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            LauncherStatusText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            LauncherStatusDesc.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            ServerStatusText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            ServerStatusDesc.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            APIStatusText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            APIStatusDesc.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            ExtractingProgress.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            /* Social Panel */
+            //ServerInfoPanel.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
+            HomePageLink.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            DiscordInviteLink.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            FacebookGroupLink.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            TwitterAccountLink.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SceneryGroupText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            ServerShutDown.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            /* Log In Panel */
+            MainEmail.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            MainPassword.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            RememberMe.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            ForgotPassword.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            LoginButton.Font = new Font(DejaVuSansBold, 10f, FontStyle.Bold);
+            RegisterText.Font = new Font(DejaVuSansBold, 10f, FontStyle.Bold);
+            ServerPingStatusText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            LogoutButton.Font = new Font(DejaVuSansBold, 10f, FontStyle.Bold);
+            PlayButton.Font = new Font(DejaVuSansBold, 14f, FontStyle.Bold);
+            PlayProgress.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            PlayProgressText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            PlayProgressTextTimer.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            /* Registering Panel */
+            RegisterPanel.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            RegisterEmail.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            RegisterPassword.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            RegisterConfirmPassword.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            RegisterTicket.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            RegisterAgree.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            RegisterButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            RegisterCancel.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+
+            /********************************/
+            /* Set Theme Colors & Images     /
+            /********************************/
+
             /* Set Background with Transparent Key */
             BackgroundImage = Theming.MainScreen;
             TransparencyKey = Theming.MainScreenTransparencyKey;
@@ -3377,6 +3220,74 @@ namespace GameLauncher
             HomePageLink.ActiveLinkColor = Theming.FivithTextForeColor;
 
             InsiderBuildNumberText.ForeColor = Theming.FivithTextForeColor;
+
+            /********************************/
+            /* Events                        /
+            /********************************/
+
+            CloseBTN.MouseEnter += new EventHandler(CloseBTN_MouseEnter);
+            CloseBTN.MouseLeave += new EventHandler(CloseBTN_MouseLeave);
+            CloseBTN.Click += new EventHandler(CloseBTN_Click);
+
+            SettingsButton.MouseEnter += new EventHandler(SettingsButton_MouseEnter);
+            SettingsButton.MouseLeave += new EventHandler(SettingsButton_MouseLeave);
+            SettingsButton.Click += new EventHandler(SettingsButton_Click);
+
+            LoginButton.MouseEnter += new EventHandler(LoginButton_MouseEnter);
+            LoginButton.MouseLeave += new EventHandler(LoginButton_MouseLeave);
+            LoginButton.MouseUp += new MouseEventHandler(LoginButton_MouseUp);
+            LoginButton.MouseDown += new MouseEventHandler(LoginButton_MouseDown);
+            LoginButton.Click += new EventHandler(LoginButton_Click);
+
+            RegisterButton.MouseEnter += Greenbutton_hover_MouseEnter;
+            RegisterButton.MouseLeave += Greenbutton_MouseLeave;
+            RegisterButton.MouseUp += Greenbutton_hover_MouseUp;
+            RegisterButton.MouseDown += Greenbutton_click_MouseDown;
+            RegisterButton.Click += RegisterButton_Click;
+
+            RegisterCancel.MouseEnter += new EventHandler(Graybutton_hover_MouseEnter);
+            RegisterCancel.MouseLeave += new EventHandler(Graybutton_MouseLeave);
+            RegisterCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
+            RegisterCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
+            RegisterCancel.Click += new EventHandler(RegisterCancel_Click);
+
+            LogoutButton.MouseEnter += new EventHandler(Graybutton_hover_MouseEnter);
+            LogoutButton.MouseLeave += new EventHandler(Graybutton_MouseLeave);
+            LogoutButton.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
+            LogoutButton.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
+            LogoutButton.Click += new EventHandler(LogoutButton_Click);
+
+            AddServer.Click += new EventHandler(AddServer_Click);
+
+            MainEmail.KeyUp += new KeyEventHandler(Loginbuttonenabler);
+            MainEmail.KeyDown += new KeyEventHandler(LoginEnter);
+            MainPassword.KeyUp += new KeyEventHandler(Loginbuttonenabler);
+            MainPassword.KeyDown += new KeyEventHandler(LoginEnter);
+
+            ServerPick.SelectedIndexChanged += new EventHandler(ServerPick_SelectedIndexChanged);
+            ServerPick.DrawItem += new DrawItemEventHandler(ComboBox1_DrawItem);
+
+            ForgotPassword.LinkClicked += new LinkLabelLinkClickedEventHandler(ForgotPassword_LinkClicked);
+
+            MouseMove += new MouseEventHandler(MoveWindow_MouseMove);
+            MouseUp += new MouseEventHandler(MoveWindow_MouseUp);
+            MouseDown += new MouseEventHandler(MoveWindow_MouseDown);
+
+            logo.MouseMove += new MouseEventHandler(MoveWindow_MouseMove);
+            logo.MouseUp += new MouseEventHandler(MoveWindow_MouseUp);
+            logo.MouseDown += new MouseEventHandler(MoveWindow_MouseDown);
+
+            PlayButton.MouseEnter += new EventHandler(PlayButton_MouseEnter);
+            PlayButton.MouseLeave += new EventHandler(PlayButton_MouseLeave);
+            PlayButton.MouseUp += new MouseEventHandler(PlayButton_MouseUp);
+            PlayButton.MouseDown += new MouseEventHandler(PlayButton_MouseDown);
+            PlayButton.Click += new EventHandler(PlayButton_Click);
+
+            RegisterText.MouseEnter += new EventHandler(Greenbutton_hover_MouseEnter);
+            RegisterText.MouseLeave += new EventHandler(Greenbutton_MouseLeave);
+            RegisterText.MouseUp += new MouseEventHandler(Greenbutton_hover_MouseUp);
+            RegisterText.MouseDown += new MouseEventHandler(Greenbutton_click_MouseDown);
+            RegisterText.Click += new EventHandler(RegisterText_LinkClicked);
         }
     }
     /* Moved 7 Unused Code to Gist */

@@ -9,7 +9,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
     {
         private static readonly IniFile ThemeFile = new IniFile("Theme.ini");
 
-        private static string ThemeFolder = AppDomain.CurrentDomain.BaseDirectory + "Theme";
+        private static readonly string ThemeFolder = AppDomain.CurrentDomain.BaseDirectory + "Theme";
 
 
         /* Theme Name & Author */

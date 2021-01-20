@@ -165,7 +165,12 @@
     <Compile Include="App\Classes\LauncherCore\Validator\Email\IsEmailValid.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\JSON\IsJSONValid.cs" />
     <Compile Include="App\Classes\LauncherCore\Visuals\Delay.cs" />
+    <Compile Include="App\Classes\LauncherCore\Visuals\ProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="App\Classes\LauncherCore\Visuals\Theming.cs" />
+    <Compile Include="App\Classes\LauncherCore\Visuals\TimeConversions.cs" />
+    <Compile Include="App\Classes\LauncherCore\Visuals\VerticalBanners.cs" />
     <Compile Include="App\Classes\SystemPlatform\Linux\DetectLinux.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\Downloader.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderCommand.cs" />
@@ -195,9 +200,6 @@
     <Compile Include="App\Classes\LauncherCore\Client\NFSW.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\ParseUri.cs" />
     <Compile Include="App\Classes\LauncherCore\Visuals\AboutNoteBlock.cs" />
-    <Compile Include="App\Classes\LauncherCore\Visuals\ProgressBar.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="App\Classes\LauncherCore\Visuals\Prompt.cs" />
     <Compile Include="App\Classes\LauncherCore\Proxy\CommunicationLog.cs" />
     <Compile Include="App\Classes\LauncherCore\Proxy\NancyBootstrapper.cs" />
