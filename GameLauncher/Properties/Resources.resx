@@ -118,26 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ac_success" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ac_success.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ac_warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ac_warning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="settingsbtn" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\settingsbtn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ac_unknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ac_unknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="secondarybackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\secondarybackground.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="close" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\close.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="graybutton" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\graybutton.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -165,30 +150,6 @@
   </data>
   <data name="playbutton_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\playbutton_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="api_checking" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\api_checking.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="api_error" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\api_error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="api_success" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\api_success.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="api_unkown" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\api_unkown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="server_checking" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\server_checking.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="server_offline" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\server_offline.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="server_online" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\server_online.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="server_unknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\server_unknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="email_error_text_border" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\email_error_text_border.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -250,10 +211,64 @@
   <data name="progress_warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\progress_warning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ac_error" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ac_error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="progress_outline" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\progress_outline.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_api_checking" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_api_checking.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_api_offline" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_api_offline.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_api_online" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_api_online.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_api_unknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_api_unknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_close" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_close.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_close_click" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_close_click.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_close_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_close_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_game_server_checking" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_game_server_checking.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_game_server_offline" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_game_server_offline.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_game_server_online" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_game_server_online.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_game_server_unknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_game_server_unknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_gear" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_gear.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_gear_click" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_gear_click.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_gear_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_gear_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_shield_checking" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_shield_checking.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_shield_error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_shield_error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_shield_success" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_shield_success.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_shield_unknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_shield_unknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_shield_warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_shield_warning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

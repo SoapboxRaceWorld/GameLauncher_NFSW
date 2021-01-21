@@ -660,6 +660,8 @@ namespace GameLauncher
 
         private void CloseBTN_Click(object sender, EventArgs e)
         {
+            CloseBTN.BackgroundImage = Theming.CloseButtonClick;
+
             FileSettingsSave.SaveSettings();
             FileAccountSave.SaveAccount();
 
@@ -700,7 +702,7 @@ namespace GameLauncher
 
         private void CloseBTN_MouseEnter(object sender, EventArgs e)
         {
-            //CloseBTN.BackgroundImage = Properties.Resources.close_hover;
+            CloseBTN.BackgroundImage = Theming.CloseButtonHover;
         }
 
         private void CloseBTN_MouseLeave(object sender, EventArgs e)
@@ -1405,7 +1407,7 @@ namespace GameLauncher
                     }
                 }
             };
-        }
+        } 
 
         private void RegisterText_LinkClicked(object sender, EventArgs e)
         {
@@ -1884,6 +1886,8 @@ namespace GameLauncher
         /* SETTINGS PAGE LAYOUT */
         private void SettingsButton_Click(object sender, EventArgs e)
         {
+            SettingsButton.BackgroundImage = Theming.GearButtonClick;
+
             if (!(ServerPick.SelectedItem is ServerInfo server)) return;
 
             new SettingsScreen(server.IpAddress, server.Name).ShowDialog();
@@ -1891,6 +1895,7 @@ namespace GameLauncher
 
         private void SettingsButton_MouseEnter(object sender, EventArgs e)
         {
+            SettingsButton.BackgroundImage = Theming.GearButtonHover;
         }
 
         private void SettingsButton_MouseLeave(object sender, EventArgs e)

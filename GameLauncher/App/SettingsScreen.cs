@@ -182,7 +182,7 @@ namespace GameLauncher.App
             /********************************/
 
             SettingsCDNPick.DrawItem += new DrawItemEventHandler(SettingsCDNPick_DrawItem);
-            /*
+
             SettingsSave.MouseEnter += new EventHandler(Greenbutton_hover_MouseEnter);
             SettingsSave.MouseLeave += new EventHandler(Greenbutton_MouseLeave);
             SettingsSave.MouseUp += new MouseEventHandler(Greenbutton_hover_MouseUp);
@@ -192,9 +192,6 @@ namespace GameLauncher.App
             SettingsCancel.MouseLeave += new EventHandler(Graybutton_MouseLeave);
             SettingsCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
             SettingsCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
-            */
-
-
         }
 
         /********************************/
@@ -911,6 +908,46 @@ namespace GameLauncher.App
             {
                 Log.Error("SETTINGS PINGING CDN: Settings.ini has an Empty CDN URL");
             }
+        }
+
+        private void Greenbutton_hover_MouseEnter(object sender, EventArgs e)
+        {
+            SettingsSave.Image = Theming.GreenButtonHover;
+        }
+
+        private void Greenbutton_MouseLeave(object sender, EventArgs e)
+        {
+            SettingsSave.Image = Theming.GreenButton;
+        }
+
+        private void Greenbutton_hover_MouseUp(object sender, EventArgs e)
+        {
+            SettingsSave.Image = Theming.GreenButtonHover;
+        }
+
+        private void Greenbutton_click_MouseDown(object sender, EventArgs e)
+        {
+            SettingsSave.Image = Theming.GreenButtonClick;
+        }
+
+        private void Graybutton_click_MouseDown(object sender, EventArgs e)
+        {
+            SettingsCancel.Image = Theming.GrayButtonClick;
+        }
+
+        private void Graybutton_hover_MouseEnter(object sender, EventArgs e)
+        {
+            SettingsCancel.Image = Theming.GrayButtonHover;
+        }
+
+        private void Graybutton_MouseLeave(object sender, EventArgs e)
+        {
+            SettingsCancel.Image = Theming.GrayButton;
+        }
+
+        private void Graybutton_hover_MouseUp(object sender, EventArgs e)
+        {
+            SettingsCancel.Image = Theming.GrayButtonHover;
         }
     }
 }

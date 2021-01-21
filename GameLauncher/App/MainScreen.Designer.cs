@@ -32,29 +32,20 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainScreen));
             this.Timeout = new System.Windows.Forms.Timer(this.components);
             this.Notification = new System.Windows.Forms.NotifyIcon(this.components);
-            this.logo = new System.Windows.Forms.PictureBox();
-            this.CloseBTN = new System.Windows.Forms.PictureBox();
             this.SelectServerBtn = new System.Windows.Forms.Button();
             this.translatedBy = new System.Windows.Forms.Label();
-            this.SettingsButton = new System.Windows.Forms.PictureBox();
             this.ServerPick = new System.Windows.Forms.ComboBox();
             this.AddServer = new System.Windows.Forms.Button();
-            this.VerticalBanner = new System.Windows.Forms.PictureBox();
             this.PlayProgressText = new System.Windows.Forms.Label();
-            this.LauncherIconStatus = new System.Windows.Forms.PictureBox();
             this.LauncherStatusText = new System.Windows.Forms.Label();
             this.LauncherStatusDesc = new System.Windows.Forms.Label();
-            this.ServerStatusIcon = new System.Windows.Forms.PictureBox();
             this.ServerStatusText = new System.Windows.Forms.Label();
             this.ServerStatusDesc = new System.Windows.Forms.Label();
-            this.APIStatusIcon = new System.Windows.Forms.PictureBox();
             this.APIStatusText = new System.Windows.Forms.Label();
             this.APIStatusDesc = new System.Windows.Forms.Label();
             this.CurrentWindowInfo = new System.Windows.Forms.Label();
             this.MainEmail = new System.Windows.Forms.TextBox();
-            this.MainEmailBorder = new System.Windows.Forms.PictureBox();
             this.MainPassword = new System.Windows.Forms.TextBox();
-            this.MainPasswordBorder = new System.Windows.Forms.PictureBox();
             this.RememberMe = new System.Windows.Forms.CheckBox();
             this.ForgotPassword = new System.Windows.Forms.LinkLabel();
             this.LoginButton = new System.Windows.Forms.Button();
@@ -64,20 +55,22 @@
             this.PlayButton = new System.Windows.Forms.Button();
             this.PlayProgressTextTimer = new System.Windows.Forms.Label();
             this.RegisterEmail = new System.Windows.Forms.TextBox();
-            this.RegisterEmailBorder = new System.Windows.Forms.PictureBox();
             this.RegisterPassword = new System.Windows.Forms.TextBox();
-            this.RegisterPasswordBorder = new System.Windows.Forms.PictureBox();
             this.RegisterConfirmPassword = new System.Windows.Forms.TextBox();
-            this.RegisterConfirmPasswordBorder = new System.Windows.Forms.PictureBox();
             this.RegisterTicket = new System.Windows.Forms.TextBox();
-            this.RegisterTicketBorder = new System.Windows.Forms.PictureBox();
             this.RegisterAgree = new System.Windows.Forms.CheckBox();
             this.RegisterButton = new System.Windows.Forms.Button();
             this.RegisterCancel = new System.Windows.Forms.Button();
             this.ShowPlayPanel = new System.Windows.Forms.Panel();
             this.RegisterPanel = new System.Windows.Forms.Panel();
-            this.DiscordInviteLink = new System.Windows.Forms.LinkLabel();
-            this.ServerShutDown = new System.Windows.Forms.Label();
+            this.InsiderBuildNumberText = new System.Windows.Forms.Label();
+            this.logo = new System.Windows.Forms.PictureBox();
+            this.RegisterEmailBorder = new System.Windows.Forms.PictureBox();
+            this.RegisterPasswordBorder = new System.Windows.Forms.PictureBox();
+            this.RegisterConfirmPasswordBorder = new System.Windows.Forms.PictureBox();
+            this.RegisterTicketBorder = new System.Windows.Forms.PictureBox();
+            this.SettingsButton = new System.Windows.Forms.PictureBox();
+            this.CloseBTN = new System.Windows.Forms.PictureBox();
             this.ServerInfoPanel = new System.Windows.Forms.Panel();
             this.HomePageIcon = new System.Windows.Forms.PictureBox();
             this.DiscordIcon = new System.Windows.Forms.PictureBox();
@@ -86,32 +79,39 @@
             this.TwitterIcon = new System.Windows.Forms.PictureBox();
             this.FacebookGroupLink = new System.Windows.Forms.LinkLabel();
             this.HomePageLink = new System.Windows.Forms.LinkLabel();
+            this.DiscordInviteLink = new System.Windows.Forms.LinkLabel();
+            this.ServerShutDown = new System.Windows.Forms.Label();
             this.SceneryGroupText = new System.Windows.Forms.Label();
-            this.InsiderBuildNumberText = new System.Windows.Forms.Label();
+            this.LauncherIconStatus = new System.Windows.Forms.PictureBox();
+            this.APIStatusIcon = new System.Windows.Forms.PictureBox();
+            this.ServerStatusIcon = new System.Windows.Forms.PictureBox();
+            this.MainEmailBorder = new System.Windows.Forms.PictureBox();
+            this.MainPasswordBorder = new System.Windows.Forms.PictureBox();
             this.ProgressBarOutline = new System.Windows.Forms.PictureBox();
+            this.VerticalBanner = new System.Windows.Forms.PictureBox();
             this.ExtractingProgress = new GameLauncherReborn.ProgressBarEx();
             this.PlayProgress = new GameLauncherReborn.ProgressBarEx();
+            this.ShowPlayPanel.SuspendLayout();
+            this.RegisterPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CloseBTN)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.VerticalBanner)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.LauncherIconStatus)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ServerStatusIcon)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.APIStatusIcon)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.MainEmailBorder)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.MainPasswordBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterEmailBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterPasswordBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterConfirmPasswordBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterTicketBorder)).BeginInit();
-            this.ShowPlayPanel.SuspendLayout();
-            this.RegisterPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CloseBTN)).BeginInit();
             this.ServerInfoPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HomePageIcon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DiscordIcon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FacebookIcon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TwitterIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LauncherIconStatus)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.APIStatusIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ServerStatusIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MainEmailBorder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MainPasswordBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ProgressBarOutline)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.VerticalBanner)).BeginInit();
             this.SuspendLayout();
             // 
             // Timeout
@@ -122,30 +122,6 @@
             // 
             this.Notification.Text = "notifyIcon1";
             this.Notification.Visible = true;
-            // 
-            // logo
-            // 
-            this.logo.BackColor = System.Drawing.Color.Transparent;
-            this.logo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.logo.InitialImage = null;
-            this.logo.Location = new System.Drawing.Point(17, 10);
-            this.logo.Name = "logo";
-            this.logo.Size = new System.Drawing.Size(215, 71);
-            this.logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.logo.TabIndex = 0;
-            this.logo.TabStop = false;
-            // 
-            // CloseBTN
-            // 
-            this.CloseBTN.BackColor = System.Drawing.Color.Transparent;
-            this.CloseBTN.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.CloseBTN.InitialImage = null;
-            this.CloseBTN.Location = new System.Drawing.Point(841, 15);
-            this.CloseBTN.Name = "CloseBTN";
-            this.CloseBTN.Size = new System.Drawing.Size(24, 24);
-            this.CloseBTN.TabIndex = 0;
-            this.CloseBTN.TabStop = false;
-            this.CloseBTN.Click += new System.EventHandler(this.CloseBTN_Click);
             // 
             // SelectServerBtn
             // 
@@ -170,17 +146,6 @@
             this.translatedBy.Size = new System.Drawing.Size(126, 13);
             this.translatedBy.TabIndex = 55;
             this.translatedBy.Text = "Translated by: meme";
-            // 
-            // SettingsButton
-            // 
-            this.SettingsButton.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.SettingsButton.InitialImage = null;
-            this.SettingsButton.Location = new System.Drawing.Point(807, 15);
-            this.SettingsButton.Name = "SettingsButton";
-            this.SettingsButton.Size = new System.Drawing.Size(24, 24);
-            this.SettingsButton.TabIndex = 21;
-            this.SettingsButton.TabStop = false;
             // 
             // ServerPick
             // 
@@ -210,17 +175,6 @@
             this.AddServer.Text = "+";
             this.AddServer.UseVisualStyleBackColor = false;
             // 
-            // VerticalBanner
-            // 
-            this.VerticalBanner.BackColor = System.Drawing.Color.Transparent;
-            this.VerticalBanner.InitialImage = null;
-            this.VerticalBanner.Location = new System.Drawing.Point(28, 81);
-            this.VerticalBanner.Name = "VerticalBanner";
-            this.VerticalBanner.Size = new System.Drawing.Size(523, 223);
-            this.VerticalBanner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.VerticalBanner.TabIndex = 22;
-            this.VerticalBanner.TabStop = false;
-            // 
             // PlayProgressText
             // 
             this.PlayProgressText.AutoSize = true;
@@ -232,17 +186,6 @@
             this.PlayProgressText.Size = new System.Drawing.Size(96, 14);
             this.PlayProgressText.TabIndex = 10;
             this.PlayProgressText.Text = "PLEASE WAIT";
-            // 
-            // LauncherIconStatus
-            // 
-            this.LauncherIconStatus.BackColor = System.Drawing.Color.Transparent;
-            this.LauncherIconStatus.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.LauncherIconStatus.InitialImage = null;
-            this.LauncherIconStatus.Location = new System.Drawing.Point(27, 456);
-            this.LauncherIconStatus.Name = "LauncherIconStatus";
-            this.LauncherIconStatus.Size = new System.Drawing.Size(21, 24);
-            this.LauncherIconStatus.TabIndex = 79;
-            this.LauncherIconStatus.TabStop = false;
             // 
             // LauncherStatusText
             // 
@@ -266,21 +209,10 @@
             this.LauncherStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.LauncherStatusDesc.Location = new System.Drawing.Point(53, 485);
             this.LauncherStatusDesc.Name = "LauncherStatusDesc";
-            this.LauncherStatusDesc.Size = new System.Drawing.Size(127, 14);
+            this.LauncherStatusDesc.Size = new System.Drawing.Size(124, 14);
             this.LauncherStatusDesc.TabIndex = 5;
             this.LauncherStatusDesc.Text = "Version: vX.X.X.X";
             this.LauncherStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // ServerStatusIcon
-            // 
-            this.ServerStatusIcon.BackColor = System.Drawing.Color.Transparent;
-            this.ServerStatusIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ServerStatusIcon.InitialImage = null;
-            this.ServerStatusIcon.Location = new System.Drawing.Point(212, 456);
-            this.ServerStatusIcon.Name = "ServerStatusIcon";
-            this.ServerStatusIcon.Size = new System.Drawing.Size(24, 24);
-            this.ServerStatusIcon.TabIndex = 6;
-            this.ServerStatusIcon.TabStop = false;
             // 
             // ServerStatusText
             // 
@@ -303,22 +235,10 @@
             this.ServerStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ServerStatusDesc.Location = new System.Drawing.Point(242, 485);
             this.ServerStatusDesc.Name = "ServerStatusDesc";
-            this.ServerStatusDesc.Size = new System.Drawing.Size(122, 14);
+            this.ServerStatusDesc.Size = new System.Drawing.Size(124, 14);
             this.ServerStatusDesc.TabIndex = 8;
             this.ServerStatusDesc.Text = "Checking Status";
             this.ServerStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // APIStatusIcon
-            // 
-            this.APIStatusIcon.BackColor = System.Drawing.Color.Transparent;
-            this.APIStatusIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.APIStatusIcon.InitialImage = null;
-            this.APIStatusIcon.Location = new System.Drawing.Point(398, 455);
-            this.APIStatusIcon.Name = "APIStatusIcon";
-            this.APIStatusIcon.Size = new System.Drawing.Size(24, 24);
-            this.APIStatusIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.APIStatusIcon.TabIndex = 113;
-            this.APIStatusIcon.TabStop = false;
             // 
             // APIStatusText
             // 
@@ -342,7 +262,7 @@
             this.APIStatusDesc.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.APIStatusDesc.Location = new System.Drawing.Point(426, 485);
             this.APIStatusDesc.Name = "APIStatusDesc";
-            this.APIStatusDesc.Size = new System.Drawing.Size(122, 14);
+            this.APIStatusDesc.Size = new System.Drawing.Size(124, 14);
             this.APIStatusDesc.TabIndex = 120;
             this.APIStatusDesc.Text = "Checking Status";
             this.APIStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -375,18 +295,6 @@
             this.MainEmail.TabIndex = 4;
             this.MainEmail.TextChanged += new System.EventHandler(this.Email_TextChanged);
             // 
-            // MainEmailBorder
-            // 
-            this.MainEmailBorder.BackColor = System.Drawing.Color.Transparent;
-            this.MainEmailBorder.Image = global::GameLauncher.Properties.Resources.email_text_border;
-            this.MainEmailBorder.InitialImage = null;
-            this.MainEmailBorder.Location = new System.Drawing.Point(606, 161);
-            this.MainEmailBorder.Name = "MainEmailBorder";
-            this.MainEmailBorder.Size = new System.Drawing.Size(231, 37);
-            this.MainEmailBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.MainEmailBorder.TabIndex = 144;
-            this.MainEmailBorder.TabStop = false;
-            // 
             // MainPassword
             // 
             this.MainPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
@@ -401,18 +309,6 @@
             this.MainPassword.WordWrap = false;
             this.MainPassword.TextChanged += new System.EventHandler(this.Password_TextChanged);
             // 
-            // MainPasswordBorder
-            // 
-            this.MainPasswordBorder.BackColor = System.Drawing.Color.Transparent;
-            this.MainPasswordBorder.Image = global::GameLauncher.Properties.Resources.password_text_border;
-            this.MainPasswordBorder.InitialImage = null;
-            this.MainPasswordBorder.Location = new System.Drawing.Point(606, 210);
-            this.MainPasswordBorder.Name = "MainPasswordBorder";
-            this.MainPasswordBorder.Size = new System.Drawing.Size(231, 37);
-            this.MainPasswordBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.MainPasswordBorder.TabIndex = 145;
-            this.MainPasswordBorder.TabStop = false;
-            // 
             // RememberMe
             // 
             this.RememberMe.AutoSize = true;
@@ -422,7 +318,7 @@
             this.RememberMe.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.RememberMe.Location = new System.Drawing.Point(645, 260);
             this.RememberMe.Name = "RememberMe";
-            this.RememberMe.Size = new System.Drawing.Size(162, 17);
+            this.RememberMe.Size = new System.Drawing.Size(163, 17);
             this.RememberMe.TabIndex = 6;
             this.RememberMe.Text = "REMEMBER MY LOGIN";
             this.RememberMe.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -551,18 +447,6 @@
             this.RegisterEmail.TabIndex = 12;
             this.RegisterEmail.TextChanged += new System.EventHandler(this.RegisterEmail_TextChanged);
             // 
-            // RegisterEmailBorder
-            // 
-            this.RegisterEmailBorder.BackColor = System.Drawing.Color.Transparent;
-            this.RegisterEmailBorder.Image = global::GameLauncher.Properties.Resources.email_text_border;
-            this.RegisterEmailBorder.InitialImage = null;
-            this.RegisterEmailBorder.Location = new System.Drawing.Point(19, 68);
-            this.RegisterEmailBorder.Name = "RegisterEmailBorder";
-            this.RegisterEmailBorder.Size = new System.Drawing.Size(231, 37);
-            this.RegisterEmailBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.RegisterEmailBorder.TabIndex = 138;
-            this.RegisterEmailBorder.TabStop = false;
-            // 
             // RegisterPassword
             // 
             this.RegisterPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
@@ -575,18 +459,6 @@
             this.RegisterPassword.TabIndex = 13;
             this.RegisterPassword.UseSystemPasswordChar = true;
             this.RegisterPassword.TextChanged += new System.EventHandler(this.RegisterPassword_TextChanged);
-            // 
-            // RegisterPasswordBorder
-            // 
-            this.RegisterPasswordBorder.BackColor = System.Drawing.Color.Transparent;
-            this.RegisterPasswordBorder.Image = global::GameLauncher.Properties.Resources.password_text_border;
-            this.RegisterPasswordBorder.InitialImage = null;
-            this.RegisterPasswordBorder.Location = new System.Drawing.Point(19, 117);
-            this.RegisterPasswordBorder.Name = "RegisterPasswordBorder";
-            this.RegisterPasswordBorder.Size = new System.Drawing.Size(231, 37);
-            this.RegisterPasswordBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.RegisterPasswordBorder.TabIndex = 139;
-            this.RegisterPasswordBorder.TabStop = false;
             // 
             // RegisterConfirmPassword
             // 
@@ -601,18 +473,6 @@
             this.RegisterConfirmPassword.UseSystemPasswordChar = true;
             this.RegisterConfirmPassword.TextChanged += new System.EventHandler(this.RegisterConfirmPassword_TextChanged);
             // 
-            // RegisterConfirmPasswordBorder
-            // 
-            this.RegisterConfirmPasswordBorder.BackColor = System.Drawing.Color.Transparent;
-            this.RegisterConfirmPasswordBorder.Image = global::GameLauncher.Properties.Resources.password_text_border;
-            this.RegisterConfirmPasswordBorder.InitialImage = null;
-            this.RegisterConfirmPasswordBorder.Location = new System.Drawing.Point(19, 166);
-            this.RegisterConfirmPasswordBorder.Name = "RegisterConfirmPasswordBorder";
-            this.RegisterConfirmPasswordBorder.Size = new System.Drawing.Size(231, 37);
-            this.RegisterConfirmPasswordBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.RegisterConfirmPasswordBorder.TabIndex = 140;
-            this.RegisterConfirmPasswordBorder.TabStop = false;
-            // 
             // RegisterTicket
             // 
             this.RegisterTicket.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
@@ -624,18 +484,6 @@
             this.RegisterTicket.Size = new System.Drawing.Size(180, 13);
             this.RegisterTicket.TabIndex = 15;
             this.RegisterTicket.TextChanged += new System.EventHandler(this.RegisterTicket_TextChanged);
-            // 
-            // RegisterTicketBorder
-            // 
-            this.RegisterTicketBorder.BackColor = System.Drawing.Color.Transparent;
-            this.RegisterTicketBorder.Image = global::GameLauncher.Properties.Resources.ticket_text_border;
-            this.RegisterTicketBorder.InitialImage = null;
-            this.RegisterTicketBorder.Location = new System.Drawing.Point(19, 215);
-            this.RegisterTicketBorder.Name = "RegisterTicketBorder";
-            this.RegisterTicketBorder.Size = new System.Drawing.Size(230, 37);
-            this.RegisterTicketBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.RegisterTicketBorder.TabIndex = 141;
-            this.RegisterTicketBorder.TabStop = false;
             // 
             // RegisterAgree
             // 
@@ -726,36 +574,101 @@
             this.RegisterPanel.TabIndex = 156;
             this.RegisterPanel.Visible = false;
             // 
-            // DiscordInviteLink
+            // InsiderBuildNumberText
             // 
-            this.DiscordInviteLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.DiscordInviteLink.AutoSize = true;
-            this.DiscordInviteLink.BackColor = System.Drawing.Color.Transparent;
-            this.DiscordInviteLink.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DiscordInviteLink.ForeColor = System.Drawing.Color.Transparent;
-            this.DiscordInviteLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.DiscordInviteLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.DiscordInviteLink.Location = new System.Drawing.Point(154, 12);
-            this.DiscordInviteLink.Name = "DiscordInviteLink";
-            this.DiscordInviteLink.Size = new System.Drawing.Size(95, 13);
-            this.DiscordInviteLink.TabIndex = 172;
-            this.DiscordInviteLink.TabStop = true;
-            this.DiscordInviteLink.Text = "Discord Invite";
-            this.DiscordInviteLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.DiscordInviteLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DiscordInviteLink_LinkClicked);
+            this.InsiderBuildNumberText.BackColor = System.Drawing.Color.Transparent;
+            this.InsiderBuildNumberText.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.InsiderBuildNumberText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.InsiderBuildNumberText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.InsiderBuildNumberText.Location = new System.Drawing.Point(364, 65);
+            this.InsiderBuildNumberText.Name = "InsiderBuildNumberText";
+            this.InsiderBuildNumberText.Size = new System.Drawing.Size(192, 15);
+            this.InsiderBuildNumberText.TabIndex = 173;
+            this.InsiderBuildNumberText.Text = "Insider Build: vX.X.X.X";
+            this.InsiderBuildNumberText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // ServerShutDown
+            // logo
             // 
-            this.ServerShutDown.BackColor = System.Drawing.Color.Transparent;
-            this.ServerShutDown.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ServerShutDown.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.ServerShutDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ServerShutDown.Location = new System.Drawing.Point(290, 42);
-            this.ServerShutDown.Name = "ServerShutDown";
-            this.ServerShutDown.Size = new System.Drawing.Size(220, 15);
-            this.ServerShutDown.TabIndex = 169;
-            this.ServerShutDown.Text = "Restart Timer: 0 Hours";
-            this.ServerShutDown.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.logo.BackColor = System.Drawing.Color.Transparent;
+            this.logo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.logo.InitialImage = null;
+            this.logo.Location = new System.Drawing.Point(17, 10);
+            this.logo.Name = "logo";
+            this.logo.Size = new System.Drawing.Size(215, 71);
+            this.logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.logo.TabIndex = 0;
+            this.logo.TabStop = false;
+            // 
+            // RegisterEmailBorder
+            // 
+            this.RegisterEmailBorder.BackColor = System.Drawing.Color.Transparent;
+            this.RegisterEmailBorder.Image = global::GameLauncher.Properties.Resources.email_text_border;
+            this.RegisterEmailBorder.InitialImage = null;
+            this.RegisterEmailBorder.Location = new System.Drawing.Point(19, 68);
+            this.RegisterEmailBorder.Name = "RegisterEmailBorder";
+            this.RegisterEmailBorder.Size = new System.Drawing.Size(231, 37);
+            this.RegisterEmailBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.RegisterEmailBorder.TabIndex = 138;
+            this.RegisterEmailBorder.TabStop = false;
+            // 
+            // RegisterPasswordBorder
+            // 
+            this.RegisterPasswordBorder.BackColor = System.Drawing.Color.Transparent;
+            this.RegisterPasswordBorder.Image = global::GameLauncher.Properties.Resources.password_text_border;
+            this.RegisterPasswordBorder.InitialImage = null;
+            this.RegisterPasswordBorder.Location = new System.Drawing.Point(19, 117);
+            this.RegisterPasswordBorder.Name = "RegisterPasswordBorder";
+            this.RegisterPasswordBorder.Size = new System.Drawing.Size(231, 37);
+            this.RegisterPasswordBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.RegisterPasswordBorder.TabIndex = 139;
+            this.RegisterPasswordBorder.TabStop = false;
+            // 
+            // RegisterConfirmPasswordBorder
+            // 
+            this.RegisterConfirmPasswordBorder.BackColor = System.Drawing.Color.Transparent;
+            this.RegisterConfirmPasswordBorder.Image = global::GameLauncher.Properties.Resources.password_text_border;
+            this.RegisterConfirmPasswordBorder.InitialImage = null;
+            this.RegisterConfirmPasswordBorder.Location = new System.Drawing.Point(19, 166);
+            this.RegisterConfirmPasswordBorder.Name = "RegisterConfirmPasswordBorder";
+            this.RegisterConfirmPasswordBorder.Size = new System.Drawing.Size(231, 37);
+            this.RegisterConfirmPasswordBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.RegisterConfirmPasswordBorder.TabIndex = 140;
+            this.RegisterConfirmPasswordBorder.TabStop = false;
+            // 
+            // RegisterTicketBorder
+            // 
+            this.RegisterTicketBorder.BackColor = System.Drawing.Color.Transparent;
+            this.RegisterTicketBorder.Image = global::GameLauncher.Properties.Resources.ticket_text_border;
+            this.RegisterTicketBorder.InitialImage = null;
+            this.RegisterTicketBorder.Location = new System.Drawing.Point(19, 215);
+            this.RegisterTicketBorder.Name = "RegisterTicketBorder";
+            this.RegisterTicketBorder.Size = new System.Drawing.Size(230, 37);
+            this.RegisterTicketBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.RegisterTicketBorder.TabIndex = 141;
+            this.RegisterTicketBorder.TabStop = false;
+            // 
+            // SettingsButton
+            // 
+            this.SettingsButton.BackColor = System.Drawing.Color.Transparent;
+            this.SettingsButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.SettingsButton.InitialImage = null;
+            this.SettingsButton.Location = new System.Drawing.Point(806, 15);
+            this.SettingsButton.Name = "SettingsButton";
+            this.SettingsButton.Size = new System.Drawing.Size(25, 25);
+            this.SettingsButton.TabIndex = 21;
+            this.SettingsButton.TabStop = false;
+            // 
+            // CloseBTN
+            // 
+            this.CloseBTN.BackColor = System.Drawing.Color.Transparent;
+            this.CloseBTN.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.CloseBTN.InitialImage = null;
+            this.CloseBTN.Location = new System.Drawing.Point(841, 15);
+            this.CloseBTN.Name = "CloseBTN";
+            this.CloseBTN.Size = new System.Drawing.Size(25, 25);
+            this.CloseBTN.TabIndex = 0;
+            this.CloseBTN.TabStop = false;
+            this.CloseBTN.Click += new System.EventHandler(this.CloseBTN_Click);
             // 
             // ServerInfoPanel
             // 
@@ -826,7 +739,7 @@
             this.TwitterAccountLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.TwitterAccountLink.Location = new System.Drawing.Point(437, 12);
             this.TwitterAccountLink.Name = "TwitterAccountLink";
-            this.TwitterAccountLink.Size = new System.Drawing.Size(88, 13);
+            this.TwitterAccountLink.Size = new System.Drawing.Size(86, 13);
             this.TwitterAccountLink.TabIndex = 174;
             this.TwitterAccountLink.TabStop = true;
             this.TwitterAccountLink.Text = "Twitter Feed";
@@ -856,7 +769,7 @@
             this.FacebookGroupLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.FacebookGroupLink.Location = new System.Drawing.Point(292, 12);
             this.FacebookGroupLink.Name = "FacebookGroupLink";
-            this.FacebookGroupLink.Size = new System.Drawing.Size(110, 13);
+            this.FacebookGroupLink.Size = new System.Drawing.Size(112, 13);
             this.FacebookGroupLink.TabIndex = 173;
             this.FacebookGroupLink.TabStop = true;
             this.FacebookGroupLink.Text = "Facebook Group";
@@ -874,12 +787,43 @@
             this.HomePageLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.HomePageLink.Location = new System.Drawing.Point(36, 12);
             this.HomePageLink.Name = "HomePageLink";
-            this.HomePageLink.Size = new System.Drawing.Size(79, 13);
+            this.HomePageLink.Size = new System.Drawing.Size(81, 13);
             this.HomePageLink.TabIndex = 171;
             this.HomePageLink.TabStop = true;
             this.HomePageLink.Text = "Home Page";
             this.HomePageLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.HomePageLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.HomePageLink_LinkClicked);
+            // 
+            // DiscordInviteLink
+            // 
+            this.DiscordInviteLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.DiscordInviteLink.AutoSize = true;
+            this.DiscordInviteLink.BackColor = System.Drawing.Color.Transparent;
+            this.DiscordInviteLink.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DiscordInviteLink.ForeColor = System.Drawing.Color.Transparent;
+            this.DiscordInviteLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.DiscordInviteLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.DiscordInviteLink.Location = new System.Drawing.Point(154, 12);
+            this.DiscordInviteLink.Name = "DiscordInviteLink";
+            this.DiscordInviteLink.Size = new System.Drawing.Size(98, 13);
+            this.DiscordInviteLink.TabIndex = 172;
+            this.DiscordInviteLink.TabStop = true;
+            this.DiscordInviteLink.Text = "Discord Invite";
+            this.DiscordInviteLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.DiscordInviteLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DiscordInviteLink_LinkClicked);
+            // 
+            // ServerShutDown
+            // 
+            this.ServerShutDown.BackColor = System.Drawing.Color.Transparent;
+            this.ServerShutDown.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerShutDown.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.ServerShutDown.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ServerShutDown.Location = new System.Drawing.Point(290, 42);
+            this.ServerShutDown.Name = "ServerShutDown";
+            this.ServerShutDown.Size = new System.Drawing.Size(220, 15);
+            this.ServerShutDown.TabIndex = 169;
+            this.ServerShutDown.Text = "Restart Timer: 0 Hours";
+            this.ServerShutDown.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // SceneryGroupText
             // 
@@ -894,18 +838,63 @@
             this.SceneryGroupText.Text = "Scenery: Normal";
             this.SceneryGroupText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // InsiderBuildNumberText
+            // LauncherIconStatus
             // 
-            this.InsiderBuildNumberText.BackColor = System.Drawing.Color.Transparent;
-            this.InsiderBuildNumberText.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.InsiderBuildNumberText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.InsiderBuildNumberText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.InsiderBuildNumberText.Location = new System.Drawing.Point(364, 65);
-            this.InsiderBuildNumberText.Name = "InsiderBuildNumberText";
-            this.InsiderBuildNumberText.Size = new System.Drawing.Size(192, 15);
-            this.InsiderBuildNumberText.TabIndex = 173;
-            this.InsiderBuildNumberText.Text = "Insider Build: vX.X.X.X";
-            this.InsiderBuildNumberText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LauncherIconStatus.BackColor = System.Drawing.Color.Transparent;
+            this.LauncherIconStatus.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.LauncherIconStatus.InitialImage = null;
+            this.LauncherIconStatus.Location = new System.Drawing.Point(25, 456);
+            this.LauncherIconStatus.Name = "LauncherIconStatus";
+            this.LauncherIconStatus.Size = new System.Drawing.Size(25, 25);
+            this.LauncherIconStatus.TabIndex = 79;
+            this.LauncherIconStatus.TabStop = false;
+            // 
+            // APIStatusIcon
+            // 
+            this.APIStatusIcon.BackColor = System.Drawing.Color.Transparent;
+            this.APIStatusIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.APIStatusIcon.InitialImage = null;
+            this.APIStatusIcon.Location = new System.Drawing.Point(397, 455);
+            this.APIStatusIcon.Name = "APIStatusIcon";
+            this.APIStatusIcon.Size = new System.Drawing.Size(25, 25);
+            this.APIStatusIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.APIStatusIcon.TabIndex = 113;
+            this.APIStatusIcon.TabStop = false;
+            // 
+            // ServerStatusIcon
+            // 
+            this.ServerStatusIcon.BackColor = System.Drawing.Color.Transparent;
+            this.ServerStatusIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ServerStatusIcon.InitialImage = null;
+            this.ServerStatusIcon.Location = new System.Drawing.Point(211, 456);
+            this.ServerStatusIcon.Name = "ServerStatusIcon";
+            this.ServerStatusIcon.Size = new System.Drawing.Size(25, 25);
+            this.ServerStatusIcon.TabIndex = 6;
+            this.ServerStatusIcon.TabStop = false;
+            // 
+            // MainEmailBorder
+            // 
+            this.MainEmailBorder.BackColor = System.Drawing.Color.Transparent;
+            this.MainEmailBorder.Image = global::GameLauncher.Properties.Resources.email_text_border;
+            this.MainEmailBorder.InitialImage = null;
+            this.MainEmailBorder.Location = new System.Drawing.Point(606, 161);
+            this.MainEmailBorder.Name = "MainEmailBorder";
+            this.MainEmailBorder.Size = new System.Drawing.Size(231, 37);
+            this.MainEmailBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.MainEmailBorder.TabIndex = 144;
+            this.MainEmailBorder.TabStop = false;
+            // 
+            // MainPasswordBorder
+            // 
+            this.MainPasswordBorder.BackColor = System.Drawing.Color.Transparent;
+            this.MainPasswordBorder.Image = global::GameLauncher.Properties.Resources.password_text_border;
+            this.MainPasswordBorder.InitialImage = null;
+            this.MainPasswordBorder.Location = new System.Drawing.Point(606, 210);
+            this.MainPasswordBorder.Name = "MainPasswordBorder";
+            this.MainPasswordBorder.Size = new System.Drawing.Size(231, 37);
+            this.MainPasswordBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.MainPasswordBorder.TabIndex = 145;
+            this.MainPasswordBorder.TabStop = false;
             // 
             // ProgressBarOutline
             // 
@@ -919,6 +908,17 @@
             this.ProgressBarOutline.Size = new System.Drawing.Size(529, 42);
             this.ProgressBarOutline.TabIndex = 174;
             this.ProgressBarOutline.TabStop = false;
+            // 
+            // VerticalBanner
+            // 
+            this.VerticalBanner.BackColor = System.Drawing.Color.Transparent;
+            this.VerticalBanner.InitialImage = null;
+            this.VerticalBanner.Location = new System.Drawing.Point(28, 81);
+            this.VerticalBanner.Name = "VerticalBanner";
+            this.VerticalBanner.Size = new System.Drawing.Size(523, 223);
+            this.VerticalBanner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.VerticalBanner.TabIndex = 22;
+            this.VerticalBanner.TabStop = false;
             // 
             // ExtractingProgress
             // 
@@ -1003,29 +1003,29 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GameLauncher";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
+            this.ShowPlayPanel.ResumeLayout(false);
+            this.RegisterPanel.ResumeLayout(false);
+            this.RegisterPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CloseBTN)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.VerticalBanner)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.LauncherIconStatus)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ServerStatusIcon)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.APIStatusIcon)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.MainEmailBorder)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.MainPasswordBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterEmailBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterPasswordBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterConfirmPasswordBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterTicketBorder)).EndInit();
-            this.ShowPlayPanel.ResumeLayout(false);
-            this.RegisterPanel.ResumeLayout(false);
-            this.RegisterPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CloseBTN)).EndInit();
             this.ServerInfoPanel.ResumeLayout(false);
             this.ServerInfoPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HomePageIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DiscordIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FacebookIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TwitterIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LauncherIconStatus)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.APIStatusIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ServerStatusIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MainEmailBorder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MainPasswordBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ProgressBarOutline)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.VerticalBanner)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

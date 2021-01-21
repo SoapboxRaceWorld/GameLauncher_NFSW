@@ -41,31 +41,31 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         /* MainScreen Icons */
 
-        public static Bitmap UpdateIconError = Properties.Resources.ac_error;
+        public static Bitmap UpdateIconError = Properties.Resources.icon_shield_error;
 
-        public static Bitmap UpdateIconSuccess = Properties.Resources.ac_success;
+        public static Bitmap UpdateIconSuccess = Properties.Resources.icon_shield_success;
 
-        public static Bitmap UpdateIconUnknown = Properties.Resources.ac_unknown;
+        public static Bitmap UpdateIconUnknown = Properties.Resources.icon_shield_unknown;
 
-        public static Bitmap UpdateIconWarning = Properties.Resources.ac_warning;
-
-
-        public static Bitmap APIIconChecking = Properties.Resources.api_checking;
-
-        public static Bitmap APIIconError = Properties.Resources.api_error;
-
-        public static Bitmap APIIconSuccess = Properties.Resources.api_success;
-
-        public static Bitmap APIIconUnkown = Properties.Resources.api_unkown;
+        public static Bitmap UpdateIconWarning = Properties.Resources.icon_shield_warning;
 
 
-        public static Bitmap ServerIconChecking = Properties.Resources.server_checking;
+        public static Bitmap APIIconChecking = Properties.Resources.icon_api_checking;
 
-        public static Bitmap ServerIconOffline = Properties.Resources.server_offline;
+        public static Bitmap APIIconError = Properties.Resources.icon_api_offline;
 
-        public static Bitmap ServerIconSuccess = Properties.Resources.server_online;
+        public static Bitmap APIIconSuccess = Properties.Resources.icon_api_online;
 
-        public static Bitmap ServerIconUnkown = Properties.Resources.server_unknown;
+        public static Bitmap APIIconUnkown = Properties.Resources.icon_api_unknown;
+
+
+        public static Bitmap ServerIconChecking = Properties.Resources.icon_game_server_checking;
+
+        public static Bitmap ServerIconOffline = Properties.Resources.icon_game_server_offline;
+
+        public static Bitmap ServerIconSuccess = Properties.Resources.icon_game_server_online;
+
+        public static Bitmap ServerIconUnkown = Properties.Resources.icon_game_server_unknown;
 
 
         public static Bitmap DiscordIcon = Properties.Resources.social_discord;
@@ -101,9 +101,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Bitmap GreenButtonHover = Properties.Resources.greenbutton_hover;
 
 
-        public static Bitmap CloseButton = Properties.Resources.close;
+        public static Bitmap CloseButton = Properties.Resources.icon_close;
 
-        public static Bitmap GearButton = Properties.Resources.settingsbtn;
+        public static Bitmap CloseButtonClick = Properties.Resources.icon_close_click;
+
+        public static Bitmap CloseButtonHover = Properties.Resources.icon_close_hover;
+
+
+        public static Bitmap GearButton = Properties.Resources.icon_gear;
+
+        public static Bitmap GearButtonClick = Properties.Resources.icon_gear_click;
+
+        public static Bitmap GearButtonHover = Properties.Resources.icon_gear_hover;
 
 
         public static Bitmap PlayButton = Properties.Resources.playbutton;
@@ -516,11 +525,43 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 }
             }
 
+            if (!string.IsNullOrEmpty(ThemeFile.Read("CloseButtonClick")))
+            {
+                if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("CloseButtonClick")))
+                {
+                    CloseButtonClick = new Bitmap(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("CloseButtonClick"));
+                }
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("CloseButtonHover")))
+            {
+                if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("CloseButtonHover")))
+                {
+                    CloseButtonHover = new Bitmap(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("CloseButtonHover"));
+                }
+            }
+
             if (!string.IsNullOrEmpty(ThemeFile.Read("GearButton")))
             {
                 if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButton")))
                 {
                     GearButton = new Bitmap(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButton"));
+                }
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("GearButtonClick")))
+            {
+                if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonClick")))
+                {
+                    GearButtonClick = new Bitmap(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonClick"));
+                }
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("GearButtonHover")))
+            {
+                if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonHover")))
+                {
+                    GearButtonHover = new Bitmap(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonHover"));
                 }
             }
 

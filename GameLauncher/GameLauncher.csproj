@@ -348,8 +348,26 @@
     <EmbeddedResource Include="SoapBoxModules\cursor.ani" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Run_Check_BG.png" />
     <None Include="Resources\progress_outline.png" />
+    <None Include="Resources\icon_gear.png" />
+    <None Include="Resources\icon_gear_click.png" />
+    <None Include="Resources\icon_gear_hover.png" />
+    <None Include="Resources\icon_close.png" />
+    <None Include="Resources\icon_close_click.png" />
+    <None Include="Resources\icon_close_hover.png" />
+    <None Include="Resources\icon_api_checking.png" />
+    <None Include="Resources\icon_api_offline.png" />
+    <None Include="Resources\icon_api_online.png" />
+    <None Include="Resources\icon_api_unknown.png" />
+    <None Include="Resources\icon_game_server_checking.png" />
+    <None Include="Resources\icon_game_server_offline.png" />
+    <None Include="Resources\icon_game_server_online.png" />
+    <None Include="Resources\icon_game_server_unknown.png" />
+    <None Include="Resources\icon_shield_checking.png" />
+    <None Include="Resources\icon_shield_error.png" />
+    <None Include="Resources\icon_shield_success.png" />
+    <None Include="Resources\icon_shield_unknown.png" />
+    <None Include="Resources\icon_shield_warning.png" />
     <Content Include="SBRW.ico" />
     <None Include="Resources\progress_warning.png" />
     <None Include="Resources\progress_success.png" />
@@ -370,14 +388,6 @@
     <None Include="Resources\email_error_text_border.png" />
     <None Include="Resources\email_text_border.png" />
     <None Include="Resources\mainbackground.png" />
-    <None Include="Resources\server_unknown.png" />
-    <None Include="Resources\server_online.png" />
-    <None Include="Resources\server_offline.png" />
-    <None Include="Resources\server_checking.png" />
-    <None Include="Resources\api_checking.png" />
-    <None Include="Resources\api_unkown.png" />
-    <None Include="Resources\api_success.png" />
-    <None Include="Resources\api_error.png" />
     <None Include="Resources\playbutton_hover.png" />
     <None Include="Resources\playbutton_click.png" />
     <None Include="Resources\playbutton.png" />
@@ -387,14 +397,8 @@
     <None Include="Resources\greenbutton_click.png" />
     <None Include="Resources\greenbutton_hover.png" />
     <None Include="Resources\greenbutton.png" />
-    <None Include="Resources\ac_warning.png" />
-    <None Include="Resources\ac_unknown.png" />
-    <None Include="Resources\ac_success.png" />
-    <None Include="Resources\ac_error.png" />
     <None Include="Resources\logo.png" />
-    <None Include="Resources\settingsbtn.png" />
     <None Include="Resources\secondarybackground.png" />
-    <None Include="Resources\close.png" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
