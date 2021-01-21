@@ -63,12 +63,12 @@
             this.RegisterCancel = new System.Windows.Forms.Button();
             this.ShowPlayPanel = new System.Windows.Forms.Panel();
             this.RegisterPanel = new System.Windows.Forms.Panel();
-            this.InsiderBuildNumberText = new System.Windows.Forms.Label();
-            this.logo = new System.Windows.Forms.PictureBox();
             this.RegisterEmailBorder = new System.Windows.Forms.PictureBox();
             this.RegisterPasswordBorder = new System.Windows.Forms.PictureBox();
             this.RegisterConfirmPasswordBorder = new System.Windows.Forms.PictureBox();
             this.RegisterTicketBorder = new System.Windows.Forms.PictureBox();
+            this.InsiderBuildNumberText = new System.Windows.Forms.Label();
+            this.logo = new System.Windows.Forms.PictureBox();
             this.SettingsButton = new System.Windows.Forms.PictureBox();
             this.CloseBTN = new System.Windows.Forms.PictureBox();
             this.ServerInfoPanel = new System.Windows.Forms.Panel();
@@ -93,11 +93,11 @@
             this.PlayProgress = new GameLauncherReborn.ProgressBarEx();
             this.ShowPlayPanel.SuspendLayout();
             this.RegisterPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterEmailBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterPasswordBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterConfirmPasswordBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterTicketBorder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CloseBTN)).BeginInit();
             this.ServerInfoPanel.SuspendLayout();
@@ -574,31 +574,6 @@
             this.RegisterPanel.TabIndex = 156;
             this.RegisterPanel.Visible = false;
             // 
-            // InsiderBuildNumberText
-            // 
-            this.InsiderBuildNumberText.BackColor = System.Drawing.Color.Transparent;
-            this.InsiderBuildNumberText.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.InsiderBuildNumberText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.InsiderBuildNumberText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.InsiderBuildNumberText.Location = new System.Drawing.Point(364, 65);
-            this.InsiderBuildNumberText.Name = "InsiderBuildNumberText";
-            this.InsiderBuildNumberText.Size = new System.Drawing.Size(192, 15);
-            this.InsiderBuildNumberText.TabIndex = 173;
-            this.InsiderBuildNumberText.Text = "Insider Build: vX.X.X.X";
-            this.InsiderBuildNumberText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // logo
-            // 
-            this.logo.BackColor = System.Drawing.Color.Transparent;
-            this.logo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.logo.InitialImage = null;
-            this.logo.Location = new System.Drawing.Point(17, 10);
-            this.logo.Name = "logo";
-            this.logo.Size = new System.Drawing.Size(215, 71);
-            this.logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.logo.TabIndex = 0;
-            this.logo.TabStop = false;
-            // 
             // RegisterEmailBorder
             // 
             this.RegisterEmailBorder.BackColor = System.Drawing.Color.Transparent;
@@ -646,6 +621,31 @@
             this.RegisterTicketBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.RegisterTicketBorder.TabIndex = 141;
             this.RegisterTicketBorder.TabStop = false;
+            // 
+            // InsiderBuildNumberText
+            // 
+            this.InsiderBuildNumberText.BackColor = System.Drawing.Color.Transparent;
+            this.InsiderBuildNumberText.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.InsiderBuildNumberText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.InsiderBuildNumberText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.InsiderBuildNumberText.Location = new System.Drawing.Point(364, 65);
+            this.InsiderBuildNumberText.Name = "InsiderBuildNumberText";
+            this.InsiderBuildNumberText.Size = new System.Drawing.Size(192, 15);
+            this.InsiderBuildNumberText.TabIndex = 173;
+            this.InsiderBuildNumberText.Text = "Insider Build: vX.X.X.X";
+            this.InsiderBuildNumberText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // logo
+            // 
+            this.logo.BackColor = System.Drawing.Color.Transparent;
+            this.logo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.logo.InitialImage = null;
+            this.logo.Location = new System.Drawing.Point(17, 10);
+            this.logo.Name = "logo";
+            this.logo.Size = new System.Drawing.Size(215, 71);
+            this.logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.logo.TabIndex = 0;
+            this.logo.TabStop = false;
             // 
             // SettingsButton
             // 
@@ -699,7 +699,7 @@
             this.HomePageIcon.InitialImage = null;
             this.HomePageIcon.Location = new System.Drawing.Point(7, 8);
             this.HomePageIcon.Name = "HomePageIcon";
-            this.HomePageIcon.Size = new System.Drawing.Size(24, 24);
+            this.HomePageIcon.Size = new System.Drawing.Size(25, 25);
             this.HomePageIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.HomePageIcon.TabIndex = 178;
             this.HomePageIcon.TabStop = false;
@@ -711,7 +711,7 @@
             this.DiscordIcon.InitialImage = null;
             this.DiscordIcon.Location = new System.Drawing.Point(127, 8);
             this.DiscordIcon.Name = "DiscordIcon";
-            this.DiscordIcon.Size = new System.Drawing.Size(24, 24);
+            this.DiscordIcon.Size = new System.Drawing.Size(25, 25);
             this.DiscordIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.DiscordIcon.TabIndex = 177;
             this.DiscordIcon.TabStop = false;
@@ -723,7 +723,7 @@
             this.FacebookIcon.InitialImage = null;
             this.FacebookIcon.Location = new System.Drawing.Point(263, 8);
             this.FacebookIcon.Name = "FacebookIcon";
-            this.FacebookIcon.Size = new System.Drawing.Size(24, 24);
+            this.FacebookIcon.Size = new System.Drawing.Size(25, 25);
             this.FacebookIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.FacebookIcon.TabIndex = 176;
             this.FacebookIcon.TabStop = false;
@@ -753,7 +753,7 @@
             this.TwitterIcon.InitialImage = null;
             this.TwitterIcon.Location = new System.Drawing.Point(407, 8);
             this.TwitterIcon.Name = "TwitterIcon";
-            this.TwitterIcon.Size = new System.Drawing.Size(24, 24);
+            this.TwitterIcon.Size = new System.Drawing.Size(25, 25);
             this.TwitterIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.TwitterIcon.TabIndex = 174;
             this.TwitterIcon.TabStop = false;
@@ -1006,11 +1006,11 @@
             this.ShowPlayPanel.ResumeLayout(false);
             this.RegisterPanel.ResumeLayout(false);
             this.RegisterPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterEmailBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterPasswordBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterConfirmPasswordBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterTicketBorder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CloseBTN)).EndInit();
             this.ServerInfoPanel.ResumeLayout(false);
