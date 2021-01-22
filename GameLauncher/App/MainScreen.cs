@@ -2419,8 +2419,8 @@ namespace GameLauncher {
                         }
                     }
 
-                    using (MemoryStream ms = new MemoryStream(new WebClientWithTimeout()
-                        .DownloadData("https://cdn.soapboxrace.world/launcher-modules/ModLoader.zip")))
+                    using (MemoryStream ms = new MemoryStream(newModNetFilesDownload.DownloadData(
+                        "https://cdn.soapboxrace.world/launcher-modules/ModLoader.zip")))
                     using (Ionic.Zip.ZipFile zf = Ionic.Zip.ZipFile.Read(ms))
                     {
                         zf.ExtractAll(_settingFile.Read("InstallationDirectory"), 
@@ -2449,9 +2449,6 @@ namespace GameLauncher {
                     String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
 
                     IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
-
-                    int CountFilesTotal = 0;
-                    CountFilesTotal = json3.Entries.Count;
 
                     String path = Path.Combine(_settingFile.Read("InstallationDirectory"), "MODS", MDFive.HashPassword(json2.ServerID).ToLower());
                     if(!Directory.Exists(path)) Directory.CreateDirectory(path);
