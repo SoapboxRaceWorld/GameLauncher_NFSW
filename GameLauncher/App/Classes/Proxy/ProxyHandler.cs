@@ -65,11 +65,17 @@ namespace GameLauncher.App.Classes.Proxy
 
             foreach (var header in context.Request.Headers)
             {
+                // Don't send Content-Length for GET requests
+                if (method == "GET" && header.Key.ToLowerInvariant() == "content-length")
+                {
+                    continue;
+                }
+
                 request = request.WithHeader(header.Key,
                     header.Key == "Host" ? resolvedUrl.ToUri().Host : header.Value.First());
             }
 
-            var requestBody = context.Request.Method != "GET" ? context.Request.Body.AsString(Encoding.UTF8) : "";
+            var requestBody = method != "GET" ? context.Request.Body.AsString(Encoding.UTF8) : "";
 
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
                 CommunicationLogEntryType.Request,

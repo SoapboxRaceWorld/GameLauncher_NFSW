@@ -41,6 +41,9 @@ using GameLauncher.App.Classes.GPU;
 using CommandLine;
 using System.Runtime.CompilerServices;
 using GameLauncher.Properties;
+using Ionic.Zip;
+using ZipFile = System.IO.Compression.ZipFile;
+
 //using System.Windows;
 
 namespace GameLauncher {
@@ -2409,9 +2412,19 @@ namespace GameLauncher {
                     string[] newFiles = GlobalFiles.Concat(ModNetReloadedFiles).ToArray();
                     WebClient newModNetFilesDownload = new WebClient();
                     foreach (string file in newFiles) {
-                        playProgressText.Text = ("Fetching ModNetReloaded Files: " + file).ToUpper();
-                        Application.DoEvents();
-                        newModNetFilesDownload.DownloadFile("http://cdn.soapboxrace.world/modules-v2/" + file, _settingFile.Read("InstallationDirectory") + "/" + file);
+                        var fullPath = _settingFile.Read("InstallationDirectory") + "/" + file;
+                        if (File.Exists(fullPath))
+                        {
+                            File.Delete(fullPath);
+                        }
+                    }
+
+                    using (MemoryStream ms = new MemoryStream(new WebClientWithTimeout()
+                        .DownloadData("https://cdn.soapboxrace.world/launcher-modules/ModLoader.zip")))
+                    using (Ionic.Zip.ZipFile zf = Ionic.Zip.ZipFile.Read(ms))
+                    {
+                        zf.ExtractAll(_settingFile.Read("InstallationDirectory"), 
+                            ExtractExistingFileAction.OverwriteSilently);
                     }
 
                     //get files now
