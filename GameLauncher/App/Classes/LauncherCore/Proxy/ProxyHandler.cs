@@ -81,7 +81,7 @@ namespace GameLauncher.App.Classes.Proxy
                 CommunicationLogEntryType.Request,
                 new CommunicationLogRequest(requestBody, resolvedUrl.ToString(), method));
 
-            HttpResponseMessage responseMessage;
+            IFlurlResponse responseMessage;
 
             var POSTContent = String.Empty;
 
@@ -104,12 +104,12 @@ namespace GameLauncher.App.Classes.Proxy
                     responseMessage = await request.GetAsync(cancellationToken);
                     break;
                 case "POST":
-                    responseMessage = await request.PostAsync(new CapturedStringContent(requestBody, Encoding.UTF8),
+                    responseMessage = await request.PostAsync(new CapturedStringContent(requestBody),
                         cancellationToken);
                     POSTContent = context.Request.Body.AsString();
                     break;
                 case "PUT":
-                    responseMessage = await request.PutAsync(new CapturedStringContent(requestBody, Encoding.UTF8),
+                    responseMessage = await request.PutAsync(new CapturedStringContent(requestBody),
                         cancellationToken);
                     break;
                 case "DELETE":
@@ -119,14 +119,14 @@ namespace GameLauncher.App.Classes.Proxy
                     throw new ProxyException("Cannot handle request method: " + method);
             }
 
-            var responseBody = await responseMessage.Content.ReadAsStringAsync();
+            var responseBody = await responseMessage.GetStringAsync();
 
             if (path == "/User/GetPermanentSession")
             {
                 responseBody = Self.CleanFromUnknownChars(responseBody);
             }
 
-            int statusCode = (int)responseMessage.StatusCode;
+            int statusCode = responseMessage.StatusCode;
 
             try
             {
@@ -141,7 +141,7 @@ namespace GameLauncher.App.Classes.Proxy
             }
 
             TextResponse textResponse = new TextResponse(responseBody,
-                responseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
+                responseMessage.ToString())
             {
                 StatusCode = (HttpStatusCode)statusCode
             };

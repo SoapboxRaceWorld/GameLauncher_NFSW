@@ -433,7 +433,7 @@ namespace GameLauncher
                             "CommandLine.dll - 2.8.0",
                             "DiscordRPC.dll - 1.0.169.0",
                             "Flurl.dll - 3.0.1",
-                            "Flurl.Http.dll - 2.4.2",
+                            "Flurl.Http.dll - 3.0.1",
                             "INIFileParser.dll - 2.5.2",
                             "LZMA.dll - 9.10 beta",
                             "Microsoft.WindowsAPICodePack.dll - 1.1.0.0",
