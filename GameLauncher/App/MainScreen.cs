@@ -3175,7 +3175,7 @@ namespace GameLauncher
             BackgroundImage = Theming.MainScreen;
             TransparencyKey = Theming.MainScreenTransparencyKey;
 
-            logo.BackgroundImage = Theming.Logo;
+            logo.BackgroundImage = Theming.LogoMain;
             SettingsButton.BackgroundImage = Theming.GearButton;
             CloseBTN.BackgroundImage = Theming.CloseButton;
 

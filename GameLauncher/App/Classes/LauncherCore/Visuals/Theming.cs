@@ -21,7 +21,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         /* Logo */
 
-        public static Bitmap Logo = Properties.Resources.logo;
+        public static Bitmap LogoMain = Properties.Resources.logo_main;
+
+        public static Bitmap LogoSplash = Properties.Resources.logo_splash;
 
 
         /* Main Backgrounds */
@@ -273,7 +275,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
             {
                 if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("Logo")))
                 {
-                    Logo = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("Logo"));
+                    LogoMain = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("Logo"));
+                }
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("LogoSplashScreen")))
+            {
+                if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("LogoSplashScreen")))
+                {
+                    LogoSplash = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("LogoSplashScreen"));
                 }
             }
 

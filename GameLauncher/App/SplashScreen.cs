@@ -11,7 +11,7 @@ namespace GameLauncher.App.Classes
 
             BackColor = Theming.SplashScreenTransparencyKey;
             TransparencyKey = Theming.SplashScreenTransparencyKey;
-            BackgroundImage = Theming.Logo;
+            BackgroundImage = Theming.LogoSplash;
         }
     }
 }

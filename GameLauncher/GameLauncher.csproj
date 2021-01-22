@@ -368,6 +368,8 @@
     <None Include="Resources\icon_shield_success.png" />
     <None Include="Resources\icon_shield_unknown.png" />
     <None Include="Resources\icon_shield_warning.png" />
+    <None Include="Resources\logo_main.png" />
+    <None Include="Resources\logo_splash.png" />
     <Content Include="SBRW.ico" />
     <None Include="Resources\progress_warning.png" />
     <None Include="Resources\progress_success.png" />
