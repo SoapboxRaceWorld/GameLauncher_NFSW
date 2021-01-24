@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 using GameLauncher.App.Classes.RPC;
 using GameLauncherReborn;
 
@@ -116,22 +117,33 @@ namespace GameLauncher.App.Classes
                 {
                     foreach(string report_url in Self.anticheatreporting) 
                     { 
-                        Uri sendReport = new Uri(report_url);
-
-                        var request = (HttpWebRequest)WebRequest.Create(sendReport);
-                        var postData = "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + Security.FingerPrint.Value();
-                        var data = Encoding.ASCII.GetBytes(postData);
-                        request.Method = "POST";
-                        request.ContentType = "application/x-www-form-urlencoded";
-                        request.ContentLength = data.Length;
-
-                        using (var stream = request.GetRequestStream())
+                        if (report_url.EndsWith("?"))
                         {
-                            stream.Write(data, 0, data.Length);
+                            WebClient update_data = new WebClient();
+                            update_data.CancelAsync();
+                            update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            update_data.DownloadStringAsync(new Uri(report_url + "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + Security.FingerPrint.Value()));
                         }
+                        else
+                        {
+                            Uri sendReport = new Uri(report_url);
 
-                        var response = (HttpWebResponse)request.GetResponse();
-                        responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                            var request = (HttpWebRequest)WebRequest.Create(sendReport);
+                            var postData = "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + Security.FingerPrint.Value();
+                            
+                            var data = Encoding.ASCII.GetBytes(postData);
+                            request.Method = "POST";
+                            request.ContentType = "application/x-www-form-urlencoded";
+                            request.ContentLength = data.Length;
+
+                            using (var stream = request.GetRequestStream())
+                            {
+                                stream.Write(data, 0, data.Length);
+                            }
+
+                            var response = (HttpWebResponse)request.GetResponse();
+                            responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                        }
                     }
 
                     Console.WriteLine("Detected: " + AntiCheat.cheats_detected);

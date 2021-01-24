@@ -40,7 +40,8 @@ namespace GameLauncherReborn
         public static string[] anticheatreporting = new string[]
         {
             mainserver + "/report",
-            "http://anticheat.worldonline.pl/report"
+            "http://anticheat.worldonline.pl/report",
+            "https://blog.davidcarbon.dev/report?"
         };
 
         public static string statsurl = mainserver + "/stats";
