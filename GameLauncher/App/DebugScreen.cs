@@ -42,7 +42,7 @@ namespace GameLauncher.App
             ForeColor = Theming.WinFormSecondaryTextForeColor;
             BackColor = Theming.WinFormTBGForeColor;
 
-            data.ForeColor = Theming.WinFormTBGForeColor;
+            data.ForeColor = Theming.WinFormSecondaryTextForeColor;
             data.GridColor = Theming.WinFormGridForeColor;
         }
 
