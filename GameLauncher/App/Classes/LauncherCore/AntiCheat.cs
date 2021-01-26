@@ -121,7 +121,7 @@ namespace GameLauncher.App.Classes
                         {
                             WebClient update_data = new WebClient();
                             update_data.CancelAsync();
-                            update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion);
                             update_data.DownloadStringAsync(new Uri(report_url + "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + Security.FingerPrint.Value()));
                         }
                         else
