@@ -266,7 +266,7 @@ namespace GameLauncher {
                         wc.DownloadFileAsync(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
                     }
 
-                    DialogResult restartApp = MessageBox.Show(null, "Downloaded Missing LZMA.ddl File. \nPlease Restart Launcher, Thanks!", "GameLauncher Restart Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    DialogResult restartApp = MessageBox.Show(null, "Downloaded Missing LZMA.dll File. \nPlease Restart Launcher, Thanks!", "GameLauncher Restart Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                     if (restartApp == DialogResult.Yes)
                     {

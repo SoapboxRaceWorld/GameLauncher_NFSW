@@ -41,7 +41,6 @@ using GameLauncher.App.Classes.GPU;
 using CommandLine;
 using System.Runtime.CompilerServices;
 using GameLauncher.Properties;
-using Ionic.Zip;
 using ZipFile = System.IO.Compression.ZipFile;
 
 //using System.Windows;
@@ -2419,13 +2418,38 @@ namespace GameLauncher {
                         }
                     }
 
-                    using (MemoryStream ms = new MemoryStream(newModNetFilesDownload.DownloadData(
-                        "https://cdn.soapboxrace.world/launcher-modules/ModLoader.zip")))
-                    using (Ionic.Zip.ZipFile zf = Ionic.Zip.ZipFile.Read(ms))
-                    {
+                    /*using (MemoryStream ms = new MemoryStream(newModNetFilesDownload.DownloadData("https://cdn.soapboxrace.world/launcher-modules/ModLoader.zip")))
+                    using (Ionic.Zip.ZipFile zf = Ionic.Zip.ZipFile.Read(ms)) {
                         zf.ExtractAll(_settingFile.Read("InstallationDirectory"), 
                             ExtractExistingFileAction.OverwriteSilently);
+                    }*/
+
+                    string modnetTempFile = Path.GetTempFileName();
+                    newModNetFilesDownload.DownloadFile("https://cdn.soapboxrace.world/launcher-modules/ModLoader.zip", modnetTempFile);
+                    using (ZipArchive archive = ZipFile.OpenRead(modnetTempFile)) {
+                        foreach (ZipArchiveEntry entry in archive.Entries) {
+                            string fullName = entry.FullName;
+
+                            if (fullName.Substring(fullName.Length - 1) == "/") {
+                                string folderName = fullName.Remove(fullName.Length - 1);
+                                if (Directory.Exists(folderName)) {
+                                    Directory.Delete(folderName, true);
+                                }
+
+                                Directory.CreateDirectory(folderName);
+                            } else {
+                                if (File.Exists(fullName)) {
+                                    File.Delete(fullName);
+                                }
+
+                                try { 
+                                    entry.ExtractToFile(Path.Combine(_settingFile.Read("InstallationDirectory"), fullName)); 
+                                } catch { }
+                            }
+                        }
                     }
+
+                    File.Delete(modnetTempFile);
 
                     //get files now
                     MainJson json2 = JsonConvert.DeserializeObject<MainJson>(jsonModNet);
