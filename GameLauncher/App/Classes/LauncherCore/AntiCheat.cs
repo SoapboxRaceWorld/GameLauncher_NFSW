@@ -17,6 +17,7 @@ namespace GameLauncher.App.Classes
         public static string serverip = String.Empty;
         public static string user_id = String.Empty;
         public static string persona_name = String.Empty;
+        public static string persona_id = String.Empty;
         public static int event_id = 0;
         public static int cheats_detected = 0;
         private static Thread thread = new Thread(() => { });
@@ -122,7 +123,7 @@ namespace GameLauncher.App.Classes
                             WebClient update_data = new WebClient();
                             update_data.CancelAsync();
                             update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion);
-                            update_data.DownloadStringAsync(new Uri(report_url + "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + Security.FingerPrint.Value()));
+                            update_data.DownloadStringAsync(new Uri(report_url + "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + Security.FingerPrint.Value() + "&persona_id=" + AntiCheat.persona_id));
                         }
                         else
                         {

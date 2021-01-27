@@ -141,6 +141,7 @@ namespace GameLauncher.App.Classes.RPC
                     PersonaAvatarId = "avatar_" + SBRW_XML.SelectSingleNode("ProfileData/IconIndex").InnerText;
                     PersonaId = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
 
+                    AntiCheat.persona_id = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
                     AntiCheat.persona_name = SBRW_XML.SelectSingleNode("ProfileData/Name").InnerText.Replace("¤", "[S]");
                 }
             }
