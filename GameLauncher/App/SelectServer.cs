@@ -195,7 +195,7 @@ namespace GameLauncher.App
             Loading.ForeColor = Theming.WinFormWarningTextForeColor;
             Version.ForeColor = Theming.WinFormTextForeColor;
 
-            ServerListRenderer.ForeColor = Theming.WinFormTBGDarkerForeColor;
+            ServerListRenderer.ForeColor = Theming.WinFormSecondaryTextForeColor;
 
             BtnAddServer.ForeColor = Theming.BlueForeColorButton;
             BtnAddServer.BackColor = Theming.BlueBackColorButton;
