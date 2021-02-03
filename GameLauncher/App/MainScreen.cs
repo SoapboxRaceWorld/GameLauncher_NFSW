@@ -1562,6 +1562,7 @@ namespace GameLauncher
 
             AddServer.Enabled = hideElements;
             ServerPick.Enabled = hideElements;
+            SelectServerBtn.Enabled = hideElements;
 
             //Input Strokes
             MainEmailBorder.Visible = hideElements;
@@ -1596,7 +1597,9 @@ namespace GameLauncher
                 RegisterTicket.ForeColor = Theming.FivithTextForeColor;
             }
             else
+            {
                 CertainElemnts = true;
+            }
 
             RegisterPanel.Visible = hideElements;
             RegisterTicket.Visible = _ticketRequired && hideElements;
@@ -2256,10 +2259,10 @@ namespace GameLauncher
             {
                 "dinput8.dll",
                 "global.ini",
-                "7z.dll", 
-                "fmt.dll", 
-                "libcurl.dll", 
-                "zlib1.dll", 
+                "7z.dll",
+                "fmt.dll",
+                "libcurl.dll",
+                "zlib1.dll",
                 "ModLoader.asi"
             };
 
