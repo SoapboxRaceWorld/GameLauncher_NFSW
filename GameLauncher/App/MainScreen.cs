@@ -435,7 +435,7 @@ namespace GameLauncher
             Log.Visuals("CORE: Entering mainScreen_Load");
 
             Log.Visuals("CORE: Setting WindowName");
-            Text = "SBRW Launcher v: " + Application.ProductVersion;
+            Text = "SBRW Launcher: v" + Application.ProductVersion;
 
             Log.Core("CORE: Centering Window location");
             Self.CenterScreen(this);

@@ -37,7 +37,7 @@ namespace GameLauncher.App.Classes.RPC
 
         public static void HandleGameState(string uri, string serverreply = "", string POST = "", string GET = "")
         {
-            LauncherRPC = "SBRW Launcher v: " + Application.ProductVersion;
+            LauncherRPC = "SBRW Launcher: v" + Application.ProductVersion;
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');
 
