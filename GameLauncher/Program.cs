@@ -266,18 +266,18 @@ namespace GameLauncher
                         messageBoxPopupKB += "- Value: DisabledByDefault -> 0\n\n";
 
                         messageBoxPopupKB += "Would you like to add those values?";
-                        DialogResult replyPatchWin7 = MessageBox.Show(null, messageBoxPopupKB, "GameLauncherReborn", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        DialogResult replyPatchWin7 = MessageBox.Show(null, messageBoxPopupKB, "SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                         if (replyPatchWin7 == DialogResult.Yes)
                         {
                             RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
                             key.SetValue("DisabledByDefault", 0x0);
 
-                            MessageBox.Show(null, "Registry option set, Remember that the changes may require a system reboot to take effect", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show(null, "Registry option set, Remember that the changes may require a system reboot to take effect", "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                         else
                         {
-                            MessageBox.Show(null, "Roger that, There may be some issues connecting to the servers.", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show(null, "Roger that, There may be some issues connecting to the servers.", "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
 
                         FileSettingsSave.Win7UpdatePatches = "1";

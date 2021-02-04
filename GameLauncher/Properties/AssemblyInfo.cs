@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("GameLauncher for Need For Speed(TM): World")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Soapbox Race World")]
-[assembly: AssemblyProduct("GameLauncherReborn")]
+[assembly: AssemblyProduct("SBRW Launcher")]
 [assembly: AssemblyCopyright("© Soapbox Race World")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

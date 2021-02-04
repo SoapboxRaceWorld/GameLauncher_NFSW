@@ -147,7 +147,7 @@ namespace GameLauncher
             {
                 Notification.Visible = true;
                 Notification.BalloonTipIcon = ToolTipIcon.Info;
-                Notification.BalloonTipTitle = "GameLauncherReborn";
+                Notification.BalloonTipTitle = "SBRW Launcher";
                 Notification.BalloonTipText = "Discord features are not yet completed.";
                 Notification.ShowBalloonTip(5000);
                 Notification.Dispose();
@@ -435,7 +435,7 @@ namespace GameLauncher
             Log.Visuals("CORE: Entering mainScreen_Load");
 
             Log.Visuals("CORE: Setting WindowName");
-            Text = "GameLauncherReborn v" + Application.ProductVersion;
+            Text = "SBRW Launcher v: " + Application.ProductVersion;
 
             Log.Core("CORE: Centering Window location");
             Self.CenterScreen(this);
@@ -2882,7 +2882,7 @@ namespace GameLauncher
 
                                 Notification.Visible = true;
                                 Notification.BalloonTipIcon = ToolTipIcon.Info;
-                                Notification.BalloonTipTitle = "GameLauncherReborn";
+                                Notification.BalloonTipTitle = "SBRW Launcher";
                                 Notification.BalloonTipText = "Your game is now ready to launch!";
                                 Notification.ShowBalloonTip(5000);
                                 Notification.Dispose();
