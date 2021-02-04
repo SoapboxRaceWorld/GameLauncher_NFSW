@@ -2255,7 +2255,7 @@ namespace GameLauncher
 
             if (Directory.Exists(FileSettingsSave.GameInstallation + "/modules")) Directory.Delete(FileSettingsSave.GameInstallation + "/modules", true);
             if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
-            String[] ModNetReloadedFiles = new string[]
+            String[] ModNetFiles = new string[]
             {
                 "7z.dll",
                 "LIBEAY32.dll",
@@ -2268,16 +2268,16 @@ namespace GameLauncher
             };
 
             Log.Core("LAUNCHER: Installing ModNet");
-            PlayProgressText.Text = ("Detecting ModNetSupport for " + _realServernameBanner).ToUpper();
+            PlayProgressText.Text = ("Detecting ModNet Support for " + _realServernameBanner).ToUpper();
             String jsonModNet = ModNetReloaded.ModNetSupported(_serverIp);
 
             if (jsonModNet != String.Empty)
             {
-                PlayProgressText.Text = "ModNetReloaded support detected, setting up...".ToUpper();
+                PlayProgressText.Text = "ModNet support detected, setting up...".ToUpper();
 
                 try
                 {
-                    string[] newFiles = ModNetReloadedFiles.ToArray();
+                    string[] newFiles = ModNetFiles.ToArray();
 
                     foreach (string file in newFiles)
                     {
@@ -2312,13 +2312,13 @@ namespace GameLauncher
 
                         if (fileETAG == null && File.Exists(FileSettingsSave.GameInstallation + "/" + file))
                         {
-                            PlayProgressText.Text = ("ModNetReloaded: Fail Safe -> Found " + file).ToUpper();
+                            PlayProgressText.Text = ("ModNet: Fail Safe -> Found " + file).ToUpper();
 
                             Log.Debug("MODNET CORE: Using Local " + file + " File! (Unable to get ETAG for File)");
                         }
                         else if (MDFive.HashFile(FileSettingsSave.GameInstallation + "/" + file) != fileETAG || !File.Exists(FileSettingsSave.GameInstallation + "/" + file))
                         {
-                            PlayProgressText.Text = ("ModNetReloaded: Downloading " + file).ToUpper();
+                            PlayProgressText.Text = ("ModNet: Downloading " + file).ToUpper();
 
                             Log.Warning("MODNET CORE: " + file + " Does not match MD5 Hash on File Server -> Online Hash: '" + fileETAG + "'");
 
@@ -2328,11 +2328,11 @@ namespace GameLauncher
                             }
 
                             WebClient newModNetFilesDownload = new WebClient();
-                            newModNetFilesDownload.DownloadFile(Self.modnetserver + "/modules-v2/" + file, FileSettingsSave.GameInstallation + "/" + file);
+                            newModNetFilesDownload.DownloadFile(Self.modnetserver + "/launcher-modules/" + file, FileSettingsSave.GameInstallation + "/" + file);
                         }
                         else
                         {
-                            PlayProgressText.Text = ("ModNetReloaded: Up to Date " + file).ToUpper();
+                            PlayProgressText.Text = ("ModNet: Up to Date " + file).ToUpper();
 
                             Log.Debug("MODNET CORE: " + file + " Is Up to Date!");
                         }
