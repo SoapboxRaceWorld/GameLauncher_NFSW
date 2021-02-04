@@ -95,6 +95,8 @@ namespace GameLauncher
 
         public static String ModNetFileNameInUse = String.Empty;
         readonly Queue<Uri> modFilesDownloadUrls = new Queue<Uri>();
+        public List<string> ModNetFiles = new List<string>();
+        public List<string> ModNetHash = new List<string>();
         bool isDownloadingModNetFiles = false;
         int CurrentModFileCount = 0;
         int TotalModFileCount = 0;
@@ -2258,17 +2260,25 @@ namespace GameLauncher
 
             if (Directory.Exists(FileSettingsSave.GameInstallation + "/modules")) Directory.Delete(FileSettingsSave.GameInstallation + "/modules", true);
             if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
-            String[] ModNetFiles = new string[]
+
+            /* Get Remote ModNet list to process for checking required ModNet files are present and current */
+            String modules = new WebClient().DownloadString(Self.modnetserver + "/launcher-modules/modules.json");
+            string[] modules_newlines = modules.Split(new string[] { "\n" }, StringSplitOptions.None);
+            foreach (String modules_newline in modules_newlines)
             {
-                "7z.dll",
-                "LIBEAY32.dll",
-                "ModLoader.asi",
-                "SSLEAY32.dll",
-                "dinput8.dll",
-                "global.ini",
-                "fmt.dll",
-                "zlib1.dll"
-            };
+                if (modules_newline.Trim() == "{" || modules_newline.Trim() == "}") continue;
+
+                String trim_modules_newline = modules_newline.Trim();
+                String[] modules_files = trim_modules_newline.Split(new char[] { ':' });
+                /* Make the dynamic Filenames list for checking */
+                String ModNetList = modules_files[0].Replace("\"", "");
+                ModNetFiles.Add(ModNetList);
+                ModNetFiles.ToList();
+                /* Make another for the SHA's to validate against */
+                String ModNetSHA = modules_files[1].Replace("\"", "").Replace(",", "");
+                ModNetHash.Add(ModNetSHA);
+                ModNetHash.ToList();
+            }
 
             Log.Core("LAUNCHER: Installing ModNet");
             PlayProgressText.Text = ("Detecting ModNet Support for " + _realServernameBanner).ToUpper();
