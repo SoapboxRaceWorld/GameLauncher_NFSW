@@ -2257,13 +2257,14 @@ namespace GameLauncher
             if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
             String[] ModNetReloadedFiles = new string[]
             {
+                "7z.dll",
+                "LIBEAY32.dll",
+                "ModLoader.asi",
+                "SSLEAY32.dll",
                 "dinput8.dll",
                 "global.ini",
-                "7z.dll",
                 "fmt.dll",
-                "libcurl.dll",
-                "zlib1.dll",
-                "ModLoader.asi"
+                "zlib1.dll"
             };
 
             Log.Core("LAUNCHER: Installing ModNet");
@@ -2280,7 +2281,7 @@ namespace GameLauncher
 
                     foreach (string file in newFiles)
                     {
-                        var url = Self.modnetserver + "/modules-v2/" + file;
+                        var url = Self.modnetserver + "/launcher-modules/" + file;
                         string fileETAG = null;
                         if (EnableInsider.ShouldIBeAnInsider() == true)
                         {
