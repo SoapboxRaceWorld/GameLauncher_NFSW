@@ -1,4 +1,4 @@
-namespace GameLauncher
+﻿namespace GameLauncher
 {
     public abstract class DownloaderCommand
     {

@@ -56,9 +56,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.JSON
                     var omy = JsonConvert.DeserializeObject<ClassWithList>(strInput);
 
                     if (omy.list != null && omy.list.Count > 0)
+                    {
                         return false;
+                    }
                     else
+                    {
                         return true;
+                    }
                 }
                 catch
                 {

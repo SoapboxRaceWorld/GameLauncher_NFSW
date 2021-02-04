@@ -1,4 +1,4 @@
-using DiscordRPC;
+﻿using DiscordRPC;
 using GameLauncher.App.Classes.Proxy;
 using GameLauncherReborn;
 using System;
