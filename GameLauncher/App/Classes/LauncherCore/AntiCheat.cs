@@ -130,7 +130,7 @@ namespace GameLauncher.App.Classes
                             Uri sendReport = new Uri(report_url);
 
                             var request = (HttpWebRequest)WebRequest.Create(sendReport);
-                            var postData = "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + Security.FingerPrint.Value();
+                            var postData = "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + Security.FingerPrint.Value() + "&persona_id=" + AntiCheat.persona_id;
                             
                             var data = Encoding.ASCII.GetBytes(postData);
                             request.Method = "POST";

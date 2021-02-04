@@ -117,6 +117,8 @@ namespace GameLauncher
         }
 
         public static Random random = new Random();
+        private string[][] scannedHashes;
+        private int filesToScan;
 
         private void MoveWindow_MouseDown(object sender, MouseEventArgs e)
         {
@@ -2255,6 +2257,9 @@ namespace GameLauncher
 
             if (Directory.Exists(FileSettingsSave.GameInstallation + "/modules")) Directory.Delete(FileSettingsSave.GameInstallation + "/modules", true);
             if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
+
+            String[] ModNetFilesRemote = new WebClient().DownloadString(Self.modnetserver + "/launcher-modules/modules.json").Split(',');
+
             String[] ModNetFiles = new string[]
             {
                 "7z.dll",
@@ -2277,7 +2282,43 @@ namespace GameLauncher
 
                 try
                 {
-                    string[] newFiles = ModNetFiles.ToArray();
+                    scannedHashes = new string[ModNetFilesRemote.Length][];
+                    for (var i = 0; i < ModNetFilesRemote.Length; i++)
+                    {
+                        scannedHashes[i] = ModNetFilesRemote[i].Split(':');
+                    }
+
+                    foreach (string[] file in scannedHashes)
+                    {
+                        String FileHash = file[0].Trim();
+                        String FileName = file[1].Trim();
+                        String RealPathToFile = FileSettingsSave.GameInstallation + FileName;
+
+                        if (FileHash != SHATwoFiveSix.HashFile(RealPathToFile).Trim() || !File.Exists(RealPathToFile))
+                        {
+                            PlayProgressText.Text = ("ModNet: Downloading " + file).ToUpper();
+
+                            Log.Warning("MODNET CORE: " + file + " Does not match MD5 Hash on File Server -> Online Hash: '" + SHATwoFiveSix.HashFile(RealPathToFile).Trim() + "'");
+
+                            if (File.Exists(FileSettingsSave.GameInstallation + "/" + file))
+                            {
+                                File.Delete(FileSettingsSave.GameInstallation + "/" + file);
+                            }
+
+                            WebClient newModNetFilesDownload = new WebClient();
+                            newModNetFilesDownload.DownloadFile(Self.modnetserver + "/launcher-modules/" + file, FileSettingsSave.GameInstallation + "/" + file);
+                        }
+                        else
+                        {
+                            PlayProgressText.Text = ("ModNet: Up to Date " + file).ToUpper();
+
+                            Log.Debug("MODNET CORE: " + file + " Is Up to Date!");
+                        }
+
+                        Application.DoEvents();
+                    }
+                    /*
+                    //string[] newFiles = filesToScan.ToArray();
 
                     foreach (string file in newFiles)
                     {
@@ -2312,23 +2353,11 @@ namespace GameLauncher
 
                         if (fileETAG == null && File.Exists(FileSettingsSave.GameInstallation + "/" + file))
                         {
-                            PlayProgressText.Text = ("ModNet: Fail Safe -> Found " + file).ToUpper();
 
-                            Log.Debug("MODNET CORE: Using Local " + file + " File! (Unable to get ETAG for File)");
                         }
-                        else if (MDFive.HashFile(FileSettingsSave.GameInstallation + "/" + file) != fileETAG || !File.Exists(FileSettingsSave.GameInstallation + "/" + file))
+                        else if ()
                         {
-                            PlayProgressText.Text = ("ModNet: Downloading " + file).ToUpper();
 
-                            Log.Warning("MODNET CORE: " + file + " Does not match MD5 Hash on File Server -> Online Hash: '" + fileETAG + "'");
-
-                            if (File.Exists(FileSettingsSave.GameInstallation + "/" + file))
-                            {
-                                File.Delete(FileSettingsSave.GameInstallation + "/" + file);
-                            }
-
-                            WebClient newModNetFilesDownload = new WebClient();
-                            newModNetFilesDownload.DownloadFile(Self.modnetserver + "/launcher-modules/" + file, FileSettingsSave.GameInstallation + "/" + file);
                         }
                         else
                         {
@@ -2340,7 +2369,7 @@ namespace GameLauncher
                         Application.DoEvents();
 
                     }
-
+                    */
                     //get files now
                     MainJson json2 = JsonConvert.DeserializeObject<MainJson>(jsonModNet);
 

@@ -160,6 +160,7 @@
     <Compile Include="App\Classes\LauncherCore\Client\Auth\Tokens.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileAccountSave.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileSettingsSave.cs" />
+    <Compile Include="App\Classes\LauncherCore\Hash\SHATwoFiveSix.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\CDN.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\ModNetLinksCleanup.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\Email\IsEmailValid.cs" />
