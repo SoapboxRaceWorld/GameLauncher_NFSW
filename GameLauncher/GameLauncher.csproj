@@ -427,6 +427,12 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if exist "$(SolutionDir)Keys\Launcher.p12" "C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x86\signtool.exe" sign /f "$(SolutionDir)Keys\Launcher.p12" /p "Launcher Development CRT" /d "Soapbox Race World" /du "https://soapboxrace.world" /tr http://timestamp.digicert.com /td SHA256 "$(TargetPath)"</PostBuildEvent>
+    <PostBuildEvent>if exist "$(SolutionDir)Keys\Launcher.p12" "C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x86\signtool.exe" sign /f "$(SolutionDir)Keys\Launcher.p12" /p "Launcher Development CRT" /d "Soapbox Race World" /du "https://soapboxrace.world" /tr http://timestamp.digicert.com /td SHA256 "$(TargetPath)"
+if exist "$(SolutionDir)Keys\Launcher.p12" "C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x86\signtool.exe" sign /f "$(SolutionDir)Keys\Launcher.p12" /p "Launcher Development CRT" /d "Soapbox Race World" /du "https://soapboxrace.world" /tr http://timestamp.digicert.com /td SHA256 "$(TargetDir)*.dll"
+</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>
