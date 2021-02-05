@@ -34,13 +34,13 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     if (store.Certificates[i].SerialNumber == RootCASerial)
                     {
                         Log.Info("CERTIFICATE STORE: Found Root CA [" + store.Certificates[i].Subject + "]");
-                        Log.Info("CERTIFICATE STORE: With Thumprint [" + store.Certificates[i].SerialNumber + "]");
+                        Log.Info("CERTIFICATE STORE: Serial Number [" + store.Certificates[i].SerialNumber + "]");
                         IsROOTCAInstalled = true;
                     }
                     else if (store.Certificates[i].SerialNumber != RootCASerial && store.Certificates[i].Subject == RootCASubjectName)
                     {
                         Log.Info("CERTIFICATE STORE: Removing OLD Root CA [" + store.Certificates[i].Subject + "]");
-                        Log.Info("CERTIFICATE STORE: With Thumprint [" + store.Certificates[i].SerialNumber + "]");
+                        Log.Info("CERTIFICATE STORE: Serial Number [" + store.Certificates[i].SerialNumber + "]");
                         store.Remove(store.Certificates[i]);
                     }
                 }
