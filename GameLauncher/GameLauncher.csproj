@@ -163,6 +163,7 @@
     <Compile Include="App\Classes\LauncherCore\Hash\SHATwoFiveSix.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\CDN.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\ModNetLinksCleanup.cs" />
+    <Compile Include="App\Classes\LauncherCore\Validator\CodeSign\JSONRootCA.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\Email\IsEmailValid.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\JSON\IsJSONValid.cs" />
     <Compile Include="App\Classes\LauncherCore\Visuals\Delay.cs" />

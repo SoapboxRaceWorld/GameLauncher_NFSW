@@ -22,6 +22,7 @@ using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.Validator.CodeSign;
 
 namespace GameLauncher
 {
@@ -53,8 +54,63 @@ namespace GameLauncher
                 {
                     if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394802)
                     {
-                        //Install Carbon Crew CA
-                        CertificateStore.Check();
+                        /* Check Up to Date Certificate Status */
+                        try
+                        {
+                            WebClient update_data = new WebClient();
+                            update_data.CancelAsync();
+                            update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            update_data.DownloadStringAsync(new Uri("http://crl.carboncrew.org/RCA-Info.json"));
+                            update_data.DownloadStringCompleted += (sender, e) => {
+                                JSONRootCA API = JsonConvert.DeserializeObject<JSONRootCA>(e.Result);
+
+                                if (API.CN != null)
+                                {
+                                    Log.Info("CERTIFICATE STORE: Setting Common Name -> " + API.CN);
+                                    CertificateStore.RootCACommonName = API.CN;
+                                }
+
+                                if (API.Subject != null)
+                                {
+                                    Log.Info("CERTIFICATE STORE: Setting Subject Name -> " + API.Subject);
+                                    CertificateStore.RootCASubjectName = API.Subject;
+                                }
+
+                                if (API.Ids != null)
+                                {
+                                    foreach (IdsModel entries in API.Ids)
+                                    {
+                                        if (entries.Serial != null)
+                                        {
+                                            Log.Info("CERTIFICATE STORE: Setting Serial Number -> " + entries.Serial);
+                                            CertificateStore.RootCASerial = entries.Serial;
+                                        }
+                                    }
+                                }
+
+                                if (API.File != null)
+                                {
+                                    foreach (FileModel entries in API.File)
+                                    {
+                                        if (entries.Name != null)
+                                        {
+                                            Log.Info("CERTIFICATE STORE: Setting Root CA File Name -> " + entries.Name);
+                                            CertificateStore.RootCAFileName = entries.Name;
+                                        }
+
+                                        if (entries.Cer != null)
+                                        {
+                                            Log.Info("CERTIFICATE STORE: Setting Root CA File URL -> " + entries.Cer);
+                                            CertificateStore.RootCAFileURL = entries.Cer;
+                                        }
+                                    }
+                                }
+                            };
+                        }
+                        catch
+                        {
+                            Log.Error("CERTIFICATE STORE: Unable to Retrive Latest Certificate Information");
+                        }
                     }
                     else
                     {
@@ -211,7 +267,7 @@ namespace GameLauncher
                             case API.Online:
                                 WebClient update_data = new WebClient();
                                 update_data.CancelAsync();
-                                update_data.Headers.Add("user-agent", "GameLauncherUpdater " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                                 update_data.DownloadStringAsync(new Uri("http://api.github.com/repos/SoapboxRaceWorld/GameLauncherUpdater/releases/latest"));
                                 update_data.DownloadStringCompleted += (sender, e) => {
                                     GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(e.Result);
@@ -576,6 +632,9 @@ namespace GameLauncher
 
             if (!DetectLinux.LinuxDetected())
             {
+                //Install Custom Root Certificate
+                CertificateStore.Check();
+
                 if (!File.Exists("GameLauncherUpdater.exe"))
                 {
                     Log.Info("LAUNCHER UPDATER: Starting GameLauncherUpdater downloader");
