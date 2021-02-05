@@ -45,14 +45,14 @@ namespace GameLauncher.App
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
-            OkBTN.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            CancelBTN.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            ServerNameLabel.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            ServerName.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            ServerAddress.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            ServerAddressLabel.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            Error.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            Version.Font= new Font(DejaVuSans, 9f, FontStyle.Regular);
+            OkBTN.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            CancelBTN.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            ServerNameLabel.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            ServerName.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            ServerAddress.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            ServerAddressLabel.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            Error.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            Version.Font= new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors              /

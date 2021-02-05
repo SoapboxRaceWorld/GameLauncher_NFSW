@@ -32,13 +32,13 @@ namespace GameLauncher.App
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
-            WelcomeText.Font = new Font(DejaVuSansBold, 10f, FontStyle.Bold);
-            DownloadSourceText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            CDNSource.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            Save.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            ListStatusText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            APIErrorButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            VersionLabel.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            WelcomeText.Font = new Font(DejaVuSansBold, 10f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            DownloadSourceText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            CDNSource.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            Save.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            ListStatusText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            APIErrorButton.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            VersionLabel.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors & Images     /

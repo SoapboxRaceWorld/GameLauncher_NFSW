@@ -209,7 +209,7 @@
             this.LauncherStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.LauncherStatusDesc.Location = new System.Drawing.Point(53, 485);
             this.LauncherStatusDesc.Name = "LauncherStatusDesc";
-            this.LauncherStatusDesc.Size = new System.Drawing.Size(124, 14);
+            this.LauncherStatusDesc.Size = new System.Drawing.Size(127, 14);
             this.LauncherStatusDesc.TabIndex = 5;
             this.LauncherStatusDesc.Text = "Version: vX.X.X.X";
             this.LauncherStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -235,7 +235,7 @@
             this.ServerStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ServerStatusDesc.Location = new System.Drawing.Point(242, 485);
             this.ServerStatusDesc.Name = "ServerStatusDesc";
-            this.ServerStatusDesc.Size = new System.Drawing.Size(124, 14);
+            this.ServerStatusDesc.Size = new System.Drawing.Size(122, 14);
             this.ServerStatusDesc.TabIndex = 8;
             this.ServerStatusDesc.Text = "Checking Status";
             this.ServerStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -262,7 +262,7 @@
             this.APIStatusDesc.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.APIStatusDesc.Location = new System.Drawing.Point(426, 485);
             this.APIStatusDesc.Name = "APIStatusDesc";
-            this.APIStatusDesc.Size = new System.Drawing.Size(124, 14);
+            this.APIStatusDesc.Size = new System.Drawing.Size(122, 14);
             this.APIStatusDesc.TabIndex = 120;
             this.APIStatusDesc.Text = "Checking Status";
             this.APIStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -318,7 +318,7 @@
             this.RememberMe.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.RememberMe.Location = new System.Drawing.Point(645, 260);
             this.RememberMe.Name = "RememberMe";
-            this.RememberMe.Size = new System.Drawing.Size(163, 17);
+            this.RememberMe.Size = new System.Drawing.Size(162, 17);
             this.RememberMe.TabIndex = 6;
             this.RememberMe.Text = "REMEMBER MY LOGIN";
             this.RememberMe.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -628,12 +628,13 @@
             this.InsiderBuildNumberText.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.InsiderBuildNumberText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.InsiderBuildNumberText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.InsiderBuildNumberText.Location = new System.Drawing.Point(364, 65);
+            this.InsiderBuildNumberText.Location = new System.Drawing.Point(352, 65);
+            this.InsiderBuildNumberText.Margin = new System.Windows.Forms.Padding(0);
             this.InsiderBuildNumberText.Name = "InsiderBuildNumberText";
-            this.InsiderBuildNumberText.Size = new System.Drawing.Size(192, 15);
+            this.InsiderBuildNumberText.Size = new System.Drawing.Size(200, 15);
             this.InsiderBuildNumberText.TabIndex = 173;
-            this.InsiderBuildNumberText.Text = "Insider Build: vX.X.X.X";
-            this.InsiderBuildNumberText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.InsiderBuildNumberText.Text = "Insider Build Date: ##-##-##-X";
+            this.InsiderBuildNumberText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // logo
             // 
@@ -739,7 +740,7 @@
             this.TwitterAccountLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.TwitterAccountLink.Location = new System.Drawing.Point(437, 12);
             this.TwitterAccountLink.Name = "TwitterAccountLink";
-            this.TwitterAccountLink.Size = new System.Drawing.Size(86, 13);
+            this.TwitterAccountLink.Size = new System.Drawing.Size(88, 13);
             this.TwitterAccountLink.TabIndex = 174;
             this.TwitterAccountLink.TabStop = true;
             this.TwitterAccountLink.Text = "Twitter Feed";
@@ -769,7 +770,7 @@
             this.FacebookGroupLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.FacebookGroupLink.Location = new System.Drawing.Point(292, 12);
             this.FacebookGroupLink.Name = "FacebookGroupLink";
-            this.FacebookGroupLink.Size = new System.Drawing.Size(112, 13);
+            this.FacebookGroupLink.Size = new System.Drawing.Size(110, 13);
             this.FacebookGroupLink.TabIndex = 173;
             this.FacebookGroupLink.TabStop = true;
             this.FacebookGroupLink.Text = "Facebook Group";
@@ -787,7 +788,7 @@
             this.HomePageLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.HomePageLink.Location = new System.Drawing.Point(36, 12);
             this.HomePageLink.Name = "HomePageLink";
-            this.HomePageLink.Size = new System.Drawing.Size(81, 13);
+            this.HomePageLink.Size = new System.Drawing.Size(79, 13);
             this.HomePageLink.TabIndex = 171;
             this.HomePageLink.TabStop = true;
             this.HomePageLink.Text = "Home Page";
@@ -805,7 +806,7 @@
             this.DiscordInviteLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.DiscordInviteLink.Location = new System.Drawing.Point(154, 12);
             this.DiscordInviteLink.Name = "DiscordInviteLink";
-            this.DiscordInviteLink.Size = new System.Drawing.Size(98, 13);
+            this.DiscordInviteLink.Size = new System.Drawing.Size(95, 13);
             this.DiscordInviteLink.TabIndex = 172;
             this.DiscordInviteLink.TabStop = true;
             this.DiscordInviteLink.Text = "Discord Invite";
