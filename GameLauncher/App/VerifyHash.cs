@@ -58,7 +58,7 @@ namespace GameLauncher.App
             VersionLabel.Text = "Version: v" + Application.ProductVersion;
             Log.Core("VerifyHash Opened");
             /* Clean up previous logs and start logging */
-            string[] filestocheck = new string[] { "validfiles.dat", "invalidfiles.dat", "Verify.log" };
+            string[] filestocheck = new string[] { "checksums.dat", "validfiles.dat", "invalidfiles.dat", "Verify.log" };
             foreach (String file in filestocheck)
             {
                 if (File.Exists(file)) File.Delete(file);

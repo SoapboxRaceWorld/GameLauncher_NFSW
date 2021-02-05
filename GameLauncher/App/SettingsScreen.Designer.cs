@@ -169,7 +169,7 @@ namespace GameLauncher.App
             this.SettingsVFilesButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
             this.SettingsVFilesButton.Location = new System.Drawing.Point(229, 80);
             this.SettingsVFilesButton.Name = "SettingsVFilesButton";
-            this.SettingsVFilesButton.Size = new System.Drawing.Size(120, 23);
+            this.SettingsVFilesButton.Size = new System.Drawing.Size(122, 23);
             this.SettingsVFilesButton.TabIndex = 177;
             this.SettingsVFilesButton.Text = "Verify GameFiles";
             this.SettingsVFilesButton.UseVisualStyleBackColor = false;
@@ -199,7 +199,7 @@ namespace GameLauncher.App
             this.SettingsCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsCDNText.Location = new System.Drawing.Point(36, 109);
             this.SettingsCDNText.Name = "SettingsCDNText";
-            this.SettingsCDNText.Size = new System.Drawing.Size(103, 14);
+            this.SettingsCDNText.Size = new System.Drawing.Size(102, 14);
             this.SettingsCDNText.TabIndex = 172;
             this.SettingsCDNText.Text = "CDN: PINGING";
             this.SettingsCDNText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -227,7 +227,7 @@ namespace GameLauncher.App
             this.SettingsLanguageText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsLanguageText.Location = new System.Drawing.Point(36, 158);
             this.SettingsLanguageText.Name = "SettingsLanguageText";
-            this.SettingsLanguageText.Size = new System.Drawing.Size(125, 14);
+            this.SettingsLanguageText.Size = new System.Drawing.Size(124, 14);
             this.SettingsLanguageText.TabIndex = 163;
             this.SettingsLanguageText.Text = "GAME LANGUAGE";
             this.SettingsLanguageText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -254,7 +254,7 @@ namespace GameLauncher.App
             this.SettingsWordFilterCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsWordFilterCheck.Location = new System.Drawing.Point(38, 325);
             this.SettingsWordFilterCheck.Name = "SettingsWordFilterCheck";
-            this.SettingsWordFilterCheck.Size = new System.Drawing.Size(253, 18);
+            this.SettingsWordFilterCheck.Size = new System.Drawing.Size(252, 18);
             this.SettingsWordFilterCheck.TabIndex = 168;
             this.SettingsWordFilterCheck.Text = "Disable Word Filtering on Game Chat";
             this.SettingsWordFilterCheck.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -269,7 +269,7 @@ namespace GameLauncher.App
             this.SettingsProxyCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsProxyCheckbox.Location = new System.Drawing.Point(38, 347);
             this.SettingsProxyCheckbox.Name = "SettingsProxyCheckbox";
-            this.SettingsProxyCheckbox.Size = new System.Drawing.Size(109, 18);
+            this.SettingsProxyCheckbox.Size = new System.Drawing.Size(108, 18);
             this.SettingsProxyCheckbox.TabIndex = 170;
             this.SettingsProxyCheckbox.Text = "Disable Proxy";
             this.SettingsProxyCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -284,7 +284,7 @@ namespace GameLauncher.App
             this.SettingsDiscordRPCCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsDiscordRPCCheckbox.Location = new System.Drawing.Point(38, 369);
             this.SettingsDiscordRPCCheckbox.Name = "SettingsDiscordRPCCheckbox";
-            this.SettingsDiscordRPCCheckbox.Size = new System.Drawing.Size(151, 18);
+            this.SettingsDiscordRPCCheckbox.Size = new System.Drawing.Size(150, 18);
             this.SettingsDiscordRPCCheckbox.TabIndex = 173;
             this.SettingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
             this.SettingsDiscordRPCCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -298,7 +298,7 @@ namespace GameLauncher.App
             this.SettingsGameFilesCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsGameFilesCurrentText.Location = new System.Drawing.Point(363, 73);
             this.SettingsGameFilesCurrentText.Name = "SettingsGameFilesCurrentText";
-            this.SettingsGameFilesCurrentText.Size = new System.Drawing.Size(154, 14);
+            this.SettingsGameFilesCurrentText.Size = new System.Drawing.Size(153, 14);
             this.SettingsGameFilesCurrentText.TabIndex = 183;
             this.SettingsGameFilesCurrentText.Text = "CURRENT DIRECTORY:";
             this.SettingsGameFilesCurrentText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -329,7 +329,7 @@ namespace GameLauncher.App
             this.SettingsCDNCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsCDNCurrentText.Location = new System.Drawing.Point(363, 121);
             this.SettingsCDNCurrentText.Name = "SettingsCDNCurrentText";
-            this.SettingsCDNCurrentText.Size = new System.Drawing.Size(110, 14);
+            this.SettingsCDNCurrentText.Size = new System.Drawing.Size(108, 14);
             this.SettingsCDNCurrentText.TabIndex = 184;
             this.SettingsCDNCurrentText.Text = "CURRENT CDN:";
             this.SettingsCDNCurrentText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;

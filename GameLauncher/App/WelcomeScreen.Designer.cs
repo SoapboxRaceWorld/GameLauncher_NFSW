@@ -57,7 +57,7 @@ namespace GameLauncher.App
             this.DownloadSourceText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.DownloadSourceText.Location = new System.Drawing.Point(9, 115);
             this.DownloadSourceText.Name = "DownloadSourceText";
-            this.DownloadSourceText.Size = new System.Drawing.Size(180, 14);
+            this.DownloadSourceText.Size = new System.Drawing.Size(177, 14);
             this.DownloadSourceText.TabIndex = 2;
             this.DownloadSourceText.Text = "CDN / Download Source:";
             this.DownloadSourceText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -88,7 +88,7 @@ namespace GameLauncher.App
             this.Save.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Save.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Save.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.Save.Location = new System.Drawing.Point(9, 164);
+            this.Save.Location = new System.Drawing.Point(5, 164);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(399, 32);
             this.Save.TabIndex = 5;
@@ -117,7 +117,7 @@ namespace GameLauncher.App
             this.APIErrorButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.APIErrorButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.APIErrorButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.APIErrorButton.Location = new System.Drawing.Point(148, 139);
+            this.APIErrorButton.Location = new System.Drawing.Point(143, 139);
             this.APIErrorButton.Name = "APIErrorButton";
             this.APIErrorButton.Size = new System.Drawing.Size(126, 26);
             this.APIErrorButton.TabIndex = 8;
