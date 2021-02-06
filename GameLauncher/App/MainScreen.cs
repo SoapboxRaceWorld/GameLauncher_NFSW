@@ -452,7 +452,7 @@ namespace GameLauncher
             Log.Visuals("CORE: Applyinng ContextMenu");
             translatedBy.Text = "";
             ContextMenu = new ContextMenu();
-            ContextMenu.MenuItems.Add(new MenuItem("About", SettingsAboutButton_Click));
+            ContextMenu.MenuItems.Add(new MenuItem("About", AboutButton_Click));
             ContextMenu.MenuItems.Add(new MenuItem("Donate", (b, n) => { Process.Start("https://paypal.me/metonator95"); }));
             ContextMenu.MenuItems.Add("-");
             //ContextMenu.MenuItems.Add(new MenuItem("Settings", SettingsButton_Click));
@@ -660,7 +660,7 @@ namespace GameLauncher
             RemoveTracksHighFiles();
         }
 
-        private void SettingsAboutButton_Click(object sender, EventArgs e)
+        private void AboutButton_Click(object sender, EventArgs e)
         {
             new About().ShowDialog();
         }
