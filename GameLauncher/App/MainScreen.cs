@@ -455,7 +455,7 @@ namespace GameLauncher
 
             ContextMenu.MenuItems.Add(new MenuItem("Donate", (b, n) => { Process.Start("https://paypal.me/metonator95"); }));
             ContextMenu.MenuItems.Add("-");
-            ContextMenu.MenuItems.Add(new MenuItem("About", SettingsAboutButton_Click));
+            ContextMenu.MenuItems.Add(new MenuItem("About", AboutButton_Click));
             ContextMenu.MenuItems.Add(new MenuItem("Add Server", AddServer_Click));
             ContextMenu.MenuItems.Add("-");
             ContextMenu.MenuItems.Add(new MenuItem("Close launcher", CloseBTN_Click));
@@ -660,7 +660,7 @@ namespace GameLauncher
             RemoveTracksHighFiles();
         }
 
-        private void SettingsAboutButton_Click(object sender, EventArgs e)
+        private void AboutButton_Click(object sender, EventArgs e)
         {
             new About().ShowDialog();
         }

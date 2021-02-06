@@ -117,6 +117,13 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                         settingFile.Write("WindowsDefender", "Not Excluded");
                     }
                 }
+                else if (WindowsProductVersion.GetWindowsNumber() < 10.0)
+                {
+                    if (settingFile.KeyExists("WindowsDefender") || !string.IsNullOrEmpty(settingFile.Read("WindowsDefender")))
+                    {
+                        settingFile.DeleteKey("WindowsDefender");
+                    }
+                }
             }
 
             settingFile = new IniFile("Settings.ini");
