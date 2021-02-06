@@ -2940,7 +2940,7 @@ namespace GameLauncher
                 // ignored
             }
 
-            if (!DetectLinux.LinuxDetected() && (!string.IsNullOrEmpty(FileSettingsSave.GameInstallation)))
+            if (!DetectLinux.LinuxDetected() && !string.IsNullOrEmpty(FileSettingsSave.GameInstallation))
             {
                 //Remove current Firewall for the Game Files 
                 string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
