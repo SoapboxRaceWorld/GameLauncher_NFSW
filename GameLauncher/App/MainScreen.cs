@@ -1461,7 +1461,7 @@ namespace GameLauncher
                     String responseString;
                     try
                     {
-                        Uri resetPasswordUrl = new Uri(_serverInfo.IpAddress + "/RecoveryPassword/ForgotPassword");
+                        Uri resetPasswordUrl = new Uri(_serverInfo.IpAddress + "/RecoveryPassword/forgotPassword");
 
                         var request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
                         var postData = "email=" + send;
