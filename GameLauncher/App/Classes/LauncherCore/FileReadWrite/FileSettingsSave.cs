@@ -104,6 +104,10 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 {
                     settingFile.Write("PatchesApplied", "0");
                 }
+                else if (settingFile.KeyExists("PatchesApplied") && WindowsProductVersion.GetWindowsNumber() != 6.1)
+                {
+                    settingFile.DeleteKey("PatchesApplied");
+                }
 
                 if (!settingFile.KeyExists("Firewall") || string.IsNullOrEmpty(settingFile.Read("Firewall")))
                 {

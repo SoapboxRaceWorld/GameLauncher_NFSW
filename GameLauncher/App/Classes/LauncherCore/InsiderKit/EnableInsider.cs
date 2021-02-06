@@ -2,10 +2,10 @@
 {
     class EnableInsider
     {
-        public static bool Insider = true;
+        public static bool Insider = false;
 
         //Current month, day, year (2 digits), and letter! Ex: 12-15-20-A
-        public static string InsiderBuildNumber = "02-04-21-B";
+        public static string InsiderBuildNumber = "02-05-21-R";
 
         public static bool ShouldIBeAnInsider()
         {
