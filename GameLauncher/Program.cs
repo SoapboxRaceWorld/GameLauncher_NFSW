@@ -487,7 +487,7 @@ namespace GameLauncher
                     {
                         string[] files = {
                             "CommandLine.dll - 2.8.0",
-                            "DiscordRPC.dll - 1.0.169.0",
+                            "DiscordRPC.dll - 1.0.175.0",
                             "Flurl.dll - 3.0.1",
                             "Flurl.Http.dll - 3.0.1",
                             "INIFileParser.dll - 2.5.2",
