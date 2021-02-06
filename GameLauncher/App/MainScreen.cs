@@ -452,10 +452,10 @@ namespace GameLauncher
             Log.Visuals("CORE: Applyinng ContextMenu");
             translatedBy.Text = "";
             ContextMenu = new ContextMenu();
-
+            ContextMenu.MenuItems.Add(new MenuItem("About", AboutButton_Click));
             ContextMenu.MenuItems.Add(new MenuItem("Donate", (b, n) => { Process.Start("https://paypal.me/metonator95"); }));
             ContextMenu.MenuItems.Add("-");
-            ContextMenu.MenuItems.Add(new MenuItem("About", AboutButton_Click));
+            //ContextMenu.MenuItems.Add(new MenuItem("Settings", SettingsButton_Click));
             ContextMenu.MenuItems.Add(new MenuItem("Add Server", AddServer_Click));
             ContextMenu.MenuItems.Add("-");
             ContextMenu.MenuItems.Add(new MenuItem("Close launcher", CloseBTN_Click));
