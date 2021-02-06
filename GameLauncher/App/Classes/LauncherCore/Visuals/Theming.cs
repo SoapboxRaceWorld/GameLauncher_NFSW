@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
@@ -10,6 +11,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         private static readonly IniFile ThemeFile = new IniFile("Theme.ini");
 
         private static readonly string ThemeFolder = AppDomain.CurrentDomain.BaseDirectory + "Theme";
+
+
+        /* Discord RPC Privacy Build Number */
+
+        public static string PrivacyRPCBuild = Application.ProductVersion;
 
 
         /* Theme Name & Author */
@@ -883,6 +889,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
             if (!string.IsNullOrEmpty(ThemeFile.Read("AboutTextForeColor")))
             {
                 AboutTextForeColor = ToColor(ThemeFile.Read("AboutTextForeColor"));
+            }
+
+            if (!string.IsNullOrEmpty(ThemeFile.Read("PrivacyRPCBuild")))
+            {
+                PrivacyRPCBuild = ThemeFile.Read("PrivacyRPCBuild");
             }
         }
 

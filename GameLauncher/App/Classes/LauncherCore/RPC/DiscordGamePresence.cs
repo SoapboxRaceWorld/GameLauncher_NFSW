@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
-using System.Windows.Forms;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 
 namespace GameLauncher.App.Classes.RPC
 {
@@ -37,7 +37,7 @@ namespace GameLauncher.App.Classes.RPC
 
         public static void HandleGameState(string uri, string serverreply = "", string POST = "", string GET = "")
         {
-            LauncherRPC = "SBRW Launcher: v" + Application.ProductVersion;
+            LauncherRPC = "SBRW Launcher: v" + Theming.PrivacyRPCBuild;
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');
 

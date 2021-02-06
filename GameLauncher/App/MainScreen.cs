@@ -624,7 +624,7 @@ namespace GameLauncher
             Log.Core("DISCORD: Checking if Discord RPC is Disabled from User Settings! It's value is " + _disableDiscordRPC);
 
             _presence.State = _OS;
-            _presence.Details = "In-Launcher: " + Application.ProductVersion;
+            _presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
             _presence.Assets = new Assets
             {
                 LargeImageText = "SBRW",
