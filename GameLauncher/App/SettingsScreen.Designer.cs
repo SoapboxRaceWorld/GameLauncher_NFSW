@@ -73,7 +73,7 @@ namespace GameLauncher.App
             this.SettingsClearServerModCacheButton.ForeColor = System.Drawing.Color.Silver;
             this.SettingsClearServerModCacheButton.Location = new System.Drawing.Point(38, 287);
             this.SettingsClearServerModCacheButton.Name = "SettingsClearServerModCacheButton";
-            this.SettingsClearServerModCacheButton.Size = new System.Drawing.Size(131, 25);
+            this.SettingsClearServerModCacheButton.Size = new System.Drawing.Size(135, 25);
             this.SettingsClearServerModCacheButton.TabIndex = 189;
             this.SettingsClearServerModCacheButton.Text = "Clear Server Mods";
             this.SettingsClearServerModCacheButton.UseVisualStyleBackColor = false;
@@ -136,7 +136,7 @@ namespace GameLauncher.App
             this.SettingsClearCommunicationLogButton.ForeColor = System.Drawing.Color.Silver;
             this.SettingsClearCommunicationLogButton.Location = new System.Drawing.Point(38, 250);
             this.SettingsClearCommunicationLogButton.Name = "SettingsClearCommunicationLogButton";
-            this.SettingsClearCommunicationLogButton.Size = new System.Drawing.Size(131, 25);
+            this.SettingsClearCommunicationLogButton.Size = new System.Drawing.Size(135, 25);
             this.SettingsClearCommunicationLogButton.TabIndex = 167;
             this.SettingsClearCommunicationLogButton.Text = "Clear NFSWO Log";
             this.SettingsClearCommunicationLogButton.UseVisualStyleBackColor = false;
@@ -153,7 +153,7 @@ namespace GameLauncher.App
             this.SettingsClearCrashLogsButton.ForeColor = System.Drawing.Color.Silver;
             this.SettingsClearCrashLogsButton.Location = new System.Drawing.Point(38, 213);
             this.SettingsClearCrashLogsButton.Name = "SettingsClearCrashLogsButton";
-            this.SettingsClearCrashLogsButton.Size = new System.Drawing.Size(131, 25);
+            this.SettingsClearCrashLogsButton.Size = new System.Drawing.Size(135, 25);
             this.SettingsClearCrashLogsButton.TabIndex = 165;
             this.SettingsClearCrashLogsButton.Text = "Clear Crash Logs";
             this.SettingsClearCrashLogsButton.UseVisualStyleBackColor = false;
@@ -242,7 +242,7 @@ namespace GameLauncher.App
             this.SettingsLanguage.FormattingEnabled = true;
             this.SettingsLanguage.Location = new System.Drawing.Point(38, 180);
             this.SettingsLanguage.Name = "SettingsLanguage";
-            this.SettingsLanguage.Size = new System.Drawing.Size(131, 21);
+            this.SettingsLanguage.Size = new System.Drawing.Size(135, 21);
             this.SettingsLanguage.TabIndex = 164;
             // 
             // SettingsWordFilterCheck
