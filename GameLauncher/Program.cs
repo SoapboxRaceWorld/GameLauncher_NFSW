@@ -22,6 +22,7 @@ using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.Validator.CodeSign;
 
 namespace GameLauncher
 {
@@ -53,8 +54,63 @@ namespace GameLauncher
                 {
                     if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394802)
                     {
-                        //Install Carbon Crew CA
-                        CertificateStore.Check();
+                        /* Check Up to Date Certificate Status */
+                        try
+                        {
+                            WebClient update_data = new WebClient();
+                            update_data.CancelAsync();
+                            update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            update_data.DownloadStringAsync(new Uri("http://crl.carboncrew.org/RCA-Info.json"));
+                            update_data.DownloadStringCompleted += (sender, e) => {
+                                JSONRootCA API = JsonConvert.DeserializeObject<JSONRootCA>(e.Result);
+
+                                if (API.CN != null)
+                                {
+                                    Log.Info("CERTIFICATE STORE: Setting Common Name -> " + API.CN);
+                                    CertificateStore.RootCACommonName = API.CN;
+                                }
+
+                                if (API.Subject != null)
+                                {
+                                    Log.Info("CERTIFICATE STORE: Setting Subject Name -> " + API.Subject);
+                                    CertificateStore.RootCASubjectName = API.Subject;
+                                }
+
+                                if (API.Ids != null)
+                                {
+                                    foreach (IdsModel entries in API.Ids)
+                                    {
+                                        if (entries.Serial != null)
+                                        {
+                                            Log.Info("CERTIFICATE STORE: Setting Serial Number -> " + entries.Serial);
+                                            CertificateStore.RootCASerial = entries.Serial;
+                                        }
+                                    }
+                                }
+
+                                if (API.File != null)
+                                {
+                                    foreach (FileModel entries in API.File)
+                                    {
+                                        if (entries.Name != null)
+                                        {
+                                            Log.Info("CERTIFICATE STORE: Setting Root CA File Name -> " + entries.Name);
+                                            CertificateStore.RootCAFileName = entries.Name;
+                                        }
+
+                                        if (entries.Cer != null)
+                                        {
+                                            Log.Info("CERTIFICATE STORE: Setting Root CA File URL -> " + entries.Cer);
+                                            CertificateStore.RootCAFileURL = entries.Cer;
+                                        }
+                                    }
+                                }
+                            };
+                        }
+                        catch
+                        {
+                            Log.Error("CERTIFICATE STORE: Unable to Retrive Latest Certificate Information");
+                        }
                     }
                     else
                     {
@@ -211,7 +267,7 @@ namespace GameLauncher
                             case API.Online:
                                 WebClient update_data = new WebClient();
                                 update_data.CancelAsync();
-                                update_data.Headers.Add("user-agent", "GameLauncherUpdater " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                                 update_data.DownloadStringAsync(new Uri("http://api.github.com/repos/SoapboxRaceWorld/GameLauncherUpdater/releases/latest"));
                                 update_data.DownloadStringCompleted += (sender, e) => {
                                     GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(e.Result);
@@ -266,18 +322,18 @@ namespace GameLauncher
                         messageBoxPopupKB += "- Value: DisabledByDefault -> 0\n\n";
 
                         messageBoxPopupKB += "Would you like to add those values?";
-                        DialogResult replyPatchWin7 = MessageBox.Show(null, messageBoxPopupKB, "GameLauncherReborn", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        DialogResult replyPatchWin7 = MessageBox.Show(null, messageBoxPopupKB, "SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                         if (replyPatchWin7 == DialogResult.Yes)
                         {
                             RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
                             key.SetValue("DisabledByDefault", 0x0);
 
-                            MessageBox.Show(null, "Registry option set, Remember that the changes may require a system reboot to take effect", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show(null, "Registry option set, Remember that the changes may require a system reboot to take effect", "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                         else
                         {
-                            MessageBox.Show(null, "Roger that, There may be some issues connecting to the servers.", "GameLauncherReborn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show(null, "Roger that, There may be some issues connecting to the servers.", "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
 
                         FileSettingsSave.Win7UpdatePatches = "1";
@@ -433,7 +489,7 @@ namespace GameLauncher
                             "CommandLine.dll - 2.8.0",
                             "DiscordRPC.dll - 1.0.169.0",
                             "Flurl.dll - 3.0.1",
-                            "Flurl.Http.dll - 2.4.2",
+                            "Flurl.Http.dll - 3.0.1",
                             "INIFileParser.dll - 2.5.2",
                             "LZMA.dll - 9.10 beta",
                             "Microsoft.WindowsAPICodePack.dll - 1.1.0.0",
@@ -576,6 +632,9 @@ namespace GameLauncher
 
             if (!DetectLinux.LinuxDetected())
             {
+                //Install Custom Root Certificate
+                CertificateStore.Check();
+
                 if (!File.Exists("GameLauncherUpdater.exe"))
                 {
                     Log.Info("LAUNCHER UPDATER: Starting GameLauncherUpdater downloader");

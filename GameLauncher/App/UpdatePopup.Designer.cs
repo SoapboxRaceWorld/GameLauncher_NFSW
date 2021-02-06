@@ -141,8 +141,7 @@
             // 
             this.AcceptButton = this.UpdateButton;
             this.AccessibleRole = System.Windows.Forms.AccessibleRole.MenuPopup;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.CancelButton = this.IgnoreButton;
             this.ClientSize = new System.Drawing.Size(398, 262);

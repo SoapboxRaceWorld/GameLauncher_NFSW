@@ -29,7 +29,7 @@ namespace GameLauncher.App
             InitializeComponent();
             SetVisuals();
 
-            Version.Text = "Version : v" + Application.ProductVersion;
+            Version.Text = "Version: v" + Application.ProductVersion;
 
             //And one for keeping data about server, IP tbh
             ServerListRenderer.View = View.Details;
@@ -178,12 +178,12 @@ namespace GameLauncher.App
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
-            ServerListRenderer.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            Loading.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            BtnAddServer.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            BtnSelectServer.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            BtnClose.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            Version.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            ServerListRenderer.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            Loading.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            BtnAddServer.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            BtnSelectServer.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            BtnClose.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            Version.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors & Images     /
@@ -195,7 +195,7 @@ namespace GameLauncher.App
             Loading.ForeColor = Theming.WinFormWarningTextForeColor;
             Version.ForeColor = Theming.WinFormTextForeColor;
 
-            ServerListRenderer.ForeColor = Theming.WinFormTBGDarkerForeColor;
+            ServerListRenderer.ForeColor = Theming.WinFormSecondaryTextForeColor;
 
             BtnAddServer.ForeColor = Theming.BlueForeColorButton;
             BtnAddServer.BackColor = Theming.BlueBackColorButton;

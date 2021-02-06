@@ -78,36 +78,36 @@ namespace GameLauncher.App
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            SettingsAboutButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            SettingsGamePathText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            SettingsGameFiles.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            SettingsCDNText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            SettingsCDNPick.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
-            SettingsLanguageText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            SettingsLanguage.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
-            SettingsClearCrashLogsButton.Font = new Font(DejaVuSansBold, 8f, FontStyle.Bold);
-            SettingsClearCommunicationLogButton.Font = new Font(DejaVuSansBold, 8f, FontStyle.Bold);
-            SettingsClearServerModCacheButton.Font = new Font(DejaVuSansBold, 8f, FontStyle.Bold);
-            SettingsWordFilterCheck.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            SettingsProxyCheckbox.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            SettingsDiscordRPCCheckbox.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            SettingsGameFilesCurrentText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            SettingsGameFilesCurrent.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            SettingsCDNCurrentText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            SettingsCDNCurrent.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            SettingsLauncherPathText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            SettingsLauncherPathCurrent.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            SettingsNetworkText.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            SettingsMainSrvText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            SettingsMainCDNText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            SettingsBkupSrvText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            SettingsBkupCDNText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            SettingsVFilesButton.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            SettingsLauncherVersion.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            SettingsSave.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            SettingsCancel.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            ThemeName.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            ThemeAuthor.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
+            SettingsAboutButton.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            SettingsGamePathText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            SettingsGameFiles.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            SettingsCDNText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            SettingsCDNPick.Font = new Font(DejaVuSans, 8f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            SettingsLanguageText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            SettingsLanguage.Font = new Font(DejaVuSans, 8f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            SettingsClearCrashLogsButton.Font = new Font(DejaVuSansBold, 8f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            SettingsClearCommunicationLogButton.Font = new Font(DejaVuSansBold, 8f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            SettingsClearServerModCacheButton.Font = new Font(DejaVuSansBold, 8f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            SettingsWordFilterCheck.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            SettingsProxyCheckbox.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            SettingsDiscordRPCCheckbox.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            SettingsGameFilesCurrentText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            SettingsGameFilesCurrent.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            SettingsCDNCurrentText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            SettingsCDNCurrent.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            SettingsLauncherPathText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            SettingsLauncherPathCurrent.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            SettingsNetworkText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            SettingsMainSrvText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            SettingsMainCDNText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            SettingsBkupSrvText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            SettingsBkupCDNText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            SettingsVFilesButton.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            SettingsLauncherVersion.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            SettingsSave.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            SettingsCancel.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            ThemeName.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            ThemeAuthor.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors & Images     /
@@ -182,7 +182,7 @@ namespace GameLauncher.App
             /********************************/
 
             SettingsCDNPick.DrawItem += new DrawItemEventHandler(SettingsCDNPick_DrawItem);
-            /*
+
             SettingsSave.MouseEnter += new EventHandler(Greenbutton_hover_MouseEnter);
             SettingsSave.MouseLeave += new EventHandler(Greenbutton_MouseLeave);
             SettingsSave.MouseUp += new MouseEventHandler(Greenbutton_hover_MouseUp);
@@ -192,9 +192,6 @@ namespace GameLauncher.App
             SettingsCancel.MouseLeave += new EventHandler(Graybutton_MouseLeave);
             SettingsCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
             SettingsCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
-            */
-
-
         }
 
         /********************************/
@@ -911,6 +908,46 @@ namespace GameLauncher.App
             {
                 Log.Error("SETTINGS PINGING CDN: Settings.ini has an Empty CDN URL");
             }
+        }
+
+        private void Greenbutton_hover_MouseEnter(object sender, EventArgs e)
+        {
+            SettingsSave.Image = Theming.GreenButtonHover;
+        }
+
+        private void Greenbutton_MouseLeave(object sender, EventArgs e)
+        {
+            SettingsSave.Image = Theming.GreenButton;
+        }
+
+        private void Greenbutton_hover_MouseUp(object sender, EventArgs e)
+        {
+            SettingsSave.Image = Theming.GreenButtonHover;
+        }
+
+        private void Greenbutton_click_MouseDown(object sender, EventArgs e)
+        {
+            SettingsSave.Image = Theming.GreenButtonClick;
+        }
+
+        private void Graybutton_click_MouseDown(object sender, EventArgs e)
+        {
+            SettingsCancel.Image = Theming.GrayButtonClick;
+        }
+
+        private void Graybutton_hover_MouseEnter(object sender, EventArgs e)
+        {
+            SettingsCancel.Image = Theming.GrayButtonHover;
+        }
+
+        private void Graybutton_MouseLeave(object sender, EventArgs e)
+        {
+            SettingsCancel.Image = Theming.GrayButton;
+        }
+
+        private void Graybutton_hover_MouseUp(object sender, EventArgs e)
+        {
+            SettingsCancel.Image = Theming.GrayButtonHover;
         }
     }
 }

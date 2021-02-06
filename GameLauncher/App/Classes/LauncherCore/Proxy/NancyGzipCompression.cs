@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.Linq;
 using Nancy;
 using Nancy.Bootstrapper;
@@ -15,7 +14,7 @@ namespace GameLauncher.App.Classes.Proxy
 
         private static void CheckForCompression(NancyContext context)
         {
-            if (!RequestIsGzipCompatible(context.Request))
+            if (!RequestIsGzipCompatible(context.Request) || context.Response.StatusCode != HttpStatusCode.OK)
             {
                 return;
             }
@@ -26,19 +25,14 @@ namespace GameLauncher.App.Classes.Proxy
         private static void CompressResponse(Response response)
         {
             response.Headers["Content-Encoding"] = "gzip";
-            response.Headers["connection"] = "close";
+            response.Headers["Connection"] = "close";
 
-            var content = new MemoryStream();
-
-            response.Contents(content);
-
-            content.Position = 0;
-
-            response.Contents = stream =>
+            var contents = response.Contents;
+            response.Contents = responseStream =>
             {
-                using (var gzip = new GZipStream(stream, CompressionMode.Compress, true))
+                using (var compression = new GZipStream(responseStream, CompressionMode.Compress))
                 {
-                    gzip.Write(content.ToArray(), 0, (int)content.Length);
+                    contents(compression);
                 }
             };
         }

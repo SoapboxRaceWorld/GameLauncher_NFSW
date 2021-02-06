@@ -10,7 +10,6 @@ using Nancy.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -65,17 +64,23 @@ namespace GameLauncher.App.Classes.Proxy
 
             foreach (var header in context.Request.Headers)
             {
+                // Don't send Content-Length for GET requests
+                if (method == "GET" && header.Key.ToLowerInvariant() == "content-length")
+                {
+                    continue;
+                }
+
                 request = request.WithHeader(header.Key,
                     header.Key == "Host" ? resolvedUrl.ToUri().Host : header.Value.First());
             }
 
-            var requestBody = context.Request.Method != "GET" ? context.Request.Body.AsString(Encoding.UTF8) : "";
+            var requestBody = method != "GET" ? context.Request.Body.AsString(Encoding.UTF8) : "";
 
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
                 CommunicationLogEntryType.Request,
                 new CommunicationLogRequest(requestBody, resolvedUrl.ToString(), method));
 
-            HttpResponseMessage responseMessage;
+            IFlurlResponse responseMessage;
 
             var POSTContent = String.Empty;
 
@@ -98,12 +103,12 @@ namespace GameLauncher.App.Classes.Proxy
                     responseMessage = await request.GetAsync(cancellationToken);
                     break;
                 case "POST":
-                    responseMessage = await request.PostAsync(new CapturedStringContent(requestBody, Encoding.UTF8),
+                    responseMessage = await request.PostAsync(new CapturedStringContent(requestBody),
                         cancellationToken);
                     POSTContent = context.Request.Body.AsString();
                     break;
                 case "PUT":
-                    responseMessage = await request.PutAsync(new CapturedStringContent(requestBody, Encoding.UTF8),
+                    responseMessage = await request.PutAsync(new CapturedStringContent(requestBody),
                         cancellationToken);
                     break;
                 case "DELETE":
@@ -113,14 +118,14 @@ namespace GameLauncher.App.Classes.Proxy
                     throw new ProxyException("Cannot handle request method: " + method);
             }
 
-            var responseBody = await responseMessage.Content.ReadAsStringAsync();
+            var responseBody = await responseMessage.GetStringAsync();
 
             if (path == "/User/GetPermanentSession")
             {
                 responseBody = Self.CleanFromUnknownChars(responseBody);
             }
 
-            int statusCode = (int)responseMessage.StatusCode;
+            int statusCode = responseMessage.StatusCode;
 
             try
             {
@@ -135,7 +140,7 @@ namespace GameLauncher.App.Classes.Proxy
             }
 
             TextResponse textResponse = new TextResponse(responseBody,
-                responseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
+                responseMessage.ToString())
             {
                 StatusCode = (HttpStatusCode)statusCode
             };

@@ -33,7 +33,7 @@ namespace GameLauncher.App
             /*******************************/
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            Font = new Font(DejaVuSans, 8.25f, FontStyle.Regular);
+            Font = new Font(DejaVuSans, 8.25f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors              /
@@ -42,7 +42,7 @@ namespace GameLauncher.App
             ForeColor = Theming.WinFormSecondaryTextForeColor;
             BackColor = Theming.WinFormTBGForeColor;
 
-            data.ForeColor = Theming.WinFormTBGForeColor;
+            data.ForeColor = Theming.WinFormSecondaryTextForeColor;
             data.GridColor = Theming.WinFormGridForeColor;
         }
 

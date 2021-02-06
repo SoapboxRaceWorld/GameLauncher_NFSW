@@ -1,4 +1,4 @@
-using DiscordRPC;
+﻿using DiscordRPC;
 using GameLauncher.App.Classes.Proxy;
 using GameLauncherReborn;
 using System;
@@ -37,7 +37,7 @@ namespace GameLauncher.App.Classes.RPC
 
         public static void HandleGameState(string uri, string serverreply = "", string POST = "", string GET = "")
         {
-            LauncherRPC = "GameLauncherReborn v" + Application.ProductVersion;
+            LauncherRPC = "SBRW Launcher: v" + Application.ProductVersion;
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');
 
@@ -141,6 +141,7 @@ namespace GameLauncher.App.Classes.RPC
                     PersonaAvatarId = "avatar_" + SBRW_XML.SelectSingleNode("ProfileData/IconIndex").InnerText;
                     PersonaId = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
 
+                    AntiCheat.persona_id = SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText;
                     AntiCheat.persona_name = SBRW_XML.SelectSingleNode("ProfileData/Name").InnerText.Replace("¤", "[S]");
                 }
             }

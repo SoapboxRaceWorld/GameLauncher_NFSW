@@ -45,12 +45,12 @@ namespace GameLauncher.App
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
-            ChangelogBox.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            ChangelogText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            UpdateButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            UpdateText.Font = new Font(DejaVuSans, 9f, FontStyle.Regular);
-            SkipButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
-            IgnoreButton.Font = new Font(DejaVuSansBold, 9f, FontStyle.Bold);
+            ChangelogBox.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            ChangelogText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            UpdateButton.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            UpdateText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            SkipButton.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            IgnoreButton.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
 
             /********************************/
             /* Set Theme Colors              /
