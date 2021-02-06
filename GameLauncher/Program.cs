@@ -237,17 +237,17 @@ namespace GameLauncher
                     case FolderType.IsUsersFolders:
                         MessageBox.Show(null, "Please, choose a different directory for the game launcher.\n\nSpecial Folders such as:" +
                             "\n\nDownloads, Documents, Desktop, Videos, Music, OneDrive, or Any Type of User Folders" +
-                            "\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                            "\nare NOT advised or allowed", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         Environment.Exit(0);
                         break;
                     case FolderType.IsProgramFilesFolder:
                         MessageBox.Show(null, "Please, choose a different directory for the game launcher." +
-                            "\n\nSpecial Folders such as:\n\nProgram Files or Program Files (x86)\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                            "\n\nSpecial Folders such as:\n\nProgram Files or Program Files (x86)\nare NOT advised or allowed", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         Environment.Exit(0);
                         break;
                     case FolderType.IsWindowsFolder:
                         MessageBox.Show(null, "Please, choose a different directory for the game launcher." +
-                            "\n\nSpecial Folder such as:\n\nWindows\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                            "\n\nSpecial Folder such as:\n\nWindows\nare NOT advised or allowed", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         Environment.Exit(0);
                         break;
                 }
