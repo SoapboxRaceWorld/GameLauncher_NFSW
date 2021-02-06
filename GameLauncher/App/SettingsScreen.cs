@@ -38,11 +38,13 @@ namespace GameLauncher.App
 
         public string ServerIP = String.Empty;
         public string ServerName = String.Empty;
+        public Form MainScreen = null;
 
-        public SettingsScreen(string serverIP, string serverName)
+        public SettingsScreen(string serverIP, string serverName, Form mainscreen)
         {
             ServerIP = serverIP;
             ServerName = serverName;
+            MainScreen = mainscreen;
 
             InitializeComponent();
             SetVisuals();
@@ -54,7 +56,8 @@ namespace GameLauncher.App
             /* Set Initial position & Icon  /
             /*******************************/
 
-            this.StartPosition = FormStartPosition.CenterParent;
+            this.Location = new Point(MainScreen.Location.X, MainScreen.Location.Y);
+            //this.StartPosition = FormStartPosition.CenterParent;
 
             /*******************************/
             /* Set Background Image         /

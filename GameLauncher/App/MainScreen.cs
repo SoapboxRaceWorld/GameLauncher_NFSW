@@ -1895,7 +1895,7 @@ namespace GameLauncher
 
             if (!(ServerPick.SelectedItem is ServerInfo server)) return;
 
-            new SettingsScreen(server.IpAddress, server.Name).ShowDialog();
+            new SettingsScreen(server.IpAddress, server.Name, this).ShowDialog();
         }
 
         private void SettingsButton_MouseEnter(object sender, EventArgs e)
