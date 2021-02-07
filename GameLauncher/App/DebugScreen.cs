@@ -46,7 +46,7 @@ namespace GameLauncher.App
             data.GridColor = Theming.WinFormGridForeColor;
         }
 
-        public static string AntivirusInstalled(string caller = "AntiVirusProduct")
+        public static string SecurityCenter(string caller)
         {
             ManagementObjectSearcher wmiData = new ManagementObjectSearcher(@"root\SecurityCenter2", "SELECT * FROM " + caller);
             ManagementObjectCollection data = wmiData.Get();
@@ -77,9 +77,9 @@ namespace GameLauncher.App
             {
                 try
                 {
-                    Antivirus = (String.IsNullOrEmpty(AntivirusInstalled())) ? "---" : AntivirusInstalled();
-                    Firewall = (String.IsNullOrEmpty(AntivirusInstalled("FirewallProduct"))) ? "Built-In" : AntivirusInstalled("FirewallProduct");
-                    AntiSpyware = (String.IsNullOrEmpty(AntivirusInstalled("AntiSpywareProduct"))) ? "---" : AntivirusInstalled("AntiSpywareProduct");
+                    Antivirus = (String.IsNullOrEmpty(SecurityCenter("AntiVirusProduct"))) ? "---" : SecurityCenter("AntiVirusProduct");
+                    Firewall = (String.IsNullOrEmpty(SecurityCenter("FirewallProduct"))) ? "Built-In" : SecurityCenter("FirewallProduct");
+                    AntiSpyware = (String.IsNullOrEmpty(SecurityCenter("AntiSpywareProduct"))) ? "---" : SecurityCenter("AntiSpywareProduct");
                 }
                 catch
                 {
