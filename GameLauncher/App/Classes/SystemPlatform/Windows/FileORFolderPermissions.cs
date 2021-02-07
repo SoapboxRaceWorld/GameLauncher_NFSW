@@ -113,23 +113,26 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
         public static void CheckLauncherPerms(string WhichFunction, string FileORFolderPath)
         {
-            if (WhichFunction == "Folder")
+            if (!DetectLinux.LinuxDetected())
             {
-                if (Directory.Exists(FileORFolderPath))
+                if (WhichFunction == "Folder")
                 {
-                    if (CheckIfFolderPermissionIsSet(FileORFolderPath) == false)
+                    if (Directory.Exists(FileORFolderPath))
                     {
-                        GiveEveryoneReadWriteFolderAccess(FileORFolderPath);
+                        if (CheckIfFolderPermissionIsSet(FileORFolderPath) == false)
+                        {
+                            GiveEveryoneReadWriteFolderAccess(FileORFolderPath);
+                        }
                     }
                 }
-            }
-            else if (WhichFunction == "File")
-            {
-                if (File.Exists(FileORFolderPath))
+                else if (WhichFunction == "File")
                 {
-                    if (CheckIfFilePermissionIsSet(FileORFolderPath) == false)
+                    if (File.Exists(FileORFolderPath))
                     {
-                        GiveEveryoneReadWriteFileAccess(FileORFolderPath);
+                        if (CheckIfFilePermissionIsSet(FileORFolderPath) == false)
+                        {
+                            GiveEveryoneReadWriteFileAccess(FileORFolderPath);
+                        }
                     }
                 }
             }
