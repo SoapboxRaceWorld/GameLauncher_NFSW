@@ -2940,7 +2940,7 @@ namespace GameLauncher
                 // ignored
             }
 
-            if (!DetectLinux.LinuxDetected() && !string.IsNullOrEmpty(FileSettingsSave.GameInstallation))
+            if (!string.IsNullOrEmpty(FileSettingsSave.GameInstallation))
             {
                 //Remove current Firewall for the Game Files 
                 string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
@@ -2961,7 +2961,14 @@ namespace GameLauncher
                 }
                 else
                 {
-                    Log.Core("WINDOWS FIREWALL: Already Exlcuded SBRW - Game {Both}");
+                    if (DetectLinux.LinuxDetected())
+                    {
+                        Log.Core("WINDOWS FIREWALL: Not Supported On Linux -> SBRW - Game");
+                    }
+                    else
+                    {
+                        Log.Core("WINDOWS FIREWALL: Already Exlcuded SBRW - Game {Both}");
+                    }
                 }
             }
 

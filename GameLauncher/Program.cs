@@ -500,7 +500,7 @@ namespace GameLauncher
                             "Newtonsoft.Json.dll - 12.0.3",
                             "System.Runtime.InteropServices.RuntimeInformation.dll - 4.6.24705.01. Commit Hash: 4d1af962ca0fede10beb01d197367c2f90e92c97",
                             "System.ValueTuple.dll - 4.6.26515.06 @BuiltBy: dlab-DDVSOWINAGE059 @Branch: release/2.1 @SrcCode: https://github.com/dotnet/corefx/tree/30ab651fcb4354552bd4891619a0bdd81e0ebdbf",
-                            "WindowsFirewallHelper.dll - 1.6.3.40"
+                            "WindowsFirewallHelper.dll - 2.0.4.70-beta2"
                         };
 
                         var missingfiles = new List<string>();
