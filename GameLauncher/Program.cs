@@ -700,6 +700,9 @@ namespace GameLauncher
                 ModNetLinksCleanup.CleanLinks(linksPath);
             }
 
+            /* Check Permission for Launcher Folder and File it Self */
+            FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(AppDomain.CurrentDomain.BaseDirectory));
+
             Log.Info("PROXY: Starting Proxy");
             ServerProxy.Instance.Start();
 

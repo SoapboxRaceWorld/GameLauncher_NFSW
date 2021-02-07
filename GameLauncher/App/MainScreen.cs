@@ -1915,6 +1915,8 @@ namespace GameLauncher
 
         private void StartGame(string userId, string loginToken)
         {
+            FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(FileSettingsSave.GameInstallation + "\\.data"));
+
             if (UriScheme.ServerIP != String.Empty)
             {
                 _serverIp = UriScheme.ServerIP;
@@ -2328,30 +2330,31 @@ namespace GameLauncher
                             Log.Debug("ETAG FINAL: " + fileETAG);
                         }
 
-                        if (fileETAG == null && File.Exists(FileSettingsSave.GameInstallation + "/" + file))
+                        if (fileETAG == null && File.Exists(FileSettingsSave.GameInstallation + "\\" + file))
                         {
                             PlayProgressText.Text = ("ModNet: Fail Safe -> Found " + file).ToUpper();
-
+                            FileORFolderPermissions.CheckLauncherPerms("File", Path.Combine(FileSettingsSave.GameInstallation + "\\" + file));
                             Log.Debug("MODNET CORE: Using Local " + file + " File! (Unable to get ETAG for File)");
                         }
-                        else if (MDFive.HashFile(FileSettingsSave.GameInstallation + "/" + file) != fileETAG || !File.Exists(FileSettingsSave.GameInstallation + "/" + file))
+                        else if (MDFive.HashFile(FileSettingsSave.GameInstallation + "\\" + file) != fileETAG || !File.Exists(FileSettingsSave.GameInstallation + "\\" + file))
                         {
                             PlayProgressText.Text = ("ModNet: Downloading " + file).ToUpper();
 
                             Log.Warning("MODNET CORE: " + file + " Does not match MD5 Hash on File Server -> Online Hash: '" + fileETAG + "'");
 
-                            if (File.Exists(FileSettingsSave.GameInstallation + "/" + file))
+                            if (File.Exists(FileSettingsSave.GameInstallation + "\\" + file))
                             {
-                                File.Delete(FileSettingsSave.GameInstallation + "/" + file);
+                                File.Delete(FileSettingsSave.GameInstallation + "\\" + file);
                             }
 
                             WebClient newModNetFilesDownload = new WebClient();
                             newModNetFilesDownload.DownloadFile(Self.modnetserver + "/launcher-modules/" + file, FileSettingsSave.GameInstallation + "/" + file);
+                            FileORFolderPermissions.CheckLauncherPerms("File", Path.Combine(FileSettingsSave.GameInstallation + "\\" + file));
                         }
                         else
                         {
                             PlayProgressText.Text = ("ModNet: Up to Date " + file).ToUpper();
-
+                            FileORFolderPermissions.CheckLauncherPerms("File", Path.Combine(FileSettingsSave.GameInstallation + "\\" + file));
                             Log.Debug("MODNET CORE: " + file + " Is Up to Date!");
                         }
 
@@ -2970,6 +2973,9 @@ namespace GameLauncher
                         Log.Core("WINDOWS FIREWALL: Already Exlcuded SBRW - Game {Both}");
                     }
                 }
+
+                FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(FileSettingsSave.GameInstallation));
+                FileORFolderPermissions.CheckLauncherPerms("File", Path.Combine(CurrentGameFilesExePath));
             }
 
             PlayProgressText.Text = "Ready!".ToUpper();
