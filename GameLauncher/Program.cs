@@ -428,7 +428,7 @@ namespace GameLauncher
                     Log.Warning("CORE: Starting LZMA downloader");
                     using (WebClient wc = new WebClient())
                     {
-                        wc.DownloadFileAsync(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
+                        wc.DownloadFile(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
                     }
 
                     DialogResult restartApp = MessageBox.Show(null, "Downloaded Missing LZMA.dll File. \nPlease Restart Launcher, Thanks!", "GameLauncher Restart Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
