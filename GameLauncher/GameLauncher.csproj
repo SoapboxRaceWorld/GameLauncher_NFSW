@@ -214,6 +214,7 @@
     <Compile Include="App\Classes\LauncherCore\RPC\DiscordGamePresence.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\EventList.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\CertificateStore.cs" />
+    <Compile Include="App\Classes\SystemPlatform\Windows\WindowsDefender.cs" />
     <Compile Include="App\SettingsScreen.cs">
       <SubType>Form</SubType>
     </Compile>

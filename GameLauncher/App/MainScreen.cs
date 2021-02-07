@@ -3099,23 +3099,33 @@ namespace GameLauncher
         }
         private void WindowsDefenderFirstRun()
         {
-            // Create Windows Defender Exclusion
-            try
+            if (WindowsDefender.SecurityCenter("AntivirusEnabled") == true && WindowsDefender.SecurityCenter("AntispywareEnabled") == true)
             {
-                Log.Info("WINDOWS DEFENDER: Excluding Core Folders");
-                //Add Exclusion to Windows Defender
-                using (PowerShell ps = PowerShell.Create())
+                // Create Windows Defender Exclusion
+                try
                 {
-                    ps.AddScript($"Add-MpPreference -ExclusionPath \"{AppDomain.CurrentDomain.BaseDirectory}\"");
-                    ps.AddScript($"Add-MpPreference -ExclusionPath \"{FileSettingsSave.GameInstallation}\"");
-                    var result = ps.Invoke();
+                    Log.Info("WINDOWS DEFENDER: Excluding Core Folders");
+                    //Add Exclusion to Windows Defender
+                    using (PowerShell ps = PowerShell.Create())
+                    {
+                        ps.AddScript($"Add-MpPreference -ExclusionPath \"{AppDomain.CurrentDomain.BaseDirectory}\"");
+                        ps.AddScript($"Add-MpPreference -ExclusionPath \"{FileSettingsSave.GameInstallation}\"");
+                        var result = ps.Invoke();
+                    }
+
+                    FileSettingsSave.WindowsDefenderStatus = "Excluded";
+                    FileSettingsSave.SaveSettings();
                 }
-                FileSettingsSave.FirewallStatus = "Excluded";
-                FileSettingsSave.SaveSettings();
+                catch (Exception ex)
+                {
+                    Log.Error("WINDOWS DEFENDER: " + ex.Message);
+                    FileSettingsSave.WindowsDefenderStatus = "Not Excluded";
+                    FileSettingsSave.SaveSettings();
+                }
             }
-            catch
+            else
             {
-                FileSettingsSave.FirewallStatus = "Not Excluded";
+                FileSettingsSave.WindowsDefenderStatus = "Not Supported";
                 FileSettingsSave.SaveSettings();
             }
         }

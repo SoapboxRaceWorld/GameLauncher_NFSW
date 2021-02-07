@@ -692,14 +692,21 @@ namespace GameLauncher.App
             //Check if New Game! Files is not in Banned Folder Locations
             CheckGameFilesDirectoryPrevention();
 
-            //Remove current Exclusion and Add new location for Exclusion
-            using (PowerShell ps = PowerShell.Create())
+            try
             {
-                Log.Warning("WINDOWS DEFENDER: Removing OLD Game Files Directory: " + FileSettingsSave.GameInstallation);
-                ps.AddScript($"Remove-MpPreference -ExclusionPath \"{FileSettingsSave.GameInstallation}\"");
-                Log.Core("WINDOWS DEFENDER: Excluding NEW Game Files Directory: " + _newGameFilesPath);
-                ps.AddScript($"Add-MpPreference -ExclusionPath \"{_newGameFilesPath}\"");
-                var result = ps.Invoke();
+                //Remove current Exclusion and Add new location for Exclusion
+                using (PowerShell ps = PowerShell.Create())
+                {
+                    Log.Warning("WINDOWS DEFENDER: Removing OLD Game Files Directory: " + FileSettingsSave.GameInstallation);
+                    ps.AddScript($"Remove-MpPreference -ExclusionPath \"{FileSettingsSave.GameInstallation}\"");
+                    Log.Core("WINDOWS DEFENDER: Excluding NEW Game Files Directory: " + _newGameFilesPath);
+                    ps.AddScript($"Add-MpPreference -ExclusionPath \"{_newGameFilesPath}\"");
+                    var result = ps.Invoke();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("WINDOWS DEFENDER: " + ex.Message);
             }
 
             //Remove current Firewall for the Game Files 

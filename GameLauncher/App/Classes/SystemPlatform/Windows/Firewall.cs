@@ -93,9 +93,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     FirewallManager.Instance.Rules.Add(rule);
                     Log.Info("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
                 }
-                catch (FirewallWASNotSupportedException ErrorMessage)
+                catch (FirewallWASNotSupportedException Error)
                 {
-                    Log.Error("WINDOWS FIREWALL: " + ErrorMessage);
+                    Log.Error("WINDOWS FIREWALL: " + Error.Message);
                 }
             }
             else
@@ -120,9 +120,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 FirewallManager.Instance.Rules.Add(defaultRule);
                 Log.Warning("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
             }
-            catch (FirewallWASNotSupportedException ErrorMessage)
+            catch (FirewallWASNotSupportedException Error)
             {
-                Log.Error("WINDOWS FIREWALL:" + ErrorMessage);
+                Log.Error("WINDOWS FIREWALL: " + Error.Message);
             }
         }
 
