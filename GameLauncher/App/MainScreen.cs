@@ -1596,7 +1596,7 @@ namespace GameLauncher
                 RegisterCancel.BackgroundImage = Theming.GrayButton;
                 RegisterCancel.ForeColor = Theming.FivithTextForeColor;
 
-                RegisterAgree.ForeColor = Theming.FivithTextForeColor;
+                RegisterAgree.ForeColor = Theming.WinFormWarningTextForeColor;
 
                 RegisterEmail.ForeColor = Theming.FivithTextForeColor;
                 RegisterPassword.ForeColor = Theming.FivithTextForeColor;
@@ -1620,7 +1620,7 @@ namespace GameLauncher
             RegisterConfirmPassword.Text = "";
             RegisterAgree.Checked = false;
 
-            RegisterAgree.ForeColor = Theming.FivithTextForeColor;
+            RegisterAgree.ForeColor = Theming.WinFormWarningTextForeColor;
             //Reset Input Stroke Images
             RegisterEmailBorder.Image = Theming.BorderEmail;
             RegisterPasswordBorder.Image = Theming.BorderPassword;
@@ -1900,7 +1900,7 @@ namespace GameLauncher
 
             if (!(ServerPick.SelectedItem is ServerInfo server)) return;
 
-            new SettingsScreen(server.IpAddress, server.Name, this).ShowDialog();
+            new SettingsScreen(server.IpAddress, server.Name).ShowDialog();
         }
 
         private void SettingsButton_MouseEnter(object sender, EventArgs e)
@@ -3188,7 +3188,7 @@ namespace GameLauncher
             APIStatusDesc.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
             ExtractingProgress.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
             /* Social Panel */
-            //ServerInfoPanel.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
+            ServerInfoPanel.Font = new Font(DejaVuSans, 8f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
             HomePageLink.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
             DiscordInviteLink.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
             FacebookGroupLink.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);

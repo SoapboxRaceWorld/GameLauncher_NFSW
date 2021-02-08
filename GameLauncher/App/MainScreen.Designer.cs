@@ -125,7 +125,7 @@
             // 
             // SelectServerBtn
             // 
-            this.SelectServerBtn.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SelectServerBtn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SelectServerBtn.Location = new System.Drawing.Point(888, 15);
             this.SelectServerBtn.Name = "SelectServerBtn";
             this.SelectServerBtn.Size = new System.Drawing.Size(228, 24);
@@ -137,9 +137,8 @@
             // 
             // translatedBy
             // 
-            this.translatedBy.AutoSize = true;
             this.translatedBy.BackColor = System.Drawing.Color.Transparent;
-            this.translatedBy.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.translatedBy.Font = new System.Drawing.Font("DejaVu Sans", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.translatedBy.ForeColor = System.Drawing.Color.DarkGray;
             this.translatedBy.Location = new System.Drawing.Point(12, -1);
             this.translatedBy.Name = "translatedBy";
@@ -166,7 +165,7 @@
             this.AddServer.BackColor = System.Drawing.SystemColors.Control;
             this.AddServer.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.AddServer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AddServer.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AddServer.Font = new System.Drawing.Font("DejaVu Sans", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AddServer.ForeColor = System.Drawing.Color.Black;
             this.AddServer.Location = new System.Drawing.Point(833, 49);
             this.AddServer.Name = "AddServer";
@@ -177,7 +176,6 @@
             // 
             // PlayProgressText
             // 
-            this.PlayProgressText.AutoSize = true;
             this.PlayProgressText.BackColor = System.Drawing.Color.Transparent;
             this.PlayProgressText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayProgressText.ForeColor = System.Drawing.Color.White;
@@ -190,12 +188,12 @@
             // LauncherStatusText
             // 
             this.LauncherStatusText.BackColor = System.Drawing.Color.Transparent;
-            this.LauncherStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LauncherStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LauncherStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(132)))), ((int)(((byte)(132)))));
             this.LauncherStatusText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LauncherStatusText.Location = new System.Drawing.Point(53, 453);
             this.LauncherStatusText.Name = "LauncherStatusText";
-            this.LauncherStatusText.Size = new System.Drawing.Size(130, 32);
+            this.LauncherStatusText.Size = new System.Drawing.Size(130, 30);
             this.LauncherStatusText.TabIndex = 4;
             this.LauncherStatusText.Text = "Launcher\n - Checking";
             this.LauncherStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -203,13 +201,12 @@
             // 
             // LauncherStatusDesc
             // 
-            this.LauncherStatusDesc.AutoSize = true;
             this.LauncherStatusDesc.BackColor = System.Drawing.Color.Transparent;
-            this.LauncherStatusDesc.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LauncherStatusDesc.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LauncherStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.LauncherStatusDesc.Location = new System.Drawing.Point(53, 485);
+            this.LauncherStatusDesc.Location = new System.Drawing.Point(53, 486);
             this.LauncherStatusDesc.Name = "LauncherStatusDesc";
-            this.LauncherStatusDesc.Size = new System.Drawing.Size(127, 14);
+            this.LauncherStatusDesc.Size = new System.Drawing.Size(130, 14);
             this.LauncherStatusDesc.TabIndex = 5;
             this.LauncherStatusDesc.Text = "Version: vX.X.X.X";
             this.LauncherStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -217,52 +214,50 @@
             // ServerStatusText
             // 
             this.ServerStatusText.BackColor = System.Drawing.Color.Transparent;
-            this.ServerStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.ServerStatusText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ServerStatusText.Location = new System.Drawing.Point(242, 453);
             this.ServerStatusText.Name = "ServerStatusText";
-            this.ServerStatusText.Size = new System.Drawing.Size(130, 32);
+            this.ServerStatusText.Size = new System.Drawing.Size(150, 30);
             this.ServerStatusText.TabIndex = 7;
             this.ServerStatusText.Text = "Server Status\n - Pinging";
             this.ServerStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ServerStatusDesc
             // 
-            this.ServerStatusDesc.AutoSize = true;
             this.ServerStatusDesc.BackColor = System.Drawing.Color.Transparent;
-            this.ServerStatusDesc.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerStatusDesc.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ServerStatusDesc.Location = new System.Drawing.Point(242, 485);
+            this.ServerStatusDesc.Location = new System.Drawing.Point(242, 486);
             this.ServerStatusDesc.Name = "ServerStatusDesc";
-            this.ServerStatusDesc.Size = new System.Drawing.Size(122, 14);
+            this.ServerStatusDesc.Size = new System.Drawing.Size(150, 30);
             this.ServerStatusDesc.TabIndex = 8;
-            this.ServerStatusDesc.Text = "Checking Status";
+            this.ServerStatusDesc.Text = "Players Online: ###\r\nRegistered: ###";
             this.ServerStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // APIStatusText
             // 
             this.APIStatusText.BackColor = System.Drawing.Color.Transparent;
-            this.APIStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.APIStatusText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.APIStatusText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.APIStatusText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.APIStatusText.Location = new System.Drawing.Point(426, 453);
             this.APIStatusText.Name = "APIStatusText";
-            this.APIStatusText.Size = new System.Drawing.Size(162, 32);
+            this.APIStatusText.Size = new System.Drawing.Size(130, 30);
             this.APIStatusText.TabIndex = 116;
             this.APIStatusText.Text = "Main API\n - Pinging";
             this.APIStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // APIStatusDesc
             // 
-            this.APIStatusDesc.AutoSize = true;
             this.APIStatusDesc.BackColor = System.Drawing.Color.Transparent;
-            this.APIStatusDesc.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.APIStatusDesc.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.APIStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.APIStatusDesc.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.APIStatusDesc.Location = new System.Drawing.Point(426, 485);
+            this.APIStatusDesc.Location = new System.Drawing.Point(426, 486);
             this.APIStatusDesc.Name = "APIStatusDesc";
-            this.APIStatusDesc.Size = new System.Drawing.Size(122, 14);
+            this.APIStatusDesc.Size = new System.Drawing.Size(130, 14);
             this.APIStatusDesc.TabIndex = 120;
             this.APIStatusDesc.Text = "Checking Status";
             this.APIStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -272,7 +267,7 @@
             this.CurrentWindowInfo.BackColor = System.Drawing.Color.Transparent;
             this.CurrentWindowInfo.Cursor = System.Windows.Forms.Cursors.Default;
             this.CurrentWindowInfo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CurrentWindowInfo.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CurrentWindowInfo.Font = new System.Drawing.Font("DejaVu Sans", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CurrentWindowInfo.ForeColor = System.Drawing.Color.White;
             this.CurrentWindowInfo.Location = new System.Drawing.Point(625, 82);
             this.CurrentWindowInfo.Name = "CurrentWindowInfo";
@@ -287,11 +282,11 @@
             // 
             this.MainEmail.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
             this.MainEmail.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.MainEmail.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MainEmail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MainEmail.ForeColor = System.Drawing.Color.White;
             this.MainEmail.Location = new System.Drawing.Point(645, 173);
             this.MainEmail.Name = "MainEmail";
-            this.MainEmail.Size = new System.Drawing.Size(180, 13);
+            this.MainEmail.Size = new System.Drawing.Size(180, 14);
             this.MainEmail.TabIndex = 4;
             this.MainEmail.TextChanged += new System.EventHandler(this.Email_TextChanged);
             // 
@@ -299,11 +294,11 @@
             // 
             this.MainPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
             this.MainPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.MainPassword.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MainPassword.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MainPassword.ForeColor = System.Drawing.Color.White;
             this.MainPassword.Location = new System.Drawing.Point(645, 221);
             this.MainPassword.Name = "MainPassword";
-            this.MainPassword.Size = new System.Drawing.Size(180, 13);
+            this.MainPassword.Size = new System.Drawing.Size(180, 14);
             this.MainPassword.TabIndex = 5;
             this.MainPassword.UseSystemPasswordChar = true;
             this.MainPassword.WordWrap = false;
@@ -311,14 +306,13 @@
             // 
             // RememberMe
             // 
-            this.RememberMe.AutoSize = true;
             this.RememberMe.BackColor = System.Drawing.Color.Transparent;
-            this.RememberMe.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RememberMe.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RememberMe.ForeColor = System.Drawing.Color.White;
             this.RememberMe.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.RememberMe.Location = new System.Drawing.Point(645, 260);
             this.RememberMe.Name = "RememberMe";
-            this.RememberMe.Size = new System.Drawing.Size(162, 17);
+            this.RememberMe.Size = new System.Drawing.Size(190, 18);
             this.RememberMe.TabIndex = 6;
             this.RememberMe.Text = "REMEMBER MY LOGIN";
             this.RememberMe.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -327,13 +321,12 @@
             // ForgotPassword
             // 
             this.ForgotPassword.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(228)))), ((int)(((byte)(0)))));
-            this.ForgotPassword.AutoSize = true;
             this.ForgotPassword.BackColor = System.Drawing.Color.Transparent;
-            this.ForgotPassword.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ForgotPassword.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForgotPassword.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
             this.ForgotPassword.Location = new System.Drawing.Point(659, 281);
             this.ForgotPassword.Name = "ForgotPassword";
-            this.ForgotPassword.Size = new System.Drawing.Size(147, 13);
+            this.ForgotPassword.Size = new System.Drawing.Size(180, 14);
             this.ForgotPassword.TabIndex = 7;
             this.ForgotPassword.TabStop = true;
             this.ForgotPassword.Text = "I FORGOT MY PASSWORD";
@@ -348,7 +341,7 @@
             this.LoginButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.LoginButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.LoginButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.LoginButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LoginButton.Font = new System.Drawing.Font("DejaVu Sans", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LoginButton.ForeColor = System.Drawing.Color.White;
             this.LoginButton.Location = new System.Drawing.Point(605, 362);
             this.LoginButton.Name = "LoginButton";
@@ -365,7 +358,7 @@
             this.RegisterText.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.RegisterText.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.RegisterText.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RegisterText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RegisterText.Font = new System.Drawing.Font("DejaVu Sans", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RegisterText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
             this.RegisterText.Location = new System.Drawing.Point(605, 409);
             this.RegisterText.Name = "RegisterText";
@@ -398,7 +391,7 @@
             this.LogoutButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.LogoutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.LogoutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.LogoutButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LogoutButton.Font = new System.Drawing.Font("DejaVu Sans", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LogoutButton.ForeColor = System.Drawing.Color.White;
             this.LogoutButton.Location = new System.Drawing.Point(6, 64);
             this.LogoutButton.Name = "LogoutButton";
@@ -415,7 +408,7 @@
             this.PlayButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.PlayButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.PlayButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.PlayButton.Font = new System.Drawing.Font("DejaVu Sans", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PlayButton.Font = new System.Drawing.Font("DejaVu Sans", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayButton.ForeColor = System.Drawing.Color.Transparent;
             this.PlayButton.Location = new System.Drawing.Point(7, 104);
             this.PlayButton.Name = "PlayButton";
@@ -427,7 +420,7 @@
             // PlayProgressTextTimer
             // 
             this.PlayProgressTextTimer.BackColor = System.Drawing.Color.Transparent;
-            this.PlayProgressTextTimer.Font = new System.Drawing.Font("DejaVu Sans", 9F);
+            this.PlayProgressTextTimer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayProgressTextTimer.ForeColor = System.Drawing.Color.White;
             this.PlayProgressTextTimer.Location = new System.Drawing.Point(432, 380);
             this.PlayProgressTextTimer.Name = "PlayProgressTextTimer";
@@ -439,11 +432,11 @@
             // 
             this.RegisterEmail.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
             this.RegisterEmail.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RegisterEmail.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RegisterEmail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RegisterEmail.ForeColor = System.Drawing.Color.White;
             this.RegisterEmail.Location = new System.Drawing.Point(58, 80);
             this.RegisterEmail.Name = "RegisterEmail";
-            this.RegisterEmail.Size = new System.Drawing.Size(180, 13);
+            this.RegisterEmail.Size = new System.Drawing.Size(180, 14);
             this.RegisterEmail.TabIndex = 12;
             this.RegisterEmail.TextChanged += new System.EventHandler(this.RegisterEmail_TextChanged);
             // 
@@ -451,11 +444,11 @@
             // 
             this.RegisterPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
             this.RegisterPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RegisterPassword.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RegisterPassword.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RegisterPassword.ForeColor = System.Drawing.Color.White;
             this.RegisterPassword.Location = new System.Drawing.Point(58, 128);
             this.RegisterPassword.Name = "RegisterPassword";
-            this.RegisterPassword.Size = new System.Drawing.Size(180, 13);
+            this.RegisterPassword.Size = new System.Drawing.Size(180, 14);
             this.RegisterPassword.TabIndex = 13;
             this.RegisterPassword.UseSystemPasswordChar = true;
             this.RegisterPassword.TextChanged += new System.EventHandler(this.RegisterPassword_TextChanged);
@@ -464,11 +457,11 @@
             // 
             this.RegisterConfirmPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
             this.RegisterConfirmPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RegisterConfirmPassword.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RegisterConfirmPassword.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RegisterConfirmPassword.ForeColor = System.Drawing.Color.White;
             this.RegisterConfirmPassword.Location = new System.Drawing.Point(58, 177);
             this.RegisterConfirmPassword.Name = "RegisterConfirmPassword";
-            this.RegisterConfirmPassword.Size = new System.Drawing.Size(180, 13);
+            this.RegisterConfirmPassword.Size = new System.Drawing.Size(180, 14);
             this.RegisterConfirmPassword.TabIndex = 14;
             this.RegisterConfirmPassword.UseSystemPasswordChar = true;
             this.RegisterConfirmPassword.TextChanged += new System.EventHandler(this.RegisterConfirmPassword_TextChanged);
@@ -477,11 +470,11 @@
             // 
             this.RegisterTicket.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
             this.RegisterTicket.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RegisterTicket.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RegisterTicket.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RegisterTicket.ForeColor = System.Drawing.Color.White;
             this.RegisterTicket.Location = new System.Drawing.Point(58, 228);
             this.RegisterTicket.Name = "RegisterTicket";
-            this.RegisterTicket.Size = new System.Drawing.Size(180, 13);
+            this.RegisterTicket.Size = new System.Drawing.Size(180, 14);
             this.RegisterTicket.TabIndex = 15;
             this.RegisterTicket.TextChanged += new System.EventHandler(this.RegisterTicket_TextChanged);
             // 
@@ -540,7 +533,7 @@
             this.ShowPlayPanel.Controls.Add(this.ServerPingStatusText);
             this.ShowPlayPanel.Controls.Add(this.LogoutButton);
             this.ShowPlayPanel.Controls.Add(this.PlayButton);
-            this.ShowPlayPanel.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ShowPlayPanel.Font = new System.Drawing.Font("DejaVu Sans", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ShowPlayPanel.ForeColor = System.Drawing.Color.Transparent;
             this.ShowPlayPanel.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.ShowPlayPanel.Location = new System.Drawing.Point(600, 281);
@@ -565,7 +558,7 @@
             this.RegisterPanel.Controls.Add(this.RegisterAgree);
             this.RegisterPanel.Controls.Add(this.RegisterButton);
             this.RegisterPanel.Controls.Add(this.RegisterCancel);
-            this.RegisterPanel.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RegisterPanel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RegisterPanel.ForeColor = System.Drawing.Color.Transparent;
             this.RegisterPanel.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.RegisterPanel.Location = new System.Drawing.Point(587, 93);
@@ -625,16 +618,16 @@
             // InsiderBuildNumberText
             // 
             this.InsiderBuildNumberText.BackColor = System.Drawing.Color.Transparent;
-            this.InsiderBuildNumberText.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.InsiderBuildNumberText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.InsiderBuildNumberText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.InsiderBuildNumberText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.InsiderBuildNumberText.Location = new System.Drawing.Point(352, 65);
             this.InsiderBuildNumberText.Margin = new System.Windows.Forms.Padding(0);
             this.InsiderBuildNumberText.Name = "InsiderBuildNumberText";
-            this.InsiderBuildNumberText.Size = new System.Drawing.Size(200, 15);
+            this.InsiderBuildNumberText.Size = new System.Drawing.Size(208, 14);
             this.InsiderBuildNumberText.TabIndex = 173;
             this.InsiderBuildNumberText.Text = "Insider Build Date: ##-##-##-X";
-            this.InsiderBuildNumberText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.InsiderBuildNumberText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // logo
             // 
@@ -686,7 +679,7 @@
             this.ServerInfoPanel.Controls.Add(this.DiscordInviteLink);
             this.ServerInfoPanel.Controls.Add(this.ServerShutDown);
             this.ServerInfoPanel.Controls.Add(this.SceneryGroupText);
-            this.ServerInfoPanel.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerInfoPanel.Font = new System.Drawing.Font("DejaVu Sans", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerInfoPanel.ForeColor = System.Drawing.Color.Transparent;
             this.ServerInfoPanel.Location = new System.Drawing.Point(27, 305);
             this.ServerInfoPanel.Name = "ServerInfoPanel";
@@ -732,9 +725,8 @@
             // TwitterAccountLink
             // 
             this.TwitterAccountLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.TwitterAccountLink.AutoSize = true;
             this.TwitterAccountLink.BackColor = System.Drawing.Color.Transparent;
-            this.TwitterAccountLink.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TwitterAccountLink.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TwitterAccountLink.ForeColor = System.Drawing.Color.Transparent;
             this.TwitterAccountLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.TwitterAccountLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
@@ -762,9 +754,8 @@
             // FacebookGroupLink
             // 
             this.FacebookGroupLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.FacebookGroupLink.AutoSize = true;
             this.FacebookGroupLink.BackColor = System.Drawing.Color.Transparent;
-            this.FacebookGroupLink.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FacebookGroupLink.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FacebookGroupLink.ForeColor = System.Drawing.Color.Transparent;
             this.FacebookGroupLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.FacebookGroupLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
@@ -780,9 +771,8 @@
             // HomePageLink
             // 
             this.HomePageLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.HomePageLink.AutoSize = true;
             this.HomePageLink.BackColor = System.Drawing.Color.Transparent;
-            this.HomePageLink.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.HomePageLink.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.HomePageLink.ForeColor = System.Drawing.Color.Transparent;
             this.HomePageLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.HomePageLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
@@ -798,9 +788,8 @@
             // DiscordInviteLink
             // 
             this.DiscordInviteLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.DiscordInviteLink.AutoSize = true;
             this.DiscordInviteLink.BackColor = System.Drawing.Color.Transparent;
-            this.DiscordInviteLink.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DiscordInviteLink.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DiscordInviteLink.ForeColor = System.Drawing.Color.Transparent;
             this.DiscordInviteLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.DiscordInviteLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
@@ -855,7 +844,7 @@
             this.APIStatusIcon.BackColor = System.Drawing.Color.Transparent;
             this.APIStatusIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.APIStatusIcon.InitialImage = null;
-            this.APIStatusIcon.Location = new System.Drawing.Point(397, 455);
+            this.APIStatusIcon.Location = new System.Drawing.Point(397, 456);
             this.APIStatusIcon.Name = "APIStatusIcon";
             this.APIStatusIcon.Size = new System.Drawing.Size(25, 25);
             this.APIStatusIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -927,7 +916,7 @@
             this.ExtractingProgress.BackgroundColor = System.Drawing.Color.Black;
             this.ExtractingProgress.Border = false;
             this.ExtractingProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.ExtractingProgress.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ExtractingProgress.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ExtractingProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.ExtractingProgress.Image = global::GameLauncher.Properties.Resources.progress_success;
             this.ExtractingProgress.Location = new System.Drawing.Point(30, 430);
@@ -944,7 +933,7 @@
             this.PlayProgress.Border = false;
             this.PlayProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.PlayProgress.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.PlayProgress.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PlayProgress.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.PlayProgress.Image = global::GameLauncher.Properties.Resources.progress_preload;
             this.PlayProgress.Location = new System.Drawing.Point(30, 430);
@@ -1015,7 +1004,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CloseBTN)).EndInit();
             this.ServerInfoPanel.ResumeLayout(false);
-            this.ServerInfoPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HomePageIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DiscordIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FacebookIcon)).EndInit();
