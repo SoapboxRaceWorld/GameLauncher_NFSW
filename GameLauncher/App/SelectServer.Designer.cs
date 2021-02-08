@@ -58,12 +58,11 @@ namespace GameLauncher.App
             // 
             // Loading
             // 
-            this.Loading.AutoSize = true;
             this.Loading.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Loading.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
             this.Loading.Location = new System.Drawing.Point(220, 242);
             this.Loading.Name = "Loading";
-            this.Loading.Size = new System.Drawing.Size(111, 13);
+            this.Loading.Size = new System.Drawing.Size(120, 13);
             this.Loading.TabIndex = 4;
             this.Loading.Text = "Loading servers...";
             // 
@@ -77,7 +76,7 @@ namespace GameLauncher.App
             this.BtnAddServer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.BtnAddServer.Location = new System.Drawing.Point(15, 247);
             this.BtnAddServer.Name = "BtnAddServer";
-            this.BtnAddServer.Size = new System.Drawing.Size(92, 23);
+            this.BtnAddServer.Size = new System.Drawing.Size(96, 23);
             this.BtnAddServer.TabIndex = 8;
             this.BtnAddServer.Text = "Add Server";
             this.BtnAddServer.UseVisualStyleBackColor = false;
@@ -117,13 +116,12 @@ namespace GameLauncher.App
             // 
             // Version
             // 
-            this.Version.AutoSize = true;
-            this.Version.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.Version.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Version.ForeColor = System.Drawing.Color.White;
-            this.Version.Location = new System.Drawing.Point(220, 257);
+            this.Version.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.Version.Location = new System.Drawing.Point(220, 260);
             this.Version.Name = "Version";
-            this.Version.Size = new System.Drawing.Size(156, 13);
+            this.Version.Size = new System.Drawing.Size(120, 13);
             this.Version.TabIndex = 9;
             this.Version.Text = "Version : vX.X.X.X";
             this.Version.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -139,6 +137,7 @@ namespace GameLauncher.App
             this.Controls.Add(this.BtnClose);
             this.Controls.Add(this.Loading);
             this.Controls.Add(this.ServerListRenderer);
+            this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -150,8 +149,7 @@ namespace GameLauncher.App
             this.Text = "GameLauncher - Please Select a Server";
             this.TopMost = true;
             this.ResumeLayout(false);
-            this.PerformLayout();
-            this.DoubleBuffered = true;
+
         }
 
         #endregion

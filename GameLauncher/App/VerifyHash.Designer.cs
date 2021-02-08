@@ -111,12 +111,11 @@
             // 
             // VersionLabel
             // 
-            this.VersionLabel.AutoSize = true;
             this.VersionLabel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VersionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.VersionLabel.Location = new System.Drawing.Point(13, 375);
             this.VersionLabel.Name = "VersionLabel";
-            this.VersionLabel.Size = new System.Drawing.Size(107, 14);
+            this.VersionLabel.Size = new System.Drawing.Size(115, 14);
             this.VersionLabel.TabIndex = 5;
             this.VersionLabel.Text = "Version: vX.X.X.X";
             this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -124,13 +123,12 @@
             // VerifyHashWelcome
             // 
             this.VerifyHashWelcome.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.VerifyHashWelcome.AutoSize = true;
             this.VerifyHashWelcome.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.VerifyHashWelcome.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VerifyHashWelcome.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.VerifyHashWelcome.Location = new System.Drawing.Point(74, 9);
+            this.VerifyHashWelcome.Location = new System.Drawing.Point(16, 6);
             this.VerifyHashWelcome.Name = "VerifyHashWelcome";
-            this.VerifyHashWelcome.Size = new System.Drawing.Size(278, 98);
+            this.VerifyHashWelcome.Size = new System.Drawing.Size(381, 106);
             this.VerifyHashWelcome.TabIndex = 8;
             this.VerifyHashWelcome.Text = "Welcome!\r\n\r\nThe scanning process is pretty quick,\r\nbut may still take a while.\r\nD" +
     "epending on your connection,\r\nre-downloading will take the longest.\r\nPlease allo" +
@@ -140,13 +138,12 @@
             // VerifyHashText
             // 
             this.VerifyHashText.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.VerifyHashText.AutoSize = true;
             this.VerifyHashText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VerifyHashText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.VerifyHashText.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.VerifyHashText.Location = new System.Drawing.Point(99, 300);
+            this.VerifyHashText.Location = new System.Drawing.Point(13, 292);
             this.VerifyHashText.Name = "VerifyHashText";
-            this.VerifyHashText.Size = new System.Drawing.Size(217, 28);
+            this.VerifyHashText.Size = new System.Drawing.Size(384, 70);
             this.VerifyHashText.TabIndex = 9;
             this.VerifyHashText.Text = "Please select \"Start Scan\"\r\nTo begin Validating Gamefiles";
             this.VerifyHashText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -179,7 +176,6 @@
             this.TopMost = true;
             this.Load += new System.EventHandler(this.VerifyHash_Load);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
