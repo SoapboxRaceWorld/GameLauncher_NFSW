@@ -250,11 +250,6 @@ namespace GameLauncher.App
             /* Read Settings.ini            /
             /*******************************/
 
-            if (!string.IsNullOrEmpty(FileSettingsSave.Lang))
-            {
-                SettingsLanguage.SelectedValue = FileSettingsSave.Lang;
-            }
-
             _disableProxy = (FileSettingsSave.Proxy == "1");
             _disableDiscordRPC = (FileSettingsSave.RPC == "1");
 
@@ -314,6 +309,11 @@ namespace GameLauncher.App
             };
 
             SettingsLanguage.DataSource = languages;
+
+            if (!string.IsNullOrEmpty(FileSettingsSave.Lang))
+            {
+                SettingsLanguage.SelectedValue = FileSettingsSave.Lang;
+            }
 
             /*******************************/
             /* Enable/Disable Visuals       /
