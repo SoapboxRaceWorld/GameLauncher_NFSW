@@ -32,4 +32,5 @@ jobs:
         name: ArtifactBuild
         path: |
           ${{ github.workspace }}/GameLauncher/bin/Release/GameLauncher.exe
+          ${{ github.workspace }}/GameLauncher/bin/Release/GameLauncher.exe.config
           ${{ github.workspace }}/GameLauncher/bin/Release/*.dll
