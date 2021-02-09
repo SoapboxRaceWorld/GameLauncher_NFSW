@@ -31,6 +31,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                         {
                             if (!File.Exists(realLoc))
                             {
+                                Log.Error("CLEANLINKS: .links file includes nonexistent directory: " + realLoc);
                                 throw new Exception(".links file includes nonexistent file: " + realLoc);
                             }
 
@@ -47,9 +48,10 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                                 File.Delete(realLoc);
                                 File.Move(origPath, realLoc);
                             }
-                            catch
+                            catch (Exception ex)
                             {
                                 Log.Error("CLEANLINKS: Error while deleting a file: {realLoc}");
+                                Log.Error("CLEANLINKS: " + ex.Message);
                             }
                         }
                         else

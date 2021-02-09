@@ -2217,6 +2217,11 @@ namespace GameLauncher
 
         private async void PlayButton_Click(object sender, EventArgs e)
         {
+            if (File.Exists(FileSettingsSave.GameInstallation + "\\.links"))
+            {
+                File.Delete(FileSettingsSave.GameInstallation + "\\.links");
+            }
+
             /* Disable Play Button and Logout Buttons */
             PlayButton.Visible = false;
             LogoutButton.Visible = false;
