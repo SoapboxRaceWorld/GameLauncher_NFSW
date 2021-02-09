@@ -181,7 +181,7 @@
             this.PlayProgressText.ForeColor = System.Drawing.Color.White;
             this.PlayProgressText.Location = new System.Drawing.Point(42, 405);
             this.PlayProgressText.Name = "PlayProgressText";
-            this.PlayProgressText.Size = new System.Drawing.Size(96, 14);
+            this.PlayProgressText.Size = new System.Drawing.Size(510, 14);
             this.PlayProgressText.TabIndex = 10;
             this.PlayProgressText.Text = "PLEASE WAIT";
             // 
