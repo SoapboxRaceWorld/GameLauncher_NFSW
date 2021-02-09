@@ -1,4 +1,5 @@
 ﻿using GameLauncher.App.Classes.Logger;
+using System;
 using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
@@ -12,17 +13,24 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             if (!DetectLinux.LinuxDetected())
             {
-                var everyone = new SecurityIdentifier(WellKnownSidType.WorldSid,
-                                      null);
+                try
+                {
+                    var everyone = new SecurityIdentifier(WellKnownSidType.WorldSid,
+                      null);
 
-                var accessRule = new FileSystemAccessRule(everyone,
-                                                          FileSystemRights.FullControl,
-                    InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.NoPropagateInherit,
-                    AccessControlType.Allow);
+                    var accessRule = new FileSystemAccessRule(everyone,
+                                                              FileSystemRights.FullControl,
+                        InheritanceFlags.None, PropagationFlags.NoPropagateInherit,
+                        AccessControlType.Allow);
 
-                var fileSecurity = File.GetAccessControl(path);
-                fileSecurity.AddAccessRule(accessRule);
-                File.SetAccessControl(path, fileSecurity);
+                    var fileSecurity = File.GetAccessControl(path);
+                    fileSecurity.AddAccessRule(accessRule);
+                    File.SetAccessControl(path, fileSecurity);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("FILE PERMISSION: " + ex.Message);
+                }
             }
         }
 
@@ -31,16 +39,23 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             if (!DetectLinux.LinuxDetected())
             {
-                DirectoryInfo Info = new DirectoryInfo(path);
-                DirectorySecurity FolderSecurity = Info.GetAccessControl();
+                try
+                {
+                    DirectoryInfo Info = new DirectoryInfo(path);
+                    DirectorySecurity FolderSecurity = Info.GetAccessControl();
 
-                SecurityIdentifier everyone = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
+                    SecurityIdentifier everyone = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
 
-                FolderSecurity.AddAccessRule(new FileSystemAccessRule(everyone, FileSystemRights.FullControl,
-                    InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.NoPropagateInherit,
-                    AccessControlType.Allow));
+                    FolderSecurity.AddAccessRule(new FileSystemAccessRule(everyone, FileSystemRights.FullControl,
+                        InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.NoPropagateInherit,
+                        AccessControlType.Allow));
 
-                Directory.SetAccessControl(path, FolderSecurity);
+                    Directory.SetAccessControl(path, FolderSecurity);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("FOLDER PERMISSION: " + ex.Message);
+                }
             }
         }
 
