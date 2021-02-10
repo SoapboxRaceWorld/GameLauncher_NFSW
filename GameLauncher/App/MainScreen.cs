@@ -2024,7 +2024,7 @@ namespace GameLauncher
 
         private void LaunchGame(string userId, string loginToken, string serverIp, Form x)
         {
-            var oldfilename = FileSettingsSave.GameInstallation + "/nfsw.exe";
+            var oldfilename = FileSettingsSave.GameInstallation + "\\nfsw.exe";
 
             var args = _serverInfo.Id.ToUpper() + " " + serverIp + " " + loginToken + " " + userId;
             var psi = new ProcessStartInfo();
