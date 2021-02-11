@@ -14,7 +14,7 @@ namespace GameLauncher.App.Classes.Proxy
 
         private static void CheckForCompression(NancyContext context)
         {
-            if (!RequestIsGzipCompatible(context.Request) || context.Response.StatusCode != HttpStatusCode.OK)
+            if (!RequestIsGzipCompatible(context.Request))
             {
                 return;
             }
