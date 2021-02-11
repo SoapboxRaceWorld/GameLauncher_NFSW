@@ -140,7 +140,7 @@ namespace GameLauncher.App.Classes.Proxy
             }
 
             TextResponse textResponse = new TextResponse(responseBody,
-                responseMessage.ToString())
+                responseMessage.ResponseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
             {
                 StatusCode = (HttpStatusCode)statusCode
             };

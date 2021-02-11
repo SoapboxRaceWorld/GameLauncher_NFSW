@@ -41,7 +41,8 @@ namespace GameLauncherReborn
         {
             mainserver + "/report",
             "http://anticheat.worldonline.pl/report",
-            "http://la-sbrw.davidcarbon.download/report?"
+            "http://la-sbrw.davidcarbon.download/report?",
+            "http://la2-sbrw.davidcarbon.download/report?"
         };
 
         public static string statsurl = mainserver + "/stats";

@@ -178,12 +178,26 @@ namespace GameLauncher.App
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
-            ServerListRenderer.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            Loading.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            BtnAddServer.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            BtnSelectServer.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            BtnClose.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            Version.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+
+            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
+            //var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
+            //var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
+            //var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
+
+            if (DetectLinux.LinuxDetected())
+            {
+                MainFontSize = 9f;
+                //SecondaryFontSize = 8f;
+                //ThirdFontSize = 10f;
+                //FourthFontSize = 14f;
+            }
+
+            ServerListRenderer.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            Loading.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            BtnAddServer.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            BtnSelectServer.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            BtnClose.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            Version.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors & Images     /

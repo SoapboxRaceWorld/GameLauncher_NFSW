@@ -237,17 +237,17 @@ namespace GameLauncher
                     case FolderType.IsUsersFolders:
                         MessageBox.Show(null, "Please, choose a different directory for the game launcher.\n\nSpecial Folders such as:" +
                             "\n\nDownloads, Documents, Desktop, Videos, Music, OneDrive, or Any Type of User Folders" +
-                            "\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                            "\nare NOT advised or allowed", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         Environment.Exit(0);
                         break;
                     case FolderType.IsProgramFilesFolder:
                         MessageBox.Show(null, "Please, choose a different directory for the game launcher." +
-                            "\n\nSpecial Folders such as:\n\nProgram Files or Program Files (x86)\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                            "\n\nSpecial Folders such as:\n\nProgram Files or Program Files (x86)\nare NOT advised or allowed", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         Environment.Exit(0);
                         break;
                     case FolderType.IsWindowsFolder:
                         MessageBox.Show(null, "Please, choose a different directory for the game launcher." +
-                            "\n\nSpecial Folder such as:\n\nWindows\n\nAre Disadvised", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                            "\n\nSpecial Folder such as:\n\nWindows\nare NOT advised or allowed", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         Environment.Exit(0);
                         break;
                 }
@@ -428,7 +428,7 @@ namespace GameLauncher
                     Log.Warning("CORE: Starting LZMA downloader");
                     using (WebClient wc = new WebClient())
                     {
-                        wc.DownloadFileAsync(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
+                        wc.DownloadFile(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
                     }
 
                     DialogResult restartApp = MessageBox.Show(null, "Downloaded Missing LZMA.dll File. \nPlease Restart Launcher, Thanks!", "GameLauncher Restart Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -487,7 +487,7 @@ namespace GameLauncher
                     {
                         string[] files = {
                             "CommandLine.dll - 2.8.0",
-                            "DiscordRPC.dll - 1.0.169.0",
+                            "DiscordRPC.dll - 1.0.175.0",
                             "Flurl.dll - 3.0.1",
                             "Flurl.Http.dll - 3.0.1",
                             "INIFileParser.dll - 2.5.2",
@@ -500,7 +500,7 @@ namespace GameLauncher
                             "Newtonsoft.Json.dll - 12.0.3",
                             "System.Runtime.InteropServices.RuntimeInformation.dll - 4.6.24705.01. Commit Hash: 4d1af962ca0fede10beb01d197367c2f90e92c97",
                             "System.ValueTuple.dll - 4.6.26515.06 @BuiltBy: dlab-DDVSOWINAGE059 @Branch: release/2.1 @SrcCode: https://github.com/dotnet/corefx/tree/30ab651fcb4354552bd4891619a0bdd81e0ebdbf",
-                            "WindowsFirewallHelper.dll - 1.6.3.40"
+                            "WindowsFirewallHelper.dll - 2.0.4.70-beta2"
                         };
 
                         var missingfiles = new List<string>();
@@ -699,6 +699,9 @@ namespace GameLauncher
                 var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
                 ModNetLinksCleanup.CleanLinks(linksPath);
             }
+
+            /* Check Permission for Launcher Folder and File it Self */
+            FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(AppDomain.CurrentDomain.BaseDirectory));
 
             Log.Info("PROXY: Starting Proxy");
             ServerProxy.Instance.Start();

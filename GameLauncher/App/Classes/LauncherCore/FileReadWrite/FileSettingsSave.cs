@@ -130,6 +130,33 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 }
             }
 
+            /* Key Entries to Remove (No Longer Needed) */
+
+            if (settingFile.KeyExists("LauncherPosX"))
+            {
+                settingFile.DeleteKey("LauncherPosX");
+            }
+
+            if (settingFile.KeyExists("LauncherPosY"))
+            {
+                settingFile.DeleteKey("LauncherPosY");
+            }
+
+            if (settingFile.KeyExists("DisableVerifyHash"))
+            {
+                settingFile.DeleteKey("DisableVerifyHash");
+            }
+
+            if (settingFile.KeyExists("TracksHigh"))
+            {
+                settingFile.DeleteKey("TracksHigh");
+            }
+
+            if (settingFile.KeyExists("ModNetDisabled"))
+            {
+                settingFile.DeleteKey("ModNetDisabled");
+            }
+
             settingFile = new IniFile("Settings.ini");
         }
 

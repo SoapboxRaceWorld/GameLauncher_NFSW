@@ -3,6 +3,7 @@ using GameLauncherReborn;
 using GameLauncher.Resources;
 using System.Drawing;
 using System.Windows.Forms;
+using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 
@@ -45,12 +46,26 @@ namespace GameLauncher.App
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
-            ChangelogBox.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            ChangelogText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            UpdateButton.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            UpdateText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SkipButton.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            IgnoreButton.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+
+            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
+            //var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
+            //var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
+            //var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
+
+            if (DetectLinux.LinuxDetected())
+            {
+                MainFontSize = 9f;
+                //SecondaryFontSize = 8f;
+                //ThirdFontSize = 10f;
+                //FourthFontSize = 14f;
+            }
+
+            ChangelogBox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            ChangelogText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            UpdateButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            UpdateText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SkipButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            IgnoreButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
 
             /********************************/
             /* Set Theme Colors              /

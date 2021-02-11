@@ -86,8 +86,8 @@
     <Reference Include="CommandLine, Version=2.8.0.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
       <HintPath>..\packages\CommandLineParser.2.8.0\lib\net45\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="DiscordRPC, Version=1.0.169.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DiscordRichPresence.1.0.169\lib\net35\DiscordRPC.dll</HintPath>
+    <Reference Include="DiscordRPC, Version=1.0.175.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DiscordRichPresence.1.0.175\lib\net35\DiscordRPC.dll</HintPath>
     </Reference>
     <Reference Include="Flurl, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Flurl.3.0.1\lib\net461\Flurl.dll</HintPath>
@@ -141,8 +141,8 @@
     <Reference Include="INIFileParser">
       <HintPath>..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
     </Reference>
-    <Reference Include="WindowsFirewallHelper, Version=1.6.3.40, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsFirewallHelper.1.6.3.40\lib\net40\WindowsFirewallHelper.dll</HintPath>
+    <Reference Include="WindowsFirewallHelper, Version=2.0.4.70, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsFirewallHelper.2.0.4.70-beta2\lib\net40\WindowsFirewallHelper.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -208,12 +208,14 @@
     <Compile Include="App\Classes\LauncherCore\Proxy\NancyGzipCompression.cs" />
     <Compile Include="App\Classes\LauncherCore\Proxy\ProxyException.cs" />
     <Compile Include="App\Classes\LauncherCore\Proxy\ProxyHandler.cs" />
+    <Compile Include="App\Classes\SystemPlatform\Windows\FileORFolderPermissions.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\RedistributablePackage.cs" />
     <Compile Include="App\Classes\RemovedClasses.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\CarList.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\DiscordGamePresence.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\EventList.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\CertificateStore.cs" />
+    <Compile Include="App\Classes\SystemPlatform\Windows\WindowsDefender.cs" />
     <Compile Include="App\SettingsScreen.cs">
       <SubType>Form</SubType>
     </Compile>

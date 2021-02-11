@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.Logger;
 
@@ -29,12 +30,38 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                         string realLoc = Path.Combine(dir, loc);
                         if (type == 0)
                         {
+                            string origPath = realLoc + ".orig";
+
                             if (!File.Exists(realLoc))
                             {
-                                throw new Exception(".links file includes nonexistent file: " + realLoc);
-                            }
+                                if (!File.Exists(origPath))
+                                {
+                                    Log.Warning("CLEANLINKS: .links file includes nonexistent file, but there is no .orig file: [" + realLoc + "] skipping file");
+                                    continue;
+                                }
+                                else if (File.Exists(origPath))
+                                {
+                                    Log.Error("CLEANLINKS: Found .orig file that should not be present: " + origPath);
+                                    DialogResult skipFolder = MessageBox.Show(null, "Found .orig file that should not be present:\n" +
+                                        origPath, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                                    Environment.Exit(0);
+                                }
+                                else
+                                {
+                                    Log.Error("CLEANLINKS: .links file includes nonexistent file: " + realLoc);
+                                    DialogResult skipFolder = MessageBox.Show(null, ".links file includes nonexistent file:\n" +
+                                        realLoc + "\n\nChoose \"Yes\" to Skip File \nChoose \"No\" to Close Launcher", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Stop);
 
-                            string origPath = realLoc + ".orig";
+                                    if (skipFolder == DialogResult.Yes)
+                                    {
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        Environment.Exit(0);
+                                    }
+                                }
+                            }
 
                             if (!File.Exists(origPath))
                             {
@@ -47,9 +74,10 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                                 File.Delete(realLoc);
                                 File.Move(origPath, realLoc);
                             }
-                            catch
+                            catch (Exception ex)
                             {
                                 Log.Error("CLEANLINKS: Error while deleting a file: {realLoc}");
+                                Log.Error("CLEANLINKS: " + ex.Message);
                             }
                         }
                         else
@@ -57,7 +85,18 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                             if (!Directory.Exists(realLoc))
                             {
                                 Log.Error("CLEANLINKS: .links file includes nonexistent directory: " + realLoc);
-                                throw new Exception(".links file includes nonexistent directory: " + realLoc);
+
+                                DialogResult skipFolder = MessageBox.Show(null, ".links file includes nonexistent file:\n" +
+                                    realLoc + "\n\nChoose \"Yes\" to Skip File \nChoose \"No\" to Close Launcher", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Stop);
+
+                                if (skipFolder == DialogResult.Yes)
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    Environment.Exit(0);
+                                }
                             }
                             Directory.Delete(realLoc, true);
                         }

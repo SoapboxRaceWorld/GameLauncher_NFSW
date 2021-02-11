@@ -95,8 +95,6 @@ namespace GameLauncher
 
         public static String ModNetFileNameInUse = String.Empty;
         readonly Queue<Uri> modFilesDownloadUrls = new Queue<Uri>();
-        public List<string> ModNetFiles = new List<string>();
-        public List<string> ModNetHash = new List<string>();
         bool isDownloadingModNetFiles = false;
         int CurrentModFileCount = 0;
         int TotalModFileCount = 0;
@@ -624,7 +622,7 @@ namespace GameLauncher
             Log.Core("DISCORD: Checking if Discord RPC is Disabled from User Settings! It's value is " + _disableDiscordRPC);
 
             _presence.State = _OS;
-            _presence.Details = "In-Launcher: " + Application.ProductVersion;
+            _presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
             _presence.Assets = new Assets
             {
                 LargeImageText = "SBRW",
@@ -1596,7 +1594,7 @@ namespace GameLauncher
                 RegisterCancel.BackgroundImage = Theming.GrayButton;
                 RegisterCancel.ForeColor = Theming.FivithTextForeColor;
 
-                RegisterAgree.ForeColor = Theming.FivithTextForeColor;
+                RegisterAgree.ForeColor = Theming.WinFormWarningTextForeColor;
 
                 RegisterEmail.ForeColor = Theming.FivithTextForeColor;
                 RegisterPassword.ForeColor = Theming.FivithTextForeColor;
@@ -1620,7 +1618,7 @@ namespace GameLauncher
             RegisterConfirmPassword.Text = "";
             RegisterAgree.Checked = false;
 
-            RegisterAgree.ForeColor = Theming.FivithTextForeColor;
+            RegisterAgree.ForeColor = Theming.WinFormWarningTextForeColor;
             //Reset Input Stroke Images
             RegisterEmailBorder.Image = Theming.BorderEmail;
             RegisterPasswordBorder.Image = Theming.BorderPassword;
@@ -1915,6 +1913,8 @@ namespace GameLauncher
 
         private void StartGame(string userId, string loginToken)
         {
+            FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(FileSettingsSave.GameInstallation + "\\.data"));
+
             if (UriScheme.ServerIP != String.Empty)
             {
                 _serverIp = UriScheme.ServerIP;
@@ -2022,7 +2022,7 @@ namespace GameLauncher
 
         private void LaunchGame(string userId, string loginToken, string serverIp, Form x)
         {
-            var oldfilename = FileSettingsSave.GameInstallation + "/nfsw.exe";
+            var oldfilename = FileSettingsSave.GameInstallation + "\\nfsw.exe";
 
             var args = _serverInfo.Id.ToUpper() + " " + serverIp + " " + loginToken + " " + userId;
             var psi = new ProcessStartInfo();
@@ -2213,8 +2213,13 @@ namespace GameLauncher
             }
         }
 
-        private async void PlayButton_Click(object sender, EventArgs e)
+        private void PlayButton_Click(object sender, EventArgs e)
         {
+            if (File.Exists(FileSettingsSave.GameInstallation + "\\.links"))
+            {
+                File.Delete(FileSettingsSave.GameInstallation + "\\.links");
+            }
+
             /* Disable Play Button and Logout Buttons */
             PlayButton.Visible = false;
             LogoutButton.Visible = false;
@@ -2266,25 +2271,6 @@ namespace GameLauncher
             if (Directory.Exists(FileSettingsSave.GameInstallation + "/modules")) Directory.Delete(FileSettingsSave.GameInstallation + "/modules", true);
             if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
 
-            /* Get Remote ModNet list to process for checking required ModNet files are present and current */
-            String modules = new WebClient().DownloadString(Self.modnetserver + "/launcher-modules/modules.json");
-            string[] modules_newlines = modules.Split(new string[] { "\n" }, StringSplitOptions.None);
-            foreach (String modules_newline in modules_newlines)
-            {
-                if (modules_newline.Trim() == "{" || modules_newline.Trim() == "}") continue;
-
-                String trim_modules_newline = modules_newline.Trim();
-                String[] modules_files = trim_modules_newline.Split(new char[] { ':' });
-                /* Make the dynamic Filenames list for checking */
-                String ModNetList = modules_files[0].Replace("\"", "");
-                ModNetFiles.Add(ModNetList);
-                ModNetFiles.ToList();
-                /* Make another for the SHA's to validate against */
-                String ModNetSHA = modules_files[1].Replace("\"", "").Replace(",", "");
-                ModNetHash.Add(ModNetSHA);
-                ModNetHash.ToList();
-            }
-
             Log.Core("LAUNCHER: Installing ModNet");
             PlayProgressText.Text = ("Detecting ModNet Support for " + _realServernameBanner).ToUpper();
             String jsonModNet = ModNetReloaded.ModNetSupported(_serverIp);
@@ -2295,68 +2281,42 @@ namespace GameLauncher
 
                 try
                 {
-                    string[] newFiles = ModNetFiles.ToArray();
-
-                    foreach (string file in newFiles)
+                    /* Get Remote ModNet list to process for checking required ModNet files are present and current */
+                    String modules = new WebClient().DownloadString(Self.modnetserver + "/launcher-modules/modules.json");
+                    string[] modules_newlines = modules.Split(new string[] { "\n" }, StringSplitOptions.None);
+                    foreach (String modules_newline in modules_newlines)
                     {
-                        var url = Self.modnetserver + "/launcher-modules/" + file;
-                        string fileETAG = null;
-                        if (EnableInsider.ShouldIBeAnInsider() == true)
+                        if (modules_newline.Trim() == "{" || modules_newline.Trim() == "}") continue;
+
+                        String trim_modules_newline = modules_newline.Trim();
+                        String[] modules_files = trim_modules_newline.Split(new char[] { ':' });
+
+                        String ModNetList = modules_files[0].Replace("\"", "").Trim();
+                        String ModNetSHA = modules_files[1].Replace("\"", "").Replace(",", "").Trim();
+
+                        if (SHATwoFiveSix.HashFile(FileSettingsSave.GameInstallation + "\\" + ModNetList).ToLower() != ModNetSHA || !File.Exists(FileSettingsSave.GameInstallation + "\\" + ModNetList))
                         {
-                            Log.Debug(url);
-                        }
-                        using (var client = new HttpClient())
-                        {
-                            string FinalETagHash = null;
-                            var response = await client.GetAsync(url);
-                            var etag1 = response.Headers.ETag;
-                            if (EnableInsider.ShouldIBeAnInsider() == true)
+                            PlayProgressText.Text = ("ModNet: Downloading " + ModNetList).ToUpper();
+
+                            Log.Warning("MODNET CORE: " + ModNetList + " Does not match SHA Hash on File Server -> Online Hash: '" + ModNetSHA + "'");
+
+                            if (File.Exists(FileSettingsSave.GameInstallation + "\\" + ModNetList))
                             {
-                                Log.Debug("ETAG: " + etag1);
-                            }
-
-                            if (etag1 != null)
-                            {
-                                FinalETagHash = etag1.ToString().TrimStart('"').TrimEnd('"');
-                                fileETAG = FinalETagHash.ToUpper();
-                            }
-                            var content = await response.Content.ReadAsStringAsync();
-                        }
-
-                        if (EnableInsider.ShouldIBeAnInsider() == true)
-                        {
-                            Log.Debug("ETAG FINAL: " + fileETAG);
-                        }
-
-                        if (fileETAG == null && File.Exists(FileSettingsSave.GameInstallation + "/" + file))
-                        {
-                            PlayProgressText.Text = ("ModNet: Fail Safe -> Found " + file).ToUpper();
-
-                            Log.Debug("MODNET CORE: Using Local " + file + " File! (Unable to get ETAG for File)");
-                        }
-                        else if (MDFive.HashFile(FileSettingsSave.GameInstallation + "/" + file) != fileETAG || !File.Exists(FileSettingsSave.GameInstallation + "/" + file))
-                        {
-                            PlayProgressText.Text = ("ModNet: Downloading " + file).ToUpper();
-
-                            Log.Warning("MODNET CORE: " + file + " Does not match MD5 Hash on File Server -> Online Hash: '" + fileETAG + "'");
-
-                            if (File.Exists(FileSettingsSave.GameInstallation + "/" + file))
-                            {
-                                File.Delete(FileSettingsSave.GameInstallation + "/" + file);
+                                File.Delete(FileSettingsSave.GameInstallation + "\\" + ModNetList);
                             }
 
                             WebClient newModNetFilesDownload = new WebClient();
-                            newModNetFilesDownload.DownloadFile(Self.modnetserver + "/launcher-modules/" + file, FileSettingsSave.GameInstallation + "/" + file);
+                            newModNetFilesDownload.DownloadFile(Self.modnetserver + "/launcher-modules/" + ModNetList, FileSettingsSave.GameInstallation + "/" + ModNetList);
+                            FileORFolderPermissions.CheckLauncherPerms("File", Path.Combine(FileSettingsSave.GameInstallation + "\\" + ModNetList));
                         }
                         else
                         {
-                            PlayProgressText.Text = ("ModNet: Up to Date " + file).ToUpper();
-
-                            Log.Debug("MODNET CORE: " + file + " Is Up to Date!");
+                            PlayProgressText.Text = ("ModNet: Up to Date " + ModNetList).ToUpper();
+                            FileORFolderPermissions.CheckLauncherPerms("File", Path.Combine(FileSettingsSave.GameInstallation + "\\" + ModNetList));
+                            Log.Debug("MODNET CORE: " + ModNetList + " Is Up to Date!");
                         }
 
                         Application.DoEvents();
-
                     }
 
                     //get files now
@@ -2961,8 +2921,18 @@ namespace GameLauncher
                 }
                 else
                 {
-                    Log.Core("WINDOWS FIREWALL: Already Exlcuded SBRW - Game {Both}");
+                    if (DetectLinux.LinuxDetected())
+                    {
+                        Log.Core("WINDOWS FIREWALL: Not Supported On Linux -> SBRW - Game");
+                    }
+                    else
+                    {
+                        Log.Core("WINDOWS FIREWALL: Already Exlcuded SBRW - Game {Both}");
+                    }
                 }
+
+                FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(FileSettingsSave.GameInstallation));
+                FileORFolderPermissions.CheckLauncherPerms("File", Path.Combine(CurrentGameFilesExePath));
             }
 
             PlayProgressText.Text = "Ready!".ToUpper();
@@ -3092,23 +3062,33 @@ namespace GameLauncher
         }
         private void WindowsDefenderFirstRun()
         {
-            // Create Windows Defender Exclusion
-            try
+            if (WindowsDefender.SecurityCenter("AntivirusEnabled") == true && WindowsDefender.SecurityCenter("AntispywareEnabled") == true)
             {
-                Log.Info("WINDOWS DEFENDER: Excluding Core Folders");
-                //Add Exclusion to Windows Defender
-                using (PowerShell ps = PowerShell.Create())
+                // Create Windows Defender Exclusion
+                try
                 {
-                    ps.AddScript($"Add-MpPreference -ExclusionPath \"{AppDomain.CurrentDomain.BaseDirectory}\"");
-                    ps.AddScript($"Add-MpPreference -ExclusionPath \"{FileSettingsSave.GameInstallation}\"");
-                    var result = ps.Invoke();
+                    Log.Info("WINDOWS DEFENDER: Excluding Core Folders");
+                    //Add Exclusion to Windows Defender
+                    using (PowerShell ps = PowerShell.Create())
+                    {
+                        ps.AddScript($"Add-MpPreference -ExclusionPath \"{AppDomain.CurrentDomain.BaseDirectory}\"");
+                        ps.AddScript($"Add-MpPreference -ExclusionPath \"{FileSettingsSave.GameInstallation}\"");
+                        var result = ps.Invoke();
+                    }
+
+                    FileSettingsSave.WindowsDefenderStatus = "Excluded";
+                    FileSettingsSave.SaveSettings();
                 }
-                FileSettingsSave.FirewallStatus = "Excluded";
-                FileSettingsSave.SaveSettings();
+                catch (Exception ex)
+                {
+                    Log.Error("WINDOWS DEFENDER: " + ex.Message);
+                    FileSettingsSave.WindowsDefenderStatus = "Not Excluded";
+                    FileSettingsSave.SaveSettings();
+                }
             }
-            catch
+            else
             {
-                FileSettingsSave.FirewallStatus = "Not Excluded";
+                FileSettingsSave.WindowsDefenderStatus = "Not Supported";
                 FileSettingsSave.SaveSettings();
             }
         }
@@ -3119,14 +3099,14 @@ namespace GameLauncher
             {
                 case FolderType.IsSameAsLauncherFolder:
                     Directory.CreateDirectory("Game Files");
-                    Log.Error("LAUNCHER: Installing NFSW in same directory where the launcher resides is disadvised.");
-                    MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Log.Error("LAUNCHER: Installing NFSW in same directory where the launcher resides is NOT recommended.");
+                    MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is not allowed.\nInstead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                     break;
                 case FolderType.IsTempFolder:
                     Directory.CreateDirectory("Game Files");
-                    Log.Error("LAUNCHER: (╯°□°）╯︵ ┻━┻ Installing NFSW in the Temp Folder is disadvised!");
-                    MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is disadvised! Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files" + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Log.Error("LAUNCHER: (╯°□°）╯︵ ┻━┻ Installing NFSW in the Temp Folder is NOT allowed!");
+                    MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is NOT allowed!\nInstead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files" + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                     break;
                 case FolderType.IsProgramFilesFolder:
@@ -3134,7 +3114,7 @@ namespace GameLauncher
                 case FolderType.IsWindowsFolder:
                     Directory.CreateDirectory("Game Files");
                     Log.Error("LAUNCHER: Installing NFSW in a Special Directory is disadvised.");
-                    MessageBox.Show(null, string.Format("Installing NFSW in a Special Directory is disadvised. Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(null, string.Format("Installing NFSW in a Special Directory is not recommended or allowed.\nInstead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                     break;
             }
@@ -3149,51 +3129,65 @@ namespace GameLauncher
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+
+            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
+            var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
+            var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
+            var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
+
+            if (DetectLinux.LinuxDetected())
+            {
+                MainFontSize = 9f;
+                SecondaryFontSize = 8f;
+                ThirdFontSize = 10f;
+                FourthFontSize = 14f;
+            }
+
             /* Front Screen */
-            InsiderBuildNumberText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SelectServerBtn.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            translatedBy.Font = new Font(DejaVuSans, 8f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            ServerPick.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            AddServer.Font = new Font(DejaVuSansBold, 8f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ShowPlayPanel.Font = new Font(DejaVuSans, 8f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            CurrentWindowInfo.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            LauncherStatusText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            LauncherStatusDesc.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            ServerStatusText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ServerStatusDesc.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            APIStatusText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            APIStatusDesc.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            ExtractingProgress.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            InsiderBuildNumberText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SelectServerBtn.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            translatedBy.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            ServerPick.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            AddServer.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            ShowPlayPanel.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            CurrentWindowInfo.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            LauncherStatusText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            LauncherStatusDesc.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            ServerStatusText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ServerStatusDesc.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            APIStatusText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            APIStatusDesc.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            ExtractingProgress.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             /* Social Panel */
-            //ServerInfoPanel.Font = new Font(DejaVuSans, 8f, FontStyle.Regular);
-            HomePageLink.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            DiscordInviteLink.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            FacebookGroupLink.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            TwitterAccountLink.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SceneryGroupText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ServerShutDown.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            ServerInfoPanel.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            HomePageLink.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            DiscordInviteLink.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            FacebookGroupLink.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            TwitterAccountLink.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SceneryGroupText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ServerShutDown.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             /* Log In Panel */
-            MainEmail.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            MainPassword.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            RememberMe.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ForgotPassword.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            LoginButton.Font = new Font(DejaVuSansBold, 10f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            RegisterText.Font = new Font(DejaVuSansBold, 10f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ServerPingStatusText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            LogoutButton.Font = new Font(DejaVuSansBold, 10f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            PlayButton.Font = new Font(DejaVuSansBold, 14f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            PlayProgress.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            PlayProgressText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            PlayProgressTextTimer.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            MainEmail.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            MainPassword.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            RememberMe.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ForgotPassword.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            LoginButton.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);
+            RegisterText.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);
+            ServerPingStatusText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            LogoutButton.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);
+            PlayButton.Font = new Font(DejaVuSansBold, FourthFontSize, FontStyle.Bold);
+            PlayProgress.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            PlayProgressText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            PlayProgressTextTimer.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             /* Registering Panel */
-            RegisterPanel.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            RegisterEmail.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            RegisterPassword.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            RegisterConfirmPassword.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            RegisterTicket.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            RegisterAgree.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            RegisterButton.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            RegisterCancel.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            RegisterPanel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            RegisterEmail.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            RegisterPassword.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            RegisterConfirmPassword.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            RegisterTicket.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            RegisterAgree.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            RegisterButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            RegisterCancel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
 
             /********************************/
             /* Set Theme Colors & Images     /

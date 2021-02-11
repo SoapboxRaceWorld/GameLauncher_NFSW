@@ -45,14 +45,28 @@ namespace GameLauncher.App
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
-            OkBTN.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            CancelBTN.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ServerNameLabel.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ServerName.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            ServerAddress.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            ServerAddressLabel.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            Error.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            Version.Font= new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+
+            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
+            //var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
+            //var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
+            //var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
+
+            if (DetectLinux.LinuxDetected())
+            {
+                MainFontSize = 9f;
+                //SecondaryFontSize = 8f;
+                //ThirdFontSize = 10f;
+                //FourthFontSize = 14f;
+            }
+
+            OkBTN.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            CancelBTN.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ServerNameLabel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ServerName.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            ServerAddress.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            ServerAddressLabel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            Error.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            Version.Font= new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors              /

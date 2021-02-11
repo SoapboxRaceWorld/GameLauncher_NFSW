@@ -74,7 +74,6 @@ namespace GameLauncher.App
             // 
             // ServerNameLabel
             // 
-            this.ServerNameLabel.AutoSize = true;
             this.ServerNameLabel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerNameLabel.Location = new System.Drawing.Point(13, 13);
             this.ServerNameLabel.Name = "ServerNameLabel";
@@ -86,6 +85,7 @@ namespace GameLauncher.App
             // ServerName
             // 
             this.ServerName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ServerName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ServerName.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.ServerName.Location = new System.Drawing.Point(15, 29);
@@ -97,16 +97,16 @@ namespace GameLauncher.App
             // ServerAddress
             // 
             this.ServerAddress.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ServerAddress.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ServerAddress.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerAddress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.ServerAddress.Location = new System.Drawing.Point(15, 78);
             this.ServerAddress.Name = "ServerAddress";
-            this.ServerAddress.Size = new System.Drawing.Size(369, 20);
+            this.ServerAddress.Size = new System.Drawing.Size(369, 21);
             this.ServerAddress.TabIndex = 2;
             // 
             // ServerAddressLabel
             // 
-            this.ServerAddressLabel.AutoSize = true;
             this.ServerAddressLabel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ServerAddressLabel.Location = new System.Drawing.Point(13, 62);
             this.ServerAddressLabel.Name = "ServerAddressLabel";
@@ -117,12 +117,11 @@ namespace GameLauncher.App
             // 
             // Error
             // 
-            this.Error.AutoSize = true;
             this.Error.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
             this.Error.Location = new System.Drawing.Point(12, 104);
             this.Error.Name = "Error";
-            this.Error.Size = new System.Drawing.Size(161, 14);
+            this.Error.Size = new System.Drawing.Size(167, 14);
             this.Error.TabIndex = 0;
             this.Error.Text = "Please check better...";
             this.Error.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -130,10 +129,9 @@ namespace GameLauncher.App
             // 
             // Version
             // 
-            this.Version.AutoSize = true;
             this.Version.Location = new System.Drawing.Point(14, 124);
             this.Version.Name = "Version";
-            this.Version.Size = new System.Drawing.Size(107, 13);
+            this.Version.Size = new System.Drawing.Size(120, 13);
             this.Version.TabIndex = 7;
             this.Version.Text = "Version : vX.X.X.X";
             // 

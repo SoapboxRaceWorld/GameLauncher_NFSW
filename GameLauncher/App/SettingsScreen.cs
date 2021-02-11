@@ -78,36 +78,45 @@ namespace GameLauncher.App
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            SettingsAboutButton.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsGamePathText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsGameFiles.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsCDNText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsCDNPick.Font = new Font(DejaVuSans, 8f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsLanguageText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsLanguage.Font = new Font(DejaVuSans, 8f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsClearCrashLogsButton.Font = new Font(DejaVuSansBold, 8f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsClearCommunicationLogButton.Font = new Font(DejaVuSansBold, 8f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsClearServerModCacheButton.Font = new Font(DejaVuSansBold, 8f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsWordFilterCheck.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsProxyCheckbox.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsDiscordRPCCheckbox.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsGameFilesCurrentText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsGameFilesCurrent.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsCDNCurrentText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsCDNCurrent.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsLauncherPathText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsLauncherPathCurrent.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsNetworkText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsMainSrvText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsMainCDNText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsBkupSrvText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsBkupCDNText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsVFilesButton.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsLauncherVersion.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsSave.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsCancel.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ThemeName.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            ThemeAuthor.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
+            var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
+
+            if (DetectLinux.LinuxDetected())
+            {
+                MainFontSize = 9f;
+                SecondaryFontSize = 8f;
+            }
+
+            SettingsAboutButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsGamePathText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsGameFiles.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsCDNText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsCDNPick.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            SettingsLanguageText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsLanguage.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            SettingsClearCrashLogsButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            SettingsClearCommunicationLogButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            SettingsClearServerModCacheButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            SettingsWordFilterCheck.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsProxyCheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsDiscordRPCCheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsGameFilesCurrentText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsGameFilesCurrent.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsCDNCurrentText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsCDNCurrent.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsLauncherPathText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsLauncherPathCurrent.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsNetworkText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsMainSrvText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsMainCDNText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsBkupSrvText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsBkupCDNText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsVFilesButton.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsLauncherVersion.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsSave.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsCancel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ThemeName.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            ThemeAuthor.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors & Images     /
@@ -247,11 +256,6 @@ namespace GameLauncher.App
             /* Read Settings.ini            /
             /*******************************/
 
-            if (!string.IsNullOrEmpty(FileSettingsSave.Lang))
-            {
-                SettingsLanguage.SelectedValue = FileSettingsSave.Lang;
-            }
-
             _disableProxy = (FileSettingsSave.Proxy == "1");
             _disableDiscordRPC = (FileSettingsSave.RPC == "1");
 
@@ -312,6 +316,11 @@ namespace GameLauncher.App
 
             SettingsLanguage.DataSource = languages;
 
+            if (!string.IsNullOrEmpty(FileSettingsSave.Lang))
+            {
+                SettingsLanguage.SelectedValue = FileSettingsSave.Lang;
+            }
+
             /*******************************/
             /* Enable/Disable Visuals       /
             /*******************************/
@@ -347,7 +356,6 @@ namespace GameLauncher.App
                 }
                 else
                 {
-
                     switch (APIStatusChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat"))
                     {
                         case API.Online:
@@ -538,6 +546,7 @@ namespace GameLauncher.App
         private void SettingsVFilesButton_Click(object sender, EventArgs e)
         {
             new VerifyHash().ShowDialog();
+            SettingsVFilesButton.Enabled = false;
         }
 
         /* Settings Clear ModNet Cache */
@@ -689,14 +698,21 @@ namespace GameLauncher.App
             //Check if New Game! Files is not in Banned Folder Locations
             CheckGameFilesDirectoryPrevention();
 
-            //Remove current Exclusion and Add new location for Exclusion
-            using (PowerShell ps = PowerShell.Create())
+            try
             {
-                Log.Warning("WINDOWS DEFENDER: Removing OLD Game Files Directory: " + FileSettingsSave.GameInstallation);
-                ps.AddScript($"Remove-MpPreference -ExclusionPath \"{FileSettingsSave.GameInstallation}\"");
-                Log.Core("WINDOWS DEFENDER: Excluding NEW Game Files Directory: " + _newGameFilesPath);
-                ps.AddScript($"Add-MpPreference -ExclusionPath \"{_newGameFilesPath}\"");
-                var result = ps.Invoke();
+                //Remove current Exclusion and Add new location for Exclusion
+                using (PowerShell ps = PowerShell.Create())
+                {
+                    Log.Warning("WINDOWS DEFENDER: Removing OLD Game Files Directory: " + FileSettingsSave.GameInstallation);
+                    ps.AddScript($"Remove-MpPreference -ExclusionPath \"{FileSettingsSave.GameInstallation}\"");
+                    Log.Core("WINDOWS DEFENDER: Excluding NEW Game Files Directory: " + _newGameFilesPath);
+                    ps.AddScript($"Add-MpPreference -ExclusionPath \"{_newGameFilesPath}\"");
+                    var result = ps.Invoke();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("WINDOWS DEFENDER: " + ex.Message);
             }
 
             //Remove current Firewall for the Game Files 
@@ -734,14 +750,14 @@ namespace GameLauncher.App
                 {
                     case FolderType.IsSameAsLauncherFolder:
                         Directory.CreateDirectory("Game Files");
-                        Log.Error("LAUNCHER: Installing NFSW in same directory where the launcher resides is disadvised.");
-                        MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Log.Error("LAUNCHER: Installing NFSW in same directory where the launcher resides is NOT recommended.");
+                        MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is not allowed.\nInstead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                         break;
                     case FolderType.IsTempFolder:
                         Directory.CreateDirectory("Game Files");
-                        Log.Error("LAUNCHER: (╯°□°）╯︵ ┻━┻ Installing NFSW in the Temp Folder is disadvised!");
-                        MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is disadvised! Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files" + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Log.Error("LAUNCHER: (╯°□°）╯︵ ┻━┻ Installing NFSW in the Temp Folder is NOT allowed!");
+                        MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is NOT allowed!\nInstead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files" + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                         break;
                     case FolderType.IsProgramFilesFolder:
@@ -749,7 +765,7 @@ namespace GameLauncher.App
                     case FolderType.IsWindowsFolder:
                         Directory.CreateDirectory("Game Files");
                         Log.Error("LAUNCHER: Installing NFSW in a Special Directory is disadvised.");
-                        MessageBox.Show(null, string.Format("Installing NFSW in a Special Directory is disadvised. Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(null, string.Format("Installing NFSW in a Special Directory is not recommended or allowed.\nInstead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                         break;
                 }
