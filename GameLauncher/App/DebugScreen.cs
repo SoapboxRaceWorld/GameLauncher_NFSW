@@ -33,7 +33,12 @@ namespace GameLauncher.App
             /*******************************/
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            Font = new Font(DejaVuSans, 8.25f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            var MainFontSize = 8f * 100f / CreateGraphics().DpiY;
+            if (DetectLinux.LinuxDetected())
+            {
+                MainFontSize = 8f;
+            }
+            Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors              /

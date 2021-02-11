@@ -29,16 +29,30 @@ namespace GameLauncher.App
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
-            AboutText.Font = new Font(DejaVuSansBold, 26.25f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            PatchTitle1.Font = new Font(DejaVuSans, 15f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            PatchText1.Font = new Font(DejaVuSans, 9.75f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            PatchButton1.Font = new Font(DejaVuSans, 15f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            PatchTitle2.Font = new Font(DejaVuSans, 15f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            PatchText2.Font = new Font(DejaVuSans, 9.75f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            PatchButton2.Font = new Font(DejaVuSans, 15f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            PatchTitle3.Font = new Font(DejaVuSans, 15f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            PatchText3.Font = new Font(DejaVuSans, 9.75f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            PatchButton3.Font = new Font(DejaVuSans, 15f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+
+            var MainFontSize = 10f * 100f / CreateGraphics().DpiY;
+            var SecondaryFontSize = 15f * 100f / CreateGraphics().DpiY;
+            var ThirdFontSize = 26f * 100f / CreateGraphics().DpiY;
+            //var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
+
+            if (DetectLinux.LinuxDetected())
+            {
+                MainFontSize = 10f;
+                SecondaryFontSize = 15f;
+                ThirdFontSize = 26f;
+                //FourthFontSize = 14f;
+            }
+
+            AboutText.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);
+            PatchTitle1.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            PatchText1.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            PatchButton1.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            PatchTitle2.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            PatchText2.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            PatchButton2.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            PatchTitle3.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            PatchText3.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            PatchButton3.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors              /

@@ -32,13 +32,27 @@ namespace GameLauncher.App
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
-            WelcomeText.Font = new Font(DejaVuSansBold, 10f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            DownloadSourceText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            CDNSource.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            Save.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ListStatusText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            APIErrorButton.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            VersionLabel.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+
+            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
+            var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
+            var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
+            var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
+
+            if (DetectLinux.LinuxDetected())
+            {
+                MainFontSize = 9f;
+                SecondaryFontSize = 8f;
+                ThirdFontSize = 10f;
+                FourthFontSize = 14f;
+            }
+
+            WelcomeText.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);
+            DownloadSourceText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            CDNSource.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            Save.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ListStatusText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            APIErrorButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            VersionLabel.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors & Images     /

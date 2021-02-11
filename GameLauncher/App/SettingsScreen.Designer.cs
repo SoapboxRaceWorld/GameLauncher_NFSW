@@ -309,11 +309,10 @@ namespace GameLauncher.App
             this.SettingsGameFilesCurrent.LinkColor = System.Drawing.Color.LawnGreen;
             this.SettingsGameFilesCurrent.Location = new System.Drawing.Point(371, 90);
             this.SettingsGameFilesCurrent.Name = "SettingsGameFilesCurrent";
-            this.SettingsGameFilesCurrent.Size = new System.Drawing.Size(360, 14);
+            this.SettingsGameFilesCurrent.Size = new System.Drawing.Size(360, 28);
             this.SettingsGameFilesCurrent.TabIndex = 174;
             this.SettingsGameFilesCurrent.TabStop = true;
             this.SettingsGameFilesCurrent.Text = "C:\\Soapbox Race World\\Game Files";
-            this.SettingsGameFilesCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsGameFilesCurrent.VisitedLinkColor = System.Drawing.Color.White;
             this.SettingsGameFilesCurrent.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.SettingsGameFilesCurrent_LinkClicked);
             // 
@@ -322,7 +321,7 @@ namespace GameLauncher.App
             this.SettingsCDNCurrentText.BackColor = System.Drawing.Color.Transparent;
             this.SettingsCDNCurrentText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsCDNCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsCDNCurrentText.Location = new System.Drawing.Point(370, 121);
+            this.SettingsCDNCurrentText.Location = new System.Drawing.Point(370, 122);
             this.SettingsCDNCurrentText.Name = "SettingsCDNCurrentText";
             this.SettingsCDNCurrentText.Size = new System.Drawing.Size(112, 14);
             this.SettingsCDNCurrentText.TabIndex = 184;
@@ -336,7 +335,7 @@ namespace GameLauncher.App
             this.SettingsCDNCurrent.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsCDNCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.SettingsCDNCurrent.LinkColor = System.Drawing.Color.LawnGreen;
-            this.SettingsCDNCurrent.Location = new System.Drawing.Point(371, 139);
+            this.SettingsCDNCurrent.Location = new System.Drawing.Point(371, 140);
             this.SettingsCDNCurrent.Name = "SettingsCDNCurrent";
             this.SettingsCDNCurrent.Size = new System.Drawing.Size(360, 14);
             this.SettingsCDNCurrent.TabIndex = 175;
@@ -367,11 +366,10 @@ namespace GameLauncher.App
             this.SettingsLauncherPathCurrent.LinkColor = System.Drawing.Color.LawnGreen;
             this.SettingsLauncherPathCurrent.Location = new System.Drawing.Point(371, 181);
             this.SettingsLauncherPathCurrent.Name = "SettingsLauncherPathCurrent";
-            this.SettingsLauncherPathCurrent.Size = new System.Drawing.Size(360, 14);
+            this.SettingsLauncherPathCurrent.Size = new System.Drawing.Size(360, 28);
             this.SettingsLauncherPathCurrent.TabIndex = 176;
             this.SettingsLauncherPathCurrent.TabStop = true;
             this.SettingsLauncherPathCurrent.Text = "C:\\Soapbox Race World\\Launcher";
-            this.SettingsLauncherPathCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsLauncherPathCurrent.VisitedLinkColor = System.Drawing.Color.White;
             this.SettingsLauncherPathCurrent.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.SettingsLauncherPathCurrent_LinkClicked);
             // 

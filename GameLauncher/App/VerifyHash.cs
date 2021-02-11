@@ -7,11 +7,12 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
+using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Logger;
-using GameLauncher.HashPassword;
-using GameLauncher.Resources;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.HashPassword;
+using GameLauncher.Resources;
 
 namespace GameLauncher.App
 {
@@ -279,13 +280,27 @@ namespace GameLauncher.App
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
-            VerifyHashWelcome.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ScanProgressText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            DownloadProgressText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            StartScanner.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            StopScanner.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            VerifyHashText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            VersionLabel.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+
+            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
+            //var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
+            //var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
+            //var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
+
+            if (DetectLinux.LinuxDetected())
+            {
+                MainFontSize = 9f;
+                //SecondaryFontSize = 8f;
+                //ThirdFontSize = 10f;
+                //FourthFontSize = 14f;
+            }
+
+            VerifyHashWelcome.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ScanProgressText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            DownloadProgressText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            StartScanner.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            StopScanner.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            VerifyHashText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            VersionLabel.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors              /
