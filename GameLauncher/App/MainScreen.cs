@@ -36,7 +36,6 @@ using GameLauncher.App.Classes.SystemPlatform.Windows;
 using System.Management.Automation;
 using WindowsFirewallHelper;
 using GameLauncher.App.Classes.InsiderKit;
-using System.Net.Http;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
@@ -2372,6 +2371,7 @@ namespace GameLauncher
 
                     String path = Path.Combine(FileSettingsSave.GameInstallation, "MODS", MDFive.HashPassword(json2.ServerID).ToLower());
                     if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+                    FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(FileSettingsSave.GameInstallation + "\\MODS"));
 
                     foreach (IndexJsonEntry modfile in json3.Entries)
                     {

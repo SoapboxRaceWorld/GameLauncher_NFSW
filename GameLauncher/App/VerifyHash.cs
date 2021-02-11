@@ -83,6 +83,7 @@ namespace GameLauncher.App
 
             if (startScan == true)
             {
+                Theming.DisableVerifyHash = true;
                 StartScan.Start();
                 Log.Info("VERIFY HASH: Started Scanner");
                 isScanning = true;
