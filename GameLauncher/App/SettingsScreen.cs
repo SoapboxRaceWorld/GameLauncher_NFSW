@@ -318,7 +318,17 @@ namespace GameLauncher.App
 
             if (!string.IsNullOrEmpty(FileSettingsSave.Lang))
             {
-                SettingsLanguage.SelectedValue = FileSettingsSave.Lang;
+                if (FileSettingsSave.Lang.ToUpper() != "EN" || FileSettingsSave.Lang.ToUpper() != "DE" || FileSettingsSave.Lang.ToUpper() != "ES" ||
+                    FileSettingsSave.Lang.ToUpper() != "FR" || FileSettingsSave.Lang.ToUpper() != "PL" || FileSettingsSave.Lang.ToUpper() != "RU" ||
+                    FileSettingsSave.Lang.ToUpper() != "PT" || FileSettingsSave.Lang.ToUpper() != "TC" || FileSettingsSave.Lang.ToUpper() != "SC" ||
+                    FileSettingsSave.Lang.ToUpper() != "TH" || FileSettingsSave.Lang.ToUpper() != "TR")
+                {
+                    SettingsLanguage.SelectedValue = "EN";
+                }
+                else
+                {
+                    SettingsLanguage.SelectedValue = FileSettingsSave.Lang.ToUpper();
+                }
             }
 
             /*******************************/
@@ -398,7 +408,10 @@ namespace GameLauncher.App
         private void SettingsSave_Click(object sender, EventArgs e)
         {
             //TODO null check
-            FileSettingsSave.Lang = SettingsLanguage.SelectedValue.ToString();
+            if (!string.IsNullOrEmpty(SettingsLanguage.SelectedValue.ToString()))
+            {
+                FileSettingsSave.Lang = SettingsLanguage.SelectedValue.ToString();
+            }
 
             if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !DetectLinux.LinuxDetected())
             {
