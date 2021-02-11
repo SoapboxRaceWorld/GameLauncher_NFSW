@@ -3177,51 +3177,65 @@ namespace GameLauncher
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+
+            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
+            var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
+            var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
+            var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
+
+            if (DetectLinux.LinuxDetected())
+            {
+                MainFontSize = 9f;
+                SecondaryFontSize = 8f;
+                ThirdFontSize = 10f;
+                FourthFontSize = 14f;
+            }
+
             /* Front Screen */
-            InsiderBuildNumberText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SelectServerBtn.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            translatedBy.Font = new Font(DejaVuSans, 8f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            ServerPick.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            AddServer.Font = new Font(DejaVuSansBold, 8f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ShowPlayPanel.Font = new Font(DejaVuSans, 8f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            CurrentWindowInfo.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            LauncherStatusText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            LauncherStatusDesc.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            ServerStatusText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ServerStatusDesc.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            APIStatusText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            APIStatusDesc.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            ExtractingProgress.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            InsiderBuildNumberText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SelectServerBtn.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            translatedBy.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            ServerPick.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            AddServer.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            ShowPlayPanel.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            CurrentWindowInfo.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            LauncherStatusText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            LauncherStatusDesc.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            ServerStatusText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ServerStatusDesc.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            APIStatusText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            APIStatusDesc.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            ExtractingProgress.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             /* Social Panel */
-            ServerInfoPanel.Font = new Font(DejaVuSans, 8f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            HomePageLink.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            DiscordInviteLink.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            FacebookGroupLink.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            TwitterAccountLink.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SceneryGroupText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ServerShutDown.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            ServerInfoPanel.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            HomePageLink.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            DiscordInviteLink.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            FacebookGroupLink.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            TwitterAccountLink.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SceneryGroupText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ServerShutDown.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             /* Log In Panel */
-            MainEmail.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            MainPassword.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            RememberMe.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ForgotPassword.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            LoginButton.Font = new Font(DejaVuSansBold, 10f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            RegisterText.Font = new Font(DejaVuSansBold, 10f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ServerPingStatusText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            LogoutButton.Font = new Font(DejaVuSansBold, 10f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            PlayButton.Font = new Font(DejaVuSansBold, 14f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            PlayProgress.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            PlayProgressText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            PlayProgressTextTimer.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            MainEmail.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            MainPassword.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            RememberMe.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ForgotPassword.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            LoginButton.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);
+            RegisterText.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);
+            ServerPingStatusText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            LogoutButton.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);
+            PlayButton.Font = new Font(DejaVuSansBold, FourthFontSize, FontStyle.Bold);
+            PlayProgress.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            PlayProgressText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            PlayProgressTextTimer.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             /* Registering Panel */
-            RegisterPanel.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            RegisterEmail.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            RegisterPassword.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            RegisterConfirmPassword.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            RegisterTicket.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            RegisterAgree.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            RegisterButton.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            RegisterCancel.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
+            RegisterPanel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            RegisterEmail.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            RegisterPassword.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            RegisterConfirmPassword.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            RegisterTicket.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            RegisterAgree.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            RegisterButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            RegisterCancel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
 
             /********************************/
             /* Set Theme Colors & Images     /

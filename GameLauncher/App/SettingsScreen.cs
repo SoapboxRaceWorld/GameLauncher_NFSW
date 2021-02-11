@@ -78,36 +78,45 @@ namespace GameLauncher.App
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            SettingsAboutButton.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsGamePathText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsGameFiles.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsCDNText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsCDNPick.Font = new Font(DejaVuSans, 8f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsLanguageText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsLanguage.Font = new Font(DejaVuSans, 8f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsClearCrashLogsButton.Font = new Font(DejaVuSansBold, 8f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsClearCommunicationLogButton.Font = new Font(DejaVuSansBold, 8f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsClearServerModCacheButton.Font = new Font(DejaVuSansBold, 8f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsWordFilterCheck.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsProxyCheckbox.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsDiscordRPCCheckbox.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsGameFilesCurrentText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsGameFilesCurrent.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsCDNCurrentText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsCDNCurrent.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsLauncherPathText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsLauncherPathCurrent.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsNetworkText.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsMainSrvText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsMainCDNText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsBkupSrvText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsBkupCDNText.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsVFilesButton.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsLauncherVersion.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            SettingsSave.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            SettingsCancel.Font = new Font(DejaVuSansBold, 9f * 100f / CreateGraphics().DpiY, FontStyle.Bold);
-            ThemeName.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
-            ThemeAuthor.Font = new Font(DejaVuSans, 9f * 100f / CreateGraphics().DpiY, FontStyle.Regular);
+            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
+            var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
+
+            if (DetectLinux.LinuxDetected())
+            {
+                MainFontSize = 9f;
+                SecondaryFontSize = 8f;
+            }
+
+            SettingsAboutButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsGamePathText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsGameFiles.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsCDNText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsCDNPick.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            SettingsLanguageText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsLanguage.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            SettingsClearCrashLogsButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            SettingsClearCommunicationLogButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            SettingsClearServerModCacheButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            SettingsWordFilterCheck.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsProxyCheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsDiscordRPCCheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsGameFilesCurrentText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsGameFilesCurrent.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsCDNCurrentText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsCDNCurrent.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsLauncherPathText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsLauncherPathCurrent.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsNetworkText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsMainSrvText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsMainCDNText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsBkupSrvText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsBkupCDNText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsVFilesButton.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsLauncherVersion.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsSave.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsCancel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ThemeName.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            ThemeAuthor.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors & Images     /
