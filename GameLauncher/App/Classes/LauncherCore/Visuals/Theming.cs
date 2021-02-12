@@ -243,6 +243,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         public static Color CDNMenuBGForeColor = Color.FromArgb(44, 58, 76);
 
+        public static Color CDNMenuTextForeColor_Category = Color.FromArgb(150, 194, 255);
+
+        public static Color CDNMenuBGForeColor_Category = Color.FromArgb(31, 41, 54);
+
 
         /* Status Colors */
 

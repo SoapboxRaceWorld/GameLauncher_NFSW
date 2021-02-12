@@ -628,6 +628,7 @@ namespace GameLauncher
 
             ServerListUpdater.GetList();
             CDNListUpdater.GetList();
+            LanguageListUpdater.GetList();
             LauncherUpdateCheck.CheckAvailability();
 
             if (!DetectLinux.LinuxDetected())
