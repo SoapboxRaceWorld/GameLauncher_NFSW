@@ -193,7 +193,7 @@
             this.LauncherStatusText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LauncherStatusText.Location = new System.Drawing.Point(53, 453);
             this.LauncherStatusText.Name = "LauncherStatusText";
-            this.LauncherStatusText.Size = new System.Drawing.Size(130, 30);
+            this.LauncherStatusText.Size = new System.Drawing.Size(152, 30);
             this.LauncherStatusText.TabIndex = 4;
             this.LauncherStatusText.Text = "Launcher\n - Checking";
             this.LauncherStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
