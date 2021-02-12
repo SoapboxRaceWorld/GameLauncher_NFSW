@@ -568,7 +568,6 @@ namespace GameLauncher.App
         private void SettingsVFilesButton_Click(object sender, EventArgs e)
         {
             new VerifyHash().ShowDialog();
-            SettingsVFilesButton.Enabled = false;
         }
 
         /* Settings Clear ModNet Cache */
