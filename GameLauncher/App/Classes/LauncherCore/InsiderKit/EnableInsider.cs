@@ -5,7 +5,7 @@
         public static bool Insider = true;
 
         //Current month, day, year (2 digits), and letter! Ex: 12-15-20-A
-        public static string InsiderBuildNumber = "02-05-21-R";
+        public static string InsiderBuildNumber = "02-11-21-R";
 
         public static bool ShouldIBeAnInsider()
         {

@@ -318,7 +318,17 @@ namespace GameLauncher.App
 
             if (!string.IsNullOrEmpty(FileSettingsSave.Lang))
             {
-                SettingsLanguage.SelectedValue = FileSettingsSave.Lang;
+                if (FileSettingsSave.Lang.ToUpper() != "EN" || FileSettingsSave.Lang.ToUpper() != "DE" || FileSettingsSave.Lang.ToUpper() != "ES" ||
+                    FileSettingsSave.Lang.ToUpper() != "FR" || FileSettingsSave.Lang.ToUpper() != "PL" || FileSettingsSave.Lang.ToUpper() != "RU" ||
+                    FileSettingsSave.Lang.ToUpper() != "PT" || FileSettingsSave.Lang.ToUpper() != "TC" || FileSettingsSave.Lang.ToUpper() != "SC" ||
+                    FileSettingsSave.Lang.ToUpper() != "TH" || FileSettingsSave.Lang.ToUpper() != "TR")
+                {
+                    SettingsLanguage.SelectedValue = "EN";
+                }
+                else
+                {
+                    SettingsLanguage.SelectedValue = FileSettingsSave.Lang.ToUpper();
+                }
             }
 
             /*******************************/
@@ -352,20 +362,29 @@ namespace GameLauncher.App
                 {
                     Log.Info("SETTINGS VERIFYHASH: Checking Characters in URL");
                     Log.Info("SETTINGS VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
-                    SettingsVFilesButton.Enabled = true;
+                    Theming.ButtonVerifyHash = true;
                 }
                 else
                 {
-                    switch (APIStatusChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat"))
+                    if (Theming.DisableVerifyHash == true)
                     {
-                        case API.Online:
-                            SettingsVFilesButton.Enabled = true;
-                            break;
-                        default:
-                            SettingsVFilesButton.Enabled = false;
-                            break;
+                        Theming.ButtonVerifyHash = false;
+                    }
+                    else
+                    {
+                        switch (APIStatusChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat"))
+                        {
+                            case API.Online:
+                                Theming.ButtonVerifyHash = true;
+                                break;
+                            default:
+                                Theming.ButtonVerifyHash = false;
+                                break;
+                        }
                     }
                 }
+
+                SettingsVFilesButton.Enabled = Theming.ButtonVerifyHash;
             }
             catch { }
 
@@ -389,7 +408,10 @@ namespace GameLauncher.App
         private void SettingsSave_Click(object sender, EventArgs e)
         {
             //TODO null check
-            FileSettingsSave.Lang = SettingsLanguage.SelectedValue.ToString();
+            if (!string.IsNullOrEmpty(SettingsLanguage.SelectedValue.ToString()))
+            {
+                FileSettingsSave.Lang = SettingsLanguage.SelectedValue.ToString();
+            }
 
             if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !DetectLinux.LinuxDetected())
             {
@@ -546,7 +568,6 @@ namespace GameLauncher.App
         private void SettingsVFilesButton_Click(object sender, EventArgs e)
         {
             new VerifyHash().ShowDialog();
-            SettingsVFilesButton.Enabled = false;
         }
 
         /* Settings Clear ModNet Cache */

@@ -58,19 +58,27 @@ namespace GameLauncher.App
         {
             VersionLabel.Text = "Version: v" + Application.ProductVersion;
             Log.Core("VerifyHash Opened");
-            /* Clean up previous logs and start logging */
-            string[] filestocheck = new string[] { "checksums.dat", "validfiles.dat", "invalidfiles.dat", "Verify.log" };
-            foreach (String file in filestocheck)
-            {
-                if (File.Exists(file)) File.Delete(file);
-            }
-            LogVerify.StartVerifyLogging();
 
-            LogVerify.Info("VERIFYHASH: Checking Characters in URL");
-            string SavedCDN = FileSettingsSave.CDN;
-            char[] charsToTrim = { '/' };
-            FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
-            LogVerify.Info("VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
+            if (Theming.DisableVerifyHash == false)
+            {
+                /* Clean up previous logs and start logging */
+                string[] filestocheck = new string[] { "checksums.dat", "validfiles.dat", "invalidfiles.dat", "Verify.log" };
+                foreach (String file in filestocheck)
+                {
+                    if (File.Exists(file)) File.Delete(file);
+                }
+                LogVerify.StartVerifyLogging();
+
+                LogVerify.Info("VERIFYHASH: Checking Characters in URL");
+                string SavedCDN = FileSettingsSave.CDN;
+                char[] charsToTrim = { '/' };
+                FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
+                LogVerify.Info("VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
+            }
+            else
+            {
+                StartScanner.Enabled = false;
+            }
         }
 
         public void GameScanner(bool startScan)
@@ -83,6 +91,7 @@ namespace GameLauncher.App
 
             if (startScan == true)
             {
+                Theming.DisableVerifyHash = true;
                 StartScan.Start();
                 Log.Info("VERIFY HASH: Started Scanner");
                 isScanning = true;
