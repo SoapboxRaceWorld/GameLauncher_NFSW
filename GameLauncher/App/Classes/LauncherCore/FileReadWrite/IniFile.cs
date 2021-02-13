@@ -41,7 +41,7 @@ namespace GameLauncher.App.Classes
             try
             {
                 Data[EXE][Key] = Value;
-                Parser.WriteFile(Path, Data);
+                Parser.WriteFile(Path, Data, System.Text.Encoding.ASCII);
             }
             catch(Exception ex)
             {
