@@ -42,7 +42,7 @@ namespace GameLauncher.App
                 ThirdFontSize = 26f;
                 //FourthFontSize = 14f;
             }
-
+            Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             AboutText.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);
             PatchTitle1.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
             PatchText1.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);

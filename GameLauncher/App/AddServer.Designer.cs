@@ -129,6 +129,9 @@ namespace GameLauncher.App
             // 
             // Version
             // 
+            this.Version.BackColor = System.Drawing.Color.Transparent;
+            this.Version.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Version.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Version.Location = new System.Drawing.Point(14, 124);
             this.Version.Name = "Version";
             this.Version.Size = new System.Drawing.Size(120, 13);

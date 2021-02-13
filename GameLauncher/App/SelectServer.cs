@@ -191,7 +191,7 @@ namespace GameLauncher.App
                 //ThirdFontSize = 10f;
                 //FourthFontSize = 14f;
             }
-
+            Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ServerListRenderer.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             Loading.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             BtnAddServer.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);

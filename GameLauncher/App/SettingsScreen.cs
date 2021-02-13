@@ -88,7 +88,7 @@ namespace GameLauncher.App
                 MainFontSize = 9f;
                 SecondaryFontSize = 8f;
             }
-
+            Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
             SettingsAboutButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsGamePathText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsGameFiles.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);

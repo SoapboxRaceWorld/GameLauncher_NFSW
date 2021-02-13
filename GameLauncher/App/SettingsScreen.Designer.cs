@@ -69,7 +69,7 @@ namespace GameLauncher.App
             this.SettingsClearServerModCacheButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.SettingsClearServerModCacheButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.SettingsClearServerModCacheButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsClearServerModCacheButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsClearServerModCacheButton.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsClearServerModCacheButton.ForeColor = System.Drawing.Color.Silver;
             this.SettingsClearServerModCacheButton.Location = new System.Drawing.Point(38, 287);
             this.SettingsClearServerModCacheButton.Name = "SettingsClearServerModCacheButton";
@@ -82,7 +82,7 @@ namespace GameLauncher.App
             // SettingsLauncherVersion
             // 
             this.SettingsLauncherVersion.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsLauncherVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsLauncherVersion.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsLauncherVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsLauncherVersion.Location = new System.Drawing.Point(36, 480);
             this.SettingsLauncherVersion.Name = "SettingsLauncherVersion";
@@ -98,7 +98,7 @@ namespace GameLauncher.App
             this.SettingsAboutButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.SettingsAboutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.SettingsAboutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsAboutButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsAboutButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsAboutButton.ForeColor = System.Drawing.Color.Silver;
             this.SettingsAboutButton.Location = new System.Drawing.Point(780, 58);
             this.SettingsAboutButton.Name = "SettingsAboutButton";
@@ -114,7 +114,7 @@ namespace GameLauncher.App
             this.SettingsGameFiles.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.SettingsGameFiles.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.SettingsGameFiles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsGameFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsGameFiles.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsGameFiles.ForeColor = System.Drawing.Color.Silver;
             this.SettingsGameFiles.Location = new System.Drawing.Point(38, 80);
             this.SettingsGameFiles.Name = "SettingsGameFiles";
@@ -132,7 +132,7 @@ namespace GameLauncher.App
             this.SettingsClearCommunicationLogButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.SettingsClearCommunicationLogButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.SettingsClearCommunicationLogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsClearCommunicationLogButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsClearCommunicationLogButton.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsClearCommunicationLogButton.ForeColor = System.Drawing.Color.Silver;
             this.SettingsClearCommunicationLogButton.Location = new System.Drawing.Point(38, 250);
             this.SettingsClearCommunicationLogButton.Name = "SettingsClearCommunicationLogButton";
@@ -149,7 +149,7 @@ namespace GameLauncher.App
             this.SettingsClearCrashLogsButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.SettingsClearCrashLogsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.SettingsClearCrashLogsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsClearCrashLogsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsClearCrashLogsButton.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsClearCrashLogsButton.ForeColor = System.Drawing.Color.Silver;
             this.SettingsClearCrashLogsButton.Location = new System.Drawing.Point(38, 213);
             this.SettingsClearCrashLogsButton.Name = "SettingsClearCrashLogsButton";
@@ -165,7 +165,7 @@ namespace GameLauncher.App
             this.SettingsVFilesButton.FlatAppearance.BorderColor = System.Drawing.Color.DarkGoldenrod;
             this.SettingsVFilesButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.SettingsVFilesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsVFilesButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsVFilesButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsVFilesButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
             this.SettingsVFilesButton.Location = new System.Drawing.Point(234, 80);
             this.SettingsVFilesButton.Name = "SettingsVFilesButton";
@@ -179,7 +179,7 @@ namespace GameLauncher.App
             // SettingsGamePathText
             // 
             this.SettingsGamePathText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsGamePathText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsGamePathText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsGamePathText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsGamePathText.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsGamePathText.Location = new System.Drawing.Point(36, 61);
@@ -195,7 +195,7 @@ namespace GameLauncher.App
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.SettingsCDNText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsCDNText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsCDNText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsCDNText.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsCDNText.Location = new System.Drawing.Point(36, 112);
@@ -211,19 +211,20 @@ namespace GameLauncher.App
             this.SettingsCDNPick.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.SettingsCDNPick.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SettingsCDNPick.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsCDNPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsCDNPick.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsCDNPick.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.SettingsCDNPick.FormattingEnabled = true;
             this.SettingsCDNPick.Location = new System.Drawing.Point(38, 131);
+            this.SettingsCDNPick.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.SettingsCDNPick.Name = "SettingsCDNPick";
-            this.SettingsCDNPick.Size = new System.Drawing.Size(275, 21);
+            this.SettingsCDNPick.Size = new System.Drawing.Size(287, 21);
             this.SettingsCDNPick.TabIndex = 166;
             this.SettingsCDNPick.SelectedIndexChanged += new System.EventHandler(this.SettingsCDNPick_SelectedIndexChanged);
             // 
             // SettingsLanguageText
             // 
             this.SettingsLanguageText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsLanguageText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsLanguageText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsLanguageText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsLanguageText.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsLanguageText.Location = new System.Drawing.Point(36, 161);
@@ -236,7 +237,7 @@ namespace GameLauncher.App
             // SettingsWordFilterCheck
             // 
             this.SettingsWordFilterCheck.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsWordFilterCheck.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsWordFilterCheck.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsWordFilterCheck.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.SettingsWordFilterCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsWordFilterCheck.Location = new System.Drawing.Point(38, 325);
@@ -250,7 +251,7 @@ namespace GameLauncher.App
             // SettingsProxyCheckbox
             // 
             this.SettingsProxyCheckbox.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsProxyCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsProxyCheckbox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsProxyCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.SettingsProxyCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsProxyCheckbox.Location = new System.Drawing.Point(38, 347);
@@ -264,7 +265,7 @@ namespace GameLauncher.App
             // SettingsDiscordRPCCheckbox
             // 
             this.SettingsDiscordRPCCheckbox.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsDiscordRPCCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsDiscordRPCCheckbox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsDiscordRPCCheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.SettingsDiscordRPCCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsDiscordRPCCheckbox.Location = new System.Drawing.Point(38, 369);
@@ -278,7 +279,7 @@ namespace GameLauncher.App
             // SettingsGameFilesCurrentText
             // 
             this.SettingsGameFilesCurrentText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsGameFilesCurrentText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsGameFilesCurrentText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsGameFilesCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsGameFilesCurrentText.Location = new System.Drawing.Point(370, 73);
             this.SettingsGameFilesCurrentText.Name = "SettingsGameFilesCurrentText";
@@ -291,7 +292,7 @@ namespace GameLauncher.App
             // 
             this.SettingsGameFilesCurrent.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsGameFilesCurrent.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsGameFilesCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsGameFilesCurrent.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsGameFilesCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.SettingsGameFilesCurrent.LinkColor = System.Drawing.Color.LawnGreen;
             this.SettingsGameFilesCurrent.Location = new System.Drawing.Point(371, 88);
@@ -306,7 +307,7 @@ namespace GameLauncher.App
             // SettingsCDNCurrentText
             // 
             this.SettingsCDNCurrentText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsCDNCurrentText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsCDNCurrentText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsCDNCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsCDNCurrentText.Location = new System.Drawing.Point(370, 123);
             this.SettingsCDNCurrentText.Name = "SettingsCDNCurrentText";
@@ -319,7 +320,7 @@ namespace GameLauncher.App
             // 
             this.SettingsCDNCurrent.ActiveLinkColor = System.Drawing.Color.Transparent;
             this.SettingsCDNCurrent.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsCDNCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsCDNCurrent.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsCDNCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.SettingsCDNCurrent.LinkColor = System.Drawing.Color.LawnGreen;
             this.SettingsCDNCurrent.Location = new System.Drawing.Point(371, 139);
@@ -335,7 +336,7 @@ namespace GameLauncher.App
             // SettingsLauncherPathText
             // 
             this.SettingsLauncherPathText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsLauncherPathText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsLauncherPathText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsLauncherPathText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsLauncherPathText.Location = new System.Drawing.Point(370, 164);
             this.SettingsLauncherPathText.Name = "SettingsLauncherPathText";
@@ -348,7 +349,7 @@ namespace GameLauncher.App
             // 
             this.SettingsLauncherPathCurrent.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsLauncherPathCurrent.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsLauncherPathCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsLauncherPathCurrent.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsLauncherPathCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.SettingsLauncherPathCurrent.LinkColor = System.Drawing.Color.LawnGreen;
             this.SettingsLauncherPathCurrent.Location = new System.Drawing.Point(371, 179);
@@ -363,7 +364,7 @@ namespace GameLauncher.App
             // SettingsNetworkText
             // 
             this.SettingsNetworkText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsNetworkText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsNetworkText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsNetworkText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsNetworkText.Location = new System.Drawing.Point(370, 214);
             this.SettingsNetworkText.Name = "SettingsNetworkText";
@@ -375,7 +376,7 @@ namespace GameLauncher.App
             // SettingsMainSrvText
             // 
             this.SettingsMainSrvText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsMainSrvText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsMainSrvText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsMainSrvText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.SettingsMainSrvText.Location = new System.Drawing.Point(370, 230);
             this.SettingsMainSrvText.Name = "SettingsMainSrvText";
@@ -386,7 +387,7 @@ namespace GameLauncher.App
             // SettingsMainCDNText
             // 
             this.SettingsMainCDNText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsMainCDNText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsMainCDNText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsMainCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.SettingsMainCDNText.Location = new System.Drawing.Point(370, 250);
             this.SettingsMainCDNText.Name = "SettingsMainCDNText";
@@ -398,7 +399,7 @@ namespace GameLauncher.App
             // SettingsBkupSrvText
             // 
             this.SettingsBkupSrvText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsBkupSrvText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsBkupSrvText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsBkupSrvText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.SettingsBkupSrvText.Location = new System.Drawing.Point(370, 270);
             this.SettingsBkupSrvText.Name = "SettingsBkupSrvText";
@@ -410,7 +411,7 @@ namespace GameLauncher.App
             // SettingsBkupCDNText
             // 
             this.SettingsBkupCDNText.BackColor = System.Drawing.Color.Transparent;
-            this.SettingsBkupCDNText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsBkupCDNText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsBkupCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.SettingsBkupCDNText.Location = new System.Drawing.Point(370, 290);
             this.SettingsBkupCDNText.Name = "SettingsBkupCDNText";
@@ -426,7 +427,7 @@ namespace GameLauncher.App
             this.SettingsSave.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.SettingsSave.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.SettingsSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsSave.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsSave.ForeColor = System.Drawing.Color.White;
             this.SettingsSave.Image = global::GameLauncher.Properties.Resources.greenbutton;
             this.SettingsSave.Location = new System.Drawing.Point(645, 454);
@@ -444,7 +445,7 @@ namespace GameLauncher.App
             this.SettingsCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.SettingsCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.SettingsCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsCancel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsCancel.ForeColor = System.Drawing.Color.White;
             this.SettingsCancel.Image = global::GameLauncher.Properties.Resources.graybutton;
             this.SettingsCancel.Location = new System.Drawing.Point(755, 454);
@@ -483,12 +484,13 @@ namespace GameLauncher.App
             this.SettingsLanguage.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.SettingsLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SettingsLanguage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsLanguage.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsLanguage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.SettingsLanguage.FormattingEnabled = true;
             this.SettingsLanguage.Location = new System.Drawing.Point(38, 179);
+            this.SettingsLanguage.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.SettingsLanguage.Name = "SettingsLanguage";
-            this.SettingsLanguage.Size = new System.Drawing.Size(275, 21);
+            this.SettingsLanguage.Size = new System.Drawing.Size(164, 21);
             this.SettingsLanguage.TabIndex = 192;
             this.SettingsLanguage.SelectedIndexChanged += new System.EventHandler(this.SettingsLanguage_SelectedIndexChanged);
             // 
@@ -529,7 +531,7 @@ namespace GameLauncher.App
             this.Controls.Add(this.SettingsBkupSrvText);
             this.Controls.Add(this.SettingsBkupCDNText);
             this.DoubleBuffered = true;
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

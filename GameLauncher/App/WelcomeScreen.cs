@@ -45,7 +45,7 @@ namespace GameLauncher.App
                 ThirdFontSize = 10f;
                 FourthFontSize = 14f;
             }
-
+            Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             WelcomeText.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);
             DownloadSourceText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             CDNSource.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);

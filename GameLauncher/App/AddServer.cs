@@ -58,7 +58,7 @@ namespace GameLauncher.App
                 //ThirdFontSize = 10f;
                 //FourthFontSize = 14f;
             }
-
+            Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             OkBTN.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             CancelBTN.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             ServerNameLabel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);

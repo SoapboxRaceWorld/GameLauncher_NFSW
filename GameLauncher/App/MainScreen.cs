@@ -3142,7 +3142,7 @@ namespace GameLauncher
                 ThirdFontSize = 10f;
                 FourthFontSize = 14f;
             }
-
+            Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
             /* Front Screen */
             InsiderBuildNumberText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SelectServerBtn.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);

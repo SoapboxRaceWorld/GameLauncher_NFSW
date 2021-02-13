@@ -302,7 +302,7 @@ namespace GameLauncher.App
                 //ThirdFontSize = 10f;
                 //FourthFontSize = 14f;
             }
-
+            Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             VerifyHashWelcome.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             ScanProgressText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             DownloadProgressText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);

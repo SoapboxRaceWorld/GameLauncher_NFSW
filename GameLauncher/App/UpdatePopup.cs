@@ -59,7 +59,7 @@ namespace GameLauncher.App
                 //ThirdFontSize = 10f;
                 //FourthFontSize = 14f;
             }
-
+            Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ChangelogBox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ChangelogText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             UpdateButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
