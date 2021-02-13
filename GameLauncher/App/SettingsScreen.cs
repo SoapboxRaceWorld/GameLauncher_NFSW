@@ -526,6 +526,10 @@ namespace GameLauncher.App
 
                 IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
                 LanguagePickerFile.Write("Language", ((LangObject)SettingsLanguage.SelectedItem).INI_Value);
+            } else {
+                if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini")) {
+                    File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                }
             }
 
             /* Save Settings */
