@@ -207,6 +207,8 @@ namespace GameLauncher.App
             Brush textColor;
             Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
             Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
+            Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
+            Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
 
             var cdnListText = "";
 
@@ -221,8 +223,8 @@ namespace GameLauncher.App
             if (cdnListText.StartsWith("<GROUP>"))
             {
                 font = new Font(font, FontStyle.Bold);
-                e.Graphics.FillRectangle(Brushes.White, e.Bounds);
-                e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, Brushes.Black, e.Bounds);
+                e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
+                e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
             }
             else
             {

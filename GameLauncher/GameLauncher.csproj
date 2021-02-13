@@ -162,6 +162,8 @@
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileSettingsSave.cs" />
     <Compile Include="App\Classes\LauncherCore\Hash\SHATwoFiveSix.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\CDN.cs" />
+    <Compile Include="App\Classes\LauncherCore\Lists\JSON\LanguageScheme.cs" />
+    <Compile Include="App\Classes\LauncherCore\Lists\LanguageListUpdater.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\ModNetLinksCleanup.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\CodeSign\JSONRootCA.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\Email\IsEmailValid.cs" />

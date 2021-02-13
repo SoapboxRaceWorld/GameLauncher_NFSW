@@ -9,6 +9,7 @@ using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.Resources;
 using GameLauncherReborn;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -30,6 +31,7 @@ namespace GameLauncher.App
         public string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
 
         private int _lastSelectedCdnId;
+        private int _lastSelectedLanguage;
         private bool _disableProxy;
         private bool _disableDiscordRPC;
         private bool _restartRequired;
@@ -191,6 +193,7 @@ namespace GameLauncher.App
             /********************************/
 
             SettingsCDNPick.DrawItem += new DrawItemEventHandler(SettingsCDNPick_DrawItem);
+            SettingsLanguage.DrawItem += new DrawItemEventHandler(SettingsLanguage_DrawItem);
 
             SettingsSave.MouseEnter += new EventHandler(Greenbutton_hover_MouseEnter);
             SettingsSave.MouseLeave += new EventHandler(Greenbutton_MouseLeave);
@@ -214,6 +217,8 @@ namespace GameLauncher.App
             Brush textColor;
             Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
             Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
+            Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
+            Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
 
             var cdnListText = "";
 
@@ -228,8 +233,8 @@ namespace GameLauncher.App
             if (cdnListText.StartsWith("<GROUP>"))
             {
                 font = new Font(font, FontStyle.Bold);
-                e.Graphics.FillRectangle(Brushes.White, e.Bounds);
-                e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, Brushes.Black, e.Bounds);
+                e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
+                e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
             }
             else
             {
@@ -246,7 +251,52 @@ namespace GameLauncher.App
                 }
 
                 e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                e.Graphics.DrawString(cdnListText, font, textColor, e.Bounds);
+                e.Graphics.DrawString("    " + cdnListText, font, textColor, e.Bounds);
+            }
+        }
+
+        private void SettingsLanguage_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            var font = (sender as ComboBox).Font;
+            Brush backgroundColor;
+            Brush textColor;
+            Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
+            Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
+            Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
+            Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
+
+            var langListText = "";
+
+            if (sender is ComboBox cb)
+            {
+                if (cb.Items[e.Index] is LangObject si)
+                {
+                    langListText = si.Name;
+                }
+            }
+
+            if (langListText.StartsWith("<GROUP>"))
+            {
+                font = new Font(font, FontStyle.Bold);
+                e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
+                e.Graphics.DrawString(langListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
+            }
+            else
+            {
+                font = new Font(font, FontStyle.Bold);
+                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                {
+                    backgroundColor = SystemBrushes.Highlight;
+                    textColor = SystemBrushes.HighlightText;
+                }
+                else
+                {
+                    backgroundColor = customBGColor;
+                    textColor = customTextColor;
+                }
+
+                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                e.Graphics.DrawString("    " + langListText, font, textColor, e.Bounds);
             }
         }
 
@@ -295,41 +345,6 @@ namespace GameLauncher.App
 
             SettingsProxyCheckbox.Checked = _disableProxy;
             SettingsDiscordRPCCheckbox.Checked = _disableDiscordRPC;
-
-            SettingsLanguage.DisplayMember = "Text";
-            SettingsLanguage.ValueMember = "Value";
-
-            var languages = new[]
-            {
-                new { Text = "English", Value = "EN" },
-                new { Text = "Deutsch", Value = "DE" },
-                new { Text = "Español", Value = "ES" },
-                new { Text = "Français", Value = "FR" },
-                new { Text = "Polski", Value = "PL" },
-                new { Text = "Русский", Value = "RU" },
-                new { Text = "Português (Brasil)", Value = "PT" },
-                new { Text = "繁體中文", Value = "TC" },
-                new { Text = "简体中文", Value = "SC" },
-                new { Text = "ภาษาไทย", Value = "TH" },
-                new { Text = "Türkçe", Value = "TR" },
-            };
-
-            SettingsLanguage.DataSource = languages;
-
-            if (!string.IsNullOrEmpty(FileSettingsSave.Lang))
-            {
-                if (FileSettingsSave.Lang.ToUpper() != "EN" || FileSettingsSave.Lang.ToUpper() != "DE" || FileSettingsSave.Lang.ToUpper() != "ES" ||
-                    FileSettingsSave.Lang.ToUpper() != "FR" || FileSettingsSave.Lang.ToUpper() != "PL" || FileSettingsSave.Lang.ToUpper() != "RU" ||
-                    FileSettingsSave.Lang.ToUpper() != "PT" || FileSettingsSave.Lang.ToUpper() != "TC" || FileSettingsSave.Lang.ToUpper() != "SC" ||
-                    FileSettingsSave.Lang.ToUpper() != "TH" || FileSettingsSave.Lang.ToUpper() != "TR")
-                {
-                    SettingsLanguage.SelectedValue = "EN";
-                }
-                else
-                {
-                    SettingsLanguage.SelectedValue = FileSettingsSave.Lang.ToUpper();
-                }
-            }
 
             /*******************************/
             /* Enable/Disable Visuals       /
@@ -395,7 +410,11 @@ namespace GameLauncher.App
             SettingsCDNPick.DisplayMember = "Name";
             SettingsCDNPick.DataSource = CDNListUpdater.CleanList;
 
+            SettingsLanguage.DisplayMember = "Name";
+            SettingsLanguage.DataSource = LanguageListUpdater.CleanList;
+
             RememberLastCDN();
+            RememberLastLanguage();
             IsCDNDownGame();
             PingAPIStatus();
         }
@@ -408,9 +427,14 @@ namespace GameLauncher.App
         private void SettingsSave_Click(object sender, EventArgs e)
         {
             //TODO null check
-            if (!string.IsNullOrEmpty(SettingsLanguage.SelectedValue.ToString()))
+            if (!string.IsNullOrEmpty(((LangObject)SettingsLanguage.SelectedItem).INI_Value))
             {
-                FileSettingsSave.Lang = SettingsLanguage.SelectedValue.ToString();
+                FileSettingsSave.Lang = ((LangObject)SettingsLanguage.SelectedItem).INI_Value;
+            }
+
+            //TODO: Inform player about custom languagepack used.
+            if(((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") {
+                MessageBox.Show(null, "Please note, that if this server won't have that languagepack installed, it will fallback to English instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !DetectLinux.LinuxDetected())
@@ -494,6 +518,20 @@ namespace GameLauncher.App
                 if (File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis")) File.Move(FileSettingsSave.GameInstallation + "/profwords_dis", FileSettingsSave.GameInstallation + "/profwords");
             }
 
+            //Create Custom Settings.ini for LangPicker.asi module
+            if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") {
+                if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) {
+                    Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
+                }
+
+                IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                LanguagePickerFile.Write("Language", ((LangObject)SettingsLanguage.SelectedItem).INI_Value);
+            } else {
+                if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini")) {
+                    File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                }
+            }
+
             /* Save Settings */
             FileSettingsSave.SaveSettings();
 
@@ -506,7 +544,7 @@ namespace GameLauncher.App
                     {
                         userSettingsXml.Load(_userSettings);
                         var language = userSettingsXml.SelectSingleNode("Settings/UI/Language");
-                        language.InnerText = SettingsLanguage.SelectedValue.ToString();
+                        language.InnerText = ((LangObject)SettingsLanguage.SelectedItem).XML_Value;
                     }
                     catch
                     {
@@ -518,7 +556,7 @@ namespace GameLauncher.App
                         var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
                         var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
                         chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + Self.currentLanguage + "</DefaultChatGroup>";
-                        ui.InnerXml = "<Language Type=\"string\">" + SettingsLanguage.SelectedValue + "</Language>";
+                        ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
                     }
@@ -533,7 +571,7 @@ namespace GameLauncher.App
                         var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
                         var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
                         chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + Self.currentLanguage + "</DefaultChatGroup>";
-                        ui.InnerXml = "<Language Type=\"string\">" + SettingsLanguage.SelectedValue + "</Language>";
+                        ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
                     }
@@ -680,6 +718,16 @@ namespace GameLauncher.App
             }
 
             _lastSelectedCdnId = SettingsCDNPick.SelectedIndex;
+        }
+
+        private void SettingsLanguage_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (((LangObject)SettingsLanguage.SelectedItem).IsSpecial) {
+                SettingsLanguage.SelectedIndex = _lastSelectedLanguage;
+                return;
+            }
+
+            _lastSelectedLanguage = SettingsLanguage.SelectedIndex;
         }
 
         /*******************************/
@@ -885,6 +933,42 @@ namespace GameLauncher.App
                     Log.Warning("SETTINGS CDNLIST: Unknown entry value is " + FinalCDNURL);
                 }
                 Log.Core("SETTINGS CDNLIST: All done");
+            }
+        }
+
+        private void RememberLastLanguage()
+        {
+            /* Last Selected CDN */
+            Log.Core("SETTINGS LANGLIST: Checking...");
+            Log.Core("SETTINGS LANGLIST: Setting first server in list");
+            Log.Core("SETTINGS LANGLIST: Checking if server is set on INI File");
+
+            if (!string.IsNullOrEmpty(FileSettingsSave.Lang))
+            {
+                string SavedLang = FileSettingsSave.Lang.Trim();
+
+                Log.Core("SETTINGS LANGLIST: Found something!");
+                Log.Core("SETTINGS LANGLIST: Checking if language exists on our database");
+
+                if (LanguageListUpdater.CleanList.FindIndex(i => string.Equals(i.INI_Value, SavedLang)) != 0)
+                {
+                    Log.Core("SETTINGS LANGLIST: Language found! Checking its Value");
+                    var index = LanguageListUpdater.CleanList.FindIndex(i => string.Equals(i.INI_Value, SavedLang));
+
+                    Log.Core("SETTINGS LANGLIST: ID is " + index);
+                    if (index >= 0)
+                    {
+                        Log.Core("SETTINGS LANGLIST: ID set correctly");
+                        SettingsLanguage.SelectedIndex = index;
+                    }
+                }
+                else
+                {
+                    Log.Warning("SETTINGS LANGLIST: Unable to find anything, assuming default");
+                    SettingsLanguage.SelectedIndex = 1;
+                    Log.Warning("SETTINGS LANGLIST: Unknown entry value is " + SavedLang);
+                }
+                Log.Core("SETTINGS LANGLIST: All done");
             }
         }
 
