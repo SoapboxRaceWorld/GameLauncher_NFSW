@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Windows;
 using IniParser;
 using IniParser.Model;
+using System.Text;
 
 namespace GameLauncher.App.Classes
 {
@@ -38,10 +39,11 @@ namespace GameLauncher.App.Classes
 
         public void Write(string Key, string Value)
         {
+            UTF8Encoding utf8 = new UTF8Encoding(false);
             try
             {
                 Data[EXE][Key] = Value;
-                Parser.WriteFile(Path, Data, System.Text.Encoding.Default);
+                Parser.WriteFile(Path, Data, utf8);
             }
             catch(Exception ex)
             {
