@@ -518,6 +518,16 @@ namespace GameLauncher.App
                 if (File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis")) File.Move(FileSettingsSave.GameInstallation + "/profwords_dis", FileSettingsSave.GameInstallation + "/profwords");
             }
 
+            //Create Custom Settings.ini for LangPicker.asi module
+            if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") {
+                if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) {
+                    Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
+                }
+
+                IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                LanguagePickerFile.Write("Language", ((LangObject)SettingsLanguage.SelectedItem).INI_Value);
+            }
+
             /* Save Settings */
             FileSettingsSave.SaveSettings();
 
