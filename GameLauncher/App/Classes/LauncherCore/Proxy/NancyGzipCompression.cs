@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 using System.Linq;
 using Nancy;
 using Nancy.Bootstrapper;

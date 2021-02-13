@@ -1,4 +1,4 @@
-﻿using GameLauncher.Resources;
+using GameLauncher.Resources;
 using Newtonsoft.Json;
 using SoapBox.JsonScheme;
 using System;

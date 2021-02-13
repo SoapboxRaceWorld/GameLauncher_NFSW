@@ -1,4 +1,4 @@
-﻿using GameLauncher.App.Classes.SystemPlatform.Windows;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
 using System.IO;
 
 namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite

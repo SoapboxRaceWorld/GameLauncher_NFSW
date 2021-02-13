@@ -1,4 +1,4 @@
-﻿using GameLauncher.App.Classes;
+using GameLauncher.App.Classes;
 using GameLauncher.Resources;
 using System;
 using System.Drawing;

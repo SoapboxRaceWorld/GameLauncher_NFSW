@@ -1,4 +1,4 @@
-﻿using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.Logger;
 using System;
 using System.IO;
 using System.Security.AccessControl;

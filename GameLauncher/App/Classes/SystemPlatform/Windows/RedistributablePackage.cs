@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Win32;
 
 // based on https://github.com/bitbeans/RedistributableChecker/blob/master/RedistributableChecker/RedistributablePackage.cs

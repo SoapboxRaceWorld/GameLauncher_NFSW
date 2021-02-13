@@ -1,4 +1,4 @@
-﻿//Credits: https://stackoverflow.com/a/24187171
+//Credits: https://stackoverflow.com/a/24187171
 
 using GameLauncher.App.Classes;
 using System;

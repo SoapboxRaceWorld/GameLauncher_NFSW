@@ -1,4 +1,4 @@
-﻿using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.Logger;
 using GameLauncherReborn;
 using Newtonsoft.Json;
 using System;

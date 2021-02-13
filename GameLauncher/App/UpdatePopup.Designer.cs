@@ -1,4 +1,4 @@
-﻿namespace GameLauncher.App
+namespace GameLauncher.App
 {
     partial class UpdatePopup
     {

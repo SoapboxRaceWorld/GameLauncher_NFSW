@@ -1,4 +1,4 @@
-﻿using GameLauncher.App.Classes;
+using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;

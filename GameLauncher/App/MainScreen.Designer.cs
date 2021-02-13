@@ -1,4 +1,4 @@
-﻿namespace GameLauncher
+namespace GameLauncher
 {
     sealed partial class MainScreen
     {

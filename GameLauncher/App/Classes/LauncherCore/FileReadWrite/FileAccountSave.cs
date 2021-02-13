@@ -1,4 +1,4 @@
-﻿namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
+namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 {
     class FileAccountSave
     {

@@ -1,4 +1,4 @@
-﻿using GameLauncher.App.Classes;
+using GameLauncher.App.Classes;
 using System;
 using System.Globalization;
 using System.IO;

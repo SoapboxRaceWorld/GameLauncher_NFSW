@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using GameLauncherReborn;
 using GameLauncher.Resources;
 using System.Drawing;

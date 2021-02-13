@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace GameLauncher.App.Classes.LauncherCore.Validator.CodeSign

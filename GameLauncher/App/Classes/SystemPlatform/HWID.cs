@@ -1,4 +1,4 @@
-﻿using System.Management;
+using System.Management;
 using System.Security.Cryptography;
 using System.Text;
 using System.IO;

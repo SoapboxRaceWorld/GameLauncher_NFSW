@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using GameLauncher.App.Classes.Proxy;
 using GameLauncherReborn;
 using Nancy.Hosting.Self;

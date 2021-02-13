@@ -1,4 +1,4 @@
-﻿namespace GameLauncher.App.Classes.InsiderKit
+namespace GameLauncher.App.Classes.InsiderKit
 {
     class EnableInsider
     {
