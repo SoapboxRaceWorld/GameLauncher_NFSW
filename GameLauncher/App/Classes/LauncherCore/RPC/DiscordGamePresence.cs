@@ -7,11 +7,15 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App.Classes.RPC
 {
     class DiscordGamePresence
     {
+        /* Default Discord ID */
+        public static string DiscordRPCID = "540651192179752970";
+
         public static RichPresence _presence = new RichPresence();
 
         //Some checks
@@ -160,13 +164,13 @@ namespace GameLauncher.App.Classes.RPC
                 if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
                 eventTerminatedManually = true;
-                Self.CanDisableGame = true;
+                FunctionStatus.CanCloseGame = true;
             }
 
             //IN LOBBY
             if (uri == "/matchmaking/acceptinvite")
             {
-                Self.CanDisableGame = false;
+                FunctionStatus.CanCloseGame = false;
 
                 SBRW_XML.LoadXml(serverreply);
                 var eventIdNode = SBRW_XML.SelectSingleNode("LobbyInfo/EventId");
@@ -217,14 +221,14 @@ namespace GameLauncher.App.Classes.RPC
                     _presence.Assets.SmallImageKey = "gamemode_freeroam";
                     _presence.State = LauncherRPC;
 
-                    Self.CanDisableGame = true;
+                    FunctionStatus.CanCloseGame = true;
                 }
                 else
                 {
                     _presence.Details = "In Safehouse";
                     _presence.Assets.SmallImageText = "In-Safehouse";
                     _presence.Assets.SmallImageKey = "gamemode_safehouse";
-                    Self.CanDisableGame = false;
+                    FunctionStatus.CanCloseGame = false;
                     _presence.State = serverName;
                 }
 
@@ -237,7 +241,7 @@ namespace GameLauncher.App.Classes.RPC
             //IN EVENT
             if (Regex.Match(uri, "/matchmaking/launchevent").Success)
             {
-                Self.CanDisableGame = false;
+                FunctionStatus.CanCloseGame = false;
 
                 EventID = Convert.ToInt32(splitted_uri[3]);
 

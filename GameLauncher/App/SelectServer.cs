@@ -1,8 +1,6 @@
 using GameLauncher.App.Classes;
-using GameLauncherReborn;
 using GameLauncher.Resources;
 using Newtonsoft.Json;
-using SoapBox.JsonScheme;
 using System;
 using System.Net;
 using System.Collections.Generic;
@@ -11,6 +9,7 @@ using System.Net.NetworkInformation;
 using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 
 namespace GameLauncher.App
 {
@@ -108,7 +107,7 @@ namespace GameLauncher.App
                             else
                             {
                                 ServerListRenderer.Items[serverid].SubItems[1].Text = servername;
-                                ServerListRenderer.Items[serverid].SubItems[2].Text = Self.CountryName(content.Country.ToString());
+                                ServerListRenderer.Items[serverid].SubItems[2].Text = ServerListUpdater.CountryName(content.Country.ToString());
                                 ServerListRenderer.Items[serverid].SubItems[3].Text = content.OnlineNumber.ToString();
                                 ServerListRenderer.Items[serverid].SubItems[4].Text = content.NumberOfRegistered.ToString();
 

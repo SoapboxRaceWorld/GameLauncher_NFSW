@@ -1,6 +1,5 @@
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.HashPassword;
-using GameLauncherReborn;
 using Newtonsoft.Json;
 using System;
 using System.Net;
@@ -8,6 +7,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using System.Globalization;
 
 namespace GameLauncher.App.Classes
 {
@@ -21,7 +22,7 @@ namespace GameLauncher.App.Classes
         {
             List<ServerInfo> serverInfos = new List<ServerInfo>();
 
-            foreach (var serverListURL in Self.serverlisturl)
+            foreach (var serverListURL in URLs.serverlisturl)
             {
                 try
                 {
@@ -34,16 +35,19 @@ namespace GameLauncher.App.Classes
                     {
                         serverInfos.AddRange(
                             JsonConvert.DeserializeObject<List<ServerInfo>>(response));
+                        FunctionStatus.ServerListStatus = "Loaded";
                         break;
                     }
                     catch (Exception error)
                     {
                         Log.Error("LIST CORE: Error occurred while deserializing Server List from [" + serverListURL + "]: " + error.Message);
+                        FunctionStatus.ServerListStatus = "Error";
                     }
                 }
                 catch (Exception error)
                 {
                     Log.Error("LIST CORE: Error occurred while loading Server List from [" + serverListURL + "]: " + error.Message);
+                    FunctionStatus.ServerListStatus = "Error";
                 }
             }
 
@@ -128,6 +132,23 @@ namespace GameLauncher.App.Classes
                     CleanList.Add(CList);
                 }
             }
+        }
+
+        /* Converts 2 Letter Country Code and Returns Full Country Name (In English) */
+        public static string CountryName(string twoLetterCountryCode)
+        {
+            CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+
+            foreach (CultureInfo culture in cultures)
+            {
+                RegionInfo region = new RegionInfo(culture.LCID);
+                if (region.TwoLetterISORegionName.ToUpper() == twoLetterCountryCode.ToUpper())
+                {
+                    return region.EnglishName;
+                }
+            }
+
+            return "Unknown";
         }
     }
 }

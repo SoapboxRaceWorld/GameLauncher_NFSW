@@ -17,8 +17,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         public static bool ButtonVerifyHash = true;
 
-        public static bool DisableVerifyHash = false;
-
 
         /* Discord RPC Privacy Build Number */
 

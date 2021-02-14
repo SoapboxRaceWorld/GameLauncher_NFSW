@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App.Classes.Events
 {
@@ -31,9 +32,9 @@ namespace GameLauncher.App.Classes.Events
         {
             if (!DetectLinux.LinuxDetected())
             {
-                switch (APIStatusChecker.CheckStatus(Self.mainserver + "/update.php?version=" + Application.ProductVersion))
+                switch (APIStatusChecker.CheckStatus(URLs.mainserver + "/update.php?version=" + Application.ProductVersion))
                 {
-                    case API.Online:
+                    case APIStatus.Online:
                         MainAPI();
                         break;
                     default:
@@ -135,7 +136,7 @@ namespace GameLauncher.App.Classes.Events
             WebClient update_data = new WebClient();
             update_data.CancelAsync();
             update_data.Headers.Add("user-agent", "GameLauncherUpdater " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-            update_data.DownloadStringAsync(new Uri(Self.mainserver + "/update.php?version=" + Application.ProductVersion));
+            update_data.DownloadStringAsync(new Uri(URLs.mainserver + "/update.php?version=" + Application.ProductVersion));
             update_data.DownloadStringCompleted += (sender, e) => {
                 UpdateCheckResponse MAPI = JsonConvert.DeserializeObject<UpdateCheckResponse>(e.Result);
 
@@ -152,7 +153,7 @@ namespace GameLauncher.App.Classes.Events
             Log.Warning("UPDATER: Falling back to GitHub API");
             switch (APIStatusChecker.CheckStatus("http://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest"))
             {
-                case API.Online:
+                case APIStatus.Online:
                     WebClient update_data = new WebClient();
                     update_data.CancelAsync();
                     update_data.Headers.Add("user-agent", "GameLauncherUpdater " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");

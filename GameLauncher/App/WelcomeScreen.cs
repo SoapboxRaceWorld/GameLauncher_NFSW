@@ -5,6 +5,9 @@ using System.Drawing;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 
 namespace GameLauncher.App
 {
@@ -20,6 +23,15 @@ namespace GameLauncher.App
 
         private void SetVisuals()
         {
+            /*******************************/
+            /* Load CDN List                /
+            /*******************************/
+
+            if (FileSettingsSave.CDN != "Loaded")
+            {
+                CDNListUpdater.GetList();
+            }
+
             /*******************************/
             /* Set Hardcoded Text           /
             /*******************************/
@@ -145,6 +157,7 @@ namespace GameLauncher.App
                 APIErrorFormElements(false);
                 SettingsFormElements(true);
                 WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
+                PreloadServerList();
             }
         }
 
@@ -163,7 +176,7 @@ namespace GameLauncher.App
                 char[] charsToTrim = { '/' };
                 string FinalCDNURL = ChoosenCDN.TrimEnd(charsToTrim);
 
-                CDN.CDNUrl = FinalCDNURL;
+                JsonCDN.CDNUrl = FinalCDNURL;
 
                 QuitWithoutSaving_Click(sender, e);
             }
@@ -171,6 +184,11 @@ namespace GameLauncher.App
             {
                 MessageBox.Show(null, "Please Choose a CDN. \n\n(╯°□°）╯︵ ┻━┻", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void PreloadServerList()
+        {
+            ServerListUpdater.GetList();
         }
 
         private void QuitWithoutSaving_Click(object sender, EventArgs e)
@@ -183,6 +201,7 @@ namespace GameLauncher.App
             APIErrorFormElements(false);
             SettingsFormElements();
             WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
+            PreloadServerList();
         }
 
         private void APIErrorFormElements(bool hideElements = true)

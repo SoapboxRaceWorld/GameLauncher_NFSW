@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App
 {
@@ -22,7 +23,7 @@ namespace GameLauncher.App
                 InitializeComponent();
                 SetVisuals();
 
-                ChangelogText.Text = new WebClient().DownloadString(Self.mainserver + "/launcher/changelog");
+                ChangelogText.Text = new WebClient().DownloadString(URLs.mainserver + "/launcher/changelog");
                 ChangelogText.Select(0, 0);
                 ChangelogText.SelectionLength = 0;
                 ChangelogText.TabStop = false;

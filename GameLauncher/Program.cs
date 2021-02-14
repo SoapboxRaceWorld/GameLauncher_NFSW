@@ -22,7 +22,9 @@ using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.LauncherCore.Validator.CodeSign;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.SystemPlatform.Components;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 
 namespace GameLauncher
 {
@@ -62,7 +64,7 @@ namespace GameLauncher
                             update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                             update_data.DownloadStringAsync(new Uri("http://crl.carboncrew.org/RCA-Info.json"));
                             update_data.DownloadStringCompleted += (sender, e) => {
-                                JSONRootCA API = JsonConvert.DeserializeObject<JSONRootCA>(e.Result);
+                                JsonRootCA API = JsonConvert.DeserializeObject<JsonRootCA>(e.Result);
 
                                 if (API.CN != null)
                                 {
@@ -134,7 +136,7 @@ namespace GameLauncher
             FileSettingsSave.NullSafeSettings();
             FileAccountSave.NullSafeAccount();
 
-            Self.currentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
+            FunctionStatus.CurrentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
 
@@ -218,8 +220,6 @@ namespace GameLauncher
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
 
-            VisualsAPIChecker.PingAPIStatus();
-
             /* Set Launcher Directory */
             Log.Info("CORE: Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
@@ -228,7 +228,7 @@ namespace GameLauncher
             {
                 Log.Info("CORE: Checking current directory");
 
-                switch (Self.CheckFolder(Directory.GetCurrentDirectory())) 
+                switch (FunctionStatus.CheckFolder(Directory.GetCurrentDirectory())) 
                 {
                     case FolderType.IsTempFolder:
                         MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
@@ -252,7 +252,7 @@ namespace GameLauncher
                         break;
                 }
 
-                if (!Self.HasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath)))
+                if (!FunctionStatus.HasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath)))
                 {
                     MessageBox.Show("This application requires admin priviledge");
                 }
@@ -264,7 +264,7 @@ namespace GameLauncher
                     {
                         switch (APIStatusChecker.CheckStatus("http://api.github.com/repos/SoapboxRaceWorld/GameLauncherUpdater/releases/latest"))
                         {
-                            case API.Online:
+                            case APIStatus.Online:
                                 WebClient update_data = new WebClient();
                                 update_data.CancelAsync();
                                 update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
@@ -287,7 +287,7 @@ namespace GameLauncher
                     }
                     catch
                     {
-                        var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(Self.secondstaticapiserver + "/Version.txt");
+                        var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(URLs.secondstaticapiserver + "/Version.txt");
                         if (!string.IsNullOrEmpty(GetLatestUpdaterBuildVersion))
                         {
                             Log.Info("LAUNCHER UPDATER: Setting Latest Version -> " + GetLatestUpdaterBuildVersion);
@@ -307,14 +307,14 @@ namespace GameLauncher
                 //Windows 7 Fix
                 if ((string.IsNullOrEmpty(FileSettingsSave.Win7UpdatePatches) && WindowsProductVersion.GetWindowsNumber() == 6.1) || FileSettingsSave.Win7UpdatePatches == "0")
                 {
-                    if (Self.GetInstalledHotFix("KB3020369") == false || Self.GetInstalledHotFix("KB3125574") == false)
+                    if (ManagementSearcher.GetInstalledHotFix("KB3020369") == false || ManagementSearcher.GetInstalledHotFix("KB3125574") == false)
                     {
                         String messageBoxPopupKB = String.Empty;
                         messageBoxPopupKB = "Hey Windows 7 User, we've detected a potential issue of some missing Updates that are required.\n";
                         messageBoxPopupKB += "We found that these Windows Update packages are showing as not installed:\n\n";
 
-                        if (Self.GetInstalledHotFix("KB3020369") == false) messageBoxPopupKB += "- Update KB3020369\n";
-                        if (Self.GetInstalledHotFix("KB3125574") == false) messageBoxPopupKB += "- Update KB3125574\n";
+                        if (ManagementSearcher.GetInstalledHotFix("KB3020369") == false) messageBoxPopupKB += "- Update KB3020369\n";
+                        if (ManagementSearcher.GetInstalledHotFix("KB3125574") == false) messageBoxPopupKB += "- Update KB3125574\n";
 
                         messageBoxPopupKB += "\nAditionally, we must add a value to the registry:\n";
 
@@ -413,7 +413,7 @@ namespace GameLauncher
 
             if (!string.IsNullOrEmpty(FileSettingsSave.GameInstallation))
             {
-                if (!Self.HasWriteAccessToFolder(FileSettingsSave.GameInstallation))
+                if (!FunctionStatus.HasWriteAccessToFolder(FileSettingsSave.GameInstallation))
                 {
                     MessageBox.Show("This application requires admin priviledge. Restarting...");
                 }
@@ -428,7 +428,7 @@ namespace GameLauncher
                     Log.Warning("CORE: Starting LZMA downloader");
                     using (WebClient wc = new WebClient())
                     {
-                        wc.DownloadFile(new Uri(Self.fileserver + "/LZMA.dll"), "LZMA.dll");
+                        wc.DownloadFile(new Uri(URLs.fileserver + "/LZMA.dll"), "LZMA.dll");
                     }
 
                     DialogResult restartApp = MessageBox.Show(null, "Downloaded Missing LZMA.dll File. \nPlease Restart Launcher, Thanks!", "GameLauncher Restart Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -528,7 +528,7 @@ namespace GameLauncher
                                         } 
                                         else
                                         { 
-                                            if (Self.CheckArchitectureFile(splitFileVersion[0]) == false) 
+                                            if (HardwareInfo.CheckArchitectureFile(splitFileVersion[0]) == false) 
                                             {
                                                 missingfiles.Add(splitFileVersion[0] + " - Wrong Architecture");
                                             } 
@@ -626,8 +626,6 @@ namespace GameLauncher
                 }
             }
 
-            ServerListUpdater.GetList();
-            CDNListUpdater.GetList();
             LanguageListUpdater.GetList();
             LauncherUpdateCheck.CheckAvailability();
 

@@ -1,10 +1,11 @@
 using GameLauncher.App.Classes.Logger;
-using GameLauncherReborn;
 using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Collections.Generic;
 using System.Linq;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 
 namespace GameLauncher.App.Classes
 {
@@ -18,7 +19,7 @@ namespace GameLauncher.App.Classes
         {
             List<CDNObject> cdnInfos = new List<CDNObject>();
 
-            foreach (var cdnListURL in Self.cdnlisturl)
+            foreach (var cdnListURL in URLs.cdnlisturl)
             {
                 try
                 {
@@ -31,16 +32,19 @@ namespace GameLauncher.App.Classes
                     {
                         cdnInfos.AddRange(
                             JsonConvert.DeserializeObject<List<CDNObject>>(responseList));
+                        FunctionStatus.CDNListStatus = "Loaded";
                         break;
                     }
                     catch (Exception error)
                     {
                         Log.Error("LIST CORE: Error occurred while deserializing CDN List from [" + cdnListURL + "]: " + error.Message);
+                        FunctionStatus.CDNListStatus = "Error";
                     }
                 }
                 catch (Exception error)
                 {
                     Log.Error("LIST CORE: Error occurred while loading CDN List from [" + cdnListURL + "]: " + error.Message);
+                    FunctionStatus.CDNListStatus = "Error";
                 }
             }
 

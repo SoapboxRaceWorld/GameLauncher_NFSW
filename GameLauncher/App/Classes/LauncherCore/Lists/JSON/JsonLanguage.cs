@@ -1,8 +1,7 @@
-using Newtonsoft.Json;
-using System;
+﻿using Newtonsoft.Json;
 
-namespace GameLauncher.App.Classes
-{ 
+namespace GameLauncher.App.Classes.LauncherCore.Lists.JSON
+{
     public class LangObject
     {
         [JsonProperty("category")]

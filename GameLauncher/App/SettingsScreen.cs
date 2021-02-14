@@ -2,6 +2,8 @@ using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.Logger;
@@ -381,7 +383,7 @@ namespace GameLauncher.App
                 }
                 else
                 {
-                    if (Theming.DisableVerifyHash == true)
+                    if (FunctionStatus.IsVerifyHashDisabled == true)
                     {
                         Theming.ButtonVerifyHash = false;
                     }
@@ -389,7 +391,7 @@ namespace GameLauncher.App
                     {
                         switch (APIStatusChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat"))
                         {
-                            case API.Online:
+                            case APIStatus.Online:
                                 Theming.ButtonVerifyHash = true;
                                 break;
                             default:
@@ -406,6 +408,11 @@ namespace GameLauncher.App
             /********************************/
             /* CDN, APIs, & Restore Last CDN /
             /********************************/
+
+            if (FunctionStatus.CDNListStatus != "Loaded")
+            {
+                CDNListUpdater.GetList();
+            }
 
             SettingsCDNPick.DisplayMember = "Name";
             SettingsCDNPick.DataSource = CDNListUpdater.CleanList;
@@ -555,7 +562,7 @@ namespace GameLauncher.App
 
                         var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
                         var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
-                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + Self.currentLanguage + "</DefaultChatGroup>";
+                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + FunctionStatus.CurrentLanguage + "</DefaultChatGroup>";
                         ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
@@ -570,7 +577,7 @@ namespace GameLauncher.App
 
                         var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
                         var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
-                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + Self.currentLanguage + "</DefaultChatGroup>";
+                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + FunctionStatus.CurrentLanguage + "</DefaultChatGroup>";
                         ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
@@ -744,7 +751,7 @@ namespace GameLauncher.App
 
                 switch (APIStatusChecker.CheckStatus(((CDNObject)SettingsCDNPick.SelectedItem).Url + "/index.xml"))
                 {
-                    case API.Online:
+                    case APIStatus.Online:
                         SettingsCDNText.Text = "CDN: ONLINE";
                         SettingsCDNText.ForeColor = Theming.Sucess;
                         Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Online!");
@@ -815,7 +822,7 @@ namespace GameLauncher.App
         {
             if (!DetectLinux.LinuxDetected())
             {
-                switch (Self.CheckFolder(_newGameFilesPath))
+                switch (FunctionStatus.CheckFolder(_newGameFilesPath))
                 {
                     case FolderType.IsSameAsLauncherFolder:
                         Directory.CreateDirectory("Game Files");
@@ -1015,7 +1022,7 @@ namespace GameLauncher.App
 
                 switch (APIStatusChecker.CheckStatus(FileSettingsSave.CDN + "/index.xml"))
                 {
-                    case API.Online:
+                    case APIStatus.Online:
                         SettingsCDNCurrent.LinkColor = Theming.Sucess;
                         Log.UrlCall("SETTINGS PINGING CDN: " + FileSettingsSave.CDN + " Is Online!");
                         break;

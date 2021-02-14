@@ -6,6 +6,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncherReborn;
 using Newtonsoft.Json;
 
@@ -119,7 +120,7 @@ namespace GameLauncher.App.Classes
         {
             using (var wc = new WebClient())
             {
-                var data = wc.DownloadString(Self.mainserver + $"/servers/{server}/mods");
+                var data = wc.DownloadString(URLs.mainserver + $"/servers/{server}/mods");
 
                 return JsonConvert.DeserializeObject<List<ModInfo>>(data);
             }
@@ -135,7 +136,7 @@ namespace GameLauncher.App.Classes
 
             using (var wc = new WebClient())
             {
-                var data = wc.DownloadString(Self.mainserver + $"/servers/{serverKey}");
+                var data = wc.DownloadString(URLs.mainserver + $"/servers/{serverKey}");
                 serverInfo = JsonConvert.DeserializeObject<ServerInfo>(data);
             }
 

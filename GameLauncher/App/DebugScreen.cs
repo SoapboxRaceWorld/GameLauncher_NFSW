@@ -9,6 +9,7 @@ using GameLauncherReborn;
 using GameLauncher.Resources;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.SystemPlatform.Components;
 
 namespace GameLauncher.App
 {
@@ -167,7 +168,7 @@ namespace GameLauncher.App
                 new ListType{ Name = "Server Name", Value = ServerName},
                 new ListType{ Name = "Server Address", Value = ServerIP},
                 new ListType{ Name = "CDN Address", Value = FileSettingsSave.CDN},
-                new ListType{ Name = "ProxyPort", Value = Self.ProxyPort.ToString()},
+                new ListType{ Name = "ProxyPort", Value = ServerProxy.ProxyPort.ToString()},
                 new ListType{ Name = "", Value = "" },
             };
 
@@ -188,7 +189,7 @@ namespace GameLauncher.App
             }
             settings.AddRange(new[]
             {
-                new ListType{ Name = "HWID", Value = Security.FingerPrint.Value()},
+                new ListType{ Name = "HWID", Value = HardwareID.FingerPrint.Value()},
                 new ListType{ Name = "Operating System", Value = OS},
                 new ListType{ Name = "Environment Version", Value = Environment.OSVersion.Version.ToString() },
                 new ListType{ Name = "Screen Resolution", Value = Screen.PrimaryScreen.Bounds.Width + "x" + Screen.PrimaryScreen.Bounds.Height }

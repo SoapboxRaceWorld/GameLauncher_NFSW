@@ -1,6 +1,5 @@
 using GameLauncher.Resources;
 using Newtonsoft.Json;
-using SoapBox.JsonScheme;
 using System;
 using System.Net;
 using System.Collections.Generic;
@@ -11,6 +10,7 @@ using GameLauncher.App.Classes;
 using GameLauncher.HashPassword;
 using static System.String;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 
 namespace GameLauncher.App
 {

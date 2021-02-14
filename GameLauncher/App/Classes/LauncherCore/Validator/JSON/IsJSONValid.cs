@@ -10,7 +10,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.JSON
     {
         public class ClassWithList
         {
-            public List<object> list { get; set; }
+            public List<object> List { get; set; }
         }
 
         public static bool ValidJson(string strInput)
@@ -55,7 +55,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.JSON
                 {
                     var omy = JsonConvert.DeserializeObject<ClassWithList>(strInput);
 
-                    if (omy.list != null && omy.list.Count > 0)
+                    if (omy.List != null && omy.List.Count > 0)
                     {
                         return false;
                     }

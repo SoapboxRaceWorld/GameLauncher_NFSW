@@ -13,6 +13,7 @@ using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.HashPassword;
 using GameLauncher.Resources;
+using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App
 {
@@ -59,7 +60,7 @@ namespace GameLauncher.App
             VersionLabel.Text = "Version: v" + Application.ProductVersion;
             Log.Core("VerifyHash Opened");
 
-            if (Theming.DisableVerifyHash == false)
+            if (FunctionStatus.IsVerifyHashDisabled == false)
             {
                 /* Clean up previous logs and start logging */
                 string[] filestocheck = new string[] { "checksums.dat", "validfiles.dat", "invalidfiles.dat", "Verify.log" };
@@ -91,7 +92,7 @@ namespace GameLauncher.App
 
             if (startScan == true)
             {
-                Theming.DisableVerifyHash = true;
+                FunctionStatus.IsVerifyHashDisabled = true;
                 StartScan.Start();
                 Log.Info("VERIFY HASH: Started Scanner");
                 isScanning = true;

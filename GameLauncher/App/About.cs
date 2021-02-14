@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Xml;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App
 {
@@ -97,7 +98,7 @@ namespace GameLauncher.App
             try
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load(Self.secondstaticapiserver + "/about.xml");
+                doc.Load(URLs.secondstaticapiserver + "/about.xml");
 
                 foreach (XmlNode node in doc.DocumentElement)
                 {

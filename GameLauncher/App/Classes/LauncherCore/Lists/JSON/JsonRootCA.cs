@@ -1,9 +1,9 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace GameLauncher.App.Classes.LauncherCore.Validator.CodeSign
+namespace GameLauncher.App.Classes.LauncherCore.Lists.JSON
 {
-    public class JSONRootCA
+    public class JsonRootCA
     {
         [JsonProperty("CommonName")]
         public string CN { get; set; }

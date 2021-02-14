@@ -6,7 +6,9 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.RPC;
+using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncherReborn;
 
 namespace GameLauncher.App.Classes
@@ -116,21 +118,21 @@ namespace GameLauncher.App.Classes
                 String responseString;
                 try
                 {
-                    foreach(string report_url in Self.anticheatreporting) 
+                    foreach(string report_url in URLs.anticheatreporting) 
                     { 
                         if (report_url.EndsWith("?"))
                         {
                             WebClient update_data = new WebClient();
                             update_data.CancelAsync();
                             update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion);
-                            update_data.DownloadStringAsync(new Uri(report_url + "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + Security.FingerPrint.Value() + "&persona_id=" + AntiCheat.persona_id));
+                            update_data.DownloadStringAsync(new Uri(report_url + "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + AntiCheat.persona_id));
                         }
                         else
                         {
                             Uri sendReport = new Uri(report_url);
 
                             var request = (HttpWebRequest)WebRequest.Create(sendReport);
-                            var postData = "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + Security.FingerPrint.Value() + "&persona_id=" + AntiCheat.persona_id;
+                            var postData = "serverip=" + AntiCheat.serverip + "&user_id=" + AntiCheat.user_id + "&persona_name=" + AntiCheat.persona_name + "&event_session=" + AntiCheat.event_id + "&cheat_type=" + AntiCheat.cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + AntiCheat.persona_id;
                             
                             var data = Encoding.ASCII.GetBytes(postData);
                             request.Method = "POST";

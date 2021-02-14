@@ -14,7 +14,6 @@ using System.Net.NetworkInformation;
 using GameLauncher.Resources;
 using GameLauncher.App.Classes;
 using Newtonsoft.Json;
-using SoapBox.JsonScheme;
 using GameLauncher.App.Classes.Events;
 using GameLauncherReborn;
 using Microsoft.Win32;
@@ -31,7 +30,6 @@ using System.Threading.Tasks;
 using GameLauncher.App.Classes.ModNetReloaded;
 using GameLauncher.App.Classes.HashPassword;
 using GameLauncher.App.Classes.RPC;
-using GameLauncher.App.Classes.GPU;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using System.Management.Automation;
 using WindowsFirewallHelper;
@@ -42,6 +40,9 @@ using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.SystemPlatform.Components;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 
 namespace GameLauncher
 {
@@ -150,17 +151,23 @@ namespace GameLauncher
                 Notification.Dispose();
             }
 
+            /* Run the API Checks to Make Sure it Visually Displayed Correctly */
+            if (FunctionStatus.IsVisualAPIsChecked != true)
+            {
+                VisualsAPIChecker.PingAPIStatus();
+            }
+
             Log.Visuals("CORE: Entered mainScreen");
 
             Random rnd;
             rnd = new Random(Environment.TickCount);
 
-            discordRpcClient = new DiscordRpcClient(Self.DiscordRPCID);
+            discordRpcClient = new DiscordRpcClient(DiscordGamePresence.DiscordRPCID);
 
             discordRpcClient.OnReady += (sender, e) =>
             {
                 Log.Debug("DISCORD: Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
-                Self.discordid = e.User.ID.ToString();
+                FunctionStatus.DiscordUserID = e.User.ID.ToString();
             };
 
             discordRpcClient.OnError += (sender, e) =>
@@ -194,8 +201,8 @@ namespace GameLauncher
                     Log.Debug("SYSTEM: OS Type: 64 Bit");
                 }
                 Log.System("SYSTEM: OS Details: " + Environment.OSVersion);
-                Log.System("SYSTEM: Video Card: " + GPUHelper.CardName());
-                Log.System("SYSTEM: Driver Version: " + GPUHelper.DriverVersion());
+                Log.System("SYSTEM: Video Card: " + HardwareInfo.GPU.CardName());
+                Log.System("SYSTEM: Driver Version: " + HardwareInfo.GPU.DriverVersion());
             }
 
             _downloader = new Downloader(this, 3, 2, 16)
@@ -217,7 +224,7 @@ namespace GameLauncher
             _disableDiscordRPC = (FileSettingsSave.RPC == "1");
             Log.Debug("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + _disableProxy);
 
-            Self.CenterScreen(this);
+            FunctionStatus.CenterScreen(this);
 
             Log.Visuals("CORE: Disabling MaximizeBox");
             MaximizeBox = false;
@@ -262,7 +269,7 @@ namespace GameLauncher
             };
 
             Log.Core("CORE: Checking permissions");
-            if (!Self.HasWriteAccessToFolder(Directory.GetCurrentDirectory()))
+            if (!FunctionStatus.HasWriteAccessToFolder(Directory.GetCurrentDirectory()))
             {
                 Log.Error("CORE: Check Permission Failed.");
                 MessageBox.Show(null, "Failed to write the test file. Make sure you're running the launcher with administrative privileges.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -284,8 +291,8 @@ namespace GameLauncher
                     }
                     else
                     {
-                        FileSettingsSave.CDN = CDN.CDNUrl;
-                        _NFSW_Installation_Source = CDN.CDNUrl;
+                        FileSettingsSave.CDN = JsonCDN.CDNUrl;
+                        _NFSW_Installation_Source = JsonCDN.CDNUrl;
                         FileSettingsSave.SaveSettings();
                     }
                 }
@@ -310,7 +317,7 @@ namespace GameLauncher
 
                 if (fbd.ShowDialog() == CommonFileDialogResult.Ok)
                 {
-                    if (!Self.HasWriteAccessToFolder(fbd.FileName))
+                    if (!FunctionStatus.HasWriteAccessToFolder(fbd.FileName))
                     {
                         Log.Error("LAUNCHER: Not enough permissions. Exiting.");
                         MessageBox.Show(null, "You don't have enough permission to select this path as installation folder. Please select another directory.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -435,7 +442,7 @@ namespace GameLauncher
             Text = "SBRW Launcher: v" + Application.ProductVersion;
 
             Log.Core("CORE: Centering Window location");
-            Self.CenterScreen(this);
+            FunctionStatus.CenterScreen(this);
 
             if (!string.IsNullOrEmpty(EnableInsider.BuildNumber()))
             {
@@ -470,6 +477,13 @@ namespace GameLauncher
             {
                 Log.Core("LAUNCHER: Restoring last saved email and password");
                 RememberMe.Checked = true;
+            }
+
+            /* Check ServerList Status */
+
+            if (FunctionStatus.ServerListStatus != "Loaded")
+            {
+                ServerListUpdater.GetList();
             }
 
             /* Server Display List */
@@ -786,7 +800,7 @@ namespace GameLauncher
             Tokens.IPAddress = _serverInfo.IpAddress;
             Tokens.ServerName = _serverInfo.Name;
 
-            Self.userAgent = _serverInfo.ForceUserAgent ?? null;
+            FunctionStatus.UserAgent = _serverInfo.ForceUserAgent ?? null;
 
             if (_modernAuthSupport == false)
             {
@@ -938,7 +952,7 @@ namespace GameLauncher
             }
 
             WebClient client = new WebClient();
-            var artificialPingStart = Self.GetTimestamp();
+            var artificialPingStart = Time.GetStamp();
             VerticalBanner.BackColor = Color.Transparent;
 
             var stringToUri = new Uri(serverIp + "/GetServerInformation");
@@ -952,7 +966,7 @@ namespace GameLauncher
             {
                 aTimer.Enabled = false;
 
-                var artificialPingEnd = Self.GetTimestamp();
+                var artificialPingEnd = Time.GetStamp();
 
                 if (e2.Cancelled)
                 {
@@ -1028,7 +1042,7 @@ namespace GameLauncher
                         String purejson = String.Empty;
                         purejson = e2.Result;
                         json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
-                        Self.rememberjson = e2.Result;
+
                         try
                         {
                             if (!string.IsNullOrEmpty(json.BannerUrl))
@@ -1426,7 +1440,7 @@ namespace GameLauncher
 
                 if (_realServername == "WorldUnited Official" || _realServername == "WorldUnited OFFICIAL")
                 {
-                    Process.Start("https://signup.worldunited.gg/?discordid=" + Self.discordid);
+                    Process.Start("https://signup.worldunited.gg/?discordid=" + FunctionStatus.DiscordUserID);
                     MessageBox.Show(null, "A browser window has been opened to complete registration on WorldUnited OFFICIAL", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
@@ -1893,6 +1907,11 @@ namespace GameLauncher
         /* SETTINGS PAGE LAYOUT */
         private void SettingsButton_Click(object sender, EventArgs e)
         {
+            if (FunctionStatus.CDNListStatus != "Loaded")
+            {
+                CDNListUpdater.GetList();
+            }
+
             SettingsButton.BackgroundImage = Theming.GearButtonClick;
 
             if (!(ServerPick.SelectedItem is ServerInfo server)) return;
@@ -1943,7 +1962,7 @@ namespace GameLauncher
                         Match match = Regex.Match(convert.Host, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
                         if (!match.Success)
                         {
-                            _serverIp = _serverIp.Replace(convert.Host, Self.HostName2IP(convert.Host));
+                            _serverIp = _serverIp.Replace(convert.Host, FunctionStatus.HostName2IP(convert.Host));
                         }
                     }
 
@@ -1956,7 +1975,7 @@ namespace GameLauncher
                         discordRpcClient.Dispose();
                         discordRpcClient = null;
                     }
-                    LaunchGame(userId, loginToken, "http://127.0.0.1:" + Self.ProxyPort + "/nfsw/Engine.svc", this);
+                    LaunchGame(userId, loginToken, "http://127.0.0.1:" + ServerProxy.ProxyPort + "/nfsw/Engine.svc", this);
                 }
             })
             { IsBackground = true };
@@ -2067,7 +2086,7 @@ namespace GameLauncher
 
                 if (secondsToShutDown <= 0)
                 {
-                    if (Self.CanDisableGame == true)
+                    if (FunctionStatus.CanCloseGame == true)
                     {
                         foreach (var oneProcess in allOfThem)
                         {
@@ -2281,7 +2300,7 @@ namespace GameLauncher
                 try
                 {
                     /* Get Remote ModNet list to process for checking required ModNet files are present and current */
-                    String modules = new WebClient().DownloadString(Self.modnetserver + "/launcher-modules/modules.json");
+                    String modules = new WebClient().DownloadString(URLs.modnetserver + "/launcher-modules/modules.json");
                     string[] modules_newlines = modules.Split(new string[] { "\n" }, StringSplitOptions.None);
                     foreach (String modules_newline in modules_newlines)
                     {
@@ -2305,7 +2324,7 @@ namespace GameLauncher
                             }
 
                             WebClient newModNetFilesDownload = new WebClient();
-                            newModNetFilesDownload.DownloadFile(Self.modnetserver + "/launcher-modules/" + ModNetList, FileSettingsSave.GameInstallation + "/" + ModNetList);
+                            newModNetFilesDownload.DownloadFile(URLs.modnetserver + "/launcher-modules/" + ModNetList, FileSettingsSave.GameInstallation + "/" + ModNetList);
                             FileORFolderPermissions.CheckLauncherPerms("File", Path.Combine(FileSettingsSave.GameInstallation + "\\" + ModNetList));
                         }
                         else
@@ -2487,7 +2506,7 @@ namespace GameLauncher
                         while (secondsToCloseLauncher > 0)
                         {
                             PlayProgressText.Text = string.Format("Loading game. Launcher will minimize in {0} seconds.", secondsToCloseLauncher).ToUpper(); //"LOADING GAME. LAUNCHER WILL MINIMIZE ITSELF IN " + secondsToCloseLauncher + " SECONDS";
-                            Delay.WaitSeconds(1);
+                            Time.SecondsRemaining(1);
                             secondsToCloseLauncher--;
                         }
 
@@ -3062,7 +3081,7 @@ namespace GameLauncher
         }
         private void WindowsDefenderFirstRun()
         {
-            if (WindowsDefender.SecurityCenter("AntivirusEnabled") == true && WindowsDefender.SecurityCenter("AntispywareEnabled") == true)
+            if (ManagementSearcher.SecurityCenter("AntivirusEnabled") == true && ManagementSearcher.SecurityCenter("AntispywareEnabled") == true)
             {
                 // Create Windows Defender Exclusion
                 try
@@ -3095,7 +3114,7 @@ namespace GameLauncher
 
         private void CheckGameFilesDirectoryPrevention()
         {
-            switch (Self.CheckFolder(FileSettingsSave.GameInstallation))
+            switch (FunctionStatus.CheckFolder(FileSettingsSave.GameInstallation))
             {
                 case FolderType.IsSameAsLauncherFolder:
                     Directory.CreateDirectory("Game Files");
