@@ -1211,6 +1211,9 @@ namespace GameLauncher
                             case "SCENERY_GROUP_CHRISTMAS":
                                 this.SceneryGroupText.Text = "Scenery: Christmas";
                                 break;
+                            case "SCENERY_GROUP_VALENTINES":
+                                this.SceneryGroupText.Text = "Scenery: Valentines";
+                                break;
                             default:
                                 this.SceneryGroupText.Text = "Scenery: Normal";
                                 break;
