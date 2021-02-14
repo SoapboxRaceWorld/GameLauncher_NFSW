@@ -188,7 +188,10 @@ namespace GameLauncher.App
 
         private void PreloadServerList()
         {
-            ServerListUpdater.GetList();
+            if (FunctionStatus.ServerListStatus != "Loaded")
+            {
+                ServerListUpdater.GetList();
+            }
         }
 
         private void QuitWithoutSaving_Click(object sender, EventArgs e)

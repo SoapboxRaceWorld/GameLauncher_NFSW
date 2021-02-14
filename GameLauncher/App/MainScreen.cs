@@ -15,7 +15,6 @@ using GameLauncher.Resources;
 using GameLauncher.App.Classes;
 using Newtonsoft.Json;
 using GameLauncher.App.Classes.Events;
-using GameLauncherReborn;
 using Microsoft.Win32;
 using GameLauncher.App;
 using GameLauncher.HashPassword;
