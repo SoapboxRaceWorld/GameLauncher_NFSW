@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists.JSON

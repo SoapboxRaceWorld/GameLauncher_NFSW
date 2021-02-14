@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Visuals

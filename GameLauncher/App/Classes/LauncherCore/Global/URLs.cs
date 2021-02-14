@@ -1,4 +1,4 @@
-﻿namespace GameLauncher.App.Classes.LauncherCore.Global
+namespace GameLauncher.App.Classes.LauncherCore.Global
 {
     class URLs
     {
