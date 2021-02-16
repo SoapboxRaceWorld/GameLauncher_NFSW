@@ -918,6 +918,7 @@ namespace GameLauncher
             this.ExtractingProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.ExtractingProgress.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ExtractingProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.ExtractingProgress.GradiantColor = System.Drawing.Color.Transparent;
             this.ExtractingProgress.Image = global::GameLauncher.Properties.Resources.progress_success;
             this.ExtractingProgress.Location = new System.Drawing.Point(30, 430);
             this.ExtractingProgress.Name = "ExtractingProgress";
@@ -932,9 +933,10 @@ namespace GameLauncher
             this.PlayProgress.BackgroundColor = System.Drawing.Color.Black;
             this.PlayProgress.Border = false;
             this.PlayProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.PlayProgress.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.PlayProgress.Cursor = System.Windows.Forms.Cursors.Default;
             this.PlayProgress.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.PlayProgress.GradiantColor = System.Drawing.Color.Transparent;
             this.PlayProgress.Image = global::GameLauncher.Properties.Resources.progress_preload;
             this.PlayProgress.Location = new System.Drawing.Point(30, 430);
             this.PlayProgress.Name = "PlayProgress";
