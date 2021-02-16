@@ -42,6 +42,7 @@ using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using DiscordButton = DiscordRPC.Button;
 
 namespace GameLauncher
 {
@@ -104,6 +105,9 @@ namespace GameLauncher
         public static DiscordRpcClient discordRpcClient;
 
         readonly Dictionary<string, int> serverStatusDictionary = new Dictionary<string, int>();
+
+        //Used to Set Discord Buttons
+        public static List<DiscordButton> ButtonsList = new List<DiscordButton>();
 
         readonly String filename_pack = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameFiles.sbrwpack");
 
@@ -640,6 +644,19 @@ namespace GameLauncher
                 LargeImageText = "SBRW",
                 LargeImageKey = "nfsw"
             };
+            ButtonsList.Clear();
+            ButtonsList.Add(new DiscordButton()
+            {
+                Label = "Project Site",
+                Url = "https://soapboxrace.world"
+            });
+            ButtonsList.Add(new DiscordButton()
+            {
+                Label = "Launcher Patch Notes",
+                Url = "https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/tag/" + Theming.PrivacyRPCBuild
+            });
+            _presence.Buttons = ButtonsList.ToArray();
+
             if (discordRpcClient != null) discordRpcClient.SetPresence(_presence);
 
             BeginInvoke((MethodInvoker)delegate
@@ -1996,6 +2013,31 @@ namespace GameLauncher
                     SmallImageText = _realServername,
                     SmallImageKey = _presenceImageKey
                 };
+
+                if (!String.IsNullOrEmpty(_serverWebsiteLink) || !String.IsNullOrEmpty(_serverDiscordLink))
+                {
+                    ButtonsList.Clear();
+
+                    if (!String.IsNullOrEmpty(_serverWebsiteLink) && _serverWebsiteLink != _serverDiscordLink)
+                    {
+                        ButtonsList.Add(new DiscordButton()
+                        {
+                            Label = "Website",
+                            Url = _serverWebsiteLink
+                        });
+                    }
+
+                    if (!String.IsNullOrEmpty(_serverDiscordLink))
+                    {
+                        ButtonsList.Add(new DiscordButton()
+                        {
+                            Label = "Discord",
+                            Url = _serverDiscordLink
+                        });
+                    }
+
+                    _presence.Buttons = ButtonsList.ToArray();
+                }
 
                 if (discordRpcClient != null) discordRpcClient.SetPresence(_presence);
             }
