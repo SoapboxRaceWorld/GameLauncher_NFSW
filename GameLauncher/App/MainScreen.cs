@@ -3180,7 +3180,7 @@ namespace GameLauncher
             APIStatusDesc.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ExtractingProgress.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             /* Social Panel */
-            //ServerInfoPanel.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            ServerInfoPanel.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             HomePageLink.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             DiscordInviteLink.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             FacebookGroupLink.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
