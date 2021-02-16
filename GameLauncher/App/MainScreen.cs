@@ -1110,6 +1110,7 @@ namespace GameLauncher
                                 DiscordIcon.BackgroundImage = Theming.DiscordIcon;
                                 DiscordInviteLink.Enabled = true;
                                 _serverDiscordLink = json.DiscordUrl;
+                                DiscordGamePresence.ServerDiscrdLink = json.DiscordUrl;
                                 DiscordInviteLink.Text = "Discord Invite";
                             }
                         }
@@ -1136,6 +1137,7 @@ namespace GameLauncher
                                 HomePageIcon.BackgroundImage = Theming.HomeIcon;
                                 HomePageLink.Enabled = true;
                                 _serverWebsiteLink = json.HomePageUrl;
+                                DiscordGamePresence.ServerSiteLink = json.HomePageUrl;
                                 HomePageLink.Text = "Home Page";
                             }
                         }
