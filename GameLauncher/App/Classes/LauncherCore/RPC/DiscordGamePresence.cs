@@ -17,12 +17,6 @@ namespace GameLauncher.App.Classes.RPC
 
         public static RichPresence _presence = new RichPresence();
 
-        //Used to Set Discord Buttons
-        public static List<Button> ButtonsList = new List<Button>();
-        //Sets Links
-        public static string ServerSiteLink = String.Empty;
-        public static string ServerDiscrdLink = String.Empty;
-
         //Some checks
         private static readonly string serverName = ServerProxy.Instance.GetServerName();
         private static bool canUpdateProfileField = false;
@@ -46,27 +40,6 @@ namespace GameLauncher.App.Classes.RPC
 
         public static void HandleGameState(string uri, string serverreply = "", string POST = "", string GET = "")
         {
-            if (!String.IsNullOrEmpty(ServerSiteLink) || !String.IsNullOrEmpty(ServerDiscrdLink))
-            {
-                if (!String.IsNullOrEmpty(ServerSiteLink) && ServerSiteLink != ServerDiscrdLink)
-                {
-                    ButtonsList.Add(new Button()
-                    {
-                        Label = "Website",
-                        Url = ServerSiteLink
-                    });
-                }
-
-                if (!String.IsNullOrEmpty(ServerDiscrdLink))
-                {
-                    ButtonsList.Add(new Button()
-                    {
-                        Label = "Discord",
-                        Url = ServerDiscrdLink
-                    });
-                }
-            }
-
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');
 
@@ -91,7 +64,7 @@ namespace GameLauncher.App.Classes.RPC
             {
                 PersonaTreasure++;
 
-                _presence.Details = "Collecting gems (" + PersonaTreasure+" of "+TotalTreasure+")";
+                _presence.Details = "Collecting gems (" + PersonaTreasure + " of " + TotalTreasure + ")";
                 _presence.State = LauncherRPC;
                 _presence.Assets = new Assets
                 {
@@ -100,7 +73,7 @@ namespace GameLauncher.App.Classes.RPC
                     SmallImageText = "Treasure Hunt - Day: " + TEDay,
                     SmallImageKey = "gamemode_treasure"
                 };
-                _presence.Buttons = ButtonsList.ToArray();
+                _presence.Buttons = MainScreen.ButtonsList.ToArray();
 
                 if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
             }
@@ -180,13 +153,14 @@ namespace GameLauncher.App.Classes.RPC
             {
                 _presence.Details = "Driving " + PersonaCarName;
                 _presence.State = LauncherRPC;
-                _presence.Assets = new Assets {
+                _presence.Assets = new Assets
+                {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                     LargeImageKey = PersonaAvatarId,
                     SmallImageText = "In-Freeroam",
                     SmallImageKey = "gamemode_freeroam"
                 };
-                _presence.Buttons = ButtonsList.ToArray();
+                _presence.Buttons = MainScreen.ButtonsList.ToArray();
 
                 if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
@@ -215,7 +189,7 @@ namespace GameLauncher.App.Classes.RPC
                         SmallImageText = EventsList.GetEventName(Convert.ToInt32(EventID)),
                         SmallImageKey = EventsList.GetEventType(Convert.ToInt32(EventID))
                     };
-                    _presence.Buttons = ButtonsList.ToArray();
+                    _presence.Buttons = MainScreen.ButtonsList.ToArray();
 
                     if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
@@ -227,13 +201,14 @@ namespace GameLauncher.App.Classes.RPC
             {
                 _presence.Details = "Searching for event...";
                 _presence.State = LauncherRPC;
-                _presence.Assets = new Assets {
+                _presence.Assets = new Assets
+                {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                     LargeImageKey = PersonaAvatarId,
                     SmallImageText = "In-Freeroam",
                     SmallImageKey = "gamemode_freeroam"
                 };
-                _presence.Buttons = ButtonsList.ToArray();
+                _presence.Buttons = MainScreen.ButtonsList.ToArray();
 
                 if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
@@ -265,7 +240,7 @@ namespace GameLauncher.App.Classes.RPC
 
                 _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
                 _presence.Assets.LargeImageKey = PersonaAvatarId;
-                _presence.Buttons = ButtonsList.ToArray();
+                _presence.Buttons = MainScreen.ButtonsList.ToArray();
 
                 if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
             }
@@ -286,7 +261,7 @@ namespace GameLauncher.App.Classes.RPC
                     SmallImageText = EventsList.GetEventName(EventID),
                     SmallImageKey = EventsList.GetEventType(EventID)
                 };
-                _presence.Buttons = ButtonsList.ToArray();
+                _presence.Buttons = MainScreen.ButtonsList.ToArray();
 
                 if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
 
@@ -303,7 +278,7 @@ namespace GameLauncher.App.Classes.RPC
                     SmallImageText = EventsList.GetEventName(EventID),
                     SmallImageKey = EventsList.GetEventType(EventID)
                 };
-                _presence.Buttons = ButtonsList.ToArray();
+                _presence.Buttons = MainScreen.ButtonsList.ToArray();
 
                 AntiCheat.DisableChecks();
                 if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
@@ -321,7 +296,7 @@ namespace GameLauncher.App.Classes.RPC
                     SmallImageText = EventsList.GetEventName(EventID),
                     SmallImageKey = EventsList.GetEventType(EventID)
                 };
-                _presence.Buttons = ButtonsList.ToArray();
+                _presence.Buttons = MainScreen.ButtonsList.ToArray();
 
                 AntiCheat.event_id = EventID;
                 AntiCheat.EnableChecks();

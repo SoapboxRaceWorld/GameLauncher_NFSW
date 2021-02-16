@@ -1110,7 +1110,6 @@ namespace GameLauncher
                                 DiscordIcon.BackgroundImage = Theming.DiscordIcon;
                                 DiscordInviteLink.Enabled = true;
                                 _serverDiscordLink = json.DiscordUrl;
-                                DiscordGamePresence.ServerDiscrdLink = json.DiscordUrl;
                                 DiscordInviteLink.Text = "Discord Invite";
                             }
                         }
@@ -1137,7 +1136,6 @@ namespace GameLauncher
                                 HomePageIcon.BackgroundImage = Theming.HomeIcon;
                                 HomePageLink.Enabled = true;
                                 _serverWebsiteLink = json.HomePageUrl;
-                                DiscordGamePresence.ServerSiteLink = json.HomePageUrl;
                                 HomePageLink.Text = "Home Page";
                             }
                         }
@@ -2037,9 +2035,8 @@ namespace GameLauncher
                             Url = _serverDiscordLink
                         });
                     }
-
-                    _presence.Buttons = ButtonsList.ToArray();
                 }
+                _presence.Buttons = ButtonsList.ToArray();
 
                 if (discordRpcClient != null) discordRpcClient.SetPresence(_presence);
             }
