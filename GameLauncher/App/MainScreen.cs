@@ -79,6 +79,7 @@ namespace GameLauncher
         private string _serverFacebookLink = "";
         private string _serverDiscordLink = "";
         private string _serverTwitterLink = "";
+        private string _serverPanelLink = "";
         private string _loginWelcomeTime = "";
         private string _loginToken = "";
         private string _userId = "";
@@ -100,7 +101,7 @@ namespace GameLauncher
         int TotalModFileCount = 0;
 
         ServerInfo _serverInfo = null;
-        GetServerInformation json = new GetServerInformation();
+        public static GetServerInformation json = new GetServerInformation();
 
         public static DiscordRpcClient discordRpcClient;
 
@@ -2014,11 +2015,20 @@ namespace GameLauncher
                     SmallImageKey = _presenceImageKey
                 };
 
-                if (!String.IsNullOrEmpty(_serverWebsiteLink) || !String.IsNullOrEmpty(_serverDiscordLink))
+                _serverPanelLink = json.webPanelUrl;
+                if (!String.IsNullOrEmpty(_serverWebsiteLink) || !String.IsNullOrEmpty(_serverDiscordLink) || !String.IsNullOrEmpty(_serverPanelLink))
                 {
                     ButtonsList.Clear();
 
-                    if (!String.IsNullOrEmpty(_serverWebsiteLink) && _serverWebsiteLink != _serverDiscordLink)
+                    if (!String.IsNullOrEmpty(_serverPanelLink))
+                    {
+                        //Let's format it now, if possible
+                        ButtonsList.Add(new DiscordButton() {
+                            Label = "View Panel",
+                            Url = _serverPanelLink.Split(new string[] { "{sep}" }, StringSplitOptions.None)[0]
+                        });
+                    } 
+                    else if (!String.IsNullOrEmpty(_serverWebsiteLink) && _serverWebsiteLink != _serverDiscordLink)
                     {
                         ButtonsList.Add(new DiscordButton()
                         {

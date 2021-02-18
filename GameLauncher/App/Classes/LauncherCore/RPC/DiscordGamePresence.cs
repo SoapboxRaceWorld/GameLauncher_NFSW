@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using DiscordButton = DiscordRPC.Button;
 
 namespace GameLauncher.App.Classes.RPC
 {
@@ -42,6 +43,56 @@ namespace GameLauncher.App.Classes.RPC
         {
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');
+
+            String _serverPanelLink = MainScreen.json.webPanelUrl;
+            String _serverWebsiteLink = MainScreen.json.HomePageUrl;
+            String _serverDiscordLink = MainScreen.json.DiscordUrl;
+            if (!String.IsNullOrEmpty(_serverWebsiteLink) || !String.IsNullOrEmpty(_serverDiscordLink) || !String.IsNullOrEmpty(_serverPanelLink))
+            {
+                MainScreen.ButtonsList.Clear();
+
+                if (!String.IsNullOrEmpty(_serverPanelLink))
+                {
+                    //Let's format it now, if possible
+                    if (AntiCheat.persona_id == String.Empty || AntiCheat.persona_name == String.Empty)
+                    {
+                        MainScreen.ButtonsList.Add(new DiscordButton()
+                        {
+                            Label = "View Panel",
+                            Url = _serverPanelLink.Split(new string[] { "{sep}" }, StringSplitOptions.None)[0]
+                        });
+                    }
+                    else
+                    {
+                        _serverPanelLink = _serverPanelLink.Replace("{personaid}", AntiCheat.persona_id);
+                        _serverPanelLink = _serverPanelLink.Replace("{personaname}", AntiCheat.persona_name);
+                        _serverPanelLink = _serverPanelLink.Replace("{sep}", String.Empty);
+
+                        MainScreen.ButtonsList.Add(new DiscordButton()
+                        {
+                            Label = "Check " + AntiCheat.persona_name + " on Panel",
+                            Url = _serverPanelLink
+                        });
+                    }
+                }
+                else if (!String.IsNullOrEmpty(_serverWebsiteLink) && _serverWebsiteLink != _serverDiscordLink)
+                {
+                    MainScreen.ButtonsList.Add(new DiscordButton()
+                    {
+                        Label = "Website",
+                        Url = _serverWebsiteLink
+                    });
+                }
+
+                if (!String.IsNullOrEmpty(_serverDiscordLink))
+                {
+                    MainScreen.ButtonsList.Add(new DiscordButton()
+                    {
+                        Label = "Discord",
+                        Url = _serverDiscordLink
+                    });
+                }
+            }
 
             if (uri == "/events/gettreasurehunteventsession")
             {

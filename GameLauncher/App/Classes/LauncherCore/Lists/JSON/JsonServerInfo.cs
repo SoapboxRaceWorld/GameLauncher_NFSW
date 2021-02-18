@@ -31,7 +31,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists.JSON
         public bool RWACallow { get; set; }
         public string ModernAuthSupport { get; set; }
         public string WebSignupUrl { get; set; }
-        public string PasswordResetUrl { get; set; }
+        public string webPanelUrl { get; set; }
         public string IconUrl { get; set; }
         public string WebRecoveryUrl { get; set; }
         public string FreeroamMapSocket { get; set; }
