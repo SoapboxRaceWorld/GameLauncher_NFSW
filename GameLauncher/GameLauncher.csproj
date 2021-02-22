@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -238,7 +238,7 @@
     <Compile Include="App\Classes\LauncherCore\Lists\ServerListUpdater.cs" />
     <Compile Include="App\Classes\LauncherCore\Proxy\ServerProxy.cs" />
     <Compile Include="App\Classes\LauncherCore\Proxy\Singleton.cs" />
-    <Compile Include="App\Classes\SystemPlatform\Windows\Firewall.cs" />
+    <Compile Include="App\Classes\SystemPlatform\Windows\FirewallHelper.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\WindowsProductVersion.cs" />
     <Compile Include="App\Classes\SystemPlatform\TaskBar.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\UriScheme.cs" />
@@ -421,6 +421,15 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <COMReference Include="NetFwTypeLib">
+      <Guid>{58FBCF7C-E7A9-467C-80B3-FC65E8FCCA08}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
     <COMReference Include="stdole">
       <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
       <VersionMajor>2</VersionMajor>
