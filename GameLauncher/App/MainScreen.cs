@@ -2976,19 +2976,22 @@ namespace GameLauncher
                 //Remove current Firewall for the Game Files 
                 string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
 
-                if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.RuleExist("SBRW - Game") == false)
+                if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.FirewallStatus() == true)
                 {
-                    bool removeFirewallRule = false;
-                    bool firstTimeRun = true;
+                    if (FirewallHelper.RuleExist("SBRW - Game") == false)
+                    {
+                        bool removeFirewallRule = false;
+                        bool firstTimeRun = true;
 
-                    string nameOfGame = "SBRW - Game";
-                    string localOfGame = CurrentGameFilesExePath;
+                        string nameOfGame = "SBRW - Game";
+                        string localOfGame = CurrentGameFilesExePath;
 
-                    string groupKeyGame = "Need for Speed: World";
-                    string descriptionGame = groupKeyGame;
+                        string groupKeyGame = "Need for Speed: World";
+                        string descriptionGame = groupKeyGame;
 
-                    //Inbound & Outbound
-                    FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+                        //Inbound & Outbound
+                        FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+                    }
                 }
                 else
                 {
@@ -2996,9 +2999,20 @@ namespace GameLauncher
                     {
                         Log.Core("WINDOWS FIREWALL: Not Supported On Linux -> SBRW - Game");
                     }
+                    else if (FirewallManager.IsServiceRunning == true)
+                    {
+                        if (FirewallHelper.FirewallStatus() == false)
+                        {
+                            Log.Warning("WINDOWS FIREWALL: Turned Off [Not by Launcher] -> SBRW - Game");
+                        }
+                        else
+                        {
+                            Log.Core("WINDOWS FIREWALL: Already Exlcuded SBRW - Game {Both}");
+                        }
+                    }
                     else
                     {
-                        Log.Core("WINDOWS FIREWALL: Already Exlcuded SBRW - Game {Both}");
+                        Log.Warning("WINDOWS FIREWALL: Service is Stopped [Not by Launcher] -> SBRW - Game");
                     }
                 }
 

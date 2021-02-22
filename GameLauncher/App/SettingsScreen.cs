@@ -457,19 +457,22 @@ namespace GameLauncher.App
                     //Remove current Firewall for the Game Files 
                     string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
 
-                    if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.RuleExist("SBRW - Game") == true)
+                    if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.FirewallStatus() == true)
                     {
-                        bool removeFirewallRule = true;
-                        bool firstTimeRun = true;
+                        if (FirewallHelper.RuleExist("SBRW - Game") == true)
+                        {
+                            bool removeFirewallRule = true;
+                            bool firstTimeRun = true;
 
-                        string nameOfGame = "SBRW - Game";
-                        string localOfGame = CurrentGameFilesExePath;
+                            string nameOfGame = "SBRW - Game";
+                            string localOfGame = CurrentGameFilesExePath;
 
-                        string groupKeyGame = "Need for Speed: World";
-                        string descriptionGame = groupKeyGame;
+                            string groupKeyGame = "Need for Speed: World";
+                            string descriptionGame = groupKeyGame;
 
-                        //Inbound & Outbound
-                        FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+                            //Inbound & Outbound
+                            FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+                        }
                     }
                 }
 
@@ -794,19 +797,22 @@ namespace GameLauncher.App
             //Remove current Firewall for the Game Files 
             string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
 
-            if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.RuleExist("SBRW - Game") == true)
+            if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.FirewallStatus() == true)
             {
-                bool removeFirewallRule = true;
-                bool firstTimeRun = true;
+                if (FirewallHelper.RuleExist("SBRW - Game") == true)
+                {
+                    bool removeFirewallRule = true;
+                    bool firstTimeRun = true;
 
-                string nameOfGame = "SBRW - Game";
-                string localOfGame = CurrentGameFilesExePath;
+                    string nameOfGame = "SBRW - Game";
+                    string localOfGame = CurrentGameFilesExePath;
 
-                string groupKeyGame = "Need for Speed: World";
-                string descriptionGame = groupKeyGame;
+                    string groupKeyGame = "Need for Speed: World";
+                    string descriptionGame = groupKeyGame;
 
-                //Inbound & Outbound
-                FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+                    //Inbound & Outbound
+                    FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+                }
             }
 
             FileSettingsSave.GameInstallation = _newGameFilesPath;
