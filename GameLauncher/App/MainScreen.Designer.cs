@@ -179,7 +179,7 @@ namespace GameLauncher
             this.PlayProgressText.BackColor = System.Drawing.Color.Transparent;
             this.PlayProgressText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayProgressText.ForeColor = System.Drawing.Color.White;
-            this.PlayProgressText.Location = new System.Drawing.Point(42, 405);
+            this.PlayProgressText.Location = new System.Drawing.Point(42, 403);
             this.PlayProgressText.Name = "PlayProgressText";
             this.PlayProgressText.Size = new System.Drawing.Size(510, 14);
             this.PlayProgressText.TabIndex = 10;
