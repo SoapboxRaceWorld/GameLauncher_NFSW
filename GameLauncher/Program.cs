@@ -411,23 +411,18 @@ namespace GameLauncher
                 switch (FunctionStatus.CheckFolder(Directory.GetCurrentDirectory()))
                 {
                     case FolderType.IsTempFolder:
-                        MessageBox.Show(null, "Please, extract me and my DLL files before executing...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                        Environment.Exit(0);
-                        break;
                     case FolderType.IsUsersFolders:
-                        MessageBox.Show(null, "Please, choose a different directory for the game launcher.\n\nSpecial Folders such as:" +
-                            "\n\nDownloads, Documents, Desktop, Videos, Music, OneDrive, or Any Type of User Folders" +
-                            "\nare NOT advised or allowed", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                        Environment.Exit(0);
-                        break;
                     case FolderType.IsProgramFilesFolder:
-                        MessageBox.Show(null, "Please, choose a different directory for the game launcher." +
-                            "\n\nSpecial Folders such as:\n\nProgram Files or Program Files (x86)\nare NOT advised or allowed", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                        Environment.Exit(0);
-                        break;
                     case FolderType.IsWindowsFolder:
-                        MessageBox.Show(null, "Please, choose a different directory for the game launcher." +
-                            "\n\nSpecial Folder such as:\n\nWindows\nare NOT advised or allowed", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        String constructMsg = String.Empty;
+
+                        constructMsg += "Using this directory for launcher is not allowed. Please move launcher files to a folder/directory that is NOT:\n\n";
+                        constructMsg += "• C:\\Program Files\n";
+                        constructMsg += "• C:\\Program Files (x86)\n";
+                        constructMsg += "• C:\\Users\n";
+                        constructMsg += "• C:\\Windows\n\n";
+                        constructMsg += "Your launcher dir: " + Directory.GetCurrentDirectory();
+                        MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         Environment.Exit(0);
                         break;
                 }
