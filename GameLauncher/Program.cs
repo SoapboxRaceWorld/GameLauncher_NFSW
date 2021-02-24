@@ -421,8 +421,7 @@ namespace GameLauncher
                         constructMsg += "• C:\\Program Files (x86)\n";
                         constructMsg += "• C:\\Users\n";
                         constructMsg += "• C:\\Windows\n\n";
-                        constructMsg += "Your launcher dir: " + Directory.GetCurrentDirectory();
-                        MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Environment.Exit(0);
                         break;
                 }

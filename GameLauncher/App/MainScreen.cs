@@ -326,7 +326,14 @@ namespace GameLauncher
                         Environment.Exit(Environment.ExitCode);
                     }
 
-                    if (fbd.FileName == AppDomain.CurrentDomain.BaseDirectory)
+                    if(fbd.FileName.Length == 3) 
+                    {
+                        Log.Warning("LAUNCHER: Installing NFSW in root of the harddisk is not allowed.");
+                        MessageBox.Show(null, string.Format("Installing NFSW in root of the harddisk is not allowed. Instead, we will install it on {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
+                        FileSettingsSave.SaveSettings();
+                    } 
+                    else if (fbd.FileName == AppDomain.CurrentDomain.BaseDirectory)
                     {
                         Directory.CreateDirectory("Game Files");
                         Log.Warning("LAUNCHER: Installing NFSW in same directory where the launcher resides is disadvised.");
