@@ -43,6 +43,7 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using DiscordButton = DiscordRPC.Button;
+using GameLauncher.App.Classes.LauncherCore.Client.Game;
 
 namespace GameLauncher
 {
@@ -70,7 +71,7 @@ namespace GameLauncher
 
         private int _lastSelectedServerId;
         private int _nfswPid;
-        private Thread _nfswstarted;
+        public static Thread NFSWStarted;
 
         private DateTime _downloadStartTime;
         private readonly Downloader _downloader;
@@ -1965,7 +1966,7 @@ namespace GameLauncher
                 _disableProxy = false;
             }
 
-            _nfswstarted = new Thread(() =>
+            NFSWStarted = new Thread(() =>
             {
                 if (_disableProxy == true)
                 {
@@ -1986,7 +1987,8 @@ namespace GameLauncher
                         }
                     }
 
-                    LaunchGame(userId, loginToken, _serverIp, this);
+                    Launch.Game(_realServername, _serverInfo.Id.ToUpper(), _serverIp, userId, loginToken, json.SecondsToShutDown, this);
+                    //LaunchGame(userId, loginToken, _serverIp, this);
                 }
                 else
                 {
@@ -1995,12 +1997,13 @@ namespace GameLauncher
                         discordRpcClient.Dispose();
                         discordRpcClient = null;
                     }
-                    LaunchGame(userId, loginToken, "http://127.0.0.1:" + ServerProxy.ProxyPort + "/nfsw/Engine.svc", this);
+                    Launch.Game(_realServername, _serverInfo.Id.ToUpper(), "http://127.0.0.1:" + ServerProxy.ProxyPort + "/nfsw/Engine.svc", userId, loginToken, json.SecondsToShutDown, this);
+                    //LaunchGame(userId, loginToken, "http://127.0.0.1:" + ServerProxy.ProxyPort + "/nfsw/Engine.svc", this);
                 }
             })
             { IsBackground = true };
 
-            _nfswstarted.Start();
+            NFSWStarted.Start();
 
             if (_disableDiscordRPC == false)
             {
@@ -2228,7 +2231,7 @@ namespace GameLauncher
                                 catch { /* ignored */ }
                             }
 
-                            _nfswstarted.Abort();
+                            NFSWStarted.Abort();
                             DialogResult restartApp = MessageBox.Show(null, errorMsg + "\nWould you like to restart the launcher?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                             if (restartApp == DialogResult.Yes)
                             {
@@ -2589,11 +2592,13 @@ namespace GameLauncher
                 }
                 else
                 {
+                    CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                     MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
+                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                 MessageBox.Show(null, ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
