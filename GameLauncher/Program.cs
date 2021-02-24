@@ -30,7 +30,12 @@ namespace GameLauncher
 {
     internal static class Program
     {
+        /* Hardcoded Default Version for Updater Version  */
         private static string LatestUpdaterBuildVersion = "1.0.0.4";
+
+        /* Global Thread for Splash Screen */
+        private static Thread _SplashScreen;
+        private static bool IsSplashScreenLive = false;
 
         internal class Arguments
         {
@@ -185,8 +190,25 @@ namespace GameLauncher
             }
         }
 
+        private static void SplashScreen()
+        {
+            if (IsSplashScreenLive == false)
+            {
+                Application.Run(new SplashScreen());
+            }
+
+            IsSplashScreenLive = true;
+        }
+
         private static void DoRunChecks(Arguments args)
         {
+            /* Splash Screen */
+            if (!Debugger.IsAttached && !DetectLinux.LinuxDetected())
+            {
+                _SplashScreen = new Thread(new ThreadStart(SplashScreen));
+                _SplashScreen.Start();
+            }
+
             if (!DetectLinux.LinuxDetected())
             {
                 //Check if User has .NETFramework 4.6.2 or later Installed
@@ -263,6 +285,13 @@ namespace GameLauncher
                         {
                             Process.Start("https://dotnet.microsoft.com/download/dotnet-framework");
                         }
+
+                        /* Close Splash Screen (Just in Case) */
+                        if (IsSplashScreenLive == true)
+                        {
+                            _SplashScreen.Abort();
+                        }
+
                         Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                     }
                 }
@@ -605,6 +634,12 @@ namespace GameLauncher
 
                 if (restartAppNoApis == DialogResult.Yes)
                 {
+                    /* Close Splash Screen (Just in Case) */
+                    if (IsSplashScreenLive == true)
+                    {
+                        _SplashScreen.Abort();
+                    }
+
                     Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                 }
             }
@@ -688,6 +723,11 @@ namespace GameLauncher
             Log.Info("PROXY: Starting Proxy");
             ServerProxy.Instance.Start();
 
+            /* Close Splash Screen */
+            if (IsSplashScreenLive == true)
+            {
+                _SplashScreen.Abort();
+            }
 
             Log.Visuals("CORE: Starting MainScreen");
             Application.Run(new MainScreen());

@@ -228,8 +228,6 @@ namespace GameLauncher
             _disableDiscordRPC = (FileSettingsSave.RPC == "1");
             Log.Debug("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + _disableProxy);
 
-            FunctionStatus.CenterScreen(this);
-
             Log.Visuals("CORE: Disabling MaximizeBox");
             MaximizeBox = false;
             Log.Visuals("CORE: Setting Styles");
