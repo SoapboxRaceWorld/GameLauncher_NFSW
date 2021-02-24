@@ -8,7 +8,6 @@ using System.Xml;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using DiscordButton = DiscordRPC.Button;
-using GameLauncher.App.Classes.Logger;
 
 namespace GameLauncher.App.Classes.RPC
 {
@@ -173,9 +172,8 @@ namespace GameLauncher.App.Classes.RPC
                         PersonaIds.Add(node.SelectSingleNode("PersonaId").InnerText);
                     }
                 }
-                catch (Exception error)
+                catch (Exception)
                 {
-                    Log.Error("DISCORD RPC: " + error.Message);
                 }
             }
 

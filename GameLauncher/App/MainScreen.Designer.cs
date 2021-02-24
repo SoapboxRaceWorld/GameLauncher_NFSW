@@ -1034,7 +1034,7 @@ namespace GameLauncher
         private System.Windows.Forms.ComboBox ServerPick;
         private System.Windows.Forms.Button AddServer;
         private System.Windows.Forms.PictureBox VerticalBanner;
-        private System.Windows.Forms.Label PlayProgressText;
+        internal System.Windows.Forms.Label PlayProgressText;
         private GameLauncherReborn.ProgressBarEx ExtractingProgress;
         private GameLauncherReborn.ProgressBarEx PlayProgress;
         private System.Windows.Forms.PictureBox LauncherIconStatus;

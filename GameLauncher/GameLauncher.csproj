@@ -158,7 +158,6 @@
     <Compile Include="App\Classes\LauncherCore\Client\Auth\ClassicAuth.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\ModernAuth.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\Tokens.cs" />
-    <Compile Include="App\Classes\LauncherCore\Client\Game\Launch.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Web\WebRequest.cs">
       <SubType>Component</SubType>
     </Compile>

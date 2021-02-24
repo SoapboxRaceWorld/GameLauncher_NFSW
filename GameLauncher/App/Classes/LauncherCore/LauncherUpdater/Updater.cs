@@ -3,6 +3,7 @@ using System.Net;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using GameLauncherReborn;
 using Newtonsoft.Json;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
