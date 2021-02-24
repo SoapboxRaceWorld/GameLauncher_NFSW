@@ -158,6 +158,9 @@
     <Compile Include="App\Classes\LauncherCore\Client\Auth\ClassicAuth.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\ModernAuth.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\Tokens.cs" />
+    <Compile Include="App\Classes\LauncherCore\Client\Web\WebRequest.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileAccountSave.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileSettingsSave.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\EnumTypes.cs" />
@@ -242,9 +245,6 @@
     <Compile Include="App\Classes\SystemPlatform\Windows\WindowsProductVersion.cs" />
     <Compile Include="App\Classes\SystemPlatform\TaskBar.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\UriScheme.cs" />
-    <Compile Include="App\Classes\LauncherCore\Client\WebRequest.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="App\DebugScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -293,9 +293,6 @@
     <EmbeddedResource Include="App\AddServer.resx">
       <DependentUpon>AddServer.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="App\Classes\LauncherCore\Client\WebRequest.resx">
-      <DependentUpon>WebRequest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\DebugScreen.resx">
       <DependentUpon>DebugScreen.cs</DependentUpon>

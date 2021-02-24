@@ -181,10 +181,6 @@ namespace GameLauncher
 
             discordRpcClient.Initialize();
 
-            Log.Debug("CORE: Setting SSL Protocol");
-            ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-
             if (DetectLinux.LinuxDetected())
             {
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };

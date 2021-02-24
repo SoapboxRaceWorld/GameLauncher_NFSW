@@ -49,10 +49,23 @@ namespace GameLauncher
             Parser.Default.ParseArguments<Arguments>(args).WithParsed(Main2);
         }
 
+        private static void NetCodeDefaults()
+        {
+            File.Delete("communication.log");
+            File.Delete("launcher.log");
+
+            Log.StartLogging();
+
+            Log.Debug("CORE: Setting SSL Protocol");
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+        }
+
         private static void Main2(Arguments args)
         {
             if (Debugger.IsAttached && !NFSW.IsNFSWRunning())
             {
+                NetCodeDefaults();
                 DoRunChecks(args);
             } 
             else
@@ -62,6 +75,8 @@ namespace GameLauncher
                     MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                 }
+
+                NetCodeDefaults();
 
                 //INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
                 //Updated RedTheKitsune Code so it downloads the file if its missing. It also restarts the launcher if the user click on yes on Prompt. - DavidCarbon
@@ -296,11 +311,6 @@ namespace GameLauncher
                     }
                 }
             }
-
-            File.Delete("communication.log");
-            File.Delete("launcher.log");
-
-            Log.StartLogging();
 
             FileSettingsSave.NullSafeSettings();
             FileAccountSave.NullSafeAccount();
@@ -610,8 +620,6 @@ namespace GameLauncher
                 Properties.Settings.Default.Save();
                 Thread.Sleep(3000);
             }
-
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             Theming.CheckIfThemeExists();
 
