@@ -2199,7 +2199,6 @@ namespace GameLauncher
                         x.BeginInvoke(new Action(() =>
                         {
                             x.WindowState = FormWindowState.Normal;
-                            x.Opacity = 1;
                             x.ShowInTaskbar = true;
                             String errorMsg = "Game Crash with exitcode: " + exitCode.ToString() + " (0x" + exitCode.ToString("X") + ")";
                             if (exitCode == -1073741819) errorMsg = "Game Crash: Access Violation (0x" + exitCode.ToString("X") + ")";

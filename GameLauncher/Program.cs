@@ -54,12 +54,6 @@ namespace GameLauncher
 
         private static void NetCodeDefaults()
         {
-            File.Delete("communication.log");
-            File.Delete("launcher.log");
-
-            Log.StartLogging();
-
-            Log.Debug("CORE: Setting SSL Protocol");
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
@@ -87,7 +81,6 @@ namespace GameLauncher
                 {
                     try
                     {
-                        Log.Warning("CORE: Starting LZMA downloader");
                         using (WebClient wc = new WebClient())
                         {
                             wc.DownloadFile(new Uri(URLs.fileserver + "/LZMA.dll"), "LZMA.dll");
@@ -105,9 +98,9 @@ namespace GameLauncher
 
                         Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        Log.Error("CORE: Failed to download LZMA. " + ex.Message);
+
                     }
                 }
 
@@ -203,7 +196,6 @@ namespace GameLauncher
                 finally
                 {
                     mutex.Close();
-                    mutex = null;
                 }
             }
         }
@@ -226,6 +218,10 @@ namespace GameLauncher
                 _SplashScreen = new Thread(new ThreadStart(SplashScreen));
                 _SplashScreen.Start();
             }
+
+            File.Delete("communication.log");
+            File.Delete("launcher.log");
+            Log.StartLogging();
 
             if (!DetectLinux.LinuxDetected())
             {
