@@ -39,15 +39,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public void Write(string Key, string Value)
         {
-            UTF8Encoding utf8 = new UTF8Encoding(false);
-            try
-            {
+            if(new FileInfo(Path).IsReadOnly != true) 
+            { 
+                UTF8Encoding utf8 = new UTF8Encoding(false);
                 Data[EXE][Key] = Value;
                 Parser.WriteFile(Path, Data, utf8);
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(String.Format("Failed to write \"{0}\" to {2}\n{3}", Key, Value, Path, ex.Message));
             }
         }
 
