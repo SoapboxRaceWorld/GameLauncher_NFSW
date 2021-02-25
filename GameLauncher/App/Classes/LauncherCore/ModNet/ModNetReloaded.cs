@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Collections.Generic;
 
-namespace GameLauncher.App.Classes.ModNetReloaded
+namespace GameLauncher.App.Classes.LauncherCore.ModNet
 {
     public class MainJson
     {
-        public string BasePath { get; set; }
-        public string ServerID { get; set; }
-        public List<object> Features { get; set; }
+        public string basePath { get; set; }
+        public string serverID { get; set; }
+        public List<object> features { get; set; }
     }
 
     public class IndexJsonEntry
@@ -19,8 +19,8 @@ namespace GameLauncher.App.Classes.ModNetReloaded
 
     public class IndexJson
     {
-        public DateTime Built_At { get; set; }
-        public List<IndexJsonEntry> Entries { get; set; }
+        public DateTime built_at { get; set; }
+        public List<IndexJsonEntry> entries { get; set; }
     }
 
     class ModNetReloaded

@@ -1,13 +1,15 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Windows.Forms;
-using GameLauncher.App.Classes;
-using GameLauncher.HashPassword;
 using GameLauncher.App.Classes.Logger;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
+using GameLauncher.App.Classes.SystemPlatform.Components;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.Hash;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
 
-namespace GameLauncherReborn
+namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 {
     public class WebClientWithTimeout : WebClient
     {
@@ -67,10 +69,10 @@ namespace GameLauncherReborn
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
             request.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            request.Headers["X-HWID"] = Security.FingerPrint.Value();
-            request.Headers["X-UserAgent"] = "GameLauncherReborn "+Application.ProductVersion+ " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+            request.Headers["X-HWID"] = HardwareID.FingerPrint.Value();
+            request.Headers["X-UserAgent"] = "GameLauncherReborn " + Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = Value();
-            request.Headers["X-DiscordID"] = Self.discordid;
+            request.Headers["X-DiscordID"] = FunctionStatus.DiscordUserID;
 
             if (addrange != 0)
             {

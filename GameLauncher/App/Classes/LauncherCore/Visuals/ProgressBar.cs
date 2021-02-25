@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 //If you are using this code to build a Class Library Project instead of just adding it to a Form Project then you
 //will need to add a reference to System.Drawing and System.Windows.Forms for the next three Imports. You can do
@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace GameLauncherReborn
+namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
     [ToolboxBitmap("PBEX.bmp")]
     public class ProgressBarEx : Control

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
@@ -6,7 +6,7 @@ using System.Net.Cache;
 using System.Threading;
 using System.Xml;
 
-namespace GameLauncher
+namespace GameLauncher.App.Classes.LauncherCore.Downloader
 {
     internal class DownloadManager
     {

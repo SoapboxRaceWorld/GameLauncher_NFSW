@@ -1,6 +1,6 @@
-﻿using System.Windows.Forms;
+using System.Windows.Forms;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
     public static class Prompt
     {

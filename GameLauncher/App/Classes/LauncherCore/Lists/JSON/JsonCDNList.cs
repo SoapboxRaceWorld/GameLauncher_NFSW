@@ -1,14 +1,10 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.LauncherCore.Lists.JSON
 {
-    class CDN {
-        public static string CDNUrl = String.Empty;
-        public static string TrackHigh = String.Empty;
-    }
-
-    public class CDNObject 
+    /* http://localhost/cdn_list.json */
+    public class CDNList
     {
         [JsonProperty("category")]
         public string Category { get; set; }

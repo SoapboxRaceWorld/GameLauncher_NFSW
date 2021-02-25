@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using Newtonsoft.Json;
 using System;
 
-namespace GameLauncher.App.Classes.RPC
+namespace GameLauncher.App.Classes.LauncherCore.RPC
 {
     class CarsList
     {

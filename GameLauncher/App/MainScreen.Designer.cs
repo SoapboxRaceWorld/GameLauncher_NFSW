@@ -1,4 +1,4 @@
-﻿namespace GameLauncher
+namespace GameLauncher
 {
     sealed partial class MainScreen
     {
@@ -89,8 +89,8 @@
             this.MainPasswordBorder = new System.Windows.Forms.PictureBox();
             this.ProgressBarOutline = new System.Windows.Forms.PictureBox();
             this.VerticalBanner = new System.Windows.Forms.PictureBox();
-            this.ExtractingProgress = new GameLauncherReborn.ProgressBarEx();
-            this.PlayProgress = new GameLauncherReborn.ProgressBarEx();
+            this.ExtractingProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
+            this.PlayProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
             this.ShowPlayPanel.SuspendLayout();
             this.RegisterPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterEmailBorder)).BeginInit();
@@ -179,7 +179,7 @@
             this.PlayProgressText.BackColor = System.Drawing.Color.Transparent;
             this.PlayProgressText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayProgressText.ForeColor = System.Drawing.Color.White;
-            this.PlayProgressText.Location = new System.Drawing.Point(42, 405);
+            this.PlayProgressText.Location = new System.Drawing.Point(42, 403);
             this.PlayProgressText.Name = "PlayProgressText";
             this.PlayProgressText.Size = new System.Drawing.Size(510, 14);
             this.PlayProgressText.TabIndex = 10;
@@ -193,7 +193,7 @@
             this.LauncherStatusText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LauncherStatusText.Location = new System.Drawing.Point(53, 453);
             this.LauncherStatusText.Name = "LauncherStatusText";
-            this.LauncherStatusText.Size = new System.Drawing.Size(130, 30);
+            this.LauncherStatusText.Size = new System.Drawing.Size(152, 30);
             this.LauncherStatusText.TabIndex = 4;
             this.LauncherStatusText.Text = "Launcher\n - Checking";
             this.LauncherStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -726,13 +726,13 @@
             // 
             this.TwitterAccountLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.TwitterAccountLink.BackColor = System.Drawing.Color.Transparent;
-            this.TwitterAccountLink.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TwitterAccountLink.ForeColor = System.Drawing.Color.Transparent;
+            this.TwitterAccountLink.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TwitterAccountLink.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.TwitterAccountLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.TwitterAccountLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.TwitterAccountLink.Location = new System.Drawing.Point(437, 12);
             this.TwitterAccountLink.Name = "TwitterAccountLink";
-            this.TwitterAccountLink.Size = new System.Drawing.Size(88, 13);
+            this.TwitterAccountLink.Size = new System.Drawing.Size(88, 14);
             this.TwitterAccountLink.TabIndex = 174;
             this.TwitterAccountLink.TabStop = true;
             this.TwitterAccountLink.Text = "Twitter Feed";
@@ -756,12 +756,12 @@
             this.FacebookGroupLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.FacebookGroupLink.BackColor = System.Drawing.Color.Transparent;
             this.FacebookGroupLink.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FacebookGroupLink.ForeColor = System.Drawing.Color.Transparent;
+            this.FacebookGroupLink.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.FacebookGroupLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.FacebookGroupLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.FacebookGroupLink.Location = new System.Drawing.Point(292, 12);
             this.FacebookGroupLink.Name = "FacebookGroupLink";
-            this.FacebookGroupLink.Size = new System.Drawing.Size(110, 13);
+            this.FacebookGroupLink.Size = new System.Drawing.Size(110, 14);
             this.FacebookGroupLink.TabIndex = 173;
             this.FacebookGroupLink.TabStop = true;
             this.FacebookGroupLink.Text = "Facebook Group";
@@ -773,12 +773,12 @@
             this.HomePageLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.HomePageLink.BackColor = System.Drawing.Color.Transparent;
             this.HomePageLink.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.HomePageLink.ForeColor = System.Drawing.Color.Transparent;
+            this.HomePageLink.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.HomePageLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.HomePageLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.HomePageLink.Location = new System.Drawing.Point(36, 12);
             this.HomePageLink.Name = "HomePageLink";
-            this.HomePageLink.Size = new System.Drawing.Size(79, 13);
+            this.HomePageLink.Size = new System.Drawing.Size(79, 14);
             this.HomePageLink.TabIndex = 171;
             this.HomePageLink.TabStop = true;
             this.HomePageLink.Text = "Home Page";
@@ -790,12 +790,12 @@
             this.DiscordInviteLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.DiscordInviteLink.BackColor = System.Drawing.Color.Transparent;
             this.DiscordInviteLink.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DiscordInviteLink.ForeColor = System.Drawing.Color.Transparent;
+            this.DiscordInviteLink.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.DiscordInviteLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.DiscordInviteLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.DiscordInviteLink.Location = new System.Drawing.Point(154, 12);
             this.DiscordInviteLink.Name = "DiscordInviteLink";
-            this.DiscordInviteLink.Size = new System.Drawing.Size(95, 13);
+            this.DiscordInviteLink.Size = new System.Drawing.Size(95, 14);
             this.DiscordInviteLink.TabIndex = 172;
             this.DiscordInviteLink.TabStop = true;
             this.DiscordInviteLink.Text = "Discord Invite";
@@ -918,6 +918,7 @@
             this.ExtractingProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.ExtractingProgress.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ExtractingProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.ExtractingProgress.GradiantColor = System.Drawing.Color.Transparent;
             this.ExtractingProgress.Image = global::GameLauncher.Properties.Resources.progress_success;
             this.ExtractingProgress.Location = new System.Drawing.Point(30, 430);
             this.ExtractingProgress.Name = "ExtractingProgress";
@@ -932,9 +933,10 @@
             this.PlayProgress.BackgroundColor = System.Drawing.Color.Black;
             this.PlayProgress.Border = false;
             this.PlayProgress.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.PlayProgress.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.PlayProgress.Cursor = System.Windows.Forms.Cursors.Default;
             this.PlayProgress.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayProgress.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.PlayProgress.GradiantColor = System.Drawing.Color.Transparent;
             this.PlayProgress.Image = global::GameLauncher.Properties.Resources.progress_preload;
             this.PlayProgress.Location = new System.Drawing.Point(30, 430);
             this.PlayProgress.Name = "PlayProgress";
@@ -1033,8 +1035,8 @@
         private System.Windows.Forms.Button AddServer;
         private System.Windows.Forms.PictureBox VerticalBanner;
         internal System.Windows.Forms.Label PlayProgressText;
-        private GameLauncherReborn.ProgressBarEx ExtractingProgress;
-        private GameLauncherReborn.ProgressBarEx PlayProgress;
+        private GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx ExtractingProgress;
+        private GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx PlayProgress;
         private System.Windows.Forms.PictureBox LauncherIconStatus;
         private System.Windows.Forms.Label LauncherStatusText;
         private System.Windows.Forms.Label LauncherStatusDesc;

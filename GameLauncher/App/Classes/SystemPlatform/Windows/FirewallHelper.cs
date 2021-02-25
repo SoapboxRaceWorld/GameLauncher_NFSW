@@ -1,4 +1,6 @@
-﻿using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
+using NetFwTypeLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +16,19 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             if (FirewallManager.IsServiceRunning == true && !DetectLinux.LinuxDetected())
             {
-                CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfApp, localOfApp, groupKey, description, FirewallDirection.Inbound, protocol, FirewallDirection.Inbound.ToString());
-                CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfApp, localOfApp, groupKey, description, FirewallDirection.Outbound, protocol, FirewallDirection.Outbound.ToString());
+                if (FirewallStatus() == true)
+                {
+                    CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfApp, localOfApp, groupKey, description, FirewallDirection.Inbound, protocol, FirewallDirection.Inbound.ToString());
+                    CheckIfRuleExists(removeFirewallRule, firstTimeRun, nameOfApp, localOfApp, groupKey, description, FirewallDirection.Outbound, protocol, FirewallDirection.Outbound.ToString());
+                }
+                else
+                {
+                    Log.Warning("WINDOWS FIREWALL: Turned Off [Not by Launcher]");
+                }
             }
             else if (FirewallManager.IsServiceRunning == false && !DetectLinux.LinuxDetected())
             {
-                Log.Error("WINDOWS FIREWALL: Windows Firewall is Disabled");
+                Log.Warning("WINDOWS FIREWALL: Service is Stopped [Not by Launcher]");
             }
             else if (DetectLinux.LinuxDetected())
             {
@@ -69,37 +78,31 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
         public static void AddApplicationRule(string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote) 
         {
-            if (FirewallManager.IsServiceRunning == true)
+            try
             {
-                try
+                Log.Info("WINDOWS FIREWALL: Supported Firewall Found");
+                var rule = new FirewallWASRuleWin8(localOfApp, FirewallAction.Allow, direction, FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public)
                 {
-                    Log.Info("WINDOWS FIREWALL: Supported Firewall Found");
-                    var rule = new FirewallWASRuleWin8(localOfApp, FirewallAction.Allow, direction, FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public)
-                    {
-                        ApplicationName = localOfApp,
-                        Name = nameOfApp,
-                        Grouping = groupKey,
-                        Description = description,
-                        NetworkInterfaceTypes = NetworkInterfaceTypes.Lan | NetworkInterfaceTypes.RemoteAccess |
-                                         NetworkInterfaceTypes.Wireless,
-                        Protocol = protocol
-                    };
+                    ApplicationName = localOfApp,
+                    Name = nameOfApp,
+                    Grouping = groupKey,
+                    Description = description,
+                    NetworkInterfaceTypes = NetworkInterfaceTypes.Lan | NetworkInterfaceTypes.RemoteAccess |
+                                     NetworkInterfaceTypes.Wireless,
+                    Protocol = protocol
+                };
 
-                    if (direction == FirewallDirection.Inbound)
-                    {
-                        rule.EdgeTraversalOptions = EdgeTraversalAction.Allow;
-                    }
-
-                    FirewallManager.Instance.Rules.Add(rule);
-                    Log.Info("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
-                }
-                catch (FirewallWASNotSupportedException Error)
+                if (direction == FirewallDirection.Inbound)
                 {
-                    Log.Error("WINDOWS FIREWALL: " + Error.Message);
+                    rule.EdgeTraversalOptions = EdgeTraversalAction.Allow;
                 }
+
+                FirewallManager.Instance.Rules.Add(rule);
+                Log.Info("WINDOWS FIREWALL: Finished Adding " + nameOfApp + " to Firewall! {" + firewallLogNote + "}");
             }
-            else
+            catch (FirewallWASNotSupportedException Error)
             {
+                Log.Error("WINDOWS FIREWALL: " + Error.Message);
                 AddDefaultApplicationRule(nameOfApp, localOfApp, direction, protocol, firewallLogNote);
             }
         }
@@ -160,6 +163,33 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     StringComparison.OrdinalIgnoreCase)).ToArray();
 
             return null;
+        }
+
+        /* Checks if Windows Firewall is Enabled or not from a System Level */
+        public static bool FirewallStatus()
+        {
+            bool FirewallEnabled;
+
+            if (DetectLinux.LinuxDetected())
+            {
+                FirewallEnabled = false;
+            }
+            else
+            {
+                try
+                {
+                    Type NetFwMgrType = Type.GetTypeFromProgID("HNetCfg.FwMgr", false);
+                    INetFwMgr mgr = (INetFwMgr)Activator.CreateInstance(NetFwMgrType);
+
+                    FirewallEnabled = mgr.LocalPolicy.CurrentProfile.FirewallEnabled;
+                }
+                catch
+                {
+                    FirewallEnabled = false;
+                }
+            }
+
+            return FirewallEnabled;
         }
     }
 }

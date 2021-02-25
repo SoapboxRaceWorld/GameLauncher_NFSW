@@ -1,4 +1,4 @@
-﻿using GameLauncherReborn;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using System;
 using System.IO;
 using System.Net;

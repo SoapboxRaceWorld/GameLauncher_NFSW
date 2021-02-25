@@ -1,4 +1,4 @@
-﻿namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes
 {
     partial class SplashScreen
     {
@@ -28,7 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.Clock = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
+            // 
+            // Clock
+            // 
+            this.Clock.Enabled = true;
+            this.Clock.Interval = 1200;
+            this.Clock.Tick += new System.EventHandler(this.Clock_Tick);
             // 
             // SplashScreen
             // 
@@ -48,12 +56,16 @@
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Splash Screen - GameLauncher";
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(25)))));
+            this.Load += new System.EventHandler(this.SplashScreen_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private System.Windows.Forms.Timer Clock;
     }
 }

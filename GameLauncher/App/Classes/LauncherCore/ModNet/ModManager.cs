@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,40 +6,14 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
-using GameLauncherReborn;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 using Newtonsoft.Json;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.LauncherCore.ModNet
 {
-    public class ServerInfo
-    {
-        [JsonProperty("id")]
-        public string Id { get; set; }
-
-        [JsonProperty("distribution_url")]
-        public string DistributionUrl { get; set; }
-
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("ip_address")]
-        public string IpAddress { get; set; }
-
-        [JsonProperty("category")]
-        public string Category { get; set; }
-
-        [JsonProperty("discord_presence_key")]
-        public string DiscordPresenceKey { get; set; }
-
-        [JsonProperty("forceUserAgent")]
-        public string ForceUserAgent { get; set; }
-
-        [JsonProperty("discord_application_id")]
-        public string DiscordAppId { get; set; }
-
-        [JsonIgnore]
-        public bool IsSpecial { get; set; }
-    }
+    /* http://localhost/Engine.svc/GetServerInformation */
 
     public class ModFile
     {
@@ -50,6 +24,7 @@ namespace GameLauncher.App.Classes
         public string Hash { get; set; }
     }
 
+    /* http://localhost/Engine.svc/Modding/GetModInfo */
     public class ModInfo
     {
         [JsonProperty("id")]
@@ -119,7 +94,7 @@ namespace GameLauncher.App.Classes
         {
             using (var wc = new WebClient())
             {
-                var data = wc.DownloadString(Self.mainserver + $"/servers/{server}/mods");
+                var data = wc.DownloadString(URLs.mainserver + $"/servers/{server}/mods");
 
                 return JsonConvert.DeserializeObject<List<ModInfo>>(data);
             }
@@ -127,7 +102,7 @@ namespace GameLauncher.App.Classes
 
         public static bool Download(List<ModInfo> mods, string gameDir, string serverKey, System.Windows.Forms.Label PlayProgress, ProgressBarEx progress)
         {
-            ServerInfo serverInfo;
+            ServerList serverInfo;
             PlayProgress.Text = ("Downloading mods for " + serverKey).ToUpper();
             progress.Value = 0;
 
@@ -135,8 +110,8 @@ namespace GameLauncher.App.Classes
 
             using (var wc = new WebClient())
             {
-                var data = wc.DownloadString(Self.mainserver + $"/servers/{serverKey}");
-                serverInfo = JsonConvert.DeserializeObject<ServerInfo>(data);
+                var data = wc.DownloadString(URLs.mainserver + $"/servers/{serverKey}");
+                serverInfo = JsonConvert.DeserializeObject<ServerList>(data);
             }
 
             var modsDirectory = Path.Combine(gameDir, "MODS");

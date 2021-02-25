@@ -1,6 +1,3 @@
-﻿using GameLauncher.App.Classes;
-using GameLauncherReborn;
-using GameLauncher.Resources;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,6 +5,8 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Xml;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
 
 namespace GameLauncher.App
 {
@@ -42,7 +41,7 @@ namespace GameLauncher.App
                 ThirdFontSize = 26f;
                 //FourthFontSize = 14f;
             }
-
+            Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             AboutText.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);
             PatchTitle1.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
             PatchText1.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
@@ -97,7 +96,7 @@ namespace GameLauncher.App
             try
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load(Self.secondstaticapiserver + "/about.xml");
+                doc.Load(URLs.secondstaticapiserver + "/about.xml");
 
                 foreach (XmlNode node in doc.DocumentElement)
                 {

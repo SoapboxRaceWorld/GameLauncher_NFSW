@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.SystemPlatform
 {
     internal static class LZMA
     {

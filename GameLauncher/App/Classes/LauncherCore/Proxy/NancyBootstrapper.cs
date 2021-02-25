@@ -1,9 +1,9 @@
-﻿using Nancy;
+using Nancy;
 using System;
 using System.Collections.Generic;
 using Nancy.Configuration;
 
-namespace GameLauncher.App.Classes.Proxy
+namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     class NancyBootstrapper : DefaultNancyBootstrapper
     {

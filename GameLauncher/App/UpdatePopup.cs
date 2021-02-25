@@ -1,11 +1,10 @@
-﻿using System.Net;
-using GameLauncherReborn;
-using GameLauncher.Resources;
+using System.Net;
 using System.Drawing;
 using System.Windows.Forms;
-using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
 
 namespace GameLauncher.App
 {
@@ -22,7 +21,7 @@ namespace GameLauncher.App
                 InitializeComponent();
                 SetVisuals();
 
-                ChangelogText.Text = new WebClient().DownloadString(Self.mainserver + "/launcher/changelog");
+                ChangelogText.Text = new WebClient().DownloadString(URLs.mainserver + "/launcher/changelog");
                 ChangelogText.Select(0, 0);
                 ChangelogText.SelectionLength = 0;
                 ChangelogText.TabStop = false;
@@ -59,7 +58,7 @@ namespace GameLauncher.App
                 //ThirdFontSize = 10f;
                 //FourthFontSize = 14f;
             }
-
+            Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ChangelogBox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ChangelogText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             UpdateButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);

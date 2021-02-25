@@ -1,4 +1,4 @@
-﻿
+
 namespace GameLauncher.App
 {
     partial class SettingsScreen
@@ -41,7 +41,6 @@ namespace GameLauncher.App
             this.SettingsCDNText = new System.Windows.Forms.Label();
             this.SettingsCDNPick = new System.Windows.Forms.ComboBox();
             this.SettingsLanguageText = new System.Windows.Forms.Label();
-            this.SettingsLanguage = new System.Windows.Forms.ComboBox();
             this.SettingsWordFilterCheck = new System.Windows.Forms.CheckBox();
             this.SettingsProxyCheckbox = new System.Windows.Forms.CheckBox();
             this.SettingsDiscordRPCCheckbox = new System.Windows.Forms.CheckBox();
@@ -60,6 +59,7 @@ namespace GameLauncher.App
             this.SettingsCancel = new System.Windows.Forms.Button();
             this.ThemeAuthor = new System.Windows.Forms.Label();
             this.ThemeName = new System.Windows.Forms.Label();
+            this.SettingsLanguage = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // SettingsClearServerModCacheButton
@@ -215,8 +215,9 @@ namespace GameLauncher.App
             this.SettingsCDNPick.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.SettingsCDNPick.FormattingEnabled = true;
             this.SettingsCDNPick.Location = new System.Drawing.Point(38, 131);
+            this.SettingsCDNPick.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.SettingsCDNPick.Name = "SettingsCDNPick";
-            this.SettingsCDNPick.Size = new System.Drawing.Size(275, 21);
+            this.SettingsCDNPick.Size = new System.Drawing.Size(287, 21);
             this.SettingsCDNPick.TabIndex = 166;
             this.SettingsCDNPick.SelectedIndexChanged += new System.EventHandler(this.SettingsCDNPick_SelectedIndexChanged);
             // 
@@ -232,19 +233,6 @@ namespace GameLauncher.App
             this.SettingsLanguageText.TabIndex = 163;
             this.SettingsLanguageText.Text = "GAME LANGUAGE";
             this.SettingsLanguageText.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // SettingsLanguage
-            // 
-            this.SettingsLanguage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.SettingsLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SettingsLanguage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsLanguage.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsLanguage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
-            this.SettingsLanguage.FormattingEnabled = true;
-            this.SettingsLanguage.Location = new System.Drawing.Point(38, 180);
-            this.SettingsLanguage.Name = "SettingsLanguage";
-            this.SettingsLanguage.Size = new System.Drawing.Size(135, 21);
-            this.SettingsLanguage.TabIndex = 164;
             // 
             // SettingsWordFilterCheck
             // 
@@ -471,7 +459,7 @@ namespace GameLauncher.App
             // ThemeAuthor
             // 
             this.ThemeAuthor.BackColor = System.Drawing.Color.Transparent;
-            this.ThemeAuthor.Font = new System.Drawing.Font("DejaVu Sans", 9F);
+            this.ThemeAuthor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.ThemeAuthor.Location = new System.Drawing.Point(35, 454);
             this.ThemeAuthor.Name = "ThemeAuthor";
             this.ThemeAuthor.Size = new System.Drawing.Size(232, 14);
@@ -482,7 +470,7 @@ namespace GameLauncher.App
             // ThemeName
             // 
             this.ThemeName.BackColor = System.Drawing.Color.Transparent;
-            this.ThemeName.Font = new System.Drawing.Font("DejaVu Sans", 9F);
+            this.ThemeName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.ThemeName.Location = new System.Drawing.Point(35, 428);
             this.ThemeName.Name = "ThemeName";
             this.ThemeName.Size = new System.Drawing.Size(148, 14);
@@ -490,12 +478,29 @@ namespace GameLauncher.App
             this.ThemeName.Text = "Theme Name: Default";
             this.ThemeName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // SettingsLanguage
+            // 
+            this.SettingsLanguage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.SettingsLanguage.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.SettingsLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SettingsLanguage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SettingsLanguage.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsLanguage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.SettingsLanguage.FormattingEnabled = true;
+            this.SettingsLanguage.Location = new System.Drawing.Point(38, 179);
+            this.SettingsLanguage.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.SettingsLanguage.Name = "SettingsLanguage";
+            this.SettingsLanguage.Size = new System.Drawing.Size(164, 21);
+            this.SettingsLanguage.TabIndex = 192;
+            this.SettingsLanguage.SelectedIndexChanged += new System.EventHandler(this.SettingsLanguage_SelectedIndexChanged);
+            // 
             // SettingsScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.SettingsLanguage);
             this.Controls.Add(this.ThemeName);
             this.Controls.Add(this.ThemeAuthor);
             this.Controls.Add(this.SettingsClearServerModCacheButton);
@@ -511,7 +516,6 @@ namespace GameLauncher.App
             this.Controls.Add(this.SettingsCDNText);
             this.Controls.Add(this.SettingsCDNPick);
             this.Controls.Add(this.SettingsLanguageText);
-            this.Controls.Add(this.SettingsLanguage);
             this.Controls.Add(this.SettingsWordFilterCheck);
             this.Controls.Add(this.SettingsProxyCheckbox);
             this.Controls.Add(this.SettingsDiscordRPCCheckbox);
@@ -556,7 +560,6 @@ namespace GameLauncher.App
         private System.Windows.Forms.Label SettingsCDNText;
         private System.Windows.Forms.ComboBox SettingsCDNPick;
         private System.Windows.Forms.Label SettingsLanguageText;
-        private System.Windows.Forms.ComboBox SettingsLanguage;
         private System.Windows.Forms.CheckBox SettingsWordFilterCheck;
         private System.Windows.Forms.CheckBox SettingsProxyCheckbox;
         private System.Windows.Forms.CheckBox SettingsDiscordRPCCheckbox;
@@ -573,5 +576,6 @@ namespace GameLauncher.App
         private System.Windows.Forms.Label SettingsBkupCDNText;
         private System.Windows.Forms.Label ThemeAuthor;
         private System.Windows.Forms.Label ThemeName;
+        private System.Windows.Forms.ComboBox SettingsLanguage;
     }
 }

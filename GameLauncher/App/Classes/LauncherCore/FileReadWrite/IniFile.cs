@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Windows;
 using IniParser;
 using IniParser.Model;
+using System.Text;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 {
     class IniFile
     {
@@ -38,14 +39,11 @@ namespace GameLauncher.App.Classes
 
         public void Write(string Key, string Value)
         {
-            try
-            {
+            if (new FileInfo(Path).IsReadOnly != true) 
+            { 
+                UTF8Encoding utf8 = new UTF8Encoding(false);
                 Data[EXE][Key] = Value;
-                Parser.WriteFile(Path, Data);
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(String.Format("Failed to write \"{0}\" to {2}\n{3}", Key, Value, Path, ex.Message));
+                Parser.WriteFile(Path, Data, utf8);
             }
         }
 

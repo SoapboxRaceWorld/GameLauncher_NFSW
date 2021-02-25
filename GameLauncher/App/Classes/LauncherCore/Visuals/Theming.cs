@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 
 namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
@@ -16,8 +17,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         /* Enable or Disable Verify Hash Button */
 
         public static bool ButtonVerifyHash = true;
-
-        public static bool DisableVerifyHash = false;
 
 
         /* Discord RPC Privacy Build Number */
@@ -242,6 +241,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Color CDNMenuTextForeColor = Color.FromArgb(178, 210, 255);
 
         public static Color CDNMenuBGForeColor = Color.FromArgb(44, 58, 76);
+
+        public static Color CDNMenuTextForeColor_Category = Color.FromArgb(150, 194, 255);
+
+        public static Color CDNMenuBGForeColor_Category = Color.FromArgb(31, 41, 54);
 
 
         /* Status Colors */

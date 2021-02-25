@@ -1,8 +1,6 @@
-﻿using Flurl;
+using Flurl;
 using Flurl.Http;
 using Flurl.Http.Content;
-using GameLauncher.App.Classes.RPC;
-using GameLauncherReborn;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Extensions;
@@ -13,10 +11,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using GameLauncher.App.Classes.Logger;
 using Url = Flurl.Url;
+using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
 
-namespace GameLauncher.App.Classes.Proxy
+namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public class ProxyHandler : IApplicationStartup
     {
@@ -35,7 +36,7 @@ namespace GameLauncher.App.Classes.Proxy
                 CommunicationLogEntryType.Error,
                 new CommunicationLogLauncherError(exception.Message, context.Request.Path,
                     context.Request.Method));
-            await Self.SubmitError(exception);
+            await SubmitError(exception);
 
             return new TextResponse(HttpStatusCode.BadRequest, exception.Message);
         }
@@ -94,9 +95,6 @@ namespace GameLauncher.App.Classes.Proxy
 
             var GETContent = string.Join(";", queryParams.Select(x => x.Key + "=" + x.Value).ToArray());
 
-            // ReSharper disable once LocalizableElement
-            //Console.WriteLine($"[LOG] [{method}] ProxyHandler: {path}");
-
             switch (method)
             {
                 case "GET":
@@ -122,21 +120,21 @@ namespace GameLauncher.App.Classes.Proxy
 
             if (path == "/User/GetPermanentSession")
             {
-                responseBody = Self.CleanFromUnknownChars(responseBody);
+                responseBody = CleanFromUnknownChars(responseBody);
             }
 
             int statusCode = responseMessage.StatusCode;
 
             try
             {
-                DiscordGamePresence.HandleGameState(path, responseBody, POSTContent, GETContent);
+                DiscordGamePresence.HandleGameState(path, responseBody, GETContent);
             }
             catch (Exception e)
             {
                 Log.Error($"DISCORD RPC ERROR [handling {context.Request.Path}]");
                 Log.Error($"\tMESSAGE: {e.Message}");
                 Log.Error($"\t{e.StackTrace}");
-                await Self.SubmitError(e);
+                await SubmitError(e);
             }
 
             TextResponse textResponse = new TextResponse(responseBody,
@@ -152,6 +150,41 @@ namespace GameLauncher.App.Classes.Proxy
                     responseBody, resolvedUrl.ToString(), method));
 
             return textResponse;
+        }
+
+        private static string CleanFromUnknownChars(string s)
+        {
+            StringBuilder sb = new StringBuilder(s.Length);
+            foreach (char c in s)
+            {
+                if
+                 (
+                  (int)c >= 48 && (int)c <= 57 ||
+                  (int)c == 60 ||
+                  (int)c == 62 ||
+                  (int)c >= 65 && (int)c <= 90 ||
+                  (int)c >= 97 && (int)c <= 122 ||
+                  (int)c == 47 ||
+                  (int)c == 45 ||
+                  (int)c == 46
+                 )
+                {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        private static async Task SubmitError(Exception exception)
+        {
+            var mainsrv = DetectLinux.LinuxDetected() ? URLs.mainserver.Replace("https", "http") : URLs.mainserver;
+            Url url = new Url(mainsrv + "/error-report");
+            await url.PostJsonAsync(new
+            {
+                message = exception.Message ?? "no message",
+                stackTrace = exception.StackTrace ?? "no stack trace"
+            });
         }
     }
 

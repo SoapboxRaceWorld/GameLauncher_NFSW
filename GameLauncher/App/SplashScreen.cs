@@ -1,5 +1,6 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Visuals;
 using System.Windows.Forms;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App.Classes
 {
@@ -12,6 +13,17 @@ namespace GameLauncher.App.Classes
             BackColor = Theming.SplashScreenTransparencyKey;
             TransparencyKey = Theming.SplashScreenTransparencyKey;
             BackgroundImage = Theming.LogoSplash;
+        }
+
+        private void SplashScreen_Load(object sender, System.EventArgs e)
+        {
+            FunctionStatus.CenterScreen(this);
+        }
+
+        private void Clock_Tick(object sender, System.EventArgs e)
+        {
+            Clock.Start();
+            Application.OpenForms["SplashScreen"].Close();
         }
     }
 }

@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace GameLauncher.App.Classes.HashPassword
+namespace GameLauncher.App.Classes.Hash
 {
     class MDFive
     {

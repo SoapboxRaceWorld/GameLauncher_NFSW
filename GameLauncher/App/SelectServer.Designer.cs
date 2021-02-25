@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+using System.Windows.Forms;
 namespace GameLauncher.App
 {
     partial class SelectServer
@@ -116,8 +116,9 @@ namespace GameLauncher.App
             // 
             // Version
             // 
+            this.Version.BackColor = System.Drawing.Color.Transparent;
             this.Version.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Version.ForeColor = System.Drawing.Color.White;
+            this.Version.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Version.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.Version.Location = new System.Drawing.Point(220, 260);
             this.Version.Name = "Version";

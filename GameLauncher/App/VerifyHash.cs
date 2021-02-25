@@ -1,4 +1,4 @@
-﻿using DiscordRPC;
+using DiscordRPC;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -7,12 +7,12 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.HashPassword;
-using GameLauncher.Resources;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.Hash;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
 
 namespace GameLauncher.App
 {
@@ -59,7 +59,7 @@ namespace GameLauncher.App
             VersionLabel.Text = "Version: v" + Application.ProductVersion;
             Log.Core("VerifyHash Opened");
 
-            if (Theming.DisableVerifyHash == false)
+            if (FunctionStatus.IsVerifyHashDisabled == false)
             {
                 /* Clean up previous logs and start logging */
                 string[] filestocheck = new string[] { "checksums.dat", "validfiles.dat", "invalidfiles.dat", "Verify.log" };
@@ -91,7 +91,7 @@ namespace GameLauncher.App
 
             if (startScan == true)
             {
-                Theming.DisableVerifyHash = true;
+                FunctionStatus.IsVerifyHashDisabled = true;
                 StartScan.Start();
                 Log.Info("VERIFY HASH: Started Scanner");
                 isScanning = true;
@@ -302,7 +302,7 @@ namespace GameLauncher.App
                 //ThirdFontSize = 10f;
                 //FourthFontSize = 14f;
             }
-
+            Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             VerifyHashWelcome.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             ScanProgressText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             DownloadProgressText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);

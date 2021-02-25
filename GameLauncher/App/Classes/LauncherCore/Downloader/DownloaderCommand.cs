@@ -1,15 +1,15 @@
-﻿namespace GameLauncher
+namespace GameLauncher.App.Classes.LauncherCore.Downloader
 {
     public abstract class DownloaderCommand
     {
-        protected GameLauncher.Downloader _downloader;
+        protected Downloader _downloader;
 
-        public GameLauncher.Downloader Downloader
+        public Downloader Downloader
         {
             get { return this._downloader; }
         }
 
-        protected DownloaderCommand(GameLauncher.Downloader downloader)
+        protected DownloaderCommand(Downloader downloader)
         {
             this._downloader = downloader;
         }

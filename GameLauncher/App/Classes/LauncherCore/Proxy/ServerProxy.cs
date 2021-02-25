@@ -1,12 +1,12 @@
-﻿using System;
-using GameLauncher.App.Classes.Proxy;
-using GameLauncherReborn;
+using System;
 using Nancy.Hosting.Self;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public class ServerProxy : Singleton<ServerProxy>
     {
+        public static int ProxyPort = new Random().Next(6260, 8269);
+
         private string _serverUrl;
         private string _serverName;
         private NancyHost _host;
@@ -31,7 +31,7 @@ namespace GameLauncher.App.Classes
                 throw new Exception("Server already running!");
             }
 
-            _host = new NancyHost(new Uri("http://127.0.0.1:" + Self.ProxyPort), new NancyBootstrapper(), new HostConfiguration
+            _host = new NancyHost(new Uri("http://127.0.0.1:" + ProxyPort), new NancyBootstrapper(), new HostConfiguration
             {
                 AllowChunkedEncoding = false,
                 RewriteLocalhost = false

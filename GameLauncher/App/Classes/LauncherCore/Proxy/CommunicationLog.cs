@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace GameLauncher.App.Classes.Proxy
+namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public enum CommunicationLogEntryType
     {

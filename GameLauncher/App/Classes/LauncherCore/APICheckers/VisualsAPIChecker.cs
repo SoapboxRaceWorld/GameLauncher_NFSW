@@ -1,4 +1,4 @@
-﻿using GameLauncherReborn;
+using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 {
@@ -14,9 +14,9 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
         public static void PingAPIStatus()
         {
-            switch (APIStatusChecker.CheckStatus(Self.mainserver + "/serverlist.json"))
+            switch (APIStatusChecker.CheckStatus(URLs.mainserver + "/serverlist.json"))
             {
-                case API.Online:
+                case APIStatus.Online:
                     break;
                 default:
                     UnitedAPI = false;
@@ -25,9 +25,9 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
             if (UnitedAPI == false)
             {
-                switch (APIStatusChecker.CheckStatus(Self.staticapiserver + "/serverlist.json"))
+                switch (APIStatusChecker.CheckStatus(URLs.staticapiserver + "/serverlist.json"))
                 {
-                    case API.Online:
+                    case APIStatus.Online:
                         break;
                     default:
                         CarbonAPI = false;
@@ -37,9 +37,9 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
             if (CarbonAPI == false)
             {
-                switch (APIStatusChecker.CheckStatus(Self.secondstaticapiserver + "/serverlist.json"))
+                switch (APIStatusChecker.CheckStatus(URLs.secondstaticapiserver + "/serverlist.json"))
                 {
-                    case API.Online:
+                    case APIStatus.Online:
                         break;
                     default:
                         CarbonAPITwo = false;
@@ -49,15 +49,17 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
             if (CarbonAPITwo == false)
             {
-                switch (APIStatusChecker.CheckStatus(Self.woplserver + "/serverlist.json"))
+                switch (APIStatusChecker.CheckStatus(URLs.woplserver + "/serverlist.json"))
                 {
-                    case API.Online:
+                    case APIStatus.Online:
                         break;
                     default:
                         WOPLAPI = false;
                         break;
                 }
             }
+
+            FunctionStatus.IsVisualAPIsChecked = true;
         }
     }
 }

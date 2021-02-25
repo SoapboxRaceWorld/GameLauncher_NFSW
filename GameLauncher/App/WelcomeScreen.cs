@@ -1,10 +1,13 @@
-﻿using GameLauncher.App.Classes;
-using GameLauncher.Resources;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 
 namespace GameLauncher.App
 {
@@ -20,6 +23,15 @@ namespace GameLauncher.App
 
         private void SetVisuals()
         {
+            /*******************************/
+            /* Load CDN List                /
+            /*******************************/
+
+            if (FileSettingsSave.CDN != "Loaded")
+            {
+                CDNListUpdater.GetList();
+            }
+
             /*******************************/
             /* Set Hardcoded Text           /
             /*******************************/
@@ -45,7 +57,7 @@ namespace GameLauncher.App
                 ThirdFontSize = 10f;
                 FourthFontSize = 14f;
             }
-
+            Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             WelcomeText.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);
             DownloadSourceText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             CDNSource.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
@@ -88,7 +100,7 @@ namespace GameLauncher.App
 
         private void CDNSource_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (((CDNObject)CDNSource.SelectedItem).IsSpecial)
+            if (((CDNList)CDNSource.SelectedItem).IsSpecial)
             {
                 CDNSource.SelectedIndex = 1;
                 return;
@@ -145,6 +157,7 @@ namespace GameLauncher.App
                 APIErrorFormElements(false);
                 SettingsFormElements(true);
                 WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
+                PreloadServerList();
             }
         }
 
@@ -157,19 +170,27 @@ namespace GameLauncher.App
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (((CDNObject)CDNSource.SelectedItem).Url != null)
+            if (((CDNList)CDNSource.SelectedItem).Url != null)
             {
-                string ChoosenCDN = ((CDNObject)CDNSource.SelectedItem).Url;
+                string ChoosenCDN = ((CDNList)CDNSource.SelectedItem).Url;
                 char[] charsToTrim = { '/' };
                 string FinalCDNURL = ChoosenCDN.TrimEnd(charsToTrim);
 
-                CDN.CDNUrl = FinalCDNURL;
+                SelectedCDN.CDNUrl = FinalCDNURL;
 
                 QuitWithoutSaving_Click(sender, e);
             }
             else
             {
                 MessageBox.Show(null, "Please Choose a CDN. \n\n(╯°□°）╯︵ ┻━┻", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void PreloadServerList()
+        {
+            if (FunctionStatus.ServerListStatus != "Loaded")
+            {
+                ServerListUpdater.GetList();
             }
         }
 
@@ -183,6 +204,7 @@ namespace GameLauncher.App
             APIErrorFormElements(false);
             SettingsFormElements();
             WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
+            PreloadServerList();
         }
 
         private void APIErrorFormElements(bool hideElements = true)
@@ -207,12 +229,14 @@ namespace GameLauncher.App
             Brush textColor;
             Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
             Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
+            Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
+            Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
 
             var cdnListText = "";
 
             if (sender is ComboBox cb)
             {
-                if (cb.Items[e.Index] is CDNObject si)
+                if (cb.Items[e.Index] is CDNList si)
                 {
                     cdnListText = si.Name;
                 }
@@ -221,8 +245,8 @@ namespace GameLauncher.App
             if (cdnListText.StartsWith("<GROUP>"))
             {
                 font = new Font(font, FontStyle.Bold);
-                e.Graphics.FillRectangle(Brushes.White, e.Bounds);
-                e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, Brushes.Black, e.Bounds);
+                e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
+                e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
             }
             else
             {
