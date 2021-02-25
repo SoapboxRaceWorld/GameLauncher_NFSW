@@ -5,38 +5,40 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists.JSON
     /* http://localhost/Engine.svc/GetServerInformation */
     public class GetServerInformation
     {
-        public string MessageSrv { get; set; }
-        public string HomePageUrl { get; set; }
-        public string FacebookUrl { get; set; }
-        public string TwitterUrl { get; set; }
-        public string DiscordUrl { get; set; }
-        public string ServerName { get; set; }
-        public string Country { get; set; }
-        public int? TimeZone { get; set; }
-        public string BannerUrl { get; set; }
-        public string AdminList { get; set; }
-        public string OwnerList { get; set; }
-        public int NumberOfRegistered { get; set; }
-        public int SecondsToShutDown { get; set; }
-        public string AllowedCountries { get; set; }
-        public string ModsUrl { get; set; }
-        public List<string> ActivatedHolidaySceneryGroups { get; set; }
-        public List<string> DisactivatedHolidaySceneryGroups { get; set; }
-        public int OnlineNumber { get; set; }
-        public string RequireTicket { get; set; }
-        public string PlayerCountRewardMultiplier { get; set; }
-        public bool HappyHourEnabled { get; set; }
-        public string HappyHourMultipler { get; set; }
-        public string ServerVersion { get; set; }
-        public int MaxUsersAllowed { get; set; }
-        public bool RWACallow { get; set; }
-        public string ModernAuthSupport { get; set; }
-        public string WebSignupUrl { get; set; }
+        public string messageSrv { get; set; }
+        public string homePageUrl { get; set; }
+        public string facebookUrl { get; set; }
+        public string twitterUrl { get; set; }
+        public string discordUrl { get; set; }
+        public string serverName { get; set; }
+        public string country { get; set; }
+        public int? timezone { get; set; }
+        public string bannerUrl { get; set; }
+        public string adminList { get; set; }
+        public string ownerList { get; set; }
+        public int numberOfRegistered { get; set; }
+        public int secondsToShutDown { get; set; }
+        public string allowedCountries { get; set; }
+        public string modsUrl { get; set; }
+        public List<string> activatedHolidaySceneryGroups { get; set; }
+        public List<string> disactivatedHolidaySceneryGroups { get; set; }
+        public int onlineNumber { get; set; }
+        public string requireTicket { get; set; }
+        public string playerCountRewardMultiplier { get; set; }
+        public bool happyHourEnabled { get; set; }
+        public string happyHourMultipler { get; set; }
+        public string serverVersion { get; set; }
+        public int maxUsersAllowed { get; set; }
+        public int maxOnlinePlayers { get; set; }
+        public bool rwacallow { get; set; }
+        public string modernAuthSupport { get; set; }
+        public string webSignupUrl { get; set; }
         public string webPanelUrl { get; set; }
-        public string IconUrl { get; set; }
-        public string WebRecoveryUrl { get; set; }
-        public string FreeroamMapSocket { get; set; }
-        public List<string> FreeroamServers { get; set; }
+        public string iconUrl { get; set; }
+        public string webRecoveryUrl { get; set; }
+        public string passwordResetUrl { get; set; }
+        public string freeroamMapSocket { get; set; }
+        public List<string> freeroamServers { get; set; }
     }
 
     /* Moved "FreeroamObject" to Gist */

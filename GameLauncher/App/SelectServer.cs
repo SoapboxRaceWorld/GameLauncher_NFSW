@@ -107,9 +107,9 @@ namespace GameLauncher.App
                             else
                             {
                                 ServerListRenderer.Items[serverid].SubItems[1].Text = servername;
-                                ServerListRenderer.Items[serverid].SubItems[2].Text = ServerListUpdater.CountryName(content.Country.ToString());
-                                ServerListRenderer.Items[serverid].SubItems[3].Text = content.OnlineNumber.ToString();
-                                ServerListRenderer.Items[serverid].SubItems[4].Text = content.NumberOfRegistered.ToString();
+                                ServerListRenderer.Items[serverid].SubItems[2].Text = ServerListUpdater.CountryName(content.country.ToString());
+                                ServerListRenderer.Items[serverid].SubItems[3].Text = content.onlineNumber.ToString();
+                                ServerListRenderer.Items[serverid].SubItems[4].Text = content.numberOfRegistered.ToString();
 
                                 //PING
                                 if (!DetectLinux.LinuxDetected())

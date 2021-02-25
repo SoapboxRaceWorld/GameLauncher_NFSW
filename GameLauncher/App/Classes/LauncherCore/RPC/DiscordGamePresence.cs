@@ -45,8 +45,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             string[] splitted_uri = uri.Split('/');
 
             String _serverPanelLink = MainScreen.json.webPanelUrl;
-            String _serverWebsiteLink = MainScreen.json.HomePageUrl;
-            String _serverDiscordLink = MainScreen.json.DiscordUrl;
+            String _serverWebsiteLink = MainScreen.json.homePageUrl;
+            String _serverDiscordLink = MainScreen.json.discordUrl;
             if (!String.IsNullOrEmpty(_serverWebsiteLink) || !String.IsNullOrEmpty(_serverDiscordLink) || !String.IsNullOrEmpty(_serverPanelLink))
             {
                 MainScreen.ButtonsList.Clear();

@@ -147,7 +147,7 @@ namespace GameLauncher.App
 
                 GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(serverLoginResponse);
 
-                if (IsNullOrEmpty(json.ServerName))
+                if (IsNullOrEmpty(json.serverName))
                 {
                     DrawErrorAroundTextBox(ServerAddress);
                     success = false;
