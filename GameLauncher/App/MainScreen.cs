@@ -2167,7 +2167,23 @@ namespace GameLauncher
                 {
                     long p = oneProcess.MainWindowHandle.ToInt64();
                     TimeSpan t = TimeSpan.FromSeconds(secondsToShutDown);
-                    string secondsToShutDownNamed = string.Format("{0:D2}:{1:D2}:{2:D2}", t.Hours, t.Minutes, t.Seconds);
+
+                    //Proper Formatting
+                    List<string>            list_of_times = new List<string>();
+                    if (t.Days != 0)        list_of_times.Add(t.Days + (t.Days != 1 ? "Days" : "Day"));
+                    if (t.Hours != 0)       list_of_times.Add(t.Hours + (t.Hours != 1 ? "Hours" : "Hour"));
+                    if (t.Minutes != 0)     list_of_times.Add(t.Minutes + (t.Minutes != 1 ? "Minutes" : "Minute"));
+                    if (t.Seconds != 0)     list_of_times.Add(t.Seconds + (t.Seconds != 1 ? "Seconds" : "Second"));
+
+                    String secondsToShutDownNamed = String.Empty;
+                    if (list_of_times.Count() >= 2)
+                    {
+                        secondsToShutDownNamed = list_of_times[0] + ", " + list_of_times[1] + " left";
+                    }
+                    else
+                    {
+                        secondsToShutDownNamed = list_of_times[0] + " left";
+                    }
 
                     if (secondsToShutDown == 0)
                     {
