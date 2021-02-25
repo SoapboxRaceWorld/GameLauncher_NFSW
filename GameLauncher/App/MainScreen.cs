@@ -2182,7 +2182,7 @@ namespace GameLauncher
                     }
                     else
                     {
-                        secondsToShutDownNamed = list_of_times[0]";
+                        secondsToShutDownNamed = list_of_times[0];
                     }
 
                     if (secondsToShutDown == 0)
