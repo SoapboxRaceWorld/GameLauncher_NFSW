@@ -3183,6 +3183,13 @@ namespace GameLauncher
         {
             switch (FunctionStatus.CheckFolder(FileSettingsSave.GameInstallation))
             {
+                case FolderType.IsSameAsLauncherFolder:
+                    Directory.CreateDirectory("Game Files");
+                    Log.Error("LAUNCHER: Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
+                    MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed.\nInstead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
+                    break;
+
                     case FolderType.IsTempFolder:
                     case FolderType.IsUsersFolders:
                     case FolderType.IsProgramFilesFolder:
@@ -3198,7 +3205,7 @@ namespace GameLauncher
                         constructMsg += "• C:\\Windows\n\n";
                         constructMsg += "• Instead, we will install the NFSW Game at " + AppDomain.CurrentDomain.BaseDirectory + "\\Game Files\n";
 
-                    MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     Log.Error("LAUNCHER: Installing NFSW in a Restricted Location is not allowed.");
                     FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                     break;
