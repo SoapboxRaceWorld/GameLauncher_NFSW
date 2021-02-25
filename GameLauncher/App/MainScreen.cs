@@ -2178,11 +2178,11 @@ namespace GameLauncher
                     String secondsToShutDownNamed = String.Empty;
                     if (list_of_times.Count() >= 2)
                     {
-                        secondsToShutDownNamed = list_of_times[0] + ", " + list_of_times[1] + " left";
+                        secondsToShutDownNamed = list_of_times[0] + ", " + list_of_times[1];
                     }
                     else
                     {
-                        secondsToShutDownNamed = list_of_times[0] + " left";
+                        secondsToShutDownNamed = list_of_times[0]";
                     }
 
                     if (secondsToShutDown == 0)
