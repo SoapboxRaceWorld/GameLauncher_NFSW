@@ -405,7 +405,6 @@
     <None Include="Resources\greenbutton_click.png" />
     <None Include="Resources\greenbutton_hover.png" />
     <None Include="Resources\greenbutton.png" />
-    <None Include="Resources\logo.png" />
     <None Include="Resources\secondarybackground.png" />
   </ItemGroup>
   <ItemGroup>
