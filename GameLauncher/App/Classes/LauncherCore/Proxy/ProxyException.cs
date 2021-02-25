@@ -1,6 +1,6 @@
 using System;
 
-namespace GameLauncher.App.Classes.Proxy
+namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public class ProxyException : Exception
     {

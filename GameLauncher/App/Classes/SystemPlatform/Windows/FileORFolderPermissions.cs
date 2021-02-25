@@ -1,4 +1,5 @@
 using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
 using System;
 using System.IO;
 using System.Security.AccessControl;

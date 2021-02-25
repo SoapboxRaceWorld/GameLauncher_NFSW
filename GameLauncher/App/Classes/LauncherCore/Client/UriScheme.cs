@@ -2,7 +2,7 @@ using Microsoft.Win32;
 using System;
 using System.Text;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.LauncherCore.Client
 {
     class UriScheme
     {

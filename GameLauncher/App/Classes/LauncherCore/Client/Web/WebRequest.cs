@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Net;
 using System.Windows.Forms;
-using GameLauncher.HashPassword;
 using GameLauncher.App.Classes.Logger;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.Hash;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 {

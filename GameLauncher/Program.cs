@@ -6,25 +6,28 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using GameLauncher.App.Classes;
-using GameLauncher.App.Classes.Logger;
-using GameLauncherReborn;
 using Microsoft.Win32;
 using CommandLine;
 using System.Globalization;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
-using GameLauncher.App.Classes.InsiderKit;
 using System.Reflection;
 using WindowsFirewallHelper;
-using GameLauncher.App.Classes.Events;
 using Newtonsoft.Json;
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes;
+using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.Client;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 
 namespace GameLauncher
 {

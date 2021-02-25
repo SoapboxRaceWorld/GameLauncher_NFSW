@@ -1,5 +1,3 @@
-using GameLauncher.App.Classes;
-using GameLauncher.Resources;
 using Newtonsoft.Json;
 using System;
 using System.Net;
@@ -10,6 +8,8 @@ using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.LauncherCore.Lists;
 
 namespace GameLauncher.App
 {
@@ -17,8 +17,8 @@ namespace GameLauncher.App
     {
         private readonly int ID = 1;
         readonly Dictionary<int, GetServerInformation> rememberServerInformationID = new Dictionary<int, GetServerInformation>();
-        public GetServerInformation ServerInfo;
-        readonly Dictionary<int, ServerInfo> data = new Dictionary<int, ServerInfo>();
+        public GetServerInformation ServerList;
+        readonly Dictionary<int, ServerList> data = new Dictionary<int, ServerList>();
 
         //Used to ping the Server in ms
         public Queue<string> servers = new Queue<string>();
@@ -245,7 +245,7 @@ namespace GameLauncher.App
         {
             if (ServerListRenderer.SelectedItems.Count == 1)
             {
-                rememberServerInformationID.TryGetValue(ServerListRenderer.SelectedIndices[0], out ServerInfo);
+                rememberServerInformationID.TryGetValue(ServerListRenderer.SelectedIndices[0], out ServerList);
 
                 MainScreen.ServerName = data[ServerListRenderer.SelectedIndices[0] + 1];
 

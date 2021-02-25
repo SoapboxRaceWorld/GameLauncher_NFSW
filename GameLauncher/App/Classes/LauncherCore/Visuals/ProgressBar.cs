@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace GameLauncherReborn
+namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
     [ToolboxBitmap("PBEX.bmp")]
     public class ProgressBarEx : Control

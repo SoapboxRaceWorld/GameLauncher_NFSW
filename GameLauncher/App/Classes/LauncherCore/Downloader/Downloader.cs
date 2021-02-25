@@ -1,5 +1,4 @@
-using GameLauncher.App.Classes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -10,8 +9,9 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using GameLauncher.App.Classes.SystemPlatform;
 
-namespace GameLauncher
+namespace GameLauncher.App.Classes.LauncherCore.Downloader
 {
     public class Downloader
     {
@@ -86,7 +86,7 @@ namespace GameLauncher
             this.mHashThreads = hashThreads;
             this.mFE = fe;
             this.mDownloadManager = new DownloadManager(downloadThreads, downloadChunks);
-		}
+        }
 
         public void StartDownload(string indexUrl, string package, string patchPath, bool calculateHashes, bool useIndexCache, int downloadSize)
         {
@@ -156,7 +156,8 @@ namespace GameLauncher
                 else
                 {
 
-                    try {
+                    try
+                    {
                         WebClient webClient = new WebClient();
                         webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.Downloader_DownloadFileCompleted);
                         string tempFileName = Path.GetTempFileName();
@@ -175,7 +176,9 @@ namespace GameLauncher
                         xmlDocument.Load(tempFileName);
                         Downloader.mIndexCached = xmlDocument;
                         result = xmlDocument;
-                    } catch {
+                    }
+                    catch
+                    {
                         result = null;
                     }
                 }

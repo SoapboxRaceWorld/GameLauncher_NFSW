@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.RPC;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.SystemPlatform;
 using GameLauncher.App.Classes.SystemPlatform.Components;
-using GameLauncherReborn;
 
 namespace GameLauncher.App.Classes
 {

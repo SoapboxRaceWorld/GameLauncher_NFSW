@@ -7,17 +7,23 @@ using System.Linq;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
+    class SelectedCDN
+    {
+        public static string CDNUrl = String.Empty;
+        public static string TrackHigh = String.Empty;
+    }
+
     public class CDNListUpdater
     {
-        public static List<CDNObject> NoCategoryList = new List<CDNObject>();
+        public static List<CDNList> NoCategoryList = new List<CDNList>();
 
-        public static List<CDNObject> CleanList = new List<CDNObject>();
+        public static List<CDNList> CleanList = new List<CDNList>();
 
         public static void GetList()
         {
-            List<CDNObject> cdnInfos = new List<CDNObject>();
+            List<CDNList> cdnInfos = new List<CDNList>();
 
             foreach (var cdnListURL in URLs.cdnlisturl)
             {
@@ -31,7 +37,7 @@ namespace GameLauncher.App.Classes
                     try
                     {
                         cdnInfos.AddRange(
-                            JsonConvert.DeserializeObject<List<CDNObject>>(responseList));
+                            JsonConvert.DeserializeObject<List<CDNList>>(responseList));
                         FunctionStatus.CDNListStatus = "Loaded";
                         break;
                     }
@@ -49,7 +55,7 @@ namespace GameLauncher.App.Classes
             }
 
             /* Create Final CDN List without Categories */
-            foreach (CDNObject NoCatList in cdnInfos)
+            foreach (CDNList NoCatList in cdnInfos)
             {
                 if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
                 {
@@ -58,13 +64,13 @@ namespace GameLauncher.App.Classes
             }
 
             /* Create Rough Draft CDN List with Categories */
-            List<CDNObject> RawList = new List<CDNObject>();
+            List<CDNList> RawList = new List<CDNList>();
 
             foreach (var cdnItemGroup in cdnInfos.GroupBy(s => s.Category))
             {
                 if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{cdnItemGroup.Key} Mirrors")) == -1)
                 {
-                    RawList.Add(new CDNObject
+                    RawList.Add(new CDNList
                     {
                         Name = $"<GROUP>{cdnItemGroup.Key} Mirrors",
                         IsSpecial = true
@@ -74,7 +80,7 @@ namespace GameLauncher.App.Classes
             }
 
             /* Create Final CDN List with Categories */
-            foreach (CDNObject CList in RawList)
+            foreach (CDNList CList in RawList)
             {
                 if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
                 {

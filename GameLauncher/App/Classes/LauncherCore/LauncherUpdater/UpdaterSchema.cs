@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace GameLauncher.App.Classes.Events
+namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
     public class Update
     {

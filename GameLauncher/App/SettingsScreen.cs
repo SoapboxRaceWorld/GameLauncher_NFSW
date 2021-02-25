@@ -1,17 +1,4 @@
-using GameLauncher.App.Classes;
-using GameLauncher.App.Classes.InsiderKit;
-using GameLauncher.App.Classes.LauncherCore.APICheckers;
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using GameLauncher.App.Classes.LauncherCore.ModNet;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.Logger;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
-using GameLauncher.Resources;
-using GameLauncherReborn;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -21,6 +8,17 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using WindowsFirewallHelper;
+using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.ModNet;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.LauncherCore.Lists;
 
 namespace GameLauncher.App
 {
@@ -226,7 +224,7 @@ namespace GameLauncher.App
 
             if (sender is ComboBox cb)
             {
-                if (cb.Items[e.Index] is CDNObject si)
+                if (cb.Items[e.Index] is CDNList si)
                 {
                     cdnListText = si.Name;
                 }
@@ -485,11 +483,11 @@ namespace GameLauncher.App
                 _restartRequired = true;
             }
 
-            if (FileSettingsSave.CDN != ((CDNObject)SettingsCDNPick.SelectedItem).Url)
+            if (FileSettingsSave.CDN != ((CDNList)SettingsCDNPick.SelectedItem).Url)
             {
                 SettingsCDNCurrentText.Text = "CHANGED CDN";
-                SettingsCDNCurrent.Text = ((CDNObject)SettingsCDNPick.SelectedItem).Url;
-                FileSettingsSave.CDN = ((CDNObject)SettingsCDNPick.SelectedItem).Url;
+                SettingsCDNCurrent.Text = ((CDNList)SettingsCDNPick.SelectedItem).Url;
+                FileSettingsSave.CDN = ((CDNList)SettingsCDNPick.SelectedItem).Url;
                 _restartRequired = true;
             }
 
@@ -712,12 +710,12 @@ namespace GameLauncher.App
         /* Settings CDN Dropdown Menu Index */
         private void SettingsCDNPick_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (((CDNObject)SettingsCDNPick.SelectedItem).IsSpecial && ((CDNObject)SettingsCDNPick.SelectedItem).Url == null)
+            if (((CDNList)SettingsCDNPick.SelectedItem).IsSpecial && ((CDNList)SettingsCDNPick.SelectedItem).Url == null)
             {
                 SettingsCDNPick.SelectedIndex = _lastSelectedCdnId;
                 return;
             }
-            else if (((CDNObject)SettingsCDNPick.SelectedItem).Url != null)
+            else if (((CDNList)SettingsCDNPick.SelectedItem).Url != null)
             {
                 IsChangedCDNDown();
             }
@@ -746,23 +744,23 @@ namespace GameLauncher.App
 
         private void IsChangedCDNDown()
         {
-            if (!string.IsNullOrEmpty(((CDNObject)SettingsCDNPick.SelectedItem).Url))
+            if (!string.IsNullOrEmpty(((CDNList)SettingsCDNPick.SelectedItem).Url))
             {
                 SettingsCDNText.Text = "CDN: PINGING";
                 SettingsCDNText.ForeColor = Theming.SecondaryTextForeColor;
                 Log.Info("SETTINGS PINGING CHANGED CDN: Checking Changed CDN from Drop Down List");
 
-                switch (APIStatusChecker.CheckStatus(((CDNObject)SettingsCDNPick.SelectedItem).Url + "/index.xml"))
+                switch (APIStatusChecker.CheckStatus(((CDNList)SettingsCDNPick.SelectedItem).Url + "/index.xml"))
                 {
                     case APIStatus.Online:
                         SettingsCDNText.Text = "CDN: ONLINE";
                         SettingsCDNText.ForeColor = Theming.Sucess;
-                        Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Online!");
+                        Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNList)SettingsCDNPick.SelectedItem).Url + " Is Online!");
                         break;
                     default:
                         SettingsCDNText.Text = "CDN: OFFLINE";
                         SettingsCDNText.ForeColor = Theming.Error;
-                        Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNObject)SettingsCDNPick.SelectedItem).Url + " Is Offline!");
+                        Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNList)SettingsCDNPick.SelectedItem).Url + " Is Offline!");
                         break;
                 }
             }

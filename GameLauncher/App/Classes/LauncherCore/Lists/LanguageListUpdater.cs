@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
     public class LanguageListUpdater
     {

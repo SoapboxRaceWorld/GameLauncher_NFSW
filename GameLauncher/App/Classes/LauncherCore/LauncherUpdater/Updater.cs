@@ -3,14 +3,15 @@ using System.Net;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using GameLauncherReborn;
 using Newtonsoft.Json;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
 
-namespace GameLauncher.App.Classes.Events
+namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
     class LauncherUpdateCheck
     {

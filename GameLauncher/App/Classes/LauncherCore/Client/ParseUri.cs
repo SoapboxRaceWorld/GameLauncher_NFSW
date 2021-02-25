@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.LauncherCore.Client
 {
     class ParseUri
     {

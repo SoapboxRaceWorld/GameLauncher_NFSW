@@ -1,5 +1,4 @@
 using GameLauncher.App.Classes.Logger;
-using GameLauncher.HashPassword;
 using Newtonsoft.Json;
 using System;
 using System.Net;
@@ -9,18 +8,20 @@ using System.IO;
 using System.Linq;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using System.Globalization;
+using GameLauncher.App.Classes.Hash;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
     public class ServerListUpdater
     {
-        public static List<ServerInfo> NoCategoryList = new List<ServerInfo>();
+        public static List<ServerList> NoCategoryList = new List<ServerList>();
 
-        public static List<ServerInfo> CleanList = new List<ServerInfo>();
+        public static List<ServerList> CleanList = new List<ServerList>();
 
         public static void GetList()
         {
-            List<ServerInfo> serverInfos = new List<ServerInfo>();
+            List<ServerList> serverInfos = new List<ServerList>();
 
             foreach (var serverListURL in URLs.serverlisturl)
             {
@@ -34,7 +35,7 @@ namespace GameLauncher.App.Classes
                     try
                     {
                         serverInfos.AddRange(
-                            JsonConvert.DeserializeObject<List<ServerInfo>>(response));
+                            JsonConvert.DeserializeObject<List<ServerList>>(response));
                         FunctionStatus.ServerListStatus = "Loaded";
                         break;
                     }
@@ -53,7 +54,7 @@ namespace GameLauncher.App.Classes
 
             if (File.Exists("servers.json"))
             {
-                var fileItems = JsonConvert.DeserializeObject<List<ServerInfo>>(File.ReadAllText("servers.json")) ?? new List<ServerInfo>();
+                var fileItems = JsonConvert.DeserializeObject<List<ServerList>>(File.ReadAllText("servers.json")) ?? new List<ServerList>();
 
                 if (fileItems.Count > 0)
                 {
@@ -72,7 +73,7 @@ namespace GameLauncher.App.Classes
 
             if (File.Exists("libOfflineServer.dll"))
             {
-                serverInfos.Add(new ServerInfo
+                serverInfos.Add(new ServerList
                 {
                     Name = "Offline Built-In Server",
                     Category = "OFFLINE",
@@ -86,7 +87,7 @@ namespace GameLauncher.App.Classes
 
             if (Debugger.IsAttached)
             {
-                serverInfos.Add(new ServerInfo
+                serverInfos.Add(new ServerList
                 {
                     Name = "Local Debug Server",
                     Category = "DEBUG",
@@ -99,7 +100,7 @@ namespace GameLauncher.App.Classes
             }
 
             /* Create Final Server List without Categories */
-            foreach (ServerInfo NoCatList in serverInfos)
+            foreach (ServerList NoCatList in serverInfos)
             {
                 if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
                 {
@@ -108,13 +109,13 @@ namespace GameLauncher.App.Classes
             }
 
             /* Create Rough Draft Server List with Categories */
-            List<ServerInfo> RawList = new List<ServerInfo>();
+            List<ServerList> RawList = new List<ServerList>();
 
             foreach (var serverItemGroup in serverInfos.GroupBy(s => s.Category))
             {
                 if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
                 {
-                    RawList.Add(new ServerInfo
+                    RawList.Add(new ServerList
                     {
                         Id = $"__category-{serverItemGroup.Key}__",
                         Name = $"<GROUP>{serverItemGroup.Key} Servers",
@@ -125,7 +126,7 @@ namespace GameLauncher.App.Classes
             }
 
             /* Create Final Server List with Categories */
-            foreach (ServerInfo CList in RawList)
+            foreach (ServerList CList in RawList)
             {
                 if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
                 {

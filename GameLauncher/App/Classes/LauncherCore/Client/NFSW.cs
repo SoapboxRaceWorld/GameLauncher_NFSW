@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Threading;
 
-namespace GameLauncherReborn
+namespace GameLauncher.App.Classes.LauncherCore.Client
 {
     class NFSW
     {

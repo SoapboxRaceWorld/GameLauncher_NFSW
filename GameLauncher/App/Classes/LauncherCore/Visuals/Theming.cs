@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 
 namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {

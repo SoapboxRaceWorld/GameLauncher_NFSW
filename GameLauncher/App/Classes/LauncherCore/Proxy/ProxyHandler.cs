@@ -1,7 +1,6 @@
 using Flurl;
 using Flurl.Http;
 using Flurl.Http.Content;
-using GameLauncher.App.Classes.RPC;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Extensions;
@@ -12,11 +11,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using GameLauncher.App.Classes.Logger;
 using Url = Flurl.Url;
+using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
 
-namespace GameLauncher.App.Classes.Proxy
+namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public class ProxyHandler : IApplicationStartup
     {
@@ -126,7 +127,7 @@ namespace GameLauncher.App.Classes.Proxy
 
             try
             {
-                DiscordGamePresence.HandleGameState(path, responseBody, POSTContent, GETContent);
+                DiscordGamePresence.HandleGameState(path, responseBody, GETContent);
             }
             catch (Exception e)
             {

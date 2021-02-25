@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 
-namespace GameLauncher
+namespace GameLauncher.App.Classes.LauncherCore.Downloader
 {
     internal class HashManager
     {

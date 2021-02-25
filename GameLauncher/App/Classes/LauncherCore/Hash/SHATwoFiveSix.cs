@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace GameLauncher.HashPassword
+namespace GameLauncher.App.Classes.Hash
 {
     class SHATwoFiveSix
     {

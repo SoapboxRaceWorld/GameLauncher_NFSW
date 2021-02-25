@@ -6,7 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace GameLauncher.Resources
+namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
     class FontWrapper
     {

@@ -1,6 +1,6 @@
 //Credits: https://stackoverflow.com/a/24187171
 
-using GameLauncher.App.Classes;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
 using System;
 using System.Runtime.InteropServices;
 

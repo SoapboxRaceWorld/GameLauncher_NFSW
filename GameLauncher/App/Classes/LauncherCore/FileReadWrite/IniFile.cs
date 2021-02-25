@@ -6,7 +6,7 @@ using IniParser;
 using IniParser.Model;
 using System.Text;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 {
     class IniFile
     {

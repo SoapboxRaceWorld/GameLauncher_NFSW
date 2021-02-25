@@ -11,29 +11,24 @@ using System.Diagnostics;
 using System.Threading;
 using System.Reflection;
 using System.Net.NetworkInformation;
-using GameLauncher.Resources;
-using GameLauncher.App.Classes;
 using Newtonsoft.Json;
-using GameLauncher.App.Classes.Events;
 using Microsoft.Win32;
-using GameLauncher.App;
-using GameLauncher.HashPassword;
 using System.Linq;
 using System.Text.RegularExpressions;
-using GameLauncher.App.Classes.Logger;
 using System.IO.Compression;
-using GameLauncher.App.Classes.Auth;
 using DiscordRPC;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Threading.Tasks;
-using GameLauncher.App.Classes.ModNetReloaded;
-using GameLauncher.App.Classes.HashPassword;
-using GameLauncher.App.Classes.RPC;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
 using System.Management.Automation;
 using WindowsFirewallHelper;
+using DiscordButton = DiscordRPC.Button;
+using GameLauncher.App;
+using GameLauncher.App.Classes;
+using GameLauncher.App.Classes.Auth;
+using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
@@ -42,7 +37,15 @@ using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using DiscordButton = DiscordRPC.Button;
+using GameLauncher.App.Classes.LauncherCore.Client;
+using GameLauncher.App.Classes.LauncherCore.Downloader;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
+using GameLauncher.App.Classes.Hash;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.SystemPlatform;
+using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 
 namespace GameLauncher
 {
@@ -100,7 +103,7 @@ namespace GameLauncher
         int CurrentModFileCount = 0;
         int TotalModFileCount = 0;
 
-        ServerInfo _serverInfo = null;
+        ServerList _serverInfo = null;
         public static GetServerInformation json = new GetServerInformation();
 
         public static DiscordRpcClient discordRpcClient;
@@ -113,8 +116,8 @@ namespace GameLauncher
         readonly String filename_pack = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameFiles.sbrwpack");
 
         //UltimateLauncherFunction: SelectServer
-        private static ServerInfo _ServerList;
-        public static ServerInfo ServerName
+        private static ServerList _ServerList;
+        public static ServerList ServerName
         {
             get { return _ServerList; }
             set { _ServerList = value; }
@@ -243,8 +246,8 @@ namespace GameLauncher
                     discordRpcClient.Invoke();
 
                     //Let's fetch all servers
-                    List<ServerInfo> allServs = ServerListUpdater.CleanList.FindAll(i => string.Equals(i.IsSpecial, false));
-                    allServs.ForEach(delegate (ServerInfo server) {
+                    List<ServerList> allServs = ServerListUpdater.CleanList.FindAll(i => string.Equals(i.IsSpecial, false));
+                    allServs.ForEach(delegate (ServerList server) {
                         try
                         {
                             WebClient pingServer = new WebClient();
@@ -289,8 +292,8 @@ namespace GameLauncher
                     }
                     else
                     {
-                        FileSettingsSave.CDN = JsonCDN.CDNUrl;
-                        _NFSW_Installation_Source = JsonCDN.CDNUrl;
+                        FileSettingsSave.CDN = SelectedCDN.CDNUrl;
+                        _NFSW_Installation_Source = SelectedCDN.CDNUrl;
                         FileSettingsSave.SaveSettings();
                     }
                 }
@@ -392,7 +395,7 @@ namespace GameLauncher
 
             if (sender is ComboBox cb)
             {
-                if (cb.Items[e.Index] is ServerInfo si)
+                if (cb.Items[e.Index] is ServerList si)
                 {
                     serverListText = si.Name;
                     onlineStatus = serverStatusDictionary.ContainsKey(si.Id) ? serverStatusDictionary[si.Id] : 2;
@@ -521,8 +524,8 @@ namespace GameLauncher
             {
                 if (string.IsNullOrEmpty(FileAccountSave.ChoosenGameServer))
                 {
-                    Log.Warning("SERVERLIST: Failed to find anything... assuming " + ((ServerInfo)ServerPick.SelectedItem).IpAddress);
-                    FileAccountSave.ChoosenGameServer = ((ServerInfo)ServerPick.SelectedItem).IpAddress;
+                    Log.Warning("SERVERLIST: Failed to find anything... assuming " + ((ServerList)ServerPick.SelectedItem).IpAddress);
+                    FileAccountSave.ChoosenGameServer = ((ServerList)ServerPick.SelectedItem).IpAddress;
                     FileAccountSave.SaveAccount();
                 }
             }
@@ -730,7 +733,7 @@ namespace GameLauncher
 
         private void OpenDebugWindow(object sender, EventArgs e)
         {
-            if (!(ServerPick.SelectedItem is ServerInfo server)) return;
+            if (!(ServerPick.SelectedItem is ServerList server)) return;
 
             var form = new DebugWindow(server.IpAddress, server.Name);
             form.Show();
@@ -852,7 +855,7 @@ namespace GameLauncher
 
             try
             {
-                if (!(ServerPick.SelectedItem is ServerInfo server)) return;
+                if (!(ServerPick.SelectedItem is ServerList server)) return;
                 FileAccountSave.ChoosenGameServer = server.IpAddress;
             }
             catch
@@ -918,7 +921,7 @@ namespace GameLauncher
 
             //ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
-            _serverInfo = (ServerInfo)ServerPick.SelectedItem;
+            _serverInfo = (ServerList)ServerPick.SelectedItem;
             _realServername = _serverInfo.Name;
             _realServernameBanner = _serverInfo.Name;
             _modernAuthSupport = false;
@@ -1311,7 +1314,7 @@ namespace GameLauncher
                         LoginButton.Enabled = true;
                         RegisterText.Enabled = true;
 
-                        if (((ServerInfo)ServerPick.SelectedItem).Category == "DEV")
+                        if (((ServerList)ServerPick.SelectedItem).Category == "DEV")
                         {
                             //Disable Social Panel
                             DisableSocialPanelandClearIt();
@@ -1934,7 +1937,7 @@ namespace GameLauncher
 
             SettingsButton.BackgroundImage = Theming.GearButtonClick;
 
-            if (!(ServerPick.SelectedItem is ServerInfo server)) return;
+            if (!(ServerPick.SelectedItem is ServerList server)) return;
 
             new SettingsScreen(server.IpAddress, server.Name).ShowDialog();
         }
@@ -2522,7 +2525,7 @@ namespace GameLauncher
                 discordRpcClient.Initialize();
             }
 
-            if ((_disableDiscordRPC == false) && ((ServerInfo)ServerPick.SelectedItem).Category == "DEV")
+            if ((_disableDiscordRPC == false) && ((ServerList)ServerPick.SelectedItem).Category == "DEV")
             {
                 discordRpcClient.Dispose();
                 discordRpcClient = null;

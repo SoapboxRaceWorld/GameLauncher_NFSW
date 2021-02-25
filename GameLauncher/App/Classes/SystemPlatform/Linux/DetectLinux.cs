@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.SystemPlatform.Linux
 {
     class DetectLinux
     {

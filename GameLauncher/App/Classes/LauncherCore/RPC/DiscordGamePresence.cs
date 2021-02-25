@@ -1,15 +1,15 @@
 using DiscordRPC;
-using GameLauncher.App.Classes.Proxy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
+using DiscordButton = DiscordRPC.Button;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using DiscordButton = DiscordRPC.Button;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
 
-namespace GameLauncher.App.Classes.RPC
+namespace GameLauncher.App.Classes.LauncherCore.RPC
 {
     class DiscordGamePresence
     {
@@ -39,7 +39,7 @@ namespace GameLauncher.App.Classes.RPC
         public static int TEDay = 0;
         public static List<string> PersonaIds = new List<string>();
 
-        public static void HandleGameState(string uri, string serverreply = "", string POST = "", string GET = "")
+        public static void HandleGameState(string uri, string serverreply, string GET)
         {
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');

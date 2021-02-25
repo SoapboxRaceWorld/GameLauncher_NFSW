@@ -1,9 +1,7 @@
 using System;
-using GameLauncher.App.Classes.Proxy;
-using GameLauncherReborn;
 using Nancy.Hosting.Self;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public class ServerProxy : Singleton<ServerProxy>
     {

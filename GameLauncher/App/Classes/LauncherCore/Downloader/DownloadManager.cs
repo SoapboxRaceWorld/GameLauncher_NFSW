@@ -6,7 +6,7 @@ using System.Net.Cache;
 using System.Threading;
 using System.Xml;
 
-namespace GameLauncher
+namespace GameLauncher.App.Classes.LauncherCore.Downloader
 {
     internal class DownloadManager
     {

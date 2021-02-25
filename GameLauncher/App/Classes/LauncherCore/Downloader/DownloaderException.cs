@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace GameLauncher
+namespace GameLauncher.App.Classes.LauncherCore.Downloader
 {
     [Serializable]
     public class DownloaderException : Exception

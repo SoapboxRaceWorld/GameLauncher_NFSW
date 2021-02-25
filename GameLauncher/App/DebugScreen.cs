@@ -1,15 +1,15 @@
-using GameLauncher.App.Classes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Management;
 using System.Windows.Forms;
-using GameLauncherReborn;
-using GameLauncher.Resources;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Components;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.SystemPlatform;
 
 namespace GameLauncher.App
 {

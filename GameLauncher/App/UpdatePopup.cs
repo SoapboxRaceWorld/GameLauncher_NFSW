@@ -1,12 +1,10 @@
 using System.Net;
-using GameLauncherReborn;
-using GameLauncher.Resources;
 using System.Drawing;
 using System.Windows.Forms;
-using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
 
 namespace GameLauncher.App
 {

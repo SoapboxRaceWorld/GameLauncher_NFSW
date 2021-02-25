@@ -1,8 +1,8 @@
-namespace GameLauncher
+namespace GameLauncher.App.Classes.LauncherCore.Downloader
 {
     public class VerifyCommand : DownloaderCommand
     {
-        public VerifyCommand(GameLauncher.Downloader downloader) : base(downloader)
+        public VerifyCommand(Downloader downloader) : base(downloader)
         {
         }
 

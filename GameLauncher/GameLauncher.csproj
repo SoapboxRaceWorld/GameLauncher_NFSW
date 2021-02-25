@@ -161,16 +161,18 @@
     <Compile Include="App\Classes\LauncherCore\Client\Web\WebRequest.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="App\Classes\LauncherCore\Downloader\Downloader.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileAccountSave.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileSettingsSave.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\EnumTypes.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\FunctionStatus.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\URLs.cs" />
     <Compile Include="App\Classes\LauncherCore\Hash\SHATwoFiveSix.cs" />
-    <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonCDN.cs" />
+    <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonCDNList.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonLanguage.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonRootCA.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonServerInfo.cs" />
+    <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonServerList.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\LanguageListUpdater.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\ModNetLinksCleanup.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\Email\IsEmailValid.cs" />
@@ -185,7 +187,6 @@
     <Compile Include="App\Classes\SystemPlatform\Components\HardwareID.cs" />
     <Compile Include="App\Classes\SystemPlatform\Components\HardwareInfo.cs" />
     <Compile Include="App\Classes\SystemPlatform\Linux\DetectLinux.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\Downloader.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderCommand.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderException.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\DownloadFailed.cs" />

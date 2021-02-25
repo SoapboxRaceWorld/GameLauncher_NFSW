@@ -2,6 +2,7 @@ using System.IO;
 using System.Management;
 using System.Security.Cryptography;
 using System.Text;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Components
 {

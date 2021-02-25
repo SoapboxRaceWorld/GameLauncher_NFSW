@@ -1,4 +1,3 @@
-using GameLauncher.Resources;
 using Newtonsoft.Json;
 using System;
 using System.Net;
@@ -6,11 +5,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using GameLauncher.App.Classes;
-using GameLauncher.HashPassword;
 using static System.String;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.Hash;
 
 namespace GameLauncher.App
 {
@@ -178,9 +177,9 @@ namespace GameLauncher.App
                         oldcontent = "[]";
                     }
 
-                    var servers = JsonConvert.DeserializeObject<List<ServerInfo>>(oldcontent);
+                    var servers = JsonConvert.DeserializeObject<List<ServerList>>(oldcontent);
 
-                    servers.Add(new ServerInfo
+                    servers.Add(new ServerList
                     {
                         Name = ServerName.Text,
                         IpAddress = wellFormattedURL,

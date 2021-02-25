@@ -89,8 +89,8 @@ namespace GameLauncher
             this.MainPasswordBorder = new System.Windows.Forms.PictureBox();
             this.ProgressBarOutline = new System.Windows.Forms.PictureBox();
             this.VerticalBanner = new System.Windows.Forms.PictureBox();
-            this.ExtractingProgress = new GameLauncherReborn.ProgressBarEx();
-            this.PlayProgress = new GameLauncherReborn.ProgressBarEx();
+            this.ExtractingProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
+            this.PlayProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
             this.ShowPlayPanel.SuspendLayout();
             this.RegisterPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterEmailBorder)).BeginInit();
@@ -1035,8 +1035,8 @@ namespace GameLauncher
         private System.Windows.Forms.Button AddServer;
         private System.Windows.Forms.PictureBox VerticalBanner;
         internal System.Windows.Forms.Label PlayProgressText;
-        private GameLauncherReborn.ProgressBarEx ExtractingProgress;
-        private GameLauncherReborn.ProgressBarEx PlayProgress;
+        private GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx ExtractingProgress;
+        private GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx PlayProgress;
         private System.Windows.Forms.PictureBox LauncherIconStatus;
         private System.Windows.Forms.Label LauncherStatusText;
         private System.Windows.Forms.Label LauncherStatusDesc;

@@ -1,6 +1,3 @@
-using GameLauncher.App.Classes;
-using GameLauncherReborn;
-using GameLauncher.Resources;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,6 +6,7 @@ using System.Windows.Forms;
 using System.Xml;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
 
 namespace GameLauncher.App
 {

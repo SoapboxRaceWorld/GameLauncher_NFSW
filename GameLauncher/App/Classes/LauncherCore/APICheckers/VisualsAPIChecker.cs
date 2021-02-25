@@ -1,5 +1,4 @@
 using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncherReborn;
 
 namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 {

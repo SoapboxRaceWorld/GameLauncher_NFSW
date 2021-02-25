@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using System.Collections.Generic;
 
-namespace GameLauncher.App.Classes.ModNetReloaded
+namespace GameLauncher.App.Classes.LauncherCore.ModNet
 {
     public class MainJson
     {

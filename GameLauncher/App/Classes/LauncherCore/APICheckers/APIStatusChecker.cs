@@ -4,7 +4,7 @@ using System;
 using System.Net;
 using System.Windows.Forms;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 {
     class APIStatusChecker
     {

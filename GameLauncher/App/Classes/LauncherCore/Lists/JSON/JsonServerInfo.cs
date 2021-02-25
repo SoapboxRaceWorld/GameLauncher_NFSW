@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists.JSON
 {
+    /* http://localhost/Engine.svc/GetServerInformation */
     public class GetServerInformation
     {
         public string MessageSrv { get; set; }
