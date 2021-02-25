@@ -3183,24 +3183,23 @@ namespace GameLauncher
         {
             switch (FunctionStatus.CheckFolder(FileSettingsSave.GameInstallation))
             {
-                case FolderType.IsSameAsLauncherFolder:
-                    Directory.CreateDirectory("Game Files");
-                    Log.Error("LAUNCHER: Installing NFSW in same directory where the launcher resides is NOT recommended.");
-                    MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is not allowed.\nInstead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
-                    break;
-                case FolderType.IsTempFolder:
-                    Directory.CreateDirectory("Game Files");
-                    Log.Error("LAUNCHER: (╯°□°）╯︵ ┻━┻ Installing NFSW in the Temp Folder is NOT allowed!");
-                    MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is NOT allowed!\nInstead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files" + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
-                    break;
-                case FolderType.IsProgramFilesFolder:
-                case FolderType.IsUsersFolders:
-                case FolderType.IsWindowsFolder:
-                    Directory.CreateDirectory("Game Files");
-                    Log.Error("LAUNCHER: Installing NFSW in a Special Directory is disadvised.");
-                    MessageBox.Show(null, string.Format("Installing NFSW in a Special Directory is not recommended or allowed.\nInstead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    case FolderType.IsTempFolder:
+                    case FolderType.IsUsersFolders:
+                    case FolderType.IsProgramFilesFolder:
+                    case FolderType.IsWindowsFolder:
+                    case FolderType.IsRootFolder:
+                        String constructMsg = String.Empty;
+                        Directory.CreateDirectory("Game Files");
+                        constructMsg += "Using this location for Game Files is not allowed.\nThe following list are NOT allowed:\n\n";
+                        constructMsg += "• X:\\ (Root of Drive, such as C:\\ or D:\\)\n";
+                        constructMsg += "• C:\\Program Files\n";
+                        constructMsg += "• C:\\Program Files (x86)\n";
+                        constructMsg += "• C:\\Users (Includes 'Desktop' or 'Documents')\n";
+                        constructMsg += "• C:\\Windows\n\n";
+                        constructMsg += "• Instead, we will install the NFSW Game at " + AppDomain.CurrentDomain.BaseDirectory + "\\Game Files\n";
+
+                    MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Log.Error("LAUNCHER: Installing NFSW in a Restricted Location is not allowed.");
                     FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                     break;
             }

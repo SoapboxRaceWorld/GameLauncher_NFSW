@@ -424,12 +424,14 @@ namespace GameLauncher
                     case FolderType.IsUsersFolders:
                     case FolderType.IsProgramFilesFolder:
                     case FolderType.IsWindowsFolder:
+                    case FolderType.IsRootFolder:
                         String constructMsg = String.Empty;
 
-                        constructMsg += "Using this directory for launcher is not allowed. Please move launcher files to a folder/directory that is NOT:\n\n";
+                        constructMsg += "Using this location for GameLauncher is not allowed.\nPlease move Launcher files to a folder/directory that is NOT:\n\n";
+                        constructMsg += "• X:\\ (Root of Drive, such as C:\\ or D:\\)\n";
                         constructMsg += "• C:\\Program Files\n";
                         constructMsg += "• C:\\Program Files (x86)\n";
-                        constructMsg += "• C:\\Users\n";
+                        constructMsg += "• C:\\Users (Includes 'Desktop' or 'Documents')\n";
                         constructMsg += "• C:\\Windows\n\n";
                         MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Environment.Exit(0);

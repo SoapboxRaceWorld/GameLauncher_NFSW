@@ -10,6 +10,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         IsProgramFilesFolder,
         IsWindowsFolder,
         IsSameAsLauncherFolder,
+        IsRootFolder,
         Unknown
     }
 

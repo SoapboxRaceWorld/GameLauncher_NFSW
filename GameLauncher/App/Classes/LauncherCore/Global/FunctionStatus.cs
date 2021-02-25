@@ -65,6 +65,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             if (FolderName.Contains("C:\\Users")) return FolderType.IsUsersFolders;
             if (FolderName.Contains("C:\\Program Files")) return FolderType.IsProgramFilesFolder;
             if (FolderName.Contains("C:\\Windows")) return FolderType.IsWindowsFolder;
+            if (FolderName.Length == 3) return FolderType.IsRootFolder;
             if (FolderName + "\\" == AppDomain.CurrentDomain.BaseDirectory) return FolderType.IsSameAsLauncherFolder;
 
             return FolderType.Unknown;
