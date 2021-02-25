@@ -39,7 +39,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public void Write(string Key, string Value)
         {
-            if(new FileInfo(Path).IsReadOnly != true) 
+            if (new FileInfo(Path).IsReadOnly != true) 
             { 
                 UTF8Encoding utf8 = new UTF8Encoding(false);
                 Data[EXE][Key] = Value;
