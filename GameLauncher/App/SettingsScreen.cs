@@ -438,7 +438,7 @@ namespace GameLauncher.App
             }
 
             //TODO: Inform player about custom languagepack used.
-            if(((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") {
+            if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") {
                 MessageBox.Show(null, "Please note, that if this server won't have that languagepack installed, it will fallback to English instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 

@@ -8,6 +8,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
     {
         public static IniFile settingFile = new IniFile("Settings.ini");
 
+        public static string GameInstallation = settingFile.Read("InstallationDirectory");
+
         public static string CDN = settingFile.Read("CDN");
 
         public static string Lang = settingFile.Read("Language");
@@ -15,8 +17,6 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         public static string Proxy = settingFile.Read("DisableProxy");
 
         public static string RPC = settingFile.Read("DisableRPC");
-
-        public static string GameInstallation = settingFile.Read("InstallationDirectory");
 
         public static string IgnoreVersion = settingFile.Read("IgnoreUpdateVersion");
 
@@ -55,7 +55,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             }
             else if (!settingFile.KeyExists("InstallationDirectory"))
             {
-                settingFile.Write("InstallationDirectory", "");
+                settingFile.Write("InstallationDirectory", string.Empty);
             }
             else if (!File.Exists(settingFile.Read("InstallationDirectory")) && !string.IsNullOrEmpty(settingFile.Read("InstallationDirectory")))
             {
@@ -81,7 +81,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
             if (!settingFile.KeyExists("Language") || string.IsNullOrEmpty(settingFile.Read("Language")))
             {
-                settingFile.Write("Language", "en");
+                settingFile.Write("Language", "EN");
             }
 
             if (!settingFile.KeyExists("DisableProxy") || string.IsNullOrEmpty(settingFile.Read("DisableProxy")))
@@ -98,18 +98,9 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             {
                 settingFile.Write("IgnoreUpdateVersion", string.Empty);
             }
-            
+
             if (!DetectLinux.LinuxDetected())
             {
-                if (!settingFile.KeyExists("PatchesApplied") && WindowsProductVersion.GetWindowsNumber() == 6.1)
-                {
-                    settingFile.Write("PatchesApplied", "0");
-                }
-                else if (settingFile.KeyExists("PatchesApplied") && WindowsProductVersion.GetWindowsNumber() != 6.1)
-                {
-                    settingFile.DeleteKey("PatchesApplied");
-                }
-
                 if (!settingFile.KeyExists("Firewall") || string.IsNullOrEmpty(settingFile.Read("Firewall")))
                 {
                     settingFile.Write("Firewall", "Not Excluded");
@@ -128,6 +119,15 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     {
                         settingFile.DeleteKey("WindowsDefender");
                     }
+                }
+
+                if (WindowsProductVersion.GetWindowsNumber() == 6.1 && !settingFile.KeyExists("PatchesApplied"))
+                {
+                    settingFile.Write("PatchesApplied", string.Empty);
+                }
+                else if (WindowsProductVersion.GetWindowsNumber() != 6.1 && settingFile.KeyExists("PatchesApplied"))
+                {
+                    settingFile.DeleteKey("PatchesApplied");
                 }
             }
 
