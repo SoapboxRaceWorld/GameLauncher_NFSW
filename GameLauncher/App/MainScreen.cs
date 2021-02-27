@@ -2169,11 +2169,11 @@ namespace GameLauncher
                     TimeSpan t = TimeSpan.FromSeconds(secondsToShutDown);
 
                     //Proper Formatting
-                    List<string>            list_of_times = new List<string>();
-                    if (t.Days != 0)        list_of_times.Add(t.Days + (t.Days != 1 ? "Days" : "Day"));
-                    if (t.Hours != 0)       list_of_times.Add(t.Hours + (t.Hours != 1 ? "Hours" : "Hour"));
-                    if (t.Minutes != 0)     list_of_times.Add(t.Minutes + (t.Minutes != 1 ? "Minutes" : "Minute"));
-                    if (t.Seconds != 0)     list_of_times.Add(t.Seconds + (t.Seconds != 1 ? "Seconds" : "Second"));
+                    List<string>        list_of_times = new List<string>();
+                    if (t.Days != 0)    list_of_times.Add(t.Days + (t.Days != 1 ? "Days" : "Day"));
+                    if (t.Hours != 0)   list_of_times.Add(t.Hours + (t.Hours != 1 ? "Hours" : "Hour"));
+                    if (t.Minutes != 0) list_of_times.Add(t.Minutes + (t.Minutes != 1 ? "Minutes" : "Minute"));
+                    if (t.Seconds != 0) list_of_times.Add(t.Seconds + (t.Seconds != 1 ? "Seconds" : "Second"));
 
                     String secondsToShutDownNamed = String.Empty;
                     if (list_of_times.Count() >= 2)
@@ -2527,11 +2527,13 @@ namespace GameLauncher
                 double bytesIn = double.Parse(e.BytesReceived.ToString());
                 double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
                 double percentage = bytesIn / totalBytes * 100;
-                PlayProgressText.Text = ("[" + CurrentModFileCount + " / " + TotalModFileCount + "] Downloading " + ModNetFileNameInUse + ": " + TimeConversions.FormatFileSize(e.BytesReceived) + " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive)).ToUpper();
+                PlayProgressTextTimer.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
+                PlayProgressText.Text = (" " + ModNetFileNameInUse + " - " + TimeConversions.FormatFileSize(e.BytesReceived) + " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive)).ToUpper();
 
                 ExtractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
                 ExtractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
             });
+            PlayProgressTextTimer.Text = "";
         }
 
         //Launch game
@@ -2581,6 +2583,7 @@ namespace GameLauncher
 
                         while (secondsToCloseLauncher > 0)
                         {
+                            PlayProgressTextTimer.Text = "";
                             PlayProgressText.Text = string.Format("Loading game. Launcher will minimize in {0} seconds.", secondsToCloseLauncher).ToUpper(); //"LOADING GAME. LAUNCHER WILL MINIMIZE ITSELF IN " + secondsToCloseLauncher + " SECONDS";
                             Time.SecondsRemaining(1);
                             secondsToCloseLauncher--;
@@ -2591,6 +2594,7 @@ namespace GameLauncher
                             CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                         }
 
+                        PlayProgressTextTimer.Text = "";
                         PlayProgressText.Text = "";
 
                         WindowState = FormWindowState.Minimized;
@@ -2744,6 +2748,7 @@ namespace GameLauncher
             else if (!File.Exists(FileSettingsSave.GameInstallation + "/nfsw.exe"))
             {
                 _downloadStartTime = DateTime.Now;
+                PlayProgressTextTimer.Text = "Downloading: Core GameFiles".ToUpper();
                 Log.Info("DOWNLOAD: Getting Core Game Files");
                 _downloader.StartDownload(_NFSW_Installation_Source, "", FileSettingsSave.GameInstallation, false, false, 1130632198);
             }
@@ -2764,6 +2769,7 @@ namespace GameLauncher
             if (!File.Exists(FileSettingsSave.GameInstallation + "/Tracks/STREAML5RA_98.BUN"))
             {
                 _downloadStartTime = DateTime.Now;
+                PlayProgressTextTimer.Text = "Downloading: Tracks Data".ToUpper();
                 Log.Info("DOWNLOAD: Getting Tracks Folder");
                 _downloader.StartDownload(_NFSW_Installation_Source, "Tracks", FileSettingsSave.GameInstallation, false, false, 615494528);
             }
@@ -2821,12 +2827,14 @@ namespace GameLauncher
             if (!File.Exists(FileSettingsSave.GameInstallation + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big"))
             {
                 _downloadStartTime = DateTime.Now;
+                PlayProgressTextTimer.Text = "Downloading: Language Audio".ToUpper();
                 Log.Info("DOWNLOAD: Getting Speech/Audio Files");
                 _downloader.StartDownload(_NFSW_Installation_Source, speechFile, FileSettingsSave.GameInstallation, false, false, speechSize);
             }
             else
             {
                 OnDownloadFinished();
+                PlayProgressTextTimer.Text = "";
                 Log.Info("DOWNLOAD: Game Files Download is Complete!");
             }
         }
@@ -2961,7 +2969,8 @@ namespace GameLauncher
         {
             if (downloadCurrent < compressedLength)
             {
-                PlayProgressText.Text = String.Format("Downloading — {0} of {1} ({3}%) — {2}", TimeConversions.FormatFileSize(downloadCurrent), TimeConversions.FormatFileSize(compressedLength), TimeConversions.EstimateFinishTime(downloadCurrent, compressedLength, _downloadStartTime), (int)(100 * downloadCurrent / compressedLength)).ToUpper();
+                //PlayProgressTextTimer.Text = String.Format("Downloading - {0} of {1} :").ToUpper();
+                PlayProgressText.Text = String.Format("{0} of {1} ({3}%) — {2}", TimeConversions.FormatFileSize(downloadCurrent), TimeConversions.FormatFileSize(compressedLength), TimeConversions.EstimateFinishTime(downloadCurrent, compressedLength, _downloadStartTime), (int)(100 * downloadCurrent / compressedLength)).ToUpper();
             }
 
             try
@@ -3109,7 +3118,8 @@ namespace GameLauncher
         {
             if (PlayProgress.Value == 100)
             {
-                PlayProgressText.Text = String.Format("Extracting — {0} of {1} ({3}%) — {2}", TimeConversions.FormatFileSize(currentCount), TimeConversions.FormatFileSize(allFilesCount), TimeConversions.EstimateFinishTime(currentCount, allFilesCount, _downloadStartTime), (int)(100 * currentCount / allFilesCount)).ToUpper();
+                //PlayProgressTextTimer.Text = "Extracting -".ToUpper();
+                PlayProgressText.Text = String.Format("{0} of {1} : ({3}%) — {2}", TimeConversions.FormatFileSize(currentCount), TimeConversions.FormatFileSize(allFilesCount), TimeConversions.EstimateFinishTime(currentCount, allFilesCount, _downloadStartTime), (int)(100 * currentCount / allFilesCount)).ToUpper();
             }
 
             ExtractingProgress.Value = (int)(100 * currentCount / allFilesCount);
@@ -3293,7 +3303,7 @@ namespace GameLauncher
             PlayButton.Font = new Font(DejaVuSansBold, FourthFontSize, FontStyle.Bold);
             PlayProgress.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             PlayProgressText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
-            PlayProgressTextTimer.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            PlayProgressTextTimer.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             /* Registering Panel */
             RegisterPanel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             RegisterEmail.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);

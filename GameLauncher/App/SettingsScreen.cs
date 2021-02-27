@@ -980,6 +980,9 @@ namespace GameLauncher.App
                     Log.Warning("SETTINGS LANGLIST: Unknown entry value is " + SavedLang);
                 }
                 Log.Core("SETTINGS LANGLIST: All done");
+            } else {
+                Log.Warning("SETTINGS LANGLIST: Unable to find anything, assuming default");
+                SettingsLanguage.SelectedIndex = 1;
             }
         }
 
@@ -1012,6 +1015,8 @@ namespace GameLauncher.App
                 {
                     SettingsCDNPick.SelectedIndex = 1;
                 }
+            } else {
+                SettingsCDNPick.SelectedIndex = 1;
             }
         }
 
