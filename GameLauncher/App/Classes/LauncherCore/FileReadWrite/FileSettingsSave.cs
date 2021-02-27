@@ -207,11 +207,6 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
             if (!DetectLinux.LinuxDetected())
             {
-                if ((settingFile.Read("PatchesApplied") != Win7UpdatePatches) && WindowsProductVersion.GetWindowsNumber() == 6.1)
-                {
-                    settingFile.Write("PatchesApplied", Win7UpdatePatches);
-                }
-
                 if (settingFile.Read("Firewall") != FirewallStatus)
                 {
                     settingFile.Write("Firewall", FirewallStatus);
@@ -223,6 +218,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     {
                         settingFile.Write("WindowsDefender", WindowsDefenderStatus);
                     }
+                }
+
+                if ((settingFile.Read("PatchesApplied") != Win7UpdatePatches) && WindowsProductVersion.GetWindowsNumber() == 6.1)
+                {
+                    settingFile.Write("PatchesApplied", Win7UpdatePatches);
                 }
             }
 
