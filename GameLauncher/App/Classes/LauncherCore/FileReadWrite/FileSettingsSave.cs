@@ -64,7 +64,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
             if (!settingFile.KeyExists("CDN") || string.IsNullOrEmpty(settingFile.Read("CDN")))
             {
-                settingFile.Write("CDN", "http://localhost");
+                settingFile.Write("CDN", "http://localhost/");
             }
             else if (settingFile.KeyExists("CDN"))
             {
