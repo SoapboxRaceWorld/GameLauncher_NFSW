@@ -976,7 +976,7 @@ namespace GameLauncher.App
                 else
                 {
                     Log.Warning("SETTINGS LANGLIST: Unable to find anything, assuming default");
-                    SettingsLanguage.SelectedIndex = 2;
+                    SettingsLanguage.SelectedIndex = 1;
                     Log.Warning("SETTINGS LANGLIST: Unknown entry value is " + SavedLang);
                 }
                 Log.Core("SETTINGS LANGLIST: All done");
