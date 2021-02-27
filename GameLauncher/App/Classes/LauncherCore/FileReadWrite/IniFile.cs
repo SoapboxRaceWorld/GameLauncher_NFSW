@@ -39,6 +39,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public void Write(string Key, string Value)
         {
+            if (!File.Exists(Path))
+            {
+                File.Create(Path).Dispose();
+            }
+
             if (new FileInfo(Path).IsReadOnly != true) 
             { 
                 UTF8Encoding utf8 = new UTF8Encoding(false);
