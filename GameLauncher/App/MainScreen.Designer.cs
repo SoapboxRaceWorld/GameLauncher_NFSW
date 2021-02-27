@@ -179,11 +179,12 @@ namespace GameLauncher
             this.PlayProgressText.BackColor = System.Drawing.Color.Transparent;
             this.PlayProgressText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayProgressText.ForeColor = System.Drawing.Color.White;
-            this.PlayProgressText.Location = new System.Drawing.Point(42, 403);
+            this.PlayProgressText.Location = new System.Drawing.Point(42, 404);
             this.PlayProgressText.Name = "PlayProgressText";
             this.PlayProgressText.Size = new System.Drawing.Size(510, 14);
             this.PlayProgressText.TabIndex = 10;
             this.PlayProgressText.Text = "PLEASE WAIT";
+            this.PlayProgressText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // LauncherStatusText
             // 
@@ -420,13 +421,13 @@ namespace GameLauncher
             // PlayProgressTextTimer
             // 
             this.PlayProgressTextTimer.BackColor = System.Drawing.Color.Transparent;
-            this.PlayProgressTextTimer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PlayProgressTextTimer.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PlayProgressTextTimer.ForeColor = System.Drawing.Color.White;
-            this.PlayProgressTextTimer.Location = new System.Drawing.Point(432, 380);
+            this.PlayProgressTextTimer.Location = new System.Drawing.Point(25, 385);
             this.PlayProgressTextTimer.Name = "PlayProgressTextTimer";
-            this.PlayProgressTextTimer.Size = new System.Drawing.Size(120, 19);
+            this.PlayProgressTextTimer.Size = new System.Drawing.Size(529, 14);
             this.PlayProgressTextTimer.TabIndex = 135;
-            this.PlayProgressTextTimer.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.PlayProgressTextTimer.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // RegisterEmail
             // 
