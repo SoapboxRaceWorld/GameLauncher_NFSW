@@ -369,7 +369,7 @@ namespace GameLauncher
                 File.Delete(temporaryFile);
 
                 //Windows Defender (Windows 10)
-                if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.WindowsDefenderStatus == "Not Excluded"))
+                if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.WindowsDefenderStatus == "Not Excluded" || FileSettingsSave.WindowsDefenderStatus == "Unknown"))
                 {
                     Log.Core("WINDOWS DEFENDER: Windows 10 Detected! Running Exclusions for Core Folders");
                     WindowsDefenderFirstRun();
