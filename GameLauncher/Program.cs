@@ -362,7 +362,7 @@ namespace GameLauncher
                         bool removeFirewallRule = false;
                         bool firstTimeRun = false;
 
-                        if (FileSettingsSave.FirewallStatus == "Not Excluded" || FileSettingsSave.FirewallStatus == "Turned Off" || FileSettingsSave.FirewallStatus == "Service Stopped")
+                        if (FileSettingsSave.FirewallStatus == "Not Excluded" || FileSettingsSave.FirewallStatus == "Turned Off" || FileSettingsSave.FirewallStatus == "Service Stopped" || FileSettingsSave.FirewallStatus == "Unknown")
                         {
                             firstTimeRun = true;
                             FileSettingsSave.FirewallStatus = "Excluded";
@@ -726,6 +726,13 @@ namespace GameLauncher
 
             Log.Info("PROXY: Starting Proxy");
             ServerProxy.Instance.Start();
+
+            /* Check ServerList Status */
+
+            if (FunctionStatus.ServerListStatus != "Loaded")
+            {
+                ServerListUpdater.GetList();
+            }
 
             /* Close Splash Screen */
             if (IsSplashScreenLive == true)

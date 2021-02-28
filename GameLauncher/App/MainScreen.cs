@@ -487,13 +487,6 @@ namespace GameLauncher
                 RememberMe.Checked = true;
             }
 
-            /* Check ServerList Status */
-
-            if (FunctionStatus.ServerListStatus != "Loaded")
-            {
-                ServerListUpdater.GetList();
-            }
-
             /* Server Display List */
             ServerPick.DisplayMember = "Name";
             Log.Core("LAUNCHER: Setting server list");
@@ -1057,8 +1050,13 @@ namespace GameLauncher
                         {
                             serverStatusDictionary[_serverInfo.Id] = 1;
                         }
-                        //Enable Social Panel
-                        ServerInfoPanel.Visible = true;
+
+                        try
+                        {
+                            //Enable Social Panel
+                            ServerInfoPanel.Visible = true;
+                        }
+                        catch { }
 
                         String purejson = String.Empty;
                         purejson = e2.Result;
@@ -1118,13 +1116,7 @@ namespace GameLauncher
                                 DiscordInviteLink.Text = "Discord Invite";
                             }
                         }
-                        catch
-                        {
-                            DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled;
-                            DiscordInviteLink.Enabled = false;
-                            _serverDiscordLink = null;
-                            DiscordInviteLink.Text = "";
-                        }
+                        catch { }
 
                         //Homepage Display
                         try
@@ -1144,13 +1136,7 @@ namespace GameLauncher
                                 HomePageLink.Text = "Home Page";
                             }
                         }
-                        catch
-                        {
-                            HomePageIcon.BackgroundImage = Theming.HomeIconDisabled;
-                            HomePageLink.Enabled = false;
-                            _serverWebsiteLink = null;
-                            HomePageLink.Text = "";
-                        }
+                        catch { }
 
                         //Facebook Group Display
                         try
@@ -1170,13 +1156,7 @@ namespace GameLauncher
                                 FacebookGroupLink.Text = "Facebook Page";
                             }
                         }
-                        catch
-                        {
-                            FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled;
-                            FacebookGroupLink.Enabled = false;
-                            _serverFacebookLink = null;
-                            FacebookGroupLink.Text = "";
-                        }
+                        catch { }
 
                         //Twitter Account Display
                         try
@@ -1196,13 +1176,7 @@ namespace GameLauncher
                                 TwitterAccountLink.Text = "Twitter Feed";
                             }
                         }
-                        catch
-                        {
-                            TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled;
-                            TwitterAccountLink.Enabled = false;
-                            _serverTwitterLink = null;
-                            TwitterAccountLink.Text = "";
-                        }
+                        catch { }
 
                         //Server Set Speedbug Timer Display
                         try
@@ -1212,33 +1186,34 @@ namespace GameLauncher
 
                             this.ServerShutDown.Text = serverSecondsToShutDownNamed;
                         }
-                        catch
-                        {
-                            this.ServerShutDown.Text = "∞ and Beyond";
-                        }
+                        catch { }
 
-                        //Scenery Group Display
-                        switch (String.Join("", json.activatedHolidaySceneryGroups))
+                        try
                         {
-                            case "SCENERY_GROUP_NEWYEARS":
-                                this.SceneryGroupText.Text = "Scenery: New Years";
-                                break;
-                            case "SCENERY_GROUP_OKTOBERFEST":
-                                this.SceneryGroupText.Text = "Scenery: OKTOBERFEST";
-                                break;
-                            case "SCENERY_GROUP_HALLOWEEN":
-                                this.SceneryGroupText.Text = "Scenery: Halloween";
-                                break;
-                            case "SCENERY_GROUP_CHRISTMAS":
-                                this.SceneryGroupText.Text = "Scenery: Christmas";
-                                break;
-                            case "SCENERY_GROUP_VALENTINES":
-                                this.SceneryGroupText.Text = "Scenery: Valentines";
-                                break;
-                            default:
-                                this.SceneryGroupText.Text = "Scenery: Normal";
-                                break;
+                            //Scenery Group Display
+                            switch (String.Join("", json.activatedHolidaySceneryGroups))
+                            {
+                                case "SCENERY_GROUP_NEWYEARS":
+                                    this.SceneryGroupText.Text = "Scenery: New Years";
+                                    break;
+                                case "SCENERY_GROUP_OKTOBERFEST":
+                                    this.SceneryGroupText.Text = "Scenery: OKTOBERFEST";
+                                    break;
+                                case "SCENERY_GROUP_HALLOWEEN":
+                                    this.SceneryGroupText.Text = "Scenery: Halloween";
+                                    break;
+                                case "SCENERY_GROUP_CHRISTMAS":
+                                    this.SceneryGroupText.Text = "Scenery: Christmas";
+                                    break;
+                                case "SCENERY_GROUP_VALENTINES":
+                                    this.SceneryGroupText.Text = "Scenery: Valentines";
+                                    break;
+                                default:
+                                    this.SceneryGroupText.Text = "Scenery: Normal";
+                                    break;
+                            }
                         }
+                        catch { }
 
                         try
                         {

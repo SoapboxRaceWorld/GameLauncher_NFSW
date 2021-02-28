@@ -8,23 +8,23 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
     {
         public static IniFile settingFile = new IniFile("Settings.ini");
 
-        public static string GameInstallation = settingFile.Read("InstallationDirectory");
+        public static string GameInstallation = !string.IsNullOrEmpty(settingFile.Read("InstallationDirectory")) ? settingFile.Read("InstallationDirectory") : string.Empty;
 
-        public static string CDN = settingFile.Read("CDN");
+        public static string CDN = !string.IsNullOrEmpty(settingFile.Read("CDN")) ? settingFile.Read("CDN") : "http://localhost/";
 
-        public static string Lang = settingFile.Read("Language");
+        public static string Lang = !string.IsNullOrEmpty(settingFile.Read("Language")) ? settingFile.Read("Language") : "EN";
 
-        public static string Proxy = settingFile.Read("DisableProxy");
+        public static string Proxy = !string.IsNullOrEmpty(settingFile.Read("DisableProxy")) ? settingFile.Read("DisableProxy") : "0";
 
-        public static string RPC = settingFile.Read("DisableRPC");
+        public static string RPC = !string.IsNullOrEmpty(settingFile.Read("DisableRPC")) ? settingFile.Read("DisableRPC") : "0";
 
-        public static string IgnoreVersion = settingFile.Read("IgnoreUpdateVersion");
+        public static string IgnoreVersion = !string.IsNullOrEmpty(settingFile.Read("IgnoreUpdateVersion")) ? settingFile.Read("IgnoreUpdateVersion") : string.Empty;
 
-        public static string FirewallStatus = settingFile.Read("Firewall");
+        public static string FirewallStatus = !string.IsNullOrEmpty(settingFile.Read("Firewall")) ? settingFile.Read("Firewall") : "Unknown";
 
-        public static string WindowsDefenderStatus = settingFile.Read("WindowsDefender");
+        public static string WindowsDefenderStatus = !string.IsNullOrEmpty(settingFile.Read("WindowsDefender")) ? settingFile.Read("WindowsDefender") : "Unknown";
 
-        public static string Win7UpdatePatches = settingFile.Read("PatchesApplied");
+        public static string Win7UpdatePatches = !string.IsNullOrEmpty(settingFile.Read("PatchesApplied")) ? settingFile.Read("PatchesApplied") : string.Empty;
 
         public static void NullSafeSettings()
         {
@@ -55,62 +55,60 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             }
             else if (!settingFile.KeyExists("InstallationDirectory"))
             {
-                settingFile.Write("InstallationDirectory", string.Empty);
+                settingFile.Write("InstallationDirectory", GameInstallation);
             }
-            else if (!File.Exists(settingFile.Read("InstallationDirectory")) && !string.IsNullOrEmpty(settingFile.Read("InstallationDirectory")))
+            else if (!File.Exists(GameInstallation) && !string.IsNullOrEmpty(GameInstallation))
             {
-                Directory.CreateDirectory(settingFile.Read("InstallationDirectory"));
+                Directory.CreateDirectory(GameInstallation);
             }
 
-            if (!settingFile.KeyExists("CDN") || string.IsNullOrEmpty(settingFile.Read("CDN")))
+            if (!settingFile.KeyExists("CDN"))
             {
-                settingFile.Write("CDN", "http://localhost/");
+                settingFile.Write("CDN", CDN);
             }
             else if (settingFile.KeyExists("CDN"))
             {
-                string SavedCDN = settingFile.Read("CDN");
-
-                if (SavedCDN.EndsWith("/"))
+                if (CDN.EndsWith("/"))
                 {
                     char[] charsToTrim = { '/' };
-                    string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
+                    string FinalCDNURL = CDN.TrimEnd(charsToTrim);
 
                     settingFile.Write("CDN", FinalCDNURL);
                 }
             }
 
-            if (!settingFile.KeyExists("Language") || string.IsNullOrEmpty(settingFile.Read("Language")))
+            if (!settingFile.KeyExists("Language"))
             {
-                settingFile.Write("Language", "EN");
+                settingFile.Write("Language", Lang);
             }
 
-            if (!settingFile.KeyExists("DisableProxy") || string.IsNullOrEmpty(settingFile.Read("DisableProxy")))
+            if (!settingFile.KeyExists("DisableProxy"))
             {
-                settingFile.Write("DisableProxy", "0");
+                settingFile.Write("DisableProxy", Proxy);
             }
 
-            if (!settingFile.KeyExists("DisableRPC") || string.IsNullOrEmpty(settingFile.Read("DisableRPC")))
+            if (!settingFile.KeyExists("DisableRPC"))
             {
-                settingFile.Write("DisableRPC", "0");
+                settingFile.Write("DisableRPC", RPC);
             }
 
             if (!settingFile.KeyExists("IgnoreUpdateVersion"))
             {
-                settingFile.Write("IgnoreUpdateVersion", string.Empty);
+                settingFile.Write("IgnoreUpdateVersion", IgnoreVersion);
             }
 
             if (!DetectLinux.LinuxDetected())
             {
-                if (!settingFile.KeyExists("Firewall") || string.IsNullOrEmpty(settingFile.Read("Firewall")))
+                if (!settingFile.KeyExists("Firewall"))
                 {
-                    settingFile.Write("Firewall", "Not Excluded");
+                    settingFile.Write("Firewall", FirewallStatus);
                 }
 
                 if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
                 {
-                    if (!settingFile.KeyExists("WindowsDefender") || string.IsNullOrEmpty(settingFile.Read("WindowsDefender")))
+                    if (!settingFile.KeyExists("WindowsDefender"))
                     {
-                        settingFile.Write("WindowsDefender", "Not Excluded");
+                        settingFile.Write("WindowsDefender", WindowsDefenderStatus);
                     }
                 }
                 else if (WindowsProductVersion.GetWindowsNumber() < 10.0)
@@ -123,7 +121,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
                 if (WindowsProductVersion.GetWindowsNumber() == 6.1 && !settingFile.KeyExists("PatchesApplied"))
                 {
-                    settingFile.Write("PatchesApplied", string.Empty);
+                    settingFile.Write("PatchesApplied", Win7UpdatePatches);
                 }
                 else if (WindowsProductVersion.GetWindowsNumber() != 6.1 && settingFile.KeyExists("PatchesApplied"))
                 {
@@ -165,12 +163,10 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         {
             if (settingFile.Read("CDN") != CDN)
             {
-                string SavedCDN = CDN;
-
-                if (SavedCDN.EndsWith("/"))
+                if (CDN.EndsWith("/"))
                 {
                     char[] charsToTrim = { '/' };
-                    string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
+                    string FinalCDNURL = CDN.TrimEnd(charsToTrim);
 
                     settingFile.Write("CDN", FinalCDNURL);
                 }
