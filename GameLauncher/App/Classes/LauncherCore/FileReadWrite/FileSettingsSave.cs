@@ -20,7 +20,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public static string IgnoreVersion = !string.IsNullOrEmpty(settingFile.Read("IgnoreUpdateVersion")) ? settingFile.Read("IgnoreUpdateVersion") : string.Empty;
 
-        public static string FirewallLauncherStatus = !string.IsNullOrEmpty(settingFile.Read("Firewall")) ? settingFile.Read("Firewall") : "Unknown";
+        public static string FirewallLauncherStatus = !string.IsNullOrEmpty(settingFile.Read("FirewallLauncher")) ? settingFile.Read("FirewallLauncher") : "Unknown";
 
         public static string FirewallGameStatus = !string.IsNullOrEmpty(settingFile.Read("FirewallGame")) ? settingFile.Read("FirewallGame") : "Unknown";
 
