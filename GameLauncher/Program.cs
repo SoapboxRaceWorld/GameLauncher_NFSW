@@ -362,7 +362,7 @@ namespace GameLauncher
                         bool removeFirewallRule = false;
                         bool firstTimeRun = false;
 
-                        if (FileSettingsSave.FirewallStatus == "Not Excluded" || FileSettingsSave.FirewallStatus == "Turned Off" || FileSettingsSave.FirewallStatus == "Service Stopped")
+                        if (FileSettingsSave.FirewallStatus == "Not Excluded" || FileSettingsSave.FirewallStatus == "Turned Off" || FileSettingsSave.FirewallStatus == "Service Stopped" || FileSettingsSave.FirewallStatus == "Unknown")
                         {
                             firstTimeRun = true;
                             FileSettingsSave.FirewallStatus = "Excluded";
@@ -490,7 +490,7 @@ namespace GameLauncher
             if (!DetectLinux.LinuxDetected())
             {
                 //Windows 7 Fix
-                if ((string.IsNullOrEmpty(FileSettingsSave.Win7UpdatePatches) && WindowsProductVersion.GetWindowsNumber() == 6.1) || FileSettingsSave.Win7UpdatePatches == "0")
+                if (WindowsProductVersion.GetWindowsNumber() == 6.1 && (string.IsNullOrEmpty(FileSettingsSave.Win7UpdatePatches)))
                 {
                     if (ManagementSearcher.GetInstalledHotFix("KB3020369") == false || ManagementSearcher.GetInstalledHotFix("KB3125574") == false)
                     {
@@ -515,13 +515,14 @@ namespace GameLauncher
                             key.SetValue("DisabledByDefault", 0x0);
 
                             MessageBox.Show(null, "Registry option set, Remember that the changes may require a system reboot to take effect", "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            FileSettingsSave.Win7UpdatePatches = "1";
                         }
                         else
                         {
                             MessageBox.Show(null, "Roger that, There may be some issues connecting to the servers.", "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            FileSettingsSave.Win7UpdatePatches = "0";
                         }
 
-                        FileSettingsSave.Win7UpdatePatches = "1";
                         FileSettingsSave.SaveSettings();
                     }
                 }
@@ -725,6 +726,13 @@ namespace GameLauncher
 
             Log.Info("PROXY: Starting Proxy");
             ServerProxy.Instance.Start();
+
+            /* Check ServerList Status */
+
+            if (FunctionStatus.ServerListStatus != "Loaded")
+            {
+                ServerListUpdater.GetList();
+            }
 
             /* Close Splash Screen */
             if (IsSplashScreenLive == true)

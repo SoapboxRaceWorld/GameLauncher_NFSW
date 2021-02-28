@@ -369,7 +369,7 @@ namespace GameLauncher
                 File.Delete(temporaryFile);
 
                 //Windows Defender (Windows 10)
-                if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.WindowsDefenderStatus == "Not Excluded"))
+                if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.WindowsDefenderStatus == "Not Excluded" || FileSettingsSave.WindowsDefenderStatus == "Unknown"))
                 {
                     Log.Core("WINDOWS DEFENDER: Windows 10 Detected! Running Exclusions for Core Folders");
                     WindowsDefenderFirstRun();
@@ -485,13 +485,6 @@ namespace GameLauncher
             {
                 Log.Core("LAUNCHER: Restoring last saved email and password");
                 RememberMe.Checked = true;
-            }
-
-            /* Check ServerList Status */
-
-            if (FunctionStatus.ServerListStatus != "Loaded")
-            {
-                ServerListUpdater.GetList();
             }
 
             /* Server Display List */
@@ -1057,8 +1050,13 @@ namespace GameLauncher
                         {
                             serverStatusDictionary[_serverInfo.Id] = 1;
                         }
-                        //Enable Social Panel
-                        ServerInfoPanel.Visible = true;
+
+                        try
+                        {
+                            //Enable Social Panel
+                            ServerInfoPanel.Visible = true;
+                        }
+                        catch { }
 
                         String purejson = String.Empty;
                         purejson = e2.Result;
@@ -1118,13 +1116,7 @@ namespace GameLauncher
                                 DiscordInviteLink.Text = "Discord Invite";
                             }
                         }
-                        catch
-                        {
-                            DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled;
-                            DiscordInviteLink.Enabled = false;
-                            _serverDiscordLink = null;
-                            DiscordInviteLink.Text = "";
-                        }
+                        catch { }
 
                         //Homepage Display
                         try
@@ -1144,13 +1136,7 @@ namespace GameLauncher
                                 HomePageLink.Text = "Home Page";
                             }
                         }
-                        catch
-                        {
-                            HomePageIcon.BackgroundImage = Theming.HomeIconDisabled;
-                            HomePageLink.Enabled = false;
-                            _serverWebsiteLink = null;
-                            HomePageLink.Text = "";
-                        }
+                        catch { }
 
                         //Facebook Group Display
                         try
@@ -1170,13 +1156,7 @@ namespace GameLauncher
                                 FacebookGroupLink.Text = "Facebook Page";
                             }
                         }
-                        catch
-                        {
-                            FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled;
-                            FacebookGroupLink.Enabled = false;
-                            _serverFacebookLink = null;
-                            FacebookGroupLink.Text = "";
-                        }
+                        catch { }
 
                         //Twitter Account Display
                         try
@@ -1196,13 +1176,7 @@ namespace GameLauncher
                                 TwitterAccountLink.Text = "Twitter Feed";
                             }
                         }
-                        catch
-                        {
-                            TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled;
-                            TwitterAccountLink.Enabled = false;
-                            _serverTwitterLink = null;
-                            TwitterAccountLink.Text = "";
-                        }
+                        catch { }
 
                         //Server Set Speedbug Timer Display
                         try
@@ -1212,33 +1186,34 @@ namespace GameLauncher
 
                             this.ServerShutDown.Text = serverSecondsToShutDownNamed;
                         }
-                        catch
-                        {
-                            this.ServerShutDown.Text = "∞ and Beyond";
-                        }
+                        catch { }
 
-                        //Scenery Group Display
-                        switch (String.Join("", json.activatedHolidaySceneryGroups))
+                        try
                         {
-                            case "SCENERY_GROUP_NEWYEARS":
-                                this.SceneryGroupText.Text = "Scenery: New Years";
-                                break;
-                            case "SCENERY_GROUP_OKTOBERFEST":
-                                this.SceneryGroupText.Text = "Scenery: OKTOBERFEST";
-                                break;
-                            case "SCENERY_GROUP_HALLOWEEN":
-                                this.SceneryGroupText.Text = "Scenery: Halloween";
-                                break;
-                            case "SCENERY_GROUP_CHRISTMAS":
-                                this.SceneryGroupText.Text = "Scenery: Christmas";
-                                break;
-                            case "SCENERY_GROUP_VALENTINES":
-                                this.SceneryGroupText.Text = "Scenery: Valentines";
-                                break;
-                            default:
-                                this.SceneryGroupText.Text = "Scenery: Normal";
-                                break;
+                            //Scenery Group Display
+                            switch (String.Join("", json.activatedHolidaySceneryGroups))
+                            {
+                                case "SCENERY_GROUP_NEWYEARS":
+                                    this.SceneryGroupText.Text = "Scenery: New Years";
+                                    break;
+                                case "SCENERY_GROUP_OKTOBERFEST":
+                                    this.SceneryGroupText.Text = "Scenery: OKTOBERFEST";
+                                    break;
+                                case "SCENERY_GROUP_HALLOWEEN":
+                                    this.SceneryGroupText.Text = "Scenery: Halloween";
+                                    break;
+                                case "SCENERY_GROUP_CHRISTMAS":
+                                    this.SceneryGroupText.Text = "Scenery: Christmas";
+                                    break;
+                                case "SCENERY_GROUP_VALENTINES":
+                                    this.SceneryGroupText.Text = "Scenery: Valentines";
+                                    break;
+                                default:
+                                    this.SceneryGroupText.Text = "Scenery: Normal";
+                                    break;
+                            }
                         }
+                        catch { }
 
                         try
                         {
@@ -2170,10 +2145,10 @@ namespace GameLauncher
 
                     //Proper Formatting
                     List<string>        list_of_times = new List<string>();
-                    if (t.Days != 0)    list_of_times.Add(t.Days + (t.Days != 1 ? "Days" : "Day"));
-                    if (t.Hours != 0)   list_of_times.Add(t.Hours + (t.Hours != 1 ? "Hours" : "Hour"));
-                    if (t.Minutes != 0) list_of_times.Add(t.Minutes + (t.Minutes != 1 ? "Minutes" : "Minute"));
-                    if (t.Seconds != 0) list_of_times.Add(t.Seconds + (t.Seconds != 1 ? "Seconds" : "Second"));
+                    if (t.Days != 0)    list_of_times.Add(t.Days + (t.Days != 1 ? " Days" : " Day"));
+                    if (t.Hours != 0)   list_of_times.Add(t.Hours + (t.Hours != 1 ? " Hours" : " Hour"));
+                    if (t.Minutes != 0) list_of_times.Add(t.Minutes + (t.Minutes != 1 ? " Minutes" : " Minute"));
+                    if (t.Seconds != 0) list_of_times.Add(t.Seconds + (t.Seconds != 1 ? " Seconds" : " Second"));
 
                     String secondsToShutDownNamed = String.Empty;
                     if (list_of_times.Count() >= 2)
@@ -2674,18 +2649,7 @@ namespace GameLauncher
             PlayProgress.Width = 0;
             ExtractingProgress.Width = 0;
 
-            string speechFile;
-
-            try
-            {
-                speechFile = string.IsNullOrEmpty(FileSettingsSave.Lang) ? "en" : FileSettingsSave.Lang.ToLower();
-            }
-            catch (Exception)
-            {
-                speechFile = "en";
-            }
-
-            if (!File.Exists(FileSettingsSave.GameInstallation + "/Sound/Speech/copspeechhdr_" + speechFile + ".big"))
+            if (!File.Exists(FileSettingsSave.GameInstallation + "/Sound/Speech/copspeechhdr_" + FileSettingsSave.Lang.ToLower() + ".big"))
             {
                 PlayProgressText.Text = "Loading list of files to download...".ToUpper();
 
@@ -2792,28 +2756,19 @@ namespace GameLauncher
 
             try
             {
-                if (string.IsNullOrEmpty(FileSettingsSave.Lang))
-                {
-                    speechFile = "en";
-                    speechSize = 141805935;
-                    _langInfo = "ENGLISH";
-                }
-                else
-                {
-                    WebClient wc = new WebClient();
-                    var response = wc.DownloadString(_NFSW_Installation_Source + "/" + FileSettingsSave.Lang.ToLower() + "/index.xml");
+                WebClient wc = new WebClient();
+                var response = wc.DownloadString(_NFSW_Installation_Source + "/" + FileSettingsSave.Lang.ToLower() + "/index.xml");
 
-                    response = response.Substring(3, response.Length - 3);
+                response = response.Substring(3, response.Length - 3);
 
-                    var speechFileXml = new XmlDocument();
-                    speechFileXml.LoadXml(response);
-                    var speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
+                var speechFileXml = new XmlDocument();
+                speechFileXml.LoadXml(response);
+                var speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
 
-                    speechFile = FileSettingsSave.Lang.ToLower();
-                    speechSize = Convert.ToInt32(speechSizeNode.InnerText);
-                    /* Fix this issue - DavidCarbon */
-                    //_langInfo = SettingsLanguage.GetItemText(SettingsLanguage.SelectedItem).ToUpper();
-                }
+                speechFile = FileSettingsSave.Lang.ToLower();
+                speechSize = Convert.ToInt32(speechSizeNode.InnerText);
+                /* Fix this issue - DavidCarbon */
+                //_langInfo = SettingsLanguage.GetItemText(SettingsLanguage.SelectedItem).ToUpper();
             }
             catch (Exception)
             {
