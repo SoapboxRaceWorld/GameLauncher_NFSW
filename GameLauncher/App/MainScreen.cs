@@ -2147,7 +2147,7 @@ namespace GameLauncher
                     List<string>        list_of_times = new List<string>();
                     if (t.Days != 0)    list_of_times.Add(t.Days + (t.Days != 1 ? " Days" : " Day"));
                     if (t.Hours != 0)   list_of_times.Add(t.Hours + (t.Hours != 1 ? " Hours" : " Hour"));
-                    if (t.Minutes != 0) list_of_times.Add(t.Minutes + (t.Minutes != 1 ? " Minutes" : "Minute"));
+                    if (t.Minutes != 0) list_of_times.Add(t.Minutes + (t.Minutes != 1 ? " Minutes" : " Minute"));
                     if (t.Seconds != 0) list_of_times.Add(t.Seconds + (t.Seconds != 1 ? " Seconds" : " Second"));
 
                     String secondsToShutDownNamed = String.Empty;
