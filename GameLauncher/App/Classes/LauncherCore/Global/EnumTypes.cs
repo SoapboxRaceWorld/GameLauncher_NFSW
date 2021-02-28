@@ -37,4 +37,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         Unknown,
         Null
     }
+
+    /* Used with System Language Function in FunctionStatus.cs
+    /* Or
+    * Other Conditionals */
+    enum SystemLang
+    {
+        English,
+        Russian
+    }
 }
