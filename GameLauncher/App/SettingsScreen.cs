@@ -553,6 +553,7 @@ namespace GameLauncher.App
                         userSettingsXml.Load(_userSettings);
                         var language = userSettingsXml.SelectSingleNode("Settings/UI/Language");
                         language.InnerText = ((LangObject)SettingsLanguage.SelectedItem).XML_Value;
+                        Log.Debug("1");
                     }
                     catch
                     {
@@ -567,6 +568,7 @@ namespace GameLauncher.App
                         ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
+                        Log.Debug("2");
                     }
                 }
                 else
@@ -582,6 +584,7 @@ namespace GameLauncher.App
                         ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
+                        Log.Debug("3");
                     }
                     catch (Exception ex)
                     {

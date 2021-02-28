@@ -117,17 +117,6 @@ namespace GameLauncher.App
                 UpdateSkip = FileSettingsSave.IgnoreVersion;
             }
 
-            string FirewallRuleStatus = "";
-
-            if (String.IsNullOrEmpty(FileSettingsSave.FirewallStatus))
-            {
-                FirewallRuleStatus = "Not Exlcuded";
-            }
-            else
-            {
-                FirewallRuleStatus = FileSettingsSave.FirewallStatus;
-            }
-
             long memKb = 0;
             ulong lpFreeBytesAvailable = 0;
             List<string> GPUs = new List<string>();
@@ -163,7 +152,8 @@ namespace GameLauncher.App
                 new ListType{ Name = "Skipping Update", Value = UpdateSkip},
                 new ListType{ Name = "Disable Proxy", Value = ProxyStatus},
                 new ListType{ Name = "Disable RPC", Value = RPCStatus},
-                new ListType{ Name = "Firewall Rule", Value =  FirewallRuleStatus},
+                new ListType{ Name = "Firewall Rule - Launcher", Value =  FileSettingsSave.FirewallLauncherStatus},
+                new ListType{ Name = "Firewall Rule - Game", Value =  FileSettingsSave.FirewallGameStatus},
                 new ListType{ Name = "", Value = "" },
                 new ListType{ Name = "Server Name", Value = ServerName},
                 new ListType{ Name = "Server Address", Value = ServerIP},

@@ -343,67 +343,48 @@ namespace GameLauncher
                 Thread.Sleep(3000);
             }
 
-            if (!DetectLinux.LinuxDetected())
+            //Windows Firewall Runner
+            if (!string.IsNullOrEmpty(FileSettingsSave.FirewallLauncherStatus))
             {
-                //Windows Firewall Runner
-                if (!string.IsNullOrEmpty(FileSettingsSave.FirewallStatus))
+                if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == true)
                 {
-                    if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == true)
+                    string nameOfLauncher = "SBRW - Game Launcher";
+                    string localOfLauncher = Assembly.GetEntryAssembly().Location;
+
+                    string nameOfUpdater = "SBRW - Game Launcher Updater";
+                    string localOfUpdater = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "GameLauncherUpdater.exe");
+
+                    string groupKeyLauncher = "Game Launcher for Windows";
+                    string descriptionLauncher = "Soapbox Race World";
+
+                    bool removeFirewallRule = false;
+                    bool firstTimeRun = false;
+
+                    if (FileSettingsSave.FirewallLauncherStatus == "Not Excluded" || FileSettingsSave.FirewallLauncherStatus == "Turned Off" || FileSettingsSave.FirewallLauncherStatus == "Service Stopped" || FileSettingsSave.FirewallLauncherStatus == "Unknown")
                     {
-                        string nameOfLauncher = "SBRW - Game Launcher";
-                        string localOfLauncher = Assembly.GetEntryAssembly().Location;
-
-                        string nameOfUpdater = "SBRW - Game Launcher Updater";
-                        string localOfUpdater = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "GameLauncherUpdater.exe");
-
-                        string groupKeyLauncher = "Game Launcher for Windows";
-                        string descriptionLauncher = "Soapbox Race World";
-
-                        bool removeFirewallRule = false;
-                        bool firstTimeRun = false;
-
-                        if (FileSettingsSave.FirewallStatus == "Not Excluded" || FileSettingsSave.FirewallStatus == "Turned Off" || FileSettingsSave.FirewallStatus == "Service Stopped" || FileSettingsSave.FirewallStatus == "Unknown")
-                        {
-                            firstTimeRun = true;
-                            FileSettingsSave.FirewallStatus = "Excluded";
-                        }
-                        else if (FileSettingsSave.FirewallStatus == "Reset")
-                        {
-                            removeFirewallRule = true;
-                            FileSettingsSave.FirewallStatus = "Not Excluded";
-                        }
-
-                        //Inbound & Outbound
-                        FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
-                        FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
-
-                        //This Removes the Game File Exe From Firewall
-                        //To Find the one that Adds the Exe To Firewall -> Search for `OnDownloadFinished()`
-                        string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
-
-                        if (File.Exists(CurrentGameFilesExePath) && removeFirewallRule == true)
-                        {
-                            string nameOfGame = "SBRW - Game";
-                            string localOfGame = CurrentGameFilesExePath;
-
-                            string groupKeyGame = "Need for Speed: World";
-                            string descriptionGame = groupKeyGame;
-
-                            //Inbound & Outbound
-                            FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
-                        }
+                        firstTimeRun = true;
+                        FileSettingsSave.FirewallLauncherStatus = "Excluded";
                     }
-                    else if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == false)
+                    else if (FileSettingsSave.FirewallLauncherStatus == "Reset")
                     {
-                        FileSettingsSave.FirewallStatus = "Turned Off";
-                    }
-                    else
-                    {
-                        FileSettingsSave.FirewallStatus = "Service Stopped";
+                        removeFirewallRule = true;
+                        FileSettingsSave.FirewallLauncherStatus = "Not Excluded";
                     }
 
-                    FileSettingsSave.SaveSettings();
+                    //Inbound & Outbound
+                    FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
+                    FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
                 }
+                else if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == false)
+                {
+                    FileSettingsSave.FirewallLauncherStatus = "Turned Off";
+                }
+                else
+                {
+                    FileSettingsSave.FirewallLauncherStatus = "Service Stopped";
+                }
+
+                FileSettingsSave.SaveSettings();
             }
 
             Application.EnableVisualStyles();
@@ -720,9 +701,6 @@ namespace GameLauncher
                 var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
                 ModNetLinksCleanup.CleanLinks(linksPath);
             }
-
-            /* Check Permission for Launcher Folder and File it Self */
-            FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(AppDomain.CurrentDomain.BaseDirectory));
 
             Log.Info("PROXY: Starting Proxy");
             ServerProxy.Instance.Start();

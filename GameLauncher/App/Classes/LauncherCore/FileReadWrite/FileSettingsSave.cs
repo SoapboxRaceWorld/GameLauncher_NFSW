@@ -20,14 +20,19 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public static string IgnoreVersion = !string.IsNullOrEmpty(settingFile.Read("IgnoreUpdateVersion")) ? settingFile.Read("IgnoreUpdateVersion") : string.Empty;
 
-        public static string FirewallStatus = !string.IsNullOrEmpty(settingFile.Read("Firewall")) ? settingFile.Read("Firewall") : "Unknown";
+        public static string FirewallLauncherStatus = !string.IsNullOrEmpty(settingFile.Read("Firewall")) ? settingFile.Read("Firewall") : "Unknown";
+
+        public static string FirewallGameStatus = !string.IsNullOrEmpty(settingFile.Read("FirewallGame")) ? settingFile.Read("FirewallGame") : "Unknown";
 
         public static string WindowsDefenderStatus = !string.IsNullOrEmpty(settingFile.Read("WindowsDefender")) ? settingFile.Read("WindowsDefender") : "Unknown";
 
         public static string Win7UpdatePatches = !string.IsNullOrEmpty(settingFile.Read("PatchesApplied")) ? settingFile.Read("PatchesApplied") : string.Empty;
 
+        public static string FilePermissionStatus = !string.IsNullOrEmpty(settingFile.Read("FilePermission")) ? settingFile.Read("FilePermission") : "Not Set";
+
         public static void NullSafeSettings()
         {
+            /* Migrate old Key Entries */
             if (settingFile.KeyExists("Server"))
             {
                 FileAccountSave.ChoosenGameServer = settingFile.Read("Server");
@@ -48,6 +53,14 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 settingFile.DeleteKey("Password");
                 FileAccountSave.SaveAccount();
             }
+
+            if (settingFile.KeyExists("Firewall"))
+            {
+                FirewallLauncherStatus = settingFile.Read("Firewall");
+                settingFile.DeleteKey("Firewall");
+            }
+
+            /* Check if any Entries are missing */
 
             if (DetectLinux.LinuxDetected() && !settingFile.KeyExists("InstallationDirectory"))
             {
@@ -97,11 +110,29 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 settingFile.Write("IgnoreUpdateVersion", IgnoreVersion);
             }
 
+            if (!settingFile.KeyExists("FilePermission") && !DetectLinux.LinuxDetected())
+            {
+                settingFile.Write("FilePermission", FilePermissionStatus);
+            }
+            else if (settingFile.KeyExists("FilePermission") && DetectLinux.LinuxDetected())
+            {
+                settingFile.DeleteKey("FilePermission");
+            }
+
             if (!DetectLinux.LinuxDetected())
             {
-                if (!settingFile.KeyExists("Firewall"))
+                if (!settingFile.KeyExists("FirewallLauncher"))
                 {
-                    settingFile.Write("Firewall", FirewallStatus);
+                    settingFile.Write("FirewallLauncher", FirewallLauncherStatus);
+                }
+
+                if (FirewallLauncherStatus != "Unknown")
+                {
+                    FirewallGameStatus = FirewallLauncherStatus;
+                }
+                else if (!settingFile.KeyExists("FirewallGame"))
+                {
+                    settingFile.Write("FirewallGame", FirewallGameStatus);
                 }
 
                 if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
@@ -203,9 +234,19 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
             if (!DetectLinux.LinuxDetected())
             {
-                if (settingFile.Read("Firewall") != FirewallStatus)
+                if (settingFile.Read("FilePermission") != FilePermissionStatus)
                 {
-                    settingFile.Write("Firewall", FirewallStatus);
+                    settingFile.Write("FilePermission", FilePermissionStatus);
+                }
+
+                if (settingFile.Read("FirewallLauncher") != FirewallLauncherStatus)
+                {
+                    settingFile.Write("FirewallLauncher", FirewallLauncherStatus);
+                }
+
+                if (settingFile.Read("FirewallGame") != FirewallGameStatus)
+                {
+                    settingFile.Write("FirewallGame", FirewallGameStatus);
                 }
 
                 if (WindowsProductVersion.GetWindowsNumber() >= 10.0)

@@ -46,6 +46,7 @@ using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.SystemPlatform;
 using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 
 namespace GameLauncher
 {
@@ -1934,8 +1935,6 @@ namespace GameLauncher
 
         private void StartGame(string userId, string loginToken)
         {
-            FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(FileSettingsSave.GameInstallation + "\\.data"));
-
             if (UriScheme.ServerIP != String.Empty)
             {
                 _serverIp = UriScheme.ServerIP;
@@ -2377,12 +2376,10 @@ namespace GameLauncher
 
                             WebClient newModNetFilesDownload = new WebClient();
                             newModNetFilesDownload.DownloadFile(URLs.modnetserver + "/launcher-modules/" + ModNetList, FileSettingsSave.GameInstallation + "/" + ModNetList);
-                            FileORFolderPermissions.CheckLauncherPerms("File", Path.Combine(FileSettingsSave.GameInstallation + "\\" + ModNetList));
                         }
                         else
                         {
                             PlayProgressText.Text = ("ModNet: Up to Date " + ModNetList).ToUpper();
-                            FileORFolderPermissions.CheckLauncherPerms("File", Path.Combine(FileSettingsSave.GameInstallation + "\\" + ModNetList));
                             Log.Debug("MODNET CORE: " + ModNetList + " Is Up to Date!");
                         }
 
@@ -2442,7 +2439,6 @@ namespace GameLauncher
 
                     String path = Path.Combine(FileSettingsSave.GameInstallation, "MODS", MDFive.HashPassword(json2.serverID).ToLower());
                     if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-                    FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(FileSettingsSave.GameInstallation + "\\MODS"));
 
                     foreach (IndexJsonEntry modfile in json3.entries)
                     {
@@ -2701,7 +2697,7 @@ namespace GameLauncher
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
             //Guess who is Back - DavidCarbon
-            if (File.Exists(filename_pack))
+            if (File.Exists(filename_pack) && !File.Exists(FileSettingsSave.GameInstallation + "/nfsw.exe"))
             {
                 PlayProgressTextTimer.Visible = true;
                 PlayProgressText.Text = "Local GameFiles sbrwpack Found In Launcher Folder".ToUpper();
@@ -2766,7 +2762,7 @@ namespace GameLauncher
 
             try
             {
-                WebClient wc = new WebClient();
+                WebClientWithTimeout wc = new WebClientWithTimeout();
                 var response = wc.DownloadString(_NFSW_Installation_Source + "/" + speechFile + "/index.xml");
 
                 response = response.Substring(3, response.Length - 3);
@@ -2968,53 +2964,58 @@ namespace GameLauncher
                 // ignored
             }
 
-            if (!string.IsNullOrEmpty(FileSettingsSave.GameInstallation))
+            //Windows Firewall Runner
+            if (!string.IsNullOrEmpty(FileSettingsSave.FirewallGameStatus))
             {
-                //Remove current Firewall for the Game Files 
-                string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
-
-                if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.FirewallStatus() == true)
+                if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == true)
                 {
-                    if (FirewallHelper.RuleExist("SBRW - Game") == false)
+                    bool removeFirewallRule = false;
+                    bool firstTimeRun = false;
+
+                    string nameOfGame = "SBRW - Game";
+                    string localOfGame = FileSettingsSave.GameInstallation + "\\nfsw.exe";
+
+                    string groupKeyGame = "Need for Speed: World";
+                    string descriptionGame = groupKeyGame;
+
+                    if (FileSettingsSave.FirewallGameStatus == "Not Excluded" || FileSettingsSave.FirewallGameStatus == "Turned Off" || FileSettingsSave.FirewallGameStatus == "Service Stopped" || FileSettingsSave.FirewallGameStatus == "Unknown")
                     {
-                        bool removeFirewallRule = false;
-                        bool firstTimeRun = true;
-
-                        string nameOfGame = "SBRW - Game";
-                        string localOfGame = CurrentGameFilesExePath;
-
-                        string groupKeyGame = "Need for Speed: World";
-                        string descriptionGame = groupKeyGame;
-
-                        //Inbound & Outbound
-                        FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+                        firstTimeRun = true;
+                        FileSettingsSave.FirewallGameStatus = "Excluded";
                     }
+                    else if (FileSettingsSave.FirewallGameStatus == "Reset")
+                    {
+                        removeFirewallRule = true;
+                        FileSettingsSave.FirewallGameStatus = "Not Excluded";
+                    }
+
+                    //Inbound & Outbound
+                    FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+                }
+                else if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == false)
+                {
+                    FileSettingsSave.FirewallGameStatus = "Turned Off";
                 }
                 else
                 {
-                    if (DetectLinux.LinuxDetected())
-                    {
-                        Log.Core("WINDOWS FIREWALL: Not Supported On Linux -> SBRW - Game");
-                    }
-                    else if (FirewallManager.IsServiceRunning == true)
-                    {
-                        if (FirewallHelper.FirewallStatus() == false)
-                        {
-                            Log.Warning("WINDOWS FIREWALL: Turned Off [Not by Launcher] -> SBRW - Game");
-                        }
-                        else
-                        {
-                            Log.Core("WINDOWS FIREWALL: Already Exlcuded SBRW - Game {Both}");
-                        }
-                    }
-                    else
-                    {
-                        Log.Warning("WINDOWS FIREWALL: Service is Stopped [Not by Launcher] -> SBRW - Game");
-                    }
+                    FileSettingsSave.FirewallGameStatus = "Service Stopped";
                 }
 
-                FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(FileSettingsSave.GameInstallation));
-                FileORFolderPermissions.CheckLauncherPerms("File", Path.Combine(CurrentGameFilesExePath));
+                /* Set Folder Permissions Here - DavidCarbon */
+                if (FileSettingsSave.FilePermissionStatus != "Set" && !DetectLinux.LinuxDetected())
+                {
+                    /* Launcher Folder */
+                    FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(AppDomain.CurrentDomain.BaseDirectory));
+                    /* Game Files Folder */
+                    FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(FileSettingsSave.GameInstallation));
+                    FileSettingsSave.FilePermissionStatus = "Set";
+                }
+                else
+                {
+                    Log.Core("PERMISSIONS: Checking File! It's value is " + FileSettingsSave.FilePermissionStatus);
+                }
+
+                FileSettingsSave.SaveSettings();
             }
 
             PlayProgressText.Text = "Ready!".ToUpper();
