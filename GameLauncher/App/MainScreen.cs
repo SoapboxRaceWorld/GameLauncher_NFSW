@@ -2649,18 +2649,7 @@ namespace GameLauncher
             PlayProgress.Width = 0;
             ExtractingProgress.Width = 0;
 
-            string speechFile;
-
-            try
-            {
-                speechFile = string.IsNullOrEmpty(FileSettingsSave.Lang) ? "en" : FileSettingsSave.Lang.ToLower();
-            }
-            catch (Exception)
-            {
-                speechFile = "en";
-            }
-
-            if (!File.Exists(FileSettingsSave.GameInstallation + "/Sound/Speech/copspeechhdr_" + speechFile + ".big"))
+            if (!File.Exists(FileSettingsSave.GameInstallation + "/Sound/Speech/copspeechhdr_" + FileSettingsSave.Lang.ToLower() + ".big"))
             {
                 PlayProgressText.Text = "Loading list of files to download...".ToUpper();
 
@@ -2767,28 +2756,19 @@ namespace GameLauncher
 
             try
             {
-                if (string.IsNullOrEmpty(FileSettingsSave.Lang))
-                {
-                    speechFile = "en";
-                    speechSize = 141805935;
-                    _langInfo = "ENGLISH";
-                }
-                else
-                {
-                    WebClient wc = new WebClient();
-                    var response = wc.DownloadString(_NFSW_Installation_Source + "/" + FileSettingsSave.Lang.ToLower() + "/index.xml");
+                WebClient wc = new WebClient();
+                var response = wc.DownloadString(_NFSW_Installation_Source + "/" + FileSettingsSave.Lang.ToLower() + "/index.xml");
 
-                    response = response.Substring(3, response.Length - 3);
+                response = response.Substring(3, response.Length - 3);
 
-                    var speechFileXml = new XmlDocument();
-                    speechFileXml.LoadXml(response);
-                    var speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
+                var speechFileXml = new XmlDocument();
+                speechFileXml.LoadXml(response);
+                var speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
 
-                    speechFile = FileSettingsSave.Lang.ToLower();
-                    speechSize = Convert.ToInt32(speechSizeNode.InnerText);
-                    /* Fix this issue - DavidCarbon */
-                    //_langInfo = SettingsLanguage.GetItemText(SettingsLanguage.SelectedItem).ToUpper();
-                }
+                speechFile = FileSettingsSave.Lang.ToLower();
+                speechSize = Convert.ToInt32(speechSizeNode.InnerText);
+                /* Fix this issue - DavidCarbon */
+                //_langInfo = SettingsLanguage.GetItemText(SettingsLanguage.SelectedItem).ToUpper();
             }
             catch (Exception)
             {
