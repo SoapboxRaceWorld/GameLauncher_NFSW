@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
@@ -32,6 +33,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* Sets Conditional to If its Possible to Close Game */
         public static Boolean CanCloseGame = true;
 
+        /*  */
+        private static CultureInfo Lang = CultureInfo.CurrentUICulture;
 
         /* Checks if we have Write Permissions */
         public static bool HasWriteAccessToFolder(string path)
@@ -77,6 +80,29 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             IPHostEntry iphost = Dns.GetHostEntry(hostname);
             IPAddress[] addresses = iphost.AddressList;
             return addresses[0].ToString();
+        }
+
+        /* Check System Language and Return Current Lang for Speech Files */
+        public static string SpeechFiles()
+        {
+            string CurrentLang = Lang.ThreeLetterISOLanguageName;
+
+            if (CurrentLang == "eng") return "en";
+            else if (CurrentLang == "ger" || CurrentLang == "deu") return "de";
+            else if (CurrentLang == "rus") return "ru";
+            else if (CurrentLang == "spa") return "es";
+            else return "en";
+        }
+
+        public static int SpeechFilesSize()
+        {
+            string CurrentLang = Lang.ThreeLetterISOLanguageName;
+
+            if (CurrentLang == "eng") return 141805935;
+            else if (CurrentLang == "ger" || CurrentLang == "deu") return 105948386;
+            else if (CurrentLang == "rus") return 121367723;
+            else if (CurrentLang == "spa") return 101540466;
+            else return 141805935;
         }
 
         /* Moved "runAsAdmin" Code to Gist */

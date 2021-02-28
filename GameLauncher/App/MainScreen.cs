@@ -325,13 +325,13 @@ namespace GameLauncher
                         Environment.Exit(Environment.ExitCode);
                     }
 
-                    if(fbd.FileName.Length == 3) 
+                    if (fbd.FileName.Length == 3)
                     {
                         Log.Warning("LAUNCHER: Installing NFSW in root of the harddisk is not allowed.");
                         MessageBox.Show(null, string.Format("Installing NFSW in root of the harddisk is not allowed. Instead, we will install it on {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                         FileSettingsSave.SaveSettings();
-                    } 
+                    }
                     else if (fbd.FileName == AppDomain.CurrentDomain.BaseDirectory)
                     {
                         Directory.CreateDirectory("Game Files");
@@ -2006,11 +2006,12 @@ namespace GameLauncher
                     if (!String.IsNullOrEmpty(_serverPanelLink))
                     {
                         //Let's format it now, if possible
-                        ButtonsList.Add(new DiscordButton() {
+                        ButtonsList.Add(new DiscordButton()
+                        {
                             Label = "View Panel",
                             Url = _serverPanelLink.Split(new string[] { "{sep}" }, StringSplitOptions.None)[0]
                         });
-                    } 
+                    }
                     else if (!String.IsNullOrEmpty(_serverWebsiteLink) && _serverWebsiteLink != _serverDiscordLink)
                     {
                         ButtonsList.Add(new DiscordButton()
@@ -2144,9 +2145,9 @@ namespace GameLauncher
                     TimeSpan t = TimeSpan.FromSeconds(secondsToShutDown);
 
                     //Proper Formatting
-                    List<string>        list_of_times = new List<string>();
-                    if (t.Days != 0)    list_of_times.Add(t.Days + (t.Days != 1 ? " Days" : " Day"));
-                    if (t.Hours != 0)   list_of_times.Add(t.Hours + (t.Hours != 1 ? " Hours" : " Hour"));
+                    List<string> list_of_times = new List<string>();
+                    if (t.Days != 0) list_of_times.Add(t.Days + (t.Days != 1 ? " Days" : " Day"));
+                    if (t.Hours != 0) list_of_times.Add(t.Hours + (t.Hours != 1 ? " Hours" : " Hour"));
                     if (t.Minutes != 0) list_of_times.Add(t.Minutes + (t.Minutes != 1 ? " Minutes" : " Minute"));
                     if (t.Seconds != 0) list_of_times.Add(t.Seconds + (t.Seconds != 1 ? " Seconds" : " Second"));
 
@@ -2754,10 +2755,19 @@ namespace GameLauncher
             string speechFile;
             int speechSize;
 
+            if (FileSettingsSave.Lang.ToLower() == FunctionStatus.SpeechFiles())
+            {
+                speechFile = FileSettingsSave.Lang.ToLower();
+            }
+            else
+            {
+                speechFile = FunctionStatus.SpeechFiles();
+            }
+
             try
             {
                 WebClient wc = new WebClient();
-                var response = wc.DownloadString(_NFSW_Installation_Source + "/" + FileSettingsSave.Lang.ToLower() + "/index.xml");
+                var response = wc.DownloadString(_NFSW_Installation_Source + "/" + speechFile + "/index.xml");
 
                 response = response.Substring(3, response.Length - 3);
 
@@ -2765,16 +2775,15 @@ namespace GameLauncher
                 speechFileXml.LoadXml(response);
                 var speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
 
-                speechFile = FileSettingsSave.Lang.ToLower();
                 speechSize = Convert.ToInt32(speechSizeNode.InnerText);
                 /* Fix this issue - DavidCarbon */
                 //_langInfo = SettingsLanguage.GetItemText(SettingsLanguage.SelectedItem).ToUpper();
             }
             catch (Exception)
             {
-                speechFile = "en";
-                speechSize = 141805935;
-                _langInfo = "ENGLISH";
+                speechFile = FunctionStatus.SpeechFiles();
+                speechSize = FunctionStatus.SpeechFilesSize();
+                _langInfo = FunctionStatus.SpeechFiles();
             }
 
             PlayProgressText.Text = string.Format("Checking for {0} Speech Files.", _langInfo).ToUpper();
@@ -3178,20 +3187,20 @@ namespace GameLauncher
                     FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                     break;
 
-                    case FolderType.IsTempFolder:
-                    case FolderType.IsUsersFolders:
-                    case FolderType.IsProgramFilesFolder:
-                    case FolderType.IsWindowsFolder:
-                    case FolderType.IsRootFolder:
-                        String constructMsg = String.Empty;
-                        Directory.CreateDirectory("Game Files");
-                        constructMsg += "Using this location for Game Files is not allowed.\nThe following list are NOT allowed:\n\n";
-                        constructMsg += "• X:\\ (Root of Drive, such as C:\\ or D:\\)\n";
-                        constructMsg += "• C:\\Program Files\n";
-                        constructMsg += "• C:\\Program Files (x86)\n";
-                        constructMsg += "• C:\\Users (Includes 'Desktop' or 'Documents')\n";
-                        constructMsg += "• C:\\Windows\n\n";
-                        constructMsg += "• Instead, we will install the NFSW Game at " + AppDomain.CurrentDomain.BaseDirectory + "\\Game Files\n";
+                case FolderType.IsTempFolder:
+                case FolderType.IsUsersFolders:
+                case FolderType.IsProgramFilesFolder:
+                case FolderType.IsWindowsFolder:
+                case FolderType.IsRootFolder:
+                    String constructMsg = String.Empty;
+                    Directory.CreateDirectory("Game Files");
+                    constructMsg += "Using this location for Game Files is not allowed.\nThe following list are NOT allowed:\n\n";
+                    constructMsg += "• X:\\ (Root of Drive, such as C:\\ or D:\\)\n";
+                    constructMsg += "• C:\\Program Files\n";
+                    constructMsg += "• C:\\Program Files (x86)\n";
+                    constructMsg += "• C:\\Users (Includes 'Desktop' or 'Documents')\n";
+                    constructMsg += "• C:\\Windows\n\n";
+                    constructMsg += "• Instead, we will install the NFSW Game at " + AppDomain.CurrentDomain.BaseDirectory + "\\Game Files\n";
 
                     MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     Log.Error("LAUNCHER: Installing NFSW in a Restricted Location is not allowed.");

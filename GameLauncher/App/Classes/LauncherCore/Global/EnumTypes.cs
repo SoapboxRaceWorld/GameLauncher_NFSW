@@ -44,6 +44,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
     enum SystemLang
     {
         English,
-        Russian
+        German,
+        Spanish,
+        Russian,
+        NotSupported
     }
 }
