@@ -61,7 +61,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     NullValueHandling.Ignore);
             }
 
-            IFlurlRequest request = resolvedUrl.AllowAnyHttpStatus();
+            IFlurlRequest request = resolvedUrl.AllowAnyHttpStatus().WithTimeout(TimeSpan.FromSeconds(30));
 
             foreach (var header in context.Request.Headers)
             {
@@ -137,19 +137,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 await SubmitError(e);
             }
 
-            TextResponse textResponse = new TextResponse(responseBody,
-                responseMessage.ResponseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
-            {
-                StatusCode = (HttpStatusCode)statusCode
-            };
-
             queryParams.Clear();
 
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
                 CommunicationLogEntryType.Response, new CommunicationLogResponse(
                     responseBody, resolvedUrl.ToString(), method));
 
-            return textResponse;
+            return new TextResponse(responseBody,
+                responseMessage.ResponseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
+            {
+                StatusCode = (HttpStatusCode)statusCode
+            }; ;
         }
 
         private static string CleanFromUnknownChars(string s)
@@ -160,12 +158,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 if
                  (
                   (int)c >= 48 && (int)c <= 57 ||
-                  (int)c == 60 ||
-                  (int)c == 62 ||
+                  (int)c == 60 || (int)c == 62 ||
                   (int)c >= 65 && (int)c <= 90 ||
                   (int)c >= 97 && (int)c <= 122 ||
-                  (int)c == 47 ||
-                  (int)c == 45 ||
+                  (int)c == 47 || (int)c == 45 ||
                   (int)c == 46
                  )
                 {

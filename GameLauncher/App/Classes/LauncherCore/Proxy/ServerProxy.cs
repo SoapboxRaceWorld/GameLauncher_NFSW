@@ -1,4 +1,5 @@
 using System;
+using GameLauncher.App.Classes.Logger;
 using Nancy.Hosting.Self;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
@@ -28,20 +29,27 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
         {
             if (_host != null)
             {
-                throw new Exception("Server already running!");
+                Log.Warning("Server already running!");
             }
-
-            _host = new NancyHost(new Uri("http://127.0.0.1:" + ProxyPort), new NancyBootstrapper(), new HostConfiguration
+            else
             {
-                AllowChunkedEncoding = false,
-                RewriteLocalhost = false
-            });
-            _host.Start();
+                var hostConfigs = new HostConfiguration()
+                {
+                    UrlReservations = new UrlReservations()
+                    {
+                        CreateAutomatically = true,
+                    },
+                    AllowChunkedEncoding = false
+                };
+
+                _host = new NancyHost(new Uri("http://127.0.0.1:" + ProxyPort), new NancyBootstrapper(), hostConfigs);
+                _host.Start();
+            }
         }
 
         public void Stop()
         {
-            _host?.Stop();
+            _host.Stop();
         }
     }
 }
