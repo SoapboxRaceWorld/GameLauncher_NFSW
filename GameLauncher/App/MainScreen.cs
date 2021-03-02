@@ -3199,9 +3199,9 @@ namespace GameLauncher
                     constructMsg += "• X:\\ (Root of Drive, such as C:\\ or D:\\)\n";
                     constructMsg += "• C:\\Program Files\n";
                     constructMsg += "• C:\\Program Files (x86)\n";
-                    constructMsg += "• C:\\Users (Includes 'Desktop' or 'Documents')\n";
+                    constructMsg += "• C:\\Users (Includes 'Desktop', 'Documents', 'Downloads')\n";
                     constructMsg += "• C:\\Windows\n\n";
-                    constructMsg += "• Instead, we will install the NFSW Game at " + AppDomain.CurrentDomain.BaseDirectory + "\\Game Files\n";
+                    constructMsg += "Instead, we will install the NFSW Game at " + AppDomain.CurrentDomain.BaseDirectory + "\\Game Files\n";
 
                     MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     Log.Error("LAUNCHER: Installing NFSW in a Restricted Location is not allowed.");

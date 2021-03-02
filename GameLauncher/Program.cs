@@ -407,12 +407,15 @@ namespace GameLauncher
                     case FolderType.IsRootFolder:
                         String constructMsg = String.Empty;
 
-                        constructMsg += "Using this location for GameLauncher is not allowed.\nPlease move Launcher files to a folder/directory that is NOT:\n\n";
+                        constructMsg += "Using this location for GameLauncher is not allowed.\nThe Launcher folder/directory can NOT be in:\n\n";
                         constructMsg += "• X:\\ (Root of Drive, such as C:\\ or D:\\)\n";
                         constructMsg += "• C:\\Program Files\n";
                         constructMsg += "• C:\\Program Files (x86)\n";
-                        constructMsg += "• C:\\Users (Includes 'Desktop' or 'Documents')\n";
+                        constructMsg += "• C:\\Users (Includes 'Desktop', 'Documents', 'Downloads')\n";
                         constructMsg += "• C:\\Windows\n\n";
+                        constructMsg += "Instead, move it someplace like:\n";
+                        constructMsg += "• 'X:\\Soabox Race World' or 'X:\\SBRW'\n";
+                        constructMsg += "(Where 'X:' is a 'Local Disk' location on `My Computer` / `This PC`)\n\n";
                         MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Environment.Exit(0);
                         break;
