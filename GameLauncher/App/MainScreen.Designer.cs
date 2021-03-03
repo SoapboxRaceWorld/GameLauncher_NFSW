@@ -995,6 +995,7 @@ namespace GameLauncher
             this.Name = "MainScreen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GameLauncher";
+            this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.ShowPlayPanel.ResumeLayout(false);
             this.RegisterPanel.ResumeLayout(false);
