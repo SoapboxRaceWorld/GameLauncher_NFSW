@@ -539,6 +539,7 @@ namespace GameLauncher.App
             this.Name = "SettingsScreen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Settings - GameLauncher";
+            this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.Load += new System.EventHandler(this.SettingsScreen_Load);
             this.ResumeLayout(false);
