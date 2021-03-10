@@ -2428,7 +2428,7 @@ namespace GameLauncher
                     }
 
                     //get new index
-                    PlayProgressText.Text = ("Fetching Server Mdos List!").ToUpper();
+                    PlayProgressText.Text = ("Fetching Server Mods List!").ToUpper();
                     Uri newIndexFile = new Uri(json2.basePath + "/index.json");
                     Log.Core("CORE: Loading Server Mods List");
                     String jsonindex = new WebClient().DownloadString(newIndexFile);
