@@ -19,9 +19,9 @@ namespace GameLauncher.App
 {
     public partial class VerifyHash : Form
     {
-        private readonly RichPresence _presence = new RichPresence();
+        public RichPresence _presence = new RichPresence();
 
-        //VerifyHash
+        /* VerifyHash */
         string[][] scannedHashes;
         public int filesToScan;
         public int badFiles;
@@ -285,17 +285,12 @@ namespace GameLauncher.App
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
             var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-            //var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
-            //var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
-            //var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
 
             if (DetectLinux.LinuxDetected())
             {
                 MainFontSize = 9f;
-                //SecondaryFontSize = 8f;
-                //ThirdFontSize = 10f;
-                //FourthFontSize = 14f;
             }
+
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             VerifyHashWelcome.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             ScanProgressText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);

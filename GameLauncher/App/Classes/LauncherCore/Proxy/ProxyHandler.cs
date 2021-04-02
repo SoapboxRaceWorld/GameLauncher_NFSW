@@ -65,7 +65,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             foreach (var header in context.Request.Headers)
             {
-                // Don't send Content-Length for GET requests
+                /* Don't send Content-Length for GET requests */
                 if (method == "GET" && header.Key.ToLowerInvariant() == "content-length")
                 {
                     continue;

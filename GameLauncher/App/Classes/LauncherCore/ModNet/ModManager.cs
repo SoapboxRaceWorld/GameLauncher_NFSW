@@ -49,13 +49,13 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
 
         static string ComputeSha256Hash(byte[] rawData)
         {
-            // Create a SHA256
+            /* Create a SHA256 */
             using (var sha256Hash = SHA256.Create())
             {
-                // ComputeHash - returns byte array
+                /* ComputeHash - returns byte array */
                 var bytes = sha256Hash.ComputeHash(rawData);
 
-                // Convert byte array to a string
+                /* Convert byte array to a string */
                 var builder = new StringBuilder();
                 foreach (var t in bytes)
                 {

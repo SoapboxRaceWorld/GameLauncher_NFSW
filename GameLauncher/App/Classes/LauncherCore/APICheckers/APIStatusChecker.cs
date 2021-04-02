@@ -17,13 +17,13 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 try
                 {
                     HttpWebRequest requestAPIStatus = (HttpWebRequest)HttpWebRequest.Create(APIURI);
-                    requestAPIStatus.AllowAutoRedirect = false; // Find out if this site is up and don't follow a redirector
+                    requestAPIStatus.AllowAutoRedirect = false; /* Find out if this site is up and don't follow a redirector */
                     requestAPIStatus.Method = "GET";
                     requestAPIStatus.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
                     serverResponse = (HttpWebResponse)requestAPIStatus.GetResponse();
                     Log.Info("CORE: " + APIURI + " is Online!");
                     return APIStatus.Online;
-                    //Do something with response.Headers to find out information about the request
+                    /* Do something with response.Headers to find out information about the request */
                 }
                 catch (WebException e)
                 {
@@ -82,7 +82,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                         {
                             return APIStatus.InvaildSSL;
                         }
-                        //Set flag if there was a timeout or some other issues
+                        /* Set flag if there was a timeout or some other issues */
                     }
                     else
                     {

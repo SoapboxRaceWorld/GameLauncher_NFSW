@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 
@@ -23,7 +23,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /// https://docs.microsoft.com/en-us/windows/release-information/
         public static int GetWindowsBuildNumber()
         {
-            // Get the Kernel32 DLL File Version
+            /* Get the Kernel32 DLL File Version */
             FileVersionInfo osVersionInfo = FileVersionInfo.GetVersionInfo(Environment.GetEnvironmentVariable("windir") + @"\System32\Kernel32.dll");
 
             return osVersionInfo.FileBuildPart;
@@ -41,7 +41,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /// https://www.lifewire.com/windows-version-numbers-2625171
         public static double GetWindowsNumber()
         {
-            // Get the Kernel32 DLL File Version
+            /* Get the Kernel32 DLL File Version */
             FileVersionInfo osVersionInfo = FileVersionInfo.GetVersionInfo(Environment.GetEnvironmentVariable("windir") + @"\System32\Kernel32.dll");
 
             return double.Parse(osVersionInfo.FileMajorPart + "." + osVersionInfo.FileMinorPart, CultureInfo.InvariantCulture);

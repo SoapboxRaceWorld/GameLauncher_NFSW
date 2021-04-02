@@ -1,4 +1,4 @@
-﻿using DiscordRPC;
+using DiscordRPC;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
@@ -144,7 +144,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
                     if (!String.IsNullOrEmpty(InformationCache.SelectedServerJSON.webPanelUrl))
                     {
-                        //Let's format it now, if possible
+                        /* Let's format it now, if possible */
                         ButtonsList.Add(new DiscordButton()
                         {
                             Label = "View Panel",

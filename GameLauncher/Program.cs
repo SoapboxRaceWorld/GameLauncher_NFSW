@@ -76,8 +76,9 @@ namespace GameLauncher
 
                 NetCodeDefaults();
 
-                //INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
-                //Updated RedTheKitsune Code so it downloads the file if its missing. It also restarts the launcher if the user click on yes on Prompt. - DavidCarbon
+                /* INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
+                   Updated RedTheKitsune Code so it downloads the file if its missing.
+                   It also restarts the launcher if the user click on yes on Prompt. - DavidCarbon */
                 if (!File.Exists("LZMA.dll"))
                 {
                     try
@@ -128,7 +129,7 @@ namespace GameLauncher
                         var missingfiles = new List<string>();
 
                         if (!DetectLinux.LinuxDetected())
-                        { //MONO Hates that...
+                        {   /* MONO Hates this... */
                             foreach (var file in files) {
                                 var splitFileVersion = file.Split(new string[] { " - " }, StringSplitOptions.None);
 
@@ -249,7 +250,7 @@ namespace GameLauncher
 
             if (!DetectLinux.LinuxDetected())
             {
-                //Check if User has .NETFramework 4.6.2 or later Installed
+                /* Check if User has .NETFramework 4.6.2 or later Installed */
                 const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
 
                 using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey))
@@ -351,7 +352,7 @@ namespace GameLauncher
                 }
             }
 
-            //Windows Firewall Runner
+            /* Windows Firewall Runner */
             if (!string.IsNullOrEmpty(FileSettingsSave.FirewallLauncherStatus))
             {
                 if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == true)
@@ -379,7 +380,7 @@ namespace GameLauncher
                         FileSettingsSave.FirewallLauncherStatus = "Not Excluded";
                     }
 
-                    //Inbound & Outbound
+                    /* Inbound & Outbound */
                     FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
                     FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
                 }
@@ -434,7 +435,7 @@ namespace GameLauncher
                     MessageBox.Show("This application requires admin priviledge");
                 }
 
-                //Update this text file if a new GameLauncherUpdater.exe has been delployed - DavidCarbon
+                /* Update this text file if a new GameLauncherUpdater.exe has been delployed - DavidCarbon */
                 try
                 {
                     try
@@ -481,7 +482,7 @@ namespace GameLauncher
 
             if (!DetectLinux.LinuxDetected())
             {
-                //Windows 7 Fix
+                /* Windows 7 Fix */
                 if (WindowsProductVersion.CachedWindowsNumber == 6.1 && string.IsNullOrEmpty(FileSettingsSave.Win7UpdatePatches))
                 {
                     if (ManagementSearcher.GetInstalledHotFix("KB3020369") == false || ManagementSearcher.GetInstalledHotFix("KB3125574") == false)
@@ -597,8 +598,6 @@ namespace GameLauncher
                 }
             }
 
-            //StaticConfiguration.DisableErrorTraces = false;
-
             if (!File.Exists("servers.json"))
             {
                 try
@@ -638,7 +637,7 @@ namespace GameLauncher
 
             if (!DetectLinux.LinuxDetected())
             {
-                //Install Custom Root Certificate
+                /* Install Custom Root Certificate */
                 CertificateStore.Check();
 
                 if (!File.Exists("GameLauncherUpdater.exe"))

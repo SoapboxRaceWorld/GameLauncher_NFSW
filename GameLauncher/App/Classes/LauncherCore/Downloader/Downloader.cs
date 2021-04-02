@@ -344,8 +344,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     int num13 = 0;
                     foreach (XmlNode xmlNode2 in xmlNodeList)
                     {
-                        //fileschecked++;
-
                         if (Downloader.mStopFlag)
                         {
                             break;
@@ -451,7 +449,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                                     array2 = this.mDownloadManager.GetFile(text7);
                                     if (array2 == null)
                                     {
-                                        //MessageBox.Show("DownloadManager returned a null buffer for file '" + text7 + "', aborting");
                                         if (this.mDownloadFailed != null)
                                         {
                                             if (!Downloader.mStopFlag)
@@ -538,7 +535,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                                 }
                                 fileStream.Close();
                                 fileStream.Dispose();
-                                //(IntPtr)num15;
                                 IntPtr outPropsSize = new IntPtr(5);
                                 byte[] array5 = new byte[5];
                                 for (int m = 0; m < 5; m++)
@@ -561,7 +557,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                                 IntPtr value = new IntPtr(num22);
                                 int num24 = LZMA.LzmaUncompressBuf2File(text6, ref value, array3, ref intPtr, array5, outPropsSize);
 
-                                //TODO: use total file lenght and extracted file length instead of files checked and total array size.
+                                /* TODO: use total file lenght and extracted file length instead of files checked and total array size. */
                                 fileschecked = +num3;
 
                                 try
@@ -773,7 +769,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                     if (flag3)
                     {
-                        //Downloader.mLogger.Info("Writing hash cache");
                         HashManager.Instance.WriteHashCache(text + ".hsh", true);
                     }
                     if (flag4)

@@ -42,17 +42,17 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
         public static void CheckIfRuleExists(bool removeFirewallRule, bool firstTimeRun, string nameOfApp, string localOfApp, string groupKey, string description, FirewallDirection direction, FirewallProtocol protocol, string firewallLogNote)
         {
-            //Remove Firewall Rules
+            /* Remove Firewall Rules */
             if (removeFirewallRule == true && firstTimeRun == false)
             {
                 RemoveRules(nameOfApp, firewallLogNote);
             }
-            //Add Firewall Rules
+            /* Add Firewall Rules */
             else if (removeFirewallRule == false && firstTimeRun == true)
             {
                 AddApplicationRule(nameOfApp, localOfApp, groupKey, description, direction, protocol, firewallLogNote);
             }
-            //Removes a Specific Rule from Firewall (When switching locations)
+            /* Removes a Specific Rule from Firewall (When switching locations) */
             else if (removeFirewallRule == true && firstTimeRun == true)
             {
                 if (RuleExist(nameOfApp) == true)

@@ -46,17 +46,12 @@ namespace GameLauncher.App
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
             var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-            //var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
-            //var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
-            //var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
 
             if (DetectLinux.LinuxDetected())
             {
                 MainFontSize = 9f;
-                //SecondaryFontSize = 8f;
-                //ThirdFontSize = 10f;
-                //FourthFontSize = 14f;
             }
+
             Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             OkBTN.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             CancelBTN.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);

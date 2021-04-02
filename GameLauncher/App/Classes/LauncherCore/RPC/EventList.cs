@@ -10,7 +10,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
         public static string GetEventName(int id) 
         {
-            // Let's load the "From Server" version first
+            /* Let's load the "From Server" version first */
             if (remoteEventsList != String.Empty)
             {
                 dynamic dynJson = JsonConvert.DeserializeObject(remoteEventsList);
@@ -24,7 +24,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 }
             }
 
-            // If we don't have a Server version, load "default" version
+            /* If we don't have a Server version, load "default" version */
             if (remoteEventsList == String.Empty)
             {
                 dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.LauncherCore.RPC.JSON.events.json"));
@@ -38,13 +38,13 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 }
             }
 
-            // And if it's not found, do this instead
+            /* And if it's not found, do this instead */
             return "EVENT:"+id;
         }
 
         public static string GetEventType(int id)
         {
-            // Let's load the "From Server" version first
+            /* Let's load the "From Server" version first */
             if (remoteEventsList != String.Empty)
             {
                 dynamic dynJson = JsonConvert.DeserializeObject(remoteEventsList);
@@ -58,7 +58,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 }
             }
 
-            // If we don't have a Server version, load "default" version
+            /* If we don't have a Server version, load "default" version */
             if (remoteEventsList != String.Empty)
             {
                 dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.events.json"));
@@ -72,7 +72,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 }
             }
 
-            // And if it's not found, do this instead
+            /* And if it's not found, do this instead */
             return "gamemode_freeroam";
         }
     }

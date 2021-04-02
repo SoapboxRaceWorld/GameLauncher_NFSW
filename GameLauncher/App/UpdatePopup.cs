@@ -14,7 +14,7 @@ namespace GameLauncher.App
         {
             if (FileSettingsSave.IgnoreVersion == LatestLauncherBuild)
             {
-                //No Update Popup
+                /* No Update Popup */
             }
             else
             {
@@ -47,17 +47,12 @@ namespace GameLauncher.App
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
             var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-            //var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
-            //var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
-            //var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
 
             if (DetectLinux.LinuxDetected())
             {
                 MainFontSize = 9f;
-                //SecondaryFontSize = 8f;
-                //ThirdFontSize = 10f;
-                //FourthFontSize = 14f;
             }
+
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ChangelogBox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ChangelogText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);

@@ -63,7 +63,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         public static Boolean CanCloseGame = true;
 
         /* Detect and Set System Language */
-        private static CultureInfo Lang = CultureInfo.CurrentUICulture;
+        public static CultureInfo Lang = CultureInfo.CurrentUICulture;
 
         /* Checks if we have Write Permissions */
         public static bool HasWriteAccessToFolder(string path)
@@ -235,11 +235,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                         String constructMsg = String.Empty;
                         Directory.CreateDirectory("Game Files");
                         constructMsg += "Using this location for Game Files is not allowed.\nThe following list are NOT allowed:\n\n";
-                        constructMsg += "• X:\\ (Root of Drive, such as C:\\ or D:\\)\n";
-                        constructMsg += "• C:\\Program Files\n";
-                        constructMsg += "• C:\\Program Files (x86)\n";
-                        constructMsg += "• C:\\Users (Includes 'Desktop', 'Documents', 'Downloads')\n";
-                        constructMsg += "• C:\\Windows\n\n";
+                        constructMsg += "â€¢ X:\\ (Root of Drive, such as C:\\ or D:\\)\n";
+                        constructMsg += "â€¢ C:\\Program Files\n";
+                        constructMsg += "â€¢ C:\\Program Files (x86)\n";
+                        constructMsg += "â€¢ C:\\Users (Includes 'Desktop', 'Documents', 'Downloads')\n";
+                        constructMsg += "â€¢ C:\\Windows\n\n";
                         constructMsg += "Instead, we will install the NFSW Game at " + AppDomain.CurrentDomain.BaseDirectory + "\\Game Files\n";
 
                         MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -249,17 +249,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 }
                 FileSettingsSave.SaveSettings();
 
-                //Windows Defender (Windows 10)
+                /* Windows Defender (Windows 10) */
                 if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && (FileSettingsSave.WindowsDefenderStatus == "Not Excluded" || FileSettingsSave.WindowsDefenderStatus == "Unknown"))
                 {
                     Log.Core("WINDOWS DEFENDER: Windows 10 Detected! Running Exclusions for Core Folders");
                     if (ManagementSearcher.SecurityCenter("AntivirusEnabled") == true && ManagementSearcher.SecurityCenter("AntispywareEnabled") == true)
                     {
-                        // Create Windows Defender Exclusion
+                        /* Create Windows Defender Exclusion */
                         try
                         {
                             Log.Info("WINDOWS DEFENDER: Excluding Core Folders");
-                            //Add Exclusion to Windows Defender
+                            /* Add Exclusion to Windows Defender */
                             using (PowerShell ps = PowerShell.Create())
                             {
                                 ps.AddScript($"Add-MpPreference -ExclusionPath \"{AppDomain.CurrentDomain.BaseDirectory}\"");
@@ -379,7 +379,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             Brush textColor;
 
             var serverListText = "";
-            int onlineStatus = 2; //0 = offline | 1 = online | 2 = checking
+            int onlineStatus = 2; /* 0 = offline | 1 = online | 2 = checking */
 
             if (sender is ComboBox cb)
             {
@@ -408,17 +408,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 {
                     if (onlineStatus == 2)
                     {
-                        //CHECKING
+                        /* CHECKING */
                         backgroundColor = Brushes.Khaki;
                     }
                     else if (onlineStatus == 1)
                     {
-                        //ONLINE
+                        /* ONLINE */
                         backgroundColor = Brushes.PaleGreen;
                     }
                     else
                     {
-                        //OFFLINE
+                        /* OFFLINE */
                         backgroundColor = Brushes.LightCoral;
                     }
 

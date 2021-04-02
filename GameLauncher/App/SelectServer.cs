@@ -20,7 +20,7 @@ namespace GameLauncher.App
         public GetServerInformation ServerList;
         readonly Dictionary<int, ServerList> data = new Dictionary<int, ServerList>();
 
-        //Used to ping the Server in ms
+        /* Used to ping the Server in ms */
         public Queue<string> servers = new Queue<string>();
 
         public SelectServer()
@@ -30,7 +30,7 @@ namespace GameLauncher.App
 
             Version.Text = "Version: v" + Application.ProductVersion;
 
-            //And one for keeping data about server, IP tbh
+            /* And one for keeping data about server, IP tbh */
             ServerListRenderer.View = View.Details;
             ServerListRenderer.FullRowSelect = true;
 
@@ -111,7 +111,7 @@ namespace GameLauncher.App
                                 ServerListRenderer.Items[serverid].SubItems[3].Text = content.onlineNumber.ToString();
                                 ServerListRenderer.Items[serverid].SubItems[4].Text = content.numberOfRegistered.ToString();
 
-                                //PING
+                                /* PING */
                                 if (!DetectLinux.LinuxDetected())
                                 {
                                     Ping pingSender = new Ping();
@@ -179,17 +179,12 @@ namespace GameLauncher.App
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
             var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-            //var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
-            //var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
-            //var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
 
             if (DetectLinux.LinuxDetected())
             {
                 MainFontSize = 9f;
-                //SecondaryFontSize = 8f;
-                //ThirdFontSize = 10f;
-                //FourthFontSize = 14f;
             }
+
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ServerListRenderer.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             Loading.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);

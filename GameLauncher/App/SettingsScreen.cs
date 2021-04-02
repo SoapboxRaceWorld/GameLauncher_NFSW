@@ -431,13 +431,13 @@ namespace GameLauncher.App
         /* Settings Save */
         private void SettingsSave_Click(object sender, EventArgs e)
         {
-            //TODO null check
+            /* TODO null check */
             if (!string.IsNullOrEmpty(((LangObject)SettingsLanguage.SelectedItem).INI_Value))
             {
                 FileSettingsSave.Lang = ((LangObject)SettingsLanguage.SelectedItem).INI_Value;
             }
 
-            //TODO: Inform player about custom languagepack used.
+            /* TODO: Inform player about custom languagepack used. */
             if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") {
                 MessageBox.Show(null, "Please note, that if this server won't have that languagepack installed, it will fallback to English instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -452,7 +452,7 @@ namespace GameLauncher.App
 
                 if (!DetectLinux.LinuxDetected())
                 {
-                    //Remove current Firewall for the Game Files 
+                    /* Remove current Firewall for the Game Files */
                     string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
 
                     if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.FirewallStatus() == true)
@@ -468,7 +468,7 @@ namespace GameLauncher.App
                             string groupKeyGame = "Need for Speed: World";
                             string descriptionGame = groupKeyGame;
 
-                            //Inbound & Outbound
+                            /* Inbound & Outbound */
                             FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
                         }
                     }
@@ -476,7 +476,7 @@ namespace GameLauncher.App
 
                 FileSettingsSave.GameInstallation = _newGameFilesPath;
 
-                //Clean Mods Files from New Dirctory (If it has .links in directory)
+                /* Clean Mods Files from New Dirctory (If it has .links in directory) */
                 var linksPath = Path.Combine(_newGameFilesPath, "\\.links");
                 ModNetLinksCleanup.CleanLinks(linksPath);
 
@@ -510,13 +510,13 @@ namespace GameLauncher.App
                 MessageBox.Show(null, "In order to see settings changes, you need to restart launcher manually.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            //Actually lets check those 2 files
+            /* Actually lets check those 2 files */
             if (File.Exists(FileSettingsSave.GameInstallation + "/profwords") && File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis"))
             {
                 File.Delete(FileSettingsSave.GameInstallation + "/profwords_dis");
             }
 
-            //Delete/Enable profwords filter here
+            /* Delete/Enable profwords filter here */
             if (SettingsWordFilterCheck.Checked)
             {
                 if (File.Exists(FileSettingsSave.GameInstallation + "/profwords")) File.Move(FileSettingsSave.GameInstallation + "/profwords", FileSettingsSave.GameInstallation + "/profwords_dis");
@@ -526,7 +526,7 @@ namespace GameLauncher.App
                 if (File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis")) File.Move(FileSettingsSave.GameInstallation + "/profwords_dis", FileSettingsSave.GameInstallation + "/profwords");
             }
 
-            //Create Custom Settings.ini for LangPicker.asi module
+            /* Create Custom Settings.ini for LangPicker.asi module */
             if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") {
                 if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) {
                     Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
@@ -602,14 +602,12 @@ namespace GameLauncher.App
             /* Save XML Settings */
             userSettingsXml.Save(_userSettings);
 
-            //DialogResult = DialogResult.OK;
             Close();
         }
 
         /* Settings Cancel */
         private void SettingsCancel_Click(object sender, EventArgs e)
         {
-            //DialogResult = DialogResult.Cancel;
             Close();
         }
 
@@ -775,12 +773,12 @@ namespace GameLauncher.App
 
         private void WindowsDefenderGameFilesDirctoryChange()
         {
-            //Check if New Game! Files is not in Banned Folder Locations
+            /* Check if New Game! Files is not in Banned Folder Locations */
             CheckGameFilesDirectoryPrevention();
 
             try
             {
-                //Remove current Exclusion and Add new location for Exclusion
+                /* Remove current Exclusion and Add new location for Exclusion */
                 using (PowerShell ps = PowerShell.Create())
                 {
                     Log.Warning("WINDOWS DEFENDER: Removing OLD Game Files Directory: " + FileSettingsSave.GameInstallation);
@@ -795,7 +793,7 @@ namespace GameLauncher.App
                 Log.Error("WINDOWS DEFENDER: " + ex.Message);
             }
 
-            //Remove current Firewall for the Game Files 
+            /* Remove current Firewall for the Game Files */
             string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
 
             if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.FirewallStatus() == true)
@@ -811,14 +809,14 @@ namespace GameLauncher.App
                     string groupKeyGame = "Need for Speed: World";
                     string descriptionGame = groupKeyGame;
 
-                    //Inbound & Outbound
+                    /* Inbound & Outbound */
                     FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
                 }
             }
 
             FileSettingsSave.GameInstallation = _newGameFilesPath;
 
-            //Clean Mods Files from New Dirctory (If it has .links in directory)
+            /* Clean Mods Files from New Dirctory (If it has .links in directory) */
             var linksPath = Path.Combine(_newGameFilesPath, "\\.links");
             ModNetLinksCleanup.CleanLinks(linksPath);
 
@@ -856,7 +854,7 @@ namespace GameLauncher.App
             }
         }
 
-        //DavidCarbon
+        /* DavidCarbon */
         private void PingAPIStatus()
         {
             if (VisualsAPIChecker.UnitedAPI != false)
@@ -1023,7 +1021,7 @@ namespace GameLauncher.App
             }
         }
 
-        //CDN Display Playing Game! - DavidCarbon
+        /* CDN Display Playing Game! - DavidCarbon */
         private async void IsCDNDownGame()
         {
             if (!string.IsNullOrEmpty(FileSettingsSave.CDN))

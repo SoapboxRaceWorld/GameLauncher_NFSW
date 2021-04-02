@@ -42,10 +42,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
             }
         }
 
-
         public static String RelativeTime(int seconds) {
-            int calcs = 0;
-
+            int calcs;
             if (seconds >= 60*60*24*30) {
                 calcs = seconds / 60 / 60 / 24 / 30;
                 return calcs == 1 ? "1 Month" : calcs + " Months";

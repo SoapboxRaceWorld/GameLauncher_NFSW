@@ -34,11 +34,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
                 address = new UriBuilder(address)
                 {
                     Scheme = Uri.UriSchemeHttp,
-                    Port = address.IsDefaultPort ? -1 : address.Port // -1 => default port for scheme
+                    Port = address.IsDefaultPort ? -1 : address.Port /* -1 => default port for scheme */
                 }.Uri;
             }
 
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.ServerCertificateValidationCallback = (Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => {
                 bool isOk = true;

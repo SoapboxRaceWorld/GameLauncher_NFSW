@@ -32,15 +32,14 @@ namespace GameLauncher.App
             var MainFontSize = 10f * 100f / CreateGraphics().DpiY;
             var SecondaryFontSize = 15f * 100f / CreateGraphics().DpiY;
             var ThirdFontSize = 26f * 100f / CreateGraphics().DpiY;
-            //var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
 
             if (DetectLinux.LinuxDetected())
             {
                 MainFontSize = 10f;
                 SecondaryFontSize = 15f;
                 ThirdFontSize = 26f;
-                //FourthFontSize = 14f;
             }
+
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             AboutText.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);
             PatchTitle1.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);

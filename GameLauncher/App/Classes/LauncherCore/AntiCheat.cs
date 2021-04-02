@@ -24,7 +24,7 @@ namespace GameLauncher.App.Classes
         public static int cheats_detected = 0;
         private static Thread thread = new Thread(() => { });
 
-        //INTERNAL//
+        /* INTERNAL */
         public static bool detect_MULTIHACK     = false;
         public static bool detect_FAST_POWERUPS = false;
         public static bool detect_SPEEDHACK     = false;
@@ -44,15 +44,15 @@ namespace GameLauncher.App.Classes
             thread = new Thread(() =>
             {
                 List<int> addresses = new List<int> {
-                    418534,  // GMZ_MULTIHACK
-                    3788216, // FAST_POWERUPS
-                    4552702, // SPEEDHACK
-                    4476396, // SMOOTH_WALLS
-                    4506534, // TANK
-                    4587060, // WALLHACK
-                    4486168, // DRIFTMOD/MULTIHACK
-                    4820249, // PURSUITBOT (NO COPS VARIATION)
-                    8972152 // PROFILEMASKER!
+                    418534,  /* GMZ_MULTIHACK */
+                    3788216, /* FAST_POWERUPS */
+                    4552702, /* SPEEDHACK */
+                    4476396, /* SMOOTH_WALLS */
+                    4506534, /* TANK */
+                    4587060, /* WALLHACK */
+                    4486168, /* DRIFTMOD/MULTIHACK */
+                    4820249, /* PURSUITBOT (NO COPS VARIATION) */
+                    8972152 /* PROFILEMASKER! */
                 };
 
                 while (true)
@@ -78,7 +78,7 @@ namespace GameLauncher.App.Classes
                             if (checkInt.Substring(0, 4) == "0xE9" && detect_DRIFTMOD == false)  { detect_DRIFTMOD = true; }
                         }
 
-                        //ProfileMasker
+                        /* ProfileMasker */
                         if (oneAddress == 8972152)
                         {
                             byte[] buffer16 = new byte[16];

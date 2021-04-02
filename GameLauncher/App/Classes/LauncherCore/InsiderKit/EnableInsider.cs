@@ -4,8 +4,8 @@ namespace GameLauncher.App.Classes.InsiderKit
     {
         public static bool Insider = true;
 
-        //Current month, day, year (2 digits), and letter! Ex: 12-15-20-A
-        public static string InsiderBuildNumber = "02-27-21-A";
+        /* Current month, day, year (2 digits), and letter! Ex: 12-15-20-A */
+        public static string InsiderBuildNumber = "04-02-21-A";
 
         public static bool ShouldIBeAnInsider()
         {

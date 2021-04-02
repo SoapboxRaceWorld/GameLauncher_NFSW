@@ -28,7 +28,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                 if (detectRunningNFSW != null)
                 {
                     detectRunningNFSW.Close();
-                    //detectRunningNFSW = null;
                 }
             }
         }

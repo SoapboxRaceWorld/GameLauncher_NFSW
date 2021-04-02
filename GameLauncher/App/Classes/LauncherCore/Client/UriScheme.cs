@@ -6,18 +6,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
 {
     class UriScheme
     {
-        //Login Param
+        /* Login Param */
         public static String Email = String.Empty;
         public static String Password = String.Empty;
         public static bool ForceLogin = false;
 
-        //LaunchGame
+        /* LaunchGame */
         public static String UserID = String.Empty;
         public static String LoginToken = String.Empty;
         public static String ServerIP = String.Empty;
         public static bool ForceGame = false;
 
-        //Global
+        /* Global */
         public static bool StartMinimized = false;
 
         public UriScheme(string Parse)

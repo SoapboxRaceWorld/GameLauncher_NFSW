@@ -88,8 +88,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
                     if (FileSettingsSave.IgnoreVersion == LatestLauncherBuild.ToString())
                     {
-                        //No Update Popup
-                        //Blame DavidCarbon if this Breaks (to some degree), not Zacam...
+                        /* No Update Popup
+                           Blame DavidCarbon if this Breaks (to some degree), not Zacam...*/
                     }
                     else
                     {
@@ -107,13 +107,13 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                             }
                         };
 
-                        //Check if User clicked Ignore so it doesn't update "IgnoreUpdateVersion"
+                        /* Check if User clicked Ignore so it doesn't update "IgnoreUpdateVersion" */
                         if (updateConfirm == DialogResult.Cancel)
                         {
                             FileSettingsSave.IgnoreVersion = String.Empty;
                         };
 
-                        //Write to Settings.ini to Skip Update
+                        /* Write to Settings.ini to Skip Update */
                         if (updateConfirm == DialogResult.Ignore)
                         {
                             FileSettingsSave.IgnoreVersion = LatestLauncherBuild.ToString();
@@ -129,7 +129,6 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 text.ForeColor = Theming.Error;
                 description.Text = "Version: v" + Application.ProductVersion;
             }
-            //----------------------//
         }
 
         public static void MainAPI()

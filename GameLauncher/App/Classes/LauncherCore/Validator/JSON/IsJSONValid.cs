@@ -17,8 +17,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.JSON
         {
             if (string.IsNullOrWhiteSpace(strInput)) { return false; }
             strInput = strInput.Trim();
-            if ((strInput.StartsWith("{") && strInput.EndsWith("}")) || //For object
-                (strInput.StartsWith("[") && strInput.EndsWith("]"))) //For array
+            if ((strInput.StartsWith("{") && strInput.EndsWith("}")) || /* For object */
+                (strInput.StartsWith("[") && strInput.EndsWith("]"))) /* For array */
             {
                 try
                 {
@@ -27,13 +27,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.JSON
                 }
                 catch (JsonReaderException jex)
                 {
-                    //Exception in parsing json
+                    /* Exception in parsing json */
                     Log.Error(jex.Message);
                     return false;
                 }
                 catch (Exception ex)
                 {
-                    //General Exception
+                    /* General Exception */
                     Log.Error(ex.ToString());
                     return false;
                 }

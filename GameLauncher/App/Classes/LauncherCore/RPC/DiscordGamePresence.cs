@@ -18,14 +18,14 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
         public static RichPresence _presence = new RichPresence();
 
-        //Some checks
+        /* Some checks */
         private static readonly string serverName = ServerProxy.Instance.GetServerName();
         private static bool canUpdateProfileField = false;
         private static bool eventTerminatedManually = false;
         private static int EventID;
         private static string carslotsXML = String.Empty;
 
-        //Some data related, can be touched.
+        /* Some data related, can be touched. */
         public static string PersonaId = String.Empty;
         public static string PersonaName = String.Empty;
         public static string PersonaLevel = String.Empty;
@@ -53,7 +53,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
                 if (!String.IsNullOrEmpty(_serverPanelLink))
                 {
-                    //Let's format it now, if possible
+                    /* Let's format it now, if possible */
                     if (AntiCheat.persona_id == String.Empty || AntiCheat.persona_name == String.Empty)
                     {
                         DiscordLauncherPresense.ButtonsList.Add(new DiscordButton()
@@ -149,7 +149,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 PersonaTreasure = 0;
             }
 
-            //FIRST PERSONA EVER LOCALIZED IN CODE
+            /* FIRST PERSONA EVER LOCALIZED IN CODE */
             if (uri == "/User/GetPermanentSession")
             {
                 /* Moved Statuses.cs Code to Gist | Check RemovedClasses.cs for Link */
@@ -164,7 +164,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     PersonaAvatarId = "avatar_" + SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/IconIndex").InnerText;
                     PersonaId = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/PersonaId").InnerText;
 
-                    //Let's get rest of PERSONAIDs
+                    /* Let's get rest of PERSONAIDs */
                     XmlNode UserInfo = SBRW_XML.SelectSingleNode("UserInfo");
                     XmlNodeList personas = UserInfo.SelectNodes("personas/ProfileData");
                     foreach (XmlNode node in personas)
@@ -177,14 +177,14 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 }
             }
 
-            //CREATE/DELETE PERSONA Handler
+            /* CREATE/DELETE PERSONA Handler  */
             if (uri == "/DriverPersona/CreatePersona")
             {
                 SBRW_XML.LoadXml(serverreply);
                 PersonaIds.Add(SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText);
             }
 
-            //DRIVING CARNAME
+            /* DRIVING CARNAME */
             if (uri == "/DriverPersona/GetPersonaInfo" && canUpdateProfileField == true)
             {
                 if (LoggedPersonaId == GET.Split(';').Last().Split('=').Last())
@@ -219,7 +219,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 FunctionStatus.CanCloseGame = true;
             }
 
-            //IN LOBBY
+            /* IN LOBBY */
             if (uri == "/matchmaking/acceptinvite")
             {
                 FunctionStatus.CanCloseGame = false;
@@ -266,7 +266,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 eventTerminatedManually = true;
             }
 
-            //IN SAFEHOUSE/FREEROAM
+            /* IN SAFEHOUSE/FREEROAM */
             if (uri == "/DriverPersona/UpdatePersonaPresence")
             {
                 string UpdatePersonaPresenceParam = GET.Split(';').Last().Split('=').Last();
@@ -296,7 +296,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
             }
 
-            //IN EVENT
+            /* IN EVENT */
             if (Regex.Match(uri, "/matchmaking/launchevent").Success)
             {
                 FunctionStatus.CanCloseGame = false;
@@ -355,7 +355,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
             }
 
-            //CARS RELATED
+            /* CARS RELATED */
             foreach (var single_personaId in PersonaIds)
             {
                 if (Regex.Match(uri, "/personas/" + single_personaId + "/carslots", RegexOptions.IgnoreCase).Success)

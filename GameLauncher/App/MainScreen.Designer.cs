@@ -380,8 +380,6 @@ namespace GameLauncher
             this.ServerPingStatusText.TabIndex = 148;
             this.ServerPingStatusText.Text = "Your Ping to the Server";
             this.ServerPingStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ServerPingStatusText.UseCompatibleTextRendering = true;
-            this.ServerPingStatusText.UseMnemonic = false;
             // 
             // LogoutButton
             // 
@@ -990,7 +988,6 @@ namespace GameLauncher
             this.Name = "MainScreen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GameLauncher";
-            this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.ShowPlayPanel.ResumeLayout(false);
             this.RegisterPanel.ResumeLayout(false);
