@@ -247,7 +247,7 @@ namespace GameLauncher.App
             {
                 rememberServerInformationID.TryGetValue(ServerListRenderer.SelectedIndices[0], out ServerList);
 
-                MainScreen.ServerName = data[ServerListRenderer.SelectedIndices[0] + 1];
+                SelectedServer.Data = data[ServerListRenderer.SelectedIndices[0] + 1];
 
                 this.Close();
             }

@@ -133,7 +133,6 @@ namespace GameLauncher
             this.SelectServerBtn.Text = "Select Server";
             this.SelectServerBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SelectServerBtn.UseVisualStyleBackColor = true;
-            this.SelectServerBtn.Click += new System.EventHandler(this.SelectServerBtn_Click);
             // 
             // translatedBy
             // 
@@ -738,7 +737,6 @@ namespace GameLauncher
             this.TwitterAccountLink.TabStop = true;
             this.TwitterAccountLink.Text = "Twitter Feed";
             this.TwitterAccountLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.TwitterAccountLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.TwitterAccountLink_LinkClicked);
             // 
             // TwitterIcon
             // 
@@ -767,7 +765,6 @@ namespace GameLauncher
             this.FacebookGroupLink.TabStop = true;
             this.FacebookGroupLink.Text = "Facebook Group";
             this.FacebookGroupLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.FacebookGroupLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.FacebookGroupLink_LinkClicked);
             // 
             // HomePageLink
             // 
@@ -784,7 +781,6 @@ namespace GameLauncher
             this.HomePageLink.TabStop = true;
             this.HomePageLink.Text = "Home Page";
             this.HomePageLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.HomePageLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.HomePageLink_LinkClicked);
             // 
             // DiscordInviteLink
             // 
@@ -801,7 +797,6 @@ namespace GameLauncher
             this.DiscordInviteLink.TabStop = true;
             this.DiscordInviteLink.Text = "Discord Invite";
             this.DiscordInviteLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.DiscordInviteLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DiscordInviteLink_LinkClicked);
             // 
             // ServerShutDown
             // 

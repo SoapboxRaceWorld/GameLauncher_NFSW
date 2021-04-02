@@ -6,12 +6,20 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public static string UserRawEmail = accountFile.Read("AccountEmail");
 
-        public static string UserHashedPassword = accountFile.Read("Password");
+        public static string UserHashedPassword = accountFile.Read("PasswordHashed");
+
+        public static string UserRawPassword = accountFile.Read("PasswordRaw");
 
         public static string ChoosenGameServer = accountFile.Read("Server");
 
         public static void NullSafeAccount()
         {
+            if (accountFile.KeyExists("Password"))
+            {
+                UserHashedPassword = accountFile.Read("Password");
+                accountFile.DeleteKey("Password");
+            }
+
             if (!accountFile.KeyExists("Server"))
             {
                 accountFile.Write("Server", string.Empty);
@@ -22,9 +30,14 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 accountFile.Write("AccountEmail", string.Empty);
             }
 
-            if (!accountFile.KeyExists("Password"))
+            if (!accountFile.KeyExists("PasswordHashed"))
             {
-                accountFile.Write("Password", string.Empty);
+                accountFile.Write("PasswordHashed", string.Empty);
+            }
+
+            if (!accountFile.KeyExists("PasswordRaw"))
+            {
+                accountFile.Write("PasswordRaw", string.Empty);
             }
 
             accountFile = new IniFile("Account.ini");
@@ -42,9 +55,14 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 accountFile.Write("AccountEmail", UserRawEmail);
             }
 
-            if (!accountFile.KeyExists("Password") || accountFile.Read("Password") != UserHashedPassword)
+            if (!accountFile.KeyExists("PasswordHashed") || accountFile.Read("PasswordHashed") != UserHashedPassword)
             {
-                accountFile.Write("Password", UserHashedPassword);
+                accountFile.Write("PasswordHashed", UserHashedPassword);
+            }
+
+            if (!accountFile.KeyExists("PasswordRaw") || accountFile.Read("PasswordRaw") != UserRawPassword)
+            {
+                accountFile.Write("PasswordRaw", UserRawPassword);
             }
 
             accountFile = new IniFile("Account.ini");

@@ -19,7 +19,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         }
 
         public static String AsString(String filename)
-            {
+        {
             var assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream(filename))
             using (StreamReader reader = new StreamReader(stream))

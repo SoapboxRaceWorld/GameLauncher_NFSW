@@ -32,4 +32,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists.JSON
         [JsonIgnore]
         public bool IsSpecial { get; set; }
     }
+
+    class SelectedServer
+    {
+        public static ServerList List;
+        public static ServerList Data
+        {
+            get { return List; }
+            set { List = value; }
+        }
+    }
 }

@@ -91,10 +91,7 @@ namespace GameLauncher
 
                         if (restartApp == DialogResult.Yes)
                         {
-                            Properties.Settings.Default.IsRestarting = true;
-                            Properties.Settings.Default.Save();
                             Application.Restart();
-
                         }
 
                         Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
@@ -354,13 +351,6 @@ namespace GameLauncher
                 }
             }
 
-            if (Properties.Settings.Default.IsRestarting)
-            {
-                Properties.Settings.Default.IsRestarting = false;
-                Properties.Settings.Default.Save();
-                Thread.Sleep(3000);
-            }
-
             //Windows Firewall Runner
             if (!string.IsNullOrEmpty(FileSettingsSave.FirewallLauncherStatus))
             {
@@ -616,13 +606,6 @@ namespace GameLauncher
                     File.WriteAllText("servers.json", "[]");
                 }
                 catch { /* ignored */ }
-            }
-
-            if (Properties.Settings.Default.IsRestarting)
-            {
-                Properties.Settings.Default.IsRestarting = false;
-                Properties.Settings.Default.Save();
-                Thread.Sleep(3000);
             }
 
             Theming.CheckIfThemeExists();
