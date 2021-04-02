@@ -5,9 +5,9 @@ using GameLauncher.App.Classes.Logger;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using GameLauncher.App.Classes.SystemPlatform.Components;
-using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 {
@@ -72,7 +72,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
             request.Headers["X-HWID"] = HardwareID.FingerPrint.Value();
             request.Headers["X-UserAgent"] = "GameLauncherReborn " + Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = Value();
-            request.Headers["X-DiscordID"] = FunctionStatus.DiscordUserID;
+            request.Headers["X-DiscordID"] = DiscordLauncherPresense.UserID;
 
             if (addrange != 0)
             {

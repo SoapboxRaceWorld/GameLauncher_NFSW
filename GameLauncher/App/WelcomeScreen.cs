@@ -188,7 +188,7 @@ namespace GameLauncher.App
 
         private void PreloadServerList()
         {
-            if (FunctionStatus.ServerListStatus != "Loaded")
+            if (InformationCache.ServerListStatus != "Loaded")
             {
                 ServerListUpdater.GetList();
             }

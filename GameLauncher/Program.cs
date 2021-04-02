@@ -28,6 +28,7 @@ using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 
 namespace GameLauncher
 {
@@ -223,6 +224,32 @@ namespace GameLauncher
             File.Delete("launcher.log");
             Log.StartLogging();
 
+            if (EnableInsider.ShouldIBeAnInsider() == true)
+            {
+                Log.Build("INSIDER: GameLauncher " + Application.ProductVersion + "_" + EnableInsider.BuildNumber());
+            }
+            else
+            {
+                Log.Build("BUILD: GameLauncher " + Application.ProductVersion);
+            }
+
+            Log.Info("LAUNCHER: Detecting OS");
+            if (DetectLinux.LinuxDetected())
+            {
+                InformationCache.OSName = DetectLinux.Distro();
+                Log.System("SYSTEM: Detected OS: " + InformationCache.OSName);
+            }
+            else
+            {
+                WindowsProductVersion.CachedWindowsNumber = WindowsProductVersion.GetWindowsNumber();
+                InformationCache.OSName = WindowsProductVersion.ConvertWindowsNumberToName(WindowsProductVersion.CachedWindowsNumber);
+
+                Log.System("SYSTEM: Detected OS: " + InformationCache.OSName);
+                Log.System("SYSTEM: OS Details: " + Environment.OSVersion);
+                Log.System("SYSTEM: Video Card: " + HardwareInfo.GPU.CardName());
+                Log.System("SYSTEM: Driver Version: " + HardwareInfo.GPU.DriverVersion());
+            }
+
             if (!DetectLinux.LinuxDetected())
             {
                 //Check if User has .NETFramework 4.6.2 or later Installed
@@ -314,7 +341,7 @@ namespace GameLauncher
             FileSettingsSave.NullSafeSettings();
             FileAccountSave.NullSafeAccount();
 
-            FunctionStatus.CurrentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
+            InformationCache.CurrentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
 
@@ -325,15 +352,6 @@ namespace GameLauncher
                 {
                     new UriScheme(args.Parse);
                 }
-            }
-
-            if (EnableInsider.ShouldIBeAnInsider() == true)
-            {
-                Log.Build("INSIDER: GameLauncher " + Application.ProductVersion + "_" + EnableInsider.BuildNumber());
-            }
-            else
-            {
-                Log.Build("BUILD: GameLauncher " + Application.ProductVersion);
             }
 
             if (Properties.Settings.Default.IsRestarting)
@@ -437,7 +455,7 @@ namespace GameLauncher
                                 WebClient update_data = new WebClient();
                                 update_data.CancelAsync();
                                 update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                                update_data.DownloadStringAsync(new Uri("http://api.github.com/repos/SoapboxRaceWorld/GameLauncherUpdater/releases/latest"));
+                                update_data.DownloadString(new Uri("http://api.github.com/repos/SoapboxRaceWorld/GameLauncherUpdater/releases/latest"));
                                 update_data.DownloadStringCompleted += (sender, e) => {
                                     GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(e.Result);
 
@@ -474,7 +492,7 @@ namespace GameLauncher
             if (!DetectLinux.LinuxDetected())
             {
                 //Windows 7 Fix
-                if (WindowsProductVersion.GetWindowsNumber() == 6.1 && (string.IsNullOrEmpty(FileSettingsSave.Win7UpdatePatches)))
+                if (WindowsProductVersion.CachedWindowsNumber == 6.1 && string.IsNullOrEmpty(FileSettingsSave.Win7UpdatePatches))
                 {
                     if (ManagementSearcher.GetInstalledHotFix("KB3020369") == false || ManagementSearcher.GetInstalledHotFix("KB3125574") == false)
                     {
@@ -710,7 +728,7 @@ namespace GameLauncher
 
             /* Check ServerList Status */
 
-            if (FunctionStatus.ServerListStatus != "Loaded")
+            if (InformationCache.ServerListStatus != "Loaded")
             {
                 ServerListUpdater.GetList();
             }
@@ -720,6 +738,8 @@ namespace GameLauncher
             {
                 _SplashScreen.Abort();
             }
+
+            DiscordLauncherPresense.Start("Start Up", "540651192179752970");
 
             Log.Visuals("CORE: Starting MainScreen");
             Application.Run(new MainScreen());

@@ -1,3 +1,4 @@
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using System;
 using System.Globalization;
 using System.IO;
@@ -8,22 +9,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 {
     class FunctionStatus
     {
-        /* ServerList Load Checks */
-        public static string ServerListStatus = "Unknown";
-
-        /* CDNList Load Checks */
-        public static string CDNListStatus = "Unknown";
-
-        /* System Language */
-        public static string CurrentLanguage = "EN";
-
-        /* User's Discord ID */
-        public static string DiscordUserID = String.Empty;
-
-        /* Sets Game Launchers User Agent (If Required) */
-        public static string UserAgent = null;
-
-
         /* Verify Hash Status */
         public static bool IsVerifyHashDisabled = false;
 
@@ -33,7 +18,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* Sets Conditional to If its Possible to Close Game */
         public static Boolean CanCloseGame = true;
 
-        /*  */
+        /* Detect and Set System Language */
         private static CultureInfo Lang = CultureInfo.CurrentUICulture;
 
         /* Checks if we have Write Permissions */
@@ -107,5 +92,32 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         /* Moved "runAsAdmin" Code to Gist */
         /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/eec2f9f80aa4b350ab98d32383e1ee1f2e1c26fd/Self.cs */
+    }
+
+    class InformationCache
+    {
+        /* ServerList Load Checks */
+        public static string ServerListStatus = "Unknown";
+
+        /* CDNList Load Checks */
+        public static string CDNListStatus = "Unknown";
+
+        /* System Language */
+        public static string CurrentLanguage = "EN";
+
+        /* Sets Game Launchers User Agent (If Required) */
+        public static string UserAgent;
+
+        /* System OS Name */
+        public static string OSName;
+
+        /* Selected Server Category */
+        public static string SelectedServerCategory;
+
+        /* Selected Server List Key Information */
+        public static ServerList SelectedServerData;
+
+        /* Selected Server JSON (GetServerInformation) */
+        public static GetServerInformation SelectedServerJSON = new GetServerInformation();
     }
 }

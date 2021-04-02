@@ -83,20 +83,13 @@ namespace GameLauncher
         private string _serverFacebookLink = "";
         private string _serverDiscordLink = "";
         private string _serverTwitterLink = "";
-        private string _serverPanelLink = "";
         private string _loginWelcomeTime = "";
         private string _loginToken = "";
         private string _userId = "";
         private string _serverIp = "";
         private string _langInfo;
 
-        private readonly RichPresence _presence = new RichPresence();
-
-        private string _presenceImageKey;
         private string _NFSW_Installation_Source;
-        private string _realServername;
-        private string _realServernameBanner;
-        public string _OS;
 
         public static String ModNetFileNameInUse = String.Empty;
         readonly Queue<Uri> modFilesDownloadUrls = new Queue<Uri>();
@@ -104,15 +97,7 @@ namespace GameLauncher
         int CurrentModFileCount = 0;
         int TotalModFileCount = 0;
 
-        ServerList _serverInfo = null;
-        public static GetServerInformation json = new GetServerInformation();
-
-        public static DiscordRpcClient discordRpcClient;
-
         readonly Dictionary<string, int> serverStatusDictionary = new Dictionary<string, int>();
-
-        //Used to Set Discord Buttons
-        public static List<DiscordButton> ButtonsList = new List<DiscordButton>();
 
         readonly String filename_pack = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameFiles.sbrwpack");
 
@@ -170,43 +155,9 @@ namespace GameLauncher
             Random rnd;
             rnd = new Random(Environment.TickCount);
 
-            discordRpcClient = new DiscordRpcClient(DiscordGamePresence.DiscordRPCID);
-
-            discordRpcClient.OnReady += (sender, e) =>
-            {
-                Log.Debug("DISCORD: Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
-                FunctionStatus.DiscordUserID = e.User.ID.ToString();
-            };
-
-            discordRpcClient.OnError += (sender, e) =>
-            {
-                Log.Error($"DISCORD: Discord Error\n{e.Message}");
-            };
-
-            discordRpcClient.Initialize();
-
             if (DetectLinux.LinuxDetected())
             {
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-            }
-
-            Log.Info("LAUNCHER: Detecting OS");
-            if (DetectLinux.LinuxDetected())
-            {
-                _OS = DetectLinux.Distro();
-                Log.System("SYSTEM: Detected OS: " + _OS);
-            }
-            else
-            {
-                _OS = (string)Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion").GetValue("productName");
-                Log.System("SYSTEM: Detected OS: " + _OS);
-                if (Environment.Is64BitOperatingSystem == true)
-                {
-                    Log.Debug("SYSTEM: OS Type: 64 Bit");
-                }
-                Log.System("SYSTEM: OS Details: " + Environment.OSVersion);
-                Log.System("SYSTEM: Video Card: " + HardwareInfo.GPU.CardName());
-                Log.System("SYSTEM: Driver Version: " + HardwareInfo.GPU.DriverVersion());
             }
 
             _downloader = new Downloader(this, 3, 2, 16)
@@ -244,7 +195,7 @@ namespace GameLauncher
 
                 new Thread(() =>
                 {
-                    discordRpcClient.Invoke();
+                    DiscordLauncherPresense.Update();
 
                     //Let's fetch all servers
                     List<ServerList> allServs = ServerListUpdater.CleanList.FindAll(i => string.Equals(i.IsSpecial, false));
@@ -633,31 +584,6 @@ namespace GameLauncher
                 Log.Error(ex.Message);
             }
 
-            Log.Core("DISCORD: Initializing DiscordRPC");
-            Log.Core("DISCORD: Checking if Discord RPC is Disabled from User Settings! It's value is " + _disableDiscordRPC);
-
-            _presence.State = _OS;
-            _presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-            _presence.Assets = new Assets
-            {
-                LargeImageText = "SBRW",
-                LargeImageKey = "nfsw"
-            };
-            ButtonsList.Clear();
-            ButtonsList.Add(new DiscordButton()
-            {
-                Label = "Project Site",
-                Url = "https://soapboxrace.world"
-            });
-            ButtonsList.Add(new DiscordButton()
-            {
-                Label = "Launcher Patch Notes",
-                Url = "https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/tag/" + Theming.PrivacyRPCBuild
-            });
-            _presence.Buttons = ButtonsList.ToArray();
-
-            if (discordRpcClient != null) discordRpcClient.SetPresence(_presence);
-
             BeginInvoke((MethodInvoker)delegate
             {
                 Log.Core("CORE: 'GetServerInformation' from all Servers in Server List and Download Selected Server Banners");
@@ -705,9 +631,9 @@ namespace GameLauncher
             }
 
             //Kill DiscordRPC
-            if (discordRpcClient != null)
+            if (DiscordLauncherPresense.Client != null)
             {
-                discordRpcClient.Dispose();
+                DiscordLauncherPresense.Stop();
             }
 
             ServerProxy.Instance.Stop();
@@ -812,10 +738,10 @@ namespace GameLauncher
             String username = MainEmail.Text.ToString();
             String realpass;
 
-            Tokens.IPAddress = _serverInfo.IpAddress;
-            Tokens.ServerName = _serverInfo.Name;
+            Tokens.IPAddress = InformationCache.SelectedServerData.IpAddress;
+            Tokens.ServerName = InformationCache.SelectedServerData.Name;
 
-            FunctionStatus.UserAgent = _serverInfo.ForceUserAgent ?? null;
+            InformationCache.UserAgent = InformationCache.SelectedServerData.ForceUserAgent ?? null;
 
             if (_modernAuthSupport == false)
             {
@@ -915,12 +841,10 @@ namespace GameLauncher
 
             //ServerStatusBar(_colorLoading, _startPoint, _endPoint);
 
-            _serverInfo = (ServerList)ServerPick.SelectedItem;
-            _realServername = _serverInfo.Name;
-            _realServernameBanner = _serverInfo.Name;
+            InformationCache.SelectedServerData = (ServerList)ServerPick.SelectedItem;
             _modernAuthSupport = false;
 
-            if (_serverInfo.IsSpecial)
+            if (InformationCache.SelectedServerData.IsSpecial)
             {
                 ServerPick.SelectedIndex = _lastSelectedServerId;
                 return;
@@ -939,10 +863,10 @@ namespace GameLauncher
 
             LoginButton.ForeColor = Theming.SixTextForeColor;
             var verticalImageUrl = "";
-            VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+            VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.Name) + ".bin");
             VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
 
-            var serverIp = _serverInfo.IpAddress;
+            var serverIp = InformationCache.SelectedServerData.IpAddress;
             string numPlayers = "";
             string numRegistered = "";
 
@@ -999,13 +923,13 @@ namespace GameLauncher
                     //Disable Social Panel
                     DisableSocialPanelandClearIt();
 
-                    if (!serverStatusDictionary.ContainsKey(_serverInfo.Id))
+                    if (!serverStatusDictionary.ContainsKey(InformationCache.SelectedServerData.Id))
                     {
-                        serverStatusDictionary.Add(_serverInfo.Id, 2);
+                        serverStatusDictionary.Add(InformationCache.SelectedServerData.Id, 2);
                     }
                     else
                     {
-                        serverStatusDictionary[_serverInfo.Id] = 2;
+                        serverStatusDictionary[InformationCache.SelectedServerData.Id] = 2;
                     }
                 }
                 else if (e2.Error != null)
@@ -1024,18 +948,18 @@ namespace GameLauncher
                     //Disable Social Panel
                     DisableSocialPanelandClearIt();
 
-                    if (!serverStatusDictionary.ContainsKey(_serverInfo.Id))
+                    if (!serverStatusDictionary.ContainsKey(InformationCache.SelectedServerData.Id))
                     {
-                        serverStatusDictionary.Add(_serverInfo.Id, 0);
+                        serverStatusDictionary.Add(InformationCache.SelectedServerData.Id, 0);
                     }
                     else
                     {
-                        serverStatusDictionary[_serverInfo.Id] = 0;
+                        serverStatusDictionary[InformationCache.SelectedServerData.Id] = 0;
                     }
                 }
                 else
                 {
-                    if (_realServername == "Offline Built-In Server")
+                    if (InformationCache.SelectedServerData.Name == "Offline Built-In Server")
                     {
                         DisableSocialPanelandClearIt();
                         numPlayers = "∞";
@@ -1043,13 +967,13 @@ namespace GameLauncher
                     }
                     else
                     {
-                        if (!serverStatusDictionary.ContainsKey(_serverInfo.Id))
+                        if (!serverStatusDictionary.ContainsKey(InformationCache.SelectedServerData.Id))
                         {
-                            serverStatusDictionary.Add(_serverInfo.Id, 1);
+                            serverStatusDictionary.Add(InformationCache.SelectedServerData.Id, 1);
                         }
                         else
                         {
-                            serverStatusDictionary[_serverInfo.Id] = 1;
+                            serverStatusDictionary[InformationCache.SelectedServerData.Id] = 1;
                         }
 
                         try
@@ -1061,17 +985,17 @@ namespace GameLauncher
 
                         String purejson = String.Empty;
                         purejson = e2.Result;
-                        json = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
+                        InformationCache.SelectedServerJSON = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
 
                         try
                         {
-                            if (!string.IsNullOrEmpty(json.bannerUrl))
+                            if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.bannerUrl))
                             {
                                 bool result;
 
                                 try
                                 {
-                                    result = Uri.TryCreate(json.bannerUrl, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                                    result = Uri.TryCreate(InformationCache.SelectedServerJSON.bannerUrl, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
                                 catch
                                 {
@@ -1080,7 +1004,7 @@ namespace GameLauncher
 
                                 if (result)
                                 {
-                                    verticalImageUrl = json.bannerUrl;
+                                    verticalImageUrl = InformationCache.SelectedServerJSON.bannerUrl;
                                 }
                                 else
                                 {
@@ -1102,7 +1026,7 @@ namespace GameLauncher
                         //Discord Invite Display
                         try
                         {
-                            if (string.IsNullOrEmpty(json.discordUrl))
+                            if (string.IsNullOrEmpty(InformationCache.SelectedServerJSON.discordUrl))
                             {
                                 DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled;
                                 DiscordInviteLink.Enabled = false;
@@ -1113,7 +1037,7 @@ namespace GameLauncher
                             {
                                 DiscordIcon.BackgroundImage = Theming.DiscordIcon;
                                 DiscordInviteLink.Enabled = true;
-                                _serverDiscordLink = json.discordUrl;
+                                _serverDiscordLink = InformationCache.SelectedServerJSON.discordUrl;
                                 DiscordInviteLink.Text = "Discord Invite";
                             }
                         }
@@ -1122,7 +1046,7 @@ namespace GameLauncher
                         //Homepage Display
                         try
                         {
-                            if (string.IsNullOrEmpty(json.homePageUrl))
+                            if (string.IsNullOrEmpty(InformationCache.SelectedServerJSON.homePageUrl))
                             {
                                 HomePageIcon.BackgroundImage = Theming.HomeIconDisabled;
                                 HomePageLink.Enabled = false;
@@ -1133,7 +1057,7 @@ namespace GameLauncher
                             {
                                 HomePageIcon.BackgroundImage = Theming.HomeIcon;
                                 HomePageLink.Enabled = true;
-                                _serverWebsiteLink = json.homePageUrl;
+                                _serverWebsiteLink = InformationCache.SelectedServerJSON.homePageUrl;
                                 HomePageLink.Text = "Home Page";
                             }
                         }
@@ -1142,7 +1066,7 @@ namespace GameLauncher
                         //Facebook Group Display
                         try
                         {
-                            if (string.IsNullOrEmpty(json.facebookUrl) || json.facebookUrl == "Your facebook page url")
+                            if (string.IsNullOrEmpty(InformationCache.SelectedServerJSON.facebookUrl) || InformationCache.SelectedServerJSON.facebookUrl == "Your facebook page url")
                             {
                                 FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled;
                                 FacebookGroupLink.Enabled = false;
@@ -1153,7 +1077,7 @@ namespace GameLauncher
                             {
                                 FacebookIcon.BackgroundImage = Theming.FacebookIcon;
                                 FacebookGroupLink.Enabled = true;
-                                _serverFacebookLink = json.facebookUrl;
+                                _serverFacebookLink = InformationCache.SelectedServerJSON.facebookUrl;
                                 FacebookGroupLink.Text = "Facebook Page";
                             }
                         }
@@ -1162,7 +1086,7 @@ namespace GameLauncher
                         //Twitter Account Display
                         try
                         {
-                            if (string.IsNullOrEmpty(json.twitterUrl))
+                            if (string.IsNullOrEmpty(InformationCache.SelectedServerJSON.twitterUrl))
                             {
                                 TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled;
                                 TwitterAccountLink.Enabled = false;
@@ -1173,7 +1097,7 @@ namespace GameLauncher
                             {
                                 TwitterIcon.BackgroundImage = Theming.TwitterIcon;
                                 TwitterAccountLink.Enabled = true;
-                                _serverTwitterLink = json.twitterUrl;
+                                _serverTwitterLink = InformationCache.SelectedServerJSON.twitterUrl;
                                 TwitterAccountLink.Text = "Twitter Feed";
                             }
                         }
@@ -1182,7 +1106,7 @@ namespace GameLauncher
                         //Server Set Speedbug Timer Display
                         try
                         {
-                            int serverSecondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2 * 60 * 60;
+                            int serverSecondsToShutDown = (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
                             string serverSecondsToShutDownNamed = string.Format("Gameplay Timer: " + TimeConversions.RelativeTime(serverSecondsToShutDown));
 
                             this.ServerShutDown.Text = serverSecondsToShutDownNamed;
@@ -1192,7 +1116,7 @@ namespace GameLauncher
                         try
                         {
                             //Scenery Group Display
-                            switch (String.Join("", json.activatedHolidaySceneryGroups))
+                            switch (String.Join("", InformationCache.SelectedServerJSON.activatedHolidaySceneryGroups))
                             {
                                 case "SCENERY_GROUP_NEWYEARS":
                                     this.SceneryGroupText.Text = "Scenery: New Years";
@@ -1218,11 +1142,11 @@ namespace GameLauncher
 
                         try
                         {
-                            if (string.IsNullOrEmpty(json.requireTicket))
+                            if (string.IsNullOrEmpty(InformationCache.SelectedServerJSON.requireTicket))
                             {
                                 _ticketRequired = true;
                             }
-                            else if (json.requireTicket == "true")
+                            else if (InformationCache.SelectedServerJSON.requireTicket == "true")
                             {
                                 _ticketRequired = true;
                             }
@@ -1238,11 +1162,11 @@ namespace GameLauncher
 
                         try
                         {
-                            if (string.IsNullOrEmpty(json.modernAuthSupport))
+                            if (string.IsNullOrEmpty(InformationCache.SelectedServerJSON.modernAuthSupport))
                             {
                                 _modernAuthSupport = false;
                             }
-                            else if (json.modernAuthSupport == "true")
+                            else if (InformationCache.SelectedServerJSON.modernAuthSupport == "true")
                             {
                                 if (stringToUri.Scheme == "https")
                                 {
@@ -1263,20 +1187,20 @@ namespace GameLauncher
                             _modernAuthSupport = false;
                         }
 
-                        if (json.maxOnlinePlayers != 0)
+                        if (InformationCache.SelectedServerJSON.maxOnlinePlayers != 0)
                         {
-                            numPlayers = string.Format("{0} / {1}", json.onlineNumber, json.maxOnlinePlayers.ToString());
-                            numRegistered = string.Format("{0}", json.numberOfRegistered);
+                            numPlayers = string.Format("{0} / {1}", InformationCache.SelectedServerJSON.onlineNumber, InformationCache.SelectedServerJSON.maxOnlinePlayers.ToString());
+                            numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.numberOfRegistered);
                         }
-                        else if (json.maxUsersAllowed != 0)
+                        else if (InformationCache.SelectedServerJSON.maxUsersAllowed != 0)
                         {
-                            numPlayers = string.Format("{0} / {1}", json.onlineNumber, json.maxUsersAllowed.ToString());
-                            numRegistered = string.Format("{0}", json.numberOfRegistered);
+                            numPlayers = string.Format("{0} / {1}", InformationCache.SelectedServerJSON.onlineNumber, InformationCache.SelectedServerJSON.maxUsersAllowed.ToString());
+                            numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.numberOfRegistered);
                         }
-                        else if ((json.maxUsersAllowed == 0) || (json.maxOnlinePlayers == 0))
+                        else if ((InformationCache.SelectedServerJSON.maxUsersAllowed == 0) || (InformationCache.SelectedServerJSON.maxOnlinePlayers == 0))
                         {
-                            numPlayers = string.Format("{0}", json.onlineNumber);
-                            numRegistered = string.Format("{0}", json.numberOfRegistered);
+                            numPlayers = string.Format("{0}", InformationCache.SelectedServerJSON.onlineNumber);
+                            numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.numberOfRegistered);
                         }
 
                         _allowRegistration = true;
@@ -1294,8 +1218,9 @@ namespace GameLauncher
                         LoginButton.ForeColor = Theming.FivithTextForeColor;
                         LoginButton.Enabled = true;
                         RegisterText.Enabled = true;
+                        InformationCache.SelectedServerCategory = ((ServerList)ServerPick.SelectedItem).Category;
 
-                        if (((ServerList)ServerPick.SelectedItem).Category == "DEV")
+                        if (InformationCache.SelectedServerCategory == "DEV")
                         {
                             //Disable Social Panel
                             DisableSocialPanelandClearIt();
@@ -1315,7 +1240,7 @@ namespace GameLauncher
                         pingSender.PingCompleted += (sender3, e3) => {
                             PingReply reply = e3.Reply;
 
-                            if (reply.Status == IPStatus.Success && _realServername != "Offline Built-In Server")
+                            if (reply.Status == IPStatus.Success && InformationCache.SelectedServerData.Name != "Offline Built-In Server")
                             {
                                 if (this.ServerPingStatusText.InvokeRequired)
                                 {
@@ -1366,7 +1291,7 @@ namespace GameLauncher
                             if (e4.TotalBytesToReceive > 2000000)
                             {
                                 client2.CancelAsync();
-                                Log.Warning("Unable to Cache " + _realServername + " Server Banner! {Over 2MB?}");
+                                Log.Warning("Unable to Cache " + InformationCache.SelectedServerData.Name + " Server Banner! {Over 2MB?}");
                             }
                         };
 
@@ -1375,14 +1300,14 @@ namespace GameLauncher
                             if (e4.Cancelled)
                             {
                                 //Load cached banner!
-                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.Name) + ".bin");
                                 VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                 return;
                             }
                             else if (e4.Error != null)
                             {
                                 //Load cached banner!
-                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.Name) + ".bin");
                                 VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                 return;
                             }
@@ -1403,7 +1328,7 @@ namespace GameLauncher
 
                                         if (VerticalBanners.GetFileExtension(verticalImageUrl) != "gif")
                                         {
-                                            File.WriteAllBytes(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin", memoryStream.ToArray());
+                                            File.WriteAllBytes(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.Name) + ".bin", memoryStream.ToArray());
                                         }
                                     }
                                     else
@@ -1424,7 +1349,7 @@ namespace GameLauncher
                     else
                     {
                         //Load cached banner!
-                        VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(_realServernameBanner) + ".bin");
+                        VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.Name) + ".bin");
                         VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                     }
                 }
@@ -1435,21 +1360,21 @@ namespace GameLauncher
         {
             if (_allowRegistration)
             {
-                if (!string.IsNullOrEmpty(json.webSignupUrl))
+                if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.webSignupUrl))
                 {
-                    Process.Start(json.webSignupUrl);
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + json.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Process.Start(InformationCache.SelectedServerJSON.webSignupUrl);
+                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + InformationCache.SelectedServerJSON.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                if (_realServername == "WorldUnited Official" || _realServername == "WorldUnited OFFICIAL")
+                if (InformationCache.SelectedServerData.Name.ToUpper() == "WORLDUNITED OFFICIAL")
                 {
-                    Process.Start("https://signup.worldunited.gg/?discordid=" + FunctionStatus.DiscordUserID);
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on WorldUnited OFFICIAL", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Process.Start("https://signup.worldunited.gg/?discordid=" + DiscordLauncherPresense.UserID);
+                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + InformationCache.SelectedServerData.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                CurrentWindowInfo.Text = "REGISTER ON \n" + _realServername.ToUpper();
+                CurrentWindowInfo.Text = "REGISTER ON \n" + InformationCache.SelectedServerData.Name.ToUpper();
                 LoginFormElements(false);
                 RegisterFormElements(true);
             }
@@ -1461,10 +1386,10 @@ namespace GameLauncher
 
         private void ForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(json.webRecoveryUrl))
+            if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.webRecoveryUrl))
             {
-                Process.Start(json.webRecoveryUrl);
-                MessageBox.Show(null, "A browser window has been opened to complete password recovery on " + json.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Process.Start(InformationCache.SelectedServerJSON.webRecoveryUrl);
+                MessageBox.Show(null, "A browser window has been opened to complete password recovery on " + InformationCache.SelectedServerJSON.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             else
@@ -1476,7 +1401,7 @@ namespace GameLauncher
                     String responseString;
                     try
                     {
-                        Uri resetPasswordUrl = new Uri(_serverInfo.IpAddress + "/RecoveryPassword/forgotPassword");
+                        Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IpAddress + "/RecoveryPassword/forgotPassword");
 
                         var request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
                         var postData = "email=" + send;
@@ -1861,8 +1786,8 @@ namespace GameLauncher
                     String realpass;
                     String token = (_ticketRequired) ? RegisterTicket.Text : null;
 
-                    Tokens.IPAddress = _serverInfo.IpAddress;
-                    Tokens.ServerName = _serverInfo.Name;
+                    Tokens.IPAddress = InformationCache.SelectedServerData.IpAddress;
+                    Tokens.ServerName = InformationCache.SelectedServerData.Name;
 
                     if (_modernAuthSupport == false)
                     {
@@ -1911,7 +1836,7 @@ namespace GameLauncher
         /* SETTINGS PAGE LAYOUT */
         private void SettingsButton_Click(object sender, EventArgs e)
         {
-            if (FunctionStatus.CDNListStatus != "Loaded")
+            if (InformationCache.CDNListStatus != "Loaded")
             {
                 CDNListUpdater.GetList();
             }
@@ -1940,7 +1865,7 @@ namespace GameLauncher
                 _serverIp = UriScheme.ServerIP;
             }
 
-            if (_realServername == "Freeroam Sparkserver")
+            if (InformationCache.SelectedServerData.Name == "Freeroam Sparkserver")
             {
                 //Force proxy enabled.
                 Log.Core("LAUNCHER: Forcing Proxified connection for FRSS");
@@ -1951,12 +1876,6 @@ namespace GameLauncher
             {
                 if (_disableProxy == true)
                 {
-                    if (_disableDiscordRPC == true)
-                    {
-                        discordRpcClient.Dispose();
-                        discordRpcClient = null;
-                    }
-
                     Uri convert = new Uri(_serverIp);
 
                     if (convert.Scheme == "http")
@@ -1972,11 +1891,6 @@ namespace GameLauncher
                 }
                 else
                 {
-                    if (_disableDiscordRPC == true)
-                    {
-                        discordRpcClient.Dispose();
-                        discordRpcClient = null;
-                    }
                     LaunchGame(userId, loginToken, "http://127.0.0.1:" + ServerProxy.ProxyPort + "/nfsw/Engine.svc", this);
                 }
             })
@@ -1984,55 +1898,7 @@ namespace GameLauncher
 
             _nfswstarted.Start();
 
-            if (_disableDiscordRPC == false)
-            {
-                _presenceImageKey = _serverInfo.DiscordPresenceKey;
-                _presence.State = _realServername;
-                _presence.Details = "In-Game";
-                _presence.Assets = new Assets
-                {
-                    LargeImageText = "Need for Speed: World",
-                    LargeImageKey = "nfsw",
-                    SmallImageText = _realServername,
-                    SmallImageKey = _presenceImageKey
-                };
-
-                _serverPanelLink = json.webPanelUrl;
-                if (!String.IsNullOrEmpty(_serverWebsiteLink) || !String.IsNullOrEmpty(_serverDiscordLink) || !String.IsNullOrEmpty(_serverPanelLink))
-                {
-                    ButtonsList.Clear();
-
-                    if (!String.IsNullOrEmpty(_serverPanelLink))
-                    {
-                        //Let's format it now, if possible
-                        ButtonsList.Add(new DiscordButton()
-                        {
-                            Label = "View Panel",
-                            Url = _serverPanelLink.Split(new string[] { "{sep}" }, StringSplitOptions.None)[0]
-                        });
-                    }
-                    else if (!String.IsNullOrEmpty(_serverWebsiteLink) && _serverWebsiteLink != _serverDiscordLink)
-                    {
-                        ButtonsList.Add(new DiscordButton()
-                        {
-                            Label = "Website",
-                            Url = _serverWebsiteLink
-                        });
-                    }
-
-                    if (!String.IsNullOrEmpty(_serverDiscordLink))
-                    {
-                        ButtonsList.Add(new DiscordButton()
-                        {
-                            Label = "Discord",
-                            Url = _serverDiscordLink
-                        });
-                    }
-                }
-                _presence.Buttons = ButtonsList.ToArray();
-
-                if (discordRpcClient != null) discordRpcClient.SetPresence(_presence);
-            }
+            DiscordLauncherPresense.Status("In-Game", InformationCache.SelectedServerData.DiscordPresenceKey);
         }
 
         //Check Serverlist API Status Upon Main Screen load - DavidCarbon
@@ -2078,7 +1944,7 @@ namespace GameLauncher
         {
             var oldfilename = FileSettingsSave.GameInstallation + "\\nfsw.exe";
 
-            var args = _serverInfo.Id.ToUpper() + " " + serverIp + " " + loginToken + " " + userId;
+            var args = InformationCache.SelectedServerData.Id.ToUpper() + " " + serverIp + " " + loginToken + " " + userId;
             var psi = new ProcessStartInfo();
 
             if (DetectLinux.LinuxDetected())
@@ -2104,7 +1970,7 @@ namespace GameLauncher
             AntiCheat.process_id = nfswProcess.Id;
 
             //TIMER HERE
-            int secondsToShutDown = (json.secondsToShutDown != 0) ? json.secondsToShutDown : 2 * 60 * 60;
+            int secondsToShutDown = (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
             System.Timers.Timer shutdowntimer = new System.Timers.Timer();
             shutdowntimer.Elapsed += (x2, y2) =>
             {
@@ -2112,7 +1978,7 @@ namespace GameLauncher
                 {
                     Notification.Visible = true;
                     Notification.BalloonTipIcon = ToolTipIcon.Info;
-                    Notification.BalloonTipTitle = "SpeedBug Fix - " + _realServername;
+                    Notification.BalloonTipTitle = "SpeedBug Fix - " + InformationCache.SelectedServerData.Name;
                     Notification.BalloonTipText = "Game is going to shut down in 5 minutes. Please restart it manually before the launcher does it.";
                     Notification.ShowBalloonTip(5000);
                     Notification.Dispose();
@@ -2165,7 +2031,7 @@ namespace GameLauncher
                         secondsToShutDownNamed = "Waiting for event to finish.";
                     }
 
-                    User32.SetWindowText((IntPtr)p, "NEED FOR SPEED™ WORLD | Server: " + _realServername + " | " + DiscordGamePresence.LauncherRPC + " | Force Restart In: " + secondsToShutDownNamed);
+                    User32.SetWindowText((IntPtr)p, "NEED FOR SPEED™ WORLD | Server: " + InformationCache.SelectedServerData.Name + " | " + DiscordGamePresence.LauncherRPC + " | Force Restart In: " + secondsToShutDownNamed);
                 }
 
                 --secondsToShutDown;
@@ -2341,7 +2207,7 @@ namespace GameLauncher
             if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
 
             Log.Core("LAUNCHER: Installing ModNet");
-            PlayProgressText.Text = ("Detecting ModNet Support for " + _realServernameBanner).ToUpper();
+            PlayProgressText.Text = ("Detecting ModNet Support for " + InformationCache.SelectedServerData.Name).ToUpper();
             String jsonModNet = ModNetReloaded.ModNetSupported(_serverIp);
 
             if (jsonModNet != String.Empty)
@@ -2350,6 +2216,8 @@ namespace GameLauncher
 
                 try
                 {
+                    DiscordLauncherPresense.Status("Download ModNet", null);
+
                     /* Get Remote ModNet list to process for checking required ModNet files are present and current */
                     String modules = new WebClient().DownloadString(URLs.modnetserver + "/launcher-modules/modules.json");
                     string[] modules_newlines = modules.Split(new string[] { "\n" }, StringSplitOptions.None);
@@ -2453,8 +2321,7 @@ namespace GameLauncher
                     if (modFilesDownloadUrls.Count != 0)
                     {
                         this.DownloadModNetFilesRightNow(path);
-                        _presence.State = "Downloading Server Mods!";
-                        if (discordRpcClient != null) discordRpcClient.SetPresence(_presence);
+                        DiscordLauncherPresense.Status("Download Server Mods", null);
                     }
                     else
                     {
@@ -2512,18 +2379,9 @@ namespace GameLauncher
         //Launch game
         public void LaunchGame()
         {
-            if (_serverInfo.DiscordAppId != null)
+            if (InformationCache.SelectedServerData.DiscordAppId != null)
             {
-                discordRpcClient.Dispose();
-                discordRpcClient = null;
-                discordRpcClient = new DiscordRpcClient(_serverInfo.DiscordAppId);
-                discordRpcClient.Initialize();
-            }
-
-            if ((_disableDiscordRPC == false) && ((ServerList)ServerPick.SelectedItem).Category == "DEV")
-            {
-                discordRpcClient.Dispose();
-                discordRpcClient = null;
+                DiscordLauncherPresense.Start("New RPC", InformationCache.SelectedServerData.DiscordAppId);
             }
 
             try
@@ -2536,7 +2394,7 @@ namespace GameLauncher
                   )
                 {
                     ServerProxy.Instance.SetServerUrl(_serverIp);
-                    ServerProxy.Instance.SetServerName(_realServername);
+                    ServerProxy.Instance.SetServerName(InformationCache.SelectedServerData.Name);
 
                     AntiCheat.user_id = _userId;
                     AntiCheat.serverip = new Uri(_serverIp).Host;
@@ -2896,8 +2754,8 @@ namespace GameLauncher
                                 PlayProgressText.Text = ("Skipping " + fullName).ToUpper();
                             }
 
-                            _presence.State = "Unpacking game: " + (100 * current / numFiles) + "%";
-                            if (discordRpcClient != null) discordRpcClient.SetPresence(_presence);
+                            string Status = string.Format("Unpacking game: " + (100 * current / numFiles) + "%");
+                            DiscordLauncherPresense.Status("Unpack Game Files", Status);
 
                             Application.DoEvents();
 
@@ -2939,8 +2797,8 @@ namespace GameLauncher
                 PlayProgress.Value = (int)(100 * downloadCurrent / compressedLength);
                 PlayProgress.Width = (int)(519 * downloadCurrent / compressedLength);
 
-                _presence.State = string.Format("Downloaded {0}% of the Game!", (int)(100 * downloadCurrent / compressedLength));
-                if (discordRpcClient != null) discordRpcClient.SetPresence(_presence);
+                string Status = string.Format("Downloaded {0}% of the Game!", (int)(100 * downloadCurrent / compressedLength));
+                DiscordLauncherPresense.Status("Download Game Files", Status);
 
                 TaskbarProgress.SetValue(Handle, (int)(100 * downloadCurrent / compressedLength), 100);
             }
@@ -3020,8 +2878,7 @@ namespace GameLauncher
             }
 
             PlayProgressText.Text = "Ready!".ToUpper();
-            _presence.State = "Ready!";
-            if (discordRpcClient != null) discordRpcClient.SetPresence(_presence);
+            DiscordLauncherPresense.Status("Idle Ready", null);
 
             EnablePlayButton();
 
@@ -3066,8 +2923,7 @@ namespace GameLauncher
                 failureMessage = "Download failed.";
             }
 
-            _presence.State = "Failed to Downloaded Game!";
-            if (discordRpcClient != null) discordRpcClient.SetPresence(_presence);
+            DiscordLauncherPresense.Status("Download Game Files Error", null);
 
             ExtractingProgress.Value = 100;
             ExtractingProgress.Width = 519;

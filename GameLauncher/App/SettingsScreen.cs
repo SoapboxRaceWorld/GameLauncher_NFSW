@@ -407,7 +407,7 @@ namespace GameLauncher.App
             /* CDN, APIs, & Restore Last CDN /
             /********************************/
 
-            if (FunctionStatus.CDNListStatus != "Loaded")
+            if (InformationCache.CDNListStatus != "Loaded")
             {
                 CDNListUpdater.GetList();
             }
@@ -564,7 +564,7 @@ namespace GameLauncher.App
 
                         var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
                         var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
-                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + FunctionStatus.CurrentLanguage + "</DefaultChatGroup>";
+                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + InformationCache.CurrentLanguage + "</DefaultChatGroup>";
                         ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
@@ -580,7 +580,7 @@ namespace GameLauncher.App
 
                         var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
                         var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
-                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + FunctionStatus.CurrentLanguage + "</DefaultChatGroup>";
+                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + InformationCache.CurrentLanguage + "</DefaultChatGroup>";
                         ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));

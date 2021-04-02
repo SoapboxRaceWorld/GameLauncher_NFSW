@@ -36,19 +36,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     {
                         serverInfos.AddRange(
                             JsonConvert.DeserializeObject<List<ServerList>>(response));
-                        FunctionStatus.ServerListStatus = "Loaded";
+                        InformationCache.ServerListStatus = "Loaded";
                         break;
                     }
                     catch (Exception error)
                     {
                         Log.Error("LIST CORE: Error occurred while deserializing Server List from [" + serverListURL + "]: " + error.Message);
-                        FunctionStatus.ServerListStatus = "Error";
+                        InformationCache.ServerListStatus = "Error";
                     }
                 }
                 catch (Exception error)
                 {
                     Log.Error("LIST CORE: Error occurred while loading Server List from [" + serverListURL + "]: " + error.Message);
-                    FunctionStatus.ServerListStatus = "Error";
+                    InformationCache.ServerListStatus = "Error";
                 }
             }
 
