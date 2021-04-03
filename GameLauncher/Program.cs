@@ -343,15 +343,6 @@ namespace GameLauncher
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
 
-            if (UriScheme.IsCommandLineArgumentsInstalled())
-            {
-                UriScheme.InstallCommandLineArguments(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), AppDomain.CurrentDomain.FriendlyName));
-                if (args.Parse != null)
-                {
-                    new UriScheme(args.Parse);
-                }
-            }
-
             /* Windows Firewall Runner */
             if (!string.IsNullOrEmpty(FileSettingsSave.FirewallLauncherStatus))
             {
@@ -705,8 +696,11 @@ namespace GameLauncher
                 ModNetLinksCleanup.CleanLinks(linksPath);
             }
 
-            Log.Info("PROXY: Starting Proxy");
-            ServerProxy.Instance.Start();
+            if (FileSettingsSave.Proxy == "0")
+            {
+                Log.Info("PROXY: Starting Proxy (From Startup)");
+                ServerProxy.Instance.Start();
+            }
 
             /* Check ServerList Status */
 

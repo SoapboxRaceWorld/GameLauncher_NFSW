@@ -19,6 +19,7 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 
 namespace GameLauncher.App
 {
@@ -502,6 +503,16 @@ namespace GameLauncher.App
             if (FileSettingsSave.RPC != disableRPC)
             {
                 FileSettingsSave.RPC = (SettingsDiscordRPCCheckbox.Checked == true) ? "1" : "0";
+
+                if (FileSettingsSave.RPC == "1")
+                {
+                    /* Kill DiscordRPC */
+                    if (DiscordLauncherPresense.Client != null)
+                    {
+                        DiscordLauncherPresense.Stop();
+                    }
+                }
+
                 _restartRequired = true;
             }
 

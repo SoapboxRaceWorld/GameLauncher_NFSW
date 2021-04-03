@@ -12,7 +12,6 @@ using System.Threading;
 using System.Reflection;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json;
-using Microsoft.Win32;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.IO.Compression;
@@ -54,7 +53,6 @@ namespace GameLauncher
         private bool _useSavedPassword;
         private bool _skipServerTrigger;
         private bool _playenabled;
-        private bool _loggedIn;
         private bool _isDownloading = true;
         private bool _gameKilledBySpeedBugCheck = false;
         private bool _disableLogout = false;
@@ -78,7 +76,6 @@ namespace GameLauncher
         private string _loginWelcomeTime = "";
         private string _loginToken = "";
         private string _userId = "";
-        private string _serverIp = "";
         private string _langInfo;
 
         public static String ModNetFileNameInUse = String.Empty;
@@ -164,11 +161,6 @@ namespace GameLauncher
 
             this.Shown += (x, y) =>
             {
-                if (UriScheme.ForceGame == true)
-                {
-                    PlayButton_Click(x, y);
-                }
-
                 new Thread(() =>
                 {
                     DiscordLauncherPresense.Update();
@@ -373,28 +365,6 @@ namespace GameLauncher
                 }
             }
 
-            Log.Core("CORE: Setting Registry Options");
-            try
-            {
-                var gameInstallDirValue = Registry.GetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", RegistryValueKind.String);
-                if (gameInstallDirValue == null || gameInstallDirValue.ToString() != Path.GetFullPath(FileSettingsSave.GameInstallation))
-                {
-                    try
-                    {
-                        Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "GameInstallDir", Path.GetFullPath(FileSettingsSave.GameInstallation));
-                        Registry.SetValue("HKEY_LOCAL_MACHINE\\software\\Electronic Arts\\Need For Speed World", "LaunchInstallDir", Path.GetFullPath(Application.ExecutablePath));
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.Message);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-            }
-
             BeginInvoke((MethodInvoker)delegate
             {
                 Log.Core("CORE: 'GetServerInformation' from all Servers in Server List and Download Selected Server Banners");
@@ -569,16 +539,13 @@ namespace GameLauncher
                 if (!(ServerPick.SelectedItem is ServerList server)) return;
                 FileAccountSave.ChoosenGameServer = server.IpAddress;
             }
-            catch
-            {
-            }
+            catch { }
 
             if (String.IsNullOrEmpty(Tokens.Error))
             {
-                _loggedIn = true;
                 _userId = Tokens.UserId;
                 _loginToken = Tokens.LoginToken;
-                _serverIp = Tokens.IPAddress;
+                InformationCache.SelectedServerData.IpAddress = Tokens.IPAddress;
 
                 if (!String.IsNullOrEmpty(Tokens.Warning))
                 {
@@ -655,7 +622,6 @@ namespace GameLauncher
             VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.Name) + ".bin");
             VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
 
-            var serverIp = InformationCache.SelectedServerData.IpAddress;
             string numPlayers = "";
             string numRegistered = "";
 
@@ -683,7 +649,7 @@ namespace GameLauncher
             var artificialPingStart = Time.GetStamp();
             VerticalBanner.BackColor = Color.Transparent;
 
-            var stringToUri = new Uri(serverIp + "/GetServerInformation");
+            var stringToUri = new Uri(InformationCache.SelectedServerData.IpAddress + "/GetServerInformation");
             client.DownloadStringAsync(stringToUri);
 
             System.Timers.Timer aTimer = new System.Timers.Timer(10000);
@@ -1041,7 +1007,6 @@ namespace GameLauncher
                     if (!Directory.Exists(".BannerCache")) { Directory.CreateDirectory(".BannerCache"); }
                     if (!string.IsNullOrEmpty(verticalImageUrl))
                     {
-
                         WebClient client2 = new WebClient();
                         Uri stringToUri3 = new Uri(verticalImageUrl);
                         client2.DownloadDataAsync(stringToUri3);
@@ -1074,32 +1039,21 @@ namespace GameLauncher
                             {
                                 try
                                 {
-                                    if (UriScheme.ForceGame != true)
+                                    Image image;
+                                    var memoryStream = new MemoryStream(e4.Result);
+                                    image = Image.FromStream(memoryStream);
+
+                                    VerticalBanner.Image = image;
+                                    VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
+
+                                    if (VerticalBanners.GetFileExtension(verticalImageUrl) != "gif")
                                     {
-                                        Image image;
-                                        var memoryStream = new MemoryStream(e4.Result);
-                                        image = Image.FromStream(memoryStream);
-
-                                        VerticalBanner.Image = image;
-                                        VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
-
-                                        Console.WriteLine(VerticalBanners.GetFileExtension(verticalImageUrl));
-
-                                        if (VerticalBanners.GetFileExtension(verticalImageUrl) != "gif")
-                                        {
-                                            File.WriteAllBytes(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.Name) + ".bin", memoryStream.ToArray());
-                                        }
-                                    }
-                                    else
-                                    {
-                                        VerticalBanner.Image = null;
-                                        VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
+                                        File.WriteAllBytes(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.Name) + ".bin", memoryStream.ToArray());
                                     }
                                 }
                                 catch (Exception ex)
                                 {
-                                    Console.WriteLine(ex.Message);
-                                    Log.Error(ex.Message);
+                                    Log.Error("SERVER BANNER: " + ex.Message);
                                     VerticalBanner.Image = null;
                                 }
                             }
@@ -1214,7 +1168,6 @@ namespace GameLauncher
                 return;
             }
 
-            _loggedIn = false;
             LoggedInFormElements(false);
             LoginFormElements(true);
 
@@ -1299,17 +1252,11 @@ namespace GameLauncher
             SettingsButton.BackgroundImage = Theming.GearButton;
         }
 
-        private void StartGame(string userId, string loginToken)
+        private void StartGame(string UserID, string LoginToken)
         {
-            if (UriScheme.ServerIP != String.Empty)
-            {
-                _serverIp = UriScheme.ServerIP;
-            }
-
             if (InformationCache.SelectedServerData.Name == "Freeroam Sparkserver")
             {
-                /* Force proxy enabled */
-                Log.Core("LAUNCHER: Forcing Proxified connection for FRSS");
+                /* Force start proxy and enable it */
                 _disableProxy = false;
             }
 
@@ -1317,22 +1264,22 @@ namespace GameLauncher
             {
                 if (_disableProxy == true)
                 {
-                    Uri convert = new Uri(_serverIp);
+                    Uri convert = new Uri(InformationCache.SelectedServerData.IpAddress);
 
                     if (convert.Scheme == "http")
                     {
                         Match match = Regex.Match(convert.Host, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
                         if (!match.Success)
                         {
-                            _serverIp = _serverIp.Replace(convert.Host, FunctionStatus.HostName2IP(convert.Host));
+                            InformationCache.SelectedServerData.IpAddress = InformationCache.SelectedServerData.IpAddress.Replace(convert.Host, FunctionStatus.HostName2IP(convert.Host));
                         }
                     }
 
-                    LaunchGame(userId, loginToken, _serverIp, this);
+                    LaunchGame(UserID, LoginToken, InformationCache.SelectedServerData.IpAddress, this);
                 }
                 else
                 {
-                    LaunchGame(userId, loginToken, "http://127.0.0.1:" + ServerProxy.ProxyPort + "/nfsw/Engine.svc", this);
+                    LaunchGame(UserID, LoginToken, "http://127.0.0.1:" + ServerProxy.ProxyPort + "/nfsw/Engine.svc", this);
                 }
             })
             { IsBackground = true };
@@ -1381,11 +1328,8 @@ namespace GameLauncher
             }
         }
 
-        private void LaunchGame(string userId, string loginToken, string serverIp, Form x)
+        private void LaunchGame(string UserID, string LoginToken, string ServerIP, Form x)
         {
-            var oldfilename = FileSettingsSave.GameInstallation + "\\nfsw.exe";
-
-            var args = InformationCache.SelectedServerData.Id.ToUpper() + " " + serverIp + " " + loginToken + " " + userId;
             var psi = new ProcessStartInfo();
 
             if (DetectLinux.LinuxDetected())
@@ -1394,8 +1338,8 @@ namespace GameLauncher
             }
 
             psi.WorkingDirectory = FileSettingsSave.GameInstallation;
-            psi.FileName = oldfilename;
-            psi.Arguments = args;
+            psi.FileName = FileSettingsSave.GameInstallation + "\\nfsw.exe";
+            psi.Arguments = InformationCache.SelectedServerData.Id.ToUpper() + " " + ServerIP + " " + LoginToken + " " + UserID;
 
             var nfswProcess = Process.Start(psi);
             nfswProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
@@ -1597,30 +1541,6 @@ namespace GameLauncher
             /* Disable Play Button and Logout Buttons */
             PlayButton.Visible = false;
             LogoutButton.Visible = false;
-
-            if (UriScheme.ForceGame != true)
-            {
-                if (_loggedIn == false)
-                {
-                    if (_useSavedPassword == false) return;
-                    LoginButton_Click(sender, e);
-                }
-
-                if (_playenabled == false)
-                {
-                    return;
-                }
-            }
-            else
-            {
-                /* set background black */
-                VerticalBanner.Image = null;
-
-                _userId = UriScheme.UserID;
-                _loginToken = UriScheme.LoginToken;
-                _serverIp = UriScheme.ServerIP;
-            }
-
             _disableLogout = true;
             DisablePlayButton();
 
@@ -1647,7 +1567,7 @@ namespace GameLauncher
 
             Log.Core("LAUNCHER: Installing ModNet");
             PlayProgressText.Text = ("Detecting ModNet Support for " + InformationCache.SelectedServerData.Name).ToUpper();
-            String jsonModNet = ModNetReloaded.ModNetSupported(_serverIp);
+            String jsonModNet = ModNetReloaded.ModNetSupported(InformationCache.SelectedServerData.IpAddress);
 
             if (jsonModNet != String.Empty)
             {
@@ -1831,11 +1751,11 @@ namespace GameLauncher
                     SHA.HashFile(FileSettingsSave.GameInstallation + "/nfsw.exe") == "E69890D31919DE1649D319956560269DB88B8F22"
                   )
                 {
-                    ServerProxy.Instance.SetServerUrl(_serverIp);
+                    ServerProxy.Instance.SetServerUrl(InformationCache.SelectedServerData.IpAddress);
                     ServerProxy.Instance.SetServerName(InformationCache.SelectedServerData.Name);
 
                     AntiCheat.user_id = _userId;
-                    AntiCheat.serverip = new Uri(_serverIp).Host;
+                    AntiCheat.serverip = new Uri(InformationCache.SelectedServerData.IpAddress).Host;
 
                     StartGame(_userId, _loginToken);
 

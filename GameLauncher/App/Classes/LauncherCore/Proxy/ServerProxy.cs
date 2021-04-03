@@ -6,11 +6,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public class ServerProxy : Singleton<ServerProxy>
     {
-        public static int ProxyPort = new Random().Next(6260, 8269);
+        public static int ProxyPort = new Random().Next(2017, DateTime.Now.Year);
 
         private string _serverUrl;
         private string _serverName;
-        private NancyHost _host;
+        public static NancyHost Host;
 
         public string GetServerUrl() => _serverUrl;
 
@@ -27,9 +27,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         public void Start()
         {
-            if (_host != null)
+            if (Host != null)
             {
-                Log.Warning("Server already running!");
+                Log.Warning("PROXY: Local Proxy Server Already Running!");
             }
             else
             {
@@ -42,14 +42,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     AllowChunkedEncoding = false
                 };
 
-                _host = new NancyHost(new Uri("http://127.0.0.1:" + ProxyPort), new NancyBootstrapper(), hostConfigs);
-                _host.Start();
+                Host = new NancyHost(new Uri("http://127.0.0.1:" + ProxyPort), new NancyBootstrapper(), hostConfigs);
+                Host.Start();
             }
         }
 
         public void Stop()
         {
-            _host.Stop();
+            Host.Stop();
         }
     }
 }
