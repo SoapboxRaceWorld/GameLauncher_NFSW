@@ -25,14 +25,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             _serverName = serverName;
         }
 
-        public void Start()
+        public void Start(string From)
         {
             if (Host != null)
             {
-                Log.Warning("PROXY: Local Proxy Server Already Running!");
+                Log.Warning("PROXY: Local Proxy Server Already Running! (" + From + ")");
             }
             else
             {
+                Log.Info("PROXY: Local Proxy Server has Fully Initialized (" + From + ")");
+
                 var hostConfigs = new HostConfiguration()
                 {
                     UrlReservations = new UrlReservations()
@@ -47,9 +49,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             }
         }
 
-        public void Stop()
+        public void Stop(string From)
         {
-            Host.Stop();
+            if (Host != null)
+            {
+                Log.Info("PROXY: Local Proxy Server has Shutdown (" + From + ")");
+                Host.Stop();
+                Host = null;
+            }
+            else
+            {
+                Log.Warning("PROXY: Local Proxy Server is already Shutdown (" + From + ")");
+            }
         }
     }
 }

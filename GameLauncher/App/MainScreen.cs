@@ -414,7 +414,7 @@ namespace GameLauncher
 
             if (ServerProxy.Host != null)
             {
-                ServerProxy.Instance.Stop();
+                ServerProxy.Instance.Stop("Main Screen");
             }
             
             Notification.Dispose();
@@ -1256,17 +1256,21 @@ namespace GameLauncher
             SettingsButton.BackgroundImage = Theming.GearButton;
         }
 
-        private void StartGame(string UserID, string LoginToken)
+        private async Task StartGameAsync(string UserID, string LoginToken)
         {
             if (InformationCache.SelectedServerData.Name == "Freeroam Sparkserver")
             {
+                if (ServerProxy.Host == null)
+                {
+                    await Task.Run(() => ServerProxy.Instance.Start("Start Game"));
+                }
                 /* Force start proxy and enable it */
                 _disableProxy = false;
             }
 
             _nfswstarted = new Thread(() =>
             {
-                if (_disableProxy == true)
+                if (_disableProxy == true || ServerProxy.Host == null)
                 {
                     Uri convert = new Uri(InformationCache.SelectedServerData.IpAddress);
 
@@ -1516,7 +1520,7 @@ namespace GameLauncher
                         isDownloadingModNetFiles = false;
                         if (modFilesDownloadUrls.Any() == false)
                         {
-                            LaunchGame();
+                            Task GTask = LaunchGameAsync();
                         }
                         else
                         {
@@ -1688,7 +1692,7 @@ namespace GameLauncher
                     }
                     else
                     {
-                        LaunchGame();
+                        Task GTask = LaunchGameAsync();
                     }
 
                     foreach (var file in Directory.GetFiles(path))
@@ -1718,7 +1722,7 @@ namespace GameLauncher
             }
             else
             {
-                LaunchGame();
+                Task GTask = LaunchGameAsync();
             }
         }
 
@@ -1739,7 +1743,7 @@ namespace GameLauncher
         }
 
         /* Launch game */
-        public void LaunchGame()
+        public async Task LaunchGameAsync()
         {
             if (InformationCache.SelectedServerData.DiscordAppId != null)
             {
@@ -1761,7 +1765,7 @@ namespace GameLauncher
                     AntiCheat.user_id = _userId;
                     AntiCheat.serverip = new Uri(InformationCache.SelectedServerData.IpAddress).Host;
 
-                    StartGame(_userId, _loginToken);
+                    await StartGameAsync(_userId, _loginToken);
 
                     if (_builtinserver)
                     {

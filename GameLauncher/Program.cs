@@ -201,12 +201,7 @@ namespace GameLauncher
                 {
                     if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394802)
                     {
-                        InformationCache.CurrentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
-                        Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
-                        Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
-
-                        Application.EnableVisualStyles();
-                        Application.SetCompatibleTextRenderingDefault(true);
+                        //Do Nothing
                     }
                     else
                     {
@@ -218,16 +213,17 @@ namespace GameLauncher
                             Process.Start("https://dotnet.microsoft.com/download/dotnet-framework");
                         }
 
-                        /* Close Splash Screen (Just in Case) */
-                        if (IsSplashScreenLive == true)
-                        {
-                            _SplashScreen.Abort();
-                        }
-
                         Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                     }
                 }
             }
+
+            InformationCache.CurrentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(true);
 
             /* Splash Screen */
             if (!Debugger.IsAttached)
@@ -295,7 +291,15 @@ namespace GameLauncher
                         constructMsg += "Instead, move it someplace like:\n";
                         constructMsg += "• 'X:\\Soabox Race World' or 'X:\\SBRW'\n";
                         constructMsg += "(Where 'X:' is a 'Local Disk' location on `My Computer` / `This PC`)\n\n";
+
                         MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                        /* Close Splash Screen (Just in Case) */
+                        if (IsSplashScreenLive == true)
+                        {
+                            _SplashScreen.Abort();
+                        }
+
                         Environment.Exit(0);
                         break;
                 }
@@ -414,7 +418,7 @@ namespace GameLauncher
             if (FileSettingsSave.Proxy == "0")
             {
                 Log.Info("PROXY: Starting Proxy (From Startup)");
-                ServerProxy.Instance.Start();
+                ServerProxy.Instance.Start("Splash Screen");
             }
 
             /* Sets up Theming */

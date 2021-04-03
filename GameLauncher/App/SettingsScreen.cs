@@ -20,6 +20,7 @@ using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
 
 namespace GameLauncher.App
 {
@@ -496,6 +497,16 @@ namespace GameLauncher.App
             if (FileSettingsSave.Proxy != disableProxy)
             {
                 FileSettingsSave.Proxy = (SettingsProxyCheckbox.Checked == true) ? "1" : "0";
+
+                if (FileSettingsSave.Proxy == "1")
+                {
+                    ServerProxy.Instance.Stop("Settings Screen");
+                }
+                else
+                {
+                    ServerProxy.Instance.Start("Settings Screen");
+                }
+
                 _restartRequired = true;
             }
 
