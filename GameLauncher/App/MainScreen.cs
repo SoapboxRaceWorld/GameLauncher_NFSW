@@ -225,6 +225,7 @@ namespace GameLauncher
             Text = "SBRW Launcher: v" + Application.ProductVersion;
 
             FunctionStatus.CenterScreen(this);
+            Application.OpenForms["MainScreen"].Activate();
             Log.Core("CORE: Setting Parent Window location");
             InformationCache.ParentScreenLocation = Location;
 
