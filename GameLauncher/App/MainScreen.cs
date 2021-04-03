@@ -412,7 +412,11 @@ namespace GameLauncher
                 DiscordLauncherPresense.Stop();
             }
 
-            ServerProxy.Instance.Stop();
+            if (ServerProxy.Host != null)
+            {
+                ServerProxy.Instance.Stop();
+            }
+            
             Notification.Dispose();
 
             var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");

@@ -1,17 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
-using CommandLine;
 using System.Globalization;
 using System.Reflection;
 using WindowsFirewallHelper;
-using Newtonsoft.Json;
 using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.InsiderKit;
@@ -22,36 +19,22 @@ using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Components;
-using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 using GameLauncher.App.Classes.LauncherCore.RPC;
+using System.Threading.Tasks;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 
 namespace GameLauncher
 {
     internal static class Program
     {
-        /* Hardcoded Default Version for Updater Version  */
-        private static string LatestUpdaterBuildVersion = "1.0.0.4";
-
         /* Global Thread for Splash Screen */
         private static Thread _SplashScreen;
         private static bool IsSplashScreenLive = false;
-
-        internal class Arguments
-        {
-            [Option('p', "parse", Required = false, HelpText = "Parses URI")]
-            public string Parse { get; set; }
-        }
-
-        [STAThread]
-        internal static void Main(string[] args)
-        {
-            Parser.Default.ParseArguments<Arguments>(args).WithParsed(Main2);
-        }
 
         private static void NetCodeDefaults()
         {
@@ -59,12 +42,13 @@ namespace GameLauncher
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
 
-        private static void Main2(Arguments args)
+        [STAThread]
+        static async Task Main()
         {
             if (Debugger.IsAttached && !NFSW.IsNFSWRunning())
             {
                 NetCodeDefaults();
-                DoRunChecks(args);
+                await DoRunChecksAsync();
             } 
             else
             {
@@ -83,7 +67,7 @@ namespace GameLauncher
                 {
                     try
                     {
-                        using (WebClient wc = new WebClient())
+                        using (WebClientWithTimeout wc = new WebClientWithTimeout())
                         {
                             wc.DownloadFile(new Uri(URLs.fileserver + "/LZMA.dll"), "LZMA.dll");
                         }
@@ -97,10 +81,7 @@ namespace GameLauncher
 
                         Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                     }
-                    catch (Exception)
-                    {
-
-                    }
+                    catch (Exception) { }
                 }
 
                 var mutex = new Mutex(false, "GameLauncherNFSW-MeTonaTOR");
@@ -184,7 +165,7 @@ namespace GameLauncher
                         }
                         else
                         {
-                            DoRunChecks(args);
+                            await DoRunChecksAsync();
                         }
                     } 
                     else
@@ -209,10 +190,47 @@ namespace GameLauncher
             IsSplashScreenLive = true;
         }
 
-        private static void DoRunChecks(Arguments args)
+        private static async Task DoRunChecksAsync()
         {
+            if (!DetectLinux.LinuxDetected())
+            {
+                /* Check if User has .NETFramework 4.6.2 or later Installed */
+                const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
+
+                using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey))
+                {
+                    if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394802)
+                    {
+                        InformationCache.CurrentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
+                        Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+                        Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
+
+                        Application.EnableVisualStyles();
+                        Application.SetCompatibleTextRenderingDefault(true);
+                    }
+                    else
+                    {
+                        DialogResult frameworkError = MessageBox.Show(null, "This application requires one of the following versions of the .NET Framework:\n" +
+                            " .NETFramework, Version=v4.6.2 \n\nDo you want to install this .NET Framework version now?", "GameLauncher.exe - This application could not be started.", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+
+                        if (frameworkError == DialogResult.Yes)
+                        {
+                            Process.Start("https://dotnet.microsoft.com/download/dotnet-framework");
+                        }
+
+                        /* Close Splash Screen (Just in Case) */
+                        if (IsSplashScreenLive == true)
+                        {
+                            _SplashScreen.Abort();
+                        }
+
+                        Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                    }
+                }
+            }
+
             /* Splash Screen */
-            if (!Debugger.IsAttached && !DetectLinux.LinuxDetected())
+            if (!Debugger.IsAttached)
             {
                 _SplashScreen = new Thread(new ThreadStart(SplashScreen));
                 _SplashScreen.Start();
@@ -248,147 +266,8 @@ namespace GameLauncher
                 Log.System("SYSTEM: Driver Version: " + HardwareInfo.GPU.DriverVersion());
             }
 
-            if (!DetectLinux.LinuxDetected())
-            {
-                /* Check if User has .NETFramework 4.6.2 or later Installed */
-                const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
-
-                using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey))
-                {
-                    if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394802)
-                    {
-                        /* Check Up to Date Certificate Status */
-                        try
-                        {
-                            WebClient update_data = new WebClient();
-                            update_data.CancelAsync();
-                            update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                            update_data.DownloadStringAsync(new Uri("http://crl.carboncrew.org/RCA-Info.json"));
-                            update_data.DownloadStringCompleted += (sender, e) => {
-                                JsonRootCA API = JsonConvert.DeserializeObject<JsonRootCA>(e.Result);
-
-                                if (API.CN != null)
-                                {
-                                    Log.Info("CERTIFICATE STORE: Setting Common Name -> " + API.CN);
-                                    CertificateStore.RootCACommonName = API.CN;
-                                }
-
-                                if (API.Subject != null)
-                                {
-                                    Log.Info("CERTIFICATE STORE: Setting Subject Name -> " + API.Subject);
-                                    CertificateStore.RootCASubjectName = API.Subject;
-                                }
-
-                                if (API.Ids != null)
-                                {
-                                    foreach (IdsModel entries in API.Ids)
-                                    {
-                                        if (entries.Serial != null)
-                                        {
-                                            Log.Info("CERTIFICATE STORE: Setting Serial Number -> " + entries.Serial);
-                                            CertificateStore.RootCASerial = entries.Serial;
-                                        }
-                                    }
-                                }
-
-                                if (API.File != null)
-                                {
-                                    foreach (FileModel entries in API.File)
-                                    {
-                                        if (entries.Name != null)
-                                        {
-                                            Log.Info("CERTIFICATE STORE: Setting Root CA File Name -> " + entries.Name);
-                                            CertificateStore.RootCAFileName = entries.Name;
-                                        }
-
-                                        if (entries.Cer != null)
-                                        {
-                                            Log.Info("CERTIFICATE STORE: Setting Root CA File URL -> " + entries.Cer);
-                                            CertificateStore.RootCAFileURL = entries.Cer;
-                                        }
-                                    }
-                                }
-                            };
-                        }
-                        catch
-                        {
-                            Log.Error("CERTIFICATE STORE: Unable to Retrive Latest Certificate Information");
-                        }
-                    }
-                    else
-                    {
-                        DialogResult frameworkError = MessageBox.Show(null, "This application requires one of the following versions of the .NET Framework:\n" +
-                            " .NETFramework, Version=v4.6.2 \n\nDo you want to install this .NET Framework version now?", "GameLauncher.exe - This application could not be started.", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-
-                        if (frameworkError == DialogResult.Yes)
-                        {
-                            Process.Start("https://dotnet.microsoft.com/download/dotnet-framework");
-                        }
-
-                        /* Close Splash Screen (Just in Case) */
-                        if (IsSplashScreenLive == true)
-                        {
-                            _SplashScreen.Abort();
-                        }
-
-                        Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                    }
-                }
-            }
-
             FileSettingsSave.NullSafeSettings();
             FileAccountSave.NullSafeAccount();
-
-            InformationCache.CurrentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
-            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
-
-            /* Windows Firewall Runner */
-            if (!string.IsNullOrEmpty(FileSettingsSave.FirewallLauncherStatus))
-            {
-                if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == true)
-                {
-                    string nameOfLauncher = "SBRW - Game Launcher";
-                    string localOfLauncher = Assembly.GetEntryAssembly().Location;
-
-                    string nameOfUpdater = "SBRW - Game Launcher Updater";
-                    string localOfUpdater = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "GameLauncherUpdater.exe");
-
-                    string groupKeyLauncher = "Game Launcher for Windows";
-                    string descriptionLauncher = "Soapbox Race World";
-
-                    bool removeFirewallRule = false;
-                    bool firstTimeRun = false;
-
-                    if (FileSettingsSave.FirewallLauncherStatus == "Not Excluded" || FileSettingsSave.FirewallLauncherStatus == "Turned Off" || FileSettingsSave.FirewallLauncherStatus == "Service Stopped" || FileSettingsSave.FirewallLauncherStatus == "Unknown")
-                    {
-                        firstTimeRun = true;
-                        FileSettingsSave.FirewallLauncherStatus = "Excluded";
-                    }
-                    else if (FileSettingsSave.FirewallLauncherStatus == "Reset")
-                    {
-                        removeFirewallRule = true;
-                        FileSettingsSave.FirewallLauncherStatus = "Not Excluded";
-                    }
-
-                    /* Inbound & Outbound */
-                    FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
-                    FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
-                }
-                else if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == false)
-                {
-                    FileSettingsSave.FirewallLauncherStatus = "Turned Off";
-                }
-                else
-                {
-                    FileSettingsSave.FirewallLauncherStatus = "Service Stopped";
-                }
-
-                FileSettingsSave.SaveSettings();
-            }
-
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(true);
 
             /* Set Launcher Directory */
             Log.Info("CORE: Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
@@ -423,56 +302,58 @@ namespace GameLauncher
 
                 if (!FunctionStatus.HasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath)))
                 {
-                    MessageBox.Show("This application requires admin priviledge");
+                    MessageBox.Show("Unable to do a Test Write to Launcher Folder\nPermission Issue");
                 }
 
-                /* Update this text file if a new GameLauncherUpdater.exe has been delployed - DavidCarbon */
-                try
+                if (!FunctionStatus.HasWriteAccessToFolder(FileSettingsSave.GameInstallation) && !string.IsNullOrEmpty(FileSettingsSave.GameInstallation))
                 {
-                    try
-                    {
-                        switch (APIStatusChecker.CheckStatus("http://api.github.com/repos/SoapboxRaceWorld/GameLauncherUpdater/releases/latest"))
-                        {
-                            case APIStatus.Online:
-                                WebClient update_data = new WebClient();
-                                update_data.CancelAsync();
-                                update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                                update_data.DownloadString(new Uri("http://api.github.com/repos/SoapboxRaceWorld/GameLauncherUpdater/releases/latest"));
-                                update_data.DownloadStringCompleted += (sender, e) => {
-                                    GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(e.Result);
-
-                                    if (GHAPI.TagName != null)
-                                    {
-                                        Log.Info("LAUNCHER UPDATER: Setting Latest Version -> " + GHAPI.TagName);
-                                        LatestUpdaterBuildVersion = GHAPI.TagName;
-                                    }
-                                    Log.Info("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
-                                };
-                                break;
-                            default:
-                                Log.Error("LAUNCHER UPDATER: Failed to Retrive Latest Updater Information from GitHub");
-                                break;
-                        }
-                    }
-                    catch
-                    {
-                        var GetLatestUpdaterBuildVersion = new WebClient().DownloadString(URLs.secondstaticapiserver + "/Version.txt");
-                        if (!string.IsNullOrEmpty(GetLatestUpdaterBuildVersion))
-                        {
-                            Log.Info("LAUNCHER UPDATER: Setting Latest Version -> " + GetLatestUpdaterBuildVersion);
-                            LatestUpdaterBuildVersion = GetLatestUpdaterBuildVersion;
-                        }
-                    }
-                    Log.Info("LAUNCHER UPDATER: Fail Safe Latest Version -> " + LatestUpdaterBuildVersion);
+                    MessageBox.Show("Unable to do a Test Write to Game Files Folder\nPermission Issue");
                 }
-                catch (Exception ex)
+
+                /* Windows Firewall Runner */
+                if (!string.IsNullOrEmpty(FileSettingsSave.FirewallLauncherStatus))
                 {
-                    Log.Error("LAUNCHER UPDATER: Failed to get new version file: " + ex.Message);
-                }
-            }
+                    if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == true)
+                    {
+                        string nameOfLauncher = "SBRW - Game Launcher";
+                        string localOfLauncher = Assembly.GetEntryAssembly().Location;
 
-            if (!DetectLinux.LinuxDetected())
-            {
+                        string nameOfUpdater = "SBRW - Game Launcher Updater";
+                        string localOfUpdater = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "GameLauncherUpdater.exe");
+
+                        string groupKeyLauncher = "Game Launcher for Windows";
+                        string descriptionLauncher = "Soapbox Race World";
+
+                        bool removeFirewallRule = false;
+                        bool firstTimeRun = false;
+
+                        if (FileSettingsSave.FirewallLauncherStatus == "Not Excluded" || FileSettingsSave.FirewallLauncherStatus == "Turned Off" || FileSettingsSave.FirewallLauncherStatus == "Service Stopped" || FileSettingsSave.FirewallLauncherStatus == "Unknown")
+                        {
+                            firstTimeRun = true;
+                            FileSettingsSave.FirewallLauncherStatus = "Excluded";
+                        }
+                        else if (FileSettingsSave.FirewallLauncherStatus == "Reset")
+                        {
+                            removeFirewallRule = true;
+                            FileSettingsSave.FirewallLauncherStatus = "Not Excluded";
+                        }
+
+                        /* Inbound & Outbound */
+                        FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
+                        FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
+                    }
+                    else if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == false)
+                    {
+                        FileSettingsSave.FirewallLauncherStatus = "Turned Off";
+                    }
+                    else
+                    {
+                        FileSettingsSave.FirewallLauncherStatus = "Service Stopped";
+                    }
+
+                    FileSettingsSave.SaveSettings();
+                }
+
                 /* Windows 7 Fix */
                 if (WindowsProductVersion.CachedWindowsNumber == 6.1 && string.IsNullOrEmpty(FileSettingsSave.Win7UpdatePatches))
                 {
@@ -511,82 +392,8 @@ namespace GameLauncher
                     }
                 }
 
-                if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
-                {
-                    var result = MessageBox.Show(
-                        "You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nThis may restart your computer. \n \nClick OK to install it.",
-                        "Compatibility",
-                        MessageBoxButtons.OKCancel,
-                        MessageBoxIcon.Warning);
-
-                    if (result != DialogResult.OK)
-                    {
-                        MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    var wc = new WebClient();
-                    wc.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x86.exe", "VC_redist.x86.exe");
-                    var proc = Process.Start(new ProcessStartInfo
-                    {
-                        Verb = "runas",
-                        Arguments = "/quiet",
-                        FileName = "VC_redist.x86.exe"
-                    });
-
-                    if (proc == null)
-                    {
-                        MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
-                        return;
-                    }
-                }
-
-                if (Environment.Is64BitOperatingSystem == true)
-                {
-                    if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x64))
-                    {
-                        var result = MessageBox.Show(
-                            "You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nThis may restart your computer. \n \nClick OK to install it.",
-                            "Compatibility",
-                            MessageBoxButtons.OKCancel,
-                            MessageBoxIcon.Warning);
-
-                        if (result != DialogResult.OK)
-                        {
-                            MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            return;
-                        }
-
-                        var wc = new WebClient();
-                        wc.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x64.exe", "VC_redist.x64.exe");
-                        var proc = Process.Start(new ProcessStartInfo
-                        {
-                            Verb = "runas",
-                            Arguments = "/quiet",
-                            FileName = "VC_redist.x64.exe"
-                        });
-
-                        if (proc == null)
-                        {
-                            MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            return;
-                        }
-                    }
-                }
-            }
-
-            Console.WriteLine("Application path: " + Path.GetDirectoryName(Application.ExecutablePath));
-
-            if (!string.IsNullOrEmpty(FileSettingsSave.GameInstallation))
-            {
-                if (!FunctionStatus.HasWriteAccessToFolder(FileSettingsSave.GameInstallation))
-                {
-                    MessageBox.Show("This application requires admin priviledge. Restarting...");
-                }
+                /* Check if Redistributable Packages are Installed */
+                await Redistributable.CheckAsync();
             }
 
             if (!File.Exists("servers.json"))
@@ -596,98 +403,6 @@ namespace GameLauncher
                     File.WriteAllText("servers.json", "[]");
                 }
                 catch { /* ignored */ }
-            }
-
-            Theming.CheckIfThemeExists();
-
-            /* Check If Launcher Failed to Connect to any APIs */
-            if (VisualsAPIChecker.WOPLAPI == false)
-            {
-                DialogResult restartAppNoApis = MessageBox.Show(null, "There's no internet connection, Launcher might crash \n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (restartAppNoApis == DialogResult.No)
-                {
-                    MessageBox.Show("Good Luck... \n No Really \n ...Good Luck", "GameLauncher Will Continue, When It Failed To Connect To API");
-                    Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and Will Continue");
-                }
-
-                if (restartAppNoApis == DialogResult.Yes)
-                {
-                    /* Close Splash Screen (Just in Case) */
-                    if (IsSplashScreenLive == true)
-                    {
-                        _SplashScreen.Abort();
-                    }
-
-                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                }
-            }
-
-            LanguageListUpdater.GetList();
-            LauncherUpdateCheck.CheckAvailability();
-
-            if (!DetectLinux.LinuxDetected())
-            {
-                /* Install Custom Root Certificate */
-                CertificateStore.Check();
-
-                if (!File.Exists("GameLauncherUpdater.exe"))
-                {
-                    Log.Info("LAUNCHER UPDATER: Starting GameLauncherUpdater downloader");
-                    try
-                    {
-                        using (WebClient wc = new WebClient())
-                        {
-                            wc.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
-                            {
-                                if (new FileInfo("GameLauncherUpdater.exe").Length == 0)
-                                {
-                                    File.Delete("GameLauncherUpdater.exe");
-                                }
-                            };
-                            wc.DownloadFile(new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error("LAUCHER UPDATER: Failed to download updater. " + ex.Message);
-                    }
-                }
-                else if (File.Exists("GameLauncherUpdater.exe"))
-                {
-                    String GameLauncherUpdaterLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameLauncherUpdater.exe");
-                    var LauncherUpdaterBuild = FileVersionInfo.GetVersionInfo(GameLauncherUpdaterLocation);
-                    var LauncherUpdaterBuildNumber = LauncherUpdaterBuild.FileVersion;
-                    var UpdaterBuildNumberResult = LauncherUpdaterBuildNumber.CompareTo(LatestUpdaterBuildVersion);
-
-                    Log.Build("LAUNCHER UPDATER BUILD: GameLauncherUpdater " + LauncherUpdaterBuildNumber);
-                    if (UpdaterBuildNumberResult < 0)
-                    {
-                        Log.Info("LAUNCHER UPDATER: " + UpdaterBuildNumberResult + " Builds behind latest Updater!");
-                    }
-                    else
-                    {
-                        Log.Info("LAUNCHER UPDATER: Latest GameLauncherUpdater!");
-                    }
-
-                    if (UpdaterBuildNumberResult < 0)
-                    {
-                        Log.Info("LAUNCHER UPDATER: Downloading New GameLauncherUpdater.exe");
-                        File.Delete("GameLauncherUpdater.exe");
-
-                        try
-                        {
-                            using (WebClient wc = new WebClient())
-                            {
-                                wc.DownloadFile(new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error("LAUNCHER UPDATER: Failed to download new updater. " + ex.Message);
-                        }
-                    }
-                }
             }
 
             if (!string.IsNullOrEmpty(FileSettingsSave.GameInstallation))
@@ -702,17 +417,40 @@ namespace GameLauncher
                 ServerProxy.Instance.Start();
             }
 
+            /* Sets up Theming */
+            Theming.CheckIfThemeExists();
+            /* Sets Up Langauge List */
+            LanguageListUpdater.GetList();
+            /* Check If Updater Exists or Requires an Update */
+            await UpdaterExecutable.CheckAsync();
+            /* Check Up to Date Certificate Status */
+            await CertificateStore.LatestAsync();
+            /* Check Latest Launcher Version */
+            await LauncherUpdateCheck.Latest();
             /* Check ServerList Status */
-
-            if (InformationCache.ServerListStatus != "Loaded")
-            {
-                ServerListUpdater.GetList();
-            }
+            await Task.Run(() => ServerListUpdater.GetList());
 
             /* Close Splash Screen */
             if (IsSplashScreenLive == true)
             {
                 _SplashScreen.Abort();
+            }
+
+            /* Check If Launcher Failed to Connect to any APIs */
+            if (VisualsAPIChecker.WOPLAPI == false)
+            {
+                DialogResult restartAppNoApis = MessageBox.Show(null, "There's no internet connection, Launcher might crash \n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (restartAppNoApis == DialogResult.No)
+                {
+                    MessageBox.Show("Good Luck... \n No Really \n ...Good Luck", "GameLauncher Will Continue, When It Failed To Connect To API");
+                    Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and Will Continue");
+                }
+
+                if (restartAppNoApis == DialogResult.Yes)
+                {
+                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                }
             }
 
             DiscordLauncherPresense.Start("Start Up", "540651192179752970");

@@ -169,6 +169,7 @@
     <Compile Include="App\Classes\LauncherCore\Global\FunctionStatus.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\URLs.cs" />
     <Compile Include="App\Classes\LauncherCore\Hash\SHATwoFiveSix.cs" />
+    <Compile Include="App\Classes\LauncherCore\LauncherUpdater\UpdaterExecutable.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonCDNList.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonLanguage.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonRootCA.cs" />
@@ -253,7 +254,6 @@
     <Compile Include="App\Classes\SystemPlatform\Windows\FirewallHelper.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\WindowsProductVersion.cs" />
     <Compile Include="App\Classes\SystemPlatform\TaskBar.cs" />
-    <Compile Include="App\Classes\LauncherCore\Client\UriScheme.cs" />
     <Compile Include="App\DebugScreen.cs">
       <SubType>Form</SubType>
     </Compile>
