@@ -54,19 +54,7 @@ namespace GameLauncher
             this.LogoutButton = new System.Windows.Forms.Button();
             this.PlayButton = new System.Windows.Forms.Button();
             this.PlayProgressTextTimer = new System.Windows.Forms.Label();
-            this.RegisterEmail = new System.Windows.Forms.TextBox();
-            this.RegisterPassword = new System.Windows.Forms.TextBox();
-            this.RegisterConfirmPassword = new System.Windows.Forms.TextBox();
-            this.RegisterTicket = new System.Windows.Forms.TextBox();
-            this.RegisterAgree = new System.Windows.Forms.CheckBox();
-            this.RegisterButton = new System.Windows.Forms.Button();
-            this.RegisterCancel = new System.Windows.Forms.Button();
             this.ShowPlayPanel = new System.Windows.Forms.Panel();
-            this.RegisterPanel = new System.Windows.Forms.Panel();
-            this.RegisterEmailBorder = new System.Windows.Forms.PictureBox();
-            this.RegisterPasswordBorder = new System.Windows.Forms.PictureBox();
-            this.RegisterConfirmPasswordBorder = new System.Windows.Forms.PictureBox();
-            this.RegisterTicketBorder = new System.Windows.Forms.PictureBox();
             this.InsiderBuildNumberText = new System.Windows.Forms.Label();
             this.logo = new System.Windows.Forms.PictureBox();
             this.SettingsButton = new System.Windows.Forms.PictureBox();
@@ -92,11 +80,6 @@ namespace GameLauncher
             this.ExtractingProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
             this.PlayProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
             this.ShowPlayPanel.SuspendLayout();
-            this.RegisterPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RegisterEmailBorder)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RegisterPasswordBorder)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RegisterConfirmPasswordBorder)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RegisterTicketBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CloseBTN)).BeginInit();
@@ -426,103 +409,6 @@ namespace GameLauncher
             this.PlayProgressTextTimer.TabIndex = 135;
             this.PlayProgressTextTimer.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // RegisterEmail
-            // 
-            this.RegisterEmail.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
-            this.RegisterEmail.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RegisterEmail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RegisterEmail.ForeColor = System.Drawing.Color.White;
-            this.RegisterEmail.Location = new System.Drawing.Point(58, 80);
-            this.RegisterEmail.Name = "RegisterEmail";
-            this.RegisterEmail.Size = new System.Drawing.Size(180, 14);
-            this.RegisterEmail.TabIndex = 12;
-            this.RegisterEmail.TextChanged += new System.EventHandler(this.RegisterEmail_TextChanged);
-            // 
-            // RegisterPassword
-            // 
-            this.RegisterPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
-            this.RegisterPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RegisterPassword.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RegisterPassword.ForeColor = System.Drawing.Color.White;
-            this.RegisterPassword.Location = new System.Drawing.Point(58, 128);
-            this.RegisterPassword.Name = "RegisterPassword";
-            this.RegisterPassword.Size = new System.Drawing.Size(180, 14);
-            this.RegisterPassword.TabIndex = 13;
-            this.RegisterPassword.UseSystemPasswordChar = true;
-            this.RegisterPassword.TextChanged += new System.EventHandler(this.RegisterPassword_TextChanged);
-            // 
-            // RegisterConfirmPassword
-            // 
-            this.RegisterConfirmPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
-            this.RegisterConfirmPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RegisterConfirmPassword.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RegisterConfirmPassword.ForeColor = System.Drawing.Color.White;
-            this.RegisterConfirmPassword.Location = new System.Drawing.Point(58, 177);
-            this.RegisterConfirmPassword.Name = "RegisterConfirmPassword";
-            this.RegisterConfirmPassword.Size = new System.Drawing.Size(180, 14);
-            this.RegisterConfirmPassword.TabIndex = 14;
-            this.RegisterConfirmPassword.UseSystemPasswordChar = true;
-            this.RegisterConfirmPassword.TextChanged += new System.EventHandler(this.RegisterConfirmPassword_TextChanged);
-            // 
-            // RegisterTicket
-            // 
-            this.RegisterTicket.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
-            this.RegisterTicket.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RegisterTicket.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RegisterTicket.ForeColor = System.Drawing.Color.White;
-            this.RegisterTicket.Location = new System.Drawing.Point(58, 228);
-            this.RegisterTicket.Name = "RegisterTicket";
-            this.RegisterTicket.Size = new System.Drawing.Size(180, 14);
-            this.RegisterTicket.TabIndex = 15;
-            this.RegisterTicket.TextChanged += new System.EventHandler(this.RegisterTicket_TextChanged);
-            // 
-            // RegisterAgree
-            // 
-            this.RegisterAgree.BackColor = System.Drawing.Color.Transparent;
-            this.RegisterAgree.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RegisterAgree.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
-            this.RegisterAgree.Location = new System.Drawing.Point(27, 257);
-            this.RegisterAgree.Name = "RegisterAgree";
-            this.RegisterAgree.Size = new System.Drawing.Size(232, 35);
-            this.RegisterAgree.TabIndex = 16;
-            this.RegisterAgree.Text = "BY REGISTERING YOU AGREE TO THE TERMS OF SERVICE";
-            this.RegisterAgree.UseVisualStyleBackColor = false;
-            this.RegisterAgree.CheckedChanged += new System.EventHandler(this.RegisterAgree_CheckedChanged);
-            // 
-            // RegisterButton
-            // 
-            this.RegisterButton.BackColor = System.Drawing.Color.Transparent;
-            this.RegisterButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.RegisterButton.FlatAppearance.BorderSize = 0;
-            this.RegisterButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.RegisterButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.RegisterButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RegisterButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RegisterButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(159)))), ((int)(((byte)(193)))), ((int)(((byte)(32)))));
-            this.RegisterButton.Location = new System.Drawing.Point(18, 296);
-            this.RegisterButton.Name = "RegisterButton";
-            this.RegisterButton.Size = new System.Drawing.Size(231, 35);
-            this.RegisterButton.TabIndex = 17;
-            this.RegisterButton.Text = "REGISTER";
-            this.RegisterButton.UseVisualStyleBackColor = false;
-            // 
-            // RegisterCancel
-            // 
-            this.RegisterCancel.BackColor = System.Drawing.Color.Transparent;
-            this.RegisterCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.RegisterCancel.FlatAppearance.BorderSize = 0;
-            this.RegisterCancel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.RegisterCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.RegisterCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RegisterCancel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RegisterCancel.ForeColor = System.Drawing.Color.White;
-            this.RegisterCancel.Location = new System.Drawing.Point(18, 336);
-            this.RegisterCancel.Name = "RegisterCancel";
-            this.RegisterCancel.Size = new System.Drawing.Size(231, 35);
-            this.RegisterCancel.TabIndex = 18;
-            this.RegisterCancel.Text = "CANCEL";
-            this.RegisterCancel.UseVisualStyleBackColor = false;
-            // 
             // ShowPlayPanel
             // 
             this.ShowPlayPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -539,79 +425,6 @@ namespace GameLauncher
             this.ShowPlayPanel.Size = new System.Drawing.Size(237, 173);
             this.ShowPlayPanel.TabIndex = 153;
             this.ShowPlayPanel.Visible = false;
-            // 
-            // RegisterPanel
-            // 
-            this.RegisterPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.RegisterPanel.BackColor = System.Drawing.Color.Transparent;
-            this.RegisterPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.RegisterPanel.Controls.Add(this.RegisterEmail);
-            this.RegisterPanel.Controls.Add(this.RegisterEmailBorder);
-            this.RegisterPanel.Controls.Add(this.RegisterPassword);
-            this.RegisterPanel.Controls.Add(this.RegisterPasswordBorder);
-            this.RegisterPanel.Controls.Add(this.RegisterConfirmPassword);
-            this.RegisterPanel.Controls.Add(this.RegisterConfirmPasswordBorder);
-            this.RegisterPanel.Controls.Add(this.RegisterTicket);
-            this.RegisterPanel.Controls.Add(this.RegisterTicketBorder);
-            this.RegisterPanel.Controls.Add(this.RegisterAgree);
-            this.RegisterPanel.Controls.Add(this.RegisterButton);
-            this.RegisterPanel.Controls.Add(this.RegisterCancel);
-            this.RegisterPanel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RegisterPanel.ForeColor = System.Drawing.Color.Transparent;
-            this.RegisterPanel.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.RegisterPanel.Location = new System.Drawing.Point(587, 93);
-            this.RegisterPanel.Name = "RegisterPanel";
-            this.RegisterPanel.Size = new System.Drawing.Size(263, 374);
-            this.RegisterPanel.TabIndex = 156;
-            this.RegisterPanel.Visible = false;
-            // 
-            // RegisterEmailBorder
-            // 
-            this.RegisterEmailBorder.BackColor = System.Drawing.Color.Transparent;
-            this.RegisterEmailBorder.Image = global::GameLauncher.Properties.Resources.email_text_border;
-            this.RegisterEmailBorder.InitialImage = null;
-            this.RegisterEmailBorder.Location = new System.Drawing.Point(19, 68);
-            this.RegisterEmailBorder.Name = "RegisterEmailBorder";
-            this.RegisterEmailBorder.Size = new System.Drawing.Size(231, 37);
-            this.RegisterEmailBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.RegisterEmailBorder.TabIndex = 138;
-            this.RegisterEmailBorder.TabStop = false;
-            // 
-            // RegisterPasswordBorder
-            // 
-            this.RegisterPasswordBorder.BackColor = System.Drawing.Color.Transparent;
-            this.RegisterPasswordBorder.Image = global::GameLauncher.Properties.Resources.password_text_border;
-            this.RegisterPasswordBorder.InitialImage = null;
-            this.RegisterPasswordBorder.Location = new System.Drawing.Point(19, 117);
-            this.RegisterPasswordBorder.Name = "RegisterPasswordBorder";
-            this.RegisterPasswordBorder.Size = new System.Drawing.Size(231, 37);
-            this.RegisterPasswordBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.RegisterPasswordBorder.TabIndex = 139;
-            this.RegisterPasswordBorder.TabStop = false;
-            // 
-            // RegisterConfirmPasswordBorder
-            // 
-            this.RegisterConfirmPasswordBorder.BackColor = System.Drawing.Color.Transparent;
-            this.RegisterConfirmPasswordBorder.Image = global::GameLauncher.Properties.Resources.password_text_border;
-            this.RegisterConfirmPasswordBorder.InitialImage = null;
-            this.RegisterConfirmPasswordBorder.Location = new System.Drawing.Point(19, 166);
-            this.RegisterConfirmPasswordBorder.Name = "RegisterConfirmPasswordBorder";
-            this.RegisterConfirmPasswordBorder.Size = new System.Drawing.Size(231, 37);
-            this.RegisterConfirmPasswordBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.RegisterConfirmPasswordBorder.TabIndex = 140;
-            this.RegisterConfirmPasswordBorder.TabStop = false;
-            // 
-            // RegisterTicketBorder
-            // 
-            this.RegisterTicketBorder.BackColor = System.Drawing.Color.Transparent;
-            this.RegisterTicketBorder.Image = global::GameLauncher.Properties.Resources.ticket_text_border;
-            this.RegisterTicketBorder.InitialImage = null;
-            this.RegisterTicketBorder.Location = new System.Drawing.Point(19, 215);
-            this.RegisterTicketBorder.Name = "RegisterTicketBorder";
-            this.RegisterTicketBorder.Size = new System.Drawing.Size(230, 37);
-            this.RegisterTicketBorder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.RegisterTicketBorder.TabIndex = 141;
-            this.RegisterTicketBorder.TabStop = false;
             // 
             // InsiderBuildNumberText
             // 
@@ -948,7 +761,6 @@ namespace GameLauncher
             this.Controls.Add(this.InsiderBuildNumberText);
             this.Controls.Add(this.CurrentWindowInfo);
             this.Controls.Add(this.logo);
-            this.Controls.Add(this.RegisterPanel);
             this.Controls.Add(this.SettingsButton);
             this.Controls.Add(this.ShowPlayPanel);
             this.Controls.Add(this.CloseBTN);
@@ -990,12 +802,6 @@ namespace GameLauncher
             this.Text = "GameLauncher";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.ShowPlayPanel.ResumeLayout(false);
-            this.RegisterPanel.ResumeLayout(false);
-            this.RegisterPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RegisterEmailBorder)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RegisterPasswordBorder)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RegisterConfirmPasswordBorder)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RegisterTicketBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CloseBTN)).EndInit();
@@ -1053,19 +859,7 @@ namespace GameLauncher
         private System.Windows.Forms.Button LogoutButton;
         private System.Windows.Forms.Button PlayButton;
         internal System.Windows.Forms.Label PlayProgressTextTimer;
-        private System.Windows.Forms.TextBox RegisterEmail;
-        private System.Windows.Forms.PictureBox RegisterEmailBorder;
-        private System.Windows.Forms.TextBox RegisterPassword;
-        private System.Windows.Forms.PictureBox RegisterPasswordBorder;
-        private System.Windows.Forms.TextBox RegisterConfirmPassword;
-        private System.Windows.Forms.PictureBox RegisterConfirmPasswordBorder;
-        private System.Windows.Forms.TextBox RegisterTicket;
-        private System.Windows.Forms.PictureBox RegisterTicketBorder;
-        private System.Windows.Forms.CheckBox RegisterAgree;
-        private System.Windows.Forms.Button RegisterButton;
-        private System.Windows.Forms.Button RegisterCancel;
         private System.Windows.Forms.Panel ShowPlayPanel;
-        private System.Windows.Forms.Panel RegisterPanel;
         private System.Windows.Forms.LinkLabel DiscordInviteLink;
         private System.Windows.Forms.Label ServerShutDown;
         private System.Windows.Forms.Panel ServerInfoPanel;

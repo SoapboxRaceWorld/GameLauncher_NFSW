@@ -56,7 +56,7 @@ namespace GameLauncher.App
             /* Set Initial position & Icon  /
             /*******************************/
 
-            this.StartPosition = FormStartPosition.CenterParent;
+            FunctionStatus.CenterParent(this);
 
             /*******************************/
             /* Set Background Image         /

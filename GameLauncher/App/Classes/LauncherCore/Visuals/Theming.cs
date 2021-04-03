@@ -49,6 +49,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         public static Bitmap SocialPanel = Properties.Resources.socialbg;
 
+        public static Bitmap RegisterScreen = Properties.Resources.background_register;
+
+        public static Color RegisterScreenTransparencyKey = Color.FromArgb(255, 0, 255);
+
 
         /* MainScreen Icons */
 
@@ -327,6 +331,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                     if (File.Exists(ThemeFolder + "\\MainScreen\\" + ThemeFile.Read("SocialPanelBG")))
                     {
                         SocialPanel = new Bitmap(ThemeFolder + "\\MainScreen\\" + ThemeFile.Read("SocialPanelBG"));
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(ThemeFile.Read("RegisterScreenBG")))
+                {
+                    if (File.Exists(ThemeFolder + "\\RegisterScreen\\" + ThemeFile.Read("RegisterScreenBG")))
+                    {
+                        SettingsScreen = new Bitmap(ThemeFolder + "\\RegisterScreen\\" + ThemeFile.Read("RegisterScreenBG"));
                     }
                 }
 
@@ -815,6 +827,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 if (!string.IsNullOrEmpty(ThemeFile.Read("SplashScreenTransparencyKey")))
                 {
                     SplashScreenTransparencyKey = ToColor(ThemeFile.Read("SplashScreenTransparencyKey"));
+                }
+
+                if (!string.IsNullOrEmpty(ThemeFile.Read("RegisterScreenTransparencyKey")))
+                {
+                    RegisterScreenTransparencyKey = ToColor(ThemeFile.Read("RegisterScreenTransparencyKey"));
                 }
 
                 if (!string.IsNullOrEmpty(ThemeFile.Read("InputForeColor")))

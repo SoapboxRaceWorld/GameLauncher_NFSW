@@ -53,12 +53,9 @@ namespace GameLauncher
         private bool _builtinserver;
         private bool _useSavedPassword;
         private bool _skipServerTrigger;
-        private bool _ticketRequired;
         private bool _playenabled;
         private bool _loggedIn;
-        private bool _allowRegistration;
         private bool _isDownloading = true;
-        private bool _modernAuthSupport = false;
         private bool _gameKilledBySpeedBugCheck = false;
         private bool _disableLogout = false;
 
@@ -108,6 +105,7 @@ namespace GameLauncher
             if (_mouseDownPoint.IsEmpty) { return; }
             var f = this as Form;
             f.Location = new Point(f.Location.X + (e.X - _mouseDownPoint.X), f.Location.Y + (e.Y - _mouseDownPoint.Y));
+            InformationCache.ParentScreenLocation = new Point(f.Location.X + (e.X - _mouseDownPoint.X), f.Location.Y + (e.Y - _mouseDownPoint.Y));
             Opacity = 0.9;
         }
 
@@ -226,8 +224,9 @@ namespace GameLauncher
             Log.Visuals("CORE: Setting WindowName");
             Text = "SBRW Launcher: v" + Application.ProductVersion;
 
-            Log.Core("CORE: Centering Window location");
             FunctionStatus.CenterScreen(this);
+            Log.Core("CORE: Setting Parent Window location");
+            InformationCache.ParentScreenLocation = Location;
 
             if (!string.IsNullOrEmpty(EnableInsider.BuildNumber()))
             {
@@ -536,7 +535,7 @@ namespace GameLauncher
 
             InformationCache.UserAgent = InformationCache.SelectedServerData.ForceUserAgent ?? null;
 
-            if (_modernAuthSupport == false)
+            if (InformationCache.ModernAuthSupport == false)
             {
                 /* ClassicAuth sends password in SHA1 */
                 realpass = (_useSavedPassword) ? FileAccountSave.UserHashedPassword : SHA.HashPassword(MainPassword.Text.ToString()).ToLower();
@@ -631,7 +630,7 @@ namespace GameLauncher
             MainPasswordBorder.Image = Theming.BorderPassword;
 
             InformationCache.SelectedServerData = (ServerList)ServerPick.SelectedItem;
-            _modernAuthSupport = false;
+            InformationCache.ModernAuthSupport = false;
 
             if (InformationCache.SelectedServerData.IsSpecial)
             {
@@ -642,7 +641,7 @@ namespace GameLauncher
             if (!_skipServerTrigger) { return; }
 
             _lastSelectedServerId = ServerPick.SelectedIndex;
-            _allowRegistration = false;
+            FunctionStatus.AllowRegistration = false;
             _loginEnabled = false;
 
             ServerStatusText.Text = "Server Status:\n - Pinging";
@@ -703,7 +702,7 @@ namespace GameLauncher
                     ServerStatusDesc.Text = "Failed to connect to server.";
                     ServerStatusIcon.BackgroundImage = Theming.ServerIconOffline;
                     _serverEnabled = false;
-                    _allowRegistration = false;
+                    FunctionStatus.AllowRegistration = false;
                     /* Disable Login & Register Button */
                     LoginButton.Enabled = false;
                     RegisterText.Enabled = false;
@@ -726,7 +725,7 @@ namespace GameLauncher
                     ServerStatusDesc.Text = "Server seems to be offline.";
                     ServerStatusIcon.BackgroundImage = Theming.ServerIconOffline;
                     _serverEnabled = false;
-                    _allowRegistration = false;
+                    FunctionStatus.AllowRegistration = false;
                     /* Disable Login & Register Button */
                     LoginButton.Enabled = false;
                     RegisterText.Enabled = false;
@@ -927,49 +926,25 @@ namespace GameLauncher
 
                         try
                         {
-                            if (string.IsNullOrEmpty(InformationCache.SelectedServerJSON.requireTicket))
-                            {
-                                _ticketRequired = true;
-                            }
-                            else if (InformationCache.SelectedServerJSON.requireTicket == "true")
-                            {
-                                _ticketRequired = true;
-                            }
-                            else
-                            {
-                                _ticketRequired = false;
-                            }
-                        }
-                        catch
-                        {
-                            _ticketRequired = false;
-                        }
-
-                        try
-                        {
-                            if (string.IsNullOrEmpty(InformationCache.SelectedServerJSON.modernAuthSupport))
-                            {
-                                _modernAuthSupport = false;
-                            }
-                            else if (InformationCache.SelectedServerJSON.modernAuthSupport == "true")
+                            if (InformationCache.SelectedServerJSON.modernAuthSupport == "true")
                             {
                                 if (stringToUri.Scheme == "https")
                                 {
-                                    _modernAuthSupport = true;
+                                    InformationCache.ModernAuthSupport = true;
                                 }
                                 else
                                 {
-                                    _modernAuthSupport = false;
+                                    InformationCache.ModernAuthSupport = false;
                                 }
                             }
                             else
                             {
-                                _modernAuthSupport = false;
+                                InformationCache.ModernAuthSupport = false;
                             }
                         }
                         catch
                         {
-                            _modernAuthSupport = false;
+                            InformationCache.ModernAuthSupport = false;
                         }
 
                         if (InformationCache.SelectedServerJSON.maxOnlinePlayers != 0)
@@ -988,7 +963,7 @@ namespace GameLauncher
                             numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.numberOfRegistered);
                         }
 
-                        _allowRegistration = true;
+                        FunctionStatus.AllowRegistration = true;
                     }
 
                     try
@@ -1139,34 +1114,6 @@ namespace GameLauncher
             };
         }
 
-        private void RegisterText_LinkClicked(object sender, EventArgs e)
-        {
-            if (_allowRegistration)
-            {
-                if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.webSignupUrl))
-                {
-                    Process.Start(InformationCache.SelectedServerJSON.webSignupUrl);
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + InformationCache.SelectedServerJSON.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-
-                if (InformationCache.SelectedServerData.Name.ToUpper() == "WORLDUNITED OFFICIAL")
-                {
-                    Process.Start("https://signup.worldunited.gg/?discordid=" + DiscordLauncherPresense.UserID);
-                    MessageBox.Show(null, "A browser window has been opened to complete registration on " + InformationCache.SelectedServerData.Name, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-
-                CurrentWindowInfo.Text = "REGISTER ON \n" + InformationCache.SelectedServerData.Name.ToUpper();
-                LoginFormElements(false);
-                RegisterFormElements(true);
-            }
-            else
-            {
-                MessageBox.Show(null, "Server seems to be offline.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         /* Main Screen Elements */
 
         /* Social Panel | Ping or Offline | */
@@ -1258,63 +1205,7 @@ namespace GameLauncher
             MainPasswordBorder.Visible = hideElements;
             MainPasswordBorder.Image = Theming.BorderPassword;
         }
-
-        private void RegisterFormElements(bool hideElements)
-        {
-            bool CertainElemnts;
-
-            if (hideElements == true)
-            {
-                CertainElemnts = false;
-                RegisterEmail.BackColor = Theming.Input;
-                RegisterPassword.BackColor = Theming.Input;
-                RegisterConfirmPassword.BackColor = Theming.Input;
-                RegisterTicket.BackColor = Theming.Input;
-
-                RegisterButton.BackgroundImage = Theming.GreenButton;
-                RegisterButton.ForeColor = Theming.SeventhTextForeColor;
-
-                RegisterCancel.BackgroundImage = Theming.GrayButton;
-                RegisterCancel.ForeColor = Theming.FivithTextForeColor;
-
-                RegisterAgree.ForeColor = Theming.WinFormWarningTextForeColor;
-
-                RegisterEmail.ForeColor = Theming.FivithTextForeColor;
-                RegisterPassword.ForeColor = Theming.FivithTextForeColor;
-                RegisterConfirmPassword.ForeColor = Theming.FivithTextForeColor;
-                RegisterTicket.ForeColor = Theming.FivithTextForeColor;
-            }
-            else
-            {
-                CertainElemnts = true;
-            }
-
-            RegisterPanel.Visible = hideElements;
-            RegisterTicket.Visible = _ticketRequired && hideElements;
-
-            AddServer.Enabled = CertainElemnts;
-            ServerPick.Enabled = CertainElemnts;
-
-            /* Reset fields */
-            RegisterEmail.Text = "";
-            RegisterPassword.Text = "";
-            RegisterConfirmPassword.Text = "";
-            RegisterAgree.Checked = false;
-
-            RegisterAgree.ForeColor = Theming.WinFormWarningTextForeColor;
-            /* Reset Input Stroke Images */
-            RegisterEmailBorder.Image = Theming.BorderEmail;
-            RegisterPasswordBorder.Image = Theming.BorderPassword;
-            RegisterConfirmPasswordBorder.Image = Theming.BorderPassword;
-            RegisterTicketBorder.Image = Theming.BorderTicket;
-
-            /* Input Strokes */
-            RegisterEmailBorder.Visible = hideElements;
-            RegisterPasswordBorder.Visible = hideElements;
-            RegisterConfirmPasswordBorder.Visible = hideElements;
-            RegisterTicketBorder.Visible = _ticketRequired && hideElements;
-        }
-
+		
         private void LogoutButton_Click(object sender, EventArgs e)
         {
             if (_disableLogout == true)
@@ -1333,56 +1224,21 @@ namespace GameLauncher
         private void Greenbutton_hover_MouseEnter(object sender, EventArgs e)
         {
             RegisterText.BackgroundImage = Theming.GreenButtonHover;
-            RegisterButton.BackgroundImage = Theming.GreenButtonHover;
         }
 
         private void Greenbutton_MouseLeave(object sender, EventArgs e)
         {
             RegisterText.BackgroundImage = Theming.GreenButton;
-            RegisterButton.BackgroundImage = Theming.GreenButton;
         }
 
         private void Greenbutton_hover_MouseUp(object sender, EventArgs e)
         {
             RegisterText.BackgroundImage = Theming.GreenButtonHover;
-            RegisterButton.BackgroundImage = Theming.GreenButtonHover;
         }
 
         private void Greenbutton_click_MouseDown(object sender, EventArgs e)
         {
             RegisterText.BackgroundImage = Theming.GreenButtonClick;
-            RegisterButton.BackgroundImage = Theming.GreenButtonClick;
-        }
-
-        private void RegisterCancel_Click(object sender, EventArgs e)
-        {
-            RegisterFormElements(false);
-            LoginFormElements(true);
-        }
-
-        private void RegisterAgree_CheckedChanged(object sender, EventArgs e)
-        {
-            RegisterAgree.ForeColor = Theming.FivithTextForeColor;
-        }
-
-        private void RegisterEmail_TextChanged(object sender, EventArgs e)
-        {
-            RegisterEmailBorder.Image = Theming.BorderEmail;
-        }
-
-        private void RegisterTicket_TextChanged(object sender, EventArgs e)
-        {
-            RegisterTicketBorder.Image = Theming.BorderTicket;
-        }
-
-        private void RegisterConfirmPassword_TextChanged(object sender, EventArgs e)
-        {
-            RegisterConfirmPasswordBorder.Image = Theming.BorderPassword;
-        }
-
-        private void RegisterPassword_TextChanged(object sender, EventArgs e)
-        {
-            RegisterPasswordBorder.Image = Theming.BorderPassword;
         }
 
         private void Email_TextChanged(object sender, EventArgs e)
@@ -1399,171 +1255,23 @@ namespace GameLauncher
         private void Graybutton_click_MouseDown(object sender, EventArgs e)
         {
             LogoutButton.BackgroundImage = Theming.GrayButtonClick;
-            RegisterCancel.BackgroundImage = Theming.GrayButtonClick;
         }
 
         private void Graybutton_hover_MouseEnter(object sender, EventArgs e)
         {
             LogoutButton.BackgroundImage = Theming.GrayButtonHover;
-            RegisterCancel.BackgroundImage = Theming.GrayButtonHover;
         }
 
         private void Graybutton_MouseLeave(object sender, EventArgs e)
         {
             LogoutButton.BackgroundImage = Theming.GrayButton;
-            RegisterCancel.BackgroundImage = Theming.GrayButton;
         }
 
         private void Graybutton_hover_MouseUp(object sender, EventArgs e)
         {
             LogoutButton.BackgroundImage = Theming.GrayButtonHover;
-            RegisterCancel.BackgroundImage = Theming.GrayButtonHover;
         }
 
-        private void RegisterButton_Click(object sender, EventArgs e)
-        {
-            Refresh();
-
-            List<string> registerErrors = new List<string>();
-
-            if (string.IsNullOrEmpty(RegisterEmail.Text))
-            {
-                registerErrors.Add("Please enter your e-mail.");
-                RegisterEmailBorder.Image = Theming.BorderEmailError;
-
-            }
-            else if (IsEmailValid.Validate(RegisterEmail.Text) == false)
-            {
-                registerErrors.Add("Please enter a valid e-mail address.");
-                RegisterEmailBorder.Image = Theming.BorderEmailError;
-            }
-
-            if (string.IsNullOrEmpty(RegisterTicket.Text) && _ticketRequired)
-            {
-                registerErrors.Add("Please enter your ticket.");
-                RegisterTicketBorder.Image = Theming.BorderTicketError;
-            }
-
-            if (string.IsNullOrEmpty(RegisterPassword.Text))
-            {
-                registerErrors.Add("Please enter your password.");
-                RegisterPasswordBorder.Image = Theming.BorderPasswordError;
-            }
-
-            if (string.IsNullOrEmpty(RegisterConfirmPassword.Text))
-            {
-                registerErrors.Add("Please confirm your password.");
-                RegisterConfirmPasswordBorder.Image = Theming.BorderPasswordError;
-            }
-
-            if (RegisterConfirmPassword.Text != RegisterPassword.Text)
-            {
-                registerErrors.Add("Passwords don't match.");
-                RegisterConfirmPasswordBorder.Image = Theming.BorderPasswordError;
-            }
-
-            if (!RegisterAgree.Checked)
-            {
-                registerErrors.Add("You have not agreed to the Terms of Service.");
-                RegisterAgree.ForeColor = Theming.Error;
-            }
-
-            if (registerErrors.Count == 0)
-            {
-                bool allowReg = false;
-
-                try
-                {
-                    WebClient breachCheck = new WebClient();
-                    String checkPassword = SHA.HashPassword(RegisterPassword.Text.ToString()).ToUpper();
-
-                    var regex = new Regex(@"([0-9A-Z]{5})([0-9A-Z]{35})").Split(checkPassword);
-
-                    String range = regex[1];
-                    String verify = regex[2];
-                    String serverReply = breachCheck.DownloadString("https://api.pwnedpasswords.com/range/" + range);
-
-                    string[] hashes = serverReply.Split('\n');
-                    foreach (string hash in hashes)
-                    {
-                        var splitChecks = hash.Split(':');
-                        if (splitChecks[0] == verify)
-                        {
-                            var passwordCheckReply = MessageBox.Show(null, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1]) + " times, you should consider using different one.\r\nAlternatively you can use unsafe password anyway. Use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                            if (passwordCheckReply == DialogResult.Yes)
-                            {
-                                allowReg = true;
-                            }
-                            else
-                            {
-                                allowReg = false;
-                            }
-                        }
-                        else
-                        {
-                            allowReg = true;
-                        }
-                    }
-                }
-                catch
-                {
-                    allowReg = true;
-                }
-
-                if (allowReg == true)
-                {
-                    Tokens.Clear();
-
-                    String username = RegisterEmail.Text.ToString();
-                    String realpass;
-                    String token = (_ticketRequired) ? RegisterTicket.Text : null;
-
-                    Tokens.IPAddress = InformationCache.SelectedServerData.IpAddress;
-                    Tokens.ServerName = InformationCache.SelectedServerData.Name;
-
-                    if (_modernAuthSupport == false)
-                    {
-                        realpass = SHA.HashPassword(RegisterPassword.Text.ToString()).ToLower();
-                        ClassicAuth.Register(username, realpass, token);
-                    }
-                    else
-                    {
-                        realpass = RegisterPassword.Text.ToString();
-                        ModernAuth.Register(username, realpass, token);
-                    }
-
-                    if (!String.IsNullOrEmpty(Tokens.Success))
-                    {
-                        _loggedIn = true;
-                        _userId = Tokens.UserId;
-                        _loginToken = Tokens.LoginToken;
-                        _serverIp = Tokens.IPAddress;
-
-                        MessageBox.Show(null, Tokens.Success, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                        RegisterFormElements(false);
-                        LoginFormElements(true);
-
-                        _loggedIn = true;
-                    }
-                    else
-                    {
-                        MessageBox.Show(null, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                else
-                {
-                    var message = "There were some errors while registering, please fix them:\n\n";
-
-                    foreach (var error in registerErrors)
-                    {
-                        message += "• " + error + "\n";
-                    }
-
-                    MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
 
         /* SETTINGS PAGE LAYOUT */
         private void SettingsButton_Click(object sender, EventArgs e)
@@ -2727,15 +2435,6 @@ namespace GameLauncher
             PlayProgress.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             PlayProgressText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             PlayProgressTextTimer.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
-            /* Registering Panel */
-            RegisterPanel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
-            RegisterEmail.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            RegisterPassword.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            RegisterConfirmPassword.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            RegisterTicket.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            RegisterAgree.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
-            RegisterButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
-            RegisterCancel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
 
             /********************************/
             /* Set Theme Colors & Images     /
@@ -2821,18 +2520,6 @@ namespace GameLauncher
             LoginButton.MouseDown += new MouseEventHandler(LoginButton_MouseDown);
             LoginButton.Click += new EventHandler(LoginButton_Click);
 
-            RegisterButton.MouseEnter += Greenbutton_hover_MouseEnter;
-            RegisterButton.MouseLeave += Greenbutton_MouseLeave;
-            RegisterButton.MouseUp += Greenbutton_hover_MouseUp;
-            RegisterButton.MouseDown += Greenbutton_click_MouseDown;
-            RegisterButton.Click += RegisterButton_Click;
-
-            RegisterCancel.MouseEnter += new EventHandler(Graybutton_hover_MouseEnter);
-            RegisterCancel.MouseLeave += new EventHandler(Graybutton_MouseLeave);
-            RegisterCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
-            RegisterCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
-            RegisterCancel.Click += new EventHandler(RegisterCancel_Click);
-
             LogoutButton.MouseEnter += new EventHandler(Graybutton_hover_MouseEnter);
             LogoutButton.MouseLeave += new EventHandler(Graybutton_MouseLeave);
             LogoutButton.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
@@ -2869,7 +2556,7 @@ namespace GameLauncher
             RegisterText.MouseLeave += new EventHandler(Greenbutton_MouseLeave);
             RegisterText.MouseUp += new MouseEventHandler(Greenbutton_hover_MouseUp);
             RegisterText.MouseDown += new MouseEventHandler(Greenbutton_click_MouseDown);
-            RegisterText.Click += new EventHandler(RegisterText_LinkClicked);
+            RegisterText.Click += new EventHandler(FunctionEvents.RegisterText_LinkClicked);
         }
     }
     /* Moved 7 Unused Code to Gist */
