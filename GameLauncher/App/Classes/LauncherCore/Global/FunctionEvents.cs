@@ -32,7 +32,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         public static void RegisterText_LinkClicked(object sender, EventArgs e)
         {
-            if (InformationCache.ModernAuthSupport)
+            if (FunctionStatus.AllowRegistration)
             {
                 if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.webSignupUrl))
                 {
