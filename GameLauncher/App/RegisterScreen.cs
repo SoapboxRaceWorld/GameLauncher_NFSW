@@ -289,6 +289,12 @@ namespace GameLauncher.App
             /* Events                        /
             /********************************/
 
+            RegisterEmail.TextChanged += new EventHandler(RegisterEmail_TextChanged);
+            RegisterPassword.TextChanged += new EventHandler(RegisterPassword_TextChanged);
+            RegisterConfirmPassword.TextChanged += new EventHandler(RegisterConfirmPassword_TextChanged);
+            RegisterTicket.TextChanged += new EventHandler(RegisterTicket_TextChanged);
+            RegisterAgree.CheckedChanged += new EventHandler(RegisterAgree_CheckedChanged);
+
             RegisterButton.MouseEnter += Greenbutton_hover_MouseEnter;
             RegisterButton.MouseLeave += Greenbutton_MouseLeave;
             RegisterButton.MouseUp += Greenbutton_hover_MouseUp;
