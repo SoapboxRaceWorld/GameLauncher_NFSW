@@ -194,18 +194,39 @@ namespace GameLauncher
         {
             if (!DetectLinux.LinuxDetected())
             {
-                /* Check if User has .NETFramework 4.6.2 or later Installed */
+                /* Check if User has a compatible .NET Framework Installed */
                 const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
 
                 using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey))
                 {
-                    if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394802)
+                    /* For now, allow edge case of Windows 8.0 to run .NET 4.6.1 where upgrading to 8.1 is not possible */
+                    if (WindowsProductVersion.CachedWindowsNumber == 6.1)
+                    {
+                        if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394254)
+                        {
+                            //Do Nothing
+                        }
+                        else
+                        {
+                            DialogResult frameworkError = MessageBox.Show(null, "This application requires a minimum version of the .NET Framework:\n" +
+                                " .NETFramework, Version=v4.6.1 \n\nDo you want to install this .NET Framework version now?", "GameLauncher.exe - This application could not be started.", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+
+                            if (frameworkError == DialogResult.Yes)
+                            {
+                                Process.Start("https://dotnet.microsoft.com/download/dotnet-framework/net461");
+                            }
+
+                            Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                        }
+                    }
+                    /* Otherwise, all other OS Versions should have 4.6.2 as a Minimum Version */
+                    else if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394802)
                     {
                         //Do Nothing
                     }
                     else
                     {
-                        DialogResult frameworkError = MessageBox.Show(null, "This application requires one of the following versions of the .NET Framework:\n" +
+                        DialogResult frameworkError = MessageBox.Show(null, "This application requires a version equal to or newer than the .NET Framework:\n" +
                             " .NETFramework, Version=v4.6.2 \n\nDo you want to install this .NET Framework version now?", "GameLauncher.exe - This application could not be started.", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
                         if (frameworkError == DialogResult.Yes)
