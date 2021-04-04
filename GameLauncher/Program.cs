@@ -304,7 +304,7 @@ namespace GameLauncher
                         String constructMsg = String.Empty;
 
                         constructMsg += "Using this location for GameLauncher is not allowed.\nThe Launcher folder/directory can NOT be in:\n\n";
-                        constructMsg += "• X:\\ (Root of Drive, such as C:\\ or D:\\)\n";
+                        constructMsg += "• X:\\GameLauncher.exe (Root of Drive, such as C:\\ or D:\\, must be in a folder)\n";
                         constructMsg += "• C:\\Program Files\n";
                         constructMsg += "• C:\\Program Files (x86)\n";
                         constructMsg += "• C:\\Users (Includes 'Desktop', 'Documents', 'Downloads')\n";
