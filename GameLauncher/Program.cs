@@ -200,7 +200,7 @@ namespace GameLauncher
                 using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey))
                 {
                     /* For now, allow edge case of Windows 8.0 to run .NET 4.6.1 where upgrading to 8.1 is not possible */
-                    if (WindowsProductVersion.CachedWindowsNumber == 6.1)
+                    if (WindowsProductVersion.CachedWindowsNumber == 6.2)
                     {
                         if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394254)
                         {
