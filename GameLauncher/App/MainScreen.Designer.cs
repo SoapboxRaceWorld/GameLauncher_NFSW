@@ -619,7 +619,7 @@ namespace GameLauncher
             this.ServerShutDown.Name = "ServerShutDown";
             this.ServerShutDown.Size = new System.Drawing.Size(220, 15);
             this.ServerShutDown.TabIndex = 169;
-            this.ServerShutDown.Text = "Restart Timer: 0 Hours";
+            this.ServerShutDown.Text = "Restart Timer: 00.00 Hours";
             this.ServerShutDown.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // SceneryGroupText
@@ -630,9 +630,9 @@ namespace GameLauncher
             this.SceneryGroupText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SceneryGroupText.Location = new System.Drawing.Point(64, 43);
             this.SceneryGroupText.Name = "SceneryGroupText";
-            this.SceneryGroupText.Size = new System.Drawing.Size(140, 14);
+            this.SceneryGroupText.Size = new System.Drawing.Size(220, 15);
             this.SceneryGroupText.TabIndex = 179;
-            this.SceneryGroupText.Text = "Scenery: Normal";
+            this.SceneryGroupText.Text = "Scenery: SetByServInfo";
             this.SceneryGroupText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LauncherIconStatus
