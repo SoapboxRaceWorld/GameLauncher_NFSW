@@ -27,7 +27,7 @@ namespace GameLauncher.App.Classes
         {
             i++;
 
-            if (InformationCache.ServerListStatus == "Loaded")
+            if (InformationCache.ServerListStatus == "Loaded" || FunctionStatus.LoadingComplete == true)
             {
                 Clock.Start();
                 Application.OpenForms["SplashScreen"].Close();

@@ -1,6 +1,8 @@
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
@@ -57,6 +59,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
     /* This is Used to call Certain Functions (Such as Completion Status or Function Callbacks) */
     class FunctionStatus
     {
+        /* Program.cs Sets Conditional on If Launcher had Finished Loading (It Self) */
+        public static bool LoadingComplete = false;
+        
         /* Allows Registration Button to be Enabled/Disabled */
         public static bool AllowRegistration;
 
@@ -301,6 +306,28 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                     Log.Core("WINDOWS DEFENDER: Found 'WindowsDefender' key! Its value is " + FileSettingsSave.WindowsDefenderStatus);
                 }
             }
+
+            /* Check If Launcher Failed to Connect to any APIs */
+            if (VisualsAPIChecker.WOPLAPI == false)
+            {
+                DialogResult restartAppNoApis = MessageBox.Show(null, "There's no internet connection, Launcher might crash \n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (restartAppNoApis == DialogResult.No)
+                {
+                    MessageBox.Show("Good Luck... \n No Really \n ...Good Luck", "GameLauncher Will Continue, When It Failed To Connect To API");
+                    Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and Will Continue");
+                }
+
+                if (restartAppNoApis == DialogResult.Yes)
+                {
+                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                }
+            }
+
+            DiscordLauncherPresense.Start("Start Up", "540651192179752970");
+
+            Log.Visuals("CORE: Starting MainScreen");
+            Application.Run(new MainScreen());
         }
 
         /* Moved "runAsAdmin" Code to Gist */

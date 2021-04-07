@@ -15,7 +15,6 @@ using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Components;
@@ -24,13 +23,12 @@ using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
-using GameLauncher.App.Classes.LauncherCore.RPC;
 using System.Threading.Tasks;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 
 namespace GameLauncher
 {
-    internal static class Program
+    static class Program
     {
         /* Global Thread for Splash Screen */
         private static Thread _SplashScreen;
@@ -43,12 +41,16 @@ namespace GameLauncher
         }
 
         [STAThread]
-        static async Task Main()
+        static void Main()
         {
             if (Debugger.IsAttached && !NFSW.IsNFSWRunning())
             {
                 NetCodeDefaults();
-                await DoRunChecksAsync();
+                var Status = DoRunChecksAsync();
+                Status.Wait();
+                FunctionStatus.LoadingComplete = Status.IsCompleted;
+                Start();
+                Status.Dispose();
             } 
             else
             {
@@ -165,7 +167,11 @@ namespace GameLauncher
                         }
                         else
                         {
-                            await DoRunChecksAsync();
+                            var Status = DoRunChecksAsync();
+                            Status.Wait();
+                            FunctionStatus.LoadingComplete = Status.IsCompleted;
+                            Start();
+                            Status.Dispose();
                         }
                     } 
                     else
@@ -178,6 +184,12 @@ namespace GameLauncher
                     mutex.Close();
                 }
             }
+        }
+
+        private static void Start()
+        {
+            /* Do First Time Run Checks */
+            FunctionStatus.FirstTimeRun();
         }
 
         private static void SplashScreen()
@@ -460,28 +472,6 @@ namespace GameLauncher
             {
                 _SplashScreen.Abort();
             }
-
-            /* Check If Launcher Failed to Connect to any APIs */
-            if (VisualsAPIChecker.WOPLAPI == false)
-            {
-                DialogResult restartAppNoApis = MessageBox.Show(null, "There's no internet connection, Launcher might crash \n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (restartAppNoApis == DialogResult.No)
-                {
-                    MessageBox.Show("Good Luck... \n No Really \n ...Good Luck", "GameLauncher Will Continue, When It Failed To Connect To API");
-                    Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and Will Continue");
-                }
-
-                if (restartAppNoApis == DialogResult.Yes)
-                {
-                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                }
-            }
-
-            DiscordLauncherPresense.Start("Start Up", "540651192179752970");
-
-            Log.Visuals("CORE: Starting MainScreen");
-            Application.Run(new MainScreen());
         }
     }
 }

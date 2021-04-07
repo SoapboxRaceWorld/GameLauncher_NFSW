@@ -44,7 +44,7 @@ using GameLauncher.App.Classes.LauncherCore.Client.Web;
 
 namespace GameLauncher
 {
-    public sealed partial class MainScreen : Form
+    public partial class MainScreen : Form
     {
         private Point _mouseDownPoint = Point.Empty;
         private bool _loginEnabled;
@@ -189,24 +189,17 @@ namespace GameLauncher
                 }).Start();
             };
 
-            Log.Core("CORE: Checking permissions");
-            if (!FunctionStatus.HasWriteAccessToFolder(Directory.GetCurrentDirectory()))
+            if (!DetectLinux.LinuxDetected())
             {
-                Log.Error("CORE: Check Permission Failed.");
-                MessageBox.Show(null, "Failed to write the test file. Make sure you're running the launcher with administrative privileges.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log.Visuals("CORE: Setting cursor.");
+                string temporaryFile = Path.GetTempFileName();
+                File.WriteAllBytes(temporaryFile, ExtractResource.AsByte("GameLauncher.SoapBoxModules.cursor.ani"));
+                Cursor mycursor = new Cursor(Cursor.Current.Handle);
+                IntPtr colorcursorhandle = User32.LoadCursorFromFile(temporaryFile);
+                mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
+                Cursor = mycursor;
+                File.Delete(temporaryFile);
             }
-
-            /* Do First Time Run Checks */
-            FunctionStatus.FirstTimeRun();
-
-            Log.Visuals("CORE: Setting cursor.");
-            string temporaryFile = Path.GetTempFileName();
-            File.WriteAllBytes(temporaryFile, ExtractResource.AsByte("GameLauncher.SoapBoxModules.cursor.ani"));
-            Cursor mycursor = new Cursor(Cursor.Current.Handle);
-            IntPtr colorcursorhandle = User32.LoadCursorFromFile(temporaryFile);
-            mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
-            Cursor = mycursor;
-            File.Delete(temporaryFile);
         }
 
         private void MainScreen_Load(object sender, EventArgs e)
