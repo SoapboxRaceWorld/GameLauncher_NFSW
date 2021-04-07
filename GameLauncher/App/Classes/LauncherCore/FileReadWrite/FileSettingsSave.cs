@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 
@@ -127,6 +129,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 settingFile.Write("GameIntegrity", GameIntegrity);
             }
 
+            if (!settingFile.KeyExists("ProxyPort"))
+            {
+                settingFile.Write("ProxyPort", string.Empty);
+            }
+
             if (!DetectLinux.LinuxDetected())
             {
                 if (!settingFile.KeyExists("FirewallLauncher"))
@@ -175,6 +182,16 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 if (Proxy == "1")
                 {
                     FunctionStatus.DisableProxy = true;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(settingFile.Read("ProxyPort")))
+            {
+                var isNumeric = int.TryParse(settingFile.Read("ProxyPort"), out int Port);
+
+                if (isNumeric == true)
+                {
+                    ServerProxy.ProxyPort = Port;
                 }
             }
 

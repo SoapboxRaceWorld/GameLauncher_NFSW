@@ -29,7 +29,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         private async Task<TextResponse> OnError(NancyContext context, Exception exception)
         {
-            Log.Error($"PROXY ERROR [handling {context.Request.Path}]");
+            Log.Error($"PROXY HANDLER [handling {context.Request.Path}]");
             Log.Error($"\tMESSAGE: {exception.Message}");
             Log.Error($"\t{exception.StackTrace}");
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY",
@@ -174,13 +174,20 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         private static async Task SubmitError(Exception exception)
         {
-            var mainsrv = DetectLinux.LinuxDetected() ? URLs.mainserver.Replace("https", "http") : URLs.mainserver;
-            Url url = new Url(mainsrv + "/error-report");
-            await url.PostJsonAsync(new
+            try
             {
-                message = exception.Message ?? "no message",
-                stackTrace = exception.StackTrace ?? "no stack trace"
-            });
+                var mainsrv = DetectLinux.LinuxDetected() ? URLs.mainserver.Replace("https", "http") : URLs.mainserver;
+                Url url = new Url(mainsrv + "/error-report");
+                await url.PostJsonAsync(new
+                {
+                    message = exception.Message ?? "no message",
+                    stackTrace = exception.StackTrace ?? "no stack trace"
+                });
+            }
+            catch (Exception error)
+            {
+                Log.Error("PROXY HANDLER: " + error.Message);
+            }
         }
     }
 
