@@ -21,6 +21,7 @@ using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
+using System.Threading;
 
 namespace GameLauncher.App
 {
@@ -684,6 +685,7 @@ namespace GameLauncher.App
         /* Settings Change Game Files Location */
         private void SettingsGameFiles_Click(object sender, EventArgs e)
         {
+
             System.Windows.Forms.OpenFileDialog changeGameFilesPath = new System.Windows.Forms.OpenFileDialog
             {
                 InitialDirectory = "C:\\",
@@ -699,6 +701,16 @@ namespace GameLauncher.App
                 SettingsGameFilesCurrentText.Text = "NEW DIRECTORY";
                 SettingsGameFilesCurrent.Text = _newGameFilesPath;
             }
+            /*
+            Thread FileBrowser = new Thread(() =>
+            {
+
+            });
+
+            FileBrowser.SetApartmentState(ApartmentState.STA);
+            FileBrowser.Start();
+            FileBrowser.Join();
+            */
         }
 
         /* Settings Open Current CDN in Browser */
