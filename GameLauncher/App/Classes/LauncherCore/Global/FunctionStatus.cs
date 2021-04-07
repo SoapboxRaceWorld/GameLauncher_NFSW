@@ -61,7 +61,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
     {
         /* Program.cs Sets Conditional on If Launcher had Finished Loading (It Self) */
         public static bool LoadingComplete = false;
-        
+
+        /* Disables/Enables Proxy (Global) */
+        public static bool DisableProxy = false;
+
         /* Allows Registration Button to be Enabled/Disabled */
         public static bool AllowRegistration;
 

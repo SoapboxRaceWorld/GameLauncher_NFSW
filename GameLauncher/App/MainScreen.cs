@@ -58,9 +58,6 @@ namespace GameLauncher
 
         public static String getTempNa = Path.GetTempFileName();
 
-        public bool _disableProxy;
-        public bool _disableDiscordRPC;
-
         private int _lastSelectedServerId;
         private int _nfswPid;
         private Thread _nfswstarted;
@@ -1163,12 +1160,12 @@ namespace GameLauncher
                     await Task.Run(() => ServerProxy.Instance.Start("Start Game"));
                 }
                 /* Force start proxy and enable it */
-                _disableProxy = false;
+                FunctionStatus.DisableProxy = false;
             }
 
             _nfswstarted = new Thread(() =>
             {
-                if (_disableProxy == true || ServerProxy.Host == null)
+                if (FunctionStatus.DisableProxy == true || ServerProxy.Host == null)
                 {
                     Uri convert = new Uri(InformationCache.SelectedServerData.IpAddress);
 
@@ -2079,55 +2076,8 @@ namespace GameLauncher
             /* Windows Firewall Runner */
             if (!string.IsNullOrEmpty(FileSettingsSave.FirewallGameStatus))
             {
-                if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == true)
-                {
-                    bool removeFirewallRule = false;
-                    bool firstTimeRun = false;
-
-                    string nameOfGame = "SBRW - Game";
-                    string localOfGame = FileSettingsSave.GameInstallation + "\\nfsw.exe";
-
-                    string groupKeyGame = "Need for Speed: World";
-                    string descriptionGame = groupKeyGame;
-
-                    if (FileSettingsSave.FirewallGameStatus == "Not Excluded" || FileSettingsSave.FirewallGameStatus == "Turned Off" || FileSettingsSave.FirewallGameStatus == "Service Stopped" || FileSettingsSave.FirewallGameStatus == "Unknown")
-                    {
-                        firstTimeRun = true;
-                        FileSettingsSave.FirewallGameStatus = "Excluded";
-                    }
-                    else if (FileSettingsSave.FirewallGameStatus == "Reset")
-                    {
-                        removeFirewallRule = true;
-                        FileSettingsSave.FirewallGameStatus = "Not Excluded";
-                    }
-
-                    /* Inbound & Outbound */
-                    FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
-                }
-                else if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == false)
-                {
-                    FileSettingsSave.FirewallGameStatus = "Turned Off";
-                }
-                else
-                {
-                    FileSettingsSave.FirewallGameStatus = "Service Stopped";
-                }
-
-                /* Set Folder Permissions Here - DavidCarbon */
-                if (FileSettingsSave.FilePermissionStatus != "Set" && !DetectLinux.LinuxDetected())
-                {
-                    /* Launcher Folder */
-                    FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(AppDomain.CurrentDomain.BaseDirectory));
-                    /* Game Files Folder */
-                    FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(FileSettingsSave.GameInstallation));
-                    FileSettingsSave.FilePermissionStatus = "Set";
-                }
-                else
-                {
-                    Log.Core("PERMISSIONS: Checking File! It's value is " + FileSettingsSave.FilePermissionStatus);
-                }
-
-                FileSettingsSave.SaveSettings();
+                FirewallFunctions.GameFiles();
+                FileORFolderPermissionsFunctions.Folders();
             }
 
             PlayProgressText.Text = "Ready!".ToUpper();
@@ -2423,9 +2373,7 @@ namespace GameLauncher
                 VisualsAPIChecker.PingAPIStatus();
             }
 
-            _disableProxy = (FileSettingsSave.Proxy == "1");
-            _disableDiscordRPC = (FileSettingsSave.RPC == "1");
-            Log.Debug("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + _disableProxy);
+            Log.Debug("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + FunctionStatus.DisableProxy);
 
             Shown += (x, y) =>
             {

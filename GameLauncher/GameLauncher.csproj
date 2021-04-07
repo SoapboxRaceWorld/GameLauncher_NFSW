@@ -358,8 +358,8 @@
     <None Include="app.config" />
     <EmbeddedResource Include="App\Classes\LauncherCore\RPC\JSON\events.json" />
     <EmbeddedResource Include="App\Classes\LauncherCore\RPC\JSON\cars.json" />
-    <EmbeddedResource Include="Fonts\DejaVuSans.ttf" />
-    <EmbeddedResource Include="Fonts\DejaVuSans-Bold.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\DejaVuSans.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\DejaVuSans-Bold.ttf" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest">
       <SubType>Designer</SubType>

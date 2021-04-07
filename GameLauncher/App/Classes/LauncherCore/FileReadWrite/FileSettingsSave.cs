@@ -1,4 +1,5 @@
 using System.IO;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 
@@ -157,6 +158,16 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 else if (WindowsProductVersion.CachedWindowsNumber != 6.1 && settingFile.KeyExists("PatchesApplied"))
                 {
                     settingFile.DeleteKey("PatchesApplied");
+                }
+            }
+
+            /* Key Entries to Convert into Boolens */
+
+            if (!string.IsNullOrEmpty(Proxy))
+            {
+                if (Proxy == "1")
+                {
+                    FunctionStatus.DisableProxy = true;
                 }
             }
 

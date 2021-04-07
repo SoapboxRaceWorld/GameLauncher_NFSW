@@ -15,7 +15,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
     {
         private static string GameLauncherHash = string.Empty;
         private static long addrange = 0;
-        private static int timeout = 3000;
+        private static int timeout = 10000;
 
         public static string Value()
         {
@@ -40,7 +40,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             ServicePointManager.Expect100Continue = true;
-            ServicePointManager.ServerCertificateValidationCallback = (Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => {
+            ServicePointManager.ServerCertificateValidationCallback = (Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => 
+            {
                 bool isOk = true;
                 if (sslPolicyErrors != SslPolicyErrors.None)
                 {

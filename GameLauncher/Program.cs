@@ -50,12 +50,20 @@ namespace GameLauncher
         {
             if (Debugger.IsAttached && !NFSW.IsNFSWRunning())
             {
-                NetCodeDefaults();
-                var Status = DoRunChecksAsync();
-                Status.Wait();
-                FunctionStatus.LoadingComplete = Status.IsCompleted;
-                Start();
-                Status.Dispose();
+                try
+                {
+                    NetCodeDefaults();
+                    var Status = DoRunChecksAsync();
+                    Status.Wait();
+                    FunctionStatus.LoadingComplete = Status.IsCompleted;
+                    Start();
+                    Status.Dispose();
+                }
+                catch (Exception error)
+                {
+                    MessageBox.Show(null, "Unable to Start Launcher\n" + error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    Application.Exit();
+                }
             } 
             else
             {
@@ -172,11 +180,19 @@ namespace GameLauncher
                         }
                         else
                         {
-                            var Status = DoRunChecksAsync();
-                            Status.Wait();
-                            FunctionStatus.LoadingComplete = Status.IsCompleted;
-                            Start();
-                            Status.Dispose();
+                            try
+                            {
+                                var Status = DoRunChecksAsync();
+                                Status.Wait();
+                                FunctionStatus.LoadingComplete = Status.IsCompleted;
+                                Start();
+                                Status.Dispose();
+                            }
+                            catch (Exception error)
+                            {
+                                MessageBox.Show(null, "Unable to Start Launcher\n" + error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                Application.Exit();
+                            }
                         }
                     } 
                     else
@@ -355,45 +371,7 @@ namespace GameLauncher
                 /* Windows Firewall Runner */
                 if (!string.IsNullOrEmpty(FileSettingsSave.FirewallLauncherStatus))
                 {
-                    if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == true)
-                    {
-                        string nameOfLauncher = "SBRW - Game Launcher";
-                        string localOfLauncher = Assembly.GetEntryAssembly().Location;
-
-                        string nameOfUpdater = "SBRW - Game Launcher Updater";
-                        string localOfUpdater = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "GameLauncherUpdater.exe");
-
-                        string groupKeyLauncher = "Game Launcher for Windows";
-                        string descriptionLauncher = "Soapbox Race World";
-
-                        bool removeFirewallRule = false;
-                        bool firstTimeRun = false;
-
-                        if (FileSettingsSave.FirewallLauncherStatus == "Not Excluded" || FileSettingsSave.FirewallLauncherStatus == "Turned Off" || FileSettingsSave.FirewallLauncherStatus == "Service Stopped" || FileSettingsSave.FirewallLauncherStatus == "Unknown")
-                        {
-                            firstTimeRun = true;
-                            FileSettingsSave.FirewallLauncherStatus = "Excluded";
-                        }
-                        else if (FileSettingsSave.FirewallLauncherStatus == "Reset")
-                        {
-                            removeFirewallRule = true;
-                            FileSettingsSave.FirewallLauncherStatus = "Not Excluded";
-                        }
-
-                        /* Inbound & Outbound */
-                        FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfLauncher, localOfLauncher, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
-                        FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfUpdater, localOfUpdater, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
-                    }
-                    else if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == false)
-                    {
-                        FileSettingsSave.FirewallLauncherStatus = "Turned Off";
-                    }
-                    else
-                    {
-                        FileSettingsSave.FirewallLauncherStatus = "Service Stopped";
-                    }
-
-                    FileSettingsSave.SaveSettings();
+                    FirewallFunctions.Launcher();
                 }
 
                 /* Windows 7 Fix */
