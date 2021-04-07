@@ -31,7 +31,6 @@ using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Downloader;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.Hash;
@@ -1056,7 +1055,6 @@ namespace GameLauncher
 
             AddServer.Enabled = hideElements;
             ServerPick.Enabled = hideElements;
-            SelectServerBtn.Enabled = hideElements;
 
             /* Input Strokes */
             MainEmailBorder.Visible = hideElements;
@@ -2408,6 +2406,12 @@ namespace GameLauncher
             };
 
             Load += new EventHandler(MainScreen_Load);
+
+            /********************************/
+            /* Enable/Disable Visuals        /
+            /********************************/
+
+            SelectServerBtn.Enabled = EnableInsider.ShouldIBeAnInsider();
 
             /********************************/
             /* Functions                     /
