@@ -1,3 +1,4 @@
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -48,7 +49,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
         {
             try
             {
-                using (WebClient webClient = new WebClient())
+                using (WebClientWithTimeout webClient = new WebClientWithTimeout())
                 {
                     webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.DownloadManager_DownloadDataCompleted);
                     webClient.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);

@@ -16,7 +16,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.IO.Compression;
 using System.Threading.Tasks;
-using WindowsFirewallHelper;
 using GameLauncher.App;
 using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Auth;
@@ -1437,16 +1436,12 @@ namespace GameLauncher
 
         private void PlayButton_Click(object sender, EventArgs e)
         {
-            if (File.Exists(FileSettingsSave.GameInstallation + "\\.links"))
+            if (FileSettingsSave.GameIntegrity != "Good")
             {
-                File.Delete(FileSettingsSave.GameInstallation + "\\.links");
+                MessageBox.Show("Launcher had Detected Game Files Integrity Error\nPlease Verify Game Files in Settings Screen", 
+                    "Game Files Integrity", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
-
-            /* Disable Play Button and Logout Buttons */
-            PlayButton.Visible = false;
-            LogoutButton.Visible = false;
-            _disableLogout = true;
-            DisablePlayButton();
 
             if (!DetectLinux.LinuxDetected())
             {
@@ -1463,6 +1458,17 @@ namespace GameLauncher
                     return;
                 }
             }
+
+            if (File.Exists(FileSettingsSave.GameInstallation + "\\.links"))
+            {
+                File.Delete(FileSettingsSave.GameInstallation + "\\.links");
+            }
+
+            /* Disable Play Button and Logout Buttons */
+            PlayButton.Visible = false;
+            LogoutButton.Visible = false;
+            _disableLogout = true;
+            DisablePlayButton();
 
             ModManager.ResetModDat(FileSettingsSave.GameInstallation);
 
@@ -2073,6 +2079,12 @@ namespace GameLauncher
 
         private void OnDownloadFinished()
         {
+            if (FileSettingsSave.GameIntegrity == "Unknown")
+            {
+                FileSettingsSave.GameIntegrity = "Good";
+                FileSettingsSave.SaveSettings();
+            }
+
             /* Windows Firewall Runner */
             if (!string.IsNullOrEmpty(FileSettingsSave.FirewallGameStatus))
             {

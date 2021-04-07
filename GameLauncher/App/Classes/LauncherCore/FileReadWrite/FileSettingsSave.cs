@@ -31,6 +31,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public static string FilePermissionStatus = !string.IsNullOrEmpty(settingFile.Read("FilePermission")) ? settingFile.Read("FilePermission") : "Not Set";
 
+        public static string GameIntegrity = !string.IsNullOrEmpty(settingFile.Read("GameIntegrity")) ? settingFile.Read("GameIntegrity") : "Unknown";
+
         public static void NullSafeSettings()
         {
             /* Migrate old Key Entries */
@@ -118,6 +120,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             else if (settingFile.KeyExists("FilePermission") && DetectLinux.LinuxDetected())
             {
                 settingFile.DeleteKey("FilePermission");
+            }
+
+            if (!settingFile.KeyExists("GameIntegrity"))
+            {
+                settingFile.Write("GameIntegrity", GameIntegrity);
             }
 
             if (!DetectLinux.LinuxDetected())
@@ -241,6 +248,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             if (settingFile.Read("IgnoreUpdateVersion") != IgnoreVersion)
             {
                 settingFile.Write("IgnoreUpdateVersion", IgnoreVersion);
+            }
+
+            if (settingFile.Read("GameIntegrity") != GameIntegrity)
+            {
+                settingFile.Write("GameIntegrity", GameIntegrity);
             }
 
             if (!DetectLinux.LinuxDetected())

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.SystemPlatform;
 
 namespace GameLauncher.App.Classes.LauncherCore.Downloader
@@ -158,7 +159,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
 
                     try
                     {
-                        WebClient webClient = new WebClient();
+                        WebClientWithTimeout webClient = new WebClientWithTimeout();
                         webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.Downloader_DownloadFileCompleted);
                         string tempFileName = Path.GetTempFileName();
                         webClient.DownloadFileAsync(new Uri(url), tempFileName);
@@ -231,7 +232,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                         num4 = (long)num;
                     }
                     long num5 = 0L;
-                    WebClient webClient = new WebClient();
+                    WebClientWithTimeout webClient = new WebClientWithTimeout();
                     webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
                     webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
                     webClient.Headers.Add("Accept-Encoding", "gzip,deflate");
@@ -684,7 +685,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                 else
                 {
                     long num = long.Parse(indexFile.SelectSingleNode("/index/header/length").InnerText);
-                    WebClient webClient = new WebClient();
+                    WebClientWithTimeout webClient = new WebClientWithTimeout();
                     webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml,application/*,*/*;q=0.9,*/*;q=0.8");
                     webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
                     webClient.Headers.Add("Accept-Encoding", "gzip,deflate");
@@ -820,7 +821,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
 
         public static byte[] GetData(string url)
         {
-            WebClient webClient = new WebClient();
+            WebClientWithTimeout webClient = new WebClientWithTimeout();
             webClient.Headers.Add("Accept", "text/html,text/xml,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
             webClient.Headers.Add("Accept-Language", "en-us,en;q=0.5");
             webClient.Headers.Add("Accept-Encoding", "gzip");

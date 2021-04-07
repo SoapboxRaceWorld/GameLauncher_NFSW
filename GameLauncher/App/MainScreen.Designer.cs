@@ -31,7 +31,6 @@ namespace GameLauncher
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainScreen));
             this.Timeout = new System.Windows.Forms.Timer(this.components);
-            this.Notification = new System.Windows.Forms.NotifyIcon(this.components);
             this.SelectServerBtn = new System.Windows.Forms.Button();
             this.translatedBy = new System.Windows.Forms.Label();
             this.ServerPick = new System.Windows.Forms.ComboBox();
@@ -79,6 +78,7 @@ namespace GameLauncher
             this.VerticalBanner = new System.Windows.Forms.PictureBox();
             this.ExtractingProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
             this.PlayProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
+            this.Notification = new System.Windows.Forms.NotifyIcon(this.components);
             this.ShowPlayPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).BeginInit();
@@ -100,11 +100,6 @@ namespace GameLauncher
             // Timeout
             // 
             this.Timeout.Interval = 3000;
-            // 
-            // Notification
-            // 
-            this.Notification.Text = "notifyIcon1";
-            this.Notification.Visible = true;
             // 
             // SelectServerBtn
             // 
@@ -750,6 +745,11 @@ namespace GameLauncher
             this.PlayProgress.Size = new System.Drawing.Size(519, 13);
             this.PlayProgress.Text = "downloadProgress";
             // 
+            // Notification
+            // 
+            this.Notification.Text = "notifyIcon1";
+            this.Notification.Visible = true;
+            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -823,7 +823,6 @@ namespace GameLauncher
         #endregion
 
         private System.Windows.Forms.Timer Timeout;
-        private System.Windows.Forms.NotifyIcon Notification;
         private System.Windows.Forms.PictureBox logo;
         private System.Windows.Forms.PictureBox CloseBTN;
         private System.Windows.Forms.Button SelectServerBtn;
@@ -871,5 +870,6 @@ namespace GameLauncher
         private System.Windows.Forms.Label SceneryGroupText;
         private System.Windows.Forms.Label InsiderBuildNumberText;
         private System.Windows.Forms.PictureBox ProgressBarOutline;
+        private System.Windows.Forms.NotifyIcon Notification;
     }
 }

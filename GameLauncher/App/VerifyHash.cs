@@ -14,6 +14,7 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 
 namespace GameLauncher.App
 {
@@ -200,6 +201,7 @@ namespace GameLauncher.App
                     /* Update the player messaging that we're done */
                     VerifyHashText.ForeColor = Theming.WinFormSuccessTextForeColor;
                     VerifyHashText.Text = "Excellent News! There are ZERO\nmissing or invalid Gamefiles!";
+                    Integrity();
                 }
                 else
                 {
@@ -213,6 +215,12 @@ namespace GameLauncher.App
             {
                 Log.Error(ex.Message);
             }
+        }
+
+        private void Integrity()
+        {
+            FileSettingsSave.GameIntegrity = "Good";
+            FileSettingsSave.SaveSettings();
         }
 
         private void CorruptedFilesFound()
@@ -240,9 +248,10 @@ namespace GameLauncher.App
                             LogVerify.Deleted("File: " + text2);
                             File.Delete(text2);
                         }
-                        new WebClient().DownloadFile(address, text2);
+                        new WebClientWithTimeout().DownloadFile(address, text2);
                         LogVerify.Downloaded("File: " + text2);
                         redownloadedCount++;
+
                         Application.DoEvents();
                     }
                     catch { }
@@ -252,6 +261,12 @@ namespace GameLauncher.App
                         DownloadProgressBar.Value = redownloadedCount * 100 / files.Length;
                     });
                 }
+
+                if (redownloadedCount == files.Count())
+                {
+                    Integrity();
+                }
+
                 DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
                 VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
                 VerifyHashText.Text = "Yay! Scanning and Downloading \nis now completed on Gamefiles";
