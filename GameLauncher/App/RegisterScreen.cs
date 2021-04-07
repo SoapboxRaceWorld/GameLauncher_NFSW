@@ -237,6 +237,12 @@ namespace GameLauncher.App
         private void SetVisuals()
         {
             /*******************************/
+            /* Set Window Name              /
+            /*******************************/
+
+            Text = "Register - SBRW Launcher: v" + Application.ProductVersion;
+
+            /*******************************/
             /* Set Initial position & Icon  /
             /*******************************/
 

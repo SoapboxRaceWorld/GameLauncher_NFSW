@@ -147,7 +147,7 @@ namespace GameLauncher.App
             this.MinimizeBox = false;
             this.Name = "SelectServer";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "GameLauncher - Please Select a Server";
+            this.Text = "Please Select a Server - SBRW Launcher";
             this.TopMost = true;
             this.ResumeLayout(false);
 

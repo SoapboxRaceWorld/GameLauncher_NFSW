@@ -33,6 +33,12 @@ namespace GameLauncher.App
         private void SetVisuals()
         {
             /*******************************/
+            /* Set Window Name              /
+            /*******************************/
+
+            Text = "Add Server - SBRW Launcher: v" + Application.ProductVersion;
+
+            /*******************************/
             /* Set Hardcoded Text           /
             /*******************************/
 

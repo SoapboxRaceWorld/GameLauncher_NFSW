@@ -478,7 +478,6 @@ namespace GameLauncher
             // ServerInfoPanel
             // 
             this.ServerInfoPanel.BackColor = System.Drawing.Color.Transparent;
-            this.ServerInfoPanel.BackgroundImage = global::GameLauncher.Properties.Resources.socialbg;
             this.ServerInfoPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ServerInfoPanel.Controls.Add(this.HomePageIcon);
             this.ServerInfoPanel.Controls.Add(this.DiscordIcon);
@@ -672,7 +671,7 @@ namespace GameLauncher
             // MainEmailBorder
             // 
             this.MainEmailBorder.BackColor = System.Drawing.Color.Transparent;
-            this.MainEmailBorder.Image = global::GameLauncher.Properties.Resources.email_text_border;
+            this.MainEmailBorder.ErrorImage = null;
             this.MainEmailBorder.InitialImage = null;
             this.MainEmailBorder.Location = new System.Drawing.Point(606, 161);
             this.MainEmailBorder.Name = "MainEmailBorder";
@@ -684,7 +683,7 @@ namespace GameLauncher
             // MainPasswordBorder
             // 
             this.MainPasswordBorder.BackColor = System.Drawing.Color.Transparent;
-            this.MainPasswordBorder.Image = global::GameLauncher.Properties.Resources.password_text_border;
+            this.MainPasswordBorder.ErrorImage = null;
             this.MainPasswordBorder.InitialImage = null;
             this.MainPasswordBorder.Location = new System.Drawing.Point(606, 210);
             this.MainPasswordBorder.Name = "MainPasswordBorder";
@@ -696,7 +695,6 @@ namespace GameLauncher
             // ProgressBarOutline
             // 
             this.ProgressBarOutline.BackColor = System.Drawing.Color.Transparent;
-            this.ProgressBarOutline.BackgroundImage = global::GameLauncher.Properties.Resources.progress_outline;
             this.ProgressBarOutline.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ProgressBarOutline.ErrorImage = null;
             this.ProgressBarOutline.InitialImage = null;

@@ -37,19 +37,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         /* Main Backgrounds */
 
-        public static Bitmap MainScreen = Properties.Resources.mainbackground;
+        public static Bitmap MainScreen = Properties.Resources.Background_Login;
 
         public static Color MainScreenTransparencyKey = Color.FromArgb(255, 0, 255);
 
-        public static Bitmap SettingsScreen = Properties.Resources.secondarybackground;
+        public static Bitmap SettingsScreen = Properties.Resources.Background_Settings;
 
         public static Color SettingsScreenTransparencyKey = Color.FromArgb(255, 0, 255);
 
         public static Color SplashScreenTransparencyKey = Color.FromArgb(0, 0, 25);
 
-        public static Bitmap SocialPanel = Properties.Resources.socialbg;
+        public static Bitmap SocialPanel = Properties.Resources.Background_Social;
 
-        public static Bitmap RegisterScreen = Properties.Resources.background_register;
+        public static Bitmap RegisterScreen = Properties.Resources.Background_Register;
 
         public static Color RegisterScreenTransparencyKey = Color.FromArgb(255, 0, 255);
 

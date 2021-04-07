@@ -9,7 +9,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /* Cached Results from Program.cs To be Referenced Quickly */
 
         /* Final output: 18362.1016 */
-        public static int CachedWindowsBuildNumber;
+        public static int CachedWindowsBuildNumber = 0;
         /* Final output: 10.0 */
         public static double CachedWindowsNumber;
 

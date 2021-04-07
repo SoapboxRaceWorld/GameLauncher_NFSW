@@ -10,6 +10,7 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 
 namespace GameLauncher.App
 {
@@ -80,7 +81,7 @@ namespace GameLauncher.App
 
             Thread newList = new Thread(() =>
             {
-                Thread.Sleep(200);
+                //Thread.Sleep(200);
                 this.BeginInvoke((MethodInvoker)delegate
                 {
                     while (servers.Count != 0)
@@ -94,7 +95,7 @@ namespace GameLauncher.App
 
                         try
                         {
-                            WebClient getdata = new WebClient();
+                            WebClientWithTimeout getdata = new WebClientWithTimeout();
                             GetServerInformation content = JsonConvert.DeserializeObject<GetServerInformation>(getdata.DownloadString(serverurl));
 
                             if (content == null)
@@ -114,21 +115,28 @@ namespace GameLauncher.App
                                 /* PING */
                                 if (!DetectLinux.LinuxDetected())
                                 {
-                                    Ping pingSender = new Ping();
-                                    Uri StringToUri = new Uri(serverurl);
-                                    pingSender.SendAsync(StringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
-                                    pingSender.PingCompleted += (sender3, e3) => {
-                                        PingReply reply = e3.Reply;
+                                    try
+                                    {
+                                        Ping pingSender = new Ping();
+                                        Uri StringToUri = new Uri(serverurl);
+                                        pingSender.SendAsync(StringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
+                                        pingSender.PingCompleted += (sender3, e3) => {
+                                            PingReply reply = e3.Reply;
 
-                                        if (reply.Status == IPStatus.Success && servername != "Offline Built-In Server")
-                                        {
-                                            ServerListRenderer.Items[serverid].SubItems[5].Text = reply.RoundtripTime + "ms";
-                                        }
-                                        else
-                                        {
-                                            ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
-                                        }
-                                    };
+                                            if (reply.Status == IPStatus.Success && servername != "Offline Built-In Server")
+                                            {
+                                                ServerListRenderer.Items[serverid].SubItems[5].Text = reply.RoundtripTime + "ms";
+                                            }
+                                            else
+                                            {
+                                                ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                                            }
+                                        };
+                                    }
+                                    catch
+                                    {
+                                        ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                                    }
                                 }
                                 else
                                 {

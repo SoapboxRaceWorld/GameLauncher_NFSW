@@ -538,7 +538,7 @@ namespace GameLauncher.App
             this.MaximizeBox = false;
             this.Name = "SettingsScreen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Settings - GameLauncher";
+            this.Text = "Settings - SBRW Launcher";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.Load += new System.EventHandler(this.SettingsScreen_Load);
             this.ResumeLayout(false);

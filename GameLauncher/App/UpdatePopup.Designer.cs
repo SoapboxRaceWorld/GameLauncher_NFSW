@@ -161,7 +161,7 @@ namespace GameLauncher.App
             this.Name = "UpdatePopup";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "GameLauncher - Update Available";
+            this.Text = "Update Available - SBRW Launcher";
             this.TopMost = true;
             this.ChangelogBox.ResumeLayout(false);
             this.ChangelogBox.PerformLayout();

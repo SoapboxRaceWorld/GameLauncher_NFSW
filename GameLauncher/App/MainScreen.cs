@@ -67,7 +67,7 @@ namespace GameLauncher
         private Thread _nfswstarted;
 
         private DateTime _downloadStartTime;
-        private readonly Downloader _downloader;
+        private Downloader _downloader;
 
         public string _serverWebsiteLink = "";
         public string _serverFacebookLink = "";
@@ -108,106 +108,13 @@ namespace GameLauncher
 
         public MainScreen()
         {
-            ParseUri uri = new ParseUri(Environment.GetCommandLineArgs());
-
-            if (uri.IsDiscordPresent())
-            {
-                Notification.Visible = true;
-                Notification.BalloonTipIcon = ToolTipIcon.Info;
-                Notification.BalloonTipTitle = "SBRW Launcher";
-                Notification.BalloonTipText = "Discord features are not yet completed.";
-                Notification.ShowBalloonTip(5000);
-                Notification.Dispose();
-            }
-
-            /* Run the API Checks to Make Sure it Visually Displayed Correctly */
-            if (FunctionStatus.IsVisualAPIsChecked != true)
-            {
-                VisualsAPIChecker.PingAPIStatus();
-            }
-
-            Log.Visuals("CORE: Entered mainScreen");
-
-            if (DetectLinux.LinuxDetected())
-            {
-                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-            }
-
-            _downloader = new Downloader(this, 3, 2, 16)
-            {
-                ProgressUpdated = new ProgressUpdated(OnDownloadProgress),
-                DownloadFinished = new DownloadFinished(DownloadTracksFiles),
-                DownloadFailed = new DownloadFailed(OnDownloadFailed),
-                ShowMessage = new ShowMessage(OnShowMessage),
-                ShowExtract = new ShowExtract(OnShowExtract)
-            };
-
-            Log.Visuals("CORE: InitializeComponent");
             InitializeComponent();
-
-            Log.Visuals("CORE: Applying Fonts & Theme");
             SetVisuals();
-
-            _disableProxy = (FileSettingsSave.Proxy == "1");
-            _disableDiscordRPC = (FileSettingsSave.RPC == "1");
-            Log.Debug("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + _disableProxy);
-
-            Log.Visuals("CORE: Disabling MaximizeBox");
-            MaximizeBox = false;
-            Log.Visuals("CORE: Setting Styles");
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
-
-            this.Load += new EventHandler(MainScreen_Load);
-
-            this.Shown += (x, y) =>
-            {
-                new Thread(() =>
-                {
-                    DiscordLauncherPresense.Update();
-
-                    /* Let's fetch all servers */
-                    List<ServerList> allServs = ServerListUpdater.CleanList.FindAll(i => string.Equals(i.IsSpecial, false));
-                    allServs.ForEach(delegate (ServerList server) {
-                        try
-                        {
-                            WebClient pingServer = new WebClient();
-                            pingServer.DownloadString(server.IpAddress + "/GetServerInformation");
-
-                            if (!InformationCache.ServerStatusBook.ContainsKey(server.Id))
-                            {
-                                InformationCache.ServerStatusBook.Add(server.Id, 1);
-                            }
-                        }
-                        catch
-                        {
-                            if (!InformationCache.ServerStatusBook.ContainsKey(server.Id))
-                            {
-                                InformationCache.ServerStatusBook.Add(server.Id, 0);
-                            }
-                        }
-                    });
-                }).Start();
-            };
-
-            if (!DetectLinux.LinuxDetected())
-            {
-                Log.Visuals("CORE: Setting cursor.");
-                string temporaryFile = Path.GetTempFileName();
-                File.WriteAllBytes(temporaryFile, ExtractResource.AsByte("GameLauncher.SoapBoxModules.cursor.ani"));
-                Cursor mycursor = new Cursor(Cursor.Current.Handle);
-                IntPtr colorcursorhandle = User32.LoadCursorFromFile(temporaryFile);
-                mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
-                Cursor = mycursor;
-                File.Delete(temporaryFile);
-            }
         }
 
         private void MainScreen_Load(object sender, EventArgs e)
         {
             Log.Visuals("CORE: Entering mainScreen_Load");
-
-            Log.Visuals("CORE: Setting WindowName");
-            Text = "SBRW Launcher: v" + Application.ProductVersion;
 
             FunctionStatus.CenterScreen(this);
             Application.OpenForms["MainScreen"].Activate();
@@ -2303,6 +2210,12 @@ namespace GameLauncher
         private void SetVisuals()
         {
             /*******************************/
+            /* Set Window Name              /
+            /*******************************/
+
+            Text = "SBRW Launcher: v" + Application.ProductVersion;
+
+            /*******************************/
             /* Set Font                     /
             /*******************************/
 
@@ -2363,6 +2276,8 @@ namespace GameLauncher
             /* Set Theme Colors & Images     /
             /********************************/
 
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
+
             /* Set Background with Transparent Key */
             BackgroundImage = Theming.MainScreen;
             TransparencyKey = Theming.MainScreenTransparencyKey;
@@ -2402,6 +2317,8 @@ namespace GameLauncher
             MainEmail.ForeColor = Theming.FivithTextForeColor;
             MainPassword.BackColor = Theming.Input;
             MainPassword.ForeColor = Theming.FivithTextForeColor;
+
+            ServerInfoPanel.BackgroundImage = Theming.SocialPanel;
 
             ServerShutDown.ForeColor = Theming.SecondaryTextForeColor;
             SceneryGroupText.ForeColor = Theming.SecondaryTextForeColor;
@@ -2480,6 +2397,79 @@ namespace GameLauncher
             RegisterText.MouseUp += new MouseEventHandler(Greenbutton_hover_MouseUp);
             RegisterText.MouseDown += new MouseEventHandler(Greenbutton_click_MouseDown);
             RegisterText.Click += new EventHandler(FunctionEvents.RegisterText_LinkClicked);
+
+            _downloader = new Downloader(this, 3, 2, 16)
+            {
+                ProgressUpdated = new ProgressUpdated(OnDownloadProgress),
+                DownloadFinished = new DownloadFinished(DownloadTracksFiles),
+                DownloadFailed = new DownloadFailed(OnDownloadFailed),
+                ShowMessage = new ShowMessage(OnShowMessage),
+                ShowExtract = new ShowExtract(OnShowExtract)
+            };
+
+            Load += new EventHandler(MainScreen_Load);
+
+            /********************************/
+            /* Functions                     /
+            /********************************/
+
+            /* Run the API Checks to Make Sure it Visually Displayed Correctly */
+            if (FunctionStatus.IsVisualAPIsChecked != true)
+            {
+                VisualsAPIChecker.PingAPIStatus();
+            }
+
+            _disableProxy = (FileSettingsSave.Proxy == "1");
+            _disableDiscordRPC = (FileSettingsSave.RPC == "1");
+            Log.Debug("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + _disableProxy);
+
+            Shown += (x, y) =>
+            {
+                new Thread(() =>
+                {
+                    DiscordLauncherPresense.Update();
+
+                    /* Let's fetch all servers */
+                    List<ServerList> allServs = ServerListUpdater.CleanList.FindAll(i => string.Equals(i.IsSpecial, false));
+                    allServs.ForEach(delegate (ServerList server) {
+                        try
+                        {
+                            WebClientWithTimeout pingServer = new WebClientWithTimeout();
+                            pingServer.DownloadString(server.IpAddress + "/GetServerInformation");
+
+                            if (!InformationCache.ServerStatusBook.ContainsKey(server.Id))
+                            {
+                                InformationCache.ServerStatusBook.Add(server.Id, 1);
+                            }
+                        }
+                        catch
+                        {
+                            if (!InformationCache.ServerStatusBook.ContainsKey(server.Id))
+                            {
+                                InformationCache.ServerStatusBook.Add(server.Id, 0);
+                            }
+                        }
+                    });
+                }).Start();
+            };
+
+            if (!DetectLinux.LinuxDetected())
+            {
+                try
+                {
+                    string CursorFile = Path.GetTempFileName();
+                    File.WriteAllBytes(CursorFile, ExtractResource.AsByte("GameLauncher.Resources.Cursors.Cursor.ani"));
+                    Cursor mycursor = new Cursor(Cursor.Current.Handle);
+                    IntPtr colorcursorhandle = User32.LoadCursorFromFile(CursorFile);
+                    mycursor.GetType().InvokeMember("handle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, mycursor, new object[] { colorcursorhandle });
+                    Cursor = mycursor;
+                    File.Delete(CursorFile);
+                }
+                catch (Exception error)
+                {
+                    Log.Error("LAUNCHER: " + error.Message);
+                }
+            }
         }
     }
     /* Moved 7 Unused Code to Gist */

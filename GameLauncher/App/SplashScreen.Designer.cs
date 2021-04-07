@@ -56,7 +56,7 @@ namespace GameLauncher.App.Classes
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Splash Screen - GameLauncher";
+            this.Text = "Splash Screen - SBRW Launcher";
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(25)))));
             this.Load += new System.EventHandler(this.SplashScreen_Load);

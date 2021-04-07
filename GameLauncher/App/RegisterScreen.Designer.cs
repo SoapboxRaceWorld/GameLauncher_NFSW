@@ -224,7 +224,7 @@ namespace GameLauncher.App
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "RegisterScreen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Register - GameLauncher";
+            this.Text = "Register - SBRW Launcher";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             ((System.ComponentModel.ISupportInitialize)(this.RegisterEmailBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RegisterPasswordBorder)).EndInit();

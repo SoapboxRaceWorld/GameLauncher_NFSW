@@ -13,9 +13,19 @@ namespace GameLauncher.App.Classes
         {
             InitializeComponent();
 
+            /********************************/
+            /* Set Theme Colors & Images     /
+            /********************************/
+
             BackColor = Theming.SplashScreenTransparencyKey;
             TransparencyKey = Theming.SplashScreenTransparencyKey;
             BackgroundImage = Theming.LogoSplash;
+
+            /*******************************/
+            /* Set Window Name              /
+            /*******************************/
+
+            Text = "Splash Screen - SBRW Launcher: v" + Application.ProductVersion;
         }
 
         private void SplashScreen_Load(object sender, EventArgs e)

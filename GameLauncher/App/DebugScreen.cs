@@ -30,6 +30,12 @@ namespace GameLauncher.App
         private void ApplyEmbeddedFonts()
         {
             /*******************************/
+            /* Set Window Name              /
+            /*******************************/
+
+            Text = "Debug - SBRW Launcher: v" + Application.ProductVersion;
+
+            /*******************************/
             /* Set Font                     /
             /*******************************/
 

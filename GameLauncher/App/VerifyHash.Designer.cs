@@ -172,7 +172,7 @@ namespace GameLauncher.App
             this.MinimizeBox = false;
             this.Name = "VerifyHash";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "VerifyHash";
+            this.Text = "VerifyHash - SBRW Launcher";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.VerifyHash_Load);
             this.ResumeLayout(false);
