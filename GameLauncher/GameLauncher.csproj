@@ -300,6 +300,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App\Classes\LauncherCore\Visuals\FontWrapper.cs" />
+    <Compile Include="Settings.cs" />
     <EmbeddedResource Include="App\AddServer.resx">
       <DependentUpon>AddServer.cs</DependentUpon>
       <SubType>Designer</SubType>
