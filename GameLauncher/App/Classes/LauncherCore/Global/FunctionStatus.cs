@@ -54,6 +54,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         /* Holds a collection of Server Status of Servers */
         public static Dictionary<string, int> ServerStatusBook = new Dictionary<string, int>();
+
+        /* Selected Server Force Restart Timer */
+        public static int RestartTimer = (SelectedServerJSON.secondsToShutDown != 0) ? SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
     }
 
     /* This is Used to call Certain Functions (Such as Completion Status or Function Callbacks) */
@@ -76,6 +79,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         /* Sets Conditional to If its Possible to Close Game */
         public static Boolean CanCloseGame = true;
+
+        /* If In-Game OverLays was Used */
+        public static bool ExternalToolsWasUsed = false;
+
+        /* Sets Conditional if Game was Closed (By Timer) */
+        public static bool GameKilledBySpeedBugCheck = false;
 
         /* Detect and Set System Language */
         public static CultureInfo Lang = CultureInfo.CurrentUICulture;

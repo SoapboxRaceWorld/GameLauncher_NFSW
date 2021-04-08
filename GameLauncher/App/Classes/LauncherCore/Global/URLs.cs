@@ -31,12 +31,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             woplserver + "/cdn_list.json"
         };
 
-        public static string[] anticheatreporting = new string[]
+        public static string[] AntiCheatFD = new string[]
         {
             mainserver + "/report",
             "http://anticheat.worldonline.pl/report",
             "http://la-sbrw.davidcarbon.download/report?",
             "http://la2-sbrw.davidcarbon.download/report?"
+        };
+
+        public static string[] AntiCheatSD = new string[]
+        {
+            "http://la-sbrw.davidcarbon.download/report-manual?",
+            "http://la2-sbrw.davidcarbon.download/report-manual?"
         };
     }
 }

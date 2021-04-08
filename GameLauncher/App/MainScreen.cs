@@ -52,7 +52,6 @@ namespace GameLauncher
         private bool _skipServerTrigger;
         private bool _playenabled;
         private bool _isDownloading = true;
-        private bool _gameKilledBySpeedBugCheck = false;
         private bool _disableLogout = false;
 
         public static String getTempNa = Path.GetTempFileName();
@@ -1257,15 +1256,16 @@ namespace GameLauncher
             AntiCheat.process_id = nfswProcess.Id;
 
             /* TIMER HERE */
-            int secondsToShutDown = (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
             System.Timers.Timer shutdowntimer = new System.Timers.Timer();
             shutdowntimer.Elapsed += (x2, y2) =>
             {
-                if (secondsToShutDown == 300)
+                int ProcessID = 0;
+
+                if (InformationCache.RestartTimer == 300)
                 {
                     Notification.Visible = true;
                     Notification.BalloonTipIcon = ToolTipIcon.Info;
-                    Notification.BalloonTipTitle = "SpeedBug Fix - " + InformationCache.SelectedServerData.Name;
+                    Notification.BalloonTipTitle = "Force Restart - " + InformationCache.SelectedServerData.Name;
                     Notification.BalloonTipText = "Game is going to shut down in 5 minutes. Please restart it manually before the launcher does it.";
                     Notification.ShowBalloonTip(5000);
                     Notification.Dispose();
@@ -1273,19 +1273,34 @@ namespace GameLauncher
 
                 Process[] allOfThem = Process.GetProcessesByName("nfsw");
 
-                if (secondsToShutDown <= 0)
+                if (InformationCache.RestartTimer <= 0)
                 {
                     if (FunctionStatus.CanCloseGame == true)
                     {
                         foreach (var oneProcess in allOfThem)
                         {
-                            _gameKilledBySpeedBugCheck = true;
+                            FunctionStatus.GameKilledBySpeedBugCheck = true;
                             Process.GetProcessById(oneProcess.Id).Kill();
                         }
                     }
                     else
                     {
-                        secondsToShutDown = 0;
+                        InformationCache.RestartTimer = 0;
+                    }
+                }
+
+                if (FunctionStatus.DisableProxy == true)
+                {
+                    if (ProcessID == 0)
+                    {
+                        ProcessID++;
+                        AntiCheat.LocalEnablechecks();
+                    }
+
+                    if (FunctionStatus.ExternalToolsWasUsed == true && ProcessID == 1)
+                    {
+                        ProcessID++;
+                        AntiCheat.DisableChecks();
                     }
                 }
 
@@ -1294,7 +1309,7 @@ namespace GameLauncher
                 foreach (var oneProcess in allOfThem)
                 {
                     long p = oneProcess.MainWindowHandle.ToInt64();
-                    TimeSpan t = TimeSpan.FromSeconds(secondsToShutDown);
+                    TimeSpan t = TimeSpan.FromSeconds(InformationCache.RestartTimer);
 
                     /* Proper Formatting */
                     List<string> list_of_times = new List<string>();
@@ -1313,7 +1328,7 @@ namespace GameLauncher
                         secondsToShutDownNamed = list_of_times[0];
                     }
 
-                    if (secondsToShutDown == 0)
+                    if (InformationCache.RestartTimer == 0)
                     {
                         secondsToShutDownNamed = "Waiting for event to finish.";
                     }
@@ -1321,7 +1336,7 @@ namespace GameLauncher
                     User32.SetWindowText((IntPtr)p, "NEED FOR SPEED™ WORLD | Server: " + InformationCache.SelectedServerData.Name + " | " + DiscordGamePresence.LauncherRPC + " | Force Restart In: " + secondsToShutDownNamed);
                 }
 
-                --secondsToShutDown;
+                --InformationCache.RestartTimer;
             };
 
             shutdowntimer.Interval = 1000;
@@ -1337,14 +1352,28 @@ namespace GameLauncher
                     _nfswPid = 0;
                     var exitCode = nfswProcess.ExitCode;
 
-                    if (_gameKilledBySpeedBugCheck == true) exitCode = 2137;
+                    if (FunctionStatus.GameKilledBySpeedBugCheck == true)
+                    {
+                        if (FunctionStatus.ExternalToolsWasUsed == true) exitCode = 2017;
+                        else exitCode = 2137;
+                    }
 
                     if (exitCode == 0)
                     {
+                        if (AntiCheat.thread != null)
+                        {
+                            AntiCheat.thread.Abort();
+                        }
+
                         CloseBTN_Click(null, null);
                     }
                     else
                     {
+                        if (AntiCheat.thread != null)
+                        {
+                            AntiCheat.thread.Abort();
+                        }
+
                         x.BeginInvoke(new Action(() =>
                         {
                             x.WindowState = FormWindowState.Normal;
@@ -1360,6 +1389,7 @@ namespace GameLauncher
                             if (exitCode == 1) errorMsg = "The process nfsw.exe was killed via Task Manager";
                             if (exitCode == 69) errorMsg = "AllocationAssistant encountered an 'Out of Memory' condition";
                             if (exitCode == 2137) errorMsg = "Launcher killed your game to prevent SpeedBugging.";
+                            if (exitCode == 2017) errorMsg = "Server replied with Code: " + Tokens.UserId + " (0x" + exitCode.ToString("X") + ")";
                             if (exitCode == -3) errorMsg = "The Server was unable to resolve the request";
                             if (exitCode == -4) errorMsg = "Another instance is already executed";
                             if (exitCode == -5) errorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
@@ -1488,7 +1518,7 @@ namespace GameLauncher
                     DiscordLauncherPresense.Status("Download ModNet", null);
 
                     /* Get Remote ModNet list to process for checking required ModNet files are present and current */
-                    String modules = new WebClient().DownloadString(URLs.modnetserver + "/launcher-modules/modules.json");
+                    String modules = new WebClientWithTimeout().DownloadString(URLs.modnetserver + "/launcher-modules/modules.json");
                     string[] modules_newlines = modules.Split(new string[] { "\n" }, StringSplitOptions.None);
                     foreach (String modules_newline in modules_newlines)
                     {
@@ -1511,7 +1541,7 @@ namespace GameLauncher
                                 File.Delete(FileSettingsSave.GameInstallation + "\\" + ModNetList);
                             }
 
-                            WebClient newModNetFilesDownload = new WebClient();
+                            WebClientWithTimeout newModNetFilesDownload = new WebClientWithTimeout();
                             newModNetFilesDownload.DownloadFile(URLs.modnetserver + "/launcher-modules/" + ModNetList, FileSettingsSave.GameInstallation + "/" + ModNetList);
                         }
                         else
@@ -1532,13 +1562,13 @@ namespace GameLauncher
                     String remoteEventsFile = String.Empty;
                     try
                     {
-                        remoteCarsFile = new WebClient().DownloadString(json2.basePath + "/cars.json");
+                        remoteCarsFile = new WebClientWithTimeout().DownloadString(json2.basePath + "/cars.json");
                     }
                     catch { }
 
                     try
                     {
-                        remoteEventsFile = new WebClient().DownloadString(json2.basePath + "/events.json");
+                        remoteEventsFile = new WebClientWithTimeout().DownloadString(json2.basePath + "/events.json");
                     }
                     catch { }
 
@@ -1568,7 +1598,7 @@ namespace GameLauncher
                     /* get new index */
                     Uri newIndexFile = new Uri(json2.basePath + "/index.json");
                     Log.Core("CORE: Loading Server Mods List");
-                    String jsonindex = new WebClient().DownloadString(newIndexFile);
+                    String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
 
                     IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
 
