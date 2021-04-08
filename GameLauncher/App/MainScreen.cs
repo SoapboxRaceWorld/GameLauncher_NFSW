@@ -544,6 +544,8 @@ namespace GameLauncher
             }
 
             WebClient client = new WebClient();
+            client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+
             var artificialPingStart = Time.GetStamp();
             VerticalBanner.BackColor = Color.Transparent;
 
@@ -906,6 +908,7 @@ namespace GameLauncher
                     if (!string.IsNullOrEmpty(verticalImageUrl))
                     {
                         WebClient client2 = new WebClient();
+                        client2.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                         Uri stringToUri3 = new Uri(verticalImageUrl);
                         client2.DownloadDataAsync(stringToUri3);
                         client2.DownloadProgressChanged += (sender4, e4) =>
@@ -1437,6 +1440,7 @@ namespace GameLauncher
                 try
                 {
                     WebClient client2 = new WebClient();
+                    client2.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
 
                     client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged_RELOADED);
                     client2.DownloadFileCompleted += (test, stuff) =>
