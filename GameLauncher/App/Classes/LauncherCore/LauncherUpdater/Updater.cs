@@ -45,7 +45,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             {
                 try
                 {
-                    var json_data = Client.DownloadString(URLs.mainserver + "/update.php?version=" + Application.ProductVersion);
+                    var json_data = Client.DownloadString(URLs.Main + "/update.php?version=" + Application.ProductVersion);
                     UpdateCheckResponse MAPI = JsonConvert.DeserializeObject<UpdateCheckResponse>(json_data);
 
                     if (MAPI.Payload.LatestVersion != null)
@@ -69,7 +69,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 {
                     try
                     {
-                        var json_data = Client.DownloadString("http://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
+                        var json_data = Client.DownloadString(URLs.GitHub_Launcher);
                         GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
 
                         if (GHAPI.TagName != null)

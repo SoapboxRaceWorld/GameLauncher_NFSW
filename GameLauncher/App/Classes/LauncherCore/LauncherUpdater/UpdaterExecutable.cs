@@ -1,4 +1,5 @@
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using Newtonsoft.Json;
@@ -34,7 +35,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 {
                     try
                     {
-                        var json_data = Client.DownloadString("http://api.github.com/repos/SoapboxRaceWorld/GameLauncherUpdater/releases/latest");
+                        var json_data = Client.DownloadString(URLs.GitHub_Updater);
                         GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
 
                         if (GHAPI.TagName != null)

@@ -25,7 +25,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
         {
             List<CDNList> cdnInfos = new List<CDNList>();
 
-            foreach (var cdnListURL in URLs.cdnlisturl)
+            foreach (var cdnListURL in URLs.CDNList)
             {
                 try
                 {

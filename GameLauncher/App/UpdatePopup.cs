@@ -21,7 +21,7 @@ namespace GameLauncher.App
                 InitializeComponent();
                 SetVisuals();
 
-                ChangelogText.Text = new WebClient().DownloadString(URLs.mainserver + "/launcher/changelog");
+                ChangelogText.Text = new WebClient().DownloadString(URLs.Main + "/launcher/changelog");
                 ChangelogText.Select(0, 0);
                 ChangelogText.SelectionLength = 0;
                 ChangelogText.TabStop = false;

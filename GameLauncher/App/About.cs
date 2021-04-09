@@ -95,7 +95,7 @@ namespace GameLauncher.App
             try
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load(URLs.secondstaticapiserver + "/about.xml");
+                doc.Load(URLs.Static_Alt + "/about.xml");
 
                 foreach (XmlNode node in doc.DocumentElement)
                 {

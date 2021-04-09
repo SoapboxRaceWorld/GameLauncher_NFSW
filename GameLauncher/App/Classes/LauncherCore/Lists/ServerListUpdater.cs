@@ -23,7 +23,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
         {
             List<ServerList> serverInfos = new List<ServerList>();
 
-            foreach (var serverListURL in URLs.serverlisturl)
+            foreach (var serverListURL in URLs.ServerList)
             {
                 try
                 {

@@ -176,7 +176,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
         {
             try
             {
-                var mainsrv = DetectLinux.LinuxDetected() ? URLs.mainserver.Replace("https", "http") : URLs.mainserver;
+                var mainsrv = DetectLinux.LinuxDetected() ? URLs.Main.Replace("https", "http") : URLs.Main;
                 Url url = new Url(mainsrv + "/error-report");
                 await url.PostJsonAsync(new
                 {

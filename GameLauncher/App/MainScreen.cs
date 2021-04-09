@@ -1522,7 +1522,7 @@ namespace GameLauncher
                     DiscordLauncherPresense.Status("Download ModNet", null);
 
                     /* Get Remote ModNet list to process for checking required ModNet files are present and current */
-                    String modules = new WebClientWithTimeout().DownloadString(URLs.modnetserver + "/launcher-modules/modules.json");
+                    String modules = new WebClientWithTimeout().DownloadString(URLs.ModNet + "/launcher-modules/modules.json");
                     string[] modules_newlines = modules.Split(new string[] { "\n" }, StringSplitOptions.None);
                     foreach (String modules_newline in modules_newlines)
                     {
@@ -1546,7 +1546,7 @@ namespace GameLauncher
                             }
 
                             WebClientWithTimeout newModNetFilesDownload = new WebClientWithTimeout();
-                            newModNetFilesDownload.DownloadFile(URLs.modnetserver + "/launcher-modules/" + ModNetList, FileSettingsSave.GameInstallation + "/" + ModNetList);
+                            newModNetFilesDownload.DownloadFile(URLs.ModNet + "/launcher-modules/" + ModNetList, FileSettingsSave.GameInstallation + "/" + ModNetList);
                         }
                         else
                         {
@@ -2115,12 +2115,9 @@ namespace GameLauncher
         {
             try
             {
-                File.WriteAllBytes(FileSettingsSave.GameInstallation + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
+                File.WriteAllBytes(FileSettingsSave.GameInstallation + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.Resources.Bootscreen.BootFlow.gfx"));
             }
-            catch
-            {
-                // ignored
-            }
+            catch { }
 
             if (FileSettingsSave.GameIntegrity == "Unknown")
             {

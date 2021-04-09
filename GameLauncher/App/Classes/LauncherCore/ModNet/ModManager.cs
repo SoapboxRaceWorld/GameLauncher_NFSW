@@ -94,7 +94,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
         {
             using (var wc = new WebClient())
             {
-                var data = wc.DownloadString(URLs.mainserver + $"/servers/{server}/mods");
+                var data = wc.DownloadString(URLs.Main + $"/servers/{server}/mods");
 
                 return JsonConvert.DeserializeObject<List<ModInfo>>(data);
             }
@@ -110,7 +110,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
 
             using (var wc = new WebClient())
             {
-                var data = wc.DownloadString(URLs.mainserver + $"/servers/{serverKey}");
+                var data = wc.DownloadString(URLs.Main + $"/servers/{serverKey}");
                 serverInfo = JsonConvert.DeserializeObject<ServerList>(data);
             }
 
