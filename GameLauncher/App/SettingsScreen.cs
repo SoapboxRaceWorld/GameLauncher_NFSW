@@ -586,7 +586,7 @@ namespace GameLauncher.App
 
                         var language = userSettingsXml.SelectSingleNode("Settings/UI/Language");
                         language.InnerText = ((LangObject)SettingsLanguage.SelectedItem).XML_Value;
-
+                        /* Leave "Tracks" in for users who may be propigating an older/carried on UserSettings file */
                         var tracks = userSettingsXml.SelectSingleNode("Settings/UI/Tracks");
                         tracks.InnerText = "1";
 
@@ -604,6 +604,7 @@ namespace GameLauncher.App
 
                         chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).INI_Value + "</DefaultChatGroup>";
                         ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
+                        /* Leave "Tracks" in for users who may be propigating an older/carried on UserSettings file */
                         ui.InnerXml += "<Tracks Type=\"int\">1</Tracks>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
@@ -622,6 +623,7 @@ namespace GameLauncher.App
 
                         chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).INI_Value + "</DefaultChatGroup>";
                         ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
+                        /* Leave "Tracks" in for users who may be propigating an older/carried on UserSettings file */
                         ui.InnerXml += "<Tracks Type=\"int\">1</Tracks>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));

@@ -2113,6 +2113,15 @@ namespace GameLauncher
 
         private void OnDownloadFinished()
         {
+            try
+            {
+                File.WriteAllBytes(FileSettingsSave.GameInstallation + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.SoapBoxModules.BootFlow.gfx"));
+            }
+            catch
+            {
+                // ignored
+            }
+
             if (FileSettingsSave.GameIntegrity == "Unknown")
             {
                 FileSettingsSave.GameIntegrity = "Good";

@@ -374,7 +374,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Bootscreen\BootFlow.gfx" />
     <EmbeddedResource Include="Resources\Cursors\Cursor.ani" />
+    <EmbeddedResource Include="Resources\UserSettings\UserSettings.xml" />
     <None Include="Resources\ProgressBars\progress_outline.png" />
     <None Include="Resources\Logo\logo_main.png" />
     <None Include="Resources\Logo\logo_splash.png" />

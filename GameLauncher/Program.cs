@@ -331,6 +331,12 @@ namespace GameLauncher
                 Log.System("SYSTEM: Driver Version: " + HardwareInfo.GPU.DriverVersion());
             }
 
+            /* Create Default Configuration Files (if they don't already exist) */
+            string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
+            if (!File.Exists(_userSettings))
+            {
+                File.WriteAllBytes(_userSettings, ExtractResource.AsByte("GameLauncher.Resources.UserSettings.UserSettings.xml"));
+            }
             FileSettingsSave.NullSafeSettings();
             FileAccountSave.NullSafeAccount();
 
