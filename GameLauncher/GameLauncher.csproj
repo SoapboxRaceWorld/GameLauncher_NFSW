@@ -304,7 +304,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Settings.cs" />
     <EmbeddedResource Include="App\AddServer.resx">
       <DependentUpon>AddServer.cs</DependentUpon>
       <SubType>Designer</SubType>
