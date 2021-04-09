@@ -100,10 +100,12 @@ namespace GameLauncher.App
             SettingsAboutButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsGamePathText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsGameFiles.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsVFilesButton.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsCDNText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsCDNPick.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
             SettingsLanguageText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsLanguage.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            SettingsUEditorButton.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsClearCrashLogsButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             SettingsClearCommunicationLogButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             SettingsClearServerModCacheButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
@@ -121,7 +123,6 @@ namespace GameLauncher.App
             SettingsMainCDNText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsBkupSrvText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsBkupCDNText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            SettingsVFilesButton.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsLauncherVersion.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsSave.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsCancel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
@@ -147,6 +148,11 @@ namespace GameLauncher.App
             SettingsVFilesButton.BackColor = Theming.YellowBackColorButton;
             SettingsVFilesButton.FlatAppearance.BorderColor = Theming.YellowBorderColorButton;
             SettingsVFilesButton.FlatAppearance.MouseOverBackColor = Theming.YellowMouseOverBackColorButton;
+
+            SettingsUEditorButton.ForeColor = Theming.YellowForeColorButton;
+            SettingsUEditorButton.BackColor = Theming.YellowBackColorButton;
+            SettingsUEditorButton.FlatAppearance.BorderColor = Theming.YellowBorderColorButton;
+            SettingsUEditorButton.FlatAppearance.MouseOverBackColor = Theming.YellowMouseOverBackColorButton;
 
             SettingsClearCrashLogsButton.ForeColor = Theming.BlueForeColorButton;
             SettingsClearCrashLogsButton.BackColor = Theming.BlueBackColorButton;
@@ -658,6 +664,12 @@ namespace GameLauncher.App
         private void SettingsVFilesButton_Click(object sender, EventArgs e)
         {
             new VerifyHash().ShowDialog();
+        }
+
+        /* Settings UserSettings XML Editor */
+        private void SettingsUEditorButton_Click(object sender, EventArgs e)
+        {
+            new USXEditor().ShowDialog();
         }
 
         /* Settings Clear ModNet Cache */

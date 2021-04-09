@@ -7,8 +7,6 @@ using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Globalization;
-using System.Reflection;
-using WindowsFirewallHelper;
 using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.InsiderKit;
