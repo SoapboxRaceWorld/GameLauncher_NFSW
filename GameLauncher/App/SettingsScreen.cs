@@ -589,7 +589,7 @@ namespace GameLauncher.App
                     {
                         File.Delete(_userSettings);
 
-                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
+                        var persistentValue = userSettingsXml.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
                         var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
 
                         var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
@@ -606,7 +606,7 @@ namespace GameLauncher.App
                 {
                     try
                     {
-                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
+                        var persistentValue = userSettingsXml.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
                         var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
 
                         var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
