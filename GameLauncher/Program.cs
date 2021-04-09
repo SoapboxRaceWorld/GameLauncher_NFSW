@@ -290,6 +290,21 @@ namespace GameLauncher
             File.Delete("launcher.log");
             Log.StartLogging();
 
+            string LocalAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+            if (Directory.Exists(LocalAppData + "\\Soapbox_Race_World"))
+            {
+                Directory.Delete(LocalAppData + "\\Soapbox_Race_World", true);
+            }
+            if (Directory.Exists(LocalAppData + "\\SoapBoxRaceWorld"))
+            {
+                Directory.Delete(LocalAppData + "\\SoapBoxRaceWorld", true);
+            }
+            if (Directory.Exists(LocalAppData + "\\WorldUnited.gg"))
+            {
+                Directory.Delete(LocalAppData + "\\WorldUnited.gg", true);
+            }
+
             if (EnableInsider.ShouldIBeAnInsider() == true)
             {
                 Log.Build("INSIDER: GameLauncher " + Application.ProductVersion + "_" + EnableInsider.BuildNumber());
