@@ -589,11 +589,12 @@ namespace GameLauncher.App
                     {
                         File.Delete(_userSettings);
 
+                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
+                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
+
                         var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
                         var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
 
-                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
-                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
                         chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + InformationCache.CurrentLanguage + "</DefaultChatGroup>";
                         ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
 
@@ -605,11 +606,12 @@ namespace GameLauncher.App
                 {
                     try
                     {
+                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
+                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
+
                         var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
                         var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
 
-                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
-                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
                         chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + InformationCache.CurrentLanguage + "</DefaultChatGroup>";
                         ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
 
