@@ -581,8 +581,15 @@ namespace GameLauncher.App
                     try
                     {
                         userSettingsXml.Load(_userSettings);
+                        var chat = userSettingsXml.SelectSingleNode("Settings/PersistentValue/Chat/DefaultChatGroup");
+                        chat.InnerText = ((LangObject)SettingsLanguage.SelectedItem).INI_Value;
+
                         var language = userSettingsXml.SelectSingleNode("Settings/UI/Language");
                         language.InnerText = ((LangObject)SettingsLanguage.SelectedItem).XML_Value;
+
+                        var tracks = userSettingsXml.SelectSingleNode("Settings/UI/Tracks");
+                        tracks.InnerText = "1";
+
                         Log.Debug("1");
                     }
                     catch
@@ -595,8 +602,9 @@ namespace GameLauncher.App
                         var setting = persistentValue.AppendChild(userSettingsXml.CreateElement("Settings"));
                         var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
 
-                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + InformationCache.CurrentLanguage + "</DefaultChatGroup>";
+                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).INI_Value + "</DefaultChatGroup>";
                         ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
+                        ui.InnerXml += "<Tracks Type=\"int\">1</Tracks>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
                         Log.Debug("2");
@@ -612,8 +620,9 @@ namespace GameLauncher.App
                         var setting = persistentValue.AppendChild(userSettingsXml.CreateElement("Settings"));
                         var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
 
-                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + InformationCache.CurrentLanguage + "</DefaultChatGroup>";
+                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).INI_Value + "</DefaultChatGroup>";
                         ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
+                        ui.InnerXml += "<Tracks Type=\"int\">1</Tracks>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
                         Log.Debug("3");
