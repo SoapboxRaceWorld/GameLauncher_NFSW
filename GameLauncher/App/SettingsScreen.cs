@@ -592,7 +592,7 @@ namespace GameLauncher.App
                         var persistentValue = userSettingsXml.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
                         var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
 
-                        var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
+                        var setting = persistentValue.AppendChild(userSettingsXml.CreateElement("Settings"));
                         var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
 
                         chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + InformationCache.CurrentLanguage + "</DefaultChatGroup>";
@@ -609,7 +609,7 @@ namespace GameLauncher.App
                         var persistentValue = userSettingsXml.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
                         var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
 
-                        var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
+                        var setting = persistentValue.AppendChild(userSettingsXml.CreateElement("Settings"));
                         var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
 
                         chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + InformationCache.CurrentLanguage + "</DefaultChatGroup>";
