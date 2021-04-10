@@ -114,7 +114,7 @@ namespace GameLauncher
                             "Microsoft.WindowsAPICodePack.ShellExtensions.dll - 1.1.0.0",
                             "Nancy.dll - 2.0.0",
                             "Nancy.Hosting.Self.dll - 2.0.0",
-                            "Newtonsoft.Json.dll - 12.0.3",
+                            "Newtonsoft.Json.dll - 13.0.1",
                             "System.Runtime.InteropServices.RuntimeInformation.dll - 4.6.24705.01. Commit Hash: 4d1af962ca0fede10beb01d197367c2f90e92c97",
                             "System.ValueTuple.dll - 4.6.26515.06 @BuiltBy: dlab-DDVSOWINAGE059 @Branch: release/2.1 @SrcCode: https://github.com/dotnet/corefx/tree/30ab651fcb4354552bd4891619a0bdd81e0ebdbf",
                             "WindowsFirewallHelper.dll - 2.0.4.70-beta2"
