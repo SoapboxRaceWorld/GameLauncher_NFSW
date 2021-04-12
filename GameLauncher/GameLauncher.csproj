@@ -440,6 +440,7 @@
     <None Include="Resources\Buttons\greenbutton_hover.png" />
     <None Include="Resources\Buttons\greenbutton.png" />
     <None Include="Resources\Backgrounds\Background_Settings.png" />
+    <None Include="Resources\Backgrounds\Background_USXE.png" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

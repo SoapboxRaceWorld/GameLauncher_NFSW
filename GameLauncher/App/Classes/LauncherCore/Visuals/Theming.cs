@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -53,6 +53,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         public static Color RegisterScreenTransparencyKey = Color.FromArgb(255, 0, 255);
 
+        public static Bitmap USXEEditor = Properties.Resources.Background_USXE;
 
         /* MainScreen Icons */
 
