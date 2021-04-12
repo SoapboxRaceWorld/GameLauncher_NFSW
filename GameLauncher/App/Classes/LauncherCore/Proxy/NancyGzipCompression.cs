@@ -59,6 +59,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             {
                 Log.Error("PROXY: " + error.Message);
             }
+
+            /* Different Solutions With Different OoM Errors */
+            /* https://gist.github.com/DavidCarbon/e0b37e7bc58b5e1a46f6dfedc87c966d */
         }
 
         private static bool RequestIsGzipCompatible(Request request)

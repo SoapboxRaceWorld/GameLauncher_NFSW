@@ -50,6 +50,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             if (!path.StartsWith("/nfsw/Engine.svc"))
             {
+                Log.Error("PROXY HANDLER: Invalid request path " +  path);
                 throw new ProxyException("Invalid request path: " + path);
             }
 
@@ -115,7 +116,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     responseMessage = await request.DeleteAsync(cancellationToken);
                     break;
                 default:
-                    Log.Error("PROXY HANDLER: Cannot handle request method: " + method);
+                    Log.Error("PROXY HANDLER: Cannot handle request method " + method);
                     throw new ProxyException("Cannot handle request method: " + method);
             }
 
