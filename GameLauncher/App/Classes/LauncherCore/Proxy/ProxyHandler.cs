@@ -21,6 +21,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public class ProxyHandler : IApplicationStartup
     {
+        private UTF8Encoding UTF8 = new UTF8Encoding(false);
+
         public void Initialize(IPipelines pipelines)
         {
             pipelines.BeforeRequest += ProxyRequest;
@@ -75,7 +77,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     header.Key == "Host" ? resolvedUrl.ToUri().Host : header.Value.First());
             }
 
-            var requestBody = method != "GET" ? context.Request.Body.AsString(Encoding.UTF8) : "";
+            var requestBody = method != "GET" ? context.Request.Body.AsString(UTF8) : string.Empty;
 
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
                 CommunicationLogEntryType.Request,
@@ -83,7 +85,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             IFlurlResponse responseMessage;
 
-            var POSTContent = String.Empty;
+            var POSTContent = string.Empty;
 
             var queryParams = new Dictionary<string, object>();
 
@@ -103,7 +105,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 case "POST":
                     responseMessage = await request.PostAsync(new CapturedStringContent(requestBody),
                         cancellationToken);
-                    POSTContent = context.Request.Body.AsString();
+                    POSTContent = context.Request.Body.AsString(UTF8);
                     break;
                 case "PUT":
                     responseMessage = await request.PutAsync(new CapturedStringContent(requestBody),
@@ -113,6 +115,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     responseMessage = await request.DeleteAsync(cancellationToken);
                     break;
                 default:
+                    Log.Error("PROXY HANDLER: Cannot handle request method: " + method);
                     throw new ProxyException("Cannot handle request method: " + method);
             }
 
@@ -189,11 +192,5 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 Log.Error("PROXY HANDLER: " + error.Message);
             }
         }
-    }
-
-    public class Helper
-    {
-        public static int session = 0;
-        public static String personaid = String.Empty;
     }
 }

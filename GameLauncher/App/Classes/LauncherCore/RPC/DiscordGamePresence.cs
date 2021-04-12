@@ -134,7 +134,6 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             {
                 LoggedPersonaId = GET.Split(';').Last().Split('=').Last();
                 canUpdateProfileField = true;
-                Helper.personaid = LoggedPersonaId;
             }
 
             if (uri == "/User/SecureLogoutPersona")
