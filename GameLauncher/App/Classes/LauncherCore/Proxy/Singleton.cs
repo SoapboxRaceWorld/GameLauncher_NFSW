@@ -1,4 +1,4 @@
-namespace GameLauncher.App.Classes.LauncherCore.Proxy
+﻿namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     /// <summary>
     /// A simple singleton class.

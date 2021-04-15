@@ -1,42 +1,51 @@
-namespace GameLauncher.App.Classes.LauncherCore.Global
+﻿namespace GameLauncher.App.Classes.LauncherCore.Global
 {
     class URLs
     {
-        public static string mainserver = "https://api.worldunited.gg";
+        public static string Main = "https://api.worldunited.gg";
 
-        public static string fileserver = "https://files.worldunited.gg";
+        public static string File = "https://files.worldunited.gg";
 
-        public static string staticapiserver = "http://api-sbrw.davidcarbon.download";
+        public static string Static = "https://api-sbrw.davidcarbon.download";
 
-        public static string secondstaticapiserver = "http://api2-sbrw.davidcarbon.download";
+        public static string Static_Alt = "https://api2-sbrw.davidcarbon.download";
 
-        public static string woplserver = "http://worldonline.pl";
+        public static string WOPL = "http://worldonline.pl";
 
-        public static string modnetserver = "http://cdn.soapboxrace.world";
+        public static string ModNet = "https://cdn.soapboxrace.world";
 
+        public static string GitHub_Launcher = "https://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest";
 
-        public static string[] serverlisturl = new string[]
+        public static string GitHub_Updater = "https://api.github.com/repos/SoapboxRaceWorld/GameLauncherUpdater/releases/latest";
+
+        public static string[] ServerList = new string[]
         {
-            mainserver + "/serverlist.json",
-            staticapiserver + "/serverlist.json",
-            secondstaticapiserver + "/serverlist.json",
-            woplserver + "/serverlist.json"
+            Main + "/serverlist.json",
+            Static + "/serverlist.json",
+            Static_Alt + "/serverlist.json",
+            WOPL + "/serverlist.json"
         };
 
-        public static string[] cdnlisturl = new string[]
+        public static string[] CDNList = new string[]
         {
-            mainserver + "/cdn_list.json",
-            staticapiserver + "/cdn_list.json",
-            secondstaticapiserver + "/cdn_list.json",
-            woplserver + "/cdn_list.json"
+            Main + "/cdn_list.json",
+            Static + "/cdn_list.json",
+            Static_Alt + "/cdn_list.json",
+            WOPL + "/cdn_list.json"
         };
 
-        public static string[] anticheatreporting = new string[]
+        public static string[] AntiCheatFD = new string[]
         {
-            mainserver + "/report",
+            Main + "/report",
             "http://anticheat.worldonline.pl/report",
-            "http://la-sbrw.davidcarbon.download/report?",
-            "http://la2-sbrw.davidcarbon.download/report?"
+            "https://la-sbrw.davidcarbon.download/report?",
+            "https://la2-sbrw.davidcarbon.download/report?"
+        };
+
+        public static string[] AntiCheatSD = new string[]
+        {
+            "https://la-sbrw.davidcarbon.download/report-manual?",
+            "https://la2-sbrw.davidcarbon.download/report-manual?"
         };
     }
 }

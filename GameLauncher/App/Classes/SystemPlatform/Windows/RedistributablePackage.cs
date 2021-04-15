@@ -1,4 +1,11 @@
-using System;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
 using Microsoft.Win32;
 
 // based on https://github.com/bitbeans/RedistributableChecker/blob/master/RedistributableChecker/RedistributablePackage.cs
@@ -54,6 +61,123 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             catch (Exception)
             {
                 return false;
+            }
+        }
+    }
+
+    class Redistributable
+    {
+        public static async Task CheckAsync()
+        {
+            if (!DetectLinux.LinuxDetected())
+            {
+                await Task.Run(() => Installed());
+            }
+        }
+
+        public static void Installed()
+        {
+            if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
+            {
+                var result = MessageBox.Show(
+                    "You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nThis may restart your computer. \n \nClick OK to install it.",
+                    "Compatibility",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Warning);
+
+                if (result != DialogResult.OK)
+                {
+                    MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
+
+                using (WebClientWithTimeout Client = new WebClientWithTimeout())
+                {
+                    try
+                    {
+                        Client.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x86.exe", "VC_redist.x86.exe");
+                    }
+                    catch (Exception error)
+                    {
+                        Log.Error("LAUNCHER UPDATER: " + error.Message);
+                    }
+
+                    if (File.Exists("VC_redist.x86.exe"))
+                    {
+                        var proc = Process.Start(new ProcessStartInfo
+                        {
+                            Verb = "runas",
+                            Arguments = "/quiet",
+                            FileName = "VC_redist.x86.exe"
+                        });
+
+                        if (proc == null)
+                        {
+                            MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to download package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                    }
+                }
+            }
+
+            if (Environment.Is64BitOperatingSystem == true)
+            {
+                if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x64))
+                {
+                    var result = MessageBox.Show(
+                        "You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nThis may restart your computer. \n \nClick OK to install it.",
+                        "Compatibility",
+                        MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Warning);
+
+                    if (result != DialogResult.OK)
+                    {
+                        MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    using (WebClientWithTimeout Client = new WebClientWithTimeout())
+                    {
+                        try
+                        {
+                            Client.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x64.exe", "VC_redist.x64.exe");
+                        }
+                        catch (Exception error)
+                        {
+                            Log.Error("LAUNCHER UPDATER: " + error.Message);
+                        }
+
+                        if (File.Exists("VC_redist.x64.exe"))
+                        {
+                            var proc = Process.Start(new ProcessStartInfo
+                            {
+                                Verb = "runas",
+                                Arguments = "/quiet",
+                                FileName = "VC_redist.x64.exe"
+                            });
+
+                            if (proc == null)
+                            {
+                                MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to download package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                        }
+                    }
+                }
             }
         }
     }

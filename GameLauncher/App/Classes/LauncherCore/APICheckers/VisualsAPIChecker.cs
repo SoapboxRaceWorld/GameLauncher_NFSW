@@ -1,4 +1,4 @@
-using GameLauncher.App.Classes.LauncherCore.Global;
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 {
@@ -14,7 +14,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
         public static void PingAPIStatus()
         {
-            switch (APIStatusChecker.CheckStatus(URLs.mainserver + "/serverlist.json"))
+            switch (APIStatusChecker.CheckStatus(URLs.Main + "/serverlist.json"))
             {
                 case APIStatus.Online:
                     break;
@@ -25,7 +25,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
             if (UnitedAPI == false)
             {
-                switch (APIStatusChecker.CheckStatus(URLs.staticapiserver + "/serverlist.json"))
+                switch (APIStatusChecker.CheckStatus(URLs.Static + "/serverlist.json"))
                 {
                     case APIStatus.Online:
                         break;
@@ -37,7 +37,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
             if (CarbonAPI == false)
             {
-                switch (APIStatusChecker.CheckStatus(URLs.secondstaticapiserver + "/serverlist.json"))
+                switch (APIStatusChecker.CheckStatus(URLs.Static_Alt + "/serverlist.json"))
                 {
                     case APIStatus.Online:
                         break;
@@ -49,7 +49,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
             if (CarbonAPITwo == false)
             {
-                switch (APIStatusChecker.CheckStatus(URLs.woplserver + "/serverlist.json"))
+                switch (APIStatusChecker.CheckStatus(URLs.WOPL + "/serverlist.json"))
                 {
                     case APIStatus.Online:
                         break;

@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 
 namespace GameLauncher.App
 {
@@ -20,7 +21,7 @@ namespace GameLauncher.App
         public GetServerInformation ServerList;
         readonly Dictionary<int, ServerList> data = new Dictionary<int, ServerList>();
 
-        //Used to ping the Server in ms
+        /* Used to ping the Server in ms */
         public Queue<string> servers = new Queue<string>();
 
         public SelectServer()
@@ -30,7 +31,7 @@ namespace GameLauncher.App
 
             Version.Text = "Version: v" + Application.ProductVersion;
 
-            //And one for keeping data about server, IP tbh
+            /* And one for keeping data about server, IP tbh */
             ServerListRenderer.View = View.Details;
             ServerListRenderer.FullRowSelect = true;
 
@@ -80,7 +81,7 @@ namespace GameLauncher.App
 
             Thread newList = new Thread(() =>
             {
-                Thread.Sleep(200);
+                //Thread.Sleep(200);
                 this.BeginInvoke((MethodInvoker)delegate
                 {
                     while (servers.Count != 0)
@@ -94,7 +95,7 @@ namespace GameLauncher.App
 
                         try
                         {
-                            WebClient getdata = new WebClient();
+                            WebClientWithTimeout getdata = new WebClientWithTimeout();
                             GetServerInformation content = JsonConvert.DeserializeObject<GetServerInformation>(getdata.DownloadString(serverurl));
 
                             if (content == null)
@@ -111,24 +112,31 @@ namespace GameLauncher.App
                                 ServerListRenderer.Items[serverid].SubItems[3].Text = content.onlineNumber.ToString();
                                 ServerListRenderer.Items[serverid].SubItems[4].Text = content.numberOfRegistered.ToString();
 
-                                //PING
+                                /* PING */
                                 if (!DetectLinux.LinuxDetected())
                                 {
-                                    Ping pingSender = new Ping();
-                                    Uri StringToUri = new Uri(serverurl);
-                                    pingSender.SendAsync(StringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
-                                    pingSender.PingCompleted += (sender3, e3) => {
-                                        PingReply reply = e3.Reply;
+                                    try
+                                    {
+                                        Ping pingSender = new Ping();
+                                        Uri StringToUri = new Uri(serverurl);
+                                        pingSender.SendAsync(StringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
+                                        pingSender.PingCompleted += (sender3, e3) => {
+                                            PingReply reply = e3.Reply;
 
-                                        if (reply.Status == IPStatus.Success && servername != "Offline Built-In Server")
-                                        {
-                                            ServerListRenderer.Items[serverid].SubItems[5].Text = reply.RoundtripTime + "ms";
-                                        }
-                                        else
-                                        {
-                                            ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
-                                        }
-                                    };
+                                            if (reply.Status == IPStatus.Success && servername != "Offline Built-In Server")
+                                            {
+                                                ServerListRenderer.Items[serverid].SubItems[5].Text = reply.RoundtripTime + "ms";
+                                            }
+                                            else
+                                            {
+                                                ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                                            }
+                                        };
+                                    }
+                                    catch
+                                    {
+                                        ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                                    }
                                 }
                                 else
                                 {
@@ -179,17 +187,12 @@ namespace GameLauncher.App
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
             var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-            //var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
-            //var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
-            //var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
 
             if (DetectLinux.LinuxDetected())
             {
                 MainFontSize = 9f;
-                //SecondaryFontSize = 8f;
-                //ThirdFontSize = 10f;
-                //FourthFontSize = 14f;
             }
+
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ServerListRenderer.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             Loading.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
@@ -247,7 +250,7 @@ namespace GameLauncher.App
             {
                 rememberServerInformationID.TryGetValue(ServerListRenderer.SelectedIndices[0], out ServerList);
 
-                MainScreen.ServerName = data[ServerListRenderer.SelectedIndices[0] + 1];
+                SelectedServer.Data = data[ServerListRenderer.SelectedIndices[0] + 1];
 
                 this.Close();
             }

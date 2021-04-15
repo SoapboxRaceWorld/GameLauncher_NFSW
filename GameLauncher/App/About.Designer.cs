@@ -1,4 +1,4 @@
-namespace GameLauncher.App
+﻿namespace GameLauncher.App
 {
     partial class About
     {
@@ -243,7 +243,7 @@ namespace GameLauncher.App
             this.Name = "About";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "About this Launcher";
+            this.Text = "About this SBRW Launcher";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.PatchNotes_Load);
             this.PatchContainerPanel.ResumeLayout(false);

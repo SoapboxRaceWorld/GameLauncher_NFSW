@@ -1,5 +1,4 @@
-using System.IO;
-using System.Reflection;
+﻿using System.IO;
 using IniParser;
 using IniParser.Model;
 using System.Text;
@@ -13,9 +12,10 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/89c2e19c97be7ebc075203f3d998aa9e701892f6/IniFile.cs */
 
         public string Path;
-        readonly string EXE = Assembly.GetExecutingAssembly().GetName().Name;
+        readonly string EXE = "GameLauncher";
         public FileIniDataParser Parser;
         public IniData Data;
+        public UTF8Encoding UTF8 = new UTF8Encoding(false);
 
         public IniFile(string IniPath = null)
         {
@@ -23,7 +23,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             Parser = new FileIniDataParser();
             if (File.Exists(Path))
             {
-                Data = Parser.ReadFile(Path);
+                Data = Parser.ReadFile(Path, UTF8);
             }
             else
             {
@@ -51,9 +51,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 }
                 else
                 {
-                    UTF8Encoding utf8 = new UTF8Encoding(false);
                     Data[EXE][Key] = Value;
-                    Parser.WriteFile(Path, Data, utf8);
+                    Parser.WriteFile(Path, Data, UTF8);
                 }
             }
             catch { }
@@ -64,7 +63,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             try
             {
                 Data[EXE].RemoveKey(Key);
-                Parser.WriteFile(Path, Data);
+                Parser.WriteFile(Path, Data, UTF8);
             } catch { }
         }
 

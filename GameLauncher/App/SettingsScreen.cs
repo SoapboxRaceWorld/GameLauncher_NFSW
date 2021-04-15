@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -19,6 +19,8 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
 
 namespace GameLauncher.App
 {
@@ -53,10 +55,16 @@ namespace GameLauncher.App
         private void SetVisuals()
         {
             /*******************************/
+            /* Set Window Name              /
+            /*******************************/
+
+            Text = "Settings - SBRW Launcher: v" + Application.ProductVersion;
+
+            /*******************************/
             /* Set Initial position & Icon  /
             /*******************************/
 
-            this.StartPosition = FormStartPosition.CenterParent;
+            FunctionStatus.CenterParent(this);
 
             /*******************************/
             /* Set Background Image         /
@@ -92,10 +100,12 @@ namespace GameLauncher.App
             SettingsAboutButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsGamePathText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsGameFiles.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsVFilesButton.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsCDNText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsCDNPick.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
             SettingsLanguageText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsLanguage.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            SettingsUEditorButton.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsClearCrashLogsButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             SettingsClearCommunicationLogButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             SettingsClearServerModCacheButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
@@ -113,7 +123,6 @@ namespace GameLauncher.App
             SettingsMainCDNText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsBkupSrvText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsBkupCDNText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            SettingsVFilesButton.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsLauncherVersion.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsSave.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsCancel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
@@ -139,6 +148,11 @@ namespace GameLauncher.App
             SettingsVFilesButton.BackColor = Theming.YellowBackColorButton;
             SettingsVFilesButton.FlatAppearance.BorderColor = Theming.YellowBorderColorButton;
             SettingsVFilesButton.FlatAppearance.MouseOverBackColor = Theming.YellowMouseOverBackColorButton;
+
+            SettingsUEditorButton.ForeColor = Theming.YellowForeColorButton;
+            SettingsUEditorButton.BackColor = Theming.YellowBackColorButton;
+            SettingsUEditorButton.FlatAppearance.BorderColor = Theming.YellowBorderColorButton;
+            SettingsUEditorButton.FlatAppearance.MouseOverBackColor = Theming.YellowMouseOverBackColorButton;
 
             SettingsClearCrashLogsButton.ForeColor = Theming.BlueForeColorButton;
             SettingsClearCrashLogsButton.BackColor = Theming.BlueBackColorButton;
@@ -407,7 +421,7 @@ namespace GameLauncher.App
             /* CDN, APIs, & Restore Last CDN /
             /********************************/
 
-            if (FunctionStatus.CDNListStatus != "Loaded")
+            if (InformationCache.CDNListStatus != "Loaded")
             {
                 CDNListUpdater.GetList();
             }
@@ -431,13 +445,13 @@ namespace GameLauncher.App
         /* Settings Save */
         private void SettingsSave_Click(object sender, EventArgs e)
         {
-            //TODO null check
+            /* TODO null check */
             if (!string.IsNullOrEmpty(((LangObject)SettingsLanguage.SelectedItem).INI_Value))
             {
                 FileSettingsSave.Lang = ((LangObject)SettingsLanguage.SelectedItem).INI_Value;
             }
 
-            //TODO: Inform player about custom languagepack used.
+            /* TODO: Inform player about custom languagepack used. */
             if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") {
                 MessageBox.Show(null, "Please note, that if this server won't have that languagepack installed, it will fallback to English instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -452,7 +466,7 @@ namespace GameLauncher.App
 
                 if (!DetectLinux.LinuxDetected())
                 {
-                    //Remove current Firewall for the Game Files 
+                    /* Remove current Firewall for the Game Files */
                     string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
 
                     if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.FirewallStatus() == true)
@@ -468,7 +482,7 @@ namespace GameLauncher.App
                             string groupKeyGame = "Need for Speed: World";
                             string descriptionGame = groupKeyGame;
 
-                            //Inbound & Outbound
+                            /* Inbound & Outbound */
                             FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
                         }
                     }
@@ -476,7 +490,7 @@ namespace GameLauncher.App
 
                 FileSettingsSave.GameInstallation = _newGameFilesPath;
 
-                //Clean Mods Files from New Dirctory (If it has .links in directory)
+                /* Clean Mods Files from New Dirctory (If it has .links in directory) */
                 var linksPath = Path.Combine(_newGameFilesPath, "\\.links");
                 ModNetLinksCleanup.CleanLinks(linksPath);
 
@@ -495,6 +509,18 @@ namespace GameLauncher.App
             if (FileSettingsSave.Proxy != disableProxy)
             {
                 FileSettingsSave.Proxy = (SettingsProxyCheckbox.Checked == true) ? "1" : "0";
+
+                if (FileSettingsSave.Proxy == "1")
+                {
+                    ServerProxy.Instance.Stop("Settings Screen");
+                    FunctionStatus.DisableProxy = true;
+                }
+                else
+                {
+                    ServerProxy.Instance.Start("Settings Screen");
+                    FunctionStatus.DisableProxy = false;
+                }
+
                 _restartRequired = true;
             }
 
@@ -502,6 +528,16 @@ namespace GameLauncher.App
             if (FileSettingsSave.RPC != disableRPC)
             {
                 FileSettingsSave.RPC = (SettingsDiscordRPCCheckbox.Checked == true) ? "1" : "0";
+
+                if (FileSettingsSave.RPC == "1")
+                {
+                    /* Kill DiscordRPC */
+                    if (DiscordLauncherPresense.Client != null)
+                    {
+                        DiscordLauncherPresense.Stop();
+                    }
+                }
+
                 _restartRequired = true;
             }
 
@@ -510,13 +546,13 @@ namespace GameLauncher.App
                 MessageBox.Show(null, "In order to see settings changes, you need to restart launcher manually.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            //Actually lets check those 2 files
+            /* Actually lets check those 2 files */
             if (File.Exists(FileSettingsSave.GameInstallation + "/profwords") && File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis"))
             {
                 File.Delete(FileSettingsSave.GameInstallation + "/profwords_dis");
             }
 
-            //Delete/Enable profwords filter here
+            /* Delete/Enable profwords filter here */
             if (SettingsWordFilterCheck.Checked)
             {
                 if (File.Exists(FileSettingsSave.GameInstallation + "/profwords")) File.Move(FileSettingsSave.GameInstallation + "/profwords", FileSettingsSave.GameInstallation + "/profwords_dis");
@@ -526,7 +562,7 @@ namespace GameLauncher.App
                 if (File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis")) File.Move(FileSettingsSave.GameInstallation + "/profwords_dis", FileSettingsSave.GameInstallation + "/profwords");
             }
 
-            //Create Custom Settings.ini for LangPicker.asi module
+            /* Create Custom Settings.ini for LangPicker.asi module */
             if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") {
                 if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) {
                     Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
@@ -551,37 +587,53 @@ namespace GameLauncher.App
                     try
                     {
                         userSettingsXml.Load(_userSettings);
+                        var chat = userSettingsXml.SelectSingleNode("Settings/PersistentValue/Chat/DefaultChatGroup");
+                        chat.InnerText = ((LangObject)SettingsLanguage.SelectedItem).INI_Value;
+
                         var language = userSettingsXml.SelectSingleNode("Settings/UI/Language");
                         language.InnerText = ((LangObject)SettingsLanguage.SelectedItem).XML_Value;
+                        /* Leave "Tracks" in for users who may be propigating an older/carried on UserSettings file */
+                        var tracks = userSettingsXml.SelectSingleNode("Settings/UI/Tracks");
+                        tracks.InnerText = "1";
+
+                        Log.Debug("1");
                     }
                     catch
                     {
                         File.Delete(_userSettings);
 
-                        var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
+                        var persistentValue = userSettingsXml.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
+                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
+
+                        var setting = persistentValue.AppendChild(userSettingsXml.CreateElement("Settings"));
                         var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
 
-                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
-                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
-                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + FunctionStatus.CurrentLanguage + "</DefaultChatGroup>";
+                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).INI_Value + "</DefaultChatGroup>";
                         ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
+                        /* Leave "Tracks" in for users who may be propigating an older/carried on UserSettings file */
+                        ui.InnerXml += "<Tracks Type=\"int\">1</Tracks>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
+                        Log.Debug("2");
                     }
                 }
                 else
                 {
                     try
                     {
-                        var setting = userSettingsXml.AppendChild(userSettingsXml.CreateElement("Settings"));
+                        var persistentValue = userSettingsXml.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
+                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
+
+                        var setting = persistentValue.AppendChild(userSettingsXml.CreateElement("Settings"));
                         var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
 
-                        var persistentValue = setting.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
-                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
-                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + FunctionStatus.CurrentLanguage + "</DefaultChatGroup>";
+                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).INI_Value + "</DefaultChatGroup>";
                         ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
+                        /* Leave "Tracks" in for users who may be propigating an older/carried on UserSettings file */
+                        ui.InnerXml += "<Tracks Type=\"int\">1</Tracks>";
 
                         var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
+                        Log.Debug("3");
                     }
                     catch (Exception ex)
                     {
@@ -599,14 +651,12 @@ namespace GameLauncher.App
             /* Save XML Settings */
             userSettingsXml.Save(_userSettings);
 
-            //DialogResult = DialogResult.OK;
             Close();
         }
 
         /* Settings Cancel */
         private void SettingsCancel_Click(object sender, EventArgs e)
         {
-            //DialogResult = DialogResult.Cancel;
             Close();
         }
 
@@ -614,6 +664,12 @@ namespace GameLauncher.App
         private void SettingsVFilesButton_Click(object sender, EventArgs e)
         {
             new VerifyHash().ShowDialog();
+        }
+
+        /* Settings UserSettings XML Editor */
+        private void SettingsUEditorButton_Click(object sender, EventArgs e)
+        {
+            new USXEditor().ShowDialog();
         }
 
         /* Settings Clear ModNet Cache */
@@ -772,12 +828,12 @@ namespace GameLauncher.App
 
         private void WindowsDefenderGameFilesDirctoryChange()
         {
-            //Check if New Game! Files is not in Banned Folder Locations
+            /* Check if New Game! Files is not in Banned Folder Locations */
             CheckGameFilesDirectoryPrevention();
 
             try
             {
-                //Remove current Exclusion and Add new location for Exclusion
+                /* Remove current Exclusion and Add new location for Exclusion */
                 using (PowerShell ps = PowerShell.Create())
                 {
                     Log.Warning("WINDOWS DEFENDER: Removing OLD Game Files Directory: " + FileSettingsSave.GameInstallation);
@@ -792,7 +848,7 @@ namespace GameLauncher.App
                 Log.Error("WINDOWS DEFENDER: " + ex.Message);
             }
 
-            //Remove current Firewall for the Game Files 
+            /* Remove current Firewall for the Game Files */
             string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
 
             if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.FirewallStatus() == true)
@@ -808,14 +864,14 @@ namespace GameLauncher.App
                     string groupKeyGame = "Need for Speed: World";
                     string descriptionGame = groupKeyGame;
 
-                    //Inbound & Outbound
+                    /* Inbound & Outbound */
                     FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
                 }
             }
 
             FileSettingsSave.GameInstallation = _newGameFilesPath;
 
-            //Clean Mods Files from New Dirctory (If it has .links in directory)
+            /* Clean Mods Files from New Dirctory (If it has .links in directory) */
             var linksPath = Path.Combine(_newGameFilesPath, "\\.links");
             ModNetLinksCleanup.CleanLinks(linksPath);
 
@@ -853,7 +909,7 @@ namespace GameLauncher.App
             }
         }
 
-        //DavidCarbon
+        /* DavidCarbon */
         private void PingAPIStatus()
         {
             if (VisualsAPIChecker.UnitedAPI != false)
@@ -1020,7 +1076,7 @@ namespace GameLauncher.App
             }
         }
 
-        //CDN Display Playing Game! - DavidCarbon
+        /* CDN Display Playing Game! - DavidCarbon */
         private async void IsCDNDownGame()
         {
             if (!string.IsNullOrEmpty(FileSettingsSave.CDN))

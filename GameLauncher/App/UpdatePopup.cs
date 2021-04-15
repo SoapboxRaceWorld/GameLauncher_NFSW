@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Drawing;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
@@ -14,14 +14,14 @@ namespace GameLauncher.App
         {
             if (FileSettingsSave.IgnoreVersion == LatestLauncherBuild)
             {
-                //No Update Popup
+                /* No Update Popup */
             }
             else
             {
                 InitializeComponent();
                 SetVisuals();
 
-                ChangelogText.Text = new WebClient().DownloadString(URLs.mainserver + "/launcher/changelog");
+                ChangelogText.Text = new WebClient().DownloadString(URLs.Main + "/launcher/changelog");
                 ChangelogText.Select(0, 0);
                 ChangelogText.SelectionLength = 0;
                 ChangelogText.TabStop = false;
@@ -47,17 +47,12 @@ namespace GameLauncher.App
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
             var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-            //var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
-            //var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
-            //var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
 
             if (DetectLinux.LinuxDetected())
             {
                 MainFontSize = 9f;
-                //SecondaryFontSize = 8f;
-                //ThirdFontSize = 10f;
-                //FourthFontSize = 14f;
             }
+
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ChangelogBox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ChangelogText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);

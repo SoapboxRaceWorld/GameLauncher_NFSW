@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
@@ -188,7 +188,7 @@ namespace GameLauncher.App
 
         private void PreloadServerList()
         {
-            if (FunctionStatus.ServerListStatus != "Loaded")
+            if (InformationCache.ServerListStatus != "Loaded")
             {
                 ServerListUpdater.GetList();
             }

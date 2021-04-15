@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Management;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Windows

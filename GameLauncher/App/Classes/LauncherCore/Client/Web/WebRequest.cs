@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 using System.Net;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.Logger;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using GameLauncher.App.Classes.SystemPlatform.Components;
-using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 {
@@ -15,7 +15,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
     {
         private static string GameLauncherHash = string.Empty;
         private static long addrange = 0;
-        private static int timeout = 3000;
+        private static int timeout = 5000;
 
         public static string Value()
         {
@@ -34,13 +34,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
                 address = new UriBuilder(address)
                 {
                     Scheme = Uri.UriSchemeHttp,
-                    Port = address.IsDefaultPort ? -1 : address.Port // -1 => default port for scheme
+                    Port = address.IsDefaultPort ? -1 : address.Port /* -1 => default port for scheme */
                 }.Uri;
             }
 
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             ServicePointManager.Expect100Continue = true;
-            ServicePointManager.ServerCertificateValidationCallback = (Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => {
+            ServicePointManager.ServerCertificateValidationCallback = (Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => 
+            {
                 bool isOk = true;
                 if (sslPolicyErrors != SslPolicyErrors.None)
                 {
@@ -72,7 +73,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
             request.Headers["X-HWID"] = HardwareID.FingerPrint.Value();
             request.Headers["X-UserAgent"] = "GameLauncherReborn " + Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = Value();
-            request.Headers["X-DiscordID"] = FunctionStatus.DiscordUserID;
+            request.Headers["X-DiscordID"] = DiscordLauncherPresense.UserID;
 
             if (addrange != 0)
             {

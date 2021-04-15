@@ -1,4 +1,4 @@
-using DiscordRPC;
+﻿using DiscordRPC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +18,14 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
         public static RichPresence _presence = new RichPresence();
 
-        //Some checks
+        /* Some checks */
         private static readonly string serverName = ServerProxy.Instance.GetServerName();
         private static bool canUpdateProfileField = false;
         private static bool eventTerminatedManually = false;
         private static int EventID;
         private static string carslotsXML = String.Empty;
 
-        //Some data related, can be touched.
+        /* Some data related, can be touched. */
         public static string PersonaId = String.Empty;
         public static string PersonaName = String.Empty;
         public static string PersonaLevel = String.Empty;
@@ -44,19 +44,19 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             var SBRW_XML = new XmlDocument();
             string[] splitted_uri = uri.Split('/');
 
-            String _serverPanelLink = MainScreen.json.webPanelUrl;
-            String _serverWebsiteLink = MainScreen.json.homePageUrl;
-            String _serverDiscordLink = MainScreen.json.discordUrl;
+            String _serverPanelLink = InformationCache.SelectedServerJSON.webPanelUrl;
+            String _serverWebsiteLink = InformationCache.SelectedServerJSON.homePageUrl;
+            String _serverDiscordLink = InformationCache.SelectedServerJSON.discordUrl;
             if (!String.IsNullOrEmpty(_serverWebsiteLink) || !String.IsNullOrEmpty(_serverDiscordLink) || !String.IsNullOrEmpty(_serverPanelLink))
             {
-                MainScreen.ButtonsList.Clear();
+                DiscordLauncherPresense.ButtonsList.Clear();
 
                 if (!String.IsNullOrEmpty(_serverPanelLink))
                 {
-                    //Let's format it now, if possible
+                    /* Let's format it now, if possible */
                     if (AntiCheat.persona_id == String.Empty || AntiCheat.persona_name == String.Empty)
                     {
-                        MainScreen.ButtonsList.Add(new DiscordButton()
+                        DiscordLauncherPresense.ButtonsList.Add(new DiscordButton()
                         {
                             Label = "View Panel",
                             Url = _serverPanelLink.Split(new string[] { "{sep}" }, StringSplitOptions.None)[0]
@@ -68,7 +68,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         _serverPanelLink = _serverPanelLink.Replace("{personaname}", AntiCheat.persona_name);
                         _serverPanelLink = _serverPanelLink.Replace("{sep}", String.Empty);
 
-                        MainScreen.ButtonsList.Add(new DiscordButton()
+                        DiscordLauncherPresense.ButtonsList.Add(new DiscordButton()
                         {
                             Label = "Check " + AntiCheat.persona_name + " on Panel",
                             Url = _serverPanelLink
@@ -77,7 +77,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 }
                 else if (!String.IsNullOrEmpty(_serverWebsiteLink) && _serverWebsiteLink != _serverDiscordLink)
                 {
-                    MainScreen.ButtonsList.Add(new DiscordButton()
+                    DiscordLauncherPresense.ButtonsList.Add(new DiscordButton()
                     {
                         Label = "Website",
                         Url = _serverWebsiteLink
@@ -86,7 +86,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
                 if (!String.IsNullOrEmpty(_serverDiscordLink))
                 {
-                    MainScreen.ButtonsList.Add(new DiscordButton()
+                    DiscordLauncherPresense.ButtonsList.Add(new DiscordButton()
                     {
                         Label = "Discord",
                         Url = _serverDiscordLink
@@ -124,9 +124,9 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     SmallImageText = "Treasure Hunt - Day: " + TEDay,
                     SmallImageKey = "gamemode_treasure"
                 };
-                _presence.Buttons = MainScreen.ButtonsList.ToArray();
+                _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
-                if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
+                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
             }
 
 
@@ -134,7 +134,6 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             {
                 LoggedPersonaId = GET.Split(';').Last().Split('=').Last();
                 canUpdateProfileField = true;
-                Helper.personaid = LoggedPersonaId;
             }
 
             if (uri == "/User/SecureLogoutPersona")
@@ -149,7 +148,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 PersonaTreasure = 0;
             }
 
-            //FIRST PERSONA EVER LOCALIZED IN CODE
+            /* FIRST PERSONA EVER LOCALIZED IN CODE */
             if (uri == "/User/GetPermanentSession")
             {
                 /* Moved Statuses.cs Code to Gist | Check RemovedClasses.cs for Link */
@@ -164,7 +163,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     PersonaAvatarId = "avatar_" + SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/IconIndex").InnerText;
                     PersonaId = SBRW_XML.SelectSingleNode("UserInfo/personas/ProfileData/PersonaId").InnerText;
 
-                    //Let's get rest of PERSONAIDs
+                    /* Let's get rest of PERSONAIDs */
                     XmlNode UserInfo = SBRW_XML.SelectSingleNode("UserInfo");
                     XmlNodeList personas = UserInfo.SelectNodes("personas/ProfileData");
                     foreach (XmlNode node in personas)
@@ -177,14 +176,14 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 }
             }
 
-            //CREATE/DELETE PERSONA Handler
+            /* CREATE/DELETE PERSONA Handler  */
             if (uri == "/DriverPersona/CreatePersona")
             {
                 SBRW_XML.LoadXml(serverreply);
                 PersonaIds.Add(SBRW_XML.SelectSingleNode("ProfileData/PersonaId").InnerText);
             }
 
-            //DRIVING CARNAME
+            /* DRIVING CARNAME */
             if (uri == "/DriverPersona/GetPersonaInfo" && canUpdateProfileField == true)
             {
                 if (LoggedPersonaId == GET.Split(';').Last().Split('=').Last())
@@ -211,15 +210,15 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     SmallImageText = "In-Freeroam",
                     SmallImageKey = "gamemode_freeroam"
                 };
-                _presence.Buttons = MainScreen.ButtonsList.ToArray();
+                _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
-                if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
+                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
 
                 eventTerminatedManually = true;
                 FunctionStatus.CanCloseGame = true;
             }
 
-            //IN LOBBY
+            /* IN LOBBY */
             if (uri == "/matchmaking/acceptinvite")
             {
                 FunctionStatus.CanCloseGame = false;
@@ -240,9 +239,9 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         SmallImageText = EventsList.GetEventName(Convert.ToInt32(EventID)),
                         SmallImageKey = EventsList.GetEventType(Convert.ToInt32(EventID))
                     };
-                    _presence.Buttons = MainScreen.ButtonsList.ToArray();
+                    _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
-                    if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
+                    if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
 
                     eventTerminatedManually = false;
                 }
@@ -259,14 +258,14 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     SmallImageText = "In-Freeroam",
                     SmallImageKey = "gamemode_freeroam"
                 };
-                _presence.Buttons = MainScreen.ButtonsList.ToArray();
+                _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
-                if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
+                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
 
                 eventTerminatedManually = true;
             }
 
-            //IN SAFEHOUSE/FREEROAM
+            /* IN SAFEHOUSE/FREEROAM */
             if (uri == "/DriverPersona/UpdatePersonaPresence")
             {
                 string UpdatePersonaPresenceParam = GET.Split(';').Last().Split('=').Last();
@@ -291,12 +290,12 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
                 _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
                 _presence.Assets.LargeImageKey = PersonaAvatarId;
-                _presence.Buttons = MainScreen.ButtonsList.ToArray();
+                _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
-                if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
+                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
             }
 
-            //IN EVENT
+            /* IN EVENT */
             if (Regex.Match(uri, "/matchmaking/launchevent").Success)
             {
                 FunctionStatus.CanCloseGame = false;
@@ -312,9 +311,9 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     SmallImageText = EventsList.GetEventName(EventID),
                     SmallImageKey = EventsList.GetEventType(EventID)
                 };
-                _presence.Buttons = MainScreen.ButtonsList.ToArray();
+                _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
-                if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
+                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
 
                 eventTerminatedManually = false;
             }
@@ -329,10 +328,10 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     SmallImageText = EventsList.GetEventName(EventID),
                     SmallImageKey = EventsList.GetEventType(EventID)
                 };
-                _presence.Buttons = MainScreen.ButtonsList.ToArray();
+                _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
                 AntiCheat.DisableChecks();
-                if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
+                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
 
                 eventTerminatedManually = false;
             }
@@ -347,15 +346,15 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     SmallImageText = EventsList.GetEventName(EventID),
                     SmallImageKey = EventsList.GetEventType(EventID)
                 };
-                _presence.Buttons = MainScreen.ButtonsList.ToArray();
+                _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
                 AntiCheat.event_id = EventID;
                 AntiCheat.EnableChecks();
 
-                if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
+                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
             }
 
-            //CARS RELATED
+            /* CARS RELATED */
             foreach (var single_personaId in PersonaIds)
             {
                 if (Regex.Match(uri, "/personas/" + single_personaId + "/carslots", RegexOptions.IgnoreCase).Success)

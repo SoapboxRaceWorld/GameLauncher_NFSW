@@ -1,4 +1,4 @@
-using DiscordRPC;
+﻿using DiscordRPC;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -13,14 +13,16 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 
 namespace GameLauncher.App
 {
     public partial class VerifyHash : Form
     {
-        private readonly RichPresence _presence = new RichPresence();
+        public RichPresence _presence = new RichPresence();
 
-        //VerifyHash
+        /* VerifyHash */
         string[][] scannedHashes;
         public int filesToScan;
         public int badFiles;
@@ -105,14 +107,7 @@ namespace GameLauncher.App
 
         private void StartGameScanner()
         {
-            _presence.Details = "In-Launcher: " + Application.ProductVersion;
-            _presence.State = "Validating Game Files!";
-            _presence.Assets = new Assets
-            {
-                LargeImageText = "SBRW",
-                LargeImageKey = "nfsw"
-            };
-            if (MainScreen.discordRpcClient != null) MainScreen.discordRpcClient.SetPresence(_presence);
+            DiscordLauncherPresense.Status("Verify", null);
 
             Log.Info("VERIFY HASH: Checking and Deleting '.orig' Files");
 
@@ -206,6 +201,7 @@ namespace GameLauncher.App
                     /* Update the player messaging that we're done */
                     VerifyHashText.ForeColor = Theming.WinFormSuccessTextForeColor;
                     VerifyHashText.Text = "Excellent News! There are ZERO\nmissing or invalid Gamefiles!";
+                    Integrity();
                 }
                 else
                 {
@@ -219,6 +215,12 @@ namespace GameLauncher.App
             {
                 Log.Error(ex.Message);
             }
+        }
+
+        private void Integrity()
+        {
+            FileSettingsSave.GameIntegrity = "Good";
+            FileSettingsSave.SaveSettings();
         }
 
         private void CorruptedFilesFound()
@@ -246,9 +248,10 @@ namespace GameLauncher.App
                             LogVerify.Deleted("File: " + text2);
                             File.Delete(text2);
                         }
-                        new WebClient().DownloadFile(address, text2);
+                        new WebClientWithTimeout().DownloadFile(address, text2);
                         LogVerify.Downloaded("File: " + text2);
                         redownloadedCount++;
+
                         Application.DoEvents();
                     }
                     catch { }
@@ -258,6 +261,12 @@ namespace GameLauncher.App
                         DownloadProgressBar.Value = redownloadedCount * 100 / files.Length;
                     });
                 }
+
+                if (redownloadedCount == files.Count())
+                {
+                    Integrity();
+                }
+
                 DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
                 VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
                 VerifyHashText.Text = "Yay! Scanning and Downloading \nis now completed on Gamefiles";
@@ -291,17 +300,12 @@ namespace GameLauncher.App
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
             var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-            //var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
-            //var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
-            //var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
 
             if (DetectLinux.LinuxDetected())
             {
                 MainFontSize = 9f;
-                //SecondaryFontSize = 8f;
-                //ThirdFontSize = 10f;
-                //FourthFontSize = 14f;
             }
+
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             VerifyHashWelcome.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             ScanProgressText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);

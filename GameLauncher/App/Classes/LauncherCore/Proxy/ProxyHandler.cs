@@ -1,4 +1,4 @@
-using Flurl;
+﻿using Flurl;
 using Flurl.Http;
 using Flurl.Http.Content;
 using Nancy;
@@ -21,6 +21,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public class ProxyHandler : IApplicationStartup
     {
+        private UTF8Encoding UTF8 = new UTF8Encoding(false);
+
         public void Initialize(IPipelines pipelines)
         {
             pipelines.BeforeRequest += ProxyRequest;
@@ -29,7 +31,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         private async Task<TextResponse> OnError(NancyContext context, Exception exception)
         {
-            Log.Error($"PROXY ERROR [handling {context.Request.Path}]");
+            Log.Error($"PROXY HANDLER [handling {context.Request.Path}]");
             Log.Error($"\tMESSAGE: {exception.Message}");
             Log.Error($"\t{exception.StackTrace}");
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY",
@@ -48,6 +50,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             if (!path.StartsWith("/nfsw/Engine.svc"))
             {
+                Log.Error("PROXY HANDLER: Invalid request path " +  path);
                 throw new ProxyException("Invalid request path: " + path);
             }
 
@@ -61,11 +64,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     NullValueHandling.Ignore);
             }
 
-            IFlurlRequest request = resolvedUrl.AllowAnyHttpStatus();
+            IFlurlRequest request = resolvedUrl.AllowAnyHttpStatus().WithTimeout(TimeSpan.FromSeconds(30));
 
             foreach (var header in context.Request.Headers)
             {
-                // Don't send Content-Length for GET requests
+                /* Don't send Content-Length for GET requests */
                 if (method == "GET" && header.Key.ToLowerInvariant() == "content-length")
                 {
                     continue;
@@ -75,7 +78,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     header.Key == "Host" ? resolvedUrl.ToUri().Host : header.Value.First());
             }
 
-            var requestBody = method != "GET" ? context.Request.Body.AsString(Encoding.UTF8) : "";
+            var requestBody = method != "GET" ? context.Request.Body.AsString(UTF8) : string.Empty;
 
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
                 CommunicationLogEntryType.Request,
@@ -83,7 +86,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             IFlurlResponse responseMessage;
 
-            var POSTContent = String.Empty;
+            var POSTContent = string.Empty;
 
             var queryParams = new Dictionary<string, object>();
 
@@ -103,7 +106,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 case "POST":
                     responseMessage = await request.PostAsync(new CapturedStringContent(requestBody),
                         cancellationToken);
-                    POSTContent = context.Request.Body.AsString();
+                    POSTContent = context.Request.Body.AsString(UTF8);
                     break;
                 case "PUT":
                     responseMessage = await request.PutAsync(new CapturedStringContent(requestBody),
@@ -113,6 +116,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     responseMessage = await request.DeleteAsync(cancellationToken);
                     break;
                 default:
+                    Log.Error("PROXY HANDLER: Cannot handle request method " + method);
                     throw new ProxyException("Cannot handle request method: " + method);
             }
 
@@ -137,19 +141,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 await SubmitError(e);
             }
 
-            TextResponse textResponse = new TextResponse(responseBody,
-                responseMessage.ResponseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
-            {
-                StatusCode = (HttpStatusCode)statusCode
-            };
-
             queryParams.Clear();
 
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
                 CommunicationLogEntryType.Response, new CommunicationLogResponse(
                     responseBody, resolvedUrl.ToString(), method));
 
-            return textResponse;
+            return new TextResponse(responseBody,
+                responseMessage.ResponseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
+            {
+                StatusCode = (HttpStatusCode)statusCode
+            }; ;
         }
 
         private static string CleanFromUnknownChars(string s)
@@ -160,12 +162,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 if
                  (
                   (int)c >= 48 && (int)c <= 57 ||
-                  (int)c == 60 ||
-                  (int)c == 62 ||
+                  (int)c == 60 || (int)c == 62 ||
                   (int)c >= 65 && (int)c <= 90 ||
                   (int)c >= 97 && (int)c <= 122 ||
-                  (int)c == 47 ||
-                  (int)c == 45 ||
+                  (int)c == 47 || (int)c == 45 ||
                   (int)c == 46
                  )
                 {
@@ -178,19 +178,20 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         private static async Task SubmitError(Exception exception)
         {
-            var mainsrv = DetectLinux.LinuxDetected() ? URLs.mainserver.Replace("https", "http") : URLs.mainserver;
-            Url url = new Url(mainsrv + "/error-report");
-            await url.PostJsonAsync(new
+            try
             {
-                message = exception.Message ?? "no message",
-                stackTrace = exception.StackTrace ?? "no stack trace"
-            });
+                var mainsrv = DetectLinux.LinuxDetected() ? URLs.Main.Replace("https", "http") : URLs.Main;
+                Url url = new Url(mainsrv + "/error-report");
+                await url.PostJsonAsync(new
+                {
+                    message = exception.Message ?? "no message",
+                    stackTrace = exception.StackTrace ?? "no stack trace"
+                });
+            }
+            catch (Exception error)
+            {
+                Log.Error("PROXY HANDLER: " + error.Message);
+            }
         }
-    }
-
-    public class Helper
-    {
-        public static int session = 0;
-        public static String personaid = String.Empty;
     }
 }

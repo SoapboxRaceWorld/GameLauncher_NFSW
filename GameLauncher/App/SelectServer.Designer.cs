@@ -1,4 +1,4 @@
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 namespace GameLauncher.App
 {
     partial class SelectServer
@@ -147,7 +147,7 @@ namespace GameLauncher.App
             this.MinimizeBox = false;
             this.Name = "SelectServer";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "GameLauncher - Please Select a Server";
+            this.Text = "Please Select a Server - SBRW Launcher";
             this.TopMost = true;
             this.ResumeLayout(false);
 

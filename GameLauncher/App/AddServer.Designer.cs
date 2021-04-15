@@ -1,4 +1,4 @@
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 namespace GameLauncher.App
 {
     partial class AddServer
@@ -161,7 +161,7 @@ namespace GameLauncher.App
             this.Name = "AddServer";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "GameLauncher - Add Server";
+            this.Text = "Add Server - SBRW Launcher";
             this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();

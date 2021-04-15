@@ -1,4 +1,4 @@
-using GameLauncher.App.Classes.Logger;
+﻿using GameLauncher.App.Classes.Logger;
 using Newtonsoft.Json;
 using System;
 using System.Net;
@@ -23,7 +23,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
         {
             List<ServerList> serverInfos = new List<ServerList>();
 
-            foreach (var serverListURL in URLs.serverlisturl)
+            foreach (var serverListURL in URLs.ServerList)
             {
                 try
                 {
@@ -36,19 +36,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     {
                         serverInfos.AddRange(
                             JsonConvert.DeserializeObject<List<ServerList>>(response));
-                        FunctionStatus.ServerListStatus = "Loaded";
+                        InformationCache.ServerListStatus = "Loaded";
                         break;
                     }
                     catch (Exception error)
                     {
                         Log.Error("LIST CORE: Error occurred while deserializing Server List from [" + serverListURL + "]: " + error.Message);
-                        FunctionStatus.ServerListStatus = "Error";
+                        InformationCache.ServerListStatus = "Error";
                     }
                 }
                 catch (Exception error)
                 {
                     Log.Error("LIST CORE: Error occurred while loading Server List from [" + serverListURL + "]: " + error.Message);
-                    FunctionStatus.ServerListStatus = "Error";
+                    InformationCache.ServerListStatus = "Error";
                 }
             }
 

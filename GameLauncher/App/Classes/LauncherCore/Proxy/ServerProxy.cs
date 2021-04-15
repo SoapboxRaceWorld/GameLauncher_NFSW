@@ -1,15 +1,16 @@
-using System;
+﻿using System;
+using GameLauncher.App.Classes.Logger;
 using Nancy.Hosting.Self;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public class ServerProxy : Singleton<ServerProxy>
     {
-        public static int ProxyPort = new Random().Next(6260, 8269);
+        public static int ProxyPort = new Random().Next(2017, DateTime.Now.Year);
 
         private string _serverUrl;
         private string _serverName;
-        private NancyHost _host;
+        public static NancyHost Host;
 
         public string GetServerUrl() => _serverUrl;
 
@@ -24,24 +25,42 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             _serverName = serverName;
         }
 
-        public void Start()
+        public void Start(string From)
         {
-            if (_host != null)
+            if (Host != null)
             {
-                throw new Exception("Server already running!");
+                Log.Warning("PROXY: Local Proxy Server Already Running! (" + From + ")");
             }
-
-            _host = new NancyHost(new Uri("http://127.0.0.1:" + ProxyPort), new NancyBootstrapper(), new HostConfiguration
+            else
             {
-                AllowChunkedEncoding = false,
-                RewriteLocalhost = false
-            });
-            _host.Start();
+                Log.Info("PROXY: Local Proxy Server has Fully Initialized (" + From + ")");
+
+                var hostConfigs = new HostConfiguration()
+                {
+                    UrlReservations = new UrlReservations()
+                    {
+                        CreateAutomatically = true,
+                    },
+                    AllowChunkedEncoding = false
+                };
+
+                Host = new NancyHost(new Uri("http://127.0.0.1:" + ProxyPort), new NancyBootstrapper(), hostConfigs);
+                Host.Start();
+            }
         }
 
-        public void Stop()
+        public void Stop(string From)
         {
-            _host?.Stop();
+            if (Host != null)
+            {
+                Log.Info("PROXY: Local Proxy Server has Shutdown (" + From + ")");
+                Host.Stop();
+                Host = null;
+            }
+            else
+            {
+                Log.Warning("PROXY: Local Proxy Server is already Shutdown (" + From + ")");
+            }
         }
     }
 }

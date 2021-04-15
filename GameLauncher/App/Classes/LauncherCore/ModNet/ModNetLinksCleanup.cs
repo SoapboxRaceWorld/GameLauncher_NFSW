@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.IO;
-using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.Logger;
 
@@ -8,6 +7,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
 {
     class ModNetLinksCleanup
     {
+        public static int FileErrors = 0;
         public static void CleanLinks(string linksPath)
         {
             try
@@ -34,32 +34,23 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
 
                             if (!File.Exists(realLoc))
                             {
+                                FileErrors++;
+
                                 if (!File.Exists(origPath))
                                 {
-                                    Log.Warning("CLEANLINKS: .links file includes nonexistent file, but there is no .orig file: [" + realLoc + "] skipping file");
+                                    Log.Warning("CLEANLINKS: .links file includes nonexistent file, but there is no .orig file: [" + realLoc + "] Skipping File");
                                     continue;
                                 }
                                 else if (File.Exists(origPath))
                                 {
-                                    Log.Error("CLEANLINKS: Found .orig file that should not be present: " + origPath);
-                                    DialogResult skipFolder = MessageBox.Show(null, "Found .orig file that should not be present:\n" +
-                                        origPath, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                                    Environment.Exit(0);
+                                    Log.Error("CLEANLINKS: Found .orig file that should not be present. Deleting File: " + origPath);
+                                    File.Delete(origPath);
+                                    continue;
                                 }
                                 else
                                 {
-                                    Log.Error("CLEANLINKS: .links file includes nonexistent file: " + realLoc);
-                                    DialogResult skipFolder = MessageBox.Show(null, ".links file includes nonexistent file:\n" +
-                                        realLoc + "\n\nChoose \"Yes\" to Skip File \nChoose \"No\" to Close Launcher", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Stop);
-
-                                    if (skipFolder == DialogResult.Yes)
-                                    {
-                                        continue;
-                                    }
-                                    else
-                                    {
-                                        Environment.Exit(0);
-                                    }
+                                    Log.Error("CLEANLINKS: .links file includes nonexistent file. Skipping File: " + realLoc);
+                                    continue;
                                 }
                             }
 
@@ -76,6 +67,8 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                             }
                             catch (Exception ex)
                             {
+                                FileErrors++;
+
                                 Log.Error("CLEANLINKS: Error while deleting a file: {realLoc}");
                                 Log.Error("CLEANLINKS: " + ex.Message);
                             }
@@ -84,22 +77,20 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                         {
                             if (!Directory.Exists(realLoc))
                             {
-                                Log.Error("CLEANLINKS: .links file includes nonexistent directory: " + realLoc);
+                                FileErrors++;
 
-                                DialogResult skipFolder = MessageBox.Show(null, ".links file includes nonexistent file:\n" +
-                                    realLoc + "\n\nChoose \"Yes\" to Skip File \nChoose \"No\" to Close Launcher", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Stop);
-
-                                if (skipFolder == DialogResult.Yes)
-                                {
-                                    continue;
-                                }
-                                else
-                                {
-                                    Environment.Exit(0);
-                                }
+                                Log.Error("CLEANLINKS: .links file includes nonexistent directory. Skipping Directory: " + realLoc);
+                                continue;
                             }
                             Directory.Delete(realLoc, true);
                         }
+                    }
+
+                    if (FileErrors > 0)
+                    {
+                        FileSettingsSave.GameIntegrity = "Bad";
+                        FileSettingsSave.SaveSettings();
+                        FileErrors = 0;
                     }
 
                     File.Delete(linksPath);

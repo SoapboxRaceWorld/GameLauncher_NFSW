@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
@@ -47,7 +47,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         private int LoadEmbeddedFont(string fontName)
         {
-            Stream manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("GameLauncher.Fonts." + fontName);
+            Stream manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("GameLauncher.Resources.Fonts." + fontName);
             IntPtr intPtr = Marshal.AllocCoTaskMem((int)manifestResourceStream.Length);
             byte[] array = new byte[manifestResourceStream.Length];
             manifestResourceStream.Read(array, 0, (int)manifestResourceStream.Length);

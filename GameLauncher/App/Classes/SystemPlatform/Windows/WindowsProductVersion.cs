@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Globalization;
 
@@ -6,6 +6,13 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 {
     class WindowsProductVersion
     {
+        /* Cached Results from Program.cs To be Referenced Quickly */
+
+        /* Final output: 18362.1016 */
+        public static int CachedWindowsBuildNumber = 0;
+        /* Final output: 10.0 */
+        public static double CachedWindowsNumber;
+
         /// <summary>
         /// Get the Build number of the installed copy of Windows
         /// </summary>
@@ -16,7 +23,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /// https://docs.microsoft.com/en-us/windows/release-information/
         public static int GetWindowsBuildNumber()
         {
-            // Get the Kernel32 DLL File Version
+            /* Get the Kernel32 DLL File Version */
             FileVersionInfo osVersionInfo = FileVersionInfo.GetVersionInfo(Environment.GetEnvironmentVariable("windir") + @"\System32\Kernel32.dll");
 
             return osVersionInfo.FileBuildPart;
@@ -34,10 +41,28 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /// https://www.lifewire.com/windows-version-numbers-2625171
         public static double GetWindowsNumber()
         {
-            // Get the Kernel32 DLL File Version
+            /* Get the Kernel32 DLL File Version */
             FileVersionInfo osVersionInfo = FileVersionInfo.GetVersionInfo(Environment.GetEnvironmentVariable("windir") + @"\System32\Kernel32.dll");
 
             return double.Parse(osVersionInfo.FileMajorPart + "." + osVersionInfo.FileMinorPart, CultureInfo.InvariantCulture);
+        }
+
+        /* This Converts the OS Kernal Number to a Name */
+        public static string ConvertWindowsNumberToName(double osVersionInfo)
+        {
+            string BitType = " 32 bit";
+            if (Environment.Is64BitOperatingSystem == true)
+            {
+                BitType = " 64 Bit";
+            }
+
+            if (osVersionInfo == 10) return "Windows 10" + BitType;
+            else if (osVersionInfo == 6.3) return "Windows 8.1" + BitType;
+            else if (osVersionInfo == 6.2) return "Windows 8" + BitType;
+            else if (osVersionInfo == 6.1) return "Windows 7" + BitType;
+            else if (osVersionInfo == 6.0) return "Windows Vista" + BitType;
+            else if (osVersionInfo == 5.1) return "Windows XP" + BitType;
+            return "Windows -∞" + BitType;
         }
     }
 }

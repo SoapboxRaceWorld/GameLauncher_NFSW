@@ -1,4 +1,6 @@
-using System.IO;
+﻿using System.IO;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 
@@ -20,14 +22,21 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public static string IgnoreVersion = !string.IsNullOrEmpty(settingFile.Read("IgnoreUpdateVersion")) ? settingFile.Read("IgnoreUpdateVersion") : string.Empty;
 
-        public static string FirewallStatus = !string.IsNullOrEmpty(settingFile.Read("Firewall")) ? settingFile.Read("Firewall") : "Unknown";
+        public static string FirewallLauncherStatus = !string.IsNullOrEmpty(settingFile.Read("FirewallLauncher")) ? settingFile.Read("FirewallLauncher") : "Unknown";
+
+        public static string FirewallGameStatus = !string.IsNullOrEmpty(settingFile.Read("FirewallGame")) ? settingFile.Read("FirewallGame") : "Unknown";
 
         public static string WindowsDefenderStatus = !string.IsNullOrEmpty(settingFile.Read("WindowsDefender")) ? settingFile.Read("WindowsDefender") : "Unknown";
 
         public static string Win7UpdatePatches = !string.IsNullOrEmpty(settingFile.Read("PatchesApplied")) ? settingFile.Read("PatchesApplied") : string.Empty;
 
+        public static string FilePermissionStatus = !string.IsNullOrEmpty(settingFile.Read("FilePermission")) ? settingFile.Read("FilePermission") : "Not Set";
+
+        public static string GameIntegrity = !string.IsNullOrEmpty(settingFile.Read("GameIntegrity")) ? settingFile.Read("GameIntegrity") : "Unknown";
+
         public static void NullSafeSettings()
         {
+            /* Migrate old Key Entries */
             if (settingFile.KeyExists("Server"))
             {
                 FileAccountSave.ChoosenGameServer = settingFile.Read("Server");
@@ -48,6 +57,14 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 settingFile.DeleteKey("Password");
                 FileAccountSave.SaveAccount();
             }
+
+            if (settingFile.KeyExists("Firewall"))
+            {
+                FirewallLauncherStatus = settingFile.Read("Firewall");
+                settingFile.DeleteKey("Firewall");
+            }
+
+            /* Check if any Entries are missing */
 
             if (DetectLinux.LinuxDetected() && !settingFile.KeyExists("InstallationDirectory"))
             {
@@ -97,21 +114,49 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 settingFile.Write("IgnoreUpdateVersion", IgnoreVersion);
             }
 
+            if (!settingFile.KeyExists("FilePermission") && !DetectLinux.LinuxDetected())
+            {
+                settingFile.Write("FilePermission", FilePermissionStatus);
+            }
+            else if (settingFile.KeyExists("FilePermission") && DetectLinux.LinuxDetected())
+            {
+                settingFile.DeleteKey("FilePermission");
+            }
+
+            if (!settingFile.KeyExists("GameIntegrity"))
+            {
+                settingFile.Write("GameIntegrity", GameIntegrity);
+            }
+
+            if (!settingFile.KeyExists("ProxyPort"))
+            {
+                settingFile.Write("ProxyPort", string.Empty);
+            }
+
             if (!DetectLinux.LinuxDetected())
             {
-                if (!settingFile.KeyExists("Firewall"))
+                if (!settingFile.KeyExists("FirewallLauncher"))
                 {
-                    settingFile.Write("Firewall", FirewallStatus);
+                    settingFile.Write("FirewallLauncher", FirewallLauncherStatus);
                 }
 
-                if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
+                if (FirewallLauncherStatus != "Unknown")
+                {
+                    FirewallGameStatus = FirewallLauncherStatus;
+                }
+                else if (!settingFile.KeyExists("FirewallGame"))
+                {
+                    settingFile.Write("FirewallGame", FirewallGameStatus);
+                }
+
+                if (WindowsProductVersion.CachedWindowsNumber >= 10.0)
                 {
                     if (!settingFile.KeyExists("WindowsDefender"))
                     {
                         settingFile.Write("WindowsDefender", WindowsDefenderStatus);
                     }
                 }
-                else if (WindowsProductVersion.GetWindowsNumber() < 10.0)
+                else if (WindowsProductVersion.CachedWindowsNumber < 10.0)
                 {
                     if (settingFile.KeyExists("WindowsDefender") || !string.IsNullOrEmpty(settingFile.Read("WindowsDefender")))
                     {
@@ -119,13 +164,33 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     }
                 }
 
-                if (WindowsProductVersion.GetWindowsNumber() == 6.1 && !settingFile.KeyExists("PatchesApplied"))
+                if (WindowsProductVersion.CachedWindowsNumber == 6.1 && !settingFile.KeyExists("PatchesApplied"))
                 {
                     settingFile.Write("PatchesApplied", Win7UpdatePatches);
                 }
-                else if (WindowsProductVersion.GetWindowsNumber() != 6.1 && settingFile.KeyExists("PatchesApplied"))
+                else if (WindowsProductVersion.CachedWindowsNumber != 6.1 && settingFile.KeyExists("PatchesApplied"))
                 {
                     settingFile.DeleteKey("PatchesApplied");
+                }
+            }
+
+            /* Key Entries to Convert into Boolens */
+
+            if (!string.IsNullOrEmpty(Proxy))
+            {
+                if (Proxy == "1")
+                {
+                    FunctionStatus.DisableProxy = true;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(settingFile.Read("ProxyPort")))
+            {
+                var isNumeric = int.TryParse(settingFile.Read("ProxyPort"), out int Port);
+
+                if (isNumeric == true)
+                {
+                    ServerProxy.ProxyPort = Port;
                 }
             }
 
@@ -201,14 +266,29 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 settingFile.Write("IgnoreUpdateVersion", IgnoreVersion);
             }
 
+            if (settingFile.Read("GameIntegrity") != GameIntegrity)
+            {
+                settingFile.Write("GameIntegrity", GameIntegrity);
+            }
+
             if (!DetectLinux.LinuxDetected())
             {
-                if (settingFile.Read("Firewall") != FirewallStatus)
+                if (settingFile.Read("FilePermission") != FilePermissionStatus)
                 {
-                    settingFile.Write("Firewall", FirewallStatus);
+                    settingFile.Write("FilePermission", FilePermissionStatus);
                 }
 
-                if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
+                if (settingFile.Read("FirewallLauncher") != FirewallLauncherStatus)
+                {
+                    settingFile.Write("FirewallLauncher", FirewallLauncherStatus);
+                }
+
+                if (settingFile.Read("FirewallGame") != FirewallGameStatus)
+                {
+                    settingFile.Write("FirewallGame", FirewallGameStatus);
+                }
+
+                if (WindowsProductVersion.CachedWindowsNumber >= 10.0)
                 {
                     if (settingFile.Read("WindowsDefender") != WindowsDefenderStatus)
                     {
@@ -216,7 +296,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     }
                 }
 
-                if ((settingFile.Read("PatchesApplied") != Win7UpdatePatches) && WindowsProductVersion.GetWindowsNumber() == 6.1)
+                if ((settingFile.Read("PatchesApplied") != Win7UpdatePatches) && WindowsProductVersion.CachedWindowsNumber == 6.1)
                 {
                     settingFile.Write("PatchesApplied", Win7UpdatePatches);
                 }

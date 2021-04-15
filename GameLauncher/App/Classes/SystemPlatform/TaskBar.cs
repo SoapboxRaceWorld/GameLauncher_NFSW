@@ -1,4 +1,4 @@
-//Credits: https://stackoverflow.com/a/24187171
+﻿//Credits: https://stackoverflow.com/a/24187171
 
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using System;
@@ -20,7 +20,7 @@ public static class TaskbarProgress
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     private interface ITaskbarList3
     {
-        // ITaskbarList
+        /* ITaskbarList */
         [PreserveSig]
         void HrInit();
         [PreserveSig]
@@ -32,11 +32,11 @@ public static class TaskbarProgress
         [PreserveSig]
         void SetActiveAlt(IntPtr hwnd);
 
-        // ITaskbarList2
+        /* ITaskbarList2 */
         [PreserveSig]
         void MarkFullscreenWindow(IntPtr hwnd, [MarshalAs(UnmanagedType.Bool)] bool fFullscreen);
 
-        // ITaskbarList3
+        /* ITaskbarList3 */
         [PreserveSig]
         void SetProgressValue(IntPtr hwnd, UInt64 ullCompleted, UInt64 ullTotal);
         [PreserveSig]

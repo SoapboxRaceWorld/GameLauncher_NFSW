@@ -1,4 +1,4 @@
-namespace GameLauncher.App.Classes.LauncherCore.Visuals
+﻿namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
     public class AboutNoteBlock
     {

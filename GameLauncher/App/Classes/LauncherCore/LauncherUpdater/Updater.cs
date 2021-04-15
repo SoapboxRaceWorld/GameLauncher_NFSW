@@ -1,5 +1,4 @@
-using System;
-using System.Net;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
@@ -8,8 +7,9 @@ using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
+using System.Threading.Tasks;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -29,18 +29,65 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             description = statusDescription;
         }
 
-        public static void CheckAvailability()
+        public static async Task Latest()
         {
             if (!DetectLinux.LinuxDetected())
             {
-                switch (APIStatusChecker.CheckStatus(URLs.mainserver + "/update.php?version=" + Application.ProductVersion))
+                await Task.Run(() => Check());
+            }
+        }
+
+        public static void Check()
+        {
+            bool MainAPI = true;
+
+            using (WebClientWithTimeout Client = new WebClientWithTimeout())
+            {
+                try
                 {
-                    case APIStatus.Online:
-                        MainAPI();
-                        break;
-                    default:
-                        GitHubAPI();
-                        break;
+                    var json_data = Client.DownloadString(URLs.Main + "/update.php?version=" + Application.ProductVersion);
+                    UpdateCheckResponse MAPI = JsonConvert.DeserializeObject<UpdateCheckResponse>(json_data);
+
+                    if (MAPI.Payload.LatestVersion != null)
+                    {
+                        LatestLauncherBuild = MAPI.Payload.LatestVersion;
+                        Log.Info("UPDATER: Latest Version -> " + MAPI.Payload.LatestVersion);
+                    }
+                }
+                catch (Exception error)
+                {
+                    MainAPI = false;
+                    Log.Error("LAUNCHER UPDATER: " + error.Message);
+                }
+            }
+
+            if (MainAPI != true)
+            {
+                bool GitHubAPI = true;
+
+                using (WebClientWithTimeout Client = new WebClientWithTimeout())
+                {
+                    try
+                    {
+                        var json_data = Client.DownloadString(URLs.GitHub_Launcher);
+                        GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
+
+                        if (GHAPI.TagName != null)
+                        {
+                            LatestLauncherBuild = GHAPI.TagName;
+                            Log.Info("UPDATER: Latest Version -> " + GHAPI.TagName);
+                        }
+                    }
+                    catch (Exception error)
+                    {
+                        GitHubAPI = false;
+                        Log.Error("LAUNCHER UPDATER: " + error.Message);
+                    }
+                }
+
+                if (GitHubAPI != true)
+                {
+                    Log.Error("UPDATER: Failed to Retrive Latest Build Information from two APIs ");
                 }
             }
         }
@@ -88,8 +135,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
                     if (FileSettingsSave.IgnoreVersion == LatestLauncherBuild.ToString())
                     {
-                        //No Update Popup
-                        //Blame DavidCarbon if this Breaks (to some degree), not Zacam...
+                        /* No Update Popup
+                           Blame DavidCarbon if this Breaks (to some degree), not Zacam...*/
                     }
                     else
                     {
@@ -107,13 +154,13 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                             }
                         };
 
-                        //Check if User clicked Ignore so it doesn't update "IgnoreUpdateVersion"
+                        /* Check if User clicked Ignore so it doesn't update "IgnoreUpdateVersion" */
                         if (updateConfirm == DialogResult.Cancel)
                         {
                             FileSettingsSave.IgnoreVersion = String.Empty;
                         };
 
-                        //Write to Settings.ini to Skip Update
+                        /* Write to Settings.ini to Skip Update */
                         if (updateConfirm == DialogResult.Ignore)
                         {
                             FileSettingsSave.IgnoreVersion = LatestLauncherBuild.ToString();
@@ -128,50 +175,6 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 status.BackgroundImage = Theming.UpdateIconError;
                 text.ForeColor = Theming.Error;
                 description.Text = "Version: v" + Application.ProductVersion;
-            }
-            //----------------------//
-        }
-
-        public static void MainAPI()
-        {
-            WebClient update_data = new WebClient();
-            update_data.CancelAsync();
-            update_data.Headers.Add("user-agent", "GameLauncherUpdater " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-            update_data.DownloadStringAsync(new Uri(URLs.mainserver + "/update.php?version=" + Application.ProductVersion));
-            update_data.DownloadStringCompleted += (sender, e) => {
-                UpdateCheckResponse MAPI = JsonConvert.DeserializeObject<UpdateCheckResponse>(e.Result);
-
-                if (MAPI.Payload.LatestVersion != null)
-                {
-                    LatestLauncherBuild = MAPI.Payload.LatestVersion;
-                    Log.Info("UPDATER: Latest Version -> " + MAPI.Payload.LatestVersion);
-                }
-            };
-        }
-
-        public static void GitHubAPI()
-        {
-            Log.Warning("UPDATER: Falling back to GitHub API");
-            switch (APIStatusChecker.CheckStatus("http://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest"))
-            {
-                case APIStatus.Online:
-                    WebClient update_data = new WebClient();
-                    update_data.CancelAsync();
-                    update_data.Headers.Add("user-agent", "GameLauncherUpdater " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    update_data.DownloadStringAsync(new Uri("http://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest"));
-                    update_data.DownloadStringCompleted += (sender, e) => {
-                        GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(e.Result);
-
-                        if (GHAPI.TagName != null)
-                        {
-                            LatestLauncherBuild = GHAPI.TagName;
-                            Log.Info("UPDATER: Latest Version -> " + GHAPI.TagName);
-                        }
-                    };
-                    break;
-                default:
-                    Log.Error("UPDATER: Failed to Retrive Latest Build Information from two APIs ");
-                    break;
             }
         }
     }

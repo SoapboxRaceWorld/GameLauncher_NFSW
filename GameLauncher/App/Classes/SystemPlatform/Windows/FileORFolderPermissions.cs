@@ -1,3 +1,4 @@
+﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using System;
@@ -67,24 +68,32 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             if (!DetectLinux.LinuxDetected())
             {
-                var everyone = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
-                var fileSecurity = File.GetAccessControl(path);
-                var acl = fileSecurity.GetAccessRules(true, true, typeof(SecurityIdentifier));
-
-                bool IsPermsGood = false;
-
-                foreach (FileSystemAccessRule rule in acl)
+                try
                 {
-                    if (rule.IdentityReference.Value == everyone.Value && rule.AccessControlType == AccessControlType.Allow
-                        && (rule.FileSystemRights & FileSystemRights.Read) == FileSystemRights.Read)
+                    var everyone = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
+                    var fileSecurity = File.GetAccessControl(path);
+                    var acl = fileSecurity.GetAccessRules(true, true, typeof(SecurityIdentifier));
+
+                    bool IsPermsGood = false;
+
+                    foreach (FileSystemAccessRule rule in acl)
                     {
-                        IsPermsGood = true;
+                        if (rule.IdentityReference.Value == everyone.Value && rule.AccessControlType == AccessControlType.Allow
+                            && (rule.FileSystemRights & FileSystemRights.Read) == FileSystemRights.Read)
+                        {
+                            IsPermsGood = true;
+                        }
                     }
+
+                    Log.Info("FILE PERMISSION: [" + path + "] Is permission set? -> " + IsPermsGood);
+
+                    return IsPermsGood;
                 }
-
-                Log.Info("FILE PERMISSION: [" + path + "] Is permission set? -> " + IsPermsGood);
-
-                return IsPermsGood;
+                catch (Exception error)
+                {
+                    Log.Info("FILE PERMISSION: [" + path + "] Encounterd an Error" + error.Message);
+                    return false;
+                }
             }
             else
             {
@@ -97,27 +106,35 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             if (!DetectLinux.LinuxDetected())
             {
-                var everyone = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
-
-                DirectoryInfo Info = new DirectoryInfo(path);
-                DirectorySecurity FolderSecurity = Info.GetAccessControl();
-
-                var acl = FolderSecurity.GetAccessRules(true, true, typeof(SecurityIdentifier));
-
-                bool IsPermsGood = false;
-
-                foreach (FileSystemAccessRule rule in acl)
+                try
                 {
-                    if (rule.IdentityReference.Value == everyone.Value && rule.AccessControlType == AccessControlType.Allow
-                        && (rule.FileSystemRights & FileSystemRights.Read) == FileSystemRights.Read)
+                    var everyone = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
+
+                    DirectoryInfo Info = new DirectoryInfo(path);
+                    DirectorySecurity FolderSecurity = Info.GetAccessControl();
+
+                    var acl = FolderSecurity.GetAccessRules(true, true, typeof(SecurityIdentifier));
+
+                    bool IsPermsGood = false;
+
+                    foreach (FileSystemAccessRule rule in acl)
                     {
-                        IsPermsGood = true;
+                        if (rule.IdentityReference.Value == everyone.Value && rule.AccessControlType == AccessControlType.Allow
+                            && (rule.FileSystemRights & FileSystemRights.Read) == FileSystemRights.Read)
+                        {
+                            IsPermsGood = true;
+                        }
                     }
+
+                    Log.Info("FOLDER PERMISSION: [" + path + "] Is permission set? -> " + IsPermsGood);
+
+                    return IsPermsGood;
                 }
-
-                Log.Info("FOLDER PERMISSION: [" + path + "] Is permission set? -> " + IsPermsGood);
-
-                return IsPermsGood;
+                catch (Exception error)
+                {
+                    Log.Info("FOLDER PERMISSION: [" + path + "] Encounterd an Error" + error.Message);
+                    return false;
+                }
             }
             else
             {
@@ -152,6 +169,36 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     }
                 }
             }
+        }
+    }
+
+    class FileORFolderPermissionsFunctions
+    {
+        public static void Folders()
+        {
+            try
+            {
+                /* Set Folder Permissions Here - DavidCarbon */
+                if (FileSettingsSave.FilePermissionStatus != "Set" && !DetectLinux.LinuxDetected())
+                {
+                    /* Launcher Folder */
+                    FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(AppDomain.CurrentDomain.BaseDirectory));
+                    /* Game Files Folder */
+                    FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(FileSettingsSave.GameInstallation));
+                    FileSettingsSave.FilePermissionStatus = "Set";
+                }
+                else
+                {
+                    Log.Core("PERMISSIONS: Checking File! It's value is " + FileSettingsSave.FilePermissionStatus);
+                }
+            }
+            catch (Exception error)
+            {
+                Log.Error("PERMISSIONS: " + error.Message);
+                FileSettingsSave.FilePermissionStatus = "Error";
+            }
+
+            FileSettingsSave.SaveSettings();
         }
     }
 }

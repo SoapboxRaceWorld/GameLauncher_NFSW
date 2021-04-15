@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 //If you are using this code to build a Class Library Project instead of just adding it to a Form Project then you
 //will need to add a reference to System.Drawing and System.Windows.Forms for the next three Imports. You can do
@@ -32,7 +32,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         private bool _RoundedCorners = true;
         private ProgressDir _ProgressDirection = ProgressDir.Horizontal;
 
-        /// <summary>Enum of positions used for the ProgressBar`s GradiantPosition property.</summary>
+        /* <summary>Enum of positions used for the ProgressBar`s GradiantPosition property.</summary> */
         public enum GradiantArea : int
         {
             None = 0,
@@ -41,7 +41,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
             Bottom = 3
         }
 
-        /// <summary>Enum of ImageLayout types used for the ProgressBar`s ImageLayout property.</summary>
+        /* <summary>Enum of ImageLayout types used for the ProgressBar`s ImageLayout property.</summary> */
         public enum ImageLayoutType : int
         {
             None = 0,
@@ -49,7 +49,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
             Stretch = 2
         }
 
-        /// <summary>Enum of Progress Direction types used for the ProgressDirection property.</summary>
+        /* <summary>Enum of Progress Direction types used for the ProgressDirection property.</summary> */
         public enum ProgressDir : int
         {
             Horizontal = 0,
@@ -254,19 +254,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 _GradiantPosition = value;
                 if (value == GradiantArea.None)
                 {
-                    bBlend.Factors = new float[] { 0f, 0f, 0f, 0f, 0f, 0f }; //Shine None
+                    bBlend.Factors = new float[] { 0f, 0f, 0f, 0f, 0f, 0f }; /* Shine None */
                 }
                 else if (value == GradiantArea.Top)
                 {
-                    bBlend.Factors = new float[] { 0.8f, 0.7f, 0.6f, 0.4f, 0f, 0f }; //Shine Top
+                    bBlend.Factors = new float[] { 0.8f, 0.7f, 0.6f, 0.4f, 0f, 0f }; /* Shine Top */
                 }
                 else if (value == GradiantArea.Center)
                 {
-                    bBlend.Factors = new float[] { 0f, 0.4f, 0.6f, 0.6f, 0.4f, 0f }; //Shine Center
+                    bBlend.Factors = new float[] { 0f, 0.4f, 0.6f, 0.6f, 0.4f, 0f }; /* Shine Center */
                 }
                 else
                 {
-                    bBlend.Factors = new float[] { 0f, 0f, 0.4f, 0.6f, 0.7f, 0.8f }; //Shine Bottom
+                    bBlend.Factors = new float[] { 0f, 0f, 0.4f, 0.6f, 0.7f, 0.8f }; /* Shine Bottom */
                 }
                 this.Refresh();
             }
