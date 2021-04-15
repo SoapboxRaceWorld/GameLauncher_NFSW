@@ -1,4 +1,4 @@
-using Nancy.Json;
+﻿using Nancy.Json;
 using Newtonsoft.Json;
 using System;
 using System.IO;

@@ -1,4 +1,4 @@
-namespace GameLauncher.App.Classes.LauncherCore.Global
+﻿namespace GameLauncher.App.Classes.LauncherCore.Global
 {
     /* Used with CheckFolder Function in FunctionStatus.cs
     /* Or

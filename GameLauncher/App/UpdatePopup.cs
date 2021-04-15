@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Drawing;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;

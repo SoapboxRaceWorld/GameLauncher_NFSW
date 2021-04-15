@@ -1,4 +1,4 @@
-using GameLauncher.App.Classes.Auth;
+﻿using GameLauncher.App.Classes.Auth;
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;

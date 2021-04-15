@@ -1,4 +1,4 @@
-using DiscordRPC;
+﻿using DiscordRPC;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Visuals;

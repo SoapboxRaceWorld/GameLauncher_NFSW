@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 
 namespace GameLauncher.App.Classes.LauncherCore.Validator.Email

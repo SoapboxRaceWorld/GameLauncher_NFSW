@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Threading;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client

@@ -1,4 +1,4 @@
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
+﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;

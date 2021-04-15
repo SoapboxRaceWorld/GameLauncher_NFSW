@@ -1,4 +1,4 @@
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using Newtonsoft.Json;
 using System;
 

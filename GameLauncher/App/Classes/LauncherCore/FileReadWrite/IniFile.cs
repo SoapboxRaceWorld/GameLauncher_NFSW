@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using IniParser;
 using IniParser.Model;
 using System.Text;

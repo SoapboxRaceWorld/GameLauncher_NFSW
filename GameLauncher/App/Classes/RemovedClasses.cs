@@ -1,4 +1,4 @@
-/* 
+﻿/* 
 
 - Removed Language.cs
     - https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/b798b590f0927c6eee640795b912a88ecb08219f/Language.cs

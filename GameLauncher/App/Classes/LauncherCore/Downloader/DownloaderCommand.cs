@@ -1,4 +1,4 @@
-namespace GameLauncher.App.Classes.LauncherCore.Downloader
+﻿namespace GameLauncher.App.Classes.LauncherCore.Downloader
 {
     public abstract class DownloaderCommand
     {

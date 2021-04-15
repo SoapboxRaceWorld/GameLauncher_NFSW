@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.Logger;

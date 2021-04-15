@@ -1,4 +1,4 @@
-using System.Resources;
+﻿using System.Resources;
 using System.Reflection;
 using System.Runtime.InteropServices;
 

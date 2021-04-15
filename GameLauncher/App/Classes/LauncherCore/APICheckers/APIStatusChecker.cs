@@ -1,4 +1,4 @@
-using GameLauncher.App.Classes.LauncherCore.Global;
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.Logger;
 using System;
 using System.Net;
