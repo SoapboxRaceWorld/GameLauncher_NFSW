@@ -1,4 +1,4 @@
-namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
+﻿namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 {
     class FileAccountSave
     {
@@ -14,12 +14,6 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public static void NullSafeAccount()
         {
-            if (accountFile.KeyExists("Password"))
-            {
-                UserHashedPassword = accountFile.Read("Password");
-                accountFile.DeleteKey("Password");
-            }
-
             if (!accountFile.KeyExists("Server"))
             {
                 accountFile.Write("Server", string.Empty);
@@ -28,6 +22,12 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             if (!accountFile.KeyExists("AccountEmail"))
             {
                 accountFile.Write("AccountEmail", string.Empty);
+            }
+
+            if (accountFile.KeyExists("Password"))
+            {
+                UserHashedPassword = accountFile.Read("Password");
+                accountFile.DeleteKey("Password");
             }
 
             if (!accountFile.KeyExists("PasswordHashed"))
