@@ -1,5 +1,4 @@
-using System;
-using System.IO;
+﻿using System.IO;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
