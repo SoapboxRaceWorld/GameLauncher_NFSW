@@ -749,6 +749,7 @@ namespace GameLauncher.App
             // comboResolution
             // 
             this.comboResolution.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboResolution.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboResolution.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboResolution.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboResolution.FormattingEnabled = true;
@@ -957,6 +958,7 @@ namespace GameLauncher.App
             // comboAudioMode
             // 
             this.comboAudioMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboAudioMode.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboAudioMode.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboAudioMode.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboAudioMode.FormattingEnabled = true;
@@ -1026,6 +1028,7 @@ namespace GameLauncher.App
             // comboBox2
             // 
             this.comboBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBox2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboBox2.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBox2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBox2.FormattingEnabled = true;
@@ -1039,6 +1042,7 @@ namespace GameLauncher.App
             // comboBox3
             // 
             this.comboBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBox3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboBox3.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBox3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBox3.FormattingEnabled = true;
@@ -1052,6 +1056,7 @@ namespace GameLauncher.App
             // comboBox4
             // 
             this.comboBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBox4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboBox4.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBox4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBox4.FormattingEnabled = true;
@@ -1220,6 +1225,7 @@ namespace GameLauncher.App
             // comboBox5
             // 
             this.comboBox5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBox5.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboBox5.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBox5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBox5.FormattingEnabled = true;
@@ -1232,6 +1238,7 @@ namespace GameLauncher.App
             // comboBox6
             // 
             this.comboBox6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBox6.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboBox6.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBox6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBox6.FormattingEnabled = true;
@@ -1244,6 +1251,7 @@ namespace GameLauncher.App
             // comboBox7
             // 
             this.comboBox7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBox7.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboBox7.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBox7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBox7.FormattingEnabled = true;
@@ -1256,6 +1264,7 @@ namespace GameLauncher.App
             // comboBox8
             // 
             this.comboBox8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBox8.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboBox8.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBox8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBox8.FormattingEnabled = true;
@@ -1268,6 +1277,7 @@ namespace GameLauncher.App
             // comboBox9
             // 
             this.comboBox9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBox9.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboBox9.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBox9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBox9.FormattingEnabled = true;
@@ -1280,6 +1290,7 @@ namespace GameLauncher.App
             // comboBox10
             // 
             this.comboBox10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBox10.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboBox10.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBox10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBox10.FormattingEnabled = true;
@@ -1292,6 +1303,7 @@ namespace GameLauncher.App
             // comboBox11
             // 
             this.comboBox11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBox11.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboBox11.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBox11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBox11.FormattingEnabled = true;
@@ -1304,6 +1316,7 @@ namespace GameLauncher.App
             // comboBox12
             // 
             this.comboBox12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBox12.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboBox12.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBox12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBox12.FormattingEnabled = true;
@@ -1316,6 +1329,7 @@ namespace GameLauncher.App
             // comboBox13
             // 
             this.comboBox13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBox13.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboBox13.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBox13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBox13.FormattingEnabled = true;
@@ -1328,6 +1342,7 @@ namespace GameLauncher.App
             // comboBox14
             // 
             this.comboBox14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBox14.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboBox14.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBox14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBox14.FormattingEnabled = true;
