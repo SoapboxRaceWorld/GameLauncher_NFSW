@@ -334,7 +334,7 @@ namespace GameLauncher
             if (!File.Exists(_userSettings))
             {
                 string RoamingData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                if (!Directory.Exists(RoamingData + "\\Need for Speed World"))
+                if ((!Directory.Exists(RoamingData + "\\Need for Speed World")) || (!Directory.Exists(RoamingData + "\\Need for Speed World" + "\\Settings")))
                 {
                     Directory.CreateDirectory(RoamingData + "\\Need for Speed World" + "\\Settings");
                 }
