@@ -333,6 +333,11 @@ namespace GameLauncher
             string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
             if (!File.Exists(_userSettings))
             {
+                string RoamingData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                if (!Directory.Exists(RoamingData + "\\Need for Speed World"))
+                {
+                    Directory.CreateDirectory(RoamingData + "\\Need for Speed World" + "\\Settings");
+                }
                 File.WriteAllBytes(_userSettings, ExtractResource.AsByte("GameLauncher.Resources.UserSettings.UserSettings.xml"));
             }
             FileSettingsSave.NullSafeSettings();
