@@ -42,10 +42,19 @@ namespace GameLauncher.App.Classes
                 Clock.Start();
                 Application.OpenForms["SplashScreen"].Close();
             }
-            else if (i == 300)
+            else if (i >= 300)
             {
                 Log.Error("SPLASH SCREEN: Launcher might have hanged? 5 Mintinues had passed so I'm closing the form");
-                Close();
+
+                try
+                {
+                    Application.OpenForms["SplashScreen"].Close();
+                }
+                catch (Exception error)
+                {
+                    Log.Error("SPLASH SCREEN: " + error.Message);
+                    Close();
+                }
             }
         }
     }

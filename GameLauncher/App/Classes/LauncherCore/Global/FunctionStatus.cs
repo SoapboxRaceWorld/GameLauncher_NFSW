@@ -283,35 +283,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && (FileSettingsSave.WindowsDefenderStatus == "Not Excluded" || FileSettingsSave.WindowsDefenderStatus == "Unknown"))
                 {
                     Log.Core("WINDOWS DEFENDER: Windows 10 Detected! Running Exclusions for Core Folders");
-                    if (ManagementSearcher.SecurityCenter("AntivirusEnabled") == true && ManagementSearcher.SecurityCenter("AntispywareEnabled") == true)
-                    {
-                        /* Create Windows Defender Exclusion */
-                        try
-                        {
-                            Log.Info("WINDOWS DEFENDER: Excluding Core Folders");
-                            /* Add Exclusion to Windows Defender */
-                            using (PowerShell ps = PowerShell.Create())
-                            {
-                                ps.AddScript($"Add-MpPreference -ExclusionPath \"{AppDomain.CurrentDomain.BaseDirectory}\"");
-                                ps.AddScript($"Add-MpPreference -ExclusionPath \"{FileSettingsSave.GameInstallation}\"");
-                                var result = ps.Invoke();
-                            }
+                    WindowsDefenderFirstRun();
 
-                            FileSettingsSave.WindowsDefenderStatus = "Excluded";
-                            FileSettingsSave.SaveSettings();
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error("WINDOWS DEFENDER: " + ex.Message);
-                            FileSettingsSave.WindowsDefenderStatus = "Not Excluded";
-                            FileSettingsSave.SaveSettings();
-                        }
-                    }
-                    else
-                    {
-                        FileSettingsSave.WindowsDefenderStatus = "Not Supported";
-                        FileSettingsSave.SaveSettings();
-                    }
                 }
                 else if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && !string.IsNullOrEmpty(FileSettingsSave.WindowsDefenderStatus))
                 {
@@ -340,6 +313,46 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
             Log.Visuals("CORE: Starting MainScreen");
             Application.Run(new MainScreen());
+        }
+
+        public static void WindowsDefenderFirstRun()
+        {
+            try
+            {
+                if (ManagementSearcher.SecurityCenter("AntivirusEnabled") == true && ManagementSearcher.SecurityCenter("AntispywareEnabled") == true)
+                {
+                    /* Create Windows Defender Exclusion */
+                    try
+                    {
+                        Log.Info("WINDOWS DEFENDER: Excluding Core Folders");
+                        /* Add Exclusion to Windows Defender */
+                        using (PowerShell ps = PowerShell.Create())
+                        {
+                            ps.AddScript($"Add-MpPreference -ExclusionPath \"{AppDomain.CurrentDomain.BaseDirectory}\"");
+                            ps.AddScript($"Add-MpPreference -ExclusionPath \"{FileSettingsSave.GameInstallation}\"");
+                            var result = ps.Invoke();
+                        }
+
+                        FileSettingsSave.WindowsDefenderStatus = "Excluded";
+                        FileSettingsSave.SaveSettings();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("WINDOWS DEFENDER: " + ex.Message);
+                        FileSettingsSave.WindowsDefenderStatus = "Not Excluded";
+                        FileSettingsSave.SaveSettings();
+                    }
+                }
+                else
+                {
+                    FileSettingsSave.WindowsDefenderStatus = "Not Supported";
+                    FileSettingsSave.SaveSettings();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("WINDOWS DEFENDER: " + ex.Message);
+            }
         }
 
         /* Moved "runAsAdmin" Code to Gist */
