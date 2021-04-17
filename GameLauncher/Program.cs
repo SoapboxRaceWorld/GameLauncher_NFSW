@@ -315,6 +315,7 @@ namespace GameLauncher
             Log.Info("LAUNCHER: Detecting OS");
             if (DetectLinux.LinuxDetected())
             {
+                WindowsProductVersion.CachedWindowsNumber = 0;
                 InformationCache.OSName = DetectLinux.Distro();
                 Log.System("SYSTEM: Detected OS: " + InformationCache.OSName);
             }

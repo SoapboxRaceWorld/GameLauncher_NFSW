@@ -32,16 +32,23 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /* Searches for Installed Windows Updates */
         public static bool GetInstalledHotFix(string identification)
         {
-            var search = new ManagementObjectSearcher("SELECT HotFixID FROM Win32_QuickFixEngineering");
-            var collection = search.Get();
-
-            foreach (ManagementObject quickFix in collection)
+            try
             {
-                Console.WriteLine("Updates installed: " + quickFix["HotFixID"].ToString());
-                if (quickFix["HotFixID"].ToString() == identification)
+                var search = new ManagementObjectSearcher("SELECT HotFixID FROM Win32_QuickFixEngineering");
+                var collection = search.Get();
+
+                foreach (ManagementObject quickFix in collection)
                 {
-                    return true;
+                    Console.WriteLine("Updates installed: " + quickFix["HotFixID"].ToString());
+                    if (quickFix["HotFixID"].ToString() == identification)
+                    {
+                        return true;
+                    }
                 }
+            }
+            catch
+            {
+                return false;
             }
 
             return false;

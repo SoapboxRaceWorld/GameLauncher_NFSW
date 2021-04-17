@@ -452,11 +452,12 @@ namespace GameLauncher.App
             }
 
             /* TODO: Inform player about custom languagepack used. */
-            if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") {
+            if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") 
+            {
                 MessageBox.Show(null, "Please note, that if this server won't have that languagepack installed, it will fallback to English instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !DetectLinux.LinuxDetected())
+            if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !DetectLinux.LinuxDetected())
             {
                 WindowsDefenderGameFilesDirctoryChange();
             }
@@ -563,15 +564,20 @@ namespace GameLauncher.App
             }
 
             /* Create Custom Settings.ini for LangPicker.asi module */
-            if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") {
-                if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) {
+            if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") 
+            {
+                if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) 
+                {
                     Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
                 }
 
                 IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
                 LanguagePickerFile.Write("Language", ((LangObject)SettingsLanguage.SelectedItem).INI_Value);
-            } else {
-                if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini")) {
+            } 
+            else 
+            {
+                if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini")) 
+                {
                     File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
                 }
             }
@@ -786,7 +792,8 @@ namespace GameLauncher.App
 
         private void SettingsLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (((LangObject)SettingsLanguage.SelectedItem).IsSpecial) {
+            if (((LangObject)SettingsLanguage.SelectedItem).IsSpecial) 
+            {
                 SettingsLanguage.SelectedIndex = _lastSelectedLanguage;
                 return;
             }
