@@ -290,17 +290,24 @@ namespace GameLauncher
 
             string LocalAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-            if (Directory.Exists(LocalAppData + "\\Soapbox_Race_World"))
+            try
             {
-                Directory.Delete(LocalAppData + "\\Soapbox_Race_World", true);
+                if (Directory.Exists(LocalAppData + "\\Soapbox_Race_World"))
+                {
+                    Directory.Delete(LocalAppData + "\\Soapbox_Race_World", true);
+                }
+                if (Directory.Exists(LocalAppData + "\\SoapBoxRaceWorld"))
+                {
+                    Directory.Delete(LocalAppData + "\\SoapBoxRaceWorld", true);
+                }
+                if (Directory.Exists(LocalAppData + "\\WorldUnited.gg"))
+                {
+                    Directory.Delete(LocalAppData + "\\WorldUnited.gg", true);
+                }
             }
-            if (Directory.Exists(LocalAppData + "\\SoapBoxRaceWorld"))
+            catch (Exception error)
             {
-                Directory.Delete(LocalAppData + "\\SoapBoxRaceWorld", true);
-            }
-            if (Directory.Exists(LocalAppData + "\\WorldUnited.gg"))
-            {
-                Directory.Delete(LocalAppData + "\\WorldUnited.gg", true);
+                Log.Error("LAUNCHER MIGRATION: " + error.Message);
             }
 
             if (EnableInsider.ShouldIBeAnInsider() == true)
@@ -332,15 +339,25 @@ namespace GameLauncher
 
             /* Create Default Configuration Files (if they don't already exist) */
             string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
+
             if (!File.Exists(_userSettings))
             {
                 string RoamingData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                if ((!Directory.Exists(RoamingData + "\\Need for Speed World")) || (!Directory.Exists(RoamingData + "\\Need for Speed World" + "\\Settings")))
+
+                try
                 {
-                    Directory.CreateDirectory(RoamingData + "\\Need for Speed World" + "\\Settings");
+                    if ((!Directory.Exists(RoamingData + "\\Need for Speed World")) || (!Directory.Exists(RoamingData + "\\Need for Speed World" + "\\Settings")))
+                    {
+                        Directory.CreateDirectory(RoamingData + "\\Need for Speed World" + "\\Settings");
+                    }
+                    File.WriteAllBytes(_userSettings, ExtractResource.AsByte("GameLauncher.Resources.UserSettings.UserSettings.xml"));
                 }
-                File.WriteAllBytes(_userSettings, ExtractResource.AsByte("GameLauncher.Resources.UserSettings.UserSettings.xml"));
+                catch (Exception error)
+                {
+                    Log.Error("LAUNCHER XML: " + error.Message);
+                }
             }
+
             FileSettingsSave.NullSafeSettings();
             FileAccountSave.NullSafeAccount();
 
