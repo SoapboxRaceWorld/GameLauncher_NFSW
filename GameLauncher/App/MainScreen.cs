@@ -1235,6 +1235,8 @@ namespace GameLauncher
 
         private void LaunchGame(string UserID, string LoginToken, string ServerIP, Form x)
         {
+            WebClientWithTimeout.Timeout(5000);
+
             var psi = new ProcessStartInfo();
 
             if (DetectLinux.LinuxDetected())

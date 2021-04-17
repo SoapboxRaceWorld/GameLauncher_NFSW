@@ -15,7 +15,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
     {
         private static string GameLauncherHash = string.Empty;
         private static long addrange = 0;
-        private static int timeout = 5000;
+        private static int timeout = 10000;
 
         public static string Value()
         {
@@ -38,8 +38,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
                 }.Uri;
             }
 
-            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             ServicePointManager.ServerCertificateValidationCallback = (Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => 
             {
                 bool isOk = true;
@@ -82,16 +82,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 
             request.Proxy = null;
             request.Timeout = timeout;
+            request.KeepAlive = false;
 
             return request;
         }
 
-        internal void AddRange(long filesize)
+        public static void AddRange(long filesize)
         {
             addrange = filesize;
         }
 
-        internal void Timeout(int time)
+        public static void Timeout(int time)
         {
             timeout = time;
         }
