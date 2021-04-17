@@ -15,7 +15,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
     {
         private static string GameLauncherHash = string.Empty;
         private static long addrange = 0;
-        private static int timeout = 10000;
+        private static int timeout = 5000;
 
         public static string Value()
         {
