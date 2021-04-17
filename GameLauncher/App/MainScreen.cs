@@ -2413,7 +2413,7 @@ namespace GameLauncher
             /* Enable/Disable Visuals        /
             /********************************/
 
-            SelectServerBtn.Enabled = EnableInsider.ShouldIBeAnInsider();
+            SelectServerBtn.Visible = EnableInsider.ShouldIBeAnInsider();
 
             /********************************/
             /* Functions                     /
