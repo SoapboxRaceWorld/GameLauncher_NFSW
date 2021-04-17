@@ -844,6 +844,7 @@ namespace GameLauncher
                         LoginButton.Enabled = true;
                         RegisterText.Enabled = true;
                         InformationCache.SelectedServerCategory = ((ServerList)ServerPick.SelectedItem).Category;
+                        InformationCache.RestartTimer = (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
 
                         if (InformationCache.SelectedServerCategory == "DEV")
                         {

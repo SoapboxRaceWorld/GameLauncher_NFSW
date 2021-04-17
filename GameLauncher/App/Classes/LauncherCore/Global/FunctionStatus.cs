@@ -56,7 +56,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         public static Dictionary<string, int> ServerStatusBook = new Dictionary<string, int>();
 
         /* Selected Server Force Restart Timer */
-        public static int RestartTimer = (SelectedServerJSON.secondsToShutDown != 0) ? SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
+        public static int RestartTimer;
     }
 
     /* This is Used to call Certain Functions (Such as Completion Status or Function Callbacks) */
