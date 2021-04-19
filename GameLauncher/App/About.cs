@@ -94,6 +94,7 @@ namespace GameLauncher.App
         {
             try
             {
+                FunctionStatus.TLS();
                 XmlDocument doc = new XmlDocument();
                 doc.Load(URLs.Static_Alt + "/about.xml");
 

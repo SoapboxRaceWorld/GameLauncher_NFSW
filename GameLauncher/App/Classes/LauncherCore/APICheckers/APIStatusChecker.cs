@@ -16,6 +16,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
                 try
                 {
+                    FunctionStatus.TLS();
                     HttpWebRequest requestAPIStatus = (HttpWebRequest)HttpWebRequest.Create(APIURI);
                     requestAPIStatus.AllowAutoRedirect = false; /* Find out if this site is up and don't follow a redirector */
                     requestAPIStatus.Method = "GET";

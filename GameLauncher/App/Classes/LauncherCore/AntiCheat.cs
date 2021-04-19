@@ -179,6 +179,7 @@ namespace GameLauncher.App.Classes
                         {
                             if (report_url.EndsWith("?"))
                             {
+                                FunctionStatus.TLS();
                                 WebClient update_data = new WebClient();
                                 update_data.CancelAsync();
                                 update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion);
@@ -186,6 +187,7 @@ namespace GameLauncher.App.Classes
                             }
                             else
                             {
+                                FunctionStatus.TLS();
                                 Uri sendReport = new Uri(report_url);
 
                                 var request = (HttpWebRequest)WebRequest.Create(sendReport);
@@ -215,6 +217,7 @@ namespace GameLauncher.App.Classes
                                 Completed++;
                                 if (report_url.EndsWith("?"))
                                 {
+                                    FunctionStatus.TLS();
                                     WebClient update_data = new WebClient();
                                     update_data.CancelAsync();
                                     update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion);

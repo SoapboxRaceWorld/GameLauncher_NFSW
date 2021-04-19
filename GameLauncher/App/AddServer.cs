@@ -10,6 +10,7 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.Hash;
+using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App
 {
@@ -142,6 +143,7 @@ namespace GameLauncher.App
 
             try
             {
+                FunctionStatus.TLS();
                 var client = new WebClient();
                 Uri StringToUri = new Uri(wellFormattedURL + "/GetServerInformation");
                 var serverLoginResponse = client.DownloadString(StringToUri);

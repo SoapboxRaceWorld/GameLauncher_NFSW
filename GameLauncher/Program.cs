@@ -35,17 +35,6 @@ namespace GameLauncher
         private static string RoamingAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         private static string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
 
-        private static void NetCodeDefaults()
-        {
-            ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-
-            if (DetectLinux.LinuxDetected())
-            {
-                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-            }
-        }
-
         [STAThread]
         static void Main()
         {
@@ -53,7 +42,6 @@ namespace GameLauncher
             {
                 try
                 {
-                    NetCodeDefaults();
                     var Status = DoRunChecksAsync();
                     Status.Wait();
                     FunctionStatus.LoadingComplete = Status.IsCompleted;
@@ -73,8 +61,6 @@ namespace GameLauncher
                     MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                 }
-
-                NetCodeDefaults();
 
                 /* INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
                    Updated RedTheKitsune Code so it downloads the file if its missing.

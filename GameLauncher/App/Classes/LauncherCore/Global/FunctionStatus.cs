@@ -15,6 +15,8 @@ using System.Globalization;
 using System.IO;
 using System.Management.Automation;
 using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Global
@@ -162,6 +164,37 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             else if (CurrentLang == "rus") return 121367723;
             else if (CurrentLang == "spa") return 101540466;
             else return 141805935;
+        }
+
+        public static void TLS()
+        {
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+            ServicePointManager.ServerCertificateValidationCallback = (Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) =>
+            {
+                bool isOk = true;
+                if (sslPolicyErrors != SslPolicyErrors.None)
+                {
+                    for (int i = 0; i < chain.ChainStatus.Length; i++)
+                    {
+                        if (chain.ChainStatus[i].Status == X509ChainStatusFlags.RevocationStatusUnknown)
+                        {
+                            continue;
+                        }
+                        chain.ChainPolicy.RevocationFlag = X509RevocationFlag.EntireChain;
+                        chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
+                        chain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan(0, 1, 0);
+                        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
+                        bool chainIsValid = chain.Build((X509Certificate2)certificate);
+                        if (!chainIsValid)
+                        {
+                            isOk = false;
+                            break;
+                        }
+                    }
+                }
+                return isOk;
+            };
         }
 
         public static void FirstTimeRun()

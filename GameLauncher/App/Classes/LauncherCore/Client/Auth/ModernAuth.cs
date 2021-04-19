@@ -1,4 +1,5 @@
-﻿using Nancy.Json;
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
+using Nancy.Json;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -25,6 +26,7 @@ namespace GameLauncher.App.Classes.Auth
         {
             try
             {
+                FunctionStatus.TLS();
                 var buildUrl = Tokens.IPAddress + "/User/modernAuth";
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(buildUrl);
                 httpWebRequest.ContentType = "application/json";
@@ -108,6 +110,7 @@ namespace GameLauncher.App.Classes.Auth
         {
             try
             {
+                FunctionStatus.TLS();
                 var buildUrl = Tokens.IPAddress + "/User/modernRegister";
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(buildUrl);
                 httpWebRequest.ContentType = "application/json";

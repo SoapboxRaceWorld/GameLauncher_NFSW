@@ -77,6 +77,7 @@ namespace GameLauncher.App
 
                 try
                 {
+                    FunctionStatus.TLS();
                     WebClient breachCheck = new WebClient();
                     String checkPassword = SHA.HashPassword(RegisterPassword.Text.ToString()).ToUpper();
 

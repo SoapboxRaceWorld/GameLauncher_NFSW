@@ -30,6 +30,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 try
                 {
                     Log.UrlCall("LIST CORE: Loading CDN List from: " + cdnListURL);
+                    FunctionStatus.TLS();
                     var wc = new WebClient();
                     var responseList = wc.DownloadString(cdnListURL);
                     Log.UrlCall("LIST CORE: Loaded CDN List from: " + cdnListURL);

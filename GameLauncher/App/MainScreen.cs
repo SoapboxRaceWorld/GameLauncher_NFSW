@@ -543,6 +543,7 @@ namespace GameLauncher
                 ServerInfoPanel.Visible = false;
             }
 
+            FunctionStatus.TLS();
             WebClient client = new WebClient();
             client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
 
@@ -908,6 +909,7 @@ namespace GameLauncher
                     if (!Directory.Exists(".BannerCache")) { Directory.CreateDirectory(".BannerCache"); }
                     if (!string.IsNullOrEmpty(verticalImageUrl))
                     {
+                        FunctionStatus.TLS();
                         WebClient client2 = new WebClient();
                         client2.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                         Uri stringToUri3 = new Uri(verticalImageUrl);
@@ -1440,6 +1442,7 @@ namespace GameLauncher
 
                 try
                 {
+                    FunctionStatus.TLS();
                     WebClient client2 = new WebClient();
                     client2.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
 

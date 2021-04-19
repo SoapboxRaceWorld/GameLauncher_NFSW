@@ -21,6 +21,7 @@ namespace GameLauncher.App
                 InitializeComponent();
                 SetVisuals();
 
+                FunctionStatus.TLS();
                 ChangelogText.Text = new WebClient().DownloadString(URLs.Main + "/launcher/changelog");
                 ChangelogText.Select(0, 0);
                 ChangelogText.SelectionLength = 0;

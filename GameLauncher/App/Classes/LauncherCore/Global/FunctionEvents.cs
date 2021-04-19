@@ -99,6 +99,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                     String responseString;
                     try
                     {
+                        FunctionStatus.TLS();
                         Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IpAddress + "/RecoveryPassword/forgotPassword");
 
                         var request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);

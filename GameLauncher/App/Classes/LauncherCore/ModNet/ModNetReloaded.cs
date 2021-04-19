@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Collections.Generic;
+using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App.Classes.LauncherCore.ModNet
 {
@@ -29,6 +30,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
         {
             try
             {
+                FunctionStatus.TLS();
                 Uri newModNetUri = new Uri(_serverIp + "/Modding/GetModInfo");
                 WebClient x = new WebClient();
                 return x.DownloadString(newModNetUri);

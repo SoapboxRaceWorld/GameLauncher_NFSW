@@ -1,4 +1,5 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
@@ -143,6 +144,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             {
                 if (IsROOTCAInstalled == false)
                 {
+                    FunctionStatus.TLS();
                     WebClient webClient = new WebClient();
                     webClient.DownloadFile(RootCAFileURL, CertSaveLocation);
 

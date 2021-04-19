@@ -28,6 +28,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 try
                 {
                     Log.UrlCall("LIST CORE: Loading Server List from: " + serverListURL);
+                    FunctionStatus.TLS();
                     var wc = new WebClient();
                     var response = wc.DownloadString(serverListURL);
                     Log.UrlCall("LIST CORE: Loaded Server List from: " + serverListURL);

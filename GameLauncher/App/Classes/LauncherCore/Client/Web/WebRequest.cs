@@ -1,30 +1,27 @@
 ﻿using System;
-using System.Net;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.Logger;
-using System.Security.Cryptography.X509Certificates;
-using System.Net.Security;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.RPC;
+using System.Net;
+using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 {
     public class WebClientWithTimeout : WebClient
     {
-        private static string GameLauncherHash = string.Empty;
-        private static long addrange = 0;
-        private static int timeout = 5000;
+        private static string Hash = string.Empty;
 
-        public static string Value()
+        private static string Value()
         {
-            if (string.IsNullOrEmpty(GameLauncherHash))
+            if (string.IsNullOrEmpty(Hash))
             {
-                GameLauncherHash = SHA.HashFile(AppDomain.CurrentDomain.FriendlyName);
+                Hash = SHA.HashFile(AppDomain.CurrentDomain.FriendlyName);
             }
 
-            return GameLauncherHash;
+            return Hash;
         }
 
         protected override WebRequest GetWebRequest(Uri address)
@@ -38,35 +35,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
                 }.Uri;
             }
 
-            ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-            ServicePointManager.ServerCertificateValidationCallback = (Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => 
-            {
-                bool isOk = true;
-                if (sslPolicyErrors != SslPolicyErrors.None)
-                {
-                    for (int i = 0; i < chain.ChainStatus.Length; i++)
-                    {
-                        if (chain.ChainStatus[i].Status == X509ChainStatusFlags.RevocationStatusUnknown)
-                        {
-                            continue;
-                        }
-                        chain.ChainPolicy.RevocationFlag = X509RevocationFlag.EntireChain;
-                        chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
-                        chain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan(0, 1, 0);
-                        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
-                        bool chainIsValid = chain.Build((X509Certificate2)certificate);
-                        if (!chainIsValid)
-                        {
-                            isOk = false;
-                            break;
-                        }
-                    }
-                }
-                return isOk;
-            };
+            FunctionStatus.TLS();
 
-            if (!address.AbsolutePath.Contains("auth")) Log.UrlCall("Calling URL: " + address);
+            if (!address.AbsolutePath.Contains("auth")) Log.UrlCall("WEBCLIENTWITHTIMEOUT: Calling URL -> " + address);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
             request.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
@@ -74,27 +45,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
             request.Headers["X-UserAgent"] = "GameLauncherReborn " + Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = Value();
             request.Headers["X-DiscordID"] = DiscordLauncherPresense.UserID;
-
-            if (addrange != 0)
-            {
-                request.AddRange(addrange);
-            }
-
             request.Proxy = null;
-            request.Timeout = timeout;
+            request.Timeout = 5000;
             request.KeepAlive = false;
 
             return request;
-        }
-
-        public static void AddRange(long filesize)
-        {
-            addrange = filesize;
-        }
-
-        public static void Timeout(int time)
-        {
-            timeout = time;
         }
     }
 }
