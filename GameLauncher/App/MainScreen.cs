@@ -1526,7 +1526,8 @@ namespace GameLauncher
                     DiscordLauncherPresense.Status("Download ModNet", null);
 
                     /* Get Remote ModNet list to process for checking required ModNet files are present and current */
-                    String modules = new WebClientWithTimeout().DownloadString(URLs.ModNet + "/launcher-modules/modules.json");
+                    FunctionStatus.TLS();
+                    String modules = new WebClient().DownloadString(URLs.ModNet + "/launcher-modules/modules.json");
                     string[] modules_newlines = modules.Split(new string[] { "\n" }, StringSplitOptions.None);
                     foreach (String modules_newline in modules_newlines)
                     {
@@ -1549,7 +1550,9 @@ namespace GameLauncher
                                 File.Delete(FileSettingsSave.GameInstallation + "\\" + ModNetList);
                             }
 
-                            WebClientWithTimeout newModNetFilesDownload = new WebClientWithTimeout();
+                            FunctionStatus.TLS();
+                            WebClient newModNetFilesDownload = new WebClient();
+                            newModNetFilesDownload.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                             newModNetFilesDownload.DownloadFile(URLs.ModNet + "/launcher-modules/" + ModNetList, FileSettingsSave.GameInstallation + "/" + ModNetList);
                         }
                         else
@@ -1570,13 +1573,15 @@ namespace GameLauncher
                     String remoteEventsFile = String.Empty;
                     try
                     {
-                        remoteCarsFile = new WebClientWithTimeout().DownloadString(json2.basePath + "/cars.json");
+                        FunctionStatus.TLS();
+                        remoteCarsFile = new WebClient().DownloadString(json2.basePath + "/cars.json");
                     }
                     catch { }
 
                     try
                     {
-                        remoteEventsFile = new WebClientWithTimeout().DownloadString(json2.basePath + "/events.json");
+                        FunctionStatus.TLS();
+                        remoteEventsFile = new WebClient().DownloadString(json2.basePath + "/events.json");
                     }
                     catch { }
 
@@ -1606,7 +1611,8 @@ namespace GameLauncher
                     /* get new index */
                     Uri newIndexFile = new Uri(json2.basePath + "/index.json");
                     Log.Core("CORE: Loading Server Mods List");
-                    String jsonindex = new WebClientWithTimeout().DownloadString(newIndexFile);
+                    FunctionStatus.TLS();
+                    String jsonindex = new WebClient().DownloadString(newIndexFile);
 
                     IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
 
