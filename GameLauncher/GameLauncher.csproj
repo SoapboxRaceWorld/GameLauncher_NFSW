@@ -207,7 +207,7 @@
     <Compile Include="App\Classes\LauncherCore\Hash\MD5.cs" />
     <Compile Include="App\Classes\LauncherCore\Hash\SHA.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\IniFile.cs" />
-    <Compile Include="App\Classes\LauncherCore\InsiderKit\EnableInsider.cs" />
+    <Compile Include="App\Classes\LauncherCore\InsiderKit\KitEnabler.cs" />
     <Compile Include="App\Classes\LauncherCore\Logger\LogToFile.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\ModManager.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\ModNetReloaded.cs" />

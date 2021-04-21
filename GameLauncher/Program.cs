@@ -292,9 +292,15 @@ namespace GameLauncher
                 }
             }
 
-            if (EnableInsider.ShouldIBeAnInsider() == true)
+
+            if (EnableInsiderDeveloper.Allowed() == true || EnableInsiderBetaTester.Allowed() == true)
             {
-                Log.Build("INSIDER: GameLauncher " + Application.ProductVersion + "_" + EnableInsider.BuildNumber());
+                string Insider = "BETA INSIDER";
+                if (EnableInsiderDeveloper.Allowed() == true)
+                {
+                    Insider = "DEV INSIDER";
+                }
+                Log.Build(Insider + ": GameLauncher " + Application.ProductVersion + "_" + InsiderInfo.BuildNumberOnly());
             }
             else
             {

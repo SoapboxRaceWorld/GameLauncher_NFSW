@@ -115,10 +115,17 @@ namespace GameLauncher
             Log.Core("CORE: Setting Parent Window location");
             InformationCache.ParentScreenLocation = Location;
 
-            if (!string.IsNullOrEmpty(EnableInsider.BuildNumber()))
+            if (!string.IsNullOrEmpty(InsiderInfo.BuildNumber()))
             {
-                InsiderBuildNumberText.Visible = EnableInsider.ShouldIBeAnInsider();
-                InsiderBuildNumberText.Text = "Insider Build Date: " + EnableInsider.BuildNumber();
+                if (EnableInsiderDeveloper.Allowed() == true || EnableInsiderBetaTester.Allowed() == true)
+                {
+                    InsiderBuildNumberText.Visible = true;
+                    InsiderBuildNumberText.Text = InsiderInfo.BuildNumber();
+                }
+                else
+                {
+                    InsiderBuildNumberText.Visible = false;
+                }
             }
 
             Log.Core("LAUNCHER: NFSW Download Source is now: " + FileSettingsSave.CDN);
@@ -2423,7 +2430,7 @@ namespace GameLauncher
             /* Enable/Disable Visuals        /
             /********************************/
 
-            SelectServerBtn.Visible = EnableInsider.ShouldIBeAnInsider();
+            SelectServerBtn.Visible = EnableInsiderDeveloper.Allowed();
 
             /********************************/
             /* Functions                     /

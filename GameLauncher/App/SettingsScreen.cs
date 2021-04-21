@@ -364,6 +364,8 @@ namespace GameLauncher.App
             /* Enable/Disable Visuals       /
             /*******************************/
 
+            SettingsUEditorButton.Visible = EnableInsiderDeveloper.Allowed();
+
             if (File.Exists(FileSettingsSave.GameInstallation + "/NFSWO_COMMUNICATION_LOG.txt"))
             {
                 SettingsClearCommunicationLogButton.Enabled = true;
@@ -387,7 +389,7 @@ namespace GameLauncher.App
                 char[] charsToTrim = { '/' };
                 string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
 
-                if (EnableInsider.ShouldIBeAnInsider() == true)
+                if(EnableInsiderDeveloper.Allowed() == true)
                 {
                     Log.Info("SETTINGS VERIFYHASH: Checking Characters in URL");
                     Log.Info("SETTINGS VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
