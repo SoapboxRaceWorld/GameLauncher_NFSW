@@ -180,6 +180,7 @@
     <Compile Include="App\Classes\LauncherCore\RPC\DiscordLauncherPresense.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\Email\IsEmailValid.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\JSON\IsJSONValid.cs" />
+    <Compile Include="App\Classes\LauncherCore\Validator\VerifyTrust\IsExeVerified.cs" />
     <Compile Include="App\Classes\LauncherCore\Visuals\ProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>

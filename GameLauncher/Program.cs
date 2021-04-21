@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
@@ -23,6 +22,7 @@ using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 using System.Threading.Tasks;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust;
 
 namespace GameLauncher
 {
@@ -487,6 +487,10 @@ namespace GameLauncher
             await LauncherUpdateCheck.Latest();
             /* Check ServerList Status */
             await Task.Run(() => ServerListUpdater.GetList());
+            /* Check if Launcher Is Signed or Not */
+            await IsExeVerified.RunChecks();
+
+            Log.Info("SIGNED: " + IsExeVerified.LauncherSigned);
 
             /* Close Splash Screen */
             if (IsSplashScreenLive == true)
