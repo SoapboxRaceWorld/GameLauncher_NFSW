@@ -17,7 +17,6 @@ using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
-using System.Threading.Tasks;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 
 namespace GameLauncher

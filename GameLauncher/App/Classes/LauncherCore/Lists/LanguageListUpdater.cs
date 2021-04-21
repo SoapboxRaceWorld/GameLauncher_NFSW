@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {

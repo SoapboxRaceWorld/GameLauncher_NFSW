@@ -42,13 +42,13 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 if (MAPI.Payload.LatestVersion != null)
                 {
                     LatestLauncherBuild = MAPI.Payload.LatestVersion;
-                    Log.Info("UPDATER: Latest Version -> " + MAPI.Payload.LatestVersion);
+                    Log.Info("LAUNCHER UPDATE: Latest Version -> " + MAPI.Payload.LatestVersion);
                 }
             }
             catch (Exception error)
             {
                 MainAPI = false;
-                Log.Error("LAUNCHER UPDATER: " + error.Message);
+                Log.Error("LAUNCHER UPDATE: " + error.Message);
             }
 
             if (MainAPI != true)
@@ -66,18 +66,18 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     if (GHAPI.TagName != null)
                     {
                         LatestLauncherBuild = GHAPI.TagName;
-                        Log.Info("UPDATER: Latest Version -> " + GHAPI.TagName);
+                        Log.Info("LAUNCHER UPDATE: GitHub Latest Version -> " + GHAPI.TagName);
                     }
                 }
                 catch (Exception error)
                 {
                     GitHubAPI = false;
-                    Log.Error("LAUNCHER UPDATER: " + error.Message);
+                    Log.Error("LAUNCHER UPDATE: GitHub " + error.Message);
                 }
 
                 if (GitHubAPI != true)
                 {
-                    Log.Error("UPDATER: Failed to Retrive Latest Build Information from two APIs ");
+                    Log.Error("LAUNCHER UPDATE: Failed to Retrive Latest Build Information from two APIs ");
                 }
             }
 

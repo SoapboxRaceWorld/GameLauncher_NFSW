@@ -1,5 +1,4 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust;
 using GameLauncher.App.Classes.Logger;
@@ -11,7 +10,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Windows
