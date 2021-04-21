@@ -64,7 +64,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     NullValueHandling.Ignore);
             }
 
-            IFlurlRequest request = resolvedUrl.AllowAnyHttpStatus().WithTimeout(TimeSpan.FromSeconds(30));
+            IFlurlRequest request = resolvedUrl.AllowAnyHttpStatus();
 
             foreach (var header in context.Request.Headers)
             {
