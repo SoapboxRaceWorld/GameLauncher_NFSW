@@ -6,9 +6,12 @@ using GameLauncher.App.Classes.SystemPlatform.Linux;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Windows
 {
@@ -24,6 +27,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         public static string RootCACommonName = "Carbon Crew CA";
         public static string RootCASubjectName = "CN=Carbon Crew CA, OU=Certificate Authority, O=Carbon Crew Productions, C=US";
         public static string RootCASerial = "7449A8EB07C997A6";
+        /* Serial Number of Exe */
+        public static string LauncherSerial = "NOT-SIGNED";
 
         public static async Task LatestAsync()
         {
@@ -133,6 +138,21 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             else 
             {
                 Log.Warning("CERTIFICATE STORE: Default Information was detected. Not running additional Function Calls");
+            }
+
+            try
+            {
+                Assembly assembly = Assembly.LoadFrom(Application.ExecutablePath);
+                Module module = assembly.GetModules().First();
+                X509Certificate certificate = module.GetSignerCertificate();
+                if (certificate != null)
+                {
+                    LauncherSerial = certificate.GetSerialNumberString();
+                }
+            }
+            catch (Exception error)
+            {
+                Log.Error("CERTIFICATE CHECK: " + error.Message);
             }
         }
 

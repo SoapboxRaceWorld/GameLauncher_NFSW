@@ -23,6 +23,9 @@ using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 using System.Threading.Tasks;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
+using System.Linq;
 
 namespace GameLauncher
 {
@@ -489,8 +492,6 @@ namespace GameLauncher
             await Task.Run(() => ServerListUpdater.GetList());
             /* Check if Launcher Is Signed or Not */
             await IsExeVerified.RunChecks();
-
-            Log.Info("SIGNED: " + IsExeVerified.LauncherSigned);
 
             /* Close Splash Screen */
             if (IsSplashScreenLive == true)

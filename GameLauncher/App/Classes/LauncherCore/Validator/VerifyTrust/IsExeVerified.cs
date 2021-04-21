@@ -13,6 +13,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
         public static async Task RunChecks()
         {
             await Task.Run(() => Status());
+            Log.Info("SIGNED: " + LauncherSigned);
         }
 
         public static void Status()
