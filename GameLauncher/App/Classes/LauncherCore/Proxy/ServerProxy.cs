@@ -6,7 +6,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public class ServerProxy : Singleton<ServerProxy>
     {
-        public static int ProxyPort = new Random().Next(2017, DateTime.Now.Year);
+        public static int ProxyPort;
 
         private string _serverUrl;
         private string _serverName;
@@ -23,6 +23,20 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
         public void SetServerName(string serverName)
         {
             _serverName = serverName;
+        }
+
+        public static void ExpandPort()
+        {
+            var isNumeric = int.TryParse(DateTime.Now.Year.ToString(), out int Port);
+
+            if (isNumeric == true)
+            {
+                ProxyPort = new Random().Next(2017, Port);
+            }
+            else
+            {
+                ProxyPort = new Random().Next(2017, 2021);
+            }
         }
 
         public void Start(string From)

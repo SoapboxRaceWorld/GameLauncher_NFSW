@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
@@ -69,6 +70,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     CleanList.Add(CList);
                 }
             }
+
+            /* (Start Process) Check ServerList Status */
+            ServerListUpdater.GetList();
         }
     }
 }

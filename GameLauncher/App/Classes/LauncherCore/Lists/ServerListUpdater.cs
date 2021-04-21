@@ -10,6 +10,8 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using System.Globalization;
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using System.Windows.Forms;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
@@ -29,8 +31,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 {
                     Log.UrlCall("LIST CORE: Loading Server List from: " + serverListURL);
                     FunctionStatus.TLS();
-                    var wc = new WebClient();
-                    var response = wc.DownloadString(serverListURL);
+                    WebClient Client = new WebClient();
+                    Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    var response = Client.DownloadString(serverListURL);
                     Log.UrlCall("LIST CORE: Loaded Server List from: " + serverListURL);
 
                     try
@@ -134,6 +137,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     CleanList.Add(CList);
                 }
             }
+
+            /* (Start Process) Check Up to Date Certificate Status */
+            CertificateStore.Latest();
         }
 
         /* Converts 2 Letter Country Code and Returns Full Country Name (In English) */

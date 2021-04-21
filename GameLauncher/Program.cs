@@ -12,28 +12,21 @@ using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
-using GameLauncher.App.Classes.LauncherCore.Lists;
-using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 using System.Threading.Tasks;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
-using GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust;
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
-using System.Linq;
 
 namespace GameLauncher
 {
     static class Program
     {
         /* Global Thread for Splash Screen */
-        private static Thread _SplashScreen;
-        private static bool IsSplashScreenLive = false;
+        public static Thread SplashScreen;
+        public static bool IsSplashScreenLive = false;
         private static string LocalAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         private static string RoamingAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         private static string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
@@ -43,20 +36,8 @@ namespace GameLauncher
         {
             if (Debugger.IsAttached && !NFSW.IsNFSWRunning())
             {
-                try
-                {
-                    var Status = DoRunChecksAsync();
-                    Status.Wait();
-                    FunctionStatus.LoadingComplete = Status.IsCompleted;
-                    Start();
-                    Status.Dispose();
-                }
-                catch (Exception error)
-                {
-                    MessageBox.Show(null, "Unable to Start Launcher\n" + error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    Application.Exit();
-                }
-            } 
+                Start();
+            }
             else
             {
                 if (NFSW.IsNFSWRunning())
@@ -170,19 +151,7 @@ namespace GameLauncher
                         }
                         else
                         {
-                            try
-                            {
-                                var Status = DoRunChecksAsync();
-                                Status.Wait();
-                                FunctionStatus.LoadingComplete = Status.IsCompleted;
-                                Start();
-                                Status.Dispose();
-                            }
-                            catch (Exception error)
-                            {
-                                MessageBox.Show(null, "Unable to Start Launcher\n" + error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                                Application.Exit();
-                            }
+                            Start();
                         }
                     } 
                     else
@@ -197,13 +166,7 @@ namespace GameLauncher
             }
         }
 
-        private static void Start()
-        {
-            /* Do First Time Run Checks */
-            FunctionStatus.FirstTimeRun();
-        }
-
-        private static void SplashScreen()
+        private static void StartSplashScreen()
         {
             if (IsSplashScreenLive == false)
             {
@@ -213,7 +176,7 @@ namespace GameLauncher
             IsSplashScreenLive = true;
         }
 
-        private static async Task DoRunChecksAsync()
+        private static void Start()
         {
             if (!DetectLinux.LinuxDetected())
             {
@@ -223,7 +186,7 @@ namespace GameLauncher
                 using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey))
                 {
                     /* For now, allow edge case of Windows 8.0 to run .NET 4.6.1 where upgrading to 8.1 is not possible */
-                    if (WindowsProductVersion.CachedWindowsNumber == 6.2)
+                    if (WindowsProductVersion.GetWindowsNumber() == 6.2)
                     {
                         if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394254)
                         {
@@ -272,8 +235,8 @@ namespace GameLauncher
             /* Splash Screen */
             if (!Debugger.IsAttached)
             {
-                _SplashScreen = new Thread(new ThreadStart(SplashScreen));
-                _SplashScreen.Start();
+                SplashScreen = new Thread(new ThreadStart(StartSplashScreen));
+                SplashScreen.Start();
             }
 
             File.Delete("communication.log");
@@ -392,7 +355,7 @@ namespace GameLauncher
                         /* Close Splash Screen (Just in Case) */
                         if (IsSplashScreenLive == true)
                         {
-                            _SplashScreen.Abort();
+                            SplashScreen.Abort();
                         }
 
                         Environment.Exit(0);
@@ -452,9 +415,6 @@ namespace GameLauncher
                         FileSettingsSave.SaveSettings();
                     }
                 }
-
-                /* Check if Redistributable Packages are Installed */
-                await Redistributable.CheckAsync();
             }
 
             if (!File.Exists("servers.json"))
@@ -474,30 +434,13 @@ namespace GameLauncher
 
             if (FileSettingsSave.Proxy == "0")
             {
+                ServerProxy.ExpandPort();
                 Log.Info("PROXY: Starting Proxy (From Startup)");
                 ServerProxy.Instance.Start("Splash Screen");
             }
 
-            /* Sets up Theming */
-            Theming.CheckIfThemeExists();
-            /* Sets Up Langauge List */
-            LanguageListUpdater.GetList();
-            /* Check If Updater Exists or Requires an Update */
-            await UpdaterExecutable.CheckAsync();
-            /* Check Up to Date Certificate Status */
-            await CertificateStore.LatestAsync();
-            /* Check Latest Launcher Version */
-            await LauncherUpdateCheck.Latest();
-            /* Check ServerList Status */
-            await Task.Run(() => ServerListUpdater.GetList());
-            /* Check if Launcher Is Signed or Not */
-            await IsExeVerified.RunChecks();
-
-            /* Close Splash Screen */
-            if (IsSplashScreenLive == true)
-            {
-                _SplashScreen.Abort();
-            }
+            /* (Starts Function Chain) Check if Redistributable Packages are Installed */
+            Redistributable.Check();
         }
     }
 }

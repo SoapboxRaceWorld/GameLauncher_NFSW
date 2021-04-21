@@ -1155,13 +1155,13 @@ namespace GameLauncher
             SettingsButton.BackgroundImage = Theming.GearButton;
         }
 
-        private async Task StartGameAsync(string UserID, string LoginToken)
+        private void StartGame(string UserID, string LoginToken)
         {
             if (InformationCache.SelectedServerData.Name == "Freeroam Sparkserver")
             {
                 if (ServerProxy.Host == null)
                 {
-                    await Task.Run(() => ServerProxy.Instance.Start("Start Game"));
+                    ServerProxy.Instance.Start("Start Game");
                 }
                 /* Force start proxy and enable it */
                 FunctionStatus.DisableProxy = false;
@@ -1453,7 +1453,7 @@ namespace GameLauncher
                         isDownloadingModNetFiles = false;
                         if (modFilesDownloadUrls.Any() == false)
                         {
-                            Task GTask = LaunchGameAsync();
+                            LaunchGame();
                         }
                         else
                         {
@@ -1638,7 +1638,7 @@ namespace GameLauncher
                     }
                     else
                     {
-                        Task GTask = LaunchGameAsync();
+                        LaunchGame();
                     }
 
                     foreach (var file in Directory.GetFiles(path))
@@ -1668,7 +1668,7 @@ namespace GameLauncher
             }
             else
             {
-                Task GTask = LaunchGameAsync();
+                LaunchGame();
             }
         }
 
@@ -1689,7 +1689,7 @@ namespace GameLauncher
         }
 
         /* Launch game */
-        public async Task LaunchGameAsync()
+        private void LaunchGame()
         {
             if (InformationCache.SelectedServerData.DiscordAppId != null)
             {
@@ -1711,7 +1711,7 @@ namespace GameLauncher
                     AntiCheat.user_id = _userId;
                     AntiCheat.serverip = new Uri(InformationCache.SelectedServerData.IpAddress).Host;
 
-                    await StartGameAsync(_userId, _loginToken);
+                    StartGame(_userId, _loginToken);
 
                     if (_builtinserver)
                     {

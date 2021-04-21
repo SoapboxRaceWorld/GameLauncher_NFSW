@@ -1,7 +1,7 @@
-﻿using GameLauncher.App.Classes.Logger;
+﻿using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
+using GameLauncher.App.Classes.Logger;
 using System;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
@@ -10,15 +10,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
     {
         public static bool LauncherSigned = false;
 
-        public static async Task RunChecks()
-        {
-            await Task.Run(() => Status());
-            Log.Info("SIGNED: " + LauncherSigned);
-        }
-
-        public static void Status()
+        public static void Check()
         {
             LauncherSigned = CheckExeVerified.Signed(Application.ExecutablePath);
+            Log.Info("SIGNED: " + LauncherSigned);
+
+            /* (Start Process) Check If Updater Exists or Requires an Update */
+            UpdaterExecutable.Check();
         }
     }
 

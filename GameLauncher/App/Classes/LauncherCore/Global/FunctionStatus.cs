@@ -64,7 +64,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
     /* This is Used to call Certain Functions (Such as Completion Status or Function Callbacks) */
     class FunctionStatus
     {
-        /* Program.cs Sets Conditional on If Launcher had Finished Loading (It Self) */
+        /* Updater.cs Sets Conditional on If Launcher had Finished Loading (It Self) */
         public static bool LoadingComplete = false;
 
         /* Disables/Enables Proxy (Global) */

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Lists;
 
 namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
@@ -925,8 +926,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                     PrivacyRPCBuild = ThemeFile.Read("PrivacyRPCBuild");
                 }
             }
-        }
 
+            /* (Start Process) Sets Up Langauge List */
+            LanguageListUpdater.GetList();
+        }
 
         /* Convert User Inputed String into a Valid RBG Spectrum Values */
 
