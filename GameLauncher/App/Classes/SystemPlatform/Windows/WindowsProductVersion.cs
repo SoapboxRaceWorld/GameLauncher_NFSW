@@ -9,7 +9,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /* Cached Results from Program.cs To be Referenced Quickly */
 
         /* Final output: 18362.1016 */
-        public static int CachedWindowsBuildNumber = 0;
+        public static int CachedWindowsBuildNumber;
         /* Final output: 10.0 */
         public static double CachedWindowsNumber;
 
@@ -25,8 +25,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             /* Get the Kernel32 DLL File Version */
             FileVersionInfo osVersionInfo = FileVersionInfo.GetVersionInfo(Environment.GetEnvironmentVariable("windir") + @"\System32\Kernel32.dll");
+            CachedWindowsBuildNumber = osVersionInfo.FileBuildPart;
 
-            return osVersionInfo.FileBuildPart;
+            return CachedWindowsBuildNumber;
         }
 
         /// <summary>
@@ -43,8 +44,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             /* Get the Kernel32 DLL File Version */
             FileVersionInfo osVersionInfo = FileVersionInfo.GetVersionInfo(Environment.GetEnvironmentVariable("windir") + @"\System32\Kernel32.dll");
+            CachedWindowsNumber = double.Parse(osVersionInfo.FileMajorPart + "." + osVersionInfo.FileMinorPart, CultureInfo.InvariantCulture);
 
-            return double.Parse(osVersionInfo.FileMajorPart + "." + osVersionInfo.FileMinorPart, CultureInfo.InvariantCulture);
+            return CachedWindowsNumber;
         }
 
         /* This Converts the OS Kernal Number to a Name */
