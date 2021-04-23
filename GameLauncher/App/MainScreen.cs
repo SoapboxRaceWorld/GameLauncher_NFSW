@@ -1136,7 +1136,6 @@ namespace GameLauncher
             LogoutButton.BackgroundImage = Theming.GrayButtonHover;
         }
 
-
         /* SETTINGS PAGE LAYOUT */
         private void SettingsButton_Click(object sender, EventArgs e)
         {
@@ -2178,17 +2177,15 @@ namespace GameLauncher
             ExtractingProgress.Width = 519;
         }
 
-        private void OnDownloadFailed(Exception ex)
+        private void OnDownloadFailed(Exception error)
         {
+            Log.Error("CDN DOWNLOADER: " + error.Message);
+
             string failureMessage;
-            MessageBox.Show(null, "Failed to download gamefiles. \n\nCDN might be offline. \n\nPlease select a different CDN on Next Screen", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            /* CDN Went Offline Screen switch - DavidCarbon */
-            SettingsButton_Click(null, null);
-
             try
             {
-                failureMessage = ex.Message;
+
+                failureMessage = error.Message;
             }
             catch
             {
@@ -2206,6 +2203,11 @@ namespace GameLauncher
 
             TaskbarProgress.SetValue(Handle, 100, 100);
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Error);
+
+            MessageBox.Show(null, "Failed to download gamefiles. \n\nCDN might be offline. \n\nPlease select a different CDN on Next Screen", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            /* CDN Went Offline Screen switch - DavidCarbon */
+            SettingsButton_Click(null, null);
         }
 
         private void OnShowExtract(string filename, long currentCount, long allFilesCount)

@@ -201,7 +201,7 @@ namespace GameLauncher
                                 Process.Start("https://dotnet.microsoft.com/download/dotnet-framework/net461");
                             }
 
-                            Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                            Application.Exit();
                         }
                     }
                     /* Otherwise, all other OS Versions should have 4.6.2 as a Minimum Version */
@@ -219,7 +219,7 @@ namespace GameLauncher
                             Process.Start("https://dotnet.microsoft.com/download/dotnet-framework");
                         }
 
-                        Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                        Application.Exit();
                     }
                 }
             }
@@ -316,7 +316,10 @@ namespace GameLauncher
             }
             else
             {
-                WindowsProductVersion.CachedWindowsNumber = WindowsProductVersion.GetWindowsNumber();
+                if (WindowsProductVersion.CachedWindowsNumber < 6.0)
+                {
+                    WindowsProductVersion.GetWindowsNumber();
+                }
                 InformationCache.OSName = WindowsProductVersion.ConvertWindowsNumberToName(WindowsProductVersion.CachedWindowsNumber);
 
                 Log.System("SYSTEM: Detected OS: " + InformationCache.OSName);
@@ -363,7 +366,7 @@ namespace GameLauncher
                             SplashScreen.Abort();
                         }
 
-                        Environment.Exit(0);
+                        Application.Exit();
                         break;
                 }
 

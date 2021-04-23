@@ -243,7 +243,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                     {
                         Log.Error("LAUNCHER: Not enough permissions. Exiting.");
                         MessageBox.Show(null, "You don't have enough permission to select this path as installation folder. Please select another directory.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        Environment.Exit(Environment.ExitCode);
+                        Application.Exit();
                     }
 
                     if (fbd.FileName.Length == 3)
@@ -273,7 +273,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 else
                 {
                     Log.Core("LAUNCHER: Exiting");
-                    Environment.Exit(Environment.ExitCode);
+                    Application.Exit();
                 }
                 fbd.Dispose();
             }
@@ -338,7 +338,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
                 if (restartAppNoApis == DialogResult.Yes)
                 {
-                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                    Application.Exit();
                 }
             }
 
