@@ -1531,10 +1531,12 @@ namespace GameLauncher
                 {
                     DiscordLauncherPresense.Status("Download ModNet", null);
 
-                    if (FileSettingsSave.ModNetZip == "0")
+                    /* Get Remote ModNet list to process for checking required ModNet files are present and current */
+                    FunctionStatus.TLS();
+                    String modules = new WebClient().DownloadString(URLs.ModNet + "/launcher-modules/modules.json");
+
+                    try
                     {
-                        /* Get Remote ModNet list to process for checking required ModNet files are present and current */
-                        String modules = new WebClient().DownloadString(URLs.ModNet + "/launcher-modules/modules.json");
                         string[] modules_newlines = modules.Split(new string[] { "\n" }, StringSplitOptions.None);
                         foreach (String modules_newline in modules_newlines)
                         {
@@ -1572,77 +1574,13 @@ namespace GameLauncher
                             PlayProgressText.Text = ("Fetching Server Mods List!").ToUpper();
                         }
                     }
-                    else
+                    catch (Exception error)
                     {
-                        PlayProgressText.Text = ("ModNet: Downloading ModNet Files ZIP").ToUpper();
+                        Log.Error("MODNET CORE: " + error.Message);
+                        CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                        MessageBox.Show(null, $"There was an error with ModNet Files Check:\n{error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                        var ModNetURL = new Uri(URLs.ModNet + "/launcher-modules/ModLoader.zip");
-                        var NewModNetLocation = FileSettingsSave.GameInstallation + "\\ModNetFiles.zip";
-                        var OldModNetLocation = FileSettingsSave.GameInstallation + "\\ModLoader.zip";
-
-                        if (File.Exists(NewModNetLocation))
-                        {
-                            File.Delete(NewModNetLocation);
-                        }
-                        else if (File.Exists(OldModNetLocation))
-                        {
-                            File.Delete(OldModNetLocation);
-                        }
-
-                        FunctionStatus.TLS();
-                        WebClient Client = new WebClient();
-                        Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        Client.DownloadFile(ModNetURL, NewModNetLocation);
-
-                        try
-                        {
-                            using (var archive = ZipFile.Open(NewModNetLocation, ZipArchiveMode.Read))
-                            {
-                                DirectoryInfo di = Directory.CreateDirectory(FileSettingsSave.GameInstallation);
-                                string destinationDirectoryFullPath = di.FullName;
-
-                                foreach (ZipArchiveEntry file in archive.Entries)
-                                {
-                                    string completeFileName = Path.GetFullPath(Path.Combine(destinationDirectoryFullPath, file.FullName));
-
-                                    if (!completeFileName.StartsWith(destinationDirectoryFullPath, StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        Log.Warning("MODNET CORE: Trying to extract file outside of destination directory. See this link for more info: https://snyk.io/research/zip-slip-vulnerability");
-                                    }
-
-                                    if (file.Name == "")
-                                    {
-                                        Directory.CreateDirectory(Path.GetDirectoryName(completeFileName));
-                                        continue;
-                                    }
-
-                                    PlayProgressText.Text = ("ModNet: Extracted File " + file.FullName).ToUpper();
-                                    Log.Debug("MODNET CORE: Extracted File " + file.FullName);
-                                    file.ExtractToFile(completeFileName, true);
-
-                                    Application.DoEvents();
-                                    PlayProgressText.Text = ("Fetching Server Mods List!").ToUpper();
-                                }
-                            }
-                        }
-                        catch (Exception error)
-                        {
-                            Log.Error("MODNET CORE: " + error.Message);
-                            CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                            MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-                        finally
-                        {
-                            try
-                            {
-                                File.Delete(NewModNetLocation);
-                            }
-                            catch (Exception error)
-                            {
-                                Log.Error("MODNET CORE: Unable to Delete ZIP File - " + error);
-                            }
-                        }
+                        return;
                     }
 
                     /* get files now */
@@ -1694,56 +1632,75 @@ namespace GameLauncher
                     FunctionStatus.TLS();
                     String jsonindex = new WebClient().DownloadString(newIndexFile);
 
-                    IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
-
-                    int CountFilesTotal = 0;
-                    CountFilesTotal = json3.entries.Count;
-
-                    String path = Path.Combine(FileSettingsSave.GameInstallation, "MODS", MDFive.HashPassword(json2.serverID).ToLower());
-                    if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-
-                    foreach (IndexJsonEntry modfile in json3.entries)
+                    try
                     {
-                        if (SHA.HashFile(path + "/" + modfile.Name).ToLower() != modfile.Checksum)
+                        IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
+
+                        int CountFilesTotal = 0;
+                        CountFilesTotal = json3.entries.Count;
+
+                        String path = Path.Combine(FileSettingsSave.GameInstallation, "MODS", MDFive.HashPassword(json2.serverID).ToLower());
+                        if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+
+                        foreach (IndexJsonEntry modfile in json3.entries)
                         {
-                            modFilesDownloadUrls.Enqueue(new Uri(json2.basePath + "/" + modfile.Name));
-                            TotalModFileCount++;
+                            if (SHA.HashFile(path + "/" + modfile.Name).ToLower() != modfile.Checksum)
+                            {
+                                modFilesDownloadUrls.Enqueue(new Uri(json2.basePath + "/" + modfile.Name));
+                                TotalModFileCount++;
+                            }
+                            else
+                            {
+                                PlayProgressText.Text = ("Server Mods: Up to Date " + modfile.Name).ToUpper();
+                            }
+
+                            Application.DoEvents();
+                        }
+
+                        if (modFilesDownloadUrls.Count != 0)
+                        {
+                            this.DownloadModNetFilesRightNow(path);
+                            DiscordLauncherPresense.Status("Download Server Mods", null);
+                        }
+                        else
+                        {
+                            LaunchGame();
+                        }
+
+                        foreach (var file in Directory.GetFiles(path))
+                        {
+                            var name = Path.GetFileName(file);
+
+                            if (json3.entries.All(en => en.Name != name))
+                            {
+                                Log.Core("LAUNCHER: removing package: " + file);
+                                try
+                                {
+                                    File.Delete(file);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Error($"Failed to remove {file}: {ex.Message}");
+                                }
+                            }
                         }
                     }
-
-                    if (modFilesDownloadUrls.Count != 0)
+                    catch (Exception error)
                     {
-                        this.DownloadModNetFilesRightNow(path);
-                        DiscordLauncherPresense.Status("Download Server Mods", null);
-                    }
-                    else
-                    {
-                        LaunchGame();
-                    }
+                        Log.Error("LAUNCHER " + error.Message);
+                        CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                        MessageBox.Show(null, $"There was an error with Server Mods Check:\n{error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    foreach (var file in Directory.GetFiles(path))
-                    {
-                        var name = Path.GetFileName(file);
-
-                        if (json3.entries.All(en => en.Name != name))
-                        {
-                            Log.Core("LAUNCHER: removing package: " + file);
-                            try
-                            {
-                                File.Delete(file);
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Error($"Failed to remove {file}: {ex.Message}");
-                            }
-                        }
+                        return;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception error)
                 {
-                    Log.Error("LAUNCHER " + ex.Message);
+                    Log.Error("LAUNCHER " + error.Message);
                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                    MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{ex.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    return;
                 }
             }
             else
@@ -1760,7 +1717,7 @@ namespace GameLauncher
                 double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
                 double percentage = bytesIn / totalBytes * 100;
                 PlayProgressTextTimer.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
-                PlayProgressText.Text = (" " + ModNetFileNameInUse + " - " + TimeConversions.FormatFileSize(e.BytesReceived) + " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive)).ToUpper();
+                PlayProgressText.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + TimeConversions.FormatFileSize(e.BytesReceived) + " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive)).ToUpper();
 
                 ExtractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
                 ExtractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);

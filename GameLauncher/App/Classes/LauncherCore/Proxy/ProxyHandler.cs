@@ -141,17 +141,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 await SubmitError(e);
             }
 
+            TextResponse Response = new TextResponse(responseBody,
+                responseMessage.ResponseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
+            {
+                StatusCode = (HttpStatusCode)statusCode
+            };;
+
             queryParams.Clear();
 
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
                 CommunicationLogEntryType.Response, new CommunicationLogResponse(
                     responseBody, resolvedUrl.ToString(), method));
 
-            return new TextResponse(responseBody,
-                responseMessage.ResponseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
-            {
-                StatusCode = (HttpStatusCode)statusCode
-            }; ;
+            return Response;
         }
 
         private static string CleanFromUnknownChars(string s)

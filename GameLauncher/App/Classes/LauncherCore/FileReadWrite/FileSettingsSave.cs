@@ -34,8 +34,6 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public static string GameIntegrity = !string.IsNullOrEmpty(settingFile.Read("GameIntegrity")) ? settingFile.Read("GameIntegrity") : "Unknown";
 
-        public static string ModNetZip = !string.IsNullOrEmpty(settingFile.Read("ModNetZip")) ? settingFile.Read("ModNetZip") : "0";
-
         public static void NullSafeSettings()
         {
             /* Migrate old Key Entries */
@@ -135,11 +133,6 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 settingFile.Write("ProxyPort", string.Empty);
             }
 
-            if (!settingFile.KeyExists("ModNetZip"))
-            {
-                settingFile.Write("ModNetZip", ModNetZip);
-            }
-
             if (!DetectLinux.LinuxDetected())
             {
                 if (!settingFile.KeyExists("FirewallLauncher"))
@@ -228,6 +221,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 settingFile.DeleteKey("ModNetDisabled");
             }
 
+            if (settingFile.KeyExists("ModNetZip"))
+            {
+                settingFile.DeleteKey("ModNetZip");
+            }
+
             settingFile = new IniFile("Settings.ini");
         }
 
@@ -276,11 +274,6 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             if (settingFile.Read("GameIntegrity") != GameIntegrity)
             {
                 settingFile.Write("GameIntegrity", GameIntegrity);
-            }
-
-            if (settingFile.Read("ModNetZip") != ModNetZip)
-            {
-                settingFile.Write("ModNetZip", ModNetZip);
             }
 
             if (!DetectLinux.LinuxDetected())
