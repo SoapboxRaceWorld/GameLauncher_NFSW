@@ -61,6 +61,7 @@ namespace GameLauncher.App
             this.SettingsLanguage = new System.Windows.Forms.ComboBox();
             this.SettingsSave = new System.Windows.Forms.Button();
             this.SettingsCancel = new System.Windows.Forms.Button();
+            this.SettingsModNetZipDownload = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // SettingsClearServerModCacheButton
@@ -512,12 +513,27 @@ namespace GameLauncher.App
             this.SettingsCancel.UseVisualStyleBackColor = false;
             this.SettingsCancel.Click += new System.EventHandler(this.SettingsCancel_Click);
             // 
+            // SettingsModNetZipDownload
+            // 
+            this.SettingsModNetZipDownload.BackColor = System.Drawing.Color.Transparent;
+            this.SettingsModNetZipDownload.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsModNetZipDownload.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.SettingsModNetZipDownload.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SettingsModNetZipDownload.Location = new System.Drawing.Point(38, 391);
+            this.SettingsModNetZipDownload.Name = "SettingsModNetZipDownload";
+            this.SettingsModNetZipDownload.Size = new System.Drawing.Size(229, 18);
+            this.SettingsModNetZipDownload.TabIndex = 193;
+            this.SettingsModNetZipDownload.Text = "Enable ModNet ZIP Download";
+            this.SettingsModNetZipDownload.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.SettingsModNetZipDownload.UseVisualStyleBackColor = false;
+            // 
             // SettingsScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.SettingsModNetZipDownload);
             this.Controls.Add(this.SettingsLanguage);
             this.Controls.Add(this.ThemeName);
             this.Controls.Add(this.ThemeAuthor);
@@ -597,5 +613,6 @@ namespace GameLauncher.App
         private System.Windows.Forms.Label ThemeAuthor;
         private System.Windows.Forms.Label ThemeName;
         private System.Windows.Forms.ComboBox SettingsLanguage;
+        private System.Windows.Forms.CheckBox SettingsModNetZipDownload;
     }
 }
