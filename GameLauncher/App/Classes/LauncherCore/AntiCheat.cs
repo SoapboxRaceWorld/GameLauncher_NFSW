@@ -185,7 +185,7 @@ namespace GameLauncher.App.Classes
                                 WebClient update_data = new WebClient();
                                 update_data.CancelAsync();
                                 update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion);
-                                update_data.DownloadStringAsync(new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&persona_name=" + persona_name + "&event_session=" + event_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + persona_id + "&launcher_hash=" + WebClientWithTimeout.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial));
+                                update_data.DownloadStringAsync(new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&persona_name=" + persona_name + "&event_session=" + event_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + persona_id + "&launcher_hash=" + WebClientWithTimeout.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt()));
                             }
                             else
                             {
@@ -193,7 +193,7 @@ namespace GameLauncher.App.Classes
                                 Uri sendReport = new Uri(report_url);
 
                                 var request = (HttpWebRequest)WebRequest.Create(sendReport);
-                                var postData = "serverip=" + serverip + "&user_id=" + user_id + "&persona_name=" + persona_name + "&event_session=" + event_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + persona_id;
+                                var postData = "serverip=" + serverip + "&user_id=" + user_id + "&persona_name=" + persona_name + "&event_session=" + event_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + persona_id + "&launcher_hash=" + WebClientWithTimeout.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt();
 
                                 var data = Encoding.ASCII.GetBytes(postData);
                                 request.Method = "POST";
@@ -223,7 +223,7 @@ namespace GameLauncher.App.Classes
                                     WebClient update_data = new WebClient();
                                     update_data.CancelAsync();
                                     update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion);
-                                    update_data.DownloadStringAsync(new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&launcher_hash=" + WebClientWithTimeout.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial));
+                                    update_data.DownloadStringAsync(new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&launcher_hash=" + WebClientWithTimeout.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt()));
                                 }
                             }
                         }

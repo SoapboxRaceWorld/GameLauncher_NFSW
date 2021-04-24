@@ -43,6 +43,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
             request.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-HWID"] = HardwareID.FingerPrint.Value();
+            request.Headers["X-HiddenHWID"] = HardwareID.FingerPrint.ValueAlt();
             request.Headers["X-UserAgent"] = "GameLauncherReborn " + Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = Value();
             request.Headers["X-GameLauncherCertificate"] = CertificateStore.LauncherSerial;

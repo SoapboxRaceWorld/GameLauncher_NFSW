@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using Microsoft.Win32;
 
@@ -176,8 +177,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 }
             }
 
-            /* (Start Process) Sets up Theming */
-            Theming.CheckIfThemeExists();
+            /* (Start Process) */
+            HardwareID.FingerPrint.Get();
         }
     }
 }

@@ -2,6 +2,8 @@
 using System.Management;
 using System.Security.Cryptography;
 using System.Text;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Components
@@ -10,35 +12,138 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
     {
         public class FingerPrint
         {
-            private static string fingerPrint = string.Empty;
+            private static string License_A = string.Empty;
+
+            private static string License_B = string.Empty;
+
+            private static string License_C = string.Empty;
+
+            private static string License_IA = string.Empty;
+
+            private static string License_IB = string.Empty;
+
+            public static void Get()
+            {
+                string Temp;
+                Temp = Value();
+                Temp = ValueAlt();
+
+                /* (Start Process) Sets up Theming */
+                Theming.CheckIfThemeExists();
+            }
+
             public static string Value()
             {
-                if (string.IsNullOrEmpty(fingerPrint))
+                if (string.IsNullOrEmpty(License_IB))
                 {
-                    if (!DetectLinux.LinuxDetected())
+                    if (DetectLinux.LinuxDetected())
                     {
-                        fingerPrint = WindowsValue();
+                        License_IB = Level_Three_Value();
                     }
-                    else if (DetectLinux.LinuxDetected())
+                    else if (!DetectLinux.LinuxDetected())
                     {
-                        fingerPrint = LinuxValue();
+                        if (string.IsNullOrEmpty(FunctionStatus.RegistryRead("License_IB")))
+                        {
+                            FunctionStatus.RegistryWrite("License_IB", Level_One_Value());
+
+                            if (string.IsNullOrEmpty(FunctionStatus.RegistryRead("License_IB")))
+                            {
+                                License_IB = Level_One_Value();
+                            }
+                            else
+                            {
+                                License_IB = FunctionStatus.RegistryRead("License_IB");
+                            }
+                        }
+                        else
+                        {
+                            if (FunctionStatus.RegistryRead("License_IB") == Level_One_Value())
+                            {
+                                License_IB = Level_One_Value();
+                            }
+                            else
+                            {
+                                License_IB = FunctionStatus.RegistryRead("License_IB");
+                            }
+                        }
                     }
                 }
 
-                return fingerPrint;
+                return License_IB;
             }
 
-            private static string WindowsValue()
+            public static string ValueAlt()
             {
-                return GetHash(CpuId() + BaseId() + DiskId() + VideoId());
+                if (string.IsNullOrEmpty(License_IA))
+                {
+                    if (DetectLinux.LinuxDetected())
+                    {
+                        License_IA = Level_Three_Value();
+                    }
+                    else if (!DetectLinux.LinuxDetected())
+                    {
+                        if (string.IsNullOrEmpty(FunctionStatus.RegistryRead("License_IA")))
+                        {
+                            FunctionStatus.RegistryWrite("License_IA", Level_Two_Value());
+
+                            if (string.IsNullOrEmpty(FunctionStatus.RegistryRead("License_IA")))
+                            {
+                                License_IA = Level_Two_Value();
+                            }
+                            else
+                            {
+                                License_IA = FunctionStatus.RegistryRead("License_IA");
+                            }
+                        }
+                        else
+                        {
+                            if (FunctionStatus.RegistryRead("License_IA") == Level_Two_Value())
+                            {
+                                License_IA = Level_Two_Value();
+                            }
+                            else
+                            {
+                                License_IA = FunctionStatus.RegistryRead("License_IA");
+                            }
+                        }
+                    }
+                }
+
+                return License_IA;
             }
 
-            private static string LinuxValue()
+            private static string Level_One_Value()
             {
-                var machineId = File.ReadAllLines("/etc/machine-id")[0];
-                var idBytes = Encoding.ASCII.GetBytes(machineId);
-                var hmac = new HMACSHA1(Encoding.ASCII.GetBytes("GameLauncher_NFSW"));
-                return GetHexString(hmac.ComputeHash(idBytes));
+                if (string.IsNullOrEmpty(License_B))
+                {
+                    License_B = GetHash(CpuId() + BaseId() + DiskId() + VideoId());
+                }
+
+                return License_B;
+            }
+
+            private static string Level_Two_Value()
+            {
+                if (string.IsNullOrEmpty(License_A))
+                {
+                    License_A = GetHash(CpuId() + BaseId() + BiosId() + VideoId());
+                }
+
+                return License_A;
+            }
+
+            private static string Level_Three_Value()
+            {
+                if (string.IsNullOrEmpty(License_C))
+                {
+                    var machineId = File.ReadAllLines("/etc/machine-id")[0];
+                    var idBytes = Encoding.ASCII.GetBytes(machineId);
+                    var hmac = new HMACSHA1(Encoding.ASCII.GetBytes("GameLauncher_NFSW"));
+
+                    License_C = GetHexString(hmac.ComputeHash(idBytes));
+                }
+
+                return License_C;
             }
 
             public static string GetHash(string s)
@@ -85,12 +190,12 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
 
             private static string Identifier(string wmiClass, string wmiProperty)
             {
-                string result = "";
+                string result = string.Empty;
                 ManagementClass mc = new ManagementClass(wmiClass);
                 ManagementObjectCollection moc = mc.GetInstances();
                 foreach (ManagementObject mo in moc)
                 {
-                    if (result == "")
+                    if (string.IsNullOrEmpty(result))
                     {
                         try
                         {
@@ -111,19 +216,34 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
             private static string CpuId()
             {
                 string retVal = Identifier("Win32_Processor", "UniqueId");
-                if (retVal == "")
+                if (string.IsNullOrEmpty(retVal))
                 {
                     retVal = Identifier("Win32_Processor", "ProcessorId");
-                    if (retVal == "")
+                    if (string.IsNullOrEmpty(retVal))
                     {
                         retVal = Identifier("Win32_Processor", "Name");
-
-                        if (retVal == "")
+                        if (string.IsNullOrEmpty(retVal))
                         {
                             retVal = Identifier("Win32_Processor", "Manufacturer");
                         }
 
                         retVal += Identifier("Win32_Processor", "MaxClockSpeed");
+                    }
+                }
+
+                return retVal;
+            }
+
+            private static string BiosId()
+            {
+                string retVal = Identifier("Win32_BIOS", "SerialNumber");
+                if (string.IsNullOrEmpty(retVal))
+                {
+                    retVal = Identifier("Win32_BIOS", "Name");
+
+                    if (string.IsNullOrEmpty(retVal))
+                    {
+                        retVal = Identifier("Win32_BIOS", "Manufacturer");
                     }
                 }
 

@@ -6,6 +6,7 @@ using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
+using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -195,6 +196,50 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 }
                 return isOk;
             };
+        }
+
+        /// <summary>
+        /// This C# code reads a key from the windows registry.
+        /// </summary>
+        /// <param name="keyName">
+        /// <returns></returns>
+        public static string RegistryRead(string keyName)
+        {
+            string subKey = "SOFTWARE\\Soapbox Race World\\Launcher";
+
+            try
+            {
+                RegistryKey sk = Registry.LocalMachine.OpenSubKey(subKey, false);
+                if (sk == null)
+                    return null;
+                else
+                    return sk.GetValue(keyName).ToString();
+            }
+            catch (Exception error)
+            {
+                Log.Error("REGISTRYKEY: READ " + error.Message);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// This C# code writes a key to the windows registry.
+        /// </summary>
+        /// <param name="keyName">
+        /// <param name="value">
+        public static void RegistryWrite(string keyName, string value)
+        {
+            string subKey = "SOFTWARE\\Soapbox Race World\\Launcher";
+
+            try
+            {
+                RegistryKey sk = Registry.LocalMachine.CreateSubKey(subKey, true);
+                sk.SetValue(keyName, value);
+            }
+            catch (Exception error)
+            {
+                Log.Error("REGISTRYKEY: WRITE " + error.Message);
+            }
         }
 
         public static void FirstTimeRun()
