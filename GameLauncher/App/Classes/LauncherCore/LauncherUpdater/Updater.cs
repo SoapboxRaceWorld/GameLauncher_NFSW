@@ -8,6 +8,7 @@ using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using System.Net;
+using GameLauncher.App.Classes.SystemPlatform.Linux;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -29,55 +30,58 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
         public static void Latest()
         {
-            bool MainAPI = true;
-
-            try
+            if (!DetectLinux.LinuxDetected())
             {
-                FunctionStatus.TLS();
-                WebClient Client = new WebClient();
-                Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                var json_data = Client.DownloadString(URLs.Main + "/update.php?version=" + Application.ProductVersion);
-                UpdateCheckResponse MAPI = JsonConvert.DeserializeObject<UpdateCheckResponse>(json_data);
-
-                if (MAPI.Payload.LatestVersion != null)
-                {
-                    LatestLauncherBuild = MAPI.Payload.LatestVersion;
-                    Log.Info("LAUNCHER UPDATE: Latest Version -> " + MAPI.Payload.LatestVersion);
-                }
-            }
-            catch (Exception error)
-            {
-                MainAPI = false;
-                Log.Error("LAUNCHER UPDATE: " + error.Message);
-            }
-
-            if (MainAPI != true)
-            {
-                bool GitHubAPI = true;
+                bool MainAPI = true;
 
                 try
                 {
                     FunctionStatus.TLS();
                     WebClient Client = new WebClient();
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    var json_data = Client.DownloadString(URLs.GitHub_Launcher);
-                    GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
+                    var json_data = Client.DownloadString(URLs.Main + "/update.php?version=" + Application.ProductVersion);
+                    UpdateCheckResponse MAPI = JsonConvert.DeserializeObject<UpdateCheckResponse>(json_data);
 
-                    if (GHAPI.TagName != null)
+                    if (MAPI.Payload.LatestVersion != null)
                     {
-                        LatestLauncherBuild = GHAPI.TagName;
-                        Log.Info("LAUNCHER UPDATE: GitHub Latest Version -> " + GHAPI.TagName);
+                        LatestLauncherBuild = MAPI.Payload.LatestVersion;
+                        Log.Info("LAUNCHER UPDATE: Latest Version -> " + MAPI.Payload.LatestVersion);
                     }
                 }
                 catch (Exception error)
                 {
-                    GitHubAPI = false;
-                    Log.Error("LAUNCHER UPDATE: GitHub " + error.Message);
+                    MainAPI = false;
+                    Log.Error("LAUNCHER UPDATE: " + error.Message);
                 }
 
-                if (GitHubAPI != true)
+                if (MainAPI != true)
                 {
-                    Log.Error("LAUNCHER UPDATE: Failed to Retrive Latest Build Information from two APIs ");
+                    bool GitHubAPI = true;
+
+                    try
+                    {
+                        FunctionStatus.TLS();
+                        WebClient Client = new WebClient();
+                        Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        var json_data = Client.DownloadString(URLs.GitHub_Launcher);
+                        GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
+
+                        if (GHAPI.TagName != null)
+                        {
+                            LatestLauncherBuild = GHAPI.TagName;
+                            Log.Info("LAUNCHER UPDATE: GitHub Latest Version -> " + GHAPI.TagName);
+                        }
+                    }
+                    catch (Exception error)
+                    {
+                        GitHubAPI = false;
+                        Log.Error("LAUNCHER UPDATE: GitHub " + error.Message);
+                    }
+
+                    if (GitHubAPI != true)
+                    {
+                        Log.Error("LAUNCHER UPDATE: Failed to Retrive Latest Build Information from two APIs ");
+                    }
                 }
             }
 
