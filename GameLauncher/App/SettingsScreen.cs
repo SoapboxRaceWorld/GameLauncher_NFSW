@@ -403,7 +403,7 @@ namespace GameLauncher.App
                     }
                     else
                     {
-                        switch (APIStatusChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat"))
+                        switch (APIChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat"))
                         {
                             case APIStatus.Online:
                                 Theming.ButtonVerifyHash = true;
@@ -815,7 +815,7 @@ namespace GameLauncher.App
                 SettingsCDNText.ForeColor = Theming.SecondaryTextForeColor;
                 Log.Info("SETTINGS PINGING CHANGED CDN: Checking Changed CDN from Drop Down List");
 
-                switch (APIStatusChecker.CheckStatus(((CDNList)SettingsCDNPick.SelectedItem).Url + "/index.xml"))
+                switch (APIChecker.CheckStatus(((CDNList)SettingsCDNPick.SelectedItem).Url + "/index.xml"))
                 {
                     case APIStatus.Online:
                         SettingsCDNText.Text = "CDN: ONLINE";
@@ -1094,7 +1094,7 @@ namespace GameLauncher.App
                 Log.Info("SETTINGS PINGING CDN: Checking Current CDN from Settings.ini");
                 await Task.Delay(500);
 
-                switch (APIStatusChecker.CheckStatus(FileSettingsSave.CDN + "/index.xml"))
+                switch (APIChecker.CheckStatus(FileSettingsSave.CDN + "/index.xml"))
                 {
                     case APIStatus.Online:
                         SettingsCDNCurrent.LinkColor = Theming.Sucess;

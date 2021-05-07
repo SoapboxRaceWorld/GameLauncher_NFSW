@@ -153,14 +153,14 @@
       <DependentUpon>AddServer.cs</DependentUpon>
     </Compile>
     <Compile Include="App\Classes\LauncherCore\AntiCheat.cs" />
-    <Compile Include="App\Classes\LauncherCore\APICheckers\APIStatusChecker.cs" />
-    <Compile Include="App\Classes\LauncherCore\APICheckers\VisualsAPIChecker.cs" />
+    <Compile Include="App\Classes\LauncherCore\API\APIChecker.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\ClassicAuth.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\ModernAuth.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\Tokens.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Web\WebRequest.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderAddons.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\Downloader.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileAccountSave.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileSettingsSave.cs" />
@@ -191,17 +191,8 @@
     <Compile Include="App\Classes\SystemPlatform\Components\HardwareID.cs" />
     <Compile Include="App\Classes\SystemPlatform\Components\HardwareInfo.cs" />
     <Compile Include="App\Classes\SystemPlatform\Linux\DetectLinux.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderCommand.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderException.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\DownloadFailed.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\DownloadFinished.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\DownloadManager.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\HashManager.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\ProgressUpdated.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\ShowExtract.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\ShowMessage.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\UncompressionException.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\VerifyCommand.cs" />
+    <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderHandler.cs" />
+    <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderHashReader.cs" />
     <Compile Include="App\Classes\LauncherCore\LauncherUpdater\UpdaterSchema.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\ExtractResource.cs" />
     <Compile Include="App\Classes\LauncherCore\Hash\MD5.cs" />

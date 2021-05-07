@@ -240,14 +240,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                 if (string.IsNullOrEmpty(retVal))
                 {
                     retVal = Identifier("Win32_BIOS", "Name");
-
-                    if (string.IsNullOrEmpty(retVal))
-                    {
-                        retVal = Identifier("Win32_BIOS", "Manufacturer");
-                    }
                 }
 
-                return retVal;
+                return retVal + " " + Identifier("Win32_BIOS", "Manufacturer");
             }
 
             private static string DiskId()
