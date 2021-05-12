@@ -13,7 +13,7 @@ using GameLauncher.App.Classes.SystemPlatform;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 
-namespace GameLauncher.App.Classes
+namespace GameLauncher.App.Classes.LauncherCore
 {
     class AntiCheat
     {

@@ -437,7 +437,7 @@ namespace GameLauncher
             if (!string.IsNullOrEmpty(FileSettingsSave.GameInstallation))
             {
                 var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
-                ModNetLinksCleanup.CleanLinks(linksPath);
+                ModNetHandler.CleanLinks(linksPath);
             }
 
             if (FileSettingsSave.Proxy == "0")

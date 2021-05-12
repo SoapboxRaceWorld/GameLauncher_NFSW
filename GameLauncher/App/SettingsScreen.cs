@@ -495,7 +495,7 @@ namespace GameLauncher.App
 
                 /* Clean Mods Files from New Dirctory (If it has .links in directory) */
                 var linksPath = Path.Combine(_newGameFilesPath, "\\.links");
-                ModNetLinksCleanup.CleanLinks(linksPath);
+                ModNetHandler.CleanLinks(linksPath);
 
                 _restartRequired = true;
             }
@@ -882,7 +882,7 @@ namespace GameLauncher.App
 
             /* Clean Mods Files from New Dirctory (If it has .links in directory) */
             var linksPath = Path.Combine(_newGameFilesPath, "\\.links");
-            ModNetLinksCleanup.CleanLinks(linksPath);
+            ModNetHandler.CleanLinks(linksPath);
 
             _restartRequired = true;
         }

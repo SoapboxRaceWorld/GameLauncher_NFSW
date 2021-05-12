@@ -8,7 +8,7 @@
 
         public static string Static = "https://api-sbrw.davidcarbon.download";
 
-        public static string Static_Alt = "https://api2-sbrw.davidcarbon.download";
+        public static string Static_Alt = "http://api2-sbrw.davidcarbon.download";
 
         public static string WOPL = "http://worldonline.pl";
 

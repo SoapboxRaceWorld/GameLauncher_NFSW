@@ -176,7 +176,7 @@
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonServerInfo.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonServerList.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\LanguageListUpdater.cs" />
-    <Compile Include="App\Classes\LauncherCore\ModNet\ModNetLinksCleanup.cs" />
+    <Compile Include="App\Classes\LauncherCore\ModNet\JSON\JsonServerModNet.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\DiscordLauncherPresense.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\Email\IsEmailValid.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\JSON\IsJSONValid.cs" />
@@ -200,8 +200,7 @@
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\IniFile.cs" />
     <Compile Include="App\Classes\LauncherCore\InsiderKit\KitEnabler.cs" />
     <Compile Include="App\Classes\LauncherCore\Logger\LogToFile.cs" />
-    <Compile Include="App\Classes\LauncherCore\ModNet\ModManager.cs" />
-    <Compile Include="App\Classes\LauncherCore\ModNet\ModNetReloaded.cs" />
+    <Compile Include="App\Classes\LauncherCore\ModNet\ModNetHandler.cs" />
     <Compile Include="App\Classes\SystemPlatform\NativeFunctions.cs" />
     <Compile Include="App\Classes\LauncherCore\LauncherUpdater\Updater.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\NFSW.cs" />
