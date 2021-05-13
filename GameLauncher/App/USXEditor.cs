@@ -113,6 +113,7 @@ namespace GameLauncher.App
         private void SettingsSave_Click(object sender, EventArgs e)
         {
             FileGameSettingsData.Brightness = ValidNumberRange(numericBrightness.Value);
+            FileGameSettings.Save();
         }
 
         /* Check User Inputed Value and Keep in Within the Value Range of 0-100 */
