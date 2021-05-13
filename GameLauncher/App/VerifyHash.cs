@@ -310,9 +310,6 @@ namespace GameLauncher.App
         {
             this.BeginInvoke((MethodInvoker)delegate
             {
-                double bytesIn = double.Parse(e.BytesReceived.ToString());
-                double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-                double percentage = bytesIn / totalBytes * 100;
                 DownloadProgressText.Text = "Downloading File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + CurrentDownloadingFile + "\n" + TimeConversions.FormatFileSize(e.BytesReceived) + " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive);
             });
         }
