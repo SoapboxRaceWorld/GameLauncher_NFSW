@@ -28,7 +28,6 @@ namespace GameLauncher
         public static bool IsSplashScreenLive = false;
         private static string LocalAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         private static string RoamingAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        private static string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
 
         [STAThread]
         static void Main()
@@ -276,7 +275,7 @@ namespace GameLauncher
             }
 
             /* Create Default Configuration Files (if they don't already exist) */
-            if (!File.Exists(_userSettings))
+            if (!File.Exists(FileGameSettings.UserSettingsLocation))
             {
                 try
                 {
@@ -284,14 +283,13 @@ namespace GameLauncher
                     {
                         Directory.CreateDirectory(RoamingAppData + "\\Need for Speed World" + "\\Settings");
                     }
-                    File.WriteAllBytes(_userSettings, ExtractResource.AsByte("GameLauncher.Resources.UserSettings.UserSettings.xml"));
+                    File.WriteAllBytes(FileGameSettings.UserSettingsLocation, ExtractResource.AsByte("GameLauncher.Resources.UserSettings.UserSettings.xml"));
                 }
                 catch (Exception error)
                 {
                     Log.Error("LAUNCHER XML: " + error.Message);
                 }
             }
-
 
             if (EnableInsiderDeveloper.Allowed() == true || EnableInsiderBetaTester.Allowed() == true)
             {

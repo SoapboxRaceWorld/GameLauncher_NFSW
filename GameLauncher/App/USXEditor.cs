@@ -20,14 +20,12 @@ namespace GameLauncher.App
 {
     public partial class USXEditor : Form
     {
-        public string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
-
         public USXEditor()
         {
-            if (File.Exists(_userSettings))
+            if (File.Exists(FileGameSettings.UserSettingsLocation))
             {
                 Log.Debug("UXE: Success, a UserSettings.xml file was found!");
-                if (new FileInfo(_userSettings).IsReadOnly == true)
+                if (new FileInfo(FileGameSettings.UserSettingsLocation).IsReadOnly == true)
                 {
                     Log.Warning("UXE: UserSettings.xml is ReadOnly!");
                 }
@@ -41,7 +39,16 @@ namespace GameLauncher.App
             {
                 MessageBox.Show(null, "How is this even possible? There is no UserSettings.xml file found!", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Log.Warning("UXE: No UserSettings.xml file was found!");
+                return;
             }
+
+            FileGameSettings.Read();
+            /* This was used to check if the Values actualy changed (05-11-2021) - DavidCarbon
+             * 
+            Log.Debug(FileGameSettingsData.Transmission);
+            FileGameSettingsData.Transmission = "4";
+            FileGameSettings.Save();
+            */
 
             InitializeComponent();
             SetVisuals();
@@ -97,6 +104,5 @@ namespace GameLauncher.App
         {
             Close();
         }
-
     }
 }

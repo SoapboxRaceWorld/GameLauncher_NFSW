@@ -163,6 +163,7 @@
     <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderAddons.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\Downloader.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileAccountSave.cs" />
+    <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileGameSettingsSave.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileSettingsSave.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\EnumTypes.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\FunctionEvents.cs" />
