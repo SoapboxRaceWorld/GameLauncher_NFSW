@@ -104,5 +104,34 @@ namespace GameLauncher.App
         {
             Close();
         }
+
+        private void USXEditor_Load(object sender, EventArgs e)
+        {
+            numericBrightness.Value = Convert.ToDecimal(FileGameSettingsData.Brightness);
+        }
+
+        private void SettingsSave_Click(object sender, EventArgs e)
+        {
+            FileGameSettingsData.Brightness = ValidNumberRange(numericBrightness.Value);
+        }
+
+        /* Check User Inputed Value and Keep in Within the Value Range of 0-100 */
+        private string ValidNumberRange(decimal UIName)
+        {
+            int Value = Convert.ToInt32(UIName);
+
+            if (Value > 100)
+            {
+                return "100";
+            }
+            else if (Value < 0)
+            {
+                return "0";
+            }
+            else
+            {
+                return numericBrightness.Value.ToString();
+            }
+        }
     }
 }

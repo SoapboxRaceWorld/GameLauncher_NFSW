@@ -848,7 +848,7 @@ namespace GameLauncher.App
             this.numericBrightness.TabIndex = 58;
             this.numericBrightness.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.numericBrightness.Value = new decimal(new int[] {
-            52,
+            69,
             0,
             0,
             0});
@@ -1684,6 +1684,7 @@ namespace GameLauncher.App
             this.SettingsSave.TabIndex = 115;
             this.SettingsSave.Text = "SAVE";
             this.SettingsSave.UseVisualStyleBackColor = false;
+            this.SettingsSave.Click += new System.EventHandler(this.SettingsSave_Click);
             // 
             // ingameGameplayOptions
             // 
@@ -1823,6 +1824,7 @@ namespace GameLauncher.App
             this.Text = "SBRW UserSettings XML Editor";
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
+            this.Load += new System.EventHandler(this.USXEditor_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericBrightness)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMVol)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSFxVol)).EndInit();
