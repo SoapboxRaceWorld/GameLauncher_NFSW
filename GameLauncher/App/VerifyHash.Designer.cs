@@ -63,17 +63,17 @@
             // 
             this.DownloadProgressText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DownloadProgressText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.DownloadProgressText.Location = new System.Drawing.Point(1, 186);
+            this.DownloadProgressText.Location = new System.Drawing.Point(1, 176);
             this.DownloadProgressText.Margin = new System.Windows.Forms.Padding(0);
             this.DownloadProgressText.Name = "DownloadProgressText";
-            this.DownloadProgressText.Size = new System.Drawing.Size(408, 30);
+            this.DownloadProgressText.Size = new System.Drawing.Size(408, 53);
             this.DownloadProgressText.TabIndex = 7;
             this.DownloadProgressText.Text = "\r\nDownload Progress:";
             this.DownloadProgressText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // DownloadProgressBar
             // 
-            this.DownloadProgressBar.Location = new System.Drawing.Point(13, 222);
+            this.DownloadProgressBar.Location = new System.Drawing.Point(13, 232);
             this.DownloadProgressBar.Name = "DownloadProgressBar";
             this.DownloadProgressBar.Size = new System.Drawing.Size(384, 23);
             this.DownloadProgressBar.TabIndex = 6;
@@ -85,7 +85,7 @@
             this.StartScanner.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.StartScanner.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.StartScanner.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.StartScanner.Location = new System.Drawing.Point(159, 256);
+            this.StartScanner.Location = new System.Drawing.Point(159, 260);
             this.StartScanner.Name = "StartScanner";
             this.StartScanner.Size = new System.Drawing.Size(91, 24);
             this.StartScanner.TabIndex = 3;
@@ -100,7 +100,7 @@
             this.StopScanner.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.StopScanner.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.StopScanner.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
-            this.StopScanner.Location = new System.Drawing.Point(159, 256);
+            this.StopScanner.Location = new System.Drawing.Point(159, 260);
             this.StopScanner.Name = "StopScanner";
             this.StopScanner.Size = new System.Drawing.Size(91, 24);
             this.StopScanner.TabIndex = 4;
@@ -141,9 +141,9 @@
             this.VerifyHashText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VerifyHashText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.VerifyHashText.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.VerifyHashText.Location = new System.Drawing.Point(13, 292);
+            this.VerifyHashText.Location = new System.Drawing.Point(13, 297);
             this.VerifyHashText.Name = "VerifyHashText";
-            this.VerifyHashText.Size = new System.Drawing.Size(384, 70);
+            this.VerifyHashText.Size = new System.Drawing.Size(384, 66);
             this.VerifyHashText.TabIndex = 9;
             this.VerifyHashText.Text = "Please select \"Start Scan\"\r\nTo begin Validating Gamefiles";
             this.VerifyHashText.TextAlign = System.Drawing.ContentAlignment.TopCenter;

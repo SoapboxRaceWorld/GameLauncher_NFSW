@@ -17,7 +17,6 @@ using System.Text.RegularExpressions;
 using System.IO.Compression;
 using System.Threading.Tasks;
 using GameLauncher.App;
-using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.Auth;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.InsiderKit;

@@ -14,14 +14,12 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using System.ComponentModel;
 
 namespace GameLauncher.App
 {
     public partial class VerifyHash : Form
     {
-        public RichPresence _presence = new RichPresence();
-
         /* VerifyHash */
         string[][] scannedHashes;
         public int filesToScan;
@@ -33,6 +31,8 @@ namespace GameLauncher.App
         public List<string> ValidFileList = new List<string>();
         public string FinalCDNURL;
         public bool isScanning = false;
+        public static string CurrentDownloadingFile = String.Empty;
+        public int CurrentFileListLength = 0;
 
         public VerifyHash()
         {
@@ -240,6 +240,8 @@ namespace GameLauncher.App
                 foreach (string text in files)
                 {
                     currentCount = files.Count();
+                    CurrentFileListLength = files.Length;
+
                     try 
                     {
                         string text2 = FileSettingsSave.GameInstallation + text;
@@ -249,18 +251,25 @@ namespace GameLauncher.App
                             LogVerify.Deleted("File: " + text2);
                             File.Delete(text2);
                         }
-                        new WebClientWithTimeout().DownloadFile(address, text2);
+
+                        if (!new FileInfo(text2).Directory.Exists)
+                        {
+                            new FileInfo(text2).Directory.Create();
+                        }
+
+                        CurrentDownloadingFile = text;
+
+                        FunctionStatus.TLS();
+                        WebClient client = new WebClient();
+                        client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged);
+                        client.DownloadFileCompleted += new AsyncCompletedEventHandler(Client_DownloadFileCompleted);
+                        client.DownloadFileAsync(new Uri(address), text2);
                         LogVerify.Downloaded("File: " + text2);
                         redownloadedCount++;
-
                         Application.DoEvents();
                     }
                     catch { }
-                    this.BeginInvoke((MethodInvoker)delegate
-                    {
-                        DownloadProgressText.Text = "Downloaded File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + text;
-                        DownloadProgressBar.Value = redownloadedCount * 100 / files.Length;
-                    });
                 }
 
                 if (redownloadedCount == files.Count())
@@ -275,6 +284,37 @@ namespace GameLauncher.App
                 StartScanner.Visible = false;
                 StopScanner.Visible = false;
             }
+        }
+
+        void Client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+            {
+                LogVerify.Error("Download Cancelled for [" + CurrentDownloadingFile + "] - " + e.ToString());
+            }
+            else if (e.Error != null)
+            {
+                LogVerify.Error("Download Error for [" + CurrentDownloadingFile + "] - " + e.ToString());
+            }
+            else
+            {
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    DownloadProgressText.Text = "Downloaded File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + CurrentDownloadingFile;
+                    DownloadProgressBar.Value = redownloadedCount * 100 / CurrentFileListLength;
+                });
+            }
+        }
+
+        void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            this.BeginInvoke((MethodInvoker)delegate
+            {
+                double bytesIn = double.Parse(e.BytesReceived.ToString());
+                double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+                double percentage = bytesIn / totalBytes * 100;
+                DownloadProgressText.Text = "Downloading File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + CurrentDownloadingFile + "\n" + TimeConversions.FormatFileSize(e.BytesReceived) + " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive);
+            });
         }
 
         private void StartScanner_Click(object sender, EventArgs e)

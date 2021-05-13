@@ -52,6 +52,7 @@ namespace GameLauncher.App.Classes.Logger
         readonly static ConcurrentQueue<string> buffer = new ConcurrentQueue<string>();
         public static void StartVerifyLogging() => Task.Run(() => VerifyTaskKernel());
         private static void ToFile(string text, string errorname = "DEBUG") => buffer.Enqueue($"[{errorname}] {text}");
+        public static void Error(string text) => ToFile(text, "   ERROR");
         public static void Info(string text) => ToFile(text, "    INFO");
         public static void Valid(string text) => ToFile(text, "   VAILD");
         public static void Invalid(string text) => ToFile(text, " INVALID");
