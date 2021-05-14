@@ -108,30 +108,142 @@ namespace GameLauncher.App
         private void USXEditor_Load(object sender, EventArgs e)
         {
             numericBrightness.Value = Convert.ToDecimal(FileGameSettingsData.Brightness);
+            numericMVol.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.MasterAudio);
+            numericSFxVol.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.SFXAudio);
+            numericCarVol.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.CarAudio);
+            numericSpeech.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.SpeechAudio);
+            numericGMusic.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.MusicAudio);
+            numericFEMusic.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.FreeroamAudio);
+
+            if (FileGameSettingsData.ScreenWindowed == "0")
+            {
+                radioWindowedOff.Checked = true;
+            }
+            else
+            {
+                radioWindowedOn.Checked = true;
+            }
+
+            if (FileGameSettingsData.EnableAero == "0")
+            {
+                radioAeroOff.Checked = true;
+            }
+            else
+            {
+                radioAeroOn.Checked = true;
+            }
+
+            if (FileGameSettingsData.VSyncOn == "0")
+            {
+                radioVSyncOff.Checked = true;
+            }
+            else
+            {
+                radioVSyncOn.Checked = true;
+            }
+
+            if (FileGameSettingsData.AudioQuality == "0")
+            {
+                radioAQLow.Checked = true;
+            }
+            else
+            {
+                radioAQHigh.Checked = true;
+            }
+
+            if (FileGameSettingsData.Damage == "0")
+            {
+                radioDamageOn.Checked = true;
+            }
+            else
+            {
+                radioDamageOff.Checked = true;
+            }
+
+            if (FileGameSettingsData.SpeedUnits == "0")
+            {
+                radioKPH.Checked = true;
+            }
+            else
+            {
+                radioMPH.Checked = true;
+            }
         }
 
         private void SettingsSave_Click(object sender, EventArgs e)
         {
-            FileGameSettingsData.Brightness = ValidNumberRange(numericBrightness.Value);
+            FileGameSettingsData.Brightness = ValidWholeNumberRange(numericBrightness.Value);
+            FileGameSettingsData.MasterAudio = ValidDecimalNumberRange(numericMVol.Value);
+            FileGameSettingsData.SFXAudio = ValidDecimalNumberRange(numericSFxVol.Value);
+            FileGameSettingsData.CarAudio = ValidDecimalNumberRange(numericCarVol.Value);
+            FileGameSettingsData.SpeechAudio = ValidDecimalNumberRange(numericSpeech.Value);
+            FileGameSettingsData.MusicAudio = ValidDecimalNumberRange(numericGMusic.Value);
+            FileGameSettingsData.FreeroamAudio = ValidDecimalNumberRange(numericFEMusic.Value);
+
+            FileGameSettingsData.AudioQuality = (radioAQLow.Checked == true) ? "0" : "1";
+            FileGameSettingsData.VSyncOn = (radioVSyncOff.Checked == true) ? "0" : "1";
+            FileGameSettingsData.EnableAero = (radioAeroOff.Checked == true) ? "0" : "1";
+            FileGameSettingsData.ScreenWindowed = (radioWindowedOff.Checked == true) ? "0" : "1";
+            FileGameSettingsData.Damage = (radioDamageOn.Checked == true) ? "0" : "1";
+            FileGameSettingsData.SpeedUnits = (radioKPH.Checked == true) ? "0" : "1";
+
             FileGameSettings.Save();
+        }
+        /* Converts Decimal Numbers (ex. 0.52) to 52 */
+        private decimal ConvertDecimalToWholeNumber(string UIName)
+        {
+            decimal Value = Math.Round(Convert.ToDecimal(UIName), 2) * 100;
+
+            if (Value >= 100)
+            {
+                return 100;
+            }
+            else if (Value <= 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return Value;
+            }
         }
 
         /* Check User Inputed Value and Keep in Within the Value Range of 0-100 */
-        private string ValidNumberRange(decimal UIName)
+        private string ValidWholeNumberRange(decimal UIName)
         {
-            int Value = Convert.ToInt32(UIName);
+            decimal Value = Math.Round(UIName, MidpointRounding.ToEven);
 
-            if (Value > 100)
+            if (Value >= 100)
             {
                 return "100";
             }
-            else if (Value < 0)
+            else if (Value <= 0)
             {
                 return "0";
             }
             else
             {
-                return numericBrightness.Value.ToString();
+                return Value.ToString();
+            }
+        }
+
+        /* Check User Inputed Value and Keep in Within the Value Range of 0-1 with In-between Values */
+        private string ValidDecimalNumberRange(decimal UIName)
+        {
+            decimal Value = Math.Round(UIName, 1);
+
+            if (Value >= 100)
+            {
+                return "1";
+            }
+            else if (Value <= 0)
+            {
+                return "0";
+            }
+            else
+            {
+                decimal CleanValue = Value / 100;
+                return CleanValue.ToString();
             }
         }
     }

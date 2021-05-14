@@ -31,6 +31,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         public static string ForcesM1x = "false";
         public static string PerformanceLevel = "2";
         public static string PixelAspectRatioOverride = "2";
+        public static string ScreenWindowed = "0";
         public static string VSyncOn = "0";
     }
 
@@ -71,6 +72,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     FileGameSettingsData.FirstTime = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/firsttime").InnerText;
                     FileGameSettingsData.ForcesM1x = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/forcesm1x").InnerText;
                     FileGameSettingsData.PixelAspectRatioOverride = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/pixelaspectratiooverride").InnerText;
+                    FileGameSettingsData.ScreenWindowed = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenwindowed").InnerText;
                     FileGameSettingsData.VSyncOn = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/vsyncon").InnerText;
                 }
                 catch (Exception Error)
@@ -147,9 +149,17 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 {
                     UserSettingsFile.SelectSingleNode("Settings/VideoConfig/brightness").InnerText = FileGameSettingsData.Brightness;
                 }
+                if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/enableaero").InnerText != FileGameSettingsData.EnableAero)
+                {
+                    UserSettingsFile.SelectSingleNode("Settings/VideoConfig/enableaero").InnerText = FileGameSettingsData.EnableAero;
+                }
                 if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/vsyncon").InnerText != FileGameSettingsData.VSyncOn)
                 {
                     UserSettingsFile.SelectSingleNode("Settings/VideoConfig/vsyncon").InnerText = FileGameSettingsData.VSyncOn;
+                }
+                if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenwindowed").InnerText != FileGameSettingsData.ScreenWindowed)
+                {
+                    UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenwindowed").InnerText = FileGameSettingsData.ScreenWindowed;
                 }
 
                 if (new FileInfo(UserSettingsLocation).IsReadOnly != true)
