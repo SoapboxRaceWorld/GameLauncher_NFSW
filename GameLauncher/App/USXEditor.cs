@@ -97,6 +97,18 @@ namespace GameLauncher.App
             }
             Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
             labelVideoOptions.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold  | System.Drawing.FontStyle.Underline);
+
+            /*******************************/
+            /* Comboboxes                   /
+            /*******************************/
+
+            comboBox3.DisplayMember = "Text";
+            comboBox3.ValueMember = "Value";
+            var TransmissonList = new[] {
+                new { Text = "Automatic", Value = "0" },
+                new { Text = "Manual", Value = "1" },
+            };
+            comboBox3.DataSource = TransmissonList;
         }
 
         /* Settings Cancel */
@@ -114,6 +126,8 @@ namespace GameLauncher.App
             numericSpeech.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.SpeechAudio);
             numericGMusic.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.MusicAudio);
             numericFEMusic.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.FreeroamAudio);
+
+            comboBox3.SelectedIndex = (FileGameSettingsData.Transmission == "1") ? 1 : 0;
 
             if (FileGameSettingsData.ScreenWindowed == "0")
             {
@@ -186,6 +200,8 @@ namespace GameLauncher.App
             FileGameSettingsData.ScreenWindowed = (radioWindowedOff.Checked == true) ? "0" : "1";
             FileGameSettingsData.Damage = (radioDamageOn.Checked == true) ? "0" : "1";
             FileGameSettingsData.SpeedUnits = (radioKPH.Checked == true) ? "0" : "1";
+
+            FileGameSettingsData.Transmission = comboBox3.SelectedValue.ToString();
 
             FileGameSettings.Save();
         }

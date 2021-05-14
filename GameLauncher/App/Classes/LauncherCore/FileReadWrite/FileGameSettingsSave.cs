@@ -136,6 +136,15 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 {
                     UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["speedUnits"].Value = FileGameSettingsData.SpeedUnits;
                 }
+                /* Physics */
+                if (UserSettingsFile.SelectSingleNode("Settings/Physics/CameraPOV").InnerText != FileGameSettingsData.Camera)
+                {
+                    UserSettingsFile.SelectSingleNode("Settings/Physics/CameraPOV").InnerText = FileGameSettingsData.Camera;
+                }
+                if (UserSettingsFile.SelectSingleNode("Settings/Physics/TransmissionType").InnerText != FileGameSettingsData.Transmission)
+                {
+                    UserSettingsFile.SelectSingleNode("Settings/Physics/TransmissionType").InnerText = FileGameSettingsData.Transmission;
+                }
                 /* VideoConfig */
                 if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/audiomode").InnerText != FileGameSettingsData.AudioMode)
                 {
