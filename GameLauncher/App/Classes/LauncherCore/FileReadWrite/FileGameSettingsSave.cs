@@ -120,9 +120,9 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["FEMusicVol"].Value = FileGameSettingsData.FreeroamAudio;
                 }
                 /* Gameplay */
-                if (UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["camera"].Value != FileGameSettingsData.Camera)
+                if (UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["camera"].Value != FileGameSettingsData.CameraPOV)
                 {
-                    UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["camera"].Value = FileGameSettingsData.Camera;
+                    UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["camera"].Value = FileGameSettingsData.CameraPOV;
                 }
                 if (UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["transmission"].Value != FileGameSettingsData.Transmission)
                 {
@@ -137,9 +137,9 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["speedUnits"].Value = FileGameSettingsData.SpeedUnits;
                 }
                 /* Physics */
-                if (UserSettingsFile.SelectSingleNode("Settings/Physics/CameraPOV").InnerText != FileGameSettingsData.Camera)
+                if (UserSettingsFile.SelectSingleNode("Settings/Physics/CameraPOV").InnerText != FileGameSettingsData.CameraPOV)
                 {
-                    UserSettingsFile.SelectSingleNode("Settings/Physics/CameraPOV").InnerText = FileGameSettingsData.Camera;
+                    UserSettingsFile.SelectSingleNode("Settings/Physics/CameraPOV").InnerText = FileGameSettingsData.CameraPOV;
                 }
                 if (UserSettingsFile.SelectSingleNode("Settings/Physics/TransmissionType").InnerText != FileGameSettingsData.Transmission)
                 {

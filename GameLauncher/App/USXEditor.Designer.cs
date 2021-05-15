@@ -77,7 +77,6 @@ namespace GameLauncher.App
             this.label27 = new System.Windows.Forms.Label();
             this.labelLauncherVersion = new System.Windows.Forms.Label();
             this.labelVideoOptions = new System.Windows.Forms.Label();
-            this.comboResolution = new System.Windows.Forms.ComboBox();
             this.radioAeroOn = new System.Windows.Forms.RadioButton();
             this.radioAeroOff = new System.Windows.Forms.RadioButton();
             this.radioWindowedOn = new System.Windows.Forms.RadioButton();
@@ -96,8 +95,8 @@ namespace GameLauncher.App
             this.radioKPH = new System.Windows.Forms.RadioButton();
             this.radioDamageOff = new System.Windows.Forms.RadioButton();
             this.radioMPH = new System.Windows.Forms.RadioButton();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.comboBoxCamera = new System.Windows.Forms.ComboBox();
+            this.comboBoxTransmisson = new System.Windows.Forms.ComboBox();
             this.comboBox4 = new System.Windows.Forms.ComboBox();
             this.radioOverBrightOn = new System.Windows.Forms.RadioButton();
             this.radioPostProcOn = new System.Windows.Forms.RadioButton();
@@ -151,6 +150,9 @@ namespace GameLauncher.App
             this.ingameAudioOptions = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ingameVideoOptions = new System.Windows.Forms.PictureBox();
+            this.comboResolution = new System.Windows.Forms.ComboBox();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numericBrightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMVol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSFxVol)).BeginInit();
@@ -177,6 +179,8 @@ namespace GameLauncher.App
             ((System.ComponentModel.ISupportInitialize)(this.ingameAudioOptions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ingameVideoOptions)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.SuspendLayout();
             // 
             // labelAudioMode
@@ -746,19 +750,6 @@ namespace GameLauncher.App
             this.labelVideoOptions.Text = "Video Options";
             this.labelVideoOptions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // comboResolution
-            // 
-            this.comboResolution.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.comboResolution.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.comboResolution.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboResolution.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
-            this.comboResolution.FormattingEnabled = true;
-            this.comboResolution.Location = new System.Drawing.Point(136, 37);
-            this.comboResolution.Name = "comboResolution";
-            this.comboResolution.Size = new System.Drawing.Size(120, 22);
-            this.comboResolution.TabIndex = 51;
-            this.comboResolution.Text = "3840 x 2160";
-            // 
             // radioAeroOn
             // 
             this.radioAeroOn.AutoSize = true;
@@ -958,7 +949,8 @@ namespace GameLauncher.App
             // comboAudioMode
             // 
             this.comboAudioMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.comboAudioMode.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.comboAudioMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboAudioMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.comboAudioMode.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboAudioMode.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboAudioMode.FormattingEnabled = true;
@@ -969,7 +961,6 @@ namespace GameLauncher.App
             this.comboAudioMode.Size = new System.Drawing.Size(120, 22);
             this.comboAudioMode.TabIndex = 65;
             this.comboAudioMode.Tag = "Audio Mode";
-            this.comboAudioMode.Text = "1 - Surround";
             // 
             // radioDamageOn
             // 
@@ -1025,33 +1016,33 @@ namespace GameLauncher.App
             this.radioMPH.Text = "Mp/H";
             this.radioMPH.UseVisualStyleBackColor = false;
             // 
-            // comboBox2
+            // comboBoxCamera
             // 
-            this.comboBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.comboBox2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.comboBox2.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBox2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(136, 532);
-            this.comboBox2.MaxDropDownItems = 4;
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(120, 22);
-            this.comboBox2.TabIndex = 70;
-            this.comboBox2.Text = "0 - Bumper";
+            this.comboBoxCamera.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBoxCamera.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCamera.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.comboBoxCamera.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxCamera.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.comboBoxCamera.FormattingEnabled = true;
+            this.comboBoxCamera.Location = new System.Drawing.Point(136, 532);
+            this.comboBoxCamera.MaxDropDownItems = 4;
+            this.comboBoxCamera.Name = "comboBoxCamera";
+            this.comboBoxCamera.Size = new System.Drawing.Size(120, 22);
+            this.comboBoxCamera.TabIndex = 70;
             // 
-            // comboBox3
+            // comboBoxTransmisson
             // 
-            this.comboBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.comboBox3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.comboBox3.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBox3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(136, 560);
-            this.comboBox3.MaxDropDownItems = 2;
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(120, 22);
-            this.comboBox3.TabIndex = 71;
-            this.comboBox3.Text = "0 - Automatic";
+            this.comboBoxTransmisson.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBoxTransmisson.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTransmisson.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.comboBoxTransmisson.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxTransmisson.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.comboBoxTransmisson.FormattingEnabled = true;
+            this.comboBoxTransmisson.Location = new System.Drawing.Point(136, 560);
+            this.comboBoxTransmisson.MaxDropDownItems = 2;
+            this.comboBoxTransmisson.Name = "comboBoxTransmisson";
+            this.comboBoxTransmisson.Size = new System.Drawing.Size(120, 22);
+            this.comboBoxTransmisson.TabIndex = 71;
             // 
             // comboBox4
             // 
@@ -1730,12 +1721,69 @@ namespace GameLauncher.App
             this.ingameVideoOptions.TabIndex = 48;
             this.ingameVideoOptions.TabStop = false;
             // 
+            // comboResolution
+            // 
+            this.comboResolution.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboResolution.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.comboResolution.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboResolution.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.comboResolution.FormattingEnabled = true;
+            this.comboResolution.Location = new System.Drawing.Point(136, 37);
+            this.comboResolution.Name = "comboResolution";
+            this.comboResolution.Size = new System.Drawing.Size(120, 22);
+            this.comboResolution.TabIndex = 51;
+            this.comboResolution.Text = "3840 x 2160";
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.numericUpDown1.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDown1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.numericUpDown1.Location = new System.Drawing.Point(136, 37);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            9000,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(61, 21);
+            this.numericUpDown1.TabIndex = 134;
+            this.numericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            6996,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDown2
+            // 
+            this.numericUpDown2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.numericUpDown2.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDown2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.numericUpDown2.Location = new System.Drawing.Point(195, 38);
+            this.numericUpDown2.Maximum = new decimal(new int[] {
+            9000,
+            0,
+            0,
+            0});
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.Size = new System.Drawing.Size(61, 21);
+            this.numericUpDown2.TabIndex = 135;
+            this.numericUpDown2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numericUpDown2.Value = new decimal(new int[] {
+            6996,
+            0,
+            0,
+            0});
+            // 
             // USXEditor
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(560, 717);
+            this.Controls.Add(this.numericUpDown2);
+            this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.panelVisTreat);
             this.Controls.Add(this.panelParticleSys);
             this.Controls.Add(this.panelSkidMarks);
@@ -1764,8 +1812,8 @@ namespace GameLauncher.App
             this.Controls.Add(this.comboBox6);
             this.Controls.Add(this.comboBox5);
             this.Controls.Add(this.comboBox4);
-            this.Controls.Add(this.comboBox3);
-            this.Controls.Add(this.comboBox2);
+            this.Controls.Add(this.comboBoxTransmisson);
+            this.Controls.Add(this.comboBoxCamera);
             this.Controls.Add(this.comboAudioMode);
             this.Controls.Add(this.numericFEMusic);
             this.Controls.Add(this.numericGMusic);
@@ -1866,6 +1914,8 @@ namespace GameLauncher.App
             ((System.ComponentModel.ISupportInitialize)(this.ingameAudioOptions)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ingameVideoOptions)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1923,7 +1973,6 @@ namespace GameLauncher.App
         private System.Windows.Forms.PictureBox ingameVideoOptions;
         private System.Windows.Forms.Label labelLauncherVersion;
         private System.Windows.Forms.Label labelVideoOptions;
-        private System.Windows.Forms.ComboBox comboResolution;
         private System.Windows.Forms.RadioButton radioAeroOn;
         private System.Windows.Forms.RadioButton radioAeroOff;
         private System.Windows.Forms.RadioButton radioWindowedOn;
@@ -1942,8 +1991,8 @@ namespace GameLauncher.App
         private System.Windows.Forms.RadioButton radioKPH;
         private System.Windows.Forms.RadioButton radioDamageOff;
         private System.Windows.Forms.RadioButton radioMPH;
-        private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.ComboBox comboBoxCamera;
+        private System.Windows.Forms.ComboBox comboBoxTransmisson;
         private System.Windows.Forms.ComboBox comboBox4;
         private System.Windows.Forms.RadioButton radioOverBrightOn;
         private System.Windows.Forms.RadioButton radioPostProcOn;
@@ -1993,5 +2042,8 @@ namespace GameLauncher.App
         private System.Windows.Forms.Panel panelSkidMarks;
         private System.Windows.Forms.Panel panelParticleSys;
         private System.Windows.Forms.Panel panelVisTreat;
+        private System.Windows.Forms.ComboBox comboResolution;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown numericUpDown2;
     }
 }

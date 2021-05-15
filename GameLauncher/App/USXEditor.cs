@@ -102,13 +102,34 @@ namespace GameLauncher.App
             /* Comboboxes                   /
             /*******************************/
 
-            comboBox3.DisplayMember = "Text";
-            comboBox3.ValueMember = "Value";
+            /* Transmisson ComboBox */
             var TransmissonList = new[] {
                 new { Text = "Automatic", Value = "0" },
-                new { Text = "Manual", Value = "1" },
+                new { Text = "Manual", Value = "1" }
             };
-            comboBox3.DataSource = TransmissonList;
+            comboBoxTransmisson.DisplayMember = "Text";
+            comboBoxTransmisson.ValueMember = "Value";
+            comboBoxTransmisson.DataSource = TransmissonList;
+
+            /* AudioMode ComboBox */
+            var AudioModeList = new[] {
+                new { Sound = "Stero", Value = "0" },
+                new { Sound = "Surround", Value = "1" }
+            };
+            comboAudioMode.DisplayMember = "Sound";
+            comboAudioMode.ValueMember = "Value";
+            comboAudioMode.DataSource = AudioModeList;
+
+            /* CameraPOV ComboBox */
+            var CameraPOVList = new[] {
+                new { CameraPOV = "Bumper", Value = "0" },
+                new { CameraPOV = "Hood", Value = "1" },
+                new { CameraPOV = "Chase", Value = "2" },
+                new { CameraPOV = "Far", Value = "3" }
+            };
+            comboBoxCamera.DisplayMember = "CameraPOV";
+            comboBoxCamera.ValueMember = "Value";
+            comboBoxCamera.DataSource = CameraPOVList;
         }
 
         /* Settings Cancel */
@@ -127,7 +148,9 @@ namespace GameLauncher.App
             numericGMusic.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.MusicAudio);
             numericFEMusic.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.FreeroamAudio);
 
-            comboBox3.SelectedIndex = (FileGameSettingsData.Transmission == "1") ? 1 : 0;
+            comboBoxTransmisson.SelectedIndex = CheckValidRange("Transmission", "0-1", FileGameSettingsData.Transmission);
+            comboAudioMode.SelectedIndex = CheckValidRange("AudioMode", "0-2", FileGameSettingsData.AudioMode);
+            comboBoxCamera.SelectedIndex = CheckValidRange("Camera", "0-3", FileGameSettingsData.Camera);
 
             if (FileGameSettingsData.ScreenWindowed == "0")
             {
@@ -201,10 +224,72 @@ namespace GameLauncher.App
             FileGameSettingsData.Damage = (radioDamageOn.Checked == true) ? "0" : "1";
             FileGameSettingsData.SpeedUnits = (radioKPH.Checked == true) ? "0" : "1";
 
-            FileGameSettingsData.Transmission = comboBox3.SelectedValue.ToString();
+            FileGameSettingsData.Transmission = comboBoxTransmisson.SelectedValue.ToString();
+            FileGameSettingsData.AudioMode = comboAudioMode.SelectedValue.ToString();
+            FileGameSettingsData.CameraPOV = comboBoxCamera.SelectedValue.ToString();
 
             FileGameSettings.Save();
         }
+
+        private int CheckValidRange(string Type, string Range, string Value)
+        {
+            int ConvertedValue = Convert.ToInt32(Value);
+
+            if (Range == "0-1")
+            {
+                if (ConvertedValue <= 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+            else if (Range == "0-2")
+            {
+                if (Type == "AudioMode" && (ConvertedValue < 1 || ConvertedValue > 2))
+                {
+                    return 1;
+                }
+                if (ConvertedValue <= 0)
+                {
+                    return 0;
+                }
+                else if (ConvertedValue >= 2)
+                {
+                    return 2;
+                }
+                else
+                {
+                    return ConvertedValue;
+                }
+            }
+            else if (Range == "0-3")
+            {
+                if (Type == "Camera" && (ConvertedValue < 0 || ConvertedValue > 3))
+                {
+                    return 2;
+                }
+                else if (ConvertedValue <= 0)
+                {
+                    return 0;
+                }
+                else if (ConvertedValue >= 3)
+                {
+                    return 3;
+                }
+                else
+                {
+                    return ConvertedValue;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         /* Converts Decimal Numbers (ex. 0.52) to 52 */
         private decimal ConvertDecimalToWholeNumber(string UIName)
         {
