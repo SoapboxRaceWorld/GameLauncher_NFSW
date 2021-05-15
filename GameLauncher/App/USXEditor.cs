@@ -236,6 +236,7 @@ namespace GameLauncher.App
             FileGameSettingsData.ScreenWindowed = (radioWindowedOff.Checked == true) ? "0" : "1";
             FileGameSettingsData.Damage = (radioDamageOn.Checked == true) ? "0" : "1";
             FileGameSettingsData.SpeedUnits = (radioKPH.Checked == true) ? "0" : "1";
+            FileGameSettingsData.MotionBlur = (radioMotionBlurOff.Checked == true) ? "False" : "True";
 
             FileGameSettingsData.Transmission = comboBoxTransmisson.SelectedValue.ToString();
             FileGameSettingsData.AudioMode = comboAudioMode.SelectedValue.ToString();
