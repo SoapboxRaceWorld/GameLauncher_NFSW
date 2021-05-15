@@ -23,6 +23,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         /* Physics */
         public static string CameraPOV = "2";
         public static string TransmissionType = "1";
+        /* VideoOptions */
+        public static string MotionBlur = "False";
         /* VideoConfig */
         public static string AudioQuality = "0";
         public static string Brightness = "0";
@@ -31,6 +33,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         public static string ForcesM1x = "false";
         public static string PerformanceLevel = "2";
         public static string PixelAspectRatioOverride = "2";
+        public static string ScreenHeight = "600";
+        public static string ScreenWidth = "800";
         public static string ScreenWindowed = "0";
         public static string VSyncOn = "0";
     }
@@ -65,6 +69,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     /* Physics */
                     FileGameSettingsData.CameraPOV = UserSettingsFile.SelectSingleNode("Settings/Physics/CameraPOV").InnerText;
                     FileGameSettingsData.TransmissionType = UserSettingsFile.SelectSingleNode("Settings/Physics/TransmissionType").InnerText;
+                    /* VideoOptions */
+                    FileGameSettingsData.MotionBlur = UserSettingsFile.SelectSingleNode("Settings/UI/VideoDefault/VideoOptions").Attributes["motionBlur"].Value;
                     /* VideoConfig */
                     FileGameSettingsData.AudioQuality = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/audioquality").InnerText;
                     FileGameSettingsData.Brightness = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/brightness").InnerText;
@@ -72,6 +78,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     FileGameSettingsData.FirstTime = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/firsttime").InnerText;
                     FileGameSettingsData.ForcesM1x = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/forcesm1x").InnerText;
                     FileGameSettingsData.PixelAspectRatioOverride = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/pixelaspectratiooverride").InnerText;
+                    FileGameSettingsData.ScreenHeight = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenheight").InnerText;
+                    FileGameSettingsData.ScreenWidth = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenwidth").InnerText;
                     FileGameSettingsData.ScreenWindowed = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenwindowed").InnerText;
                     FileGameSettingsData.VSyncOn = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/vsyncon").InnerText;
                 }
@@ -145,6 +153,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 {
                     UserSettingsFile.SelectSingleNode("Settings/Physics/TransmissionType").InnerText = FileGameSettingsData.Transmission;
                 }
+                /* VideoOptions */
+                if (UserSettingsFile.SelectSingleNode("Settings/UI/VideoDefault/VideoOptions").Attributes["motionBlur"].Value != FileGameSettingsData.MotionBlur)
+                {
+                    UserSettingsFile.SelectSingleNode("Settings/UI/VideoDefault/VideoOptions").Attributes["motionBlur"].Value = FileGameSettingsData.MotionBlur;
+                }
                 /* VideoConfig */
                 if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/audiomode").InnerText != FileGameSettingsData.AudioMode)
                 {
@@ -162,13 +175,21 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 {
                     UserSettingsFile.SelectSingleNode("Settings/VideoConfig/enableaero").InnerText = FileGameSettingsData.EnableAero;
                 }
-                if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/vsyncon").InnerText != FileGameSettingsData.VSyncOn)
+                if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenheight").InnerText != FileGameSettingsData.ScreenHeight)
                 {
-                    UserSettingsFile.SelectSingleNode("Settings/VideoConfig/vsyncon").InnerText = FileGameSettingsData.VSyncOn;
+                    UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenheight").InnerText = FileGameSettingsData.ScreenHeight;
+                }
+                if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenwidth").InnerText != FileGameSettingsData.ScreenWidth)
+                {
+                    UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenwidth").InnerText = FileGameSettingsData.ScreenWidth;
                 }
                 if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenwindowed").InnerText != FileGameSettingsData.ScreenWindowed)
                 {
                     UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenwindowed").InnerText = FileGameSettingsData.ScreenWindowed;
+                }
+                if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/vsyncon").InnerText != FileGameSettingsData.VSyncOn)
+                {
+                    UserSettingsFile.SelectSingleNode("Settings/VideoConfig/vsyncon").InnerText = FileGameSettingsData.VSyncOn;
                 }
 
                 if (new FileInfo(UserSettingsLocation).IsReadOnly != true)

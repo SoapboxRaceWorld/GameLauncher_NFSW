@@ -140,6 +140,8 @@ namespace GameLauncher.App
 
         private void USXEditor_Load(object sender, EventArgs e)
         {
+            numericResWidth.Value = Convert.ToInt32(FileGameSettingsData.ScreenWidth);
+            numericResHeight.Value = Convert.ToInt32(FileGameSettingsData.ScreenHeight);
             numericBrightness.Value = Convert.ToDecimal(FileGameSettingsData.Brightness);
             numericMVol.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.MasterAudio);
             numericSFxVol.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.SFXAudio);
@@ -150,7 +152,7 @@ namespace GameLauncher.App
 
             comboBoxTransmisson.SelectedIndex = CheckValidRange("Transmission", "0-1", FileGameSettingsData.Transmission);
             comboAudioMode.SelectedIndex = CheckValidRange("AudioMode", "0-2", FileGameSettingsData.AudioMode);
-            comboBoxCamera.SelectedIndex = CheckValidRange("Camera", "0-3", FileGameSettingsData.Camera);
+            comboBoxCamera.SelectedIndex = CheckValidRange("Camera", "0-3", FileGameSettingsData.CameraPOV);
 
             if (FileGameSettingsData.ScreenWindowed == "0")
             {
@@ -205,11 +207,22 @@ namespace GameLauncher.App
             {
                 radioMPH.Checked = true;
             }
+
+            if (FileGameSettingsData.MotionBlur == "False")
+            {
+                radioMotionBlurOff.Checked = true;
+            }
+            else
+            {
+                radioMotionBlurOn.Checked = true;
+            }
         }
 
         private void SettingsSave_Click(object sender, EventArgs e)
         {
-            FileGameSettingsData.Brightness = ValidWholeNumberRange(numericBrightness.Value);
+            FileGameSettingsData.ScreenWidth = ValidWholeNumberRange("Resolution", numericResWidth.Value);
+            FileGameSettingsData.ScreenHeight = ValidWholeNumberRange("Resolution", numericResHeight.Value);
+            FileGameSettingsData.Brightness = ValidWholeNumberRange("Brightness", numericBrightness.Value);
             FileGameSettingsData.MasterAudio = ValidDecimalNumberRange(numericMVol.Value);
             FileGameSettingsData.SFXAudio = ValidDecimalNumberRange(numericSFxVol.Value);
             FileGameSettingsData.CarAudio = ValidDecimalNumberRange(numericCarVol.Value);
@@ -309,18 +322,25 @@ namespace GameLauncher.App
             }
         }
 
-        /* Check User Inputed Value and Keep in Within the Value Range of 0-100 */
-        private string ValidWholeNumberRange(decimal UIName)
+        /* Check User Inputed Value and Keep in Within the Value Range of 0-100 or Round to the Nearest Whole Number*/
+        private string ValidWholeNumberRange(string Type, decimal UIName)
         {
             decimal Value = Math.Round(UIName, MidpointRounding.ToEven);
 
-            if (Value >= 100)
+            if (Type == "Brightness")
             {
-                return "100";
-            }
-            else if (Value <= 0)
-            {
-                return "0";
+                if (Value >= 100)
+                {
+                    return "100";
+                }
+                else if (Value <= 0)
+                {
+                    return "0";
+                }
+                else
+                {
+                    return Value.ToString();
+                }
             }
             else
             {

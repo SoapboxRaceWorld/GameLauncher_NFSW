@@ -150,9 +150,8 @@ namespace GameLauncher.App
             this.ingameAudioOptions = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ingameVideoOptions = new System.Windows.Forms.PictureBox();
-            this.comboResolution = new System.Windows.Forms.ComboBox();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.numericResWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericResHeight = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numericBrightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMVol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSFxVol)).BeginInit();
@@ -179,8 +178,8 @@ namespace GameLauncher.App
             ((System.ComponentModel.ISupportInitialize)(this.ingameAudioOptions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ingameVideoOptions)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericResWidth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericResHeight)).BeginInit();
             this.SuspendLayout();
             // 
             // labelAudioMode
@@ -1721,57 +1720,44 @@ namespace GameLauncher.App
             this.ingameVideoOptions.TabIndex = 48;
             this.ingameVideoOptions.TabStop = false;
             // 
-            // comboResolution
+            // numericResWidth
             // 
-            this.comboResolution.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.comboResolution.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.comboResolution.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboResolution.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
-            this.comboResolution.FormattingEnabled = true;
-            this.comboResolution.Location = new System.Drawing.Point(136, 37);
-            this.comboResolution.Name = "comboResolution";
-            this.comboResolution.Size = new System.Drawing.Size(120, 22);
-            this.comboResolution.TabIndex = 51;
-            this.comboResolution.Text = "3840 x 2160";
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.numericUpDown1.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDown1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
-            this.numericUpDown1.Location = new System.Drawing.Point(136, 37);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
-            9000,
+            this.numericResWidth.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.numericResWidth.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericResWidth.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.numericResWidth.Location = new System.Drawing.Point(136, 38);
+            this.numericResWidth.Maximum = new decimal(new int[] {
+            7680,
             0,
             0,
             0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(61, 21);
-            this.numericUpDown1.TabIndex = 134;
-            this.numericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numericUpDown1.Value = new decimal(new int[] {
-            6996,
+            this.numericResWidth.Name = "numericResWidth";
+            this.numericResWidth.Size = new System.Drawing.Size(61, 21);
+            this.numericResWidth.TabIndex = 134;
+            this.numericResWidth.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numericResWidth.Value = new decimal(new int[] {
+            7680,
             0,
             0,
             0});
             // 
-            // numericUpDown2
+            // numericResHeight
             // 
-            this.numericUpDown2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.numericUpDown2.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDown2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
-            this.numericUpDown2.Location = new System.Drawing.Point(195, 38);
-            this.numericUpDown2.Maximum = new decimal(new int[] {
-            9000,
+            this.numericResHeight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.numericResHeight.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericResHeight.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.numericResHeight.Location = new System.Drawing.Point(195, 38);
+            this.numericResHeight.Maximum = new decimal(new int[] {
+            4320,
             0,
             0,
             0});
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(61, 21);
-            this.numericUpDown2.TabIndex = 135;
-            this.numericUpDown2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numericUpDown2.Value = new decimal(new int[] {
-            6996,
+            this.numericResHeight.Name = "numericResHeight";
+            this.numericResHeight.Size = new System.Drawing.Size(61, 21);
+            this.numericResHeight.TabIndex = 135;
+            this.numericResHeight.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numericResHeight.Value = new decimal(new int[] {
+            4320,
             0,
             0,
             0});
@@ -1782,8 +1768,8 @@ namespace GameLauncher.App
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(560, 717);
-            this.Controls.Add(this.numericUpDown2);
-            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.numericResHeight);
+            this.Controls.Add(this.numericResWidth);
             this.Controls.Add(this.panelVisTreat);
             this.Controls.Add(this.panelParticleSys);
             this.Controls.Add(this.panelSkidMarks);
@@ -1822,7 +1808,6 @@ namespace GameLauncher.App
             this.Controls.Add(this.numericSFxVol);
             this.Controls.Add(this.numericMVol);
             this.Controls.Add(this.numericBrightness);
-            this.Controls.Add(this.comboResolution);
             this.Controls.Add(this.labelVideoOptions);
             this.Controls.Add(this.labelLauncherVersion);
             this.Controls.Add(this.label27);
@@ -1914,8 +1899,8 @@ namespace GameLauncher.App
             ((System.ComponentModel.ISupportInitialize)(this.ingameAudioOptions)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ingameVideoOptions)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericResWidth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericResHeight)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2042,8 +2027,7 @@ namespace GameLauncher.App
         private System.Windows.Forms.Panel panelSkidMarks;
         private System.Windows.Forms.Panel panelParticleSys;
         private System.Windows.Forms.Panel panelVisTreat;
-        private System.Windows.Forms.ComboBox comboResolution;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.NumericUpDown numericResWidth;
+        private System.Windows.Forms.NumericUpDown numericResHeight;
     }
 }
