@@ -1,6 +1,7 @@
 ﻿using GameLauncher.App.Classes.Logger;
 using System;
 using System.IO;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
@@ -37,6 +38,27 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         public static string ScreenWidth = "800";
         public static string ScreenWindowed = "0";
         public static string VSyncOn = "0";
+        /* VideoConfig Addons */
+        public static string BaseTextureFilter = "0";
+        public static string BaseTextureLODBias= "0";
+        public static string BaseTextureMaxAni = "0";
+        public static string CarEnvironmentMapEnable = "0";
+        public static string CarLODLevel = "0";
+        public static string FSAALevel = "0";
+        public static string GlobalDetailLevel = "0";
+        public static string MaxSkidMarks = "0";
+        public static string MotionBlurEnable = "0";
+        public static string OverBrightEnable = "0";
+        public static string ParticleSystemEnable = "0";
+        public static string RainEnable = "0";
+        public static string RoadReflectionEnable = "0";
+        public static string RoadTextureFilter = "0";
+        public static string RoadTextureLODBias = "0";
+        public static string RoadTextureMaxAni = "0";
+        public static string ShaderDetail = "0";
+        public static string ShadowDetail = "0";
+        public static string VisualTreatment = "0";
+        public static string WaterSimEnable = "0";
     }
 
     class FileGameSettings
@@ -52,36 +74,103 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 try
                 {
                     UserSettingsFile.Load(UserSettingsLocation);
-
+                    
                     /* Audio */
-                    FileGameSettingsData.AudioMode = UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["AudioMode"].Value;
-                    FileGameSettingsData.SFXAudio = UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["SFXVol"].Value;
-                    FileGameSettingsData.MasterAudio = UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["MasterVol"].Value;
-                    FileGameSettingsData.CarAudio = UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["CarVol"].Value;
-                    FileGameSettingsData.SpeechAudio = UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["SpeechVol"].Value;
-                    FileGameSettingsData.MusicAudio = UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["GameMusicVol"].Value;
-                    FileGameSettingsData.FreeroamAudio = UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["FEMusicVol"].Value;
+                    FileGameSettingsData.AudioMode = (NodeReader("Attributes", "Settings/UI/Audio/AudioOptions", "AudioMode") != "ERROR") ? 
+                                                      NodeReader("Attributes", "Settings/UI/Audio/AudioOptions", "AudioMode") : "0";
+                    FileGameSettingsData.SFXAudio = (NodeReader("Attributes", "Settings/UI/Audio/AudioOptions", "SFXVol") != "ERROR") ?
+                                                     NodeReader("Attributes", "Settings/UI/Audio/AudioOptions", "SFXVol") : "100";
+                    FileGameSettingsData.MasterAudio = (NodeReader("Attributes", "Settings/UI/Audio/AudioOptions", "MasterVol") != "ERROR") ?
+                                                        NodeReader("Attributes", "Settings/UI/Audio/AudioOptions", "MasterVol") : "100";
+                    FileGameSettingsData.CarAudio = (NodeReader("Attributes", "Settings/UI/Audio/AudioOptions", "CarVol") != "ERROR") ?
+                                                     NodeReader("Attributes", "Settings/UI/Audio/AudioOptions", "CarVol") : "100";
+                    FileGameSettingsData.SpeechAudio = (NodeReader("Attributes", "Settings/UI/Audio/AudioOptions", "SpeechVol") != "ERROR") ?
+                                                        NodeReader("Attributes", "Settings/UI/Audio/AudioOptions", "SpeechVol") : "100";
+                    FileGameSettingsData.MusicAudio = (NodeReader("Attributes", "Settings/UI/Audio/AudioOptions", "GameMusicVol") != "ERROR") ?
+                                                       NodeReader("Attributes", "Settings/UI/Audio/AudioOptions", "GameMusicVol") : "100";
+                    FileGameSettingsData.FreeroamAudio = (NodeReader("Attributes", "Settings/UI/Audio/AudioOptions", "FEMusicVol") != "ERROR") ?
+                                                          NodeReader("Attributes", "Settings/UI/Audio/AudioOptions", "FEMusicVol") : "100";
                     /* Gameplay */
-                    FileGameSettingsData.Camera = UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["camera"].Value;
-                    FileGameSettingsData.Transmission = UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["transmission"].Value;
-                    FileGameSettingsData.Damage = UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["damage"].Value;
-                    FileGameSettingsData.SpeedUnits = UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["speedUnits"].Value;
+                    FileGameSettingsData.Camera = (NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "camera") != "ERROR") ?
+                                                   NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "camera") : "2";
+                    FileGameSettingsData.Transmission = (NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "transmission") != "ERROR") ?
+                                                         NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "transmission") : "2";
+                    FileGameSettingsData.Damage = (NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "damage") != "ERROR") ?
+                                                   NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "damage") : "1";
+                    FileGameSettingsData.SpeedUnits = (NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "speedUnits") != "ERROR") ?
+                                                       NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "speedUnits") : "1";
                     /* Physics */
-                    FileGameSettingsData.CameraPOV = UserSettingsFile.SelectSingleNode("Settings/Physics/CameraPOV").InnerText;
-                    FileGameSettingsData.TransmissionType = UserSettingsFile.SelectSingleNode("Settings/Physics/TransmissionType").InnerText;
+                    FileGameSettingsData.CameraPOV = (NodeReader("InnerText", "Settings/Physics/CameraPOV", null) != "ERROR") ?
+                                                      NodeReader("InnerText", "Settings/Physics/CameraPOV", null) : "2";
+                    FileGameSettingsData.TransmissionType = (NodeReader("InnerText", "Settings/Physics/TransmissionType", null) != "ERROR") ?
+                                                             NodeReader("InnerText", "Settings/Physics/TransmissionType", null) : "1";
                     /* VideoOptions */
-                    FileGameSettingsData.MotionBlur = UserSettingsFile.SelectSingleNode("Settings/UI/VideoDefault/VideoOptions").Attributes["motionBlur"].Value;
+                    FileGameSettingsData.MotionBlur = (NodeReader("Attributes", "Settings/UI/VideoDefault/VideoOptions", "motionBlur") != "ERROR") ?
+                                                       NodeReader("Attributes", "Settings/UI/VideoDefault/VideoOptions", "motionBlur") : "False";
                     /* VideoConfig */
-                    FileGameSettingsData.AudioQuality = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/audioquality").InnerText;
-                    FileGameSettingsData.Brightness = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/brightness").InnerText;
-                    FileGameSettingsData.EnableAero = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/enableaero").InnerText;
-                    FileGameSettingsData.FirstTime = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/firsttime").InnerText;
-                    FileGameSettingsData.ForcesM1x = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/forcesm1x").InnerText;
-                    FileGameSettingsData.PixelAspectRatioOverride = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/pixelaspectratiooverride").InnerText;
-                    FileGameSettingsData.ScreenHeight = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenheight").InnerText;
-                    FileGameSettingsData.ScreenWidth = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenwidth").InnerText;
-                    FileGameSettingsData.ScreenWindowed = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenwindowed").InnerText;
-                    FileGameSettingsData.VSyncOn = UserSettingsFile.SelectSingleNode("Settings/VideoConfig/vsyncon").InnerText;
+                    FileGameSettingsData.AudioQuality = (NodeReader("InnerText", "Settings/VideoConfig/audioquality", null) != "ERROR") ?
+                                                         NodeReader("InnerText", "Settings/VideoConfig/audioquality", null) : "0";
+                    FileGameSettingsData.Brightness = (NodeReader("InnerText", "Settings/VideoConfig/brightness", null) != "ERROR") ?
+                                                       NodeReader("InnerText", "Settings/VideoConfig/brightness", null) : "100";
+                    FileGameSettingsData.EnableAero = (NodeReader("InnerText", "Settings/VideoConfig/enableaero", null) != "ERROR") ?
+                                                       NodeReader("InnerText", "Settings/VideoConfig/enableaero", null) : "0";
+                    FileGameSettingsData.FirstTime = (NodeReader("InnerText", "Settings/VideoConfig/firsttime", null) != "ERROR") ?
+                                                      NodeReader("InnerText", "Settings/VideoConfig/firsttime", null) : "0";
+                    FileGameSettingsData.ForcesM1x = (NodeReader("InnerText", "Settings/VideoConfig/forcesm1x", null) != "ERROR") ?
+                                                      NodeReader("InnerText", "Settings/VideoConfig/forcesm1x", null) : "False";
+                    FileGameSettingsData.PixelAspectRatioOverride = (NodeReader("InnerText", "Settings/VideoConfig/pixelaspectratiooverride", null) != "ERROR") ?
+                                                                     NodeReader("InnerText", "Settings/VideoConfig/pixelaspectratiooverride", null) : "2";
+                    FileGameSettingsData.PerformanceLevel = (NodeReader("InnerText", "Settings/VideoConfig/performancelevel", null) != "ERROR") ?
+                                                             NodeReader("InnerText", "Settings/VideoConfig/performancelevel", null) : "2";
+                    FileGameSettingsData.ScreenHeight = (NodeReader("InnerText", "Settings/VideoConfig/screenheight", null) != "ERROR") ?
+                                                         NodeReader("InnerText", "Settings/VideoConfig/screenheight", null) : "600";
+                    FileGameSettingsData.ScreenWidth = (NodeReader("InnerText", "Settings/VideoConfig/screenwidth", null) != "ERROR") ?
+                                                        NodeReader("InnerText", "Settings/VideoConfig/screenwidth", null) : "800";
+                    FileGameSettingsData.ScreenWindowed = (NodeReader("InnerText", "Settings/VideoConfig/screenwindowed", null) != "ERROR") ?
+                                                           NodeReader("InnerText", "Settings/VideoConfig/screenwindowed", null) : "0";
+                    FileGameSettingsData.VSyncOn = (NodeReader("InnerText", "Settings/VideoConfig/vsyncon", null) != "ERROR") ?
+                                                    NodeReader("InnerText", "Settings/VideoConfig/vsyncon", null) : "0";
+                    /* VideoConfig Addons */
+                    FileGameSettingsData.BaseTextureFilter = (NodeReader("InnerText", "Settings/VideoConfig/basetexturefilter", null) != "ERROR") ?
+                                                              NodeReader("InnerText", "Settings/VideoConfig/basetexturefilter", null) : "0";
+                    FileGameSettingsData.BaseTextureLODBias = (NodeReader("InnerText", "Settings/VideoConfig/basetexturelodbias", null) != "ERROR") ?
+                                                               NodeReader("InnerText", "Settings/VideoConfig/basetexturelodbias", null) : "0";
+                    FileGameSettingsData.BaseTextureMaxAni = (NodeReader("InnerText", "Settings/VideoConfig/basetexturemaxani", null) != "ERROR") ?
+                                                              NodeReader("InnerText", "Settings/VideoConfig/basetexturemaxani", null) : "0";
+                    FileGameSettingsData.CarEnvironmentMapEnable = (NodeReader("InnerText", "Settings/VideoConfig/carenvironmentmapenable", null) != "ERROR") ?
+                                                                    NodeReader("InnerText", "Settings/VideoConfig/carenvironmentmapenable", null) : "0";
+                    FileGameSettingsData.CarLODLevel = (NodeReader("InnerText", "Settings/VideoConfig/carlodlevel", null) != "ERROR") ?
+                                                        NodeReader("InnerText", "Settings/VideoConfig/carlodlevel", null) : "0";
+                    FileGameSettingsData.FSAALevel = (NodeReader("InnerText", "Settings/VideoConfig/fsaalevel", null) != "ERROR") ?
+                                                      NodeReader("InnerText", "Settings/VideoConfig/fsaalevel", null) : "0";
+                    FileGameSettingsData.GlobalDetailLevel = (NodeReader("InnerText", "Settings/VideoConfig/globaldetaillevel", null) != "ERROR") ?
+                                                              NodeReader("InnerText", "Settings/VideoConfig/globaldetaillevel", null) : "0";
+                    FileGameSettingsData.MaxSkidMarks = (NodeReader("InnerText", "Settings/VideoConfig/maxskidmarks", null) != "ERROR") ?
+                                                         NodeReader("InnerText", "Settings/VideoConfig/maxskidmarks", null) : "0";
+                    FileGameSettingsData.MotionBlurEnable = (NodeReader("InnerText", "Settings/VideoConfig/motionblurenable", null) != "ERROR") ?
+                                                             NodeReader("InnerText", "Settings/VideoConfig/motionblurenable", null) : "0";
+                    FileGameSettingsData.OverBrightEnable = (NodeReader("InnerText", "Settings/VideoConfig/overbrightenable", null) != "ERROR") ?
+                                                             NodeReader("InnerText", "Settings/VideoConfig/overbrightenable", null) : "0";
+                    FileGameSettingsData.ParticleSystemEnable = (NodeReader("InnerText", "Settings/VideoConfig/particlesystemenable", null) != "ERROR") ?
+                                                                 NodeReader("InnerText", "Settings/VideoConfig/particlesystemenable", null) : "0";
+                    FileGameSettingsData.RainEnable = (NodeReader("InnerText", "Settings/VideoConfig/rainenable", null) != "ERROR") ?
+                                                       NodeReader("InnerText", "Settings/VideoConfig/rainenable", null) : "0";
+                    FileGameSettingsData.RoadReflectionEnable = (NodeReader("InnerText", "Settings/VideoConfig/roadreflectionenable", null) != "ERROR") ?
+                                                                 NodeReader("InnerText", "Settings/VideoConfig/roadreflectionenable", null) : "0";
+                    FileGameSettingsData.RoadTextureFilter = (NodeReader("InnerText", "Settings/VideoConfig/roadtexturefilter", null) != "ERROR") ?
+                                                              NodeReader("InnerText", "Settings/VideoConfig/roadtexturefilter", null) : "0";
+                    FileGameSettingsData.RoadTextureLODBias = (NodeReader("InnerText", "Settings/VideoConfig/roadtexturelodbias", null) != "ERROR") ?
+                                                               NodeReader("InnerText", "Settings/VideoConfig/roadtexturelodbias", null) : "0";
+                    FileGameSettingsData.RoadTextureMaxAni = (NodeReader("InnerText", "Settings/VideoConfig/roadtexturemaxani", null) != "ERROR") ?
+                                                              NodeReader("InnerText", "Settings/VideoConfig/roadtexturemaxani", null) : "0";
+                    FileGameSettingsData.ShaderDetail = (NodeReader("InnerText", "Settings/VideoConfig/shaderdetail", null) != "ERROR") ?
+                                                         NodeReader("InnerText", "Settings/VideoConfig/shaderdetail", null) : "0";
+                    FileGameSettingsData.ShadowDetail = (NodeReader("InnerText", "Settings/VideoConfig/shadowdetail", null) != "ERROR") ?
+                                                         NodeReader("InnerText", "Settings/VideoConfig/shadowdetail", null) : "0";
+                    FileGameSettingsData.VisualTreatment = (NodeReader("InnerText", "Settings/VideoConfig/visualtreatment", null) != "ERROR") ?
+                                                            NodeReader("InnerText", "Settings/VideoConfig/visualtreatment", null) : "0";
+                    FileGameSettingsData.WaterSimEnable = (NodeReader("InnerText", "Settings/VideoConfig/watersimenable", null) != "ERROR") ?
+                                                           NodeReader("InnerText", "Settings/VideoConfig/watersimenable", null) : "0";
                 }
                 catch (Exception Error)
                 {
@@ -99,111 +188,193 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             try
             {
                 /* Audio */
-                if (UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["AudioMode"].Value != FileGameSettingsData.AudioMode)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["AudioMode"].Value = FileGameSettingsData.AudioMode;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["SFXVol"].Value != FileGameSettingsData.SFXAudio)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["SFXVol"].Value = FileGameSettingsData.SFXAudio;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["MasterVol"].Value != FileGameSettingsData.MasterAudio)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["MasterVol"].Value = FileGameSettingsData.MasterAudio;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["CarVol"].Value != FileGameSettingsData.CarAudio)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["CarVol"].Value = FileGameSettingsData.CarAudio;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["SpeechVol"].Value != FileGameSettingsData.SpeechAudio)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["SpeechVol"].Value = FileGameSettingsData.SpeechAudio;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["GameMusicVol"].Value != FileGameSettingsData.MusicAudio)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["GameMusicVol"].Value = FileGameSettingsData.MusicAudio;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["FEMusicVol"].Value != FileGameSettingsData.FreeroamAudio)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/UI/Audio/AudioOptions").Attributes["FEMusicVol"].Value = FileGameSettingsData.FreeroamAudio;
-                }
+                NodeUpdater("Attributes", "Settings/UI/Audio", "AudioOptions", "AudioMode", FileGameSettingsData.AudioMode, FileGameSettingsData.AudioMode);
+                NodeUpdater("Attributes", "Settings/UI/Audio", "AudioOptions", "SFXVol", FileGameSettingsData.SFXAudio, FileGameSettingsData.SFXAudio);
+                NodeUpdater("Attributes", "Settings/UI/Audio", "AudioOptions", "MasterVol", FileGameSettingsData.MasterAudio, FileGameSettingsData.MasterAudio);
+                NodeUpdater("Attributes", "Settings/UI/Audio", "AudioOptions", "CarVol", FileGameSettingsData.CarAudio, FileGameSettingsData.CarAudio);
+                NodeUpdater("Attributes", "Settings/UI/Audio", "AudioOptions", "SpeechVol", FileGameSettingsData.SpeechAudio, FileGameSettingsData.SpeechAudio);
+                NodeUpdater("Attributes", "Settings/UI/Audio", "AudioOptions", "GameMusicVol", FileGameSettingsData.MusicAudio, FileGameSettingsData.MusicAudio);
+                NodeUpdater("Attributes", "Settings/UI/Audio", "AudioOptions", "FEMusicVol", FileGameSettingsData.FreeroamAudio, FileGameSettingsData.FreeroamAudio);
                 /* Gameplay */
-                if (UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["camera"].Value != FileGameSettingsData.CameraPOV)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["camera"].Value = FileGameSettingsData.CameraPOV;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["transmission"].Value != FileGameSettingsData.Transmission)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["transmission"].Value = FileGameSettingsData.Transmission;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["damage"].Value != FileGameSettingsData.Damage)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["damage"].Value = FileGameSettingsData.Damage;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["speedUnits"].Value != FileGameSettingsData.SpeedUnits)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/UI/Gameplay/GamePlayOptions").Attributes["speedUnits"].Value = FileGameSettingsData.SpeedUnits;
-                }
+                NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "camera", FileGameSettingsData.CameraPOV, FileGameSettingsData.CameraPOV);
+                NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "transmission", FileGameSettingsData.Transmission, FileGameSettingsData.Transmission);
+                NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "damage", FileGameSettingsData.Damage, FileGameSettingsData.Damage);
+                NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "speedUnits", FileGameSettingsData.SpeedUnits, FileGameSettingsData.SpeedUnits);
                 /* Physics */
-                if (UserSettingsFile.SelectSingleNode("Settings/Physics/CameraPOV").InnerText != FileGameSettingsData.CameraPOV)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/Physics/CameraPOV").InnerText = FileGameSettingsData.CameraPOV;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/Physics/TransmissionType").InnerText != FileGameSettingsData.Transmission)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/Physics/TransmissionType").InnerText = FileGameSettingsData.Transmission;
-                }
+                NodeUpdater("InnerText", "Settings/Physics", "CameraPOV", "Type", "int", FileGameSettingsData.SpeedUnits);
+                NodeUpdater("InnerText", "Settings/Physics", "TransmissionType", "Type", "int", FileGameSettingsData.Transmission);
                 /* VideoOptions */
-                if (UserSettingsFile.SelectSingleNode("Settings/UI/VideoDefault/VideoOptions").Attributes["motionBlur"].Value != FileGameSettingsData.MotionBlur)
+                if (FileGameSettingsData.PerformanceLevel == "5")
                 {
-                    UserSettingsFile.SelectSingleNode("Settings/UI/VideoDefault/VideoOptions").Attributes["motionBlur"].Value = FileGameSettingsData.MotionBlur;
+                    NodeUpdater("Attributes", "Settings/UI/VideoDefault", "VideoOptions", "carDetail", FileGameSettingsData.CarLODLevel, FileGameSettingsData.CarLODLevel);
+                    NodeUpdater("Attributes", "Settings/UI/VideoDefault", "VideoOptions", "carReflectionRate", FileGameSettingsData.CarEnvironmentMapEnable, FileGameSettingsData.CarEnvironmentMapEnable);
+                    NodeUpdater("Attributes", "Settings/UI/VideoDefault", "VideoOptions", "worldDetail", FileGameSettingsData.GlobalDetailLevel, FileGameSettingsData.GlobalDetailLevel);
+                    NodeUpdater("Attributes", "Settings/UI/VideoDefault", "VideoOptions", "roadDetail", FileGameSettingsData.RoadTextureLODBias, FileGameSettingsData.RoadTextureLODBias);
+                    NodeUpdater("Attributes", "Settings/UI/VideoDefault", "VideoOptions", "motionBlur", FileGameSettingsData.MotionBlur, FileGameSettingsData.MotionBlur);
                 }
                 /* VideoConfig */
-                if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/audiomode").InnerText != FileGameSettingsData.AudioMode)
+                NodeUpdater("InnerText", "Settings/VideoConfig", "audiomode", "Type", "int", FileGameSettingsData.AudioMode);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "audioquality", "Type", "int", FileGameSettingsData.AudioQuality);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "brightness", "Type", "int", FileGameSettingsData.Brightness);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "enableaero", "Type", "int", FileGameSettingsData.EnableAero);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "pixelaspectratiooverride", "Type", "int", FileGameSettingsData.PixelAspectRatioOverride);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "performancelevel", "Type", "int", FileGameSettingsData.PerformanceLevel);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "screenheight", "Type", "int", FileGameSettingsData.ScreenHeight);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "screenwidth", "Type", "int", FileGameSettingsData.ScreenWidth);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "screenwindowed", "Type", "int", FileGameSettingsData.ScreenWindowed);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "vsyncon", "Type", "int", FileGameSettingsData.VSyncOn);
+                /* VideoConfig Addons */
+                if (FileGameSettingsData.PerformanceLevel == "5")
                 {
-                    UserSettingsFile.SelectSingleNode("Settings/VideoConfig/audiomode").InnerText = FileGameSettingsData.AudioMode;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/audioquality").InnerText != FileGameSettingsData.AudioQuality)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/VideoConfig/audioquality").InnerText = FileGameSettingsData.AudioQuality;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/brightness").InnerText != FileGameSettingsData.Brightness)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/VideoConfig/brightness").InnerText = FileGameSettingsData.Brightness;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/enableaero").InnerText != FileGameSettingsData.EnableAero)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/VideoConfig/enableaero").InnerText = FileGameSettingsData.EnableAero;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenheight").InnerText != FileGameSettingsData.ScreenHeight)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenheight").InnerText = FileGameSettingsData.ScreenHeight;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenwidth").InnerText != FileGameSettingsData.ScreenWidth)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenwidth").InnerText = FileGameSettingsData.ScreenWidth;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenwindowed").InnerText != FileGameSettingsData.ScreenWindowed)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/VideoConfig/screenwindowed").InnerText = FileGameSettingsData.ScreenWindowed;
-                }
-                if (UserSettingsFile.SelectSingleNode("Settings/VideoConfig/vsyncon").InnerText != FileGameSettingsData.VSyncOn)
-                {
-                    UserSettingsFile.SelectSingleNode("Settings/VideoConfig/vsyncon").InnerText = FileGameSettingsData.VSyncOn;
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "basetexturefilter", "Type", "int", FileGameSettingsData.BaseTextureFilter);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "basetexturelodbias", "Type", "int", FileGameSettingsData.BaseTextureLODBias);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "basetexturemaxani", "Type", "int", FileGameSettingsData.BaseTextureMaxAni);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "carenvironmentmapenable", "Type", "int", FileGameSettingsData.CarEnvironmentMapEnable);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "carlodlevel", "Type", "int", FileGameSettingsData.CarLODLevel);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "fsaalevel", "Type", "int", FileGameSettingsData.FSAALevel);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "globaldetaillevel", "Type", "int", FileGameSettingsData.GlobalDetailLevel);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "maxskidmarks", "Type", "int", FileGameSettingsData.MaxSkidMarks);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "motionblurenable", "Type", "int", FileGameSettingsData.MotionBlurEnable);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "overbrightenable", "Type", "int", FileGameSettingsData.OverBrightEnable);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "particlesystemenable", "Type", "int", FileGameSettingsData.ParticleSystemEnable);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "rainenable", "Type", "int", FileGameSettingsData.RainEnable);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "roadreflectionenable", "Type", "int", FileGameSettingsData.RoadReflectionEnable);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "roadtexturefilter", "Type", "int", FileGameSettingsData.RoadTextureFilter);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "roadtexturelodbias", "Type", "int", FileGameSettingsData.RoadTextureLODBias);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "roadtexturemaxani", "Type", "int", FileGameSettingsData.RoadTextureMaxAni);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "shaderdetail", "Type", "int", FileGameSettingsData.ShaderDetail);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "shadowdetail", "Type", "int", FileGameSettingsData.ShadowDetail);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "visualtreatment", "Type", "int", FileGameSettingsData.VisualTreatment);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "watersimenable", "Type", "int", FileGameSettingsData.WaterSimEnable);
                 }
 
                 if (new FileInfo(UserSettingsLocation).IsReadOnly != true)
                 {
                     UserSettingsFile.Save(UserSettingsLocation);
+                    MessageBox.Show(null, "XML Settings Saved", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    Log.Error("USX File: User Game Settings File is ReadOnly. Sorry Chief");
+                    Log.Error("USX File: User Game Settings File is ReadOnly. Settings Not Saved! Sorry Chief");
+                    MessageBox.Show(null, "XML Settings Not Saved \nRead-Only File ", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception Error)
             {
                 Log.Error("USX File: " + Error.Message);
+            }
+        }
+
+        public static bool NodeChecker(string Type, string NodeLocation, string AttributeName)
+        {
+            try
+            {
+                if (Type == "Attributes")
+                {
+                    if (UserSettingsFile.SelectSingleNode(NodeLocation).Attributes[AttributeName].Value == null ||
+                        UserSettingsFile.SelectSingleNode(NodeLocation).Attributes[AttributeName].Value != null)
+                    {
+                        return true;
+                    }
+
+                    return false;
+                }
+                else
+                {
+                    if (UserSettingsFile.SelectSingleNode(NodeLocation).InnerText == null ||
+                        UserSettingsFile.SelectSingleNode(NodeLocation).InnerText != null)
+                    {
+                        return true;
+                    }
+
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static void NodeUpdater(string Type, string NodePath, string SingleNode, string AttributeName, string AttributeValue, string ValueComparison)
+        {
+            string FullNodePath = NodePath + "/" + SingleNode;
+
+            if (NodeChecker(Type, FullNodePath, AttributeName) == false)
+            {
+                try
+                {
+                    XmlNode Root = UserSettingsFile.SelectSingleNode(NodePath);
+                    XmlNode CustomNode = UserSettingsFile.CreateElement(SingleNode);
+                    XmlAttribute CustomNodeAttribute = UserSettingsFile.CreateAttribute(AttributeName);
+                    CustomNodeAttribute.Value = AttributeValue;
+                    CustomNode.Attributes.Append(CustomNodeAttribute);
+                    Root.AppendChild(CustomNode);
+                    Log.Info("USX File: Created XML Node [Type: '" + Type + "' NodePath: '" + NodePath + "' SingleNode: '" +
+                                SingleNode + "' AttributeName: '" + AttributeName + "' AttributeValue: '" + AttributeValue + "']");
+                }
+                catch (Exception Error)
+                {
+                    Log.Error("USX File: Unable to Create XML Node [Type: '" + Type + "' NodePath: '" + NodePath + "' SingleNode: '" +
+                                SingleNode + "' AttributeName: '" + AttributeName + "' AttributeValue: '" + AttributeValue + "']" + Error.Message);
+                    return;
+                }
+            }
+
+            if (Type == "Attributes")
+            {
+                if (InsiderKit.EnableInsiderDeveloper.Allowed() == true || InsiderKit.EnableInsiderBetaTester.Allowed() == true)
+                {
+                    Log.Debug("USX File: Comparing Values for '" + FullNodePath + "' CURRENT: '" + UserSettingsFile.SelectSingleNode(FullNodePath).Attributes[AttributeName].Value +
+                              "' COMPARING NEW: '" + ValueComparison + "'");
+                }
+
+                if (UserSettingsFile.SelectSingleNode(FullNodePath).Attributes[AttributeName].Value != ValueComparison)
+                {
+                    UserSettingsFile.SelectSingleNode(FullNodePath).Attributes[AttributeName].Value = ValueComparison;
+                }
+            }
+            else
+            {
+                if (InsiderKit.EnableInsiderDeveloper.Allowed() == true || InsiderKit.EnableInsiderBetaTester.Allowed() == true)
+                {
+                    Log.Debug("USX File: Comparing Values for '" + FullNodePath + "' CURRENT: '" + UserSettingsFile.SelectSingleNode(FullNodePath).InnerText + 
+                              "' COMPARING NEW: '" + ValueComparison + "'");
+                }
+
+                if (UserSettingsFile.SelectSingleNode(FullNodePath).InnerText != ValueComparison)
+                {
+                    UserSettingsFile.SelectSingleNode(FullNodePath).InnerText = ValueComparison;
+                }
+            }
+        }
+
+        public static string NodeReader(string Type, string FullNodePath, string AttributeName)
+        {
+            try
+            {
+                if (Type == "Attributes")
+                {
+                    if (UserSettingsFile.SelectSingleNode(FullNodePath).Attributes[AttributeName].Value == null)
+                    {
+                        return "ERROR";
+                    }
+
+                    return UserSettingsFile.SelectSingleNode(FullNodePath).Attributes[AttributeName].Value;
+                }
+                else
+                {
+                    if (UserSettingsFile.SelectSingleNode(FullNodePath).InnerText == null)
+                    {
+                        return "ERROR";
+                    }
+                    return UserSettingsFile.SelectSingleNode(FullNodePath).InnerText;
+                }
+            }
+            catch (Exception Error)
+            {
+                Log.Error("USX File: Unable to Read XML Node [NodePath: '" + FullNodePath + "' AttributeName: '" + AttributeName + "']" + Error.Message);
+                return "ERROR";
             }
         }
     }

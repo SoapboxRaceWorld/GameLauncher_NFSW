@@ -434,21 +434,41 @@
     <VideoConfig>
         <audiomode Type="int">1</audiomode>
         <audioquality Type="int">0</audioquality>
+        <basetexturefilter Type="int">0</basetexturefilter>
+        <basetexturelodbias Type="int">0</basetexturelodbias>
+        <basetexturemaxani Type="int">0</basetexturemaxani>
         <brightness Type="int">52</brightness>
+        <carenvironmentmapenable Type="int">0</carenvironmentmapenable>
+        <carlodlevel Type="int">0</carlodlevel>
         <enableaero Type="int">0</enableaero>
         <firsttime Type="int">0</firsttime>
         <forcesm1x Type="bool">false</forcesm1x>
+        <fsaalevel Type="int">0</fsaalevel>
+        <globaldetaillevel Type="int">0</globaldetaillevel>
+        <maxskidmarks Type="int">0</maxskidmarks>
+        <motionblurenable Type="int">0</motionblurenable>
+        <overbrightenable Type="int">0</overbrightenable>
+        <particlesystemenable Type="int">0</particlesystemenable>
         <performancelevel Type="int">2</performancelevel>
         <pixelaspectratiooverride Type="float">0</pixelaspectratiooverride>
+        <rainenable Type="int">0</rainenable>
+        <roadreflectionenable Type="int">0</roadreflectionenable>
+        <roadtexturefilter Type="int">0</roadtexturefilter>
+        <roadtexturelodbias Type="int">0</roadtexturelodbias>
+        <roadtexturemaxani Type="int">0</roadtexturemaxani>
         <screenheight Type="int">768</screenheight>
         <screenleft Type="int">10</screenleft>
         <screenrefresh Type="int">60</screenrefresh>
         <screentop Type="int">40</screentop>
         <screenwidth Type="int">1024</screenwidth>
         <screenwindowed Type="int">0</screenwindowed>
+        <shaderdetail Type="int">0</shaderdetail>
+        <shadowdetail Type="int">0</shadowdetail>
         <size Type="int">0</size>
         <version Type="int">65545</version>
+        <visualtreatment Type="int">0</visualtreatment>
         <vsyncon Type="int">1</vsyncon>
+        <watersimenable Type="int">0</watersimenable>
     </VideoConfig>
     <_Chat>
         <_scopeTypeSelected Type="string">0</_scopeTypeSelected>

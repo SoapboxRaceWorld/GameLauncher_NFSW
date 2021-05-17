@@ -1,20 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
-using GameLauncher.App.Classes.SystemPlatform.Windows;
 
 namespace GameLauncher.App
 {
@@ -34,6 +25,9 @@ namespace GameLauncher.App
                     Log.Debug("UXE: UserSettings.xml can be modified!");
                 }
 
+                FileGameSettings.Read();
+                InitializeComponent();
+                SetVisuals();
             }
             else
             {
@@ -41,101 +35,123 @@ namespace GameLauncher.App
                 Log.Warning("UXE: No UserSettings.xml file was found!");
                 return;
             }
-
-            FileGameSettings.Read();
-            /* This was used to check if the Values actualy changed (05-11-2021) - DavidCarbon
-             * 
-            Log.Debug(FileGameSettingsData.Transmission);
-            FileGameSettingsData.Transmission = "4";
-            FileGameSettings.Save();
-            */
-
-            InitializeComponent();
-            SetVisuals();
-        }
-
-        private void SetVisuals()
-        {
-            /*******************************/
-            /* Set Window Name              /
-            /*******************************/
-
-            Text = "SBRW UserSettings XML Editor";
-
-            /*******************************/
-            /* Set Initial position & Icon  /
-            /*******************************/
-            // This oddly seems to not do this as it already centers itself
-            //FunctionStatus.CenterParent(this);
-
-            /*******************************/
-            /* Set Background Image         /
-            /*******************************/
-
-            BackgroundImage = Theming.USXEEditor;
-
-            /*******************************/
-            /* Set Hardcoded Text           /
-            /*******************************/
-
-            labelLauncherVersion.Text = "Version: v" + Application.ProductVersion;
-
-            /*******************************/
-            /* Set Font                     /
-            /*******************************/
-
-            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
-
-            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-            var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
-
-            if (DetectLinux.LinuxDetected())
-            {
-                MainFontSize = 9f;
-                SecondaryFontSize = 8f;
-            }
-            Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
-            labelVideoOptions.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold  | System.Drawing.FontStyle.Underline);
-
-            /*******************************/
-            /* Comboboxes                   /
-            /*******************************/
-
-            /* Transmisson ComboBox */
-            var TransmissonList = new[] {
-                new { Text = "Automatic", Value = "0" },
-                new { Text = "Manual", Value = "1" }
-            };
-            comboBoxTransmisson.DisplayMember = "Text";
-            comboBoxTransmisson.ValueMember = "Value";
-            comboBoxTransmisson.DataSource = TransmissonList;
-
-            /* AudioMode ComboBox */
-            var AudioModeList = new[] {
-                new { Sound = "Stero", Value = "0" },
-                new { Sound = "Surround", Value = "1" }
-            };
-            comboAudioMode.DisplayMember = "Sound";
-            comboAudioMode.ValueMember = "Value";
-            comboAudioMode.DataSource = AudioModeList;
-
-            /* CameraPOV ComboBox */
-            var CameraPOVList = new[] {
-                new { CameraPOV = "Bumper", Value = "0" },
-                new { CameraPOV = "Hood", Value = "1" },
-                new { CameraPOV = "Chase", Value = "2" },
-                new { CameraPOV = "Far", Value = "3" }
-            };
-            comboBoxCamera.DisplayMember = "CameraPOV";
-            comboBoxCamera.ValueMember = "Value";
-            comboBoxCamera.DataSource = CameraPOVList;
         }
 
         /* Settings Cancel */
         private void SettingsCancel_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void comboBoxPerformanceLevel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxPerformanceLevel.SelectedIndex == 5)
+            {
+                this.Size = new Size(608, 866);
+                this.CenterToScreen();
+
+                comboBoxBaseTextureFilter.SelectedIndex = CheckValidRange("BaseTextureFilter", "0-2", FileGameSettingsData.BaseTextureFilter);
+                comboBoxAnisotropicLevel.SelectedIndex = CheckValidRange("AnisotropicLevel", "0-4", FileGameSettingsData.BaseTextureMaxAni);
+                comboBoxCarEnvironmentDetail.SelectedIndex = CheckValidRange("CarEnvironmentDetail", "0-1", FileGameSettingsData.CarLODLevel);
+                comboBoxCarReflection.SelectedIndex = CheckValidRange("CarReflection", "0-4", FileGameSettingsData.CarEnvironmentMapEnable);
+                comboBoxWorldGlobalDetail.SelectedIndex = CheckValidRange("WorldGlobalDetail", "0-4", FileGameSettingsData.GlobalDetailLevel);
+                comboBoxWorldRoadReflection.SelectedIndex = CheckValidRange("WorldRoadReflection", "0-2", FileGameSettingsData.RoadReflectionEnable);
+                comboBoxWorldRoadTexture.SelectedIndex = CheckValidRange("WorldRoadTexture", "0-2", FileGameSettingsData.RoadTextureFilter);
+                comboBoxWorldRoadAntialiasing.SelectedIndex = CheckValidRange("WorldRoadAntialiasing", "0-4", FileGameSettingsData.RoadTextureMaxAni);
+                comboBoxShaderFSAA.SelectedIndex = CheckValidRange("ShaderFSAA", "0-3", FileGameSettingsData.FSAALevel);
+                comboBoxShadowDetail.SelectedIndex = CheckValidRange("ShadowDetail", "0-2", FileGameSettingsData.ShadowDetail);
+                comboBoxShaderDetail.SelectedIndex = CheckValidRange("ShaderDetail", "0-3", FileGameSettingsData.ShaderDetail);
+
+                if (FileGameSettingsData.BaseTextureLODBias == "0")
+                {
+                    radioBaseTextureLODOff.Checked = true;
+                }
+                else
+                {
+                    radioBaseTextureLODOn.Checked = true;
+                }
+
+                if (FileGameSettingsData.CarEnvironmentMapEnable == "0")
+                {
+                    radioCarDetailLODOff.Checked = true;
+                }
+                else
+                {
+                    radioCarDetailLODOn.Checked = true;
+                }
+
+                if (FileGameSettingsData.MaxSkidMarks == "0")
+                {
+                    radioMaxSkidMarksZero.Checked = true;
+                }
+                else if (FileGameSettingsData.MaxSkidMarks == "1")
+                {
+                    radioMaxSkidMarksOne.Checked = true;
+                }
+                else
+                {
+                    radioMaxSkidMarksTwo.Checked = true;
+                }
+
+                if (FileGameSettingsData.RoadTextureLODBias == "0")
+                {
+                    radioRoadLODBiasOff.Checked = true;
+                }
+                else
+                {
+                    radioRoadLODBiasOn.Checked = true;
+                }
+
+                if (FileGameSettingsData.MotionBlur == "False")
+                {
+                    radioMotionBlurOff.Checked = true;
+                }
+                else
+                {
+                    radioMotionBlurOn.Checked = true;
+                }
+
+                if (FileGameSettingsData.OverBrightEnable == "0")
+                {
+                    radioOverBrightOff.Checked = true;
+                }
+                else
+                {
+                    radioOverBrightOn.Checked = true;
+                }
+
+                if (FileGameSettingsData.ParticleSystemEnable == "0")
+                {
+                    radioParticleSysOff.Checked = true;
+                }
+                else
+                {
+                    radioParticleSysOn.Checked = true;
+                }
+
+                if (FileGameSettingsData.VisualTreatment == "0")
+                {
+                    radioVisualTreatOff.Checked = true;
+                }
+                else
+                {
+                    radioVisualTreatOn.Checked = true;
+                }
+
+                if (FileGameSettingsData.WaterSimEnable == "0")
+                {
+                    radioWaterSimulationOff.Checked = true;
+                }
+                else
+                {
+                    radioWaterSimulationOn.Checked = true;
+                }
+            }
+            else
+            {
+                this.Size = new Size(298, 866);
+                this.CenterToScreen();
+            }
         }
 
         private void USXEditor_Load(object sender, EventArgs e)
@@ -153,6 +169,7 @@ namespace GameLauncher.App
             comboBoxTransmisson.SelectedIndex = CheckValidRange("Transmission", "0-1", FileGameSettingsData.Transmission);
             comboAudioMode.SelectedIndex = CheckValidRange("AudioMode", "0-2", FileGameSettingsData.AudioMode);
             comboBoxCamera.SelectedIndex = CheckValidRange("Camera", "0-3", FileGameSettingsData.CameraPOV);
+            comboBoxPerformanceLevel.SelectedIndex = CheckValidRange("PerformanceLevel", "0-5", FileGameSettingsData.PerformanceLevel);
 
             if (FileGameSettingsData.ScreenWindowed == "0")
             {
@@ -207,15 +224,6 @@ namespace GameLauncher.App
             {
                 radioMPH.Checked = true;
             }
-
-            if (FileGameSettingsData.MotionBlur == "False")
-            {
-                radioMotionBlurOff.Checked = true;
-            }
-            else
-            {
-                radioMotionBlurOn.Checked = true;
-            }
         }
 
         private void SettingsSave_Click(object sender, EventArgs e)
@@ -236,11 +244,37 @@ namespace GameLauncher.App
             FileGameSettingsData.ScreenWindowed = (radioWindowedOff.Checked == true) ? "0" : "1";
             FileGameSettingsData.Damage = (radioDamageOn.Checked == true) ? "0" : "1";
             FileGameSettingsData.SpeedUnits = (radioKPH.Checked == true) ? "0" : "1";
-            FileGameSettingsData.MotionBlur = (radioMotionBlurOff.Checked == true) ? "False" : "True";
 
             FileGameSettingsData.Transmission = comboBoxTransmisson.SelectedValue.ToString();
             FileGameSettingsData.AudioMode = comboAudioMode.SelectedValue.ToString();
             FileGameSettingsData.CameraPOV = comboBoxCamera.SelectedValue.ToString();
+
+            if (comboBoxPerformanceLevel.SelectedValue.ToString() == "5")
+            {
+                FileGameSettingsData.MotionBlur = (radioMotionBlurOff.Checked == true) ? "False" : "True";
+                FileGameSettingsData.MotionBlurEnable = (FileGameSettingsData.MotionBlur == "False") ? "0" : "1";
+                FileGameSettingsData.RoadTextureLODBias = (radioRoadLODBiasOff.Checked == true) ? "0" : "1";
+                FileGameSettingsData.BaseTextureLODBias = (radioBaseTextureLODOff.Checked == true) ? "0" : "1";
+                FileGameSettingsData.CarEnvironmentMapEnable = (radioCarDetailLODOff.Checked == true) ? "0" : "1";
+                FileGameSettingsData.OverBrightEnable = (radioOverBrightOff.Checked == true) ? "0" : "1";
+                FileGameSettingsData.ParticleSystemEnable = (radioParticleSysOff.Checked == true) ? "0" : "1";
+                FileGameSettingsData.VisualTreatment = (radioVisualTreatOff.Checked == true) ? "0" : "1";
+                FileGameSettingsData.WaterSimEnable = (radioWaterSimulationOff.Checked == true) ? "0" : "1";
+                FileGameSettingsData.MaxSkidMarks = SelectedElement("MaxSkidMarks");
+
+                FileGameSettingsData.PerformanceLevel = comboBoxPerformanceLevel.SelectedValue.ToString();
+                FileGameSettingsData.BaseTextureFilter = comboBoxBaseTextureFilter.SelectedIndex.ToString();
+                FileGameSettingsData.BaseTextureMaxAni = comboBoxAnisotropicLevel.SelectedIndex.ToString();
+                FileGameSettingsData.CarLODLevel = comboBoxCarEnvironmentDetail.SelectedIndex.ToString();
+                FileGameSettingsData.CarEnvironmentMapEnable = comboBoxCarReflection.SelectedIndex.ToString();
+                FileGameSettingsData.GlobalDetailLevel = comboBoxWorldGlobalDetail.SelectedIndex.ToString();
+                FileGameSettingsData.RoadReflectionEnable = comboBoxWorldRoadReflection.SelectedIndex.ToString();
+                FileGameSettingsData.RoadTextureFilter = comboBoxWorldRoadTexture.SelectedIndex.ToString();
+                FileGameSettingsData.RoadTextureMaxAni = comboBoxWorldRoadAntialiasing.SelectedIndex.ToString();
+                FileGameSettingsData.FSAALevel = comboBoxShaderFSAA.SelectedIndex.ToString();
+                FileGameSettingsData.ShadowDetail = comboBoxShadowDetail.SelectedIndex.ToString();
+                FileGameSettingsData.ShaderDetail = comboBoxShaderDetail.SelectedIndex.ToString();
+            }
 
             FileGameSettings.Save();
         }
@@ -298,6 +332,36 @@ namespace GameLauncher.App
                     return ConvertedValue;
                 }
             }
+            else if (Range == "0-4")
+            {
+                if (ConvertedValue <= 0)
+                {
+                    return 0;
+                }
+                else if (ConvertedValue >= 4)
+                {
+                    return 4;
+                }
+                else
+                {
+                    return ConvertedValue;
+                }
+            }
+            else if (Range == "0-5")
+            {
+                if (ConvertedValue <= 0)
+                {
+                    return 0;
+                }
+                else if (ConvertedValue >= 5)
+                {
+                    return 5;
+                }
+                else
+                {
+                    return ConvertedValue;
+                }
+            }
             else
             {
                 return 0;
@@ -349,6 +413,29 @@ namespace GameLauncher.App
             }
         }
 
+        private string SelectedElement(string Type)
+        {
+            if (Type == "MaxSkidMarks")
+            {
+                if (radioMaxSkidMarksZero.Checked == true)
+                {
+                    return "0";
+                }
+                else if (radioMaxSkidMarksOne.Checked == true)
+                {
+                    return "1";
+                }
+                else
+                {
+                    return "2";
+                }
+            }
+            else
+            {
+                return "0";
+            }
+        }
+
         /* Check User Inputed Value and Keep in Within the Value Range of 0-1 with In-between Values */
         private string ValidDecimalNumberRange(decimal UIName)
         {
@@ -367,6 +454,218 @@ namespace GameLauncher.App
                 decimal CleanValue = Value / 100;
                 return CleanValue.ToString();
             }
+        }
+
+        private void SetVisuals()
+        {
+            /*******************************/
+            /* Set Window Name              /
+            /*******************************/
+
+            Text = "SBRW UserSettings XML Editor";
+
+            /*******************************/
+            /* Set Initial position & Icon  /
+            /*******************************/
+            // This oddly seems to not do this as it already centers itself
+            //FunctionStatus.CenterParent(this);
+
+            /*******************************/
+            /* Set Background Image         /
+            /*******************************/
+
+            BackgroundImage = Theming.USXEEditor;
+
+            /*******************************/
+            /* Set Hardcoded Text           /
+            /*******************************/
+
+            labelLauncherVersion.Text = "Version: v" + Application.ProductVersion;
+
+            /*******************************/
+            /* Set Font                     /
+            /*******************************/
+
+            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
+            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+
+            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
+            var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
+
+            if (DetectLinux.LinuxDetected())
+            {
+                MainFontSize = 9f;
+                SecondaryFontSize = 8f;
+            }
+            Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            labelVideoOptions.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | System.Drawing.FontStyle.Underline);
+
+            /*******************************/
+            /* Comboboxes                   /
+            /*******************************/
+
+            /* Transmisson ComboBox */
+            var TransmissonList = new[] {
+                new { SaveTheManuals = "Automatic", Value = "0" },
+                new { SaveTheManuals = "Manual", Value = "1" }
+            };
+            comboBoxTransmisson.DisplayMember = "SaveTheManuals";
+            comboBoxTransmisson.ValueMember = "Value";
+            comboBoxTransmisson.DataSource = TransmissonList;
+
+            /* AudioMode ComboBox */
+            var AudioModeList = new[] {
+                new { Sound = "Stero", Value = "0" },
+                new { Sound = "Surround", Value = "1" }
+            };
+            comboAudioMode.DisplayMember = "Sound";
+            comboAudioMode.ValueMember = "Value";
+            comboAudioMode.DataSource = AudioModeList;
+
+            /* CameraPOV ComboBox */
+            var CameraPOVList = new[] {
+                new { CameraPOV = "Bumper", Value = "0" },
+                new { CameraPOV = "Hood", Value = "1" },
+                new { CameraPOV = "Near", Value = "2" },
+                new { CameraPOV = "Far", Value = "3" }
+            };
+            comboBoxCamera.DisplayMember = "CameraPOV";
+            comboBoxCamera.ValueMember = "Value";
+            comboBoxCamera.DataSource = CameraPOVList;
+
+            /* PerformanceLevel ComboBox */
+            var PerformanceLevelList = new[] {
+                new { PerformanceLevel = "Minimum", Value = "0" },
+                new { PerformanceLevel = "Low", Value = "1" },
+                new { PerformanceLevel = "Medium", Value = "2" },
+                new { PerformanceLevel = "High", Value = "3" },
+                new { PerformanceLevel = "Ultra", Value = "4" },
+                new { PerformanceLevel = "Custom", Value = "5" }
+            };
+            comboBoxPerformanceLevel.DisplayMember = "PerformanceLevel";
+            comboBoxPerformanceLevel.ValueMember = "Value";
+            comboBoxPerformanceLevel.DataSource = PerformanceLevelList;
+
+            /* BaseTextureFilter ComboBox */
+            var BaseTextureFilterList = new[] {
+                new { BaseTextureFilter = "Bilinear", Value = "0" },
+                new { BaseTextureFilter = "Trilinear", Value = "1" },
+                new { BaseTextureFilter = "Anisotropic", Value = "2" }
+            };
+            comboBoxBaseTextureFilter.DisplayMember = "BaseTextureFilter";
+            comboBoxBaseTextureFilter.ValueMember = "Value";
+            comboBoxBaseTextureFilter.DataSource = BaseTextureFilterList;
+
+            /* AnisotropicLevel ComboBox */
+            var AnisotropicLevelList = new[] {
+                new { AnisotropicLevel = "None", Value = "0" },
+                new { AnisotropicLevel = "2x", Value = "1" },
+                new { AnisotropicLevel = "4x", Value = "2" },
+                new { AnisotropicLevel = "8x", Value = "3" },
+                new { AnisotropicLevel = "16x", Value = "4" }
+            };
+            comboBoxAnisotropicLevel.DisplayMember = "AnisotropicLevel";
+            comboBoxAnisotropicLevel.ValueMember = "Value";
+            comboBoxAnisotropicLevel.DataSource = AnisotropicLevelList;
+
+            /* CarEnvironmentDetail ComboBox */
+            var CarEnvironmentDetailList = new[] {
+                new { CarEnvironmentDetail = "Low", Value = "0" },
+                new { CarEnvironmentDetail = "High", Value = "1" }
+            };
+            comboBoxCarEnvironmentDetail.DisplayMember = "CarEnvironmentDetail";
+            comboBoxCarEnvironmentDetail.ValueMember = "Value";
+            comboBoxCarEnvironmentDetail.DataSource = CarEnvironmentDetailList;
+
+            /* CarReflection ComboBox */
+            var CarReflectionList = new[] {
+                new { CarReflection = "Minimum", Value = "0" },
+                new { CarReflection = "Low", Value = "1" },
+                new { CarReflection = "Medium", Value = "2" },
+                new { CarReflection = "High", Value = "3" },
+                new { CarReflection = "Maximum", Value = "4" }
+            };
+            comboBoxCarReflection.DisplayMember = "CarReflection";
+            comboBoxCarReflection.ValueMember = "Value";
+            comboBoxCarReflection.DataSource = CarReflectionList;
+
+            /* WorldGlobalDetail ComboBox */
+            var WorldGlobalDetailList = new[] {
+                new { WorldGlobalDetail = "Minimum", Value = "0" },
+                new { WorldGlobalDetail = "Low", Value = "1" },
+                new { WorldGlobalDetail = "Medium", Value = "2" },
+                new { WorldGlobalDetail = "High", Value = "3" },
+                new { WorldGlobalDetail = "Ultra", Value = "4" }
+            };
+            comboBoxWorldGlobalDetail.DisplayMember = "WorldGlobalDetail";
+            comboBoxWorldGlobalDetail.ValueMember = "Value";
+            comboBoxWorldGlobalDetail.DataSource = WorldGlobalDetailList;
+
+            /* WorldRoadReflection ComboBox */
+            var WorldRoadReflectionList = new[] {
+                new { WorldRoadReflection = "Minimum", Value = "0" },
+                new { WorldRoadReflection = "Medium", Value = "1" },
+                new { WorldRoadReflection = "Maximum", Value = "2" }
+            };
+            comboBoxWorldRoadReflection.DisplayMember = "WorldRoadReflection";
+            comboBoxWorldRoadReflection.ValueMember = "Value";
+            comboBoxWorldRoadReflection.DataSource = WorldRoadReflectionList;
+
+            /* WorldRoadTexture ComboBox */
+            var WorldRoadTextureList = new[] {
+                new { WorldRoadTexture = "Minimum", Value = "0" },
+                new { WorldRoadTexture = "Medium", Value = "1" },
+                new { WorldRoadTexture = "Maximum", Value = "2" }
+            };
+            comboBoxWorldRoadTexture.DisplayMember = "WorldRoadTexture";
+            comboBoxWorldRoadTexture.ValueMember = "Value";
+            comboBoxWorldRoadTexture.DataSource = WorldRoadTextureList;
+
+            /* WorldRoadAntialiasing ComboBox */
+            var WorldRoadAntialiasingList = new[] {
+                new { WorldRoadAntialiasing = "None", Value = "0" },
+                new { WorldRoadAntialiasing = "2x", Value = "1" },
+                new { WorldRoadAntialiasing = "4x", Value = "2" },
+                new { WorldRoadAntialiasing = "8x", Value = "3" },
+                new { WorldRoadAntialiasing = "16x", Value = "4" }
+            };
+            comboBoxWorldRoadAntialiasing.DisplayMember = "WorldRoadAntialiasing";
+            comboBoxWorldRoadAntialiasing.ValueMember = "Value";
+            comboBoxWorldRoadAntialiasing.DataSource = WorldRoadAntialiasingList;
+
+            /* ShaderFSAA ComboBox */
+            var ShaderFSAAList = new[] {
+                new { ShaderFSAA = "None", Value = "0" },
+                new { ShaderFSAA = "Low", Value = "1" },
+                new { ShaderFSAA = "Medium", Value = "2" },
+                new { ShaderFSAA = "High", Value = "3" },
+                new { ShaderFSAA = "Ultra", Value = "4" }
+            };
+            comboBoxShaderFSAA.DisplayMember = "ShaderFSAA";
+            comboBoxShaderFSAA.ValueMember = "Value";
+            comboBoxShaderFSAA.DataSource = ShaderFSAAList;
+
+            /* ShadowDetail ComboBox */
+            var ShadowDetailList = new[] {
+                new { ShadowDetail = "Low", Value = "0" },
+                new { ShadowDetail = "Medium", Value = "1" },
+                new { ShadowDetail = "High", Value = "2" }
+            };
+            comboBoxShadowDetail.DisplayMember = "ShadowDetail";
+            comboBoxShadowDetail.ValueMember = "Value";
+            comboBoxShadowDetail.DataSource = ShadowDetailList;
+
+            /* ShaderDetail ComboBox */
+            var ShaderDetailList = new[] {
+                new { ShaderDetail = "Minimum", Value = "0" },
+                new { ShaderDetail = "Low", Value = "1" },
+                new { ShaderDetail = "Medium", Value = "2" },
+                new { ShaderDetail = "High", Value = "3" },
+                new { ShaderDetail = "Maximum", Value = "4" }
+            };
+            comboBoxShaderDetail.DisplayMember = "ShaderDetail";
+            comboBoxShaderDetail.ValueMember = "Value";
+            comboBoxShaderDetail.DataSource = ShaderDetailList;
         }
     }
 }
