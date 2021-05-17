@@ -388,15 +388,17 @@ namespace GameLauncher
                     case FolderType.IsRootFolder:
                         String constructMsg = String.Empty;
 
-                        constructMsg += "Using this location for GameLauncher is not allowed.\nThe Launcher folder/directory can NOT be in:\n\n";
+                        constructMsg += "Sorry, but this location is not recommended and not allowed.\n\n";
+                        constructMsg += "The next few locations are also not recommended and allowed:\n";
                         constructMsg += "• X:\\GameLauncher.exe (Root of Drive, such as C:\\ or D:\\, must be in a folder)\n";
                         constructMsg += "• C:\\Program Files\n";
                         constructMsg += "• C:\\Program Files (x86)\n";
                         constructMsg += "• C:\\Users (Includes 'Desktop', 'Documents', 'Downloads')\n";
                         constructMsg += "• C:\\Windows\n\n";
-                        constructMsg += "Instead, move it someplace like:\n";
-                        constructMsg += "• 'X:\\Soabox Race World' or 'X:\\SBRW'\n";
-                        constructMsg += "(Where 'X:' is a 'Local Disk' location on `My Computer` / `This PC`)\n\n";
+                        constructMsg += "Instead, move the launcher to some other place like:\n";
+                        constructMsg += "• 'C:\\Soapbox Race World' or 'C:\\SBRW'\n";
+                        constructMsg += "Or, if you don't have enough disk space, put it on another partition/drive, Example: D:\\\n\n";
+                        constructMsg += "If you don't have disk space and want to move the launcher to another drive, a location like D:\\Soapbox Race World or D:\\SBRW is allowed and recommended.\n";
 
                         MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
