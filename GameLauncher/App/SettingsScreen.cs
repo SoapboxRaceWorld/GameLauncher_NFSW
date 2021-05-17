@@ -71,6 +71,7 @@ namespace GameLauncher.App
             /*******************************/
 
             BackgroundImage = Theming.SettingsScreen;
+            TransparencyKey = Theming.SettingsScreenTransparencyKey;
 
             /*******************************/
             /* Set Hardcoded Text           /

@@ -11,6 +11,7 @@ namespace GameLauncher.App
 {
     public partial class USXEditor : Form
     {
+        public static bool FileReadOnly = false;
         public USXEditor()
         {
             if (File.Exists(FileGameSettings.UserSettingsLocation))
@@ -18,6 +19,7 @@ namespace GameLauncher.App
                 Log.Debug("UXE: Success, a UserSettings.xml file was found!");
                 if (new FileInfo(FileGameSettings.UserSettingsLocation).IsReadOnly == true)
                 {
+                    FileReadOnly = true;
                     Log.Warning("UXE: UserSettings.xml is ReadOnly!");
                 }
                 else
@@ -146,6 +148,15 @@ namespace GameLauncher.App
                 {
                     radioWaterSimulationOn.Checked = true;
                 }
+
+                if (FileGameSettingsData.PostProcessingEnable == "0")
+                {
+                    radioPostProcOff.Checked = true;
+                }
+                else
+                {
+                    radioPostProcOn.Checked = true;
+                }
             }
             else
             {
@@ -261,6 +272,7 @@ namespace GameLauncher.App
                 FileGameSettingsData.VisualTreatment = (radioVisualTreatOff.Checked == true) ? "0" : "1";
                 FileGameSettingsData.WaterSimEnable = (radioWaterSimulationOff.Checked == true) ? "0" : "1";
                 FileGameSettingsData.MaxSkidMarks = SelectedElement("MaxSkidMarks");
+                FileGameSettingsData.PostProcessingEnable = (radioPostProcOff.Checked == true) ? "0" : "1";
 
                 FileGameSettingsData.PerformanceLevel = comboBoxPerformanceLevel.SelectedValue.ToString();
                 FileGameSettingsData.BaseTextureFilter = comboBoxBaseTextureFilter.SelectedIndex.ToString();
@@ -296,21 +308,31 @@ namespace GameLauncher.App
             }
             else if (Range == "0-2")
             {
-                if (Type == "AudioMode" && (ConvertedValue < 1 || ConvertedValue > 2))
+                if (Type == "AudioMode")
                 {
-                    return 1;
-                }
-                if (ConvertedValue <= 0)
-                {
-                    return 0;
-                }
-                else if (ConvertedValue >= 2)
-                {
-                    return 2;
+                    if (ConvertedValue <= 1)
+                    {
+                        return 0;
+                    }
+                    else
+                    {
+                        return 1;
+                    }
                 }
                 else
                 {
-                    return ConvertedValue;
+                    if (ConvertedValue <= 0)
+                    {
+                        return 0;
+                    }
+                    else if (ConvertedValue >= 2)
+                    {
+                        return 2;
+                    }
+                    else
+                    {
+                        return ConvertedValue;
+                    }
                 }
             }
             else if (Range == "0-3")
@@ -465,22 +487,18 @@ namespace GameLauncher.App
             Text = "SBRW UserSettings XML Editor";
 
             /*******************************/
-            /* Set Initial position & Icon  /
-            /*******************************/
-            // This oddly seems to not do this as it already centers itself
-            //FunctionStatus.CenterParent(this);
-
-            /*******************************/
             /* Set Background Image         /
             /*******************************/
 
             BackgroundImage = Theming.USXEEditor;
+            TransparencyKey = Theming.USXEETransparencyKey;
 
             /*******************************/
             /* Set Hardcoded Text           /
             /*******************************/
 
             labelLauncherVersion.Text = "Version: v" + Application.ProductVersion;
+            labelOverRideAspect.Text = FileGameSettingsData.PostProcessingEnable;
 
             /*******************************/
             /* Set Font                     /
@@ -498,7 +516,286 @@ namespace GameLauncher.App
                 SecondaryFontSize = 8f;
             }
             Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
-            labelVideoOptions.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | System.Drawing.FontStyle.Underline);
+            labelVideoOptions.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Regular);
+            SettingsSave.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            SettingsCancel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            /* Titles */
+            labelVideoOptions.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
+            labelAudioOptions.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
+            labelVolumeControl.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
+            labelGameplayOptions.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
+            labelShaderDetails.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
+            labelWorldDetails.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
+            labelCarDetail.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
+            labelBaseTextures.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
+            /* Sub-Titles */
+            labelPerfLevel.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelResolution.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelBrightness.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelWindowed.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelEnableAero.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelVSync.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelPixelAspect.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelAudioMode.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelAudioQuality.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelMasterVol.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelSFXVol.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelCarVol.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelSpeechVol.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelGameMusicVol.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelFEMusicVol.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelGPOCamera.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelGPOTrans.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelGPODamage.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelGPOUnits.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelFSAA.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelMotionBlur.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelOverbright.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelPostProc.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelPartSys.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelShadowDetail.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelShaderDetail.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelVisTreat.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelWaterSimulation.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelGlobalDetail.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelSkidMarks.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelRoadReflection.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelRoadTexture.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelRoadLODBias.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelRoadAnti.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelCarModel.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelCarReflection.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelCDLODBias.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelFilterLvl.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelBTLODBias.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelAntialiasing.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            labelLauncherVersion.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            /* Radio Buttons */
+            radioWindowedOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioWindowedOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioAeroOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioAeroOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioVSyncOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioVSyncOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioAQLow.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioAQHigh.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioDamageOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioDamageOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioKPH.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioMPH.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioMotionBlurOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioMotionBlurOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioOverBrightOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioOverBrightOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioPostProcOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioPostProcOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioParticleSysOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioParticleSysOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioVisualTreatOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioVisualTreatOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioWaterSimulationOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioWaterSimulationOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioMaxSkidMarksZero.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioMaxSkidMarksOne.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioMaxSkidMarksTwo.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioRoadLODBiasOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioRoadLODBiasOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioCarDetailLODOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioCarDetailLODOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioBaseTextureLODOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            radioBaseTextureLODOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            /* Input Boxes */
+            numericResWidth.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            numericResHeight.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            numericBrightness.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            numericMVol.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            numericSFxVol.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            numericCarVol.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            numericSpeech.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            numericGMusic.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            numericFEMusic.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            /* DropDown Menus */
+            comboBoxPerformanceLevel.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            comboAudioMode.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            comboBoxCamera.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            comboBoxTransmisson.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            comboBoxShaderFSAA.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            comboBoxShadowDetail.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            comboBoxShaderDetail.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            comboBoxWorldGlobalDetail.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            comboBoxWorldRoadReflection.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            comboBoxWorldRoadTexture.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            comboBoxWorldRoadAntialiasing.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            comboBoxCarEnvironmentDetail.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            comboBoxCarReflection.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            comboBoxBaseTextureFilter.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+            comboBoxAnisotropicLevel.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Regular);
+
+            /********************************/
+            /* Set Theme Colors & Images     /
+            /********************************/
+
+            if (FileReadOnly == true)
+            {
+                SettingsSave.Text = "Read-Only";
+                SettingsSave.ForeColor = Theming.WinFormErrorTextForeColor;
+            }
+            else
+            {
+                SettingsSave.ForeColor = Theming.SeventhTextForeColor;
+            }
+
+            SettingsSave.Image = Theming.GreenButton;
+            SettingsCancel.Image = Theming.GrayButton;
+            /* Titles */
+            labelVideoOptions.ForeColor = Theming.SecondaryTextForeColor;
+            labelAudioOptions.ForeColor = Theming.SecondaryTextForeColor;
+            labelVolumeControl.ForeColor = Theming.SecondaryTextForeColor;
+            labelGameplayOptions.ForeColor = Theming.SecondaryTextForeColor;
+            labelShaderDetails.ForeColor = Theming.SecondaryTextForeColor;
+            labelWorldDetails.ForeColor = Theming.SecondaryTextForeColor;
+            labelCarDetail.ForeColor = Theming.SecondaryTextForeColor;
+            labelBaseTextures.ForeColor = Theming.SecondaryTextForeColor;
+            /* Sub-Titles */
+            labelPerfLevel.ForeColor = Theming.Link;
+            labelResolution.ForeColor = Theming.MainTextForeColor;
+            labelBrightness.ForeColor = Theming.MainTextForeColor;
+            labelWindowed.ForeColor = Theming.MainTextForeColor;
+            labelEnableAero.ForeColor = Theming.MainTextForeColor;
+            labelVSync.ForeColor = Theming.MainTextForeColor;
+            labelPixelAspect.ForeColor = Theming.MainTextForeColor;
+            labelAudioMode.ForeColor = Theming.MainTextForeColor;
+            labelAudioQuality.ForeColor = Theming.MainTextForeColor;
+            labelMasterVol.ForeColor = Theming.MainTextForeColor;
+            labelSFXVol.ForeColor = Theming.MainTextForeColor;
+            labelCarVol.ForeColor = Theming.MainTextForeColor;
+            labelSpeechVol.ForeColor = Theming.MainTextForeColor;
+            labelGameMusicVol.ForeColor = Theming.MainTextForeColor;
+            labelFEMusicVol.ForeColor = Theming.MainTextForeColor;
+            labelGPOCamera.ForeColor = Theming.MainTextForeColor;
+            labelGPOTrans.ForeColor = Theming.MainTextForeColor;
+            labelGPODamage.ForeColor = Theming.MainTextForeColor;
+            labelGPOUnits.ForeColor = Theming.MainTextForeColor;
+            labelFSAA.ForeColor = Theming.MainTextForeColor;
+            labelMotionBlur.ForeColor = Theming.MainTextForeColor;
+            labelOverbright.ForeColor = Theming.MainTextForeColor;
+            labelPostProc.ForeColor = Theming.MainTextForeColor;
+            labelPartSys.ForeColor = Theming.MainTextForeColor;
+            labelShadowDetail.ForeColor = Theming.MainTextForeColor;
+            labelShaderDetail.ForeColor = Theming.MainTextForeColor;
+            labelVisTreat.ForeColor = Theming.MainTextForeColor;
+            labelWaterSimulation.ForeColor = Theming.MainTextForeColor;
+            labelGlobalDetail.ForeColor = Theming.MainTextForeColor;
+            labelSkidMarks.ForeColor = Theming.MainTextForeColor;
+            labelRoadReflection.ForeColor = Theming.MainTextForeColor;
+            labelRoadTexture.ForeColor = Theming.MainTextForeColor;
+            labelRoadLODBias.ForeColor = Theming.MainTextForeColor;
+            labelRoadAnti.ForeColor = Theming.MainTextForeColor;
+            labelCarModel.ForeColor = Theming.MainTextForeColor;
+            labelCarReflection.ForeColor = Theming.MainTextForeColor;
+            labelCDLODBias.ForeColor = Theming.MainTextForeColor;
+            labelFilterLvl.ForeColor = Theming.MainTextForeColor;
+            labelBTLODBias.ForeColor = Theming.MainTextForeColor;
+            labelAntialiasing.ForeColor = Theming.MainTextForeColor;
+            labelLauncherVersion.ForeColor = Theming.MainTextForeColor;
+            /* Radio Buttons */
+            radioWindowedOn.ForeColor = Theming.MainTextForeColor;
+            radioWindowedOff.ForeColor = Theming.MainTextForeColor;
+            radioAeroOn.ForeColor = Theming.MainTextForeColor;
+            radioAeroOff.ForeColor = Theming.MainTextForeColor;
+            radioVSyncOn.ForeColor = Theming.MainTextForeColor;
+            radioVSyncOff.ForeColor = Theming.MainTextForeColor;
+            radioAQLow.ForeColor = Theming.MainTextForeColor;
+            radioAQHigh.ForeColor = Theming.MainTextForeColor;
+            radioDamageOn.ForeColor = Theming.MainTextForeColor;
+            radioDamageOff.ForeColor = Theming.MainTextForeColor;
+            radioKPH.ForeColor = Theming.MainTextForeColor;
+            radioMPH.ForeColor = Theming.MainTextForeColor;
+            radioMotionBlurOn.ForeColor = Theming.MainTextForeColor;
+            radioMotionBlurOff.ForeColor = Theming.MainTextForeColor;
+            radioOverBrightOn.ForeColor = Theming.MainTextForeColor;
+            radioOverBrightOff.ForeColor = Theming.MainTextForeColor;
+            radioPostProcOn.ForeColor = Theming.MainTextForeColor;
+            radioPostProcOff.ForeColor = Theming.MainTextForeColor;
+            radioParticleSysOn.ForeColor = Theming.MainTextForeColor;
+            radioParticleSysOff.ForeColor = Theming.MainTextForeColor;
+            radioVisualTreatOn.ForeColor = Theming.MainTextForeColor;
+            radioVisualTreatOff.ForeColor = Theming.MainTextForeColor;
+            radioWaterSimulationOn.ForeColor = Theming.MainTextForeColor;
+            radioWaterSimulationOff.ForeColor = Theming.MainTextForeColor;
+            radioMaxSkidMarksZero.ForeColor = Theming.MainTextForeColor;
+            radioMaxSkidMarksOne.ForeColor = Theming.MainTextForeColor;
+            radioMaxSkidMarksTwo.ForeColor = Theming.MainTextForeColor;
+            radioRoadLODBiasOn.ForeColor = Theming.MainTextForeColor;
+            radioRoadLODBiasOff.ForeColor = Theming.MainTextForeColor;
+            radioCarDetailLODOn.ForeColor = Theming.MainTextForeColor;
+            radioCarDetailLODOff.ForeColor = Theming.MainTextForeColor;
+            radioBaseTextureLODOn.ForeColor = Theming.MainTextForeColor;
+            radioBaseTextureLODOff.ForeColor = Theming.MainTextForeColor;
+            /* Input Boxes */
+            numericResWidth.ForeColor = Theming.CDNMenuTextForeColor;
+            numericResWidth.BackColor = Theming.CDNMenuBGForeColor;
+            numericResHeight.ForeColor = Theming.CDNMenuTextForeColor;
+            numericResHeight.BackColor = Theming.CDNMenuBGForeColor;
+            numericBrightness.ForeColor = Theming.CDNMenuTextForeColor;
+            numericBrightness.BackColor = Theming.CDNMenuBGForeColor;
+            numericMVol.ForeColor = Theming.CDNMenuTextForeColor;
+            numericMVol.BackColor = Theming.CDNMenuBGForeColor;
+            numericSFxVol.ForeColor = Theming.CDNMenuTextForeColor;
+            numericSFxVol.BackColor = Theming.CDNMenuBGForeColor;
+            numericCarVol.ForeColor = Theming.CDNMenuTextForeColor;
+            numericCarVol.BackColor = Theming.CDNMenuBGForeColor;
+            numericSpeech.ForeColor = Theming.CDNMenuTextForeColor;
+            numericSpeech.BackColor = Theming.CDNMenuBGForeColor;
+            numericGMusic.ForeColor = Theming.CDNMenuTextForeColor;
+            numericGMusic.BackColor = Theming.CDNMenuBGForeColor;
+            numericFEMusic.ForeColor = Theming.CDNMenuTextForeColor;
+            numericFEMusic.BackColor = Theming.CDNMenuBGForeColor;
+            /* DropDown Menus */
+            comboBoxPerformanceLevel.ForeColor = Theming.CDNMenuTextForeColor;
+            comboBoxPerformanceLevel.BackColor = Theming.CDNMenuBGForeColor;
+            comboAudioMode.ForeColor = Theming.CDNMenuTextForeColor;
+            comboAudioMode.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxCamera.ForeColor = Theming.CDNMenuTextForeColor;
+            comboBoxCamera.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxTransmisson.ForeColor = Theming.CDNMenuTextForeColor;
+            comboBoxTransmisson.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxShaderFSAA.ForeColor = Theming.CDNMenuTextForeColor;
+            comboBoxShaderFSAA.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxShadowDetail.ForeColor = Theming.CDNMenuTextForeColor;
+            comboBoxShadowDetail.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxShaderDetail.ForeColor = Theming.CDNMenuTextForeColor;
+            comboBoxShaderDetail.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxWorldGlobalDetail.ForeColor = Theming.CDNMenuTextForeColor;
+            comboBoxWorldGlobalDetail.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxWorldRoadReflection.ForeColor = Theming.CDNMenuTextForeColor;
+            comboBoxWorldRoadReflection.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxWorldRoadTexture.ForeColor = Theming.CDNMenuTextForeColor;
+            comboBoxWorldRoadTexture.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxWorldRoadAntialiasing.ForeColor = Theming.CDNMenuTextForeColor;
+            comboBoxWorldRoadAntialiasing.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxCarEnvironmentDetail.ForeColor = Theming.CDNMenuTextForeColor;
+            comboBoxCarEnvironmentDetail.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxCarReflection.ForeColor = Theming.CDNMenuTextForeColor;
+            comboBoxCarReflection.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxBaseTextureFilter.ForeColor = Theming.CDNMenuTextForeColor;
+            comboBoxBaseTextureFilter.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxAnisotropicLevel.ForeColor = Theming.CDNMenuTextForeColor;
+            comboBoxAnisotropicLevel.BackColor = Theming.CDNMenuBGForeColor;
+
+            /********************************/
+            /* Events                        /
+            /********************************/
+
+            SettingsSave.MouseEnter += new EventHandler(Greenbutton_hover_MouseEnter);
+            SettingsSave.MouseLeave += new EventHandler(Greenbutton_MouseLeave);
+            SettingsSave.MouseUp += new MouseEventHandler(Greenbutton_hover_MouseUp);
+            SettingsSave.MouseDown += new MouseEventHandler(Greenbutton_click_MouseDown);
+
+            SettingsCancel.MouseEnter += new EventHandler(Graybutton_hover_MouseEnter);
+            SettingsCancel.MouseLeave += new EventHandler(Graybutton_MouseLeave);
+            SettingsCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
+            SettingsCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
 
             /*******************************/
             /* Comboboxes                   /
@@ -515,8 +812,8 @@ namespace GameLauncher.App
 
             /* AudioMode ComboBox */
             var AudioModeList = new[] {
-                new { Sound = "Stero", Value = "0" },
-                new { Sound = "Surround", Value = "1" }
+                new { Sound = "Stero", Value = "1" },
+                new { Sound = "Surround", Value = "2" }
             };
             comboAudioMode.DisplayMember = "Sound";
             comboAudioMode.ValueMember = "Value";
@@ -539,7 +836,7 @@ namespace GameLauncher.App
                 new { PerformanceLevel = "Low", Value = "1" },
                 new { PerformanceLevel = "Medium", Value = "2" },
                 new { PerformanceLevel = "High", Value = "3" },
-                new { PerformanceLevel = "Ultra", Value = "4" },
+                new { PerformanceLevel = "Maximum", Value = "4" },
                 new { PerformanceLevel = "Custom", Value = "5" }
             };
             comboBoxPerformanceLevel.DisplayMember = "PerformanceLevel";
@@ -666,6 +963,46 @@ namespace GameLauncher.App
             comboBoxShaderDetail.DisplayMember = "ShaderDetail";
             comboBoxShaderDetail.ValueMember = "Value";
             comboBoxShaderDetail.DataSource = ShaderDetailList;
+        }
+
+        private void Greenbutton_hover_MouseEnter(object sender, EventArgs e)
+        {
+            SettingsSave.Image = Theming.GreenButtonHover;
+        }
+
+        private void Greenbutton_MouseLeave(object sender, EventArgs e)
+        {
+            SettingsSave.Image = Theming.GreenButton;
+        }
+
+        private void Greenbutton_hover_MouseUp(object sender, EventArgs e)
+        {
+            SettingsSave.Image = Theming.GreenButtonHover;
+        }
+
+        private void Greenbutton_click_MouseDown(object sender, EventArgs e)
+        {
+            SettingsSave.Image = Theming.GreenButtonClick;
+        }
+
+        private void Graybutton_click_MouseDown(object sender, EventArgs e)
+        {
+            SettingsCancel.Image = Theming.GrayButtonClick;
+        }
+
+        private void Graybutton_hover_MouseEnter(object sender, EventArgs e)
+        {
+            SettingsCancel.Image = Theming.GrayButtonHover;
+        }
+
+        private void Graybutton_MouseLeave(object sender, EventArgs e)
+        {
+            SettingsCancel.Image = Theming.GrayButton;
+        }
+
+        private void Graybutton_hover_MouseUp(object sender, EventArgs e)
+        {
+            SettingsCancel.Image = Theming.GrayButtonHover;
         }
     }
 }

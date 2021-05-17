@@ -451,6 +451,7 @@
         <particlesystemenable Type="int">0</particlesystemenable>
         <performancelevel Type="int">2</performancelevel>
         <pixelaspectratiooverride Type="float">0</pixelaspectratiooverride>
+        <postprocessingenable Type="int">0</postprocessingenable>
         <rainenable Type="int">0</rainenable>
         <roadreflectionenable Type="int">0</roadreflectionenable>
         <roadtexturefilter Type="int">0</roadtexturefilter>

@@ -56,6 +56,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         public static Bitmap USXEEditor = Properties.Resources.Background_USXE;
 
+        public static Color USXEETransparencyKey = Color.FromArgb(255, 0, 255);
+
         /* MainScreen Icons */
 
         public static Bitmap UpdateIconError = Properties.Resources.icon_shield_error;
@@ -227,7 +229,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         public static Color WinFormWarningTextForeColor = Color.FromArgb(224, 200, 0);
 
-        public static Color WinFormErrorTextForeColor = Color.FromArgb(0, 192, 0);
+        public static Color WinFormErrorTextForeColor = Color.FromArgb(224, 0, 0);
 
         public static Color WinFormGridForeColor = Color.FromArgb(77, 181, 191);
 
@@ -324,7 +326,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 {
                     if (File.Exists(ThemeFolder + "\\MainScreen\\" + ThemeFile.Read("MainScreenBG")))
                     {
-                        SettingsScreen = new Bitmap(ThemeFolder + "\\MainScreen\\" + ThemeFile.Read("MainScreenBG"));
+                        MainScreen = new Bitmap(ThemeFolder + "\\MainScreen\\" + ThemeFile.Read("MainScreenBG"));
                     }
                 }
 
@@ -340,7 +342,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 {
                     if (File.Exists(ThemeFolder + "\\RegisterScreen\\" + ThemeFile.Read("RegisterScreenBG")))
                     {
-                        SettingsScreen = new Bitmap(ThemeFolder + "\\RegisterScreen\\" + ThemeFile.Read("RegisterScreenBG"));
+                        RegisterScreen = new Bitmap(ThemeFolder + "\\RegisterScreen\\" + ThemeFile.Read("RegisterScreenBG"));
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(ThemeFile.Read("USXEScreenBG")))
+                {
+                    if (File.Exists(ThemeFolder + "\\USXEScreen\\" + ThemeFile.Read("USXEScreenBG")))
+                    {
+                        USXEEditor = new Bitmap(ThemeFolder + "\\USXEScreen\\" + ThemeFile.Read("USXEScreenBG"));
                     }
                 }
 
@@ -834,6 +844,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 if (!string.IsNullOrEmpty(ThemeFile.Read("RegisterScreenTransparencyKey")))
                 {
                     RegisterScreenTransparencyKey = ToColor(ThemeFile.Read("RegisterScreenTransparencyKey"));
+                }
+
+                if (!string.IsNullOrEmpty(ThemeFile.Read("USXEEScreenTransparencyKey")))
+                {
+                    USXEETransparencyKey = ToColor(ThemeFile.Read("USXEEScreenTransparencyKey"));
                 }
 
                 if (!string.IsNullOrEmpty(ThemeFile.Read("InputForeColor")))

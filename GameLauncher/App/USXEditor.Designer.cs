@@ -33,7 +33,7 @@ namespace GameLauncher.App
             this.labelAudioMode = new System.Windows.Forms.Label();
             this.labelBrightness = new System.Windows.Forms.Label();
             this.labelMasterVol = new System.Windows.Forms.Label();
-            this.labelSFxVol = new System.Windows.Forms.Label();
+            this.labelSFXVol = new System.Windows.Forms.Label();
             this.labelFEMusicVol = new System.Windows.Forms.Label();
             this.labelGameMusicVol = new System.Windows.Forms.Label();
             this.labelCarVol = new System.Windows.Forms.Label();
@@ -42,32 +42,32 @@ namespace GameLauncher.App
             this.labelGPOTrans = new System.Windows.Forms.Label();
             this.labelResolution = new System.Windows.Forms.Label();
             this.labelPerfLevel = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelBaseTextures = new System.Windows.Forms.Label();
+            this.labelFilterLvl = new System.Windows.Forms.Label();
             this.labelBTLODBias = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.labelAntialiasing = new System.Windows.Forms.Label();
+            this.labelCarDetail = new System.Windows.Forms.Label();
+            this.labelCarModel = new System.Windows.Forms.Label();
             this.labelCDLODBias = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.labelGlobalDetail = new System.Windows.Forms.Label();
+            this.labelWorldDetails = new System.Windows.Forms.Label();
             this.labelSkidMarks = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
+            this.labelRoadReflection = new System.Windows.Forms.Label();
+            this.labelRoadTexture = new System.Windows.Forms.Label();
             this.labelRoadLODBias = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
+            this.labelRoadAnti = new System.Windows.Forms.Label();
+            this.labelShaderDetails = new System.Windows.Forms.Label();
+            this.labelFSAA = new System.Windows.Forms.Label();
+            this.labelShaderDetail = new System.Windows.Forms.Label();
+            this.labelShadowDetail = new System.Windows.Forms.Label();
             this.labelMotionBlur = new System.Windows.Forms.Label();
             this.labelOverbright = new System.Windows.Forms.Label();
             this.labelPartSys = new System.Windows.Forms.Label();
             this.labelPostProc = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
-            this.label26 = new System.Windows.Forms.Label();
-            this.label27 = new System.Windows.Forms.Label();
+            this.labelPixelAspect = new System.Windows.Forms.Label();
+            this.labelGameplayOptions = new System.Windows.Forms.Label();
+            this.labelAudioOptions = new System.Windows.Forms.Label();
+            this.labelVolumeControl = new System.Windows.Forms.Label();
             this.labelLauncherVersion = new System.Windows.Forms.Label();
             this.labelVideoOptions = new System.Windows.Forms.Label();
             this.numericBrightness = new System.Windows.Forms.NumericUpDown();
@@ -157,7 +157,8 @@ namespace GameLauncher.App
             this.radioWaterSimulationOn = new System.Windows.Forms.RadioButton();
             this.radioWaterSimulationOff = new System.Windows.Forms.RadioButton();
             this.comboBoxCarReflection = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.labelCarReflection = new System.Windows.Forms.Label();
+            this.labelOverRideAspect = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericBrightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMVol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSFxVol)).BeginInit();
@@ -225,18 +226,18 @@ namespace GameLauncher.App
             this.labelMasterVol.Text = "Master:";
             this.labelMasterVol.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // labelSFxVol
+            // labelSFXVol
             // 
-            this.labelSFxVol.BackColor = System.Drawing.Color.Transparent;
-            this.labelSFxVol.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSFxVol.ForeColor = System.Drawing.Color.Silver;
-            this.labelSFxVol.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelSFxVol.Location = new System.Drawing.Point(19, 417);
-            this.labelSFxVol.Name = "labelSFxVol";
-            this.labelSFxVol.Size = new System.Drawing.Size(120, 16);
-            this.labelSFxVol.TabIndex = 8;
-            this.labelSFxVol.Text = "SFx:";
-            this.labelSFxVol.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelSFXVol.BackColor = System.Drawing.Color.Transparent;
+            this.labelSFXVol.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelSFXVol.ForeColor = System.Drawing.Color.Silver;
+            this.labelSFXVol.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelSFXVol.Location = new System.Drawing.Point(19, 417);
+            this.labelSFXVol.Name = "labelSFXVol";
+            this.labelSFXVol.Size = new System.Drawing.Size(120, 16);
+            this.labelSFXVol.TabIndex = 8;
+            this.labelSFXVol.Text = "SFX:";
+            this.labelSFXVol.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelFEMusicVol
             // 
@@ -335,30 +336,30 @@ namespace GameLauncher.App
             this.labelPerfLevel.Text = "Performance Level:";
             this.labelPerfLevel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label1
+            // labelBaseTextures
             // 
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.label1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label1.Location = new System.Drawing.Point(297, 680);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(262, 16);
-            this.label1.TabIndex = 20;
-            this.label1.Text = "Base Texture";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelBaseTextures.BackColor = System.Drawing.Color.Transparent;
+            this.labelBaseTextures.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelBaseTextures.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.labelBaseTextures.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelBaseTextures.Location = new System.Drawing.Point(297, 680);
+            this.labelBaseTextures.Name = "labelBaseTextures";
+            this.labelBaseTextures.Size = new System.Drawing.Size(262, 16);
+            this.labelBaseTextures.TabIndex = 20;
+            this.labelBaseTextures.Text = "Base Textures";
+            this.labelBaseTextures.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label2
+            // labelFilterLvl
             // 
-            this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label2.Location = new System.Drawing.Point(303, 705);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(120, 16);
-            this.label2.TabIndex = 21;
-            this.label2.Text = "Filter Level:";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelFilterLvl.BackColor = System.Drawing.Color.Transparent;
+            this.labelFilterLvl.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFilterLvl.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelFilterLvl.Location = new System.Drawing.Point(303, 705);
+            this.labelFilterLvl.Name = "labelFilterLvl";
+            this.labelFilterLvl.Size = new System.Drawing.Size(120, 16);
+            this.labelFilterLvl.TabIndex = 21;
+            this.labelFilterLvl.Text = "Filter Level:";
+            this.labelFilterLvl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelBTLODBias
             // 
@@ -372,42 +373,42 @@ namespace GameLauncher.App
             this.labelBTLODBias.Text = "LOD Bias:";
             this.labelBTLODBias.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label4
+            // labelAntialiasing
             // 
-            this.label4.BackColor = System.Drawing.Color.Transparent;
-            this.label4.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label4.Location = new System.Drawing.Point(303, 759);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(120, 16);
-            this.label4.TabIndex = 23;
-            this.label4.Text = "Antialiasing:";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelAntialiasing.BackColor = System.Drawing.Color.Transparent;
+            this.labelAntialiasing.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelAntialiasing.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelAntialiasing.Location = new System.Drawing.Point(303, 759);
+            this.labelAntialiasing.Name = "labelAntialiasing";
+            this.labelAntialiasing.Size = new System.Drawing.Size(120, 16);
+            this.labelAntialiasing.TabIndex = 23;
+            this.labelAntialiasing.Text = "Antialiasing:";
+            this.labelAntialiasing.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label5
+            // labelCarDetail
             // 
-            this.label5.BackColor = System.Drawing.Color.Transparent;
-            this.label5.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.label5.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label5.Location = new System.Drawing.Point(296, 560);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(262, 16);
-            this.label5.TabIndex = 24;
-            this.label5.Text = "Car Detail";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelCarDetail.BackColor = System.Drawing.Color.Transparent;
+            this.labelCarDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelCarDetail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.labelCarDetail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelCarDetail.Location = new System.Drawing.Point(296, 560);
+            this.labelCarDetail.Name = "labelCarDetail";
+            this.labelCarDetail.Size = new System.Drawing.Size(262, 16);
+            this.labelCarDetail.TabIndex = 24;
+            this.labelCarDetail.Text = "Car Details";
+            this.labelCarDetail.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label6
+            // labelCarModel
             // 
-            this.label6.BackColor = System.Drawing.Color.Transparent;
-            this.label6.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label6.Location = new System.Drawing.Point(302, 585);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(120, 16);
-            this.label6.TabIndex = 25;
-            this.label6.Text = "Car Model:";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelCarModel.BackColor = System.Drawing.Color.Transparent;
+            this.labelCarModel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelCarModel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelCarModel.Location = new System.Drawing.Point(302, 585);
+            this.labelCarModel.Name = "labelCarModel";
+            this.labelCarModel.Size = new System.Drawing.Size(120, 16);
+            this.labelCarModel.TabIndex = 25;
+            this.labelCarModel.Text = "Car Model:";
+            this.labelCarModel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelCDLODBias
             // 
@@ -421,30 +422,30 @@ namespace GameLauncher.App
             this.labelCDLODBias.Text = "LOD Level Bias:";
             this.labelCDLODBias.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label8
+            // labelGlobalDetail
             // 
-            this.label8.BackColor = System.Drawing.Color.Transparent;
-            this.label8.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label8.Location = new System.Drawing.Point(302, 388);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(120, 16);
-            this.label8.TabIndex = 27;
-            this.label8.Text = "Global Detail:";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelGlobalDetail.BackColor = System.Drawing.Color.Transparent;
+            this.labelGlobalDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelGlobalDetail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelGlobalDetail.Location = new System.Drawing.Point(302, 388);
+            this.labelGlobalDetail.Name = "labelGlobalDetail";
+            this.labelGlobalDetail.Size = new System.Drawing.Size(120, 16);
+            this.labelGlobalDetail.TabIndex = 27;
+            this.labelGlobalDetail.Text = "Global Detail:";
+            this.labelGlobalDetail.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label9
+            // labelWorldDetails
             // 
-            this.label9.BackColor = System.Drawing.Color.Transparent;
-            this.label9.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.label9.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label9.Location = new System.Drawing.Point(296, 363);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(262, 16);
-            this.label9.TabIndex = 28;
-            this.label9.Text = "World Details";
-            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelWorldDetails.BackColor = System.Drawing.Color.Transparent;
+            this.labelWorldDetails.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelWorldDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.labelWorldDetails.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelWorldDetails.Location = new System.Drawing.Point(296, 363);
+            this.labelWorldDetails.Name = "labelWorldDetails";
+            this.labelWorldDetails.Size = new System.Drawing.Size(262, 16);
+            this.labelWorldDetails.TabIndex = 28;
+            this.labelWorldDetails.Text = "World Details";
+            this.labelWorldDetails.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelSkidMarks
             // 
@@ -458,29 +459,29 @@ namespace GameLauncher.App
             this.labelSkidMarks.Text = "Max Skid Marks:";
             this.labelSkidMarks.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label11
+            // labelRoadReflection
             // 
-            this.label11.BackColor = System.Drawing.Color.Transparent;
-            this.label11.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label11.Location = new System.Drawing.Point(302, 446);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(120, 16);
-            this.label11.TabIndex = 30;
-            this.label11.Text = "Road Reflection:";
-            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelRoadReflection.BackColor = System.Drawing.Color.Transparent;
+            this.labelRoadReflection.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelRoadReflection.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelRoadReflection.Location = new System.Drawing.Point(302, 446);
+            this.labelRoadReflection.Name = "labelRoadReflection";
+            this.labelRoadReflection.Size = new System.Drawing.Size(120, 16);
+            this.labelRoadReflection.TabIndex = 30;
+            this.labelRoadReflection.Text = "Road Reflection:";
+            this.labelRoadReflection.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label12
+            // labelRoadTexture
             // 
-            this.label12.BackColor = System.Drawing.Color.Transparent;
-            this.label12.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label12.Location = new System.Drawing.Point(302, 474);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(120, 16);
-            this.label12.TabIndex = 31;
-            this.label12.Text = "Road Texture:";
-            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelRoadTexture.BackColor = System.Drawing.Color.Transparent;
+            this.labelRoadTexture.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelRoadTexture.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelRoadTexture.Location = new System.Drawing.Point(302, 474);
+            this.labelRoadTexture.Name = "labelRoadTexture";
+            this.labelRoadTexture.Size = new System.Drawing.Size(120, 16);
+            this.labelRoadTexture.TabIndex = 31;
+            this.labelRoadTexture.Text = "Road Texture:";
+            this.labelRoadTexture.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelRoadLODBias
             // 
@@ -494,66 +495,66 @@ namespace GameLauncher.App
             this.labelRoadLODBias.Text = "Road LOD Bias:";
             this.labelRoadLODBias.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label14
+            // labelRoadAnti
             // 
-            this.label14.BackColor = System.Drawing.Color.Transparent;
-            this.label14.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label14.Location = new System.Drawing.Point(302, 528);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(120, 16);
-            this.label14.TabIndex = 33;
-            this.label14.Text = "Road Antialiasing:";
-            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelRoadAnti.BackColor = System.Drawing.Color.Transparent;
+            this.labelRoadAnti.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelRoadAnti.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelRoadAnti.Location = new System.Drawing.Point(302, 528);
+            this.labelRoadAnti.Name = "labelRoadAnti";
+            this.labelRoadAnti.Size = new System.Drawing.Size(120, 16);
+            this.labelRoadAnti.TabIndex = 33;
+            this.labelRoadAnti.Text = "Road Antialiasing:";
+            this.labelRoadAnti.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label15
+            // labelShaderDetails
             // 
-            this.label15.BackColor = System.Drawing.Color.Transparent;
-            this.label15.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.label15.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label15.Location = new System.Drawing.Point(296, 74);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(262, 16);
-            this.label15.TabIndex = 34;
-            this.label15.Text = "Shader Details";
-            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelShaderDetails.BackColor = System.Drawing.Color.Transparent;
+            this.labelShaderDetails.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelShaderDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.labelShaderDetails.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelShaderDetails.Location = new System.Drawing.Point(296, 74);
+            this.labelShaderDetails.Name = "labelShaderDetails";
+            this.labelShaderDetails.Size = new System.Drawing.Size(262, 16);
+            this.labelShaderDetails.TabIndex = 34;
+            this.labelShaderDetails.Text = "Shader Details";
+            this.labelShaderDetails.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label16
+            // labelFSAA
             // 
-            this.label16.BackColor = System.Drawing.Color.Transparent;
-            this.label16.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label16.Location = new System.Drawing.Point(302, 99);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(120, 16);
-            this.label16.TabIndex = 35;
-            this.label16.Text = "FSAA Level:";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelFSAA.BackColor = System.Drawing.Color.Transparent;
+            this.labelFSAA.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFSAA.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelFSAA.Location = new System.Drawing.Point(302, 99);
+            this.labelFSAA.Name = "labelFSAA";
+            this.labelFSAA.Size = new System.Drawing.Size(120, 16);
+            this.labelFSAA.TabIndex = 35;
+            this.labelFSAA.Text = "FSAA Level:";
+            this.labelFSAA.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label17
+            // labelShaderDetail
             // 
-            this.label17.BackColor = System.Drawing.Color.Transparent;
-            this.label17.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label17.Location = new System.Drawing.Point(302, 275);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(120, 16);
-            this.label17.TabIndex = 36;
-            this.label17.Text = "Shader Detail:";
-            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelShaderDetail.BackColor = System.Drawing.Color.Transparent;
+            this.labelShaderDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelShaderDetail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelShaderDetail.Location = new System.Drawing.Point(302, 275);
+            this.labelShaderDetail.Name = "labelShaderDetail";
+            this.labelShaderDetail.Size = new System.Drawing.Size(120, 16);
+            this.labelShaderDetail.TabIndex = 36;
+            this.labelShaderDetail.Text = "Shader Detail:";
+            this.labelShaderDetail.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label18
+            // labelShadowDetail
             // 
-            this.label18.BackColor = System.Drawing.Color.Transparent;
-            this.label18.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label18.Location = new System.Drawing.Point(302, 247);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(120, 16);
-            this.label18.TabIndex = 37;
-            this.label18.Text = "Shadow Detail:";
-            this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelShadowDetail.BackColor = System.Drawing.Color.Transparent;
+            this.labelShadowDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelShadowDetail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelShadowDetail.Location = new System.Drawing.Point(302, 247);
+            this.labelShadowDetail.Name = "labelShadowDetail";
+            this.labelShadowDetail.Size = new System.Drawing.Size(120, 16);
+            this.labelShadowDetail.TabIndex = 37;
+            this.labelShadowDetail.Text = "Shadow Detail:";
+            this.labelShadowDetail.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelMotionBlur
             // 
@@ -603,56 +604,56 @@ namespace GameLauncher.App
             this.labelPostProc.Text = "Post-Processing:";
             this.labelPostProc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label24
+            // labelPixelAspect
             // 
-            this.label24.BackColor = System.Drawing.Color.Transparent;
-            this.label24.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label24.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label24.Location = new System.Drawing.Point(19, 238);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(120, 16);
-            this.label24.TabIndex = 13;
-            this.label24.Text = "Pixel Aspect:";
-            this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelPixelAspect.BackColor = System.Drawing.Color.Transparent;
+            this.labelPixelAspect.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPixelAspect.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelPixelAspect.Location = new System.Drawing.Point(19, 238);
+            this.labelPixelAspect.Name = "labelPixelAspect";
+            this.labelPixelAspect.Size = new System.Drawing.Size(120, 16);
+            this.labelPixelAspect.TabIndex = 13;
+            this.labelPixelAspect.Text = "Pixel Aspect:";
+            this.labelPixelAspect.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label25
+            // labelGameplayOptions
             // 
-            this.label25.BackColor = System.Drawing.Color.Transparent;
-            this.label25.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label25.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.label25.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label25.Location = new System.Drawing.Point(13, 569);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(244, 16);
-            this.label25.TabIndex = 44;
-            this.label25.Text = "Gameplay Options";
-            this.label25.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelGameplayOptions.BackColor = System.Drawing.Color.Transparent;
+            this.labelGameplayOptions.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelGameplayOptions.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.labelGameplayOptions.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelGameplayOptions.Location = new System.Drawing.Point(13, 569);
+            this.labelGameplayOptions.Name = "labelGameplayOptions";
+            this.labelGameplayOptions.Size = new System.Drawing.Size(244, 16);
+            this.labelGameplayOptions.TabIndex = 44;
+            this.labelGameplayOptions.Text = "Gameplay Options";
+            this.labelGameplayOptions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label26
+            // labelAudioOptions
             // 
-            this.label26.BackColor = System.Drawing.Color.Transparent;
-            this.label26.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.label26.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label26.Location = new System.Drawing.Point(13, 286);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(244, 16);
-            this.label26.TabIndex = 45;
-            this.label26.Text = "Audio Options";
-            this.label26.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelAudioOptions.BackColor = System.Drawing.Color.Transparent;
+            this.labelAudioOptions.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelAudioOptions.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.labelAudioOptions.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelAudioOptions.Location = new System.Drawing.Point(13, 286);
+            this.labelAudioOptions.Name = "labelAudioOptions";
+            this.labelAudioOptions.Size = new System.Drawing.Size(244, 16);
+            this.labelAudioOptions.TabIndex = 45;
+            this.labelAudioOptions.Text = "Audio Options";
+            this.labelAudioOptions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label27
+            // labelVolumeControl
             // 
-            this.label27.BackColor = System.Drawing.Color.Transparent;
-            this.label27.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.label27.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label27.Location = new System.Drawing.Point(13, 366);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(244, 16);
-            this.label27.TabIndex = 46;
-            this.label27.Text = "Volume Control";
-            this.label27.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelVolumeControl.BackColor = System.Drawing.Color.Transparent;
+            this.labelVolumeControl.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelVolumeControl.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.labelVolumeControl.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelVolumeControl.Location = new System.Drawing.Point(13, 366);
+            this.labelVolumeControl.Name = "labelVolumeControl";
+            this.labelVolumeControl.Size = new System.Drawing.Size(244, 16);
+            this.labelVolumeControl.TabIndex = 46;
+            this.labelVolumeControl.Text = "Volume Control";
+            this.labelVolumeControl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelLauncherVersion
             // 
@@ -1842,17 +1843,29 @@ namespace GameLauncher.App
             this.comboBoxCarReflection.Size = new System.Drawing.Size(120, 22);
             this.comboBoxCarReflection.TabIndex = 138;
             // 
-            // label3
+            // labelCarReflection
             // 
-            this.label3.BackColor = System.Drawing.Color.Transparent;
-            this.label3.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label3.Location = new System.Drawing.Point(302, 615);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(120, 16);
-            this.label3.TabIndex = 137;
-            this.label3.Text = "Car Reflection:";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelCarReflection.BackColor = System.Drawing.Color.Transparent;
+            this.labelCarReflection.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelCarReflection.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelCarReflection.Location = new System.Drawing.Point(302, 615);
+            this.labelCarReflection.Name = "labelCarReflection";
+            this.labelCarReflection.Size = new System.Drawing.Size(120, 16);
+            this.labelCarReflection.TabIndex = 137;
+            this.labelCarReflection.Text = "Car Reflection:";
+            this.labelCarReflection.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // labelOverRideAspect
+            // 
+            this.labelOverRideAspect.BackColor = System.Drawing.Color.Transparent;
+            this.labelOverRideAspect.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelOverRideAspect.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelOverRideAspect.Location = new System.Drawing.Point(137, 238);
+            this.labelOverRideAspect.Name = "labelOverRideAspect";
+            this.labelOverRideAspect.Size = new System.Drawing.Size(120, 16);
+            this.labelOverRideAspect.TabIndex = 139;
+            this.labelOverRideAspect.Text = "Zero";
+            this.labelOverRideAspect.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // USXEditor
             // 
@@ -1860,8 +1873,9 @@ namespace GameLauncher.App
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(588, 823);
+            this.Controls.Add(this.labelOverRideAspect);
             this.Controls.Add(this.comboBoxCarReflection);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.labelCarReflection);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.numericResHeight);
             this.Controls.Add(this.numericResWidth);
@@ -1905,24 +1919,24 @@ namespace GameLauncher.App
             this.Controls.Add(this.numericBrightness);
             this.Controls.Add(this.labelVideoOptions);
             this.Controls.Add(this.labelLauncherVersion);
-            this.Controls.Add(this.label27);
-            this.Controls.Add(this.label26);
-            this.Controls.Add(this.label25);
-            this.Controls.Add(this.label24);
-            this.Controls.Add(this.label18);
-            this.Controls.Add(this.label17);
-            this.Controls.Add(this.label16);
-            this.Controls.Add(this.label15);
-            this.Controls.Add(this.label14);
-            this.Controls.Add(this.label12);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.labelVolumeControl);
+            this.Controls.Add(this.labelAudioOptions);
+            this.Controls.Add(this.labelGameplayOptions);
+            this.Controls.Add(this.labelPixelAspect);
+            this.Controls.Add(this.labelShadowDetail);
+            this.Controls.Add(this.labelShaderDetail);
+            this.Controls.Add(this.labelFSAA);
+            this.Controls.Add(this.labelShaderDetails);
+            this.Controls.Add(this.labelRoadAnti);
+            this.Controls.Add(this.labelRoadTexture);
+            this.Controls.Add(this.labelRoadReflection);
+            this.Controls.Add(this.labelWorldDetails);
+            this.Controls.Add(this.labelGlobalDetail);
+            this.Controls.Add(this.labelCarModel);
+            this.Controls.Add(this.labelCarDetail);
+            this.Controls.Add(this.labelAntialiasing);
+            this.Controls.Add(this.labelFilterLvl);
+            this.Controls.Add(this.labelBaseTextures);
             this.Controls.Add(this.labelPerfLevel);
             this.Controls.Add(this.labelResolution);
             this.Controls.Add(this.labelGPOTrans);
@@ -1932,7 +1946,7 @@ namespace GameLauncher.App
             this.Controls.Add(this.labelCarVol);
             this.Controls.Add(this.labelGameMusicVol);
             this.Controls.Add(this.labelFEMusicVol);
-            this.Controls.Add(this.labelSFxVol);
+            this.Controls.Add(this.labelSFXVol);
             this.Controls.Add(this.labelMasterVol);
             this.Controls.Add(this.labelBrightness);
             this.Controls.Add(this.labelAudioMode);
@@ -2006,7 +2020,7 @@ namespace GameLauncher.App
         private System.Windows.Forms.Label labelAudioMode;
         private System.Windows.Forms.Label labelBrightness;
         private System.Windows.Forms.Label labelMasterVol;
-        private System.Windows.Forms.Label labelSFxVol;
+        private System.Windows.Forms.Label labelSFXVol;
         private System.Windows.Forms.Label labelFEMusicVol;
         private System.Windows.Forms.Label labelGameMusicVol;
         private System.Windows.Forms.Label labelCarVol;
@@ -2015,32 +2029,32 @@ namespace GameLauncher.App
         private System.Windows.Forms.Label labelGPOTrans;
         private System.Windows.Forms.Label labelResolution;
         private System.Windows.Forms.Label labelPerfLevel;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelBaseTextures;
+        private System.Windows.Forms.Label labelFilterLvl;
         private System.Windows.Forms.Label labelBTLODBias;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label labelAntialiasing;
+        private System.Windows.Forms.Label labelCarDetail;
+        private System.Windows.Forms.Label labelCarModel;
         private System.Windows.Forms.Label labelCDLODBias;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label labelGlobalDetail;
+        private System.Windows.Forms.Label labelWorldDetails;
         private System.Windows.Forms.Label labelSkidMarks;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label labelRoadReflection;
+        private System.Windows.Forms.Label labelRoadTexture;
         private System.Windows.Forms.Label labelRoadLODBias;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label labelRoadAnti;
+        private System.Windows.Forms.Label labelShaderDetails;
+        private System.Windows.Forms.Label labelFSAA;
+        private System.Windows.Forms.Label labelShaderDetail;
+        private System.Windows.Forms.Label labelShadowDetail;
         private System.Windows.Forms.Label labelMotionBlur;
         private System.Windows.Forms.Label labelOverbright;
         private System.Windows.Forms.Label labelPartSys;
         private System.Windows.Forms.Label labelPostProc;
-        private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label labelPixelAspect;
+        private System.Windows.Forms.Label labelGameplayOptions;
+        private System.Windows.Forms.Label labelAudioOptions;
+        private System.Windows.Forms.Label labelVolumeControl;
         private System.Windows.Forms.Label labelLauncherVersion;
         private System.Windows.Forms.Label labelVideoOptions;
         private System.Windows.Forms.NumericUpDown numericBrightness;
@@ -2130,6 +2144,7 @@ namespace GameLauncher.App
         private System.Windows.Forms.RadioButton radioWaterSimulationOn;
         private System.Windows.Forms.RadioButton radioWaterSimulationOff;
         private System.Windows.Forms.ComboBox comboBoxCarReflection;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label labelCarReflection;
+        private System.Windows.Forms.Label labelOverRideAspect;
     }
 }

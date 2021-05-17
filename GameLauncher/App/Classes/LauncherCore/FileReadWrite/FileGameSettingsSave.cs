@@ -50,6 +50,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         public static string MotionBlurEnable = "0";
         public static string OverBrightEnable = "0";
         public static string ParticleSystemEnable = "0";
+        public static string PostProcessingEnable = "0";
         public static string RainEnable = "0";
         public static string RoadReflectionEnable = "0";
         public static string RoadTextureFilter = "0";
@@ -57,6 +58,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         public static string RoadTextureMaxAni = "0";
         public static string ShaderDetail = "0";
         public static string ShadowDetail = "0";
+        public static string Size = "0";
         public static string VisualTreatment = "0";
         public static string WaterSimEnable = "0";
     }
@@ -153,6 +155,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                                                              NodeReader("InnerText", "Settings/VideoConfig/overbrightenable", null) : "0";
                     FileGameSettingsData.ParticleSystemEnable = (NodeReader("InnerText", "Settings/VideoConfig/particlesystemenable", null) != "ERROR") ?
                                                                  NodeReader("InnerText", "Settings/VideoConfig/particlesystemenable", null) : "0";
+                    FileGameSettingsData.PostProcessingEnable = (NodeReader("InnerText", "Settings/VideoConfig/postprocessingenable", null) != "ERROR") ?
+                                                                 NodeReader("InnerText", "Settings/VideoConfig/postprocessingenable", null) : "0";
                     FileGameSettingsData.RainEnable = (NodeReader("InnerText", "Settings/VideoConfig/rainenable", null) != "ERROR") ?
                                                        NodeReader("InnerText", "Settings/VideoConfig/rainenable", null) : "0";
                     FileGameSettingsData.RoadReflectionEnable = (NodeReader("InnerText", "Settings/VideoConfig/roadreflectionenable", null) != "ERROR") ?
@@ -167,6 +171,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                                                          NodeReader("InnerText", "Settings/VideoConfig/shaderdetail", null) : "0";
                     FileGameSettingsData.ShadowDetail = (NodeReader("InnerText", "Settings/VideoConfig/shadowdetail", null) != "ERROR") ?
                                                          NodeReader("InnerText", "Settings/VideoConfig/shadowdetail", null) : "0";
+                    FileGameSettingsData.Size = (NodeReader("InnerText", "Settings/VideoConfig/size", null) != "ERROR") ?
+                                                         NodeReader("InnerText", "Settings/VideoConfig/size", null) : "0";
                     FileGameSettingsData.VisualTreatment = (NodeReader("InnerText", "Settings/VideoConfig/visualtreatment", null) != "ERROR") ?
                                                             NodeReader("InnerText", "Settings/VideoConfig/visualtreatment", null) : "0";
                     FileGameSettingsData.WaterSimEnable = (NodeReader("InnerText", "Settings/VideoConfig/watersimenable", null) != "ERROR") ?
@@ -237,6 +243,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     NodeUpdater("InnerText", "Settings/VideoConfig", "motionblurenable", "Type", "int", FileGameSettingsData.MotionBlurEnable);
                     NodeUpdater("InnerText", "Settings/VideoConfig", "overbrightenable", "Type", "int", FileGameSettingsData.OverBrightEnable);
                     NodeUpdater("InnerText", "Settings/VideoConfig", "particlesystemenable", "Type", "int", FileGameSettingsData.ParticleSystemEnable);
+                    NodeUpdater("InnerText", "Settings/VideoConfig", "postprocessingenable", "Type", "int", FileGameSettingsData.PostProcessingEnable);
                     NodeUpdater("InnerText", "Settings/VideoConfig", "rainenable", "Type", "int", FileGameSettingsData.RainEnable);
                     NodeUpdater("InnerText", "Settings/VideoConfig", "roadreflectionenable", "Type", "int", FileGameSettingsData.RoadReflectionEnable);
                     NodeUpdater("InnerText", "Settings/VideoConfig", "roadtexturefilter", "Type", "int", FileGameSettingsData.RoadTextureFilter);
