@@ -455,7 +455,7 @@ namespace GameLauncher.App
             if (!string.IsNullOrEmpty(((LangObject)SettingsLanguage.SelectedItem).INI_Value))
             {
                 FileSettingsSave.Lang = ((LangObject)SettingsLanguage.SelectedItem).INI_Value;
-                FileGameSettingsData.Language = ((LangObject)SettingsLanguage.SelectedItem).INI_Value;
+                FileGameSettingsData.Language = ((LangObject)SettingsLanguage.SelectedItem).XML_Value;
             }
 
             /* TODO: Inform player about custom languagepack used. */
