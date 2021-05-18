@@ -29,7 +29,7 @@ namespace GameLauncher.App
                     Log.Debug("UXE: UserSettings.xml can be modified!");
                 }
 
-                FileGameSettings.Read();
+                FileGameSettings.Read("Full File");
                 InitializeComponent();
                 SetVisuals();
             }
@@ -288,7 +288,7 @@ namespace GameLauncher.App
             FileGameSettingsData.ShadowDetail = comboBoxShadowDetail.SelectedValue.ToString();
             FileGameSettingsData.ShaderDetail = comboBoxShaderDetail.SelectedValue.ToString();
 
-            FileGameSettings.Save("Display");
+            FileGameSettings.Save("Display", "Full File");
         }
 
         private int CheckValidRange(string Type, string Range, string Value)

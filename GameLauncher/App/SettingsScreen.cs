@@ -6,7 +6,6 @@ using System.Linq;
 using System.Management.Automation;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
 using WindowsFirewallHelper;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.InsiderKit;
@@ -29,8 +28,6 @@ namespace GameLauncher.App
         /*******************************/
         /* Global Functions             /
         /*******************************/
-
-        public string _userSettings = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
 
         private int _lastSelectedCdnId;
         private int _lastSelectedLanguage;
@@ -219,6 +216,12 @@ namespace GameLauncher.App
             SettingsCancel.MouseLeave += new EventHandler(Graybutton_MouseLeave);
             SettingsCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
             SettingsCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
+
+            /********************************/
+            /* Load XML (Only one Section)   /
+            /********************************/
+
+            FileGameSettings.Read("Language Only");
         }
 
         /********************************/
@@ -452,12 +455,13 @@ namespace GameLauncher.App
             if (!string.IsNullOrEmpty(((LangObject)SettingsLanguage.SelectedItem).INI_Value))
             {
                 FileSettingsSave.Lang = ((LangObject)SettingsLanguage.SelectedItem).INI_Value;
+                FileGameSettingsData.Language = ((LangObject)SettingsLanguage.SelectedItem).INI_Value;
             }
 
             /* TODO: Inform player about custom languagepack used. */
             if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") 
             {
-                MessageBox.Show(null, "Please note, that if this server won't have that languagepack installed, it will fallback to English instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(null, "Please Note: If a Server does not Provide Language Pack, it will Fallback to English instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !DetectLinux.LinuxDetected())
@@ -587,78 +591,7 @@ namespace GameLauncher.App
 
             /* Save Settings */
             FileSettingsSave.SaveSettings();
-
-            var userSettingsXml = new XmlDocument();
-            try
-            {
-                if (File.Exists(_userSettings))
-                {
-                    try
-                    {
-                        userSettingsXml.Load(_userSettings);
-                        var chat = userSettingsXml.SelectSingleNode("Settings/PersistentValue/Chat/DefaultChatGroup");
-                        chat.InnerText = ((LangObject)SettingsLanguage.SelectedItem).INI_Value;
-
-                        var language = userSettingsXml.SelectSingleNode("Settings/UI/Language");
-                        language.InnerText = ((LangObject)SettingsLanguage.SelectedItem).XML_Value;
-                        /* Leave "Tracks" in for users who may be propigating an older/carried on UserSettings file */
-                        var tracks = userSettingsXml.SelectSingleNode("Settings/UI/Tracks");
-                        tracks.InnerText = "1";
-
-                        Log.Debug("1");
-                    }
-                    catch
-                    {
-                        File.Delete(_userSettings);
-
-                        var persistentValue = userSettingsXml.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
-                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
-
-                        var setting = persistentValue.AppendChild(userSettingsXml.CreateElement("Settings"));
-                        var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
-
-                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).INI_Value + "</DefaultChatGroup>";
-                        ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
-                        /* Leave "Tracks" in for users who may be propigating an older/carried on UserSettings file */
-                        ui.InnerXml += "<Tracks Type=\"int\">1</Tracks>";
-
-                        var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
-                        Log.Debug("2");
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        var persistentValue = userSettingsXml.AppendChild(userSettingsXml.CreateElement("PersistentValue"));
-                        var chat = persistentValue.AppendChild(userSettingsXml.CreateElement("Chat"));
-
-                        var setting = persistentValue.AppendChild(userSettingsXml.CreateElement("Settings"));
-                        var ui = setting.AppendChild(userSettingsXml.CreateElement("UI"));
-
-                        chat.InnerXml = "<DefaultChatGroup Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).INI_Value + "</DefaultChatGroup>";
-                        ui.InnerXml = "<Language Type=\"string\">" + ((LangObject)SettingsLanguage.SelectedItem).XML_Value + "</Language>";
-                        /* Leave "Tracks" in for users who may be propigating an older/carried on UserSettings file */
-                        ui.InnerXml += "<Tracks Type=\"int\">1</Tracks>";
-
-                        var directoryInfo = Directory.CreateDirectory(Path.GetDirectoryName(_userSettings));
-                        Log.Debug("3");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(null, "There was an error saving your settings to actual file. Restoring default.\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        File.Delete(_userSettings);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(null, "There was an error saving your settings to actual file. Restoring default.\n" + ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                File.Delete(_userSettings);
-            }
-
-            /* Save XML Settings */
-            userSettingsXml.Save(_userSettings);
+            FileGameSettings.Save("Suppress", "Language Only");
 
             Close();
         }
