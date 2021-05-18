@@ -6,12 +6,14 @@ using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
+using System.Diagnostics;
 
 namespace GameLauncher.App
 {
     public partial class USXEditor : Form
     {
         public static bool FileReadOnly = false;
+        public static int AmountofCenterTimes = 0;
         public USXEditor()
         {
             if (File.Exists(FileGameSettings.UserSettingsLocation))
@@ -47,243 +49,195 @@ namespace GameLauncher.App
 
         private void comboBoxPerformanceLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxPerformanceLevel.SelectedIndex != 5)
+            try
             {
-                this.Size = new Size(298, 866);
-                this.CenterToScreen();
-            }
+                if (comboBoxPerformanceLevel.SelectedIndex == 0)
+                {
+                    /* Minama */
+                    comboBoxBaseTextureFilter.SelectedIndex = 0;
+                    comboBoxAnisotropicLevel.SelectedIndex = 0;
+                    comboBoxCarEnvironmentDetail.SelectedIndex = 0;
+                    comboBoxCarReflection.SelectedIndex = 0;
+                    comboBoxWorldGlobalDetail.SelectedIndex = 0;
+                    comboBoxWorldRoadReflection.SelectedIndex = 0;
+                    comboBoxWorldRoadTexture.SelectedIndex = 0;
+                    comboBoxWorldRoadAntialiasing.SelectedIndex = 0;
+                    comboBoxShaderFSAA.SelectedIndex = 0;
+                    comboBoxShadowDetail.SelectedIndex = 0;
+                    comboBoxShaderDetail.SelectedIndex = 0;
 
-            /* Minama */
-            if (comboBoxPerformanceLevel.SelectedIndex == 0)
-            {
-                comboBoxBaseTextureFilter.SelectedIndex = 0;
-                comboBoxAnisotropicLevel.SelectedIndex = 0;
-                comboBoxCarEnvironmentDetail.SelectedIndex = 0;
-                comboBoxCarReflection.SelectedIndex = 0;
-                comboBoxWorldGlobalDetail.SelectedIndex = 0;
-                comboBoxWorldRoadReflection.SelectedIndex = 0;
-                comboBoxWorldRoadTexture.SelectedIndex = 0;
-                comboBoxWorldRoadAntialiasing.SelectedIndex = 0;
-                comboBoxShaderFSAA.SelectedIndex = 0;
-                comboBoxShadowDetail.SelectedIndex = 0;
-                comboBoxShaderDetail.SelectedIndex = 0;
+                    SetCorrectElementValues("BaseTextureLODBias", "0");
+                    SetCorrectElementValues("CarEnvironmentMapEnable", "0");
+                    SetCorrectElementValues("MaxSkidMarks", "0");
+                    SetCorrectElementValues("RoadTextureLODBias", "0");
+                    SetCorrectElementValues("MotionBlurEnable", "0");
+                    SetCorrectElementValues("OverBrightEnable", "0");
+                    SetCorrectElementValues("ParticleSystemEnable", "0");
+                    SetCorrectElementValues("VisualTreatment", "0");
+                    SetCorrectElementValues("WaterSimEnable", "0");
+                    SetCorrectElementValues("PostProcessingEnable", "0");
 
-                SetCorrectElementValues("BaseTextureLODBias", "0");
-                SetCorrectElementValues("CarEnvironmentMapEnable", "0");
-                SetCorrectElementValues("MaxSkidMarks", "0");
-                SetCorrectElementValues("RoadTextureLODBias", "0");
-                SetCorrectElementValues("MotionBlurEnable", "0");
-                SetCorrectElementValues("OverBrightEnable", "0");
-                SetCorrectElementValues("ParticleSystemEnable", "0");
-                SetCorrectElementValues("VisualTreatment", "0");
-                SetCorrectElementValues("WaterSimEnable", "0");
-                SetCorrectElementValues("PostProcessingEnable", "0");
-            }
-            /* Low */
-            else if (comboBoxPerformanceLevel.SelectedIndex == 1)
-            {
-                comboBoxBaseTextureFilter.SelectedIndex = 0;
-                comboBoxAnisotropicLevel.SelectedIndex = 0;
-                comboBoxCarEnvironmentDetail.SelectedIndex = 0;
-                comboBoxCarReflection.SelectedIndex = 0;
-                comboBoxWorldGlobalDetail.SelectedIndex = 0;
-                comboBoxWorldRoadReflection.SelectedIndex = 0;
-                comboBoxWorldRoadTexture.SelectedIndex = 0;
-                comboBoxWorldRoadAntialiasing.SelectedIndex = 0;
-                comboBoxShaderFSAA.SelectedIndex = 0;
-                comboBoxShadowDetail.SelectedIndex = 0;
-                comboBoxShaderDetail.SelectedIndex = 0;
+                    Log.Info("USXE: Selected Minimum Preset");
+                }
+                else if (comboBoxPerformanceLevel.SelectedIndex == 1)
+                {
+                    /* Low */
+                    comboBoxBaseTextureFilter.SelectedIndex = 0;
+                    comboBoxAnisotropicLevel.SelectedIndex = 0;
+                    comboBoxCarEnvironmentDetail.SelectedIndex = 1;
+                    comboBoxCarReflection.SelectedIndex = 1;
+                    comboBoxWorldGlobalDetail.SelectedIndex = 1;
+                    comboBoxWorldRoadReflection.SelectedIndex = 0;
+                    comboBoxWorldRoadTexture.SelectedIndex = 0;
+                    comboBoxWorldRoadAntialiasing.SelectedIndex = 0;
+                    comboBoxShaderFSAA.SelectedIndex = 0;
+                    comboBoxShadowDetail.SelectedIndex = 0;
+                    comboBoxShaderDetail.SelectedIndex = 1;
 
-                SetCorrectElementValues("BaseTextureLODBias", "0");
-                SetCorrectElementValues("CarEnvironmentMapEnable", "0");
-                SetCorrectElementValues("MaxSkidMarks", "0");
-                SetCorrectElementValues("RoadTextureLODBias", "0");
-                SetCorrectElementValues("MotionBlurEnable", "0");
-                SetCorrectElementValues("OverBrightEnable", "0");
-                SetCorrectElementValues("ParticleSystemEnable", "1");
-                SetCorrectElementValues("VisualTreatment", "0");
-                SetCorrectElementValues("WaterSimEnable", "0");
-                SetCorrectElementValues("PostProcessingEnable", "0");
-            }
-            /* Medium */
-            else if (comboBoxPerformanceLevel.SelectedIndex == 2)
-            {
-                comboBoxBaseTextureFilter.SelectedIndex = 2;
-                comboBoxAnisotropicLevel.SelectedIndex = 2;
-                comboBoxCarEnvironmentDetail.SelectedIndex = 1;
-                comboBoxCarReflection.SelectedIndex = 1;
-                comboBoxWorldGlobalDetail.SelectedIndex = 2;
-                comboBoxWorldRoadReflection.SelectedIndex = 1;
-                comboBoxWorldRoadTexture.SelectedIndex = 0;
-                comboBoxWorldRoadAntialiasing.SelectedIndex = 0;
-                comboBoxShaderFSAA.SelectedIndex = 1;
-                comboBoxShadowDetail.SelectedIndex = 1;
-                comboBoxShaderDetail.SelectedIndex = 1;
+                    SetCorrectElementValues("BaseTextureLODBias", "0");
+                    SetCorrectElementValues("CarEnvironmentMapEnable", "0");
+                    SetCorrectElementValues("MaxSkidMarks", "0");
+                    SetCorrectElementValues("RoadTextureLODBias", "0");
+                    SetCorrectElementValues("MotionBlurEnable", "0");
+                    SetCorrectElementValues("OverBrightEnable", "0");
+                    SetCorrectElementValues("ParticleSystemEnable", "1");
+                    SetCorrectElementValues("VisualTreatment", "0");
+                    SetCorrectElementValues("WaterSimEnable", "0");
+                    SetCorrectElementValues("PostProcessingEnable", "0");
 
-                SetCorrectElementValues("BaseTextureLODBias", "0");
-                SetCorrectElementValues("CarEnvironmentMapEnable", "1");
-                SetCorrectElementValues("MaxSkidMarks", "1");
-                SetCorrectElementValues("RoadTextureLODBias", "0");
-                SetCorrectElementValues("MotionBlurEnable", "0");
-                SetCorrectElementValues("OverBrightEnable", "1");
-                SetCorrectElementValues("ParticleSystemEnable", "1");
-                SetCorrectElementValues("VisualTreatment", "0");
-                SetCorrectElementValues("WaterSimEnable", "0");
-                SetCorrectElementValues("PostProcessingEnable", "0");
-            }
-            /* High */
-            else if (comboBoxPerformanceLevel.SelectedIndex == 3)
-            {
-                comboBoxBaseTextureFilter.SelectedIndex = 2;
-                comboBoxAnisotropicLevel.SelectedIndex = 3;
-                comboBoxCarEnvironmentDetail.SelectedIndex = 1;
-                comboBoxCarReflection.SelectedIndex = 3;
-                comboBoxWorldGlobalDetail.SelectedIndex = 2;
-                comboBoxWorldRoadReflection.SelectedIndex = 1;
-                comboBoxWorldRoadTexture.SelectedIndex = 1;
-                comboBoxWorldRoadAntialiasing.SelectedIndex = 3;
-                comboBoxShaderFSAA.SelectedIndex = 3;
-                comboBoxShadowDetail.SelectedIndex = 2;
-                comboBoxShaderDetail.SelectedIndex = 3;
+                    Log.Info("USXE: Selected Low Preset");
+                }
+                else if (comboBoxPerformanceLevel.SelectedIndex == 2)
+                {
+                    /* Medium */
+                    comboBoxBaseTextureFilter.SelectedIndex = 1;
+                    comboBoxAnisotropicLevel.SelectedIndex = 0;
+                    comboBoxCarEnvironmentDetail.SelectedIndex = 2;
+                    comboBoxCarReflection.SelectedIndex = 2;
+                    comboBoxWorldGlobalDetail.SelectedIndex = 3;
+                    comboBoxWorldRoadReflection.SelectedIndex = 1;
+                    comboBoxWorldRoadTexture.SelectedIndex = 1;
+                    comboBoxWorldRoadAntialiasing.SelectedIndex = 0;
+                    comboBoxShaderFSAA.SelectedIndex = 1;
+                    comboBoxShadowDetail.SelectedIndex = 1;
+                    comboBoxShaderDetail.SelectedIndex = 1;
 
-                SetCorrectElementValues("BaseTextureLODBias", "0");
-                SetCorrectElementValues("CarEnvironmentMapEnable", "1");
-                SetCorrectElementValues("MaxSkidMarks", "2");
-                SetCorrectElementValues("RoadTextureLODBias", "0");
-                SetCorrectElementValues("MotionBlurEnable", "0");
-                SetCorrectElementValues("OverBrightEnable", "1");
-                SetCorrectElementValues("ParticleSystemEnable", "1");
-                SetCorrectElementValues("VisualTreatment", "1");
-                SetCorrectElementValues("WaterSimEnable", "1");
-                SetCorrectElementValues("PostProcessingEnable", "0");
-            }
-            /* Maxium */
-            else if (comboBoxPerformanceLevel.SelectedIndex == 4)
-            {
-                comboBoxBaseTextureFilter.SelectedIndex = 2;
-                comboBoxAnisotropicLevel.SelectedIndex = 4;
-                comboBoxCarEnvironmentDetail.SelectedIndex = 1;
-                comboBoxCarReflection.SelectedIndex = 3;
-                comboBoxWorldGlobalDetail.SelectedIndex = 3;
-                comboBoxWorldRoadReflection.SelectedIndex = 2;
-                comboBoxWorldRoadTexture.SelectedIndex = 2;
-                comboBoxWorldRoadAntialiasing.SelectedIndex = 3;
-                comboBoxShaderFSAA.SelectedIndex = 4;
-                comboBoxShadowDetail.SelectedIndex = 2;
-                comboBoxShaderDetail.SelectedIndex = 4;
+                    SetCorrectElementValues("BaseTextureLODBias", "0");
+                    SetCorrectElementValues("CarEnvironmentMapEnable", "1");
+                    SetCorrectElementValues("MaxSkidMarks", "1");
+                    SetCorrectElementValues("RoadTextureLODBias", "0");
+                    SetCorrectElementValues("MotionBlurEnable", "0");
+                    SetCorrectElementValues("OverBrightEnable", "1");
+                    SetCorrectElementValues("ParticleSystemEnable", "1");
+                    SetCorrectElementValues("VisualTreatment", "0");
+                    SetCorrectElementValues("WaterSimEnable", "0");
+                    SetCorrectElementValues("PostProcessingEnable", "0");
 
-                SetCorrectElementValues("BaseTextureLODBias", "0");
-                SetCorrectElementValues("CarEnvironmentMapEnable", "1");
-                SetCorrectElementValues("MaxSkidMarks", "2");
-                SetCorrectElementValues("RoadTextureLODBias", "0");
-                SetCorrectElementValues("MotionBlurEnable", "0");
-                SetCorrectElementValues("OverBrightEnable", "1");
-                SetCorrectElementValues("ParticleSystemEnable", "1");
-                SetCorrectElementValues("VisualTreatment", "1");
-                SetCorrectElementValues("WaterSimEnable", "1");
-                SetCorrectElementValues("PostProcessingEnable", "1");
-            }
-            /* Custom */
-            else if (comboBoxPerformanceLevel.SelectedIndex == 5)
-            {
-                this.Size = new Size(608, 866);
-                this.CenterToScreen();
+                    Log.Info("USXE: Selected Medium Preset");
+                }
+                else if (comboBoxPerformanceLevel.SelectedIndex == 3)
+                {
+                    /* High */
+                    comboBoxBaseTextureFilter.SelectedIndex = 2;
+                    comboBoxAnisotropicLevel.SelectedIndex = 3;
+                    comboBoxCarEnvironmentDetail.SelectedIndex = 3;
+                    comboBoxCarReflection.SelectedIndex = 3;
+                    comboBoxWorldGlobalDetail.SelectedIndex = 2;
+                    comboBoxWorldRoadReflection.SelectedIndex = 1;
+                    comboBoxWorldRoadTexture.SelectedIndex = 1;
+                    comboBoxWorldRoadAntialiasing.SelectedIndex = 3;
+                    comboBoxShaderFSAA.SelectedIndex = 2;
+                    comboBoxShadowDetail.SelectedIndex = 2;
+                    comboBoxShaderDetail.SelectedIndex = 3;
 
-                comboBoxBaseTextureFilter.SelectedIndex = CheckValidRange("BaseTextureFilter", "0-2", FileGameSettingsData.BaseTextureFilter);
-                comboBoxAnisotropicLevel.SelectedIndex = CheckValidRange("AnisotropicLevel", "0-4", FileGameSettingsData.BaseTextureMaxAni);
-                comboBoxCarEnvironmentDetail.SelectedIndex = CheckValidRange("CarEnvironmentDetail", "0-1", FileGameSettingsData.CarLODLevel);
-                comboBoxCarReflection.SelectedIndex = CheckValidRange("CarReflection", "0-4", FileGameSettingsData.CarEnvironmentMapEnable);
-                comboBoxWorldGlobalDetail.SelectedIndex = CheckValidRange("WorldGlobalDetail", "0-4", FileGameSettingsData.GlobalDetailLevel);
-                comboBoxWorldRoadReflection.SelectedIndex = CheckValidRange("WorldRoadReflection", "0-2", FileGameSettingsData.RoadReflectionEnable);
-                comboBoxWorldRoadTexture.SelectedIndex = CheckValidRange("WorldRoadTexture", "0-2", FileGameSettingsData.RoadTextureFilter);
-                comboBoxWorldRoadAntialiasing.SelectedIndex = CheckValidRange("WorldRoadAntialiasing", "0-4", FileGameSettingsData.RoadTextureMaxAni);
-                comboBoxShaderFSAA.SelectedIndex = CheckValidRange("ShaderFSAA", "0-3", FileGameSettingsData.FSAALevel);
-                comboBoxShadowDetail.SelectedIndex = CheckValidRange("ShadowDetail", "0-2", FileGameSettingsData.ShadowDetail);
-                comboBoxShaderDetail.SelectedIndex = CheckValidRange("ShaderDetail", "0-3", FileGameSettingsData.ShaderDetail);
+                    SetCorrectElementValues("BaseTextureLODBias", "0");
+                    SetCorrectElementValues("CarEnvironmentMapEnable", "1");
+                    SetCorrectElementValues("MaxSkidMarks", "2");
+                    SetCorrectElementValues("RoadTextureLODBias", "0");
+                    SetCorrectElementValues("MotionBlurEnable", "0");
+                    SetCorrectElementValues("OverBrightEnable", "1");
+                    SetCorrectElementValues("ParticleSystemEnable", "1");
+                    SetCorrectElementValues("VisualTreatment", "1");
+                    SetCorrectElementValues("WaterSimEnable", "1");
+                    SetCorrectElementValues("PostProcessingEnable", "0");
 
-                SetCorrectElementValues("BaseTextureLODBias", FileGameSettingsData.BaseTextureLODBias);
-                SetCorrectElementValues("CarEnvironmentMapEnable", FileGameSettingsData.CarEnvironmentMapEnable);
-                SetCorrectElementValues("MaxSkidMarks", FileGameSettingsData.MaxSkidMarks);
-                SetCorrectElementValues("RoadTextureLODBias", FileGameSettingsData.RoadTextureLODBias);
-                SetCorrectElementValues("MotionBlurEnable", FileGameSettingsData.MotionBlurEnable);
-                SetCorrectElementValues("OverBrightEnable", FileGameSettingsData.OverBrightEnable);
-                SetCorrectElementValues("ParticleSystemEnable", FileGameSettingsData.ParticleSystemEnable);
-                SetCorrectElementValues("VisualTreatment", FileGameSettingsData.VisualTreatment);
-                SetCorrectElementValues("WaterSimEnable", FileGameSettingsData.WaterSimEnable);
-                SetCorrectElementValues("PostProcessingEnable", FileGameSettingsData.PostProcessingEnable);
-            }
-        }
+                    Log.Info("USXE: Selected High Preset");
+                }
+                else if (comboBoxPerformanceLevel.SelectedIndex == 4)
+                {
+                    /* Maxium */
+                    comboBoxBaseTextureFilter.SelectedIndex = 2;
+                    comboBoxAnisotropicLevel.SelectedIndex = 4;
+                    comboBoxCarEnvironmentDetail.SelectedIndex = 4;
+                    comboBoxCarReflection.SelectedIndex = 4;
+                    comboBoxWorldGlobalDetail.SelectedIndex = 4;
+                    comboBoxWorldRoadReflection.SelectedIndex = 2;
+                    comboBoxWorldRoadTexture.SelectedIndex = 2;
+                    comboBoxWorldRoadAntialiasing.SelectedIndex = 4;
+                    comboBoxShaderFSAA.SelectedIndex = 2;
+                    comboBoxShadowDetail.SelectedIndex = 2;
+                    comboBoxShaderDetail.SelectedIndex = 4;
 
-        private void USXEditor_Load(object sender, EventArgs e)
-        {
-            numericResWidth.Value = Convert.ToInt32(FileGameSettingsData.ScreenWidth);
-            numericResHeight.Value = Convert.ToInt32(FileGameSettingsData.ScreenHeight);
-            numericBrightness.Value = Convert.ToDecimal(FileGameSettingsData.Brightness);
-            numericMVol.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.MasterAudio);
-            numericSFxVol.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.SFXAudio);
-            numericCarVol.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.CarAudio);
-            numericSpeech.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.SpeechAudio);
-            numericGMusic.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.MusicAudio);
-            numericFEMusic.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.FreeroamAudio);
+                    SetCorrectElementValues("BaseTextureLODBias", "0");
+                    SetCorrectElementValues("CarEnvironmentMapEnable", "1");
+                    SetCorrectElementValues("MaxSkidMarks", "2");
+                    SetCorrectElementValues("RoadTextureLODBias", "0");
+                    SetCorrectElementValues("MotionBlurEnable", "0");
+                    SetCorrectElementValues("OverBrightEnable", "1");
+                    SetCorrectElementValues("ParticleSystemEnable", "1");
+                    SetCorrectElementValues("VisualTreatment", "1");
+                    SetCorrectElementValues("WaterSimEnable", "1");
+                    SetCorrectElementValues("PostProcessingEnable", "1");
 
-            comboBoxTransmisson.SelectedIndex = CheckValidRange("Transmission", "0-1", FileGameSettingsData.Transmission);
-            comboAudioMode.SelectedIndex = CheckValidRange("AudioMode", "0-2", FileGameSettingsData.AudioMode);
-            comboBoxCamera.SelectedIndex = CheckValidRange("Camera", "0-3", FileGameSettingsData.CameraPOV);
-            Log.Debug(CheckValidRange("PerformanceLevel", "0-5", FileGameSettingsData.PerformanceLevel).ToString());
-            comboBoxPerformanceLevel.SelectedIndex = CheckValidRange("PerformanceLevel", "0-5", FileGameSettingsData.PerformanceLevel);
+                    Log.Info("USXE: Selected Maxium Preset");
+                }
+                else
+                {
+                    /* Custom */
+                    comboBoxBaseTextureFilter.SelectedIndex = CheckValidRange("BaseTextureFilter", "0-2", FileGameSettingsData.BaseTextureFilter);
+                    comboBoxAnisotropicLevel.SelectedIndex = CheckValidRange("AnisotropicLevel", "0-4", FileGameSettingsData.BaseTextureMaxAni);
+                    comboBoxCarEnvironmentDetail.SelectedIndex = CheckValidRange("CarEnvironmentDetail", "0-4", FileGameSettingsData.CarLODLevel);
+                    comboBoxCarReflection.SelectedIndex = CheckValidRange("CarReflection", "0-4", FileGameSettingsData.CarEnvironmentMapEnable);
+                    comboBoxWorldGlobalDetail.SelectedIndex = CheckValidRange("WorldGlobalDetail", "0-4", FileGameSettingsData.GlobalDetailLevel);
+                    comboBoxWorldRoadReflection.SelectedIndex = CheckValidRange("WorldRoadReflection", "0-2", FileGameSettingsData.RoadReflectionEnable);
+                    comboBoxWorldRoadTexture.SelectedIndex = CheckValidRange("WorldRoadTexture", "0-2", FileGameSettingsData.RoadTextureFilter);
+                    comboBoxWorldRoadAntialiasing.SelectedIndex = CheckValidRange("WorldRoadAntialiasing", "0-4", FileGameSettingsData.RoadTextureMaxAni);
+                    comboBoxShaderFSAA.SelectedIndex = CheckValidRange("ShaderFSAA", "0-2", FileGameSettingsData.FSAALevel);
+                    comboBoxShadowDetail.SelectedIndex = CheckValidRange("ShadowDetail", "0-2", FileGameSettingsData.ShadowDetail);
+                    comboBoxShaderDetail.SelectedIndex = CheckValidRange("ShaderDetail", "0-3", FileGameSettingsData.ShaderDetail);
 
-            if (FileGameSettingsData.ScreenWindowed == "0")
-            {
-                radioWindowedOff.Checked = true;
-            }
-            else
-            {
-                radioWindowedOn.Checked = true;
-            }
+                    SetCorrectElementValues("BaseTextureLODBias", FileGameSettingsData.BaseTextureLODBias);
+                    SetCorrectElementValues("CarEnvironmentMapEnable", FileGameSettingsData.CarEnvironmentMapEnable);
+                    SetCorrectElementValues("MaxSkidMarks", FileGameSettingsData.MaxSkidMarks);
+                    SetCorrectElementValues("RoadTextureLODBias", FileGameSettingsData.RoadTextureLODBias);
+                    SetCorrectElementValues("MotionBlurEnable", FileGameSettingsData.MotionBlurEnable);
+                    SetCorrectElementValues("OverBrightEnable", FileGameSettingsData.OverBrightEnable);
+                    SetCorrectElementValues("ParticleSystemEnable", FileGameSettingsData.ParticleSystemEnable);
+                    SetCorrectElementValues("VisualTreatment", FileGameSettingsData.VisualTreatment);
+                    SetCorrectElementValues("WaterSimEnable", FileGameSettingsData.WaterSimEnable);
+                    SetCorrectElementValues("PostProcessingEnable", FileGameSettingsData.PostProcessingEnable);
 
-            if (FileGameSettingsData.EnableAero == "0")
-            {
-                radioAeroOff.Checked = true;
-            }
-            else
-            {
-                radioAeroOn.Checked = true;
-            }
+                    Log.Info("USXE: Selected Custom Preset");
+                }
 
-            if (FileGameSettingsData.VSyncOn == "0")
-            {
-                radioVSyncOff.Checked = true;
-            }
-            else
-            {
-                radioVSyncOn.Checked = true;
-            }
+                if (comboBoxPerformanceLevel.SelectedIndex == 5)
+                {
+                    this.Size = new Size(608, 866);
 
-            if (FileGameSettingsData.AudioQuality == "0")
-            {
-                radioAQLow.Checked = true;
+                    if (AmountofCenterTimes == 0)
+                    {
+                        AmountofCenterTimes++;
+                        this.CenterToScreen();
+                    }
+                }
+                else
+                {
+                    this.Size = new Size(298, 866);
+                }
             }
-            else
+            catch (Exception Error)
             {
-                radioAQHigh.Checked = true;
-            }
-
-            if (FileGameSettingsData.Damage == "0")
-            {
-                radioDamageOn.Checked = true;
-            }
-            else
-            {
-                radioDamageOff.Checked = true;
-            }
-
-            if (FileGameSettingsData.SpeedUnits == "0")
-            {
-                radioKPH.Checked = true;
-            }
-            else
-            {
-                radioMPH.Checked = true;
+                Log.Error("USXE: " + Error.Message);
             }
         }
 
@@ -334,12 +288,21 @@ namespace GameLauncher.App
             FileGameSettingsData.ShadowDetail = comboBoxShadowDetail.SelectedValue.ToString();
             FileGameSettingsData.ShaderDetail = comboBoxShaderDetail.SelectedValue.ToString();
 
-            FileGameSettings.Save();
+            FileGameSettings.Save("Display");
         }
 
         private int CheckValidRange(string Type, string Range, string Value)
         {
-            int ConvertedValue = Convert.ToInt32(Value);
+            int ConvertedValue;
+
+            try
+            {
+                ConvertedValue = Convert.ToInt32(Value);
+            }
+            catch 
+            {
+                ConvertedValue = 0;
+            }
 
             if (Range == "0-1")
             {
@@ -383,36 +346,80 @@ namespace GameLauncher.App
             }
             else if (Range == "0-3")
             {
-                if (Type == "Camera" && (ConvertedValue < 0 || ConvertedValue > 3))
+                if (Type == "ShaderFSAA")
                 {
-                    return 2;
-                }
-                else if (ConvertedValue <= 0)
-                {
-                    return 0;
-                }
-                else if (ConvertedValue >= 3)
-                {
-                    return 3;
+                    if (ConvertedValue == 0)
+                    {
+                        return 0;
+                    }
+                    else if (ConvertedValue == 2)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return 3;
+                    }
                 }
                 else
                 {
-                    return ConvertedValue;
+                    if (Type == "Camera" && (ConvertedValue < 0 || ConvertedValue > 3))
+                    {
+                        return 2;
+                    }
+                    else if (ConvertedValue <= 0)
+                    {
+                        return 0;
+                    }
+                    else if (ConvertedValue >= 3)
+                    {
+                        return 3;
+                    }
+                    else
+                    {
+                        return ConvertedValue;
+                    }
                 }
             }
             else if (Range == "0-4")
             {
-                if (ConvertedValue <= 0)
+                if (Type == "WorldRoadAntialiasing" || Type == "AnisotropicLevel")
                 {
-                    return 0;
-                }
-                else if (ConvertedValue >= 4)
-                {
-                    return 4;
+                    if (ConvertedValue == 0)
+                    {
+                        return 0;
+                    }
+                    if (ConvertedValue == 2)
+                    {
+                        return 1;
+                    }
+                    else if (ConvertedValue == 4)
+                    {
+                        return 2;
+                    }
+                    else if (ConvertedValue == 8)
+                    {
+                        return 3;
+                    }
+                    else
+                    {
+                        return 4;
+                    }
                 }
                 else
                 {
-                    return ConvertedValue;
+                    if (ConvertedValue <= 0)
+                    {
+                        return 0;
+                    }
+                    else if (ConvertedValue >= 4)
+                    {
+                        return 4;
+                    }
+                    else
+                    {
+                        return ConvertedValue;
+                    }
                 }
             }
             else if (Range == "0-5")
@@ -439,7 +446,16 @@ namespace GameLauncher.App
         /* Converts Decimal Numbers (ex. 0.52) to 52 */
         private decimal ConvertDecimalToWholeNumber(string UIName)
         {
-            decimal Value = Math.Round(Convert.ToDecimal(UIName), 2) * 100;
+            decimal Value;
+
+            try
+            {
+                Value = Math.Round(Convert.ToDecimal(UIName), 2) * 100;
+            }
+            catch
+            {
+                Value = 52;
+            }
 
             if (Value >= 100)
             {
@@ -458,7 +474,16 @@ namespace GameLauncher.App
         /* Check User Inputed Value and Keep in Within the Value Range of 0-100 or Round to the Nearest Whole Number*/
         private string ValidWholeNumberRange(string Type, decimal UIName)
         {
-            decimal Value = Math.Round(UIName, MidpointRounding.ToEven);
+            decimal Value;
+
+            try
+            {
+                Value = Math.Round(UIName, MidpointRounding.ToEven);
+            }
+            catch
+            {
+                Value = 52;
+            }
 
             if (Type == "Brightness")
             {
@@ -507,7 +532,16 @@ namespace GameLauncher.App
         /* Check User Inputed Value and Keep in Within the Value Range of 0-1 with In-between Values */
         private string ValidDecimalNumberRange(decimal UIName)
         {
-            decimal Value = Math.Round(UIName, 1);
+            decimal Value;
+
+            try
+            {
+                Value = Math.Round(UIName, 1);
+            }
+            catch
+            {
+                Value = 100;
+            }
 
             if (Value >= 100)
             {
@@ -526,119 +560,130 @@ namespace GameLauncher.App
 
         private void SetCorrectElementValues(string Element, string ComparisonValue)
         {
-            if (Element == "BaseTextureLODBias")
+            try
             {
-                if (ComparisonValue == "0")
+                if (Element == "BaseTextureLODBias")
                 {
-                    radioBaseTextureLODOff.Checked = true;
+                    if (ComparisonValue == "0")
+                    {
+                        radioBaseTextureLODOff.Checked = true;
+                    }
+                    else
+                    {
+                        radioBaseTextureLODOn.Checked = true;
+                    }
+                }
+                else if (Element == "CarEnvironmentMapEnable")
+                {
+                    if (ComparisonValue == "0")
+                    {
+                        radioCarDetailLODOff.Checked = true;
+                    }
+                    else
+                    {
+                        radioCarDetailLODOn.Checked = true;
+                    }
+                }
+                else if (Element == "MaxSkidMarks")
+                {
+                    if (ComparisonValue == "0")
+                    {
+                        radioMaxSkidMarksZero.Checked = true;
+                    }
+                    else if (ComparisonValue == "1")
+                    {
+                        radioMaxSkidMarksOne.Checked = true;
+                    }
+                    else
+                    {
+                        radioMaxSkidMarksTwo.Checked = true;
+                    }
+                }
+                else if (Element == "RoadTextureLODBias")
+                {
+                    if (ComparisonValue == "0")
+                    {
+                        radioRoadLODBiasOff.Checked = true;
+                    }
+                    else
+                    {
+                        radioRoadLODBiasOn.Checked = true;
+                    }
+                }
+                else if (Element == "MotionBlurEnable")
+                {
+                    if (ComparisonValue == "0")
+                    {
+                        radioMotionBlurOff.Checked = true;
+                    }
+                    else
+                    {
+                        radioMotionBlurOn.Checked = true;
+                    }
+                }
+                else if (Element == "OverBrightEnable")
+                {
+                    if (ComparisonValue == "0")
+                    {
+                        radioOverBrightOff.Checked = true;
+                    }
+                    else
+                    {
+                        radioOverBrightOn.Checked = true;
+                    }
+                }
+                else if (Element == "ParticleSystemEnable")
+                {
+                    if (ComparisonValue == "0")
+                    {
+                        radioParticleSysOff.Checked = true;
+                    }
+                    else
+                    {
+                        radioParticleSysOn.Checked = true;
+                    }
+                }
+                else if (Element == "VisualTreatment")
+                {
+                    if (ComparisonValue == "0")
+                    {
+                        radioVisualTreatOff.Checked = true;
+                    }
+                    else
+                    {
+                        radioVisualTreatOn.Checked = true;
+                    }
+                }
+                else if (Element == "WaterSimEnable")
+                {
+                    if (ComparisonValue == "0")
+                    {
+                        radioWaterSimulationOff.Checked = true;
+                    }
+                    else
+                    {
+                        radioWaterSimulationOn.Checked = true;
+                    }
+                }
+                else if (Element == "PostProcessingEnable")
+                {
+                    if (ComparisonValue == "0")
+                    {
+                        radioPostProcOff.Checked = true;
+                    }
+                    else
+                    {
+                        radioPostProcOn.Checked = true;
+                    }
                 }
                 else
                 {
-                    radioBaseTextureLODOn.Checked = true;
+                    Log.Error("USXE: Unknown Function Call [Element: '" + Element + "' ComparisonValue: '" + ComparisonValue + "']");
                 }
             }
-            else if (Element == "CarEnvironmentMapEnable")
+            catch (Exception Error)
             {
-                if (ComparisonValue == "0")
-                {
-                    radioCarDetailLODOff.Checked = true;
-                }
-                else
-                {
-                    radioCarDetailLODOn.Checked = true;
-                }
-            }
-            else if (Element == "MaxSkidMarks")
-            {
-                if (ComparisonValue == "0")
-                {
-                    radioMaxSkidMarksZero.Checked = true;
-                }
-                else if (ComparisonValue == "1")
-                {
-                    radioMaxSkidMarksOne.Checked = true;
-                }
-                else
-                {
-                    radioMaxSkidMarksTwo.Checked = true;
-                }
-            }
-            else if (Element == "RoadTextureLODBias")
-            {
-                if (ComparisonValue == "0")
-                {
-                    radioRoadLODBiasOff.Checked = true;
-                }
-                else
-                {
-                    radioRoadLODBiasOn.Checked = true;
-                }
-            }
-            else if (Element == "MotionBlurEnable")
-            {
-                if (ComparisonValue == "0")
-                {
-                    radioMotionBlurOff.Checked = true;
-                }
-                else
-                {
-                    radioMotionBlurOn.Checked = true;
-                }
-            }
-            else if (Element == "OverBrightEnable")
-            {
-                if (ComparisonValue == "0")
-                {
-                    radioOverBrightOff.Checked = true;
-                }
-                else
-                {
-                    radioOverBrightOn.Checked = true;
-                }
-            }
-            else if (Element == "ParticleSystemEnable")
-            {
-                if (ComparisonValue == "0")
-                {
-                    radioParticleSysOff.Checked = true;
-                }
-                else
-                {
-                    radioParticleSysOn.Checked = true;
-                }
-            }
-            else if (Element == "VisualTreatment")
-            {
-                if (ComparisonValue == "0")
-                {
-                    radioVisualTreatOff.Checked = true;
-                }
-                else
-                {
-                    radioVisualTreatOn.Checked = true;
-                }
-            }
-            else if (Element == "WaterSimEnable")
-            {
-                if (ComparisonValue == "0")
-                {
-                    radioWaterSimulationOff.Checked = true;
-                }
-                else
-                {
-                    radioWaterSimulationOn.Checked = true;
-                }
-            }
-            else if (Element == "PostProcessingEnable")
-            {
-                if (ComparisonValue == "0")
-                {
-                    radioPostProcOff.Checked = true;
-                }
-                else
-                {
-                    radioPostProcOn.Checked = true;
-                }
+                Log.Error("USXE: " + Error.Message);
             }
         }
 
@@ -657,12 +702,13 @@ namespace GameLauncher.App
             BackgroundImage = Theming.USXEEditor;
             TransparencyKey = Theming.USXEETransparencyKey;
 
-            /*******************************/
-            /* Set Hardcoded Text           /
-            /*******************************/
+            /********************************/
+            /* Set Hardcoded Text and Values /
+            /********************************/
 
             labelLauncherVersion.Text = "Version: v" + Application.ProductVersion;
             labelOverRideAspect.Text = FileGameSettingsData.PostProcessingEnable;
+            AmountofCenterTimes = 0;
 
             /*******************************/
             /* Set Font                     /
@@ -948,20 +994,6 @@ namespace GameLauncher.App
             comboBoxAnisotropicLevel.ForeColor = Theming.CDNMenuTextForeColor;
             comboBoxAnisotropicLevel.BackColor = Theming.CDNMenuBGForeColor;
 
-            /********************************/
-            /* Events                        /
-            /********************************/
-
-            SettingsSave.MouseEnter += new EventHandler(Greenbutton_hover_MouseEnter);
-            SettingsSave.MouseLeave += new EventHandler(Greenbutton_MouseLeave);
-            SettingsSave.MouseUp += new MouseEventHandler(Greenbutton_hover_MouseUp);
-            SettingsSave.MouseDown += new MouseEventHandler(Greenbutton_click_MouseDown);
-
-            SettingsCancel.MouseEnter += new EventHandler(Graybutton_hover_MouseEnter);
-            SettingsCancel.MouseLeave += new EventHandler(Graybutton_MouseLeave);
-            SettingsCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
-            SettingsCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
-
             /*******************************/
             /* Comboboxes                   /
             /*******************************/
@@ -1021,10 +1053,10 @@ namespace GameLauncher.App
             /* AnisotropicLevel ComboBox */
             var AnisotropicLevelList = new[] {
                 new { AnisotropicLevel = "None", Value = "0" },
-                new { AnisotropicLevel = "2x", Value = "1" },
-                new { AnisotropicLevel = "4x", Value = "2" },
-                new { AnisotropicLevel = "8x", Value = "3" },
-                new { AnisotropicLevel = "16x", Value = "4" }
+                new { AnisotropicLevel = "2x", Value = "2" },
+                new { AnisotropicLevel = "4x", Value = "4" },
+                new { AnisotropicLevel = "8x", Value = "8" },
+                new { AnisotropicLevel = "16x", Value = "16" }
             };
             comboBoxAnisotropicLevel.DisplayMember = "AnisotropicLevel";
             comboBoxAnisotropicLevel.ValueMember = "Value";
@@ -1032,8 +1064,11 @@ namespace GameLauncher.App
 
             /* CarEnvironmentDetail ComboBox */
             var CarEnvironmentDetailList = new[] {
-                new { CarEnvironmentDetail = "Low", Value = "0" },
-                new { CarEnvironmentDetail = "High", Value = "1" }
+                new { CarEnvironmentDetail = "Minimum", Value = "0" },
+                new { CarEnvironmentDetail = "Low", Value = "1" },
+                new { CarEnvironmentDetail = "Medium", Value = "2" },
+                new { CarEnvironmentDetail = "High", Value = "3" },
+                new { CarEnvironmentDetail = "Maximum", Value = "4" }
             };
             comboBoxCarEnvironmentDetail.DisplayMember = "CarEnvironmentDetail";
             comboBoxCarEnvironmentDetail.ValueMember = "Value";
@@ -1057,7 +1092,7 @@ namespace GameLauncher.App
                 new { WorldGlobalDetail = "Low", Value = "1" },
                 new { WorldGlobalDetail = "Medium", Value = "2" },
                 new { WorldGlobalDetail = "High", Value = "3" },
-                new { WorldGlobalDetail = "Debug", Value = "4" }
+                new { WorldGlobalDetail = "Maximum", Value = "4" }
             };
             comboBoxWorldGlobalDetail.DisplayMember = "WorldGlobalDetail";
             comboBoxWorldGlobalDetail.ValueMember = "Value";
@@ -1086,10 +1121,10 @@ namespace GameLauncher.App
             /* WorldRoadAntialiasing ComboBox */
             var WorldRoadAntialiasingList = new[] {
                 new { WorldRoadAntialiasing = "None", Value = "0" },
-                new { WorldRoadAntialiasing = "2x", Value = "1" },
-                new { WorldRoadAntialiasing = "4x", Value = "2" },
-                new { WorldRoadAntialiasing = "8x", Value = "3" },
-                new { WorldRoadAntialiasing = "16x", Value = "4" }
+                new { WorldRoadAntialiasing = "2x", Value = "2" },
+                new { WorldRoadAntialiasing = "4x", Value = "4" },
+                new { WorldRoadAntialiasing = "8x", Value = "8" },
+                new { WorldRoadAntialiasing = "16x", Value = "16" }
             };
             comboBoxWorldRoadAntialiasing.DisplayMember = "WorldRoadAntialiasing";
             comboBoxWorldRoadAntialiasing.ValueMember = "Value";
@@ -1097,11 +1132,9 @@ namespace GameLauncher.App
 
             /* ShaderFSAA ComboBox */
             var ShaderFSAAList = new[] {
-                new { ShaderFSAA = "None", Value = "0" },
-                new { ShaderFSAA = "Low", Value = "1" },
-                new { ShaderFSAA = "Medium", Value = "2" },
-                new { ShaderFSAA = "High", Value = "3" },
-                new { ShaderFSAA = "Ultra", Value = "4" }
+                new { ShaderFSAA = "Off", Value = "0" },
+                new { ShaderFSAA = "2x", Value = "2" },
+                new { ShaderFSAA = "4x", Value = "4" }
             };
             comboBoxShaderFSAA.DisplayMember = "ShaderFSAA";
             comboBoxShaderFSAA.ValueMember = "Value";
@@ -1128,6 +1161,95 @@ namespace GameLauncher.App
             comboBoxShaderDetail.DisplayMember = "ShaderDetail";
             comboBoxShaderDetail.ValueMember = "Value";
             comboBoxShaderDetail.DataSource = ShaderDetailList;
+
+            /********************************/
+            /* Events                        /
+            /********************************/
+
+            SettingsSave.MouseEnter += new EventHandler(Greenbutton_hover_MouseEnter);
+            SettingsSave.MouseLeave += new EventHandler(Greenbutton_MouseLeave);
+            SettingsSave.MouseUp += new MouseEventHandler(Greenbutton_hover_MouseUp);
+            SettingsSave.MouseDown += new MouseEventHandler(Greenbutton_click_MouseDown);
+
+            SettingsCancel.MouseEnter += new EventHandler(Graybutton_hover_MouseEnter);
+            SettingsCancel.MouseLeave += new EventHandler(Graybutton_MouseLeave);
+            SettingsCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
+            SettingsCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
+
+            comboBoxPerformanceLevel.SelectedIndexChanged += new EventHandler(comboBoxPerformanceLevel_SelectedIndexChanged);
+
+            /************************************/
+            /* Set Drop Down, Radio, Input Boxes /
+            /************************************/
+
+            numericResWidth.Value = Convert.ToInt32(FileGameSettingsData.ScreenWidth);
+            numericResHeight.Value = Convert.ToInt32(FileGameSettingsData.ScreenHeight);
+            numericBrightness.Value = Convert.ToDecimal(FileGameSettingsData.Brightness);
+            numericMVol.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.MasterAudio);
+            numericSFxVol.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.SFXAudio);
+            numericCarVol.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.CarAudio);
+            numericSpeech.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.SpeechAudio);
+            numericGMusic.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.MusicAudio);
+            numericFEMusic.Value = ConvertDecimalToWholeNumber(FileGameSettingsData.FreeroamAudio);
+
+            comboBoxTransmisson.SelectedIndex = CheckValidRange("Transmission", "0-1", FileGameSettingsData.Transmission);
+            comboAudioMode.SelectedIndex = CheckValidRange("AudioMode", "0-2", FileGameSettingsData.AudioMode);
+            comboBoxCamera.SelectedIndex = CheckValidRange("Camera", "0-3", FileGameSettingsData.CameraPOV);
+            comboBoxPerformanceLevel.SelectedIndex = CheckValidRange("PerformanceLevel", "0-5", FileGameSettingsData.PerformanceLevel);
+
+            if (FileGameSettingsData.ScreenWindowed == "0")
+            {
+                radioWindowedOff.Checked = true;
+            }
+            else
+            {
+                radioWindowedOn.Checked = true;
+            }
+
+            if (FileGameSettingsData.EnableAero == "0")
+            {
+                radioAeroOff.Checked = true;
+            }
+            else
+            {
+                radioAeroOn.Checked = true;
+            }
+
+            if (FileGameSettingsData.VSyncOn == "0")
+            {
+                radioVSyncOff.Checked = true;
+            }
+            else
+            {
+                radioVSyncOn.Checked = true;
+            }
+
+            if (FileGameSettingsData.AudioQuality == "0")
+            {
+                radioAQLow.Checked = true;
+            }
+            else
+            {
+                radioAQHigh.Checked = true;
+            }
+
+            if (FileGameSettingsData.Damage == "0")
+            {
+                radioDamageOn.Checked = true;
+            }
+            else
+            {
+                radioDamageOff.Checked = true;
+            }
+
+            if (FileGameSettingsData.SpeedUnits == "0")
+            {
+                radioKPH.Checked = true;
+            }
+            else
+            {
+                radioMPH.Checked = true;
+            }
         }
 
         private void Greenbutton_hover_MouseEnter(object sender, EventArgs e)
@@ -1168,6 +1290,24 @@ namespace GameLauncher.App
         private void Graybutton_hover_MouseUp(object sender, EventArgs e)
         {
             SettingsCancel.Image = Theming.GrayButtonHover;
+        }
+
+        private void labelLauncherVersion_Click(object sender, EventArgs e)
+        {
+            DialogResult Alert = MessageBox.Show(null, "Do you want my Super Honk?", "FunkyWacky", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
+
+            if (Alert == DialogResult.No)
+            {
+                MessageBox.Show(null, "**Sad Turbo Noises**", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else if (Alert == DialogResult.Yes)
+            {
+                Process.Start("https://www.youtube.com/watch?v=2aL6D8tj2wk");
+            }
+            else
+            {
+                Log.Error("USXE: User Broke the Honk!");
+            }
         }
     }
 }

@@ -184,7 +184,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             }
         }
 
-        public static void Save()
+        public static void Save(string MessageBoxAlert)
         {
             try
             {
@@ -241,12 +241,18 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 if (new FileInfo(UserSettingsLocation).IsReadOnly != true)
                 {
                     UserSettingsFile.Save(UserSettingsLocation);
-                    MessageBox.Show(null, "XML Settings Saved", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (MessageBoxAlert == "Display")
+                    {
+                        MessageBox.Show(null, "XML Settings Saved", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
                 else
                 {
                     Log.Error("USX File: User Game Settings File is ReadOnly. Settings Not Saved! Sorry Chief");
-                    MessageBox.Show(null, "XML Settings Not Saved \nRead-Only File ", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (MessageBoxAlert == "Display")
+                    {
+                        MessageBox.Show(null, "XML Settings Not Saved \nRead-Only File ", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
             catch (Exception Error)

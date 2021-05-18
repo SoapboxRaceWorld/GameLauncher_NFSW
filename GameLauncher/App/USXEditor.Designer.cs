@@ -80,7 +80,6 @@ namespace GameLauncher.App
             this.comboAudioMode = new System.Windows.Forms.ComboBox();
             this.comboBoxCamera = new System.Windows.Forms.ComboBox();
             this.comboBoxTransmisson = new System.Windows.Forms.ComboBox();
-            this.comboBoxPerformanceLevel = new System.Windows.Forms.ComboBox();
             this.radioOverBrightOn = new System.Windows.Forms.RadioButton();
             this.radioPostProcOn = new System.Windows.Forms.RadioButton();
             this.radioParticleSysOn = new System.Windows.Forms.RadioButton();
@@ -159,6 +158,7 @@ namespace GameLauncher.App
             this.comboBoxCarReflection = new System.Windows.Forms.ComboBox();
             this.labelCarReflection = new System.Windows.Forms.Label();
             this.labelOverRideAspect = new System.Windows.Forms.Label();
+            this.comboBoxPerformanceLevel = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericBrightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMVol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSFxVol)).BeginInit();
@@ -664,6 +664,7 @@ namespace GameLauncher.App
             this.labelLauncherVersion.Size = new System.Drawing.Size(120, 18);
             this.labelLauncherVersion.TabIndex = 49;
             this.labelLauncherVersion.Text = "Version: vX.X.X.X";
+            this.labelLauncherVersion.Click += new System.EventHandler(this.labelLauncherVersion_Click);
             // 
             // labelVideoOptions
             // 
@@ -839,20 +840,6 @@ namespace GameLauncher.App
             this.comboBoxTransmisson.Name = "comboBoxTransmisson";
             this.comboBoxTransmisson.Size = new System.Drawing.Size(120, 22);
             this.comboBoxTransmisson.TabIndex = 25;
-            // 
-            // comboBoxPerformanceLevel
-            // 
-            this.comboBoxPerformanceLevel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.comboBoxPerformanceLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxPerformanceLevel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.comboBoxPerformanceLevel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBoxPerformanceLevel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
-            this.comboBoxPerformanceLevel.FormattingEnabled = true;
-            this.comboBoxPerformanceLevel.Location = new System.Drawing.Point(142, 25);
-            this.comboBoxPerformanceLevel.Name = "comboBoxPerformanceLevel";
-            this.comboBoxPerformanceLevel.Size = new System.Drawing.Size(121, 22);
-            this.comboBoxPerformanceLevel.TabIndex = 72;
-            this.comboBoxPerformanceLevel.SelectedIndexChanged += new System.EventHandler(this.comboBoxPerformanceLevel_SelectedIndexChanged);
             // 
             // radioOverBrightOn
             // 
@@ -1867,12 +1854,28 @@ namespace GameLauncher.App
             this.labelOverRideAspect.Text = "Zero";
             this.labelOverRideAspect.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // comboBoxPerformanceLevel
+            // 
+            this.comboBoxPerformanceLevel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.comboBoxPerformanceLevel.DisplayMember = "0";
+            this.comboBoxPerformanceLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPerformanceLevel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.comboBoxPerformanceLevel.Font = new System.Drawing.Font("DejaVu Sans", 9F);
+            this.comboBoxPerformanceLevel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.comboBoxPerformanceLevel.FormattingEnabled = true;
+            this.comboBoxPerformanceLevel.Location = new System.Drawing.Point(148, 25);
+            this.comboBoxPerformanceLevel.Name = "comboBoxPerformanceLevel";
+            this.comboBoxPerformanceLevel.Size = new System.Drawing.Size(119, 22);
+            this.comboBoxPerformanceLevel.TabIndex = 1;
+            this.comboBoxPerformanceLevel.ValueMember = "0";
+            // 
             // USXEditor
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(588, 823);
+            this.Controls.Add(this.comboBoxPerformanceLevel);
             this.Controls.Add(this.labelOverRideAspect);
             this.Controls.Add(this.comboBoxCarReflection);
             this.Controls.Add(this.labelCarReflection);
@@ -1906,7 +1909,6 @@ namespace GameLauncher.App
             this.Controls.Add(this.comboBoxCarEnvironmentDetail);
             this.Controls.Add(this.comboBoxAnisotropicLevel);
             this.Controls.Add(this.comboBoxBaseTextureFilter);
-            this.Controls.Add(this.comboBoxPerformanceLevel);
             this.Controls.Add(this.comboBoxTransmisson);
             this.Controls.Add(this.comboBoxCamera);
             this.Controls.Add(this.comboAudioMode);
@@ -1966,7 +1968,6 @@ namespace GameLauncher.App
             this.Text = "SBRW UserSettings XML Editor";
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
-            this.Load += new System.EventHandler(this.USXEditor_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericBrightness)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMVol)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSFxVol)).EndInit();
@@ -2067,7 +2068,6 @@ namespace GameLauncher.App
         private System.Windows.Forms.ComboBox comboAudioMode;
         private System.Windows.Forms.ComboBox comboBoxCamera;
         private System.Windows.Forms.ComboBox comboBoxTransmisson;
-        private System.Windows.Forms.ComboBox comboBoxPerformanceLevel;
         private System.Windows.Forms.RadioButton radioOverBrightOn;
         private System.Windows.Forms.RadioButton radioPostProcOn;
         private System.Windows.Forms.RadioButton radioParticleSysOn;
@@ -2146,5 +2146,6 @@ namespace GameLauncher.App
         private System.Windows.Forms.ComboBox comboBoxCarReflection;
         private System.Windows.Forms.Label labelCarReflection;
         private System.Windows.Forms.Label labelOverRideAspect;
+        private System.Windows.Forms.ComboBox comboBoxPerformanceLevel;
     }
 }
