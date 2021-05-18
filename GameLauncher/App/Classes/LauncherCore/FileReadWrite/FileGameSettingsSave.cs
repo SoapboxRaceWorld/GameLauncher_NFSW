@@ -24,8 +24,6 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         /* Physics */
         public static string CameraPOV = "2";
         public static string TransmissionType = "1";
-        /* VideoOptions */
-        public static string MotionBlur = "False";
         /* VideoConfig */
         public static string AudioQuality = "0";
         public static string Brightness = "0";
@@ -106,9 +104,6 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                                                       NodeReader("InnerText", "Settings/Physics/CameraPOV", null) : "2";
                     FileGameSettingsData.TransmissionType = (NodeReader("InnerText", "Settings/Physics/TransmissionType", null) != "ERROR") ?
                                                              NodeReader("InnerText", "Settings/Physics/TransmissionType", null) : "1";
-                    /* VideoOptions */
-                    FileGameSettingsData.MotionBlur = (NodeReader("Attributes", "Settings/UI/VideoDefault/VideoOptions", "motionBlur") != "ERROR") ?
-                                                       NodeReader("Attributes", "Settings/UI/VideoDefault/VideoOptions", "motionBlur") : "False";
                     /* VideoConfig */
                     FileGameSettingsData.AudioQuality = (NodeReader("InnerText", "Settings/VideoConfig/audioquality", null) != "ERROR") ?
                                                          NodeReader("InnerText", "Settings/VideoConfig/audioquality", null) : "0";
@@ -209,15 +204,6 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 /* Physics */
                 NodeUpdater("InnerText", "Settings/Physics", "CameraPOV", "Type", "int", FileGameSettingsData.SpeedUnits);
                 NodeUpdater("InnerText", "Settings/Physics", "TransmissionType", "Type", "int", FileGameSettingsData.Transmission);
-                /* VideoOptions */
-                if (FileGameSettingsData.PerformanceLevel == "5")
-                {
-                    NodeUpdater("Attributes", "Settings/UI/VideoDefault", "VideoOptions", "carDetail", FileGameSettingsData.CarLODLevel, FileGameSettingsData.CarLODLevel);
-                    NodeUpdater("Attributes", "Settings/UI/VideoDefault", "VideoOptions", "carReflectionRate", FileGameSettingsData.CarEnvironmentMapEnable, FileGameSettingsData.CarEnvironmentMapEnable);
-                    NodeUpdater("Attributes", "Settings/UI/VideoDefault", "VideoOptions", "worldDetail", FileGameSettingsData.GlobalDetailLevel, FileGameSettingsData.GlobalDetailLevel);
-                    NodeUpdater("Attributes", "Settings/UI/VideoDefault", "VideoOptions", "roadDetail", FileGameSettingsData.RoadTextureLODBias, FileGameSettingsData.RoadTextureLODBias);
-                    NodeUpdater("Attributes", "Settings/UI/VideoDefault", "VideoOptions", "motionBlur", FileGameSettingsData.MotionBlur, FileGameSettingsData.MotionBlur);
-                }
                 /* VideoConfig */
                 NodeUpdater("InnerText", "Settings/VideoConfig", "audiomode", "Type", "int", FileGameSettingsData.AudioMode);
                 NodeUpdater("InnerText", "Settings/VideoConfig", "audioquality", "Type", "int", FileGameSettingsData.AudioQuality);
@@ -230,30 +216,27 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 NodeUpdater("InnerText", "Settings/VideoConfig", "screenwindowed", "Type", "int", FileGameSettingsData.ScreenWindowed);
                 NodeUpdater("InnerText", "Settings/VideoConfig", "vsyncon", "Type", "int", FileGameSettingsData.VSyncOn);
                 /* VideoConfig Addons */
-                if (FileGameSettingsData.PerformanceLevel == "5")
-                {
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "basetexturefilter", "Type", "int", FileGameSettingsData.BaseTextureFilter);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "basetexturelodbias", "Type", "int", FileGameSettingsData.BaseTextureLODBias);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "basetexturemaxani", "Type", "int", FileGameSettingsData.BaseTextureMaxAni);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "carenvironmentmapenable", "Type", "int", FileGameSettingsData.CarEnvironmentMapEnable);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "carlodlevel", "Type", "int", FileGameSettingsData.CarLODLevel);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "fsaalevel", "Type", "int", FileGameSettingsData.FSAALevel);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "globaldetaillevel", "Type", "int", FileGameSettingsData.GlobalDetailLevel);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "maxskidmarks", "Type", "int", FileGameSettingsData.MaxSkidMarks);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "motionblurenable", "Type", "int", FileGameSettingsData.MotionBlurEnable);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "overbrightenable", "Type", "int", FileGameSettingsData.OverBrightEnable);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "particlesystemenable", "Type", "int", FileGameSettingsData.ParticleSystemEnable);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "postprocessingenable", "Type", "int", FileGameSettingsData.PostProcessingEnable);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "rainenable", "Type", "int", FileGameSettingsData.RainEnable);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "roadreflectionenable", "Type", "int", FileGameSettingsData.RoadReflectionEnable);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "roadtexturefilter", "Type", "int", FileGameSettingsData.RoadTextureFilter);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "roadtexturelodbias", "Type", "int", FileGameSettingsData.RoadTextureLODBias);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "roadtexturemaxani", "Type", "int", FileGameSettingsData.RoadTextureMaxAni);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "shaderdetail", "Type", "int", FileGameSettingsData.ShaderDetail);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "shadowdetail", "Type", "int", FileGameSettingsData.ShadowDetail);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "visualtreatment", "Type", "int", FileGameSettingsData.VisualTreatment);
-                    NodeUpdater("InnerText", "Settings/VideoConfig", "watersimenable", "Type", "int", FileGameSettingsData.WaterSimEnable);
-                }
+                NodeUpdater("InnerText", "Settings/VideoConfig", "basetexturefilter", "Type", "int", FileGameSettingsData.BaseTextureFilter);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "basetexturelodbias", "Type", "int", FileGameSettingsData.BaseTextureLODBias);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "basetexturemaxani", "Type", "int", FileGameSettingsData.BaseTextureMaxAni);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "carenvironmentmapenable", "Type", "int", FileGameSettingsData.CarEnvironmentMapEnable);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "carlodlevel", "Type", "int", FileGameSettingsData.CarLODLevel);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "fsaalevel", "Type", "int", FileGameSettingsData.FSAALevel);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "globaldetaillevel", "Type", "int", FileGameSettingsData.GlobalDetailLevel);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "maxskidmarks", "Type", "int", FileGameSettingsData.MaxSkidMarks);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "motionblurenable", "Type", "int", FileGameSettingsData.MotionBlurEnable);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "overbrightenable", "Type", "int", FileGameSettingsData.OverBrightEnable);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "particlesystemenable", "Type", "int", FileGameSettingsData.ParticleSystemEnable);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "postprocessingenable", "Type", "int", FileGameSettingsData.PostProcessingEnable);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "rainenable", "Type", "int", FileGameSettingsData.RainEnable);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "roadreflectionenable", "Type", "int", FileGameSettingsData.RoadReflectionEnable);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "roadtexturefilter", "Type", "int", FileGameSettingsData.RoadTextureFilter);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "roadtexturelodbias", "Type", "int", FileGameSettingsData.RoadTextureLODBias);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "roadtexturemaxani", "Type", "int", FileGameSettingsData.RoadTextureMaxAni);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "shaderdetail", "Type", "int", FileGameSettingsData.ShaderDetail);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "shadowdetail", "Type", "int", FileGameSettingsData.ShadowDetail);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "visualtreatment", "Type", "int", FileGameSettingsData.VisualTreatment);
+                NodeUpdater("InnerText", "Settings/VideoConfig", "watersimenable", "Type", "int", FileGameSettingsData.WaterSimEnable);
 
                 if (new FileInfo(UserSettingsLocation).IsReadOnly != true)
                 {
