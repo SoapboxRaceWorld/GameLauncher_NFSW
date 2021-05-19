@@ -1,5 +1,6 @@
 ﻿using GameLauncher.App.Classes.Auth;
 using GameLauncher.App.Classes.Hash;
+using GameLauncher.App.Classes.LauncherCore.Client.Auth;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
@@ -129,12 +130,14 @@ namespace GameLauncher.App
                     if (InformationCache.ModernAuthSupport == false)
                     {
                         realpass = SHA.HashPassword(RegisterPassword.Text.ToString()).ToLower();
-                        ClassicAuth.Register(username, realpass, token);
+                        Authentication.Client("Register", "Non Secure", username, realpass, token);
+                        //ClassicAuth.Register(username, realpass, token);
                     }
                     else
                     {
                         realpass = RegisterPassword.Text.ToString();
-                        ModernAuth.Register(username, realpass, token);
+                        Authentication.Client("Register", "Secure", username, realpass, token);
+                        //ModernAuth.Register(username, realpass, token);
                     }
 
                     if (!String.IsNullOrEmpty(Tokens.Success))

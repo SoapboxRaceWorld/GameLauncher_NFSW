@@ -40,6 +40,7 @@ using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
 using GameLauncher.App.Classes.LauncherCore;
+using GameLauncher.App.Classes.LauncherCore.Client.Auth;
 
 namespace GameLauncher
 {
@@ -416,13 +417,15 @@ namespace GameLauncher
             {
                 /* ClassicAuth sends password in SHA1 */
                 realpass = (_useSavedPassword) ? FileAccountSave.UserHashedPassword : SHA.HashPassword(MainPassword.Text.ToString()).ToLower();
-                ClassicAuth.Login(username, realpass);
+                Authentication.Client("Login", "Non Secure", username, realpass, null);
+                //ClassicAuth.Login(username, realpass);
             }
             else
             {
                 /* ModernAuth sends passwords in plaintext, but is POST request */
                 realpass = (_useSavedPassword) ? FileAccountSave.UserHashedPassword : MainPassword.Text.ToString();
-                ModernAuth.Login(username, realpass);
+                Authentication.Client("Login", "Secure", username, realpass, null);
+                //ModernAuth.Login(username, realpass);
             }
 
             if (RememberMe.Checked)

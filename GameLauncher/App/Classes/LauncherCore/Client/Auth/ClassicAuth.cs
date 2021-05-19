@@ -1,4 +1,6 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
+﻿using GameLauncher.App.Classes.LauncherCore.Client.Auth;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.Logger;
 using System;
 using System.IO;
 using System.Net;
@@ -16,23 +18,22 @@ namespace GameLauncher.App.Classes.Auth
             try
             {
                 WebClientWithTimeout wc = new WebClientWithTimeout();
-                var buildUrl = Tokens.IPAddress + "/User/authenticateUser?email=" + email + "&password=" + password;
-                serverLoginResponse = wc.DownloadString(buildUrl);
+                serverLoginResponse = wc.DownloadString(Tokens.IPAddress + "/User/authenticateUser?email=" + email + "&password=" + password);
             }
-            catch (WebException ex)
+            catch (WebException Error)
             {
-                var serverReply = (HttpWebResponse)ex.Response;
+                HttpWebResponse serverResponse = (HttpWebResponse)Error.Response;
 
-                if (serverReply == null)
+                if (serverResponse == null)
                 {
                     _errorcode = 500;
                     serverLoginResponse = "<LoginStatusVO><UserId/><LoginToken/><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
                 }
                 else
                 {
-                    using (var sr = new StreamReader(serverReply.GetResponseStream()))
+                    using (var sr = new StreamReader(serverResponse.GetResponseStream()))
                     {
-                        _errorcode = (int)serverReply.StatusCode;
+                        _errorcode = (int)serverResponse.StatusCode;
                         serverLoginResponse = sr.ReadToEnd();
                     }
                 }
@@ -48,6 +49,7 @@ namespace GameLauncher.App.Classes.Auth
                 {
                     var sbrwXml = new XmlDocument();
                     sbrwXml.LoadXml(serverLoginResponse);
+                    Log.Debug("Loaded XML:" + sbrwXml.OuterXml);
 
                     XmlNode extraNode;
                     XmlNode loginTokenNode;

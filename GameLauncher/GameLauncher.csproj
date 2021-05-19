@@ -154,6 +154,7 @@
     </Compile>
     <Compile Include="App\Classes\LauncherCore\AntiCheat.cs" />
     <Compile Include="App\Classes\LauncherCore\API\APIChecker.cs" />
+    <Compile Include="App\Classes\LauncherCore\Client\Auth\Authentication.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\ClassicAuth.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\ModernAuth.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\Tokens.cs" />
