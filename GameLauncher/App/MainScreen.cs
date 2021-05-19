@@ -418,14 +418,12 @@ namespace GameLauncher
                 /* ClassicAuth sends password in SHA1 */
                 realpass = (_useSavedPassword) ? FileAccountSave.UserHashedPassword : SHA.HashPassword(MainPassword.Text.ToString()).ToLower();
                 Authentication.Client("Login", "Non Secure", username, realpass, null);
-                //ClassicAuth.Login(username, realpass);
             }
             else
             {
                 /* ModernAuth sends passwords in plaintext, but is POST request */
                 realpass = (_useSavedPassword) ? FileAccountSave.UserHashedPassword : MainPassword.Text.ToString();
                 Authentication.Client("Login", "Secure", username, realpass, null);
-                //ModernAuth.Login(username, realpass);
             }
 
             if (RememberMe.Checked)

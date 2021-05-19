@@ -383,4 +383,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             }
         }
     }
+
+    public class ModernAuthObject
+    {
+        public string Token { get; set; }
+        public string UserId { get; set; }
+        public string Warning { get; set; }
+        public string Error { get; set; }
+    }
 }

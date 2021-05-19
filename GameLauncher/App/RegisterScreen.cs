@@ -131,13 +131,11 @@ namespace GameLauncher.App
                     {
                         realpass = SHA.HashPassword(RegisterPassword.Text.ToString()).ToLower();
                         Authentication.Client("Register", "Non Secure", username, realpass, token);
-                        //ClassicAuth.Register(username, realpass, token);
                     }
                     else
                     {
                         realpass = RegisterPassword.Text.ToString();
                         Authentication.Client("Register", "Secure", username, realpass, token);
-                        //ModernAuth.Register(username, realpass, token);
                     }
 
                     if (!String.IsNullOrEmpty(Tokens.Success))
