@@ -8,6 +8,7 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using System.IO;
 
 namespace GameLauncher.App
 {
@@ -60,6 +61,8 @@ namespace GameLauncher.App
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             WelcomeText.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);
             DownloadSourceText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            GameLangText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            GameLangSource.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             CDNSource.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             Save.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             ListStatusText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
@@ -77,6 +80,7 @@ namespace GameLauncher.App
             WelcomeText.ForeColor = Theming.WinFormSecondaryTextForeColor;
 
             DownloadSourceText.ForeColor = Theming.WinFormTextForeColor;
+            GameLangSource.ForeColor = Theming.WinFormTextForeColor;
 
             APIErrorButton.ForeColor = Theming.BlueForeColorButton;
             APIErrorButton.BackColor = Theming.BlueBackColorButton;
@@ -96,6 +100,9 @@ namespace GameLauncher.App
 
             CDNSource.DrawItem += new DrawItemEventHandler(CDNSource_DrawItem);
             CDNSource.SelectedIndexChanged += new EventHandler(CDNSource_SelectedIndexChanged);
+
+            GameLangSource.DrawItem += new DrawItemEventHandler(GameLangSource_DrawItem);
+            GameLangSource.SelectedIndexChanged += new EventHandler(GameLangSource_SelectedIndexChanged);
         }
 
         private void CDNSource_SelectedIndexChanged(object sender, EventArgs e)
@@ -103,6 +110,15 @@ namespace GameLauncher.App
             if (((CDNList)CDNSource.SelectedItem).IsSpecial)
             {
                 CDNSource.SelectedIndex = 1;
+                return;
+            }
+        }
+
+        private void GameLangSource_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (((LangObject)GameLangSource.SelectedItem).IsSpecial)
+            {
+                GameLangSource.SelectedIndex = 1;
                 return;
             }
         }
@@ -170,6 +186,32 @@ namespace GameLauncher.App
 
         private void Save_Click(object sender, EventArgs e)
         {
+            if (!string.IsNullOrEmpty(((LangObject)GameLangSource.SelectedItem).INI_Value))
+            {
+                FileSettingsSave.Lang = ((LangObject)GameLangSource.SelectedItem).INI_Value;
+                FileGameSettingsData.Language = ((LangObject)GameLangSource.SelectedItem).XML_Value;
+            }
+
+            if (((LangObject)GameLangSource.SelectedItem).Category == "Custom")
+            {
+                /* Create Custom Settings.ini for LangPicker.asi module */
+                if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts"))
+                {
+                    Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
+                }
+
+                IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                LanguagePickerFile.Write("Language", ((LangObject)GameLangSource.SelectedItem).INI_Value);
+                MessageBox.Show(null, "Please Note: If a Server does not Provide Language Pack, it will Fallback to English instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini"))
+                {
+                    File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                }
+            }
+
             if (((CDNList)CDNSource.SelectedItem).Url != null)
             {
                 string ChoosenCDN = ((CDNList)CDNSource.SelectedItem).Url;
@@ -217,6 +259,11 @@ namespace GameLauncher.App
             CDNSource.DisplayMember = "Name";
             CDNSource.DataSource = CDNListUpdater.CleanList;
 
+            GameLangSource.DisplayMember = "Name";
+            GameLangSource.DataSource = LanguageListUpdater.CleanList;
+
+            GameLangText.Visible = hideElements;
+            GameLangSource.Visible = hideElements;
             DownloadSourceText.Visible = hideElements;
             CDNSource.Visible = hideElements;
             Save.Visible = hideElements;
@@ -265,7 +312,51 @@ namespace GameLauncher.App
                 e.Graphics.FillRectangle(backgroundColor, e.Bounds);
                 e.Graphics.DrawString(cdnListText, font, textColor, e.Bounds);
             }
+        }
 
+        private void GameLangSource_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            var font = (sender as ComboBox).Font;
+            Brush backgroundColor;
+            Brush textColor;
+            Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
+            Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
+            Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
+            Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
+
+            var langListText = "";
+
+            if (sender is ComboBox cb)
+            {
+                if (cb.Items[e.Index] is LangObject si)
+                {
+                    langListText = si.Name;
+                }
+            }
+
+            if (langListText.StartsWith("<GROUP>"))
+            {
+                font = new Font(font, FontStyle.Bold);
+                e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
+                e.Graphics.DrawString(langListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
+            }
+            else
+            {
+                font = new Font(font, FontStyle.Bold);
+                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                {
+                    backgroundColor = SystemBrushes.Highlight;
+                    textColor = SystemBrushes.HighlightText;
+                }
+                else
+                {
+                    backgroundColor = customBGColor;
+                    textColor = customTextColor;
+                }
+
+                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                e.Graphics.DrawString("    " + langListText, font, textColor, e.Bounds);
+            }
         }
     }
 }
