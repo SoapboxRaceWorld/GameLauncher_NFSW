@@ -213,11 +213,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
 
                             if (string.IsNullOrEmpty(msgBoxInfo) || msgBoxInfo == "SERVER FULL")
                             {
-                                Tokens.UserId = XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/UserId", "InnerText");
-                                Tokens.LoginToken = XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/LoginToken", "InnerText");
-
                                 if (Method == "Login" && string.IsNullOrEmpty(msgBoxInfo))
                                 {
+                                    Tokens.UserId = XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/UserId", "InnerText");
+                                    Tokens.LoginToken = XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/LoginToken", "InnerText");
+
                                     if (XMLServerCore.NodeReader(sbrwXml, "NodeOnly", "LoginStatusVO/Warning", null) == "VAILD NODE - LAUNCHER")
                                     {
                                         Tokens.Warning = XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/Warning", "InnerText");
@@ -227,7 +227,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                                 {
                                     if (msgBoxInfo == "SERVER FULL")
                                     {
-                                        Tokens.Success = string.Format("Successfully registered on {0}. However, server is actually full, therefore you cannot play it right now.", Tokens.ServerName);
+                                        Tokens.Success = string.Format("Successfully registered on {0}. However, the Server is currently full. Therefore you cannot play on it right now.", Tokens.ServerName);
                                     }
                                     else
                                     {
