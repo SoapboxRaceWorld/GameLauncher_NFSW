@@ -55,12 +55,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
 
                         if (Method == "Login")
                         {
-                            JSON = new JavaScriptSerializer().Serialize(new
-                            {
-                                Email,
-                                Password,
-                                upgrade = true
-                            });
+                            JSON = new JavaScriptSerializer().Serialize(new { Email, Password, upgrade = true });
                         }
                         else
                         {
@@ -84,40 +79,22 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             }
             catch (WebException Error)
             {
-                if (Connection == "Non Secure")
-                {
-                    HttpWebResponse serverResponse = (HttpWebResponse)Error.Response;
-
-                    if (serverResponse == null)
-                    {
-                        ServerErrorCode = 500;
-                        LoginResponse = "<LoginStatusVO><UserId/><LoginToken/><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
-                    }
-                    else
-                    {
-                        using (var sr = new StreamReader(serverResponse.GetResponseStream()))
-                        {
-                            ServerErrorCode = (int)serverResponse.StatusCode;
-                            LoginResponse = sr.ReadToEnd();
-                        }
-                    }
-                }
-                else if (Connection == "Secure")
+                if (Connection == "Non Secure" || Connection == "Secure")
                 {
                     ServerResponse = (HttpWebResponse)Error.Response;
 
                     if (ServerResponse == null)
                     {
                         ServerErrorCode = 500;
-                        LoginResponse = "{\"error\":\"Failed to get reply from server. Please retry.\"}";
+                        LoginResponse = (Connection == "Secure") ? "{\"error\":\"Failed to get reply from server. Please retry.\"}" :
+                        "<LoginStatusVO><UserId>0</UserId><Description>Failed to get reply from server. Please retry.</Description></LoginStatusVO>";
                     }
                     else
                     {
                         using (var sr = new StreamReader(ServerResponse.GetResponseStream()))
                         {
                             ServerErrorCode = (int)ServerResponse.StatusCode;
-                            ServerErrorResponse = "{\"error\":\"" + ServerResponse.StatusDescription + "\"}";
-
+                            ServerErrorResponse = (Connection == "Secure") ? "{\"error\":\"" + ServerResponse.StatusDescription + "\"}" : null;
                             LoginResponse = sr.ReadToEnd();
                         }
                     }
@@ -208,8 +185,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                                     msgBoxInfo += "ERROR " + ServerErrorCode + ": " + XMLServerCore.NodeReader(sbrwXml, "InnerText", "html/body", "InnerText");
                                 }
                             }
-
-                            Log.Debug("ERROR MESSAGE: " + msgBoxInfo);
 
                             if (string.IsNullOrEmpty(msgBoxInfo) || msgBoxInfo == "SERVER FULL")
                             {
