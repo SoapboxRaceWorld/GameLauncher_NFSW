@@ -26,9 +26,73 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                     return APIStatus.Online;
                     /* Do something with response.Headers to find out information about the request */
                 }
-                catch (WebException Error)
+                catch (WebException e)
                 {
-                    ErrorCode(APIURI, Error);
+                    if (e.Status == WebExceptionStatus.ProtocolError)
+                    {
+                        serverResponse = (HttpWebResponse)e.Response;
+
+                        Console.Write("Errorcode: {0}\n", (int)serverResponse.StatusCode);
+                        Log.Error("CORE: " + APIURI + " has an Error! Status Code: " + (int)serverResponse.StatusCode);
+
+                        if ((int)serverResponse.StatusCode == 404)
+                        {
+                            return APIStatus.NotFound;
+                        }
+                        else if ((int)serverResponse.StatusCode == 500)
+                        {
+                            return APIStatus.ServerError;
+                        }
+                        else if ((int)serverResponse.StatusCode == 502)
+                        {
+                            return APIStatus.ServerOverloaded;
+                        }
+                        else if ((int)serverResponse.StatusCode == 503)
+                        {
+                            return APIStatus.ServerUnavailable;
+                        }
+                        else if ((int)serverResponse.StatusCode == 504)
+                        {
+                            return APIStatus.GetWayTimeOut;
+                        }
+                        else if ((int)serverResponse.StatusCode == 520)
+                        {
+                            return APIStatus.Unknown;
+                        }
+                        else if ((int)serverResponse.StatusCode == 521)
+                        {
+                            return APIStatus.Offline;
+                        }
+                        else if ((int)serverResponse.StatusCode == 522)
+                        {
+                            return APIStatus.ConnectionTimeOut;
+                        }
+                        else if ((int)serverResponse.StatusCode == 523)
+                        {
+                            return APIStatus.OriginUnreachable;
+                        }
+                        else if ((int)serverResponse.StatusCode == 524)
+                        {
+                            return APIStatus.Timeout;
+                        }
+                        else if ((int)serverResponse.StatusCode == 525)
+                        {
+                            return APIStatus.SSLFailed;
+                        }
+                        else if ((int)serverResponse.StatusCode == 526)
+                        {
+                            return APIStatus.InvaildSSL;
+                        }
+                        /* Set flag if there was a timeout or some other issues */
+                    }
+                    else
+                    {
+                        Console.Write("------------");
+                        Console.Write("Error: {0}", e.Status);
+                        Console.Write("------------\n");
+                        Log.Error("CORE: " + APIURI + " is Offline!");
+                        return APIStatus.Offline;
+                    }
                 }
                 finally
                 {
@@ -38,104 +102,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                     }
                 }
             }
-
             return APIStatus.Null;
-        }
-
-        public static APIStatus ErrorCode(string APIURI, WebException Error)
-        {
-            try
-            {
-                if (Error.Status == WebExceptionStatus.ProtocolError)
-                {
-                    HttpWebResponse serverResponse = (HttpWebResponse)Error.Response;
-
-                    Console.Write("Errorcode: {0}\n", (int)serverResponse.StatusCode);
-                    Log.Error("CORE: " + APIURI + " has an Error! Status Code: " + (int)serverResponse.StatusCode);
-
-                    if ((int)serverResponse.StatusCode == 400)
-                    {
-                        return APIStatus.BadRequest;
-                    }
-                    else if ((int)serverResponse.StatusCode == 401)
-                    {
-                        return APIStatus.Unauthorized;
-                    }
-                    else if ((int)serverResponse.StatusCode == 403)
-                    {
-                        return APIStatus.Forbidden;
-                    }
-                    else if ((int)serverResponse.StatusCode == 404)
-                    {
-                        return APIStatus.NotFound;
-                    }
-                    else if ((int)serverResponse.StatusCode == 500)
-                    {
-                        return APIStatus.ServerError;
-                    }
-                    else if ((int)serverResponse.StatusCode == 501)
-                    {
-                        return APIStatus.NotImplmented;
-                    }
-                    else if ((int)serverResponse.StatusCode == 502)
-                    {
-                        return APIStatus.BadGateway;
-                    }
-                    else if ((int)serverResponse.StatusCode == 503)
-                    {
-                        return APIStatus.ServerUnavailable;
-                    }
-                    else if ((int)serverResponse.StatusCode == 504)
-                    {
-                        return APIStatus.GetWayTimeOut;
-                    }
-                    else if ((int)serverResponse.StatusCode == 520)
-                    {
-                        return APIStatus.OriginError;
-                    }
-                    else if ((int)serverResponse.StatusCode == 521)
-                    {
-                        return APIStatus.Offline;
-                    }
-                    else if ((int)serverResponse.StatusCode == 522)
-                    {
-                        return APIStatus.ConnectionTimeOut;
-                    }
-                    else if ((int)serverResponse.StatusCode == 523)
-                    {
-                        return APIStatus.OriginUnreachable;
-                    }
-                    else if ((int)serverResponse.StatusCode == 524)
-                    {
-                        return APIStatus.Timeout;
-                    }
-                    else if ((int)serverResponse.StatusCode == 525)
-                    {
-                        return APIStatus.SSLFailed;
-                    }
-                    else if ((int)serverResponse.StatusCode == 526)
-                    {
-                        return APIStatus.InvaildSSL;
-                    }
-                    else
-                    {
-                        return APIStatus.Unknown;
-                    }
-                    /* Set flag if there was a timeout or some other issues */
-                }
-                else
-                {
-                    Console.Write("------------");
-                    Console.Write("Error: {0}", Error.Status);
-                    Console.Write("------------\n");
-                    Log.Error("CORE: " + APIURI + " is Offline!");
-                    return APIStatus.Offline;
-                }
-            }
-            catch
-            {
-                return APIStatus.Null;
-            }
         }
     }
 

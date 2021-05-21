@@ -1,6 +1,5 @@
 ﻿using GameLauncher.App.Classes.Auth;
 using GameLauncher.App.Classes.InsiderKit;
-using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.Logger;
@@ -85,11 +84,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             }
             catch (WebException Error)
             {
-                SetErrorCodes(Method, Connection, Error);
-                /*
                 if (Connection == "Non Secure")
                 {
                     HttpWebResponse serverResponse = (HttpWebResponse)Error.Response;
+
                     if (serverResponse == null)
                     {
                         ServerErrorCode = 500;
@@ -107,6 +105,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 else if (Connection == "Secure")
                 {
                     ServerResponse = (HttpWebResponse)Error.Response;
+
                     if (ServerResponse == null)
                     {
                         ServerErrorCode = 500;
@@ -118,6 +117,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                         {
                             ServerErrorCode = (int)ServerResponse.StatusCode;
                             ServerErrorResponse = "{\"error\":\"" + ServerResponse.StatusDescription + "\"}";
+
                             LoginResponse = sr.ReadToEnd();
                         }
                     }
@@ -126,7 +126,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 {
                     Log.Error("Authentication: [WebException] Can not Determine Function with Specified Type -> " + Connection);
                 }
-                */
             }
 
             if (Connection == "Non Secure")
@@ -186,7 +185,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                                     }
                                     else
                                     {
-                                        msgBoxInfo += "Ban Expires: Permanent";
+                                        msgBoxInfo += "Banned Forever";
                                     }
                                 }
                             }
@@ -310,101 +309,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             else
             {
                 Log.Error("Authentication: [Tokens] Can not Determine Function with Specified Type -> " + Connection);
-            }
-        }
-
-        public static void SetErrorCodes(string Method, string Connection, WebException Error)
-        {
-
-            ServerResponse = (HttpWebResponse)Error.Response;
-            string ServerInformation = string.Empty;
-            bool UseServerProvidedXML = false;
-            bool CustomProvidedStatusCodes = false;
-
-            switch (APIChecker.ErrorCode(Tokens.IPAddress, Error))
-            {
-                case APIStatus.BadGateway:
-                    ServerErrorCode = 502;
-                    ServerInformation = "Bad Gateway. Please Try Again Later.";
-                    break;
-                case APIStatus.BadRequest:
-                    CustomProvidedStatusCodes = (Connection == "Secure") ? true : false;
-                    ServerErrorCode = 400;
-                    ServerInformation = "Bad Request. Please Try Again Later.";
-                    break;
-                case APIStatus.ConnectionTimeOut:
-                    ServerErrorCode = 522;
-                    ServerInformation = "Connection Timeout Error. Check Your Internet Connection and Try Again.";
-                    break;
-                case APIStatus.InvaildSSL:
-                    ServerErrorCode = 526;
-                    ServerInformation = "Invalid SSL. Please Check In with Server Support on this Issue.";
-                    break;
-                case APIStatus.NotImplmented:
-                    ServerErrorCode = 501;
-                    ServerInformation = "Not Implemented. Check In with Launcher Division Support on this Issue.";
-                    break;
-                case APIStatus.Offline:
-                    ServerErrorCode = 503;
-                    ServerInformation = "Server is Offline. Check with Server's Website or Discord for More Information.";
-                    break;
-                case APIStatus.OriginUnreachable:
-                    ServerErrorCode = 523;
-                    ServerInformation = "Origin Is Unreachable. Please Check Your DNS Settings and Try Again.";
-                    break;
-                case APIStatus.ServerUnavailable:
-                    ServerErrorCode = 503;
-                    ServerInformation = "Service Unavailable. Server Is Under Maintenance or Overloaded";
-                    break;
-                case APIStatus.SSLFailed:
-                    ServerErrorCode = 525;
-                    ServerInformation = "SSL Handshake Failed. Please Check In with Server Support on this Issue.";
-                    break;
-                case APIStatus.Timeout:
-                    ServerErrorCode = 524;
-                    ServerInformation = "Timeout Error. Please Try Again.";
-                    break;
-                case APIStatus.Unauthorized:
-                    ServerErrorCode = 401;
-                    ServerInformation = "Unauthorized. Check In with Server's Support on this Issue.";
-                    break;
-                case APIStatus.Unknown:
-                    ServerErrorCode = 2017;
-                    ServerInformation = "Unknown? How did we get Here?. Check In with Launcher Division Support on this Issue.";
-                    break;
-                default:
-                    /* Error Codes: 401 (Unauthorized) 500 (Internal Server Error) and 403 (Forbidden) */
-                    using (var sr = new StreamReader(ServerResponse.GetResponseStream()))
-                    {
-                        UseServerProvidedXML = true;
-                        ServerErrorCode = (int)ServerResponse.StatusCode;
-                        ServerInformation = sr.ReadToEnd();
-                    }
-                    break;
-            }
-
-            Log.Debug("LOGIN MESSAGE STATUS CODE: " + ServerErrorCode);
-
-            if (CustomProvidedStatusCodes == false)
-            {
-                if (UseServerProvidedXML == true)
-                {
-                    LoginResponse = ServerInformation;
-                }
-                else
-                {
-                    LoginResponse = (Connection == "Non Secure") ?
-                    "<LoginStatusVO><UserId>0</UserId><Description>" + ServerInformation + "</Description></LoginStatusVO>" :
-                    "{\"error\":\"" + ServerInformation + "\"}";
-                }
-            }
-            else
-            {
-                using (var sr = new StreamReader(ServerResponse.GetResponseStream()))
-                {
-                    LoginResponse = sr.ReadToEnd();
-                    Log.Debug("SERVER RESPONSE: " + ServerErrorResponse + " LOGIN RESPONSE: " + LoginResponse);
-                }
             }
         }
     }
