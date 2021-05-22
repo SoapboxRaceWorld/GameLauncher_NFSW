@@ -1644,10 +1644,46 @@ namespace GameLauncher
                         String path = Path.Combine(FileSettingsSave.GameInstallation, "MODS", MDFive.HashPassword(json2.serverID).ToLower());
                         if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
+                        /* (FILENAME.mods) 
+                         * Checks for any Files that Don't match the Server Index Json and Removes that File  */
+                        foreach (string file in Directory.GetFiles(path))
+                        {
+                            string name = Path.GetFileName(file);
+
+                            if (json3.entries.All(en => en.Name != name))
+                            {
+                                try
+                                {
+                                    File.Delete(file);
+                                    Log.Core("LAUNCHER: Removed Stale Mod Package: " + file);
+                                }
+                                catch (Exception Error)
+                                {
+                                    Log.Error($"LAUNCHER: Failed To Remove Stale Mod Package [{file}]: {Error.Message}");
+                                }
+                            }
+                        }
+
+                        /* (OLD-FILENAME.mods != NEW-FILENAME.mods)
+                         * Checks for the file and if the File Hash does not match it will be added to a list to be downloaded 
+                         * If a file exists and doesn't match a the server provided index json it will be deleted */
                         foreach (IndexJsonEntry modfile in json3.entries)
                         {
                             if (SHA.HashFile(path + "/" + modfile.Name).ToLower() != modfile.Checksum)
                             {
+                                try
+                                {
+                                    if (File.Exists(path + "/" + modfile.Name))
+                                    {
+                                        File.Delete(path + "/" + modfile.Name);
+                                        Log.Core("LAUNCHER: Removed Old Mod Package: " + path + "/" + modfile.Name);
+                                    }
+                                }
+                                catch (Exception Error)
+                                {
+                                    Log.Error($"LAUNCHER: Failed To Remove Old Mod Package [{modfile.Name}]: {Error.Message}");
+                                }
+
                                 modFilesDownloadUrls.Enqueue(new Uri(json2.basePath + "/" + modfile.Name));
                                 TotalModFileCount++;
                             }
@@ -1667,24 +1703,6 @@ namespace GameLauncher
                         else
                         {
                             LaunchGame();
-                        }
-
-                        foreach (var file in Directory.GetFiles(path))
-                        {
-                            var name = Path.GetFileName(file);
-
-                            if (json3.entries.All(en => en.Name != name))
-                            {
-                                Log.Core("LAUNCHER: removing package: " + file);
-                                try
-                                {
-                                    File.Delete(file);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Log.Error($"Failed to remove {file}: {ex.Message}");
-                                }
-                            }
                         }
                     }
                     catch (Exception error)

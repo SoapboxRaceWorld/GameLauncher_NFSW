@@ -23,8 +23,9 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                 WebClient x = new WebClient();
                 return x.DownloadString(newModNetUri);
             }
-            catch (Exception)
+            catch (Exception Error)
             {
+                Log.Error("LAUNCHER: Umable to Retrive Modding Information -> " + Error.Message);
                 return String.Empty;
             }
         }
