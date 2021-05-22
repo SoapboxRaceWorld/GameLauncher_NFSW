@@ -21,7 +21,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public class ProxyHandler : IApplicationStartup
     {
-        private UTF8Encoding UTF8 = new UTF8Encoding(false);
+        private readonly UTF8Encoding UTF8 = new UTF8Encoding(false);
 
         public void Initialize(IPipelines pipelines)
         {

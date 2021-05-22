@@ -26,8 +26,8 @@ namespace GameLauncher
         /* Global Thread for Splash Screen */
         public static Thread SplashScreen;
         public static bool IsSplashScreenLive = false;
-        private static string LocalAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        private static string RoamingAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        private static readonly string LocalAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        private static readonly string RoamingAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
         [STAThread]
         static void Main()
@@ -76,8 +76,8 @@ namespace GameLauncher
                         string[] files = {
                             "CommandLine.dll - 2.8.0",
                             "DiscordRPC.dll - 1.0.175.0",
-                            "Flurl.dll - 3.0.1",
-                            "Flurl.Http.dll - 3.0.1",
+                            "Flurl.dll - 3.0.2",
+                            "Flurl.Http.dll - 3.2.0",
                             "INIFileParser.dll - 2.5.2",
                             "LZMA.dll - 9.10 beta",
                             "Microsoft.WindowsAPICodePack.dll - 1.1.0.0",
