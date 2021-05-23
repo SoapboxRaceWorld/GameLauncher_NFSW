@@ -4,6 +4,8 @@
     {
         public static IniFile accountFile = new IniFile("Account.ini");
 
+        public static bool SaveLoginInformation = false;
+
         public static string UserRawEmail = accountFile.Read("AccountEmail");
 
         public static string UserHashedPassword = accountFile.Read("PasswordHashed");
@@ -50,19 +52,28 @@
                 accountFile.Write("Server", ChoosenGameServer);
             }
 
-            if (!accountFile.KeyExists("AccountEmail") || accountFile.Read("AccountEmail") != UserRawEmail)
+            if (SaveLoginInformation == true)
             {
-                accountFile.Write("AccountEmail", UserRawEmail);
-            }
+                if (!accountFile.KeyExists("AccountEmail") || accountFile.Read("AccountEmail") != UserRawEmail)
+                {
+                    accountFile.Write("AccountEmail", UserRawEmail);
+                }
 
-            if (!accountFile.KeyExists("PasswordHashed") || accountFile.Read("PasswordHashed") != UserHashedPassword)
-            {
-                accountFile.Write("PasswordHashed", UserHashedPassword);
-            }
+                if (!accountFile.KeyExists("PasswordHashed") || accountFile.Read("PasswordHashed") != UserHashedPassword)
+                {
+                    accountFile.Write("PasswordHashed", UserHashedPassword);
+                }
 
-            if (!accountFile.KeyExists("PasswordRaw") || accountFile.Read("PasswordRaw") != UserRawPassword)
+                if (!accountFile.KeyExists("PasswordRaw") || accountFile.Read("PasswordRaw") != UserRawPassword)
+                {
+                    accountFile.Write("PasswordRaw", UserRawPassword);
+                }
+            }
+            else
             {
-                accountFile.Write("PasswordRaw", UserRawPassword);
+                accountFile.Write("AccountEmail", string.Empty);
+                accountFile.Write("PasswordHashed", string.Empty);
+                accountFile.Write("PasswordRaw", string.Empty);
             }
 
             accountFile = new IniFile("Account.ini");

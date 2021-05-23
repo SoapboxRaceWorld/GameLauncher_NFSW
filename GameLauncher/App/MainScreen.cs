@@ -264,7 +264,17 @@ namespace GameLauncher
                     FileSettingsSave.SaveSettings();
                     Log.Error(string.Format("LAUNCHER: Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir));
 
+                    string TempEmailCache = string.Empty;
+                    if (!string.IsNullOrEmpty(MainEmail.Text))
+                    {
+                        TempEmailCache = MainEmail.Text;
+                        MainEmail.Text = "EMAIL IS HIDDEN";
+                    }
                     MessageBox.Show(null, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (!string.IsNullOrEmpty(TempEmailCache))
+                    {
+                        MainEmail.Text = TempEmailCache;
+                    }
                 }
             }
 
@@ -408,7 +418,18 @@ namespace GameLauncher
 
             if (_isDownloading)
             {
+                string TempEmailCache = string.Empty;
+                if (!string.IsNullOrEmpty(MainEmail.Text))
+                {
+                    TempEmailCache = MainEmail.Text;
+                    MainEmail.Text = "EMAIL IS HIDDEN";
+                }
                 MessageBox.Show(null, "Please wait while launcher is still downloading gamefiles.", "GameLauncher", MessageBoxButtons.OK);
+                if (!string.IsNullOrEmpty(TempEmailCache))
+                {
+                    MainEmail.Text = TempEmailCache;
+                }
+
                 return;
             }
 
@@ -435,21 +456,6 @@ namespace GameLauncher
                 Authentication.Client("Login", "Secure", username, realpass, null);
             }
 
-            if (RememberMe.Checked)
-            {
-                FileAccountSave.UserRawEmail = username;
-                FileAccountSave.UserHashedPassword = realpass;
-                FileAccountSave.UserRawPassword = MainPassword.Text.ToString();
-                FileAccountSave.SaveAccount();
-            }
-            else
-            {
-                FileAccountSave.UserRawEmail = String.Empty;
-                FileAccountSave.UserHashedPassword = String.Empty;
-                FileAccountSave.UserRawPassword = string.Empty;
-                FileAccountSave.SaveAccount();
-            }
-
             try
             {
                 if (!(ServerPick.SelectedItem is ServerList server)) return;
@@ -463,9 +469,18 @@ namespace GameLauncher
                 _loginToken = Tokens.LoginToken;
                 InformationCache.SelectedServerData.IpAddress = Tokens.IPAddress;
 
+                /* Tells the FileAccountSave to Actually Save the Information or Not */
+                FileAccountSave.SaveLoginInformation = RememberMe.Checked;
+                FileAccountSave.UserRawEmail = username;
+                FileAccountSave.UserHashedPassword = realpass;
+                FileAccountSave.UserRawPassword = MainPassword.Text.ToString();
+                FileAccountSave.SaveAccount();
+
                 if (!String.IsNullOrEmpty(Tokens.Warning))
                 {
+                    MainEmail.Text = "EMAIL IS HIDDEN";
                     MessageBox.Show(null, Tokens.Warning, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MainEmail.Text = username;
                 }
 
                 LoginFormElements(false);
@@ -476,7 +491,9 @@ namespace GameLauncher
                 /* Main Screen Login */
                 MainEmailBorder.Image = Theming.BorderEmailError;
                 MainPasswordBorder.Image = Theming.BorderPasswordError;
+                MainEmail.Text = "EMAIL IS HIDDEN";
                 MessageBox.Show(null, Tokens.Error, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MainEmail.Text = username;
             }
         }
 
@@ -1401,6 +1418,7 @@ namespace GameLauncher
                         {
                             x.WindowState = FormWindowState.Normal;
                             x.ShowInTaskbar = true;
+
                             String errorMsg = "Launcher Was Unable to Determine Error Code";
                             if (exitCode == -1073741819) errorMsg = "Game Crash: Access Violation (0x" + exitCode.ToString("X") + ")";
                             else if (exitCode == -1073740940) errorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")";
@@ -1423,9 +1441,12 @@ namespace GameLauncher
                             else if(exitCode == 4) errorMsg = "ModNet: An Unhandled Error Appeared";
                             /* Generic Error */
                             else errorMsg = "Game Crash with exitcode: " + exitCode.ToString() + " (0x" + exitCode.ToString("X") + ")";
+
+                            CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                             PlayProgressText.Text = errorMsg.ToUpper();
                             PlayProgress.Value = 100;
                             PlayProgress.ForeColor = Theming.Error;
+
                             if (_nfswPid != 0)
                             {
                                 try
@@ -1494,8 +1515,10 @@ namespace GameLauncher
         {
             if (FileSettingsSave.GameIntegrity != "Good")
             {
+                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                 MessageBox.Show("Launcher had Detected Game Files Integrity Error\nPlease Verify Game Files in Settings Screen", 
                     "Game Files Integrity", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", FileAccountSave.UserRawEmail).ToUpper();
                 return;
             }
 
@@ -1506,11 +1529,13 @@ namespace GameLauncher
 
                 if (!string.Equals(driveInfo.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
                 {
+                    CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                     MessageBox.Show(
                         $"Playing the game on a non-NTFS-formatted drive is not supported.\nDrive '{driveInfo.Name}' is formatted with: {driveInfo.DriveFormat}",
                         "Compatibility",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
+                    CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", FileAccountSave.UserRawEmail).ToUpper();
                     return;
                 }
             }
@@ -1843,11 +1868,13 @@ namespace GameLauncher
                 }
                 else
                 {
+                    CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                     MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
+                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                 MessageBox.Show(null, ex.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -2272,7 +2299,17 @@ namespace GameLauncher
             TaskbarProgress.SetValue(Handle, 100, 100);
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Error);
 
+            string TempEmailCache = string.Empty;
+            if (!string.IsNullOrEmpty(MainEmail.Text))
+            {
+                TempEmailCache = MainEmail.Text;
+                MainEmail.Text = "EMAIL IS HIDDEN";
+            }
             MessageBox.Show(null, "Failed to download gamefiles. \n\nCDN might be offline. \n\nPlease select a different CDN on Next Screen", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!string.IsNullOrEmpty(TempEmailCache))
+            {
+                MainEmail.Text = TempEmailCache;
+            }
 
             /* CDN Went Offline Screen switch - DavidCarbon */
             SettingsButton_Click(null, null);
@@ -2291,7 +2328,17 @@ namespace GameLauncher
 
         private void OnShowMessage(string message, string header)
         {
+            string TempEmailCache = string.Empty;
+            if (!string.IsNullOrEmpty(MainEmail.Text))
+            {
+                TempEmailCache = MainEmail.Text;
+                MainEmail.Text = "EMAIL IS HIDDEN";
+            }
             MessageBox.Show(message, header);
+            if (!string.IsNullOrEmpty(TempEmailCache))
+            {
+                MainEmail.Text = TempEmailCache;
+            }
         }
 
         private void SetVisuals()
