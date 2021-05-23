@@ -1641,12 +1641,13 @@ namespace GameLauncher
                         int CountFilesTotal = 0;
                         CountFilesTotal = json3.entries.Count;
 
-                        String path = Path.Combine(FileSettingsSave.GameInstallation, "MODS", MDFive.HashPassword(json2.serverID).ToLower());
-                        if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+                        String ModFolderCache = Path.Combine(FileSettingsSave.GameInstallation, "MODS", MDFive.HashPassword(json2.serverID).ToLower());
+                        Log.Debug(FileSettingsSave.GameInstallation + ".data/" + MDFive.HashPassword(json2.serverID).ToLower());
+                        if (!Directory.Exists(ModFolderCache)) Directory.CreateDirectory(ModFolderCache);
 
                         /* (FILENAME.mods) 
                          * Checks for any Files that Don't match the Server Index Json and Removes that File  */
-                        foreach (string file in Directory.GetFiles(path))
+                        foreach (string file in Directory.GetFiles(ModFolderCache))
                         {
                             string name = Path.GetFileName(file);
 
@@ -1666,17 +1667,34 @@ namespace GameLauncher
 
                         /* (OLD-FILENAME.mods != NEW-FILENAME.mods)
                          * Checks for the file and if the File Hash does not match it will be added to a list to be downloaded 
-                         * If a file exists and doesn't match a the server provided index json it will be deleted */
+                         * If a file exists and doesn't match a the server provided index json it will be deleted 
+                         * 5/22/2021: If a Server Extracted Mods Directory is present and 
+                         * if a Server Mod File no longer matches it will now delete the folder (.data/SERVER-ID-HASH) - DavidCarbon
+                         */
+                        int ExtractedServerFolderRunTime = 0;
+
                         foreach (IndexJsonEntry modfile in json3.entries)
                         {
-                            if (SHA.HashFile(path + "/" + modfile.Name).ToLower() != modfile.Checksum)
+                            if (SHA.HashFile(ModFolderCache + "/" + modfile.Name).ToLower() != modfile.Checksum)
                             {
                                 try
                                 {
-                                    if (File.Exists(path + "/" + modfile.Name))
+                                    if (ExtractedServerFolderRunTime == 0)
                                     {
-                                        File.Delete(path + "/" + modfile.Name);
-                                        Log.Core("LAUNCHER: Removed Old Mod Package: " + path + "/" + modfile.Name);
+                                        String ExtractedServerFolder = Path.Combine(FileSettingsSave.GameInstallation, ".data", MDFive.HashPassword(json2.serverID).ToLower());
+                                        if (Directory.Exists(ExtractedServerFolder))
+                                        {
+                                            Directory.Delete(ExtractedServerFolder, true);
+                                            Log.Core("LAUNCHER: Removed Extracted Server Mods Folder: .data/" + MDFive.HashPassword(json2.serverID).ToLower());
+                                        }
+
+                                        ExtractedServerFolderRunTime++;
+                                    }
+
+                                    if (File.Exists(ModFolderCache + "/" + modfile.Name))
+                                    {
+                                        File.Delete(ModFolderCache + "/" + modfile.Name);
+                                        Log.Core("LAUNCHER: Removed Old Mod Package: " + modfile.Name);
                                     }
                                 }
                                 catch (Exception Error)
@@ -1697,7 +1715,7 @@ namespace GameLauncher
 
                         if (modFilesDownloadUrls.Count != 0)
                         {
-                            this.DownloadModNetFilesRightNow(path);
+                            this.DownloadModNetFilesRightNow(ModFolderCache);
                             DiscordLauncherPresense.Status("Download Server Mods", null);
                         }
                         else
