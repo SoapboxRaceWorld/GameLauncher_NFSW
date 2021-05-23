@@ -93,7 +93,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             {
                 /* Language */
                 FileGameSettingsData.Language = (NodeReader("InnerText", "Settings/UI/Language", null) != "ERROR") ?
-                                                 NodeReader("InnerText", "Settings/UI/Language", null) : FunctionStatus.SpeechFiles().ToUpper();
+                                                 NodeReader("InnerText", "Settings/UI/Language", null) : FunctionStatus.SpeechFiles(null).ToUpper();
             }
             else if (FileReadStatus == "Full File")
             {

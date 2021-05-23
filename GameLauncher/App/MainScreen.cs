@@ -55,6 +55,7 @@ namespace GameLauncher
         private bool _playenabled;
         private bool _isDownloading = true;
         private bool _disableLogout = false;
+        private bool _restartLauncher = false;
 
         public static String getTempNa = Path.GetTempFileName();
 
@@ -72,7 +73,6 @@ namespace GameLauncher
         private string _loginWelcomeTime = "";
         private string _loginToken = "";
         private string _userId = "";
-        private string _langInfo;
 
         public static String ModNetFileNameInUse = String.Empty;
         readonly Queue<Uri> modFilesDownloadUrls = new Queue<Uri>();
@@ -325,8 +325,17 @@ namespace GameLauncher
             var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
             ModNetHandler.CleanLinks(linksPath);
 
-            /* Leave this here. Its to properly close the launcher from Visual Studio (And Close the Launcher a well) */
-            try { this.Close(); } catch { }
+            /* Leave this here. Its to properly close the launcher from Visual Studio (And Close the Launcher a well) 
+             * If the Boolen is true it will restart the Application
+             */
+            if (_restartLauncher == true)
+            {
+                Application.Restart();
+            }
+            else
+            {
+                try { this.Close(); } catch { }
+            }
         }
 
         private void CloseBTN_MouseEnter(object sender, EventArgs e)
@@ -1392,26 +1401,28 @@ namespace GameLauncher
                         {
                             x.WindowState = FormWindowState.Normal;
                             x.ShowInTaskbar = true;
-                            String errorMsg = "Game Crash with exitcode: " + exitCode.ToString() + " (0x" + exitCode.ToString("X") + ")";
+                            String errorMsg = "Launcher Was Unable to Determine Error Code";
                             if (exitCode == -1073741819) errorMsg = "Game Crash: Access Violation (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073740940) errorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073740791) errorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -805306369) errorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073741515) errorMsg = "Game Crash: Missing dependency files (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073740972) errorMsg = "Game Crash: Debugger crash (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -1073741676) errorMsg = "Game Crash: Division by Zero (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == 1) errorMsg = "The process nfsw.exe was killed via Task Manager";
-                            if (exitCode == 69) errorMsg = "AllocationAssistant encountered an 'Out of Memory' condition";
-                            if (exitCode == 2137) errorMsg = "Launcher killed your game to prevent SpeedBugging.";
-                            if (exitCode == 2017) errorMsg = "Server replied with Code: " + Tokens.UserId + " (0x" + exitCode.ToString("X") + ")";
-                            if (exitCode == -3) errorMsg = "The Server was unable to resolve the request";
-                            if (exitCode == -4) errorMsg = "Another instance is already executed";
-                            if (exitCode == -5) errorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
-                            if (exitCode == -6) errorMsg = "Server was unable to resolve your request";
+                            else if (exitCode == -1073740940) errorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")";
+                            else if(exitCode == -1073740791) errorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")";
+                            else if(exitCode == -805306369) errorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")";
+                            else if(exitCode == -1073741515) errorMsg = "Game Crash: Missing dependency files (0x" + exitCode.ToString("X") + ")";
+                            else if(exitCode == -1073740972) errorMsg = "Game Crash: Debugger crash (0x" + exitCode.ToString("X") + ")";
+                            else if(exitCode == -1073741676) errorMsg = "Game Crash: Division by Zero (0x" + exitCode.ToString("X") + ")";
+                            else if(exitCode == 1) errorMsg = "The process nfsw.exe was killed via Task Manager";
+                            else if(exitCode == 69) errorMsg = "AllocationAssistant encountered an 'Out of Memory' condition";
+                            else if(exitCode == 2137) errorMsg = "Launcher killed your game to prevent SpeedBugging.";
+                            else if(exitCode == 2017) errorMsg = "Server replied with Code: " + Tokens.UserId + " (0x" + exitCode.ToString("X") + ")";
+                            else if(exitCode == -3) errorMsg = "The Server was unable to resolve the request";
+                            else if(exitCode == -4) errorMsg = "Another instance is already executed";
+                            else if(exitCode == -5) errorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
+                            else if(exitCode == -6) errorMsg = "Server was unable to resolve your request";
                             /* ModLoader */
-                            if (exitCode == 2) errorMsg = "ModNet: Game was launched with invalid command line parameters.";
-                            if (exitCode == 3) errorMsg = "ModNet: .links file should not exist upon startup!";
-                            if (exitCode == 4) errorMsg = "ModNet: An Unhandled Error Appeared";
+                            else if(exitCode == 2) errorMsg = "ModNet: Game was launched with invalid command line parameters.";
+                            else if(exitCode == 3) errorMsg = "ModNet: .links file should not exist upon startup!";
+                            else if(exitCode == 4) errorMsg = "ModNet: An Unhandled Error Appeared";
+                            /* Generic Error */
+                            else errorMsg = "Game Crash with exitcode: " + exitCode.ToString() + " (0x" + exitCode.ToString("X") + ")";
                             PlayProgressText.Text = errorMsg.ToUpper();
                             PlayProgress.Value = 100;
                             PlayProgress.ForeColor = Theming.Error;
@@ -1428,8 +1439,7 @@ namespace GameLauncher
                             DialogResult restartApp = MessageBox.Show(null, errorMsg + "\nWould you like to restart the launcher?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                             if (restartApp == DialogResult.Yes)
                             {
-                                Application.Restart();
-                                Application.ExitThread();
+                                _restartLauncher = true;
                             }
                             this.CloseBTN_Click(null, null);
                         }));
@@ -1642,7 +1652,6 @@ namespace GameLauncher
                         CountFilesTotal = json3.entries.Count;
 
                         String ModFolderCache = Path.Combine(FileSettingsSave.GameInstallation, "MODS", MDFive.HashPassword(json2.serverID).ToLower());
-                        Log.Debug(FileSettingsSave.GameInstallation + ".data/" + MDFive.HashPassword(json2.serverID).ToLower());
                         if (!Directory.Exists(ModFolderCache)) Directory.CreateDirectory(ModFolderCache);
 
                         /* (FILENAME.mods) 
@@ -1997,38 +2006,28 @@ namespace GameLauncher
             string speechFile;
             int speechSize;
 
-            if (FileSettingsSave.Lang.ToLower() == FunctionStatus.SpeechFiles())
-            {
-                speechFile = FileSettingsSave.Lang.ToLower();
-            }
-            else
-            {
-                speechFile = FunctionStatus.SpeechFiles();
-            }
-
             try
             {
+                speechFile = FunctionStatus.SpeechFiles(FileSettingsSave.Lang).ToUpper();
+
                 WebClientWithTimeout wc = new WebClientWithTimeout();
-                var response = wc.DownloadString(FileSettingsSave.CDN + "/" + speechFile + "/index.xml");
+                String response = wc.DownloadString(FileSettingsSave.CDN + "/" + speechFile + "/index.xml");
 
                 response = response.Substring(3, response.Length - 3);
 
-                var speechFileXml = new XmlDocument();
+                XmlDocument speechFileXml = new XmlDocument();
                 speechFileXml.LoadXml(response);
-                var speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
+                XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
 
                 speechSize = Convert.ToInt32(speechSizeNode.InnerText);
-                /* Fix this issue - DavidCarbon */
-                //_langInfo = SettingsLanguage.GetItemText(SettingsLanguage.SelectedItem).ToUpper();
             }
             catch (Exception)
             {
-                speechFile = FunctionStatus.SpeechFiles();
+                speechFile = FunctionStatus.SpeechFiles(null);
                 speechSize = FunctionStatus.SpeechFilesSize();
-                _langInfo = FunctionStatus.SpeechFiles();
             }
 
-            PlayProgressText.Text = string.Format("Checking for {0} Speech Files.", _langInfo).ToUpper();
+            PlayProgressText.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper();
 
             if (!File.Exists(FileSettingsSave.GameInstallation + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big"))
             {

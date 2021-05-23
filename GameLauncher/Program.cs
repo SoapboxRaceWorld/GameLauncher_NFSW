@@ -26,6 +26,8 @@ namespace GameLauncher
         /* Global Thread for Splash Screen */
         public static Thread SplashScreen;
         public static bool IsSplashScreenLive = false;
+        public static bool LauncherMustClose = false;
+        public static bool LauncherMustRestart = false;
         private static readonly string LocalAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         private static readonly string RoamingAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
@@ -41,7 +43,7 @@ namespace GameLauncher
                 if (NFSW.IsNFSWRunning())
                 {
                     MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                    Application.ExitThread();
                 }
 
                 /* INFO: this is here because this dll is necessary for downloading game files and I want to make it async.
@@ -58,12 +60,12 @@ namespace GameLauncher
 
                         DialogResult restartApp = MessageBox.Show(null, "Downloaded Missing LZMA.dll File. \nPlease Restart Launcher, Thanks!", "GameLauncher Restart Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
+                        LauncherMustClose = true;
+
                         if (restartApp == DialogResult.Yes)
                         {
-                            Application.Restart();
-                        }
-
-                        Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
+                            LauncherMustRestart = true;
+                        }               
                     }
                     catch (Exception) { }
                 }
@@ -136,6 +138,7 @@ namespace GameLauncher
                                 }
                             }
                         }
+
                         if (missingfiles.Count != 0)
                         {
                             var message = "Cannot launch GameLauncher. The following files are invalid:\n\n";
@@ -146,6 +149,18 @@ namespace GameLauncher
                             }
 
                             MessageBox.Show(null, message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else if (LauncherMustClose == true)
+                        {
+                            /* FailSafe in the event where Application.Exit() in the begining does not trigger correctly */
+                            if (LauncherMustRestart == true)
+                            {
+                                Application.Restart();
+                            }
+                            else
+                            {
+                                Application.Exit();
+                            }
                         }
                         else
                         {

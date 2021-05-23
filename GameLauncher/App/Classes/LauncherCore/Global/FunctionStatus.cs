@@ -145,9 +145,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         }
 
         /* Check System Language and Return Current Lang for Speech Files */
-        public static string SpeechFiles()
+        public static string SpeechFiles(string Language)
         {
-            string CurrentLang = Lang.ThreeLetterISOLanguageName;
+            string CurrentLang = string.IsNullOrEmpty(Language) ? Lang.ThreeLetterISOLanguageName : Language.ToLower();
 
             if (CurrentLang == "eng") return "en";
             else if (CurrentLang == "ger" || CurrentLang == "deu") return "de";
