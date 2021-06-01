@@ -53,7 +53,7 @@ namespace GameLauncher.App
             {
                 if (comboBoxPerformanceLevel.SelectedIndex == 0)
                 {
-                    /* Minama */
+                    /* Minimal */
                     comboBoxBaseTextureFilter.SelectedIndex = 0;
                     comboBoxAnisotropicLevel.SelectedIndex = 0;
                     comboBoxCarEnvironmentDetail.SelectedIndex = 0;
@@ -61,7 +61,7 @@ namespace GameLauncher.App
                     comboBoxWorldGlobalDetail.SelectedIndex = 0;
                     comboBoxWorldRoadReflection.SelectedIndex = 0;
                     comboBoxWorldRoadTexture.SelectedIndex = 0;
-                    comboBoxWorldRoadAntialiasing.SelectedIndex = 0;
+                    comboBoxWorldRoadAniso.SelectedIndex = 0;
                     comboBoxShaderFSAA.SelectedIndex = 0;
                     comboBoxShadowDetail.SelectedIndex = 0;
                     comboBoxShaderDetail.SelectedIndex = 0;
@@ -89,7 +89,7 @@ namespace GameLauncher.App
                     comboBoxWorldGlobalDetail.SelectedIndex = 1;
                     comboBoxWorldRoadReflection.SelectedIndex = 0;
                     comboBoxWorldRoadTexture.SelectedIndex = 0;
-                    comboBoxWorldRoadAntialiasing.SelectedIndex = 0;
+                    comboBoxWorldRoadAniso.SelectedIndex = 0;
                     comboBoxShaderFSAA.SelectedIndex = 0;
                     comboBoxShadowDetail.SelectedIndex = 0;
                     comboBoxShaderDetail.SelectedIndex = 1;
@@ -117,7 +117,7 @@ namespace GameLauncher.App
                     comboBoxWorldGlobalDetail.SelectedIndex = 3;
                     comboBoxWorldRoadReflection.SelectedIndex = 1;
                     comboBoxWorldRoadTexture.SelectedIndex = 1;
-                    comboBoxWorldRoadAntialiasing.SelectedIndex = 0;
+                    comboBoxWorldRoadAniso.SelectedIndex = 0;
                     comboBoxShaderFSAA.SelectedIndex = 1;
                     comboBoxShadowDetail.SelectedIndex = 1;
                     comboBoxShaderDetail.SelectedIndex = 1;
@@ -145,7 +145,7 @@ namespace GameLauncher.App
                     comboBoxWorldGlobalDetail.SelectedIndex = 2;
                     comboBoxWorldRoadReflection.SelectedIndex = 1;
                     comboBoxWorldRoadTexture.SelectedIndex = 1;
-                    comboBoxWorldRoadAntialiasing.SelectedIndex = 3;
+                    comboBoxWorldRoadAniso.SelectedIndex = 3;
                     comboBoxShaderFSAA.SelectedIndex = 2;
                     comboBoxShadowDetail.SelectedIndex = 2;
                     comboBoxShaderDetail.SelectedIndex = 3;
@@ -165,7 +165,7 @@ namespace GameLauncher.App
                 }
                 else if (comboBoxPerformanceLevel.SelectedIndex == 4)
                 {
-                    /* Maxium */
+                    /* Maximum */
                     comboBoxBaseTextureFilter.SelectedIndex = 2;
                     comboBoxAnisotropicLevel.SelectedIndex = 4;
                     comboBoxCarEnvironmentDetail.SelectedIndex = 4;
@@ -173,7 +173,7 @@ namespace GameLauncher.App
                     comboBoxWorldGlobalDetail.SelectedIndex = 4;
                     comboBoxWorldRoadReflection.SelectedIndex = 2;
                     comboBoxWorldRoadTexture.SelectedIndex = 2;
-                    comboBoxWorldRoadAntialiasing.SelectedIndex = 4;
+                    comboBoxWorldRoadAniso.SelectedIndex = 4;
                     comboBoxShaderFSAA.SelectedIndex = 2;
                     comboBoxShadowDetail.SelectedIndex = 2;
                     comboBoxShaderDetail.SelectedIndex = 4;
@@ -201,7 +201,7 @@ namespace GameLauncher.App
                     comboBoxWorldGlobalDetail.SelectedIndex = CheckValidRange("WorldGlobalDetail", "0-4", FileGameSettingsData.GlobalDetailLevel);
                     comboBoxWorldRoadReflection.SelectedIndex = CheckValidRange("WorldRoadReflection", "0-2", FileGameSettingsData.RoadReflectionEnable);
                     comboBoxWorldRoadTexture.SelectedIndex = CheckValidRange("WorldRoadTexture", "0-2", FileGameSettingsData.RoadTextureFilter);
-                    comboBoxWorldRoadAntialiasing.SelectedIndex = CheckValidRange("WorldRoadAntialiasing", "0-4", FileGameSettingsData.RoadTextureMaxAni);
+                    comboBoxWorldRoadAniso.SelectedIndex = CheckValidRange("WorldRoadAniso", "0-4", FileGameSettingsData.RoadTextureMaxAni);
                     comboBoxShaderFSAA.SelectedIndex = CheckValidRange("ShaderFSAA", "0-2", FileGameSettingsData.FSAALevel);
                     comboBoxShadowDetail.SelectedIndex = CheckValidRange("ShadowDetail", "0-2", FileGameSettingsData.ShadowDetail);
                     comboBoxShaderDetail.SelectedIndex = CheckValidRange("ShaderDetail", "0-3", FileGameSettingsData.ShaderDetail);
@@ -222,7 +222,7 @@ namespace GameLauncher.App
 
                 if (comboBoxPerformanceLevel.SelectedIndex == 5)
                 {
-                    this.Size = new Size(608, 866);
+                    this.Size = new Size(596, 842);
 
                     if (AmountofCenterTimes == 0)
                     {
@@ -232,7 +232,7 @@ namespace GameLauncher.App
                 }
                 else
                 {
-                    this.Size = new Size(298, 866);
+                    this.Size = new Size(290, 842);
                 }
             }
             catch (Exception Error)
@@ -283,7 +283,7 @@ namespace GameLauncher.App
             FileGameSettingsData.GlobalDetailLevel = comboBoxWorldGlobalDetail.SelectedValue.ToString();
             FileGameSettingsData.RoadReflectionEnable = comboBoxWorldRoadReflection.SelectedValue.ToString();
             FileGameSettingsData.RoadTextureFilter = comboBoxWorldRoadTexture.SelectedValue.ToString();
-            FileGameSettingsData.RoadTextureMaxAni = comboBoxWorldRoadAntialiasing.SelectedValue.ToString();
+            FileGameSettingsData.RoadTextureMaxAni = comboBoxWorldRoadAniso.SelectedValue.ToString();
             FileGameSettingsData.FSAALevel = comboBoxShaderFSAA.SelectedValue.ToString();
             FileGameSettingsData.ShadowDetail = comboBoxShadowDetail.SelectedValue.ToString();
             FileGameSettingsData.ShaderDetail = comboBoxShaderDetail.SelectedValue.ToString();
@@ -383,7 +383,7 @@ namespace GameLauncher.App
             }
             else if (Range == "0-4")
             {
-                if (Type == "WorldRoadAntialiasing" || Type == "AnisotropicLevel")
+                if (Type == "WorldRoadAniso" || Type == "AnisotropicLevel")
                 {
                     if (ConvertedValue == 0)
                     {
@@ -773,7 +773,7 @@ namespace GameLauncher.App
             labelRoadReflection.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelRoadTexture.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelRoadLODBias.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
-            labelRoadAnti.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            labelRoadAniso.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelCarModel.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelCarReflection.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelCDLODBias.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
@@ -836,7 +836,7 @@ namespace GameLauncher.App
             comboBoxWorldGlobalDetail.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             comboBoxWorldRoadReflection.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             comboBoxWorldRoadTexture.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
-            comboBoxWorldRoadAntialiasing.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            comboBoxWorldRoadAniso.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             comboBoxCarEnvironmentDetail.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             comboBoxCarReflection.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             comboBoxBaseTextureFilter.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
@@ -901,7 +901,7 @@ namespace GameLauncher.App
             labelRoadReflection.ForeColor = Theming.MainTextForeColor;
             labelRoadTexture.ForeColor = Theming.MainTextForeColor;
             labelRoadLODBias.ForeColor = Theming.MainTextForeColor;
-            labelRoadAnti.ForeColor = Theming.MainTextForeColor;
+            labelRoadAniso.ForeColor = Theming.MainTextForeColor;
             labelCarModel.ForeColor = Theming.MainTextForeColor;
             labelCarReflection.ForeColor = Theming.MainTextForeColor;
             labelCDLODBias.ForeColor = Theming.MainTextForeColor;
@@ -983,8 +983,8 @@ namespace GameLauncher.App
             comboBoxWorldRoadReflection.BackColor = Theming.CDNMenuBGForeColor;
             comboBoxWorldRoadTexture.ForeColor = Theming.CDNMenuTextForeColor;
             comboBoxWorldRoadTexture.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxWorldRoadAntialiasing.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxWorldRoadAntialiasing.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxWorldRoadAniso.ForeColor = Theming.CDNMenuTextForeColor;
+            comboBoxWorldRoadAniso.BackColor = Theming.CDNMenuBGForeColor;
             comboBoxCarEnvironmentDetail.ForeColor = Theming.CDNMenuTextForeColor;
             comboBoxCarEnvironmentDetail.BackColor = Theming.CDNMenuBGForeColor;
             comboBoxCarReflection.ForeColor = Theming.CDNMenuTextForeColor;
@@ -1118,17 +1118,17 @@ namespace GameLauncher.App
             comboBoxWorldRoadTexture.ValueMember = "Value";
             comboBoxWorldRoadTexture.DataSource = WorldRoadTextureList;
 
-            /* WorldRoadAntialiasing ComboBox */
-            var WorldRoadAntialiasingList = new[] {
-                new { WorldRoadAntialiasing = "None", Value = "0" },
-                new { WorldRoadAntialiasing = "2x", Value = "2" },
-                new { WorldRoadAntialiasing = "4x", Value = "4" },
-                new { WorldRoadAntialiasing = "8x", Value = "8" },
-                new { WorldRoadAntialiasing = "16x", Value = "16" }
+            /* WorldRoadAniso ComboBox */
+            var WorldRoadAnisoList = new[] {
+                new { WorldRoadAniso = "None", Value = "0" },
+                new { WorldRoadAniso = "2x", Value = "2" },
+                new { WorldRoadAniso = "4x", Value = "4" },
+                new { WorldRoadAniso = "8x", Value = "8" },
+                new { WorldRoadAniso = "16x", Value = "16" }
             };
-            comboBoxWorldRoadAntialiasing.DisplayMember = "WorldRoadAntialiasing";
-            comboBoxWorldRoadAntialiasing.ValueMember = "Value";
-            comboBoxWorldRoadAntialiasing.DataSource = WorldRoadAntialiasingList;
+            comboBoxWorldRoadAniso.DisplayMember = "WorldRoadAniso";
+            comboBoxWorldRoadAniso.ValueMember = "Value";
+            comboBoxWorldRoadAniso.DataSource = WorldRoadAnisoList;
 
             /* ShaderFSAA ComboBox */
             var ShaderFSAAList = new[] {
@@ -1235,11 +1235,11 @@ namespace GameLauncher.App
 
             if (FileGameSettingsData.Damage == "0")
             {
-                radioDamageOn.Checked = true;
+                radioDamageOff.Checked = true;
             }
             else
             {
-                radioDamageOff.Checked = true;
+                radioDamageOn.Checked = true;
             }
 
             if (FileGameSettingsData.SpeedUnits == "0")
