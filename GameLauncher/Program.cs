@@ -18,6 +18,7 @@ using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 
 namespace GameLauncher
 {
@@ -248,6 +249,9 @@ namespace GameLauncher
             /* Splash Screen */
             if (!Debugger.IsAttached)
             {
+                /* (Start Process) Sets up Theming */
+                Theming.CheckIfThemeExists();
+
                 SplashScreen = new Thread(new ThreadStart(StartSplashScreen));
                 SplashScreen.Start();
             }

@@ -42,33 +42,38 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
             }
         }
 
-        public static String RelativeTime(int seconds) {
+        public static String RelativeTime(int seconds) 
+        {
             int calcs;
-            if (seconds >= 60*60*24*30) {
-                calcs = seconds / 60 / 60 / 24 / 30;
+
+            if (seconds >= 2592000) 
+            {
+                calcs = seconds / 2592000;
                 return calcs == 1 ? "1 Month" : calcs + " Months";
             }
-
-            if (seconds >= 60*60*24) {
-                calcs = seconds / 60 / 60 / 24;
+            else if (seconds >= 86400) 
+            {
+                calcs = seconds / 86400;
                 return calcs == 1 ? "1 Day" : calcs + " Days";
             }
-
-            if (seconds >= 60*60) {
-                calcs = seconds / 60 / 60;
+            else if (seconds >= 3600) 
+            {
+                calcs = seconds / 3600;
                 return calcs == 1 ? "1 Hour" : calcs + " Hours";
             }
-
-            if (seconds >= 60) {
+            else if (seconds >= 60) 
+            {
                 calcs = seconds / 60;
                 return calcs == 1 ? "1 Minute" : calcs + " Minute";
             }
-
-            if (seconds >= 0) {
+            else if (seconds >= 0) 
+            {
                 return seconds == 1 ? "1 Second" : seconds + " Seconds";
             }
-
-            return "Unknown";
+            else
+            {
+                return "Unknown";
+            }
         }
     }
 }

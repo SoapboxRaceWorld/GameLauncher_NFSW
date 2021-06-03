@@ -10,19 +10,14 @@ using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform;
+using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App
 {
     public partial class DebugWindow : Form
     {
-        public string ServerIP = String.Empty;
-        public string ServerName = String.Empty;
-
-        public DebugWindow(string serverIP, string serverName)
+        public DebugWindow()
         {
-            ServerIP = serverIP;
-            ServerName = serverName;
-
             InitializeComponent();
             ApplyEmbeddedFonts();
         }
@@ -161,8 +156,8 @@ namespace GameLauncher.App
                 new ListType{ Name = "Firewall Rule - Launcher", Value =  FileSettingsSave.FirewallLauncherStatus},
                 new ListType{ Name = "Firewall Rule - Game", Value =  FileSettingsSave.FirewallGameStatus},
                 new ListType{ Name = "", Value = "" },
-                new ListType{ Name = "Server Name", Value = ServerName},
-                new ListType{ Name = "Server Address", Value = ServerIP},
+                new ListType{ Name = "Server Name", Value = InformationCache.SelectedServerData.Name},
+                new ListType{ Name = "Server Address", Value = InformationCache.SelectedServerData.IpAddress},
                 new ListType{ Name = "CDN Address", Value = FileSettingsSave.CDN},
                 new ListType{ Name = "ProxyPort", Value = ServerProxy.ProxyPort.ToString()},
                 new ListType{ Name = "", Value = "" },
@@ -185,7 +180,7 @@ namespace GameLauncher.App
             }
             settings.AddRange(new[]
             {
-                new ListType{ Name = "HWID", Value = HardwareID.FingerPrint.Value()},
+                new ListType{ Name = "HWID", Value = HardwareID.FingerPrint.Level_One_Value()},
                 new ListType{ Name = "Operating System", Value = OS},
                 new ListType{ Name = "Environment Version", Value = Environment.OSVersion.Version.ToString() },
                 new ListType{ Name = "Screen Resolution", Value = Screen.PrimaryScreen.Bounds.Width + "x" + Screen.PrimaryScreen.Bounds.Height }

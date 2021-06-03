@@ -37,14 +37,8 @@ namespace GameLauncher.App
         private string _newLauncherPath;
         private string _newGameFilesPath;
 
-        public string ServerIP = String.Empty;
-        public string ServerName = String.Empty;
-
-        public SettingsScreen(string serverIP, string serverName)
+        public SettingsScreen()
         {
-            ServerIP = serverIP;
-            ServerName = serverName;
-
             InitializeComponent();
             SetVisuals();
         }
@@ -702,7 +696,7 @@ namespace GameLauncher.App
 
         private void SettingsLauncherVersion_Click(object sender, EventArgs e)
         {
-            new DebugWindow(ServerIP, ServerName).ShowDialog();
+            new DebugWindow().ShowDialog();
         }
 
         /* Settings CDN Dropdown Menu Index */
@@ -910,39 +904,49 @@ namespace GameLauncher.App
             Log.Core("SETTINGS CDNLIST: Setting first server in list");
             Log.Core("SETTINGS CDNLIST: Checking if server is set on INI File");
 
-            if (!string.IsNullOrEmpty(FileSettingsSave.CDN))
+            try
             {
-                string SavedCDN = FileSettingsSave.CDN;
-                char[] charsToTrim = { '/' };
-                string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
-
-                Log.Core("SETTINGS CDNLIST: Found something!");
-                Log.Core("SETTINGS CDNLIST: Checking if CDN exists on our database");
-
-                if (CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
+                if (!string.IsNullOrEmpty(FileSettingsSave.CDN))
                 {
-                    Log.Core("SETTINGS CDNLIST: CDN found! Checking ID");
-                    var index = CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
+                    string SavedCDN = FileSettingsSave.CDN;
+                    char[] charsToTrim = { '/' };
+                    string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
 
-                    Log.Core("SETTINGS CDNLIST: ID is " + index);
-                    if (index >= 0)
+                    Log.Core("SETTINGS CDNLIST: Found something!");
+                    Log.Core("SETTINGS CDNLIST: Checking if CDN exists on our database");
+
+                    if (CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
                     {
-                        Log.Core("SETTINGS CDNLIST: ID set correctly");
-                        SettingsCDNPick.SelectedIndex = index;
+                        Log.Core("SETTINGS CDNLIST: CDN found! Checking ID");
+                        var index = CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
+
+                        Log.Core("SETTINGS CDNLIST: ID is " + index);
+                        if (index >= 0)
+                        {
+                            Log.Core("SETTINGS CDNLIST: ID set correctly");
+                            SettingsCDNPick.SelectedIndex = index;
+                        }
+                        else if (index < 0)
+                        {
+                            Log.Warning("SETTINGS CDNLIST: Checking ID Against OLD Standard");
+                            RememberLastCDNOldStandard();
+                        }
                     }
-                    else if (index < 0)
+                    else
                     {
-                        Log.Warning("SETTINGS CDNLIST: Checking ID Against OLD Standard");
-                        RememberLastCDNOldStandard();
+                        Log.Warning("SETTINGS CDNLIST: Unable to find anything, assuming default");
+                        SettingsCDNPick.SelectedIndex = 1;
+                        Log.Warning("SETTINGS CDNLIST: Unknown entry value is " + FinalCDNURL);
                     }
                 }
                 else
                 {
-                    Log.Warning("SETTINGS CDNLIST: Unable to find anything, assuming default");
                     SettingsCDNPick.SelectedIndex = 1;
-                    Log.Warning("SETTINGS CDNLIST: Unknown entry value is " + FinalCDNURL);
                 }
-                Log.Core("SETTINGS CDNLIST: All done");
+            }
+            catch (Exception Error)
+            {
+                Log.Error("SETTINGS CDNLIST: " + Error.Message);
             }
         }
 
@@ -953,35 +957,44 @@ namespace GameLauncher.App
             Log.Core("SETTINGS LANGLIST: Setting first server in list");
             Log.Core("SETTINGS LANGLIST: Checking if server is set on INI File");
 
-            if (!string.IsNullOrEmpty(FileSettingsSave.Lang))
+            try
             {
-                string SavedLang = FileSettingsSave.Lang.Trim();
-
-                Log.Core("SETTINGS LANGLIST: Found something!");
-                Log.Core("SETTINGS LANGLIST: Checking if language exists on our database");
-
-                if (LanguageListUpdater.CleanList.FindIndex(i => string.Equals(i.INI_Value, SavedLang)) != 0)
+                if (!string.IsNullOrEmpty(FileSettingsSave.Lang))
                 {
-                    Log.Core("SETTINGS LANGLIST: Language found! Checking its Value");
-                    var index = LanguageListUpdater.CleanList.FindIndex(i => string.Equals(i.INI_Value, SavedLang));
+                    string SavedLang = FileSettingsSave.Lang.Trim();
 
-                    Log.Core("SETTINGS LANGLIST: ID is " + index);
-                    if (index >= 0)
+                    Log.Core("SETTINGS LANGLIST: Found something!");
+                    Log.Core("SETTINGS LANGLIST: Checking if language exists on our database");
+
+                    if (LanguageListUpdater.CleanList.FindIndex(i => string.Equals(i.INI_Value, SavedLang)) != 0)
                     {
-                        Log.Core("SETTINGS LANGLIST: ID set correctly");
-                        SettingsLanguage.SelectedIndex = index;
+                        Log.Core("SETTINGS LANGLIST: Language found! Checking its Value");
+                        var index = LanguageListUpdater.CleanList.FindIndex(i => string.Equals(i.INI_Value, SavedLang));
+
+                        Log.Core("SETTINGS LANGLIST: ID is " + index);
+                        if (index >= 0)
+                        {
+                            Log.Core("SETTINGS LANGLIST: ID set correctly");
+                            SettingsLanguage.SelectedIndex = index;
+                        }
                     }
+                    else
+                    {
+                        Log.Warning("SETTINGS LANGLIST: Unable to find anything, assuming default");
+                        SettingsLanguage.SelectedIndex = 1;
+                        Log.Warning("SETTINGS LANGLIST: Unknown entry value is " + SavedLang);
+                    }
+                    Log.Core("SETTINGS LANGLIST: All done");
                 }
                 else
                 {
                     Log.Warning("SETTINGS LANGLIST: Unable to find anything, assuming default");
                     SettingsLanguage.SelectedIndex = 1;
-                    Log.Warning("SETTINGS LANGLIST: Unknown entry value is " + SavedLang);
                 }
-                Log.Core("SETTINGS LANGLIST: All done");
-            } else {
-                Log.Warning("SETTINGS LANGLIST: Unable to find anything, assuming default");
-                SettingsLanguage.SelectedIndex = 1;
+            }
+            catch (Exception Error)
+            {
+                Log.Error("SETTINGS LANGLIST: " + Error.Message);
             }
         }
 
@@ -990,32 +1003,41 @@ namespace GameLauncher.App
         {
             /* Last Selected CDN */
 
-            if (!string.IsNullOrEmpty(FileSettingsSave.CDN))
+            try
             {
-                string FinalCDNURL = FileSettingsSave.CDN + "/";
-
-                if (CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
+                if (!string.IsNullOrEmpty(FileSettingsSave.CDN))
                 {
-                    var index = CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
+                    string FinalCDNURL = FileSettingsSave.CDN + "/";
 
-                    if (index >= 0)
+                    if (CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
                     {
-                        Log.Warning("SETTINGS CDNLIST: Found ID Based on OLD Standard");
-                        SettingsCDNPick.SelectedIndex = index;
+                        var index = CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
+
+                        if (index >= 0)
+                        {
+                            Log.Warning("SETTINGS CDNLIST: Found ID Based on OLD Standard");
+                            SettingsCDNPick.SelectedIndex = index;
+                        }
+                        else if (index < 0)
+                        {
+                            Log.Warning("SETTINGS CDNLIST: Failed to Detect Standard!");
+                            SettingsCDNPick.SelectedIndex = 1;
+                            Log.Warning("SETTINGS CDNLIST: Displaying First CDN in List!");
+                        }
                     }
-                    else if (index < 0)
+                    else
                     {
-                        Log.Warning("SETTINGS CDNLIST: Failed to Detect Standard!");
                         SettingsCDNPick.SelectedIndex = 1;
-                        Log.Warning("SETTINGS CDNLIST: Displaying First CDN in List!");
                     }
                 }
                 else
                 {
                     SettingsCDNPick.SelectedIndex = 1;
                 }
-            } else {
-                SettingsCDNPick.SelectedIndex = 1;
+            }
+            catch (Exception Error)
+            {
+                Log.Error("SETTINGS CDNLIST: " + Error.Message);
             }
         }
 

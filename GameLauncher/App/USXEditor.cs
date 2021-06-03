@@ -7,6 +7,8 @@ using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using System.Diagnostics;
+using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 
 namespace GameLauncher.App
 {
@@ -14,6 +16,7 @@ namespace GameLauncher.App
     {
         public static bool FileReadOnly = false;
         public static int AmountofCenterTimes = 0;
+        public static bool ResolutionsListLoaded = false;
         public USXEditor()
         {
             if (File.Exists(FileGameSettings.UserSettingsLocation))
@@ -30,6 +33,7 @@ namespace GameLauncher.App
                 }
 
                 FileGameSettings.Read("Full File");
+                ResolutionsListUpdater.Get();
                 InitializeComponent();
                 SetVisuals();
             }
@@ -223,6 +227,7 @@ namespace GameLauncher.App
                 if (comboBoxPerformanceLevel.SelectedIndex == 5)
                 {
                     this.Size = new Size(596, 842);
+                    comboResolutions.Visible = false;
 
                     if (AmountofCenterTimes == 0)
                     {
@@ -233,6 +238,15 @@ namespace GameLauncher.App
                 else
                 {
                     this.Size = new Size(290, 842);
+
+                    if (ResolutionsListLoaded == true)
+                    {
+                        comboResolutions.Visible = true;
+                    }
+                    else
+                    {
+                        comboResolutions.Visible = false;
+                    }
                 }
             }
             catch (Exception Error)
@@ -243,8 +257,10 @@ namespace GameLauncher.App
 
         private void SettingsSave_Click(object sender, EventArgs e)
         {
-            FileGameSettingsData.ScreenWidth = ValidWholeNumberRange("Resolution", numericResWidth.Value);
-            FileGameSettingsData.ScreenHeight = ValidWholeNumberRange("Resolution", numericResHeight.Value);
+            FileGameSettingsData.ScreenWidth = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5") ? 
+                                               numericResWidth.Value : Convert.ToDecimal(((JsonResolutions)comboResolutions.SelectedItem).Width));
+            FileGameSettingsData.ScreenHeight = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5") ?
+                                                numericResHeight.Value : Convert.ToDecimal(((JsonResolutions)comboResolutions.SelectedItem).Height));
             FileGameSettingsData.Brightness = ValidWholeNumberRange("Brightness", numericBrightness.Value);
             FileGameSettingsData.MasterAudio = ValidDecimalNumberRange(numericMVol.Value);
             FileGameSettingsData.SFXAudio = ValidDecimalNumberRange(numericSFxVol.Value);
@@ -965,6 +981,8 @@ namespace GameLauncher.App
             /* DropDown Menus */
             comboBoxPerformanceLevel.ForeColor = Theming.CDNMenuTextForeColor;
             comboBoxPerformanceLevel.BackColor = Theming.CDNMenuBGForeColor;
+            comboResolutions.ForeColor = Theming.CDNMenuTextForeColor;
+            comboResolutions.BackColor = Theming.CDNMenuBGForeColor;
             comboAudioMode.ForeColor = Theming.CDNMenuTextForeColor;
             comboAudioMode.BackColor = Theming.CDNMenuBGForeColor;
             comboBoxCamera.ForeColor = Theming.CDNMenuTextForeColor;
@@ -1162,6 +1180,17 @@ namespace GameLauncher.App
             comboBoxShaderDetail.ValueMember = "Value";
             comboBoxShaderDetail.DataSource = ShaderDetailList;
 
+            try
+            {
+                ResolutionsListLoaded = true;
+                comboResolutions.DisplayMember = "Resolution";
+                comboResolutions.DataSource = ResolutionsListUpdater.List;
+            }
+            catch (Exception Error)
+            {
+                Log.Error("Resolution: " + Error.Message);
+            }
+
             /********************************/
             /* Events                        /
             /********************************/
@@ -1249,6 +1278,31 @@ namespace GameLauncher.App
             else
             {
                 radioMPH.Checked = true;
+            }
+
+            string SavedResolution = FileGameSettingsData.ScreenWidth + "x" + FileGameSettingsData.ScreenHeight;
+            if (!string.IsNullOrEmpty(SavedResolution))
+            {
+                try
+                {
+                    if (ResolutionsListUpdater.List.FindIndex(i => string.Equals(i.Resolution, SavedResolution)) != 0)
+                    {
+                        int Index = ResolutionsListUpdater.List.FindIndex(i => string.Equals(i.Resolution, SavedResolution));
+
+                        if (Index >= 0)
+                        {
+                            comboResolutions.SelectedIndex = Index;
+                        }
+                    }
+                    else
+                    {
+                        comboResolutions.SelectedIndex = 1;
+                    }
+                }
+                catch (Exception Error)
+                {
+                    Log.Error("USXE Resolution" + Error.Message);
+                }
             }
         }
 

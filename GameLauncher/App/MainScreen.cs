@@ -151,10 +151,31 @@ namespace GameLauncher
 
             MainEmail.Text = FileAccountSave.UserRawEmail;
             MainPassword.Text = FileAccountSave.UserRawPassword;
-            if (!string.IsNullOrEmpty(FileAccountSave.UserRawEmail) && !string.IsNullOrEmpty(FileAccountSave.UserHashedPassword))
+
+            Log.Core("LAUNCHER: Checking for password");
+            if (!string.IsNullOrEmpty(FileAccountSave.UserHashedPassword))
+            {
+                _loginEnabled = true;
+                _serverEnabled = true;
+                _useSavedPassword = true;
+                LoginButton.BackgroundImage = Theming.GrayButton;
+                LoginButton.ForeColor = Theming.FivithTextForeColor;
+            }
+            else
+            {
+                _loginEnabled = false;
+                _serverEnabled = false;
+                _useSavedPassword = false;
+                LoginButton.BackgroundImage = Theming.GrayButton;
+                LoginButton.ForeColor = Theming.SixTextForeColor;
+            }
+
+            if (!string.IsNullOrEmpty(FileAccountSave.UserRawEmail) && 
+                (!string.IsNullOrEmpty(FileAccountSave.UserHashedPassword) || !string.IsNullOrEmpty(FileAccountSave.UserRawPassword)))
             {
                 Log.Core("LAUNCHER: Restoring last saved email and password");
                 RememberMe.Checked = true;
+                FileAccountSave.SaveLoginInformation = true;
             }
 
             /* Server Display List */
@@ -234,24 +255,6 @@ namespace GameLauncher
                 Log.Core("SERVERLIST: All done");
             }
 
-            Log.Core("LAUNCHER: Checking for password");
-            if (!string.IsNullOrEmpty(FileAccountSave.UserHashedPassword))
-            {
-                _loginEnabled = true;
-                _serverEnabled = true;
-                _useSavedPassword = true;
-                LoginButton.BackgroundImage = Theming.GrayButton;
-                LoginButton.ForeColor = Theming.FivithTextForeColor;
-            }
-            else
-            {
-                _loginEnabled = false;
-                _serverEnabled = false;
-                _useSavedPassword = false;
-                LoginButton.BackgroundImage = Theming.GrayButton;
-                LoginButton.ForeColor = Theming.SixTextForeColor;
-            }
-
             Log.Core("LAUNCHER: Re-checking InstallationDirectory: " + FileSettingsSave.GameInstallation);
 
             var drive = Path.GetPathRoot(FileSettingsSave.GameInstallation);
@@ -298,8 +301,6 @@ namespace GameLauncher
                 LauncherStatusDesc.Text = "Version: v" + Application.ProductVersion;
             }
 
-            /* Load Settings API Connection Status */
-            Task.Delay(800);
             PingServerListAPIStatus();
 
             /* Remove TracksHigh Folder and Files */
@@ -793,7 +794,7 @@ namespace GameLauncher
                         /* Server Set Speedbug Timer Display */
                         try
                         {
-                            int serverSecondsToShutDown = (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
+                            int serverSecondsToShutDown = (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 7200;
                             string serverSecondsToShutDownNamed = string.Format("Gameplay Timer: " + TimeConversions.RelativeTime(serverSecondsToShutDown));
 
                             this.ServerShutDown.Text = serverSecondsToShutDownNamed;
@@ -1173,10 +1174,7 @@ namespace GameLauncher
             }
 
             SettingsButton.BackgroundImage = Theming.GearButtonClick;
-
-            if (!(ServerPick.SelectedItem is ServerList server)) return;
-
-            new SettingsScreen(server.IpAddress, server.Name).ShowDialog();
+            new SettingsScreen().ShowDialog();
         }
 
         private void SettingsButton_MouseEnter(object sender, EventArgs e)

@@ -172,10 +172,12 @@
     <Compile Include="App\Classes\LauncherCore\LauncherUpdater\UpdaterExecutable.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonCDNList.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonLanguage.cs" />
+    <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonResolutions.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonRootCA.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonServerInfo.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonServerList.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\LanguageListUpdater.cs" />
+    <Compile Include="App\Classes\LauncherCore\Lists\ResolutionsListUpdater.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\JSON\JsonServerModNet.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\DiscordLauncherPresense.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\Email\IsEmailValid.cs" />
@@ -219,6 +221,7 @@
     <Compile Include="App\Classes\LauncherCore\RPC\DiscordGamePresence.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\EventList.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\CertificateStore.cs" />
+    <Compile Include="App\Classes\SystemPlatform\Windows\ScreenResolutions.cs" />
     <Compile Include="App\RegisterScreen.cs">
       <SubType>Form</SubType>
     </Compile>

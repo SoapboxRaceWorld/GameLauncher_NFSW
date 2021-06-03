@@ -3,7 +3,7 @@ using System.Management;
 using System.Security.Cryptography;
 using System.Text;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Components
@@ -28,8 +28,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                 Temp = Value();
                 Temp = ValueAlt();
 
-                /* (Start Process) Sets up Theming */
-                Theming.CheckIfThemeExists();
+                /* (Start Process) Sets Up Langauge List */
+                LanguageListUpdater.GetList();
             }
 
             public static string Value()
@@ -112,7 +112,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                 return License_IA;
             }
 
-            private static string Level_One_Value()
+            public static string Level_One_Value()
             {
                 if (string.IsNullOrEmpty(License_B))
                 {
@@ -122,7 +122,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                 return License_B;
             }
 
-            private static string Level_Two_Value()
+            public static string Level_Two_Value()
             {
                 if (string.IsNullOrEmpty(License_A))
                 {
@@ -132,7 +132,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                 return License_A;
             }
 
-            private static string Level_Three_Value()
+            public static string Level_Three_Value()
             {
                 if (string.IsNullOrEmpty(License_C))
                 {

@@ -36,6 +36,9 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public static void NullSafeSettings()
         {
+            /* Pervent Removal of Login Info Before Main Screen (Temporary Boolean) */
+            FileAccountSave.SaveLoginInformation = true;
+
             /* Migrate old Key Entries */
             if (settingFile.KeyExists("Server"))
             {
@@ -57,6 +60,9 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 settingFile.DeleteKey("Password");
                 FileAccountSave.SaveAccount();
             }
+
+            /* Reset This Value as its now Safe to Do So */
+            FileAccountSave.SaveLoginInformation = false;
 
             if (settingFile.KeyExists("Firewall"))
             {
