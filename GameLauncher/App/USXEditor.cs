@@ -226,18 +226,18 @@ namespace GameLauncher.App
 
                 if (comboBoxPerformanceLevel.SelectedIndex == 5)
                 {
-                    this.Size = new Size(596, 842);
+                    Size = new Size(596, 842);
                     comboResolutions.Visible = false;
 
                     if (AmountofCenterTimes == 0)
                     {
                         AmountofCenterTimes++;
-                        this.CenterToScreen();
+                        CenterToScreen();
                     }
                 }
                 else
                 {
-                    this.Size = new Size(290, 842);
+                    Size = new Size(290, 842);
 
                     if (ResolutionsListLoaded == true)
                     {
@@ -379,11 +379,7 @@ namespace GameLauncher.App
                 }
                 else
                 {
-                    if (Type == "Camera" && (ConvertedValue < 0 || ConvertedValue > 3))
-                    {
-                        return 2;
-                    }
-                    else if (ConvertedValue <= 0)
+                    if (ConvertedValue <= 0)
                     {
                         return 0;
                     }
@@ -1207,9 +1203,21 @@ namespace GameLauncher.App
 
             comboBoxPerformanceLevel.SelectedIndexChanged += new EventHandler(comboBoxPerformanceLevel_SelectedIndexChanged);
 
-            /************************************/
-            /* Set Drop Down, Radio, Input Boxes /
-            /************************************/
+            /*********************************************************************/
+            /* Set Drop Down, Radio, Input Boxes, and Set Window Size and Postion /
+            /*********************************************************************/
+
+            /* Bugfix: Set the Size Ahead of Time and it will change after setting the PerformanceLevel Index */
+            Size = new Size(290, 842);
+
+            if (ResolutionsListLoaded == true)
+            {
+                comboResolutions.Visible = true;
+            }
+            else
+            {
+                comboResolutions.Visible = false;
+            }
 
             numericResWidth.Value = Convert.ToInt32(FileGameSettingsData.ScreenWidth);
             numericResHeight.Value = Convert.ToInt32(FileGameSettingsData.ScreenHeight);

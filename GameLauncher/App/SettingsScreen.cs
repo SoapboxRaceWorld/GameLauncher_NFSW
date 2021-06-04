@@ -362,8 +362,6 @@ namespace GameLauncher.App
             /* Enable/Disable Visuals       /
             /*******************************/
 
-            SettingsUEditorButton.Visible = EnableInsiderDeveloper.Allowed();
-
             if (File.Exists(FileSettingsSave.GameInstallation + "/NFSWO_COMMUNICATION_LOG.txt"))
             {
                 SettingsClearCommunicationLogButton.Enabled = true;

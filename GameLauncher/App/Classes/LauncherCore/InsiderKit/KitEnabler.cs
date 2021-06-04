@@ -4,7 +4,7 @@
     class InsiderInfo
     {
         /* Current month, day, year (2 digits), and letter! Ex: 12-15-20-A */
-        public static string InsiderBuildNumber = "05-22-21-C";
+        public static string InsiderBuildNumber = "06-03-21-C";
 
         public static string BuildNumberOnly()
         {
@@ -29,7 +29,7 @@
     /* This is only used for Developers (Bypasses Most Checks) */
     class EnableInsiderDeveloper
     {
-        public static bool Enabled = true;
+        public static bool Enabled = false;
 
         public static bool Allowed()
         {
@@ -40,7 +40,7 @@
     /* This is only used for Beta Testers (Treated like a Public Release) */
     class EnableInsiderBetaTester
     {
-        public static bool Enabled = false;
+        public static bool Enabled = true;
 
         public static bool Allowed()
         {
