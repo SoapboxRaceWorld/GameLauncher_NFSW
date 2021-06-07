@@ -257,9 +257,9 @@ namespace GameLauncher.App
 
         private void SettingsSave_Click(object sender, EventArgs e)
         {
-            FileGameSettingsData.ScreenWidth = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5") ? 
+            FileGameSettingsData.ScreenWidth = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ? 
                                                numericResWidth.Value : Convert.ToDecimal(((JsonResolutions)comboResolutions.SelectedItem).Width));
-            FileGameSettingsData.ScreenHeight = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5") ?
+            FileGameSettingsData.ScreenHeight = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ?
                                                 numericResHeight.Value : Convert.ToDecimal(((JsonResolutions)comboResolutions.SelectedItem).Height));
             FileGameSettingsData.Brightness = ValidWholeNumberRange("Brightness", numericBrightness.Value);
             FileGameSettingsData.MasterAudio = ValidDecimalNumberRange(numericMVol.Value);

@@ -9,6 +9,7 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using System.Net;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.InsiderKit;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -105,7 +106,21 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
                 if (Revisions > 0)
                 {
-                    text.Text = "Launcher Status:\n - Insider Build";
+                    string WhatBuildAmI;
+                    if (EnableInsiderDeveloper.Allowed() == true)
+                    {
+                        WhatBuildAmI = "Developer";
+                    }
+                    else if (EnableInsiderBetaTester.Allowed() == true)
+                    {
+                        WhatBuildAmI = "Beta";
+                    }
+                    else
+                    {
+                        WhatBuildAmI = "Unofficial";
+                    }
+
+                    text.Text = "Launcher Status:\n - " + WhatBuildAmI + " Build";
                     status.BackgroundImage = Theming.UpdateIconWarning;
                     text.ForeColor = Theming.Alert;
                     description.Text = "Version: v" + Application.ProductVersion;
@@ -114,7 +129,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     {
                         FileSettingsSave.IgnoreVersion = String.Empty;
                         FileSettingsSave.SaveSettings();
-                        Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. You're now on the Insider Build Branch!");
+                        Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. You are currenly using a " + WhatBuildAmI + " Build!");
                     }
                 }
                 else if (Revisions == 0)
