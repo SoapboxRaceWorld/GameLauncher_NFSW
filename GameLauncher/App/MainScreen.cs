@@ -1283,8 +1283,8 @@ namespace GameLauncher
             var nfswProcess = Process.Start(psi);
             nfswProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
 
-            var processorAffinity = 0;
-            for (var i = 0; i < Math.Min(Math.Max(1, Environment.ProcessorCount), 8); i++)
+            int processorAffinity = 0;
+            for (int i = 0; i < Math.Min(Math.Max(1, Environment.ProcessorCount), 8); i++)
             {
                 processorAffinity |= 1 << i;
             }
@@ -1292,12 +1292,13 @@ namespace GameLauncher
             nfswProcess.ProcessorAffinity = (IntPtr)processorAffinity;
 
             AntiCheat.process_id = nfswProcess.Id;
+            int ProcessID = 0;
 
             /* TIMER HERE */
             System.Timers.Timer shutdowntimer = new System.Timers.Timer();
             shutdowntimer.Elapsed += (x2, y2) =>
             {
-                int ProcessID = 0;
+                Process[] allOfThem = Process.GetProcessesByName("nfsw");
 
                 if (InformationCache.RestartTimer == 300)
                 {
@@ -1307,11 +1308,8 @@ namespace GameLauncher
                     Notification.BalloonTipText = "Game is going to shut down in 5 minutes. Please restart it manually before the launcher does it.";
                     Notification.ShowBalloonTip(5000);
                     Notification.Dispose();
-                }
-
-                Process[] allOfThem = Process.GetProcessesByName("nfsw");
-
-                if (InformationCache.RestartTimer <= 0)
+                }                
+                else if (InformationCache.RestartTimer <= 0)
                 {
                     if (FunctionStatus.CanCloseGame == true)
                     {
@@ -1357,7 +1355,12 @@ namespace GameLauncher
                     if (t.Seconds != 0) list_of_times.Add(t.Seconds + (t.Seconds != 1 ? " Seconds" : " Second"));
 
                     String secondsToShutDownNamed = String.Empty;
-                    if (list_of_times.Count() >= 2)
+                    if (list_of_times.Count() >= 3 && (
+                    (EnableInsiderDeveloper.Allowed() == true) || (EnableInsiderBetaTester.Allowed() == true)))
+                    {
+                        secondsToShutDownNamed = list_of_times[0] + ", " + list_of_times[1] + ", " + list_of_times[2];
+                    }
+                    else if (list_of_times.Count() >= 2)
                     {
                         secondsToShutDownNamed = list_of_times[0] + ", " + list_of_times[1];
                     }
