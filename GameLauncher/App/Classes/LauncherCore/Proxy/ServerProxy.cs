@@ -25,20 +25,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             _serverName = serverName;
         }
 
-        public static void ExpandPort()
-        {
-            bool isNumeric = int.TryParse(DateTime.Now.Year.ToString(), out int Port);
-
-            if (isNumeric == true)
-            {
-                ProxyPort = new Random().Next(2017, Port);
-            }
-            else
-            {
-                ProxyPort = new Random().Next(2017, 2021);
-            }
-        }
-
         public void Start(string From)
         {
             if (Host != null)
@@ -47,7 +33,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             }
             else
             {
-                ExpandPort();
                 Log.Info("PROXY: Local Proxy Server has Fully Initialized (" + From + ")");
 
                 var hostConfigs = new HostConfiguration()

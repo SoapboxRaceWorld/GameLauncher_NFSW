@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
@@ -184,15 +185,23 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
             if (!string.IsNullOrEmpty(Proxy))
             {
-                if (Proxy != "1" || Proxy != "0")
+                if (Proxy == "1" || Proxy == "0")
+                {
+                    /* Nothing */
+                }
+                else
                 {
                     Proxy = "0";
-                }
+                }                    
             }
 
             if (!string.IsNullOrEmpty(RPC))
             {
-                if (RPC != "1" || RPC != "0")
+                if (RPC == "1" || RPC == "0")
+                {
+                    /* Nothing */
+                }
+                else
                 {
                     RPC = "0";
                 }
@@ -200,13 +209,31 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
             /* Key Entries to Convert into Boolens */
 
+            /** Proxy Port Number **/
+            bool UsingCustomProxyPort = false;
+
             if (!string.IsNullOrEmpty(settingFile.Read("ProxyPort")))
             {
-                var isNumeric = int.TryParse(settingFile.Read("ProxyPort"), out int Port);
+                bool isNumeric = int.TryParse(settingFile.Read("ProxyPort"), out int Port);
 
                 if (isNumeric == true)
                 {
                     ServerProxy.ProxyPort = Port;
+                    UsingCustomProxyPort = true;
+                }
+            }
+
+            if (UsingCustomProxyPort == false)
+            {
+                bool isNumeric = int.TryParse(DateTime.Now.Year.ToString(), out int Port);
+
+                if (isNumeric == true)
+                {
+                    ServerProxy.ProxyPort = new Random().Next(2017, Port);
+                }
+                else
+                {
+                    ServerProxy.ProxyPort = new Random().Next(2017, 2021);
                 }
             }
 
