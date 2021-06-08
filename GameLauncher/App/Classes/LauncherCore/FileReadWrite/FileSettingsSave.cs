@@ -180,15 +180,25 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 }
             }
 
-            /* Key Entries to Convert into Boolens */
+            /* Key Entries to Check for Valid "Range" */
 
             if (!string.IsNullOrEmpty(Proxy))
             {
-                if (Proxy == "1")
+                if (Proxy != "1" || Proxy != "0")
                 {
-                    FunctionStatus.DisableProxy = true;
+                    Proxy = "0";
                 }
             }
+
+            if (!string.IsNullOrEmpty(RPC))
+            {
+                if (RPC != "1" || RPC != "0")
+                {
+                    RPC = "0";
+                }
+            }
+
+            /* Key Entries to Convert into Boolens */
 
             if (!string.IsNullOrEmpty(settingFile.Read("ProxyPort")))
             {

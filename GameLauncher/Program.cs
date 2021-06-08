@@ -459,9 +459,8 @@ namespace GameLauncher
 
             if (FileSettingsSave.Proxy == "0")
             {
-                ServerProxy.ExpandPort();
                 Log.Info("PROXY: Starting Proxy (From Startup)");
-                ServerProxy.Instance.Start("Splash Screen");
+                ServerProxy.Instance.Start("Splash Screen [Program.cs]");
             }
 
             /* (Starts Function Chain) Check if Redistributable Packages are Installed */

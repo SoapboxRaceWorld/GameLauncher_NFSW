@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.SystemPlatform;
@@ -53,7 +54,7 @@ namespace GameLauncher.App.Classes.LauncherCore
 
         public static void EnableChecks()
         {
-            if (FunctionStatus.DisableProxy == false)
+            if (FileSettingsSave.Proxy == "0")
             {
                 Process process = Process.GetProcessById(process_id);
                 IntPtr processHandle = Kernel32.OpenProcess(0x0010, false, process.Id);
@@ -111,7 +112,7 @@ namespace GameLauncher.App.Classes.LauncherCore
 
         public static void LocalEnablechecks()
         {
-            if (FunctionStatus.DisableProxy == true)
+            if (FileSettingsSave.Proxy == "1")
             {
                 Process process = Process.GetProcessById(process_id);
                 IntPtr processHandle = Kernel32.OpenProcess(0x0010, false, process.Id);
@@ -175,7 +176,7 @@ namespace GameLauncher.App.Classes.LauncherCore
             {
                 try
                 {
-                    if (FunctionStatus.DisableProxy == false)
+                    if (FileSettingsSave.Proxy == "0")
                     {
                         foreach (string report_url in URLs.AntiCheatFD)
                         {
@@ -232,7 +233,7 @@ namespace GameLauncher.App.Classes.LauncherCore
                 catch { }
             }
 
-            if (FunctionStatus.DisableProxy == true)
+            if (FileSettingsSave.Proxy == "1")
             {
                 InformationCache.RestartTimer = 0;
             }

@@ -27,7 +27,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         public static void ExpandPort()
         {
-            var isNumeric = int.TryParse(DateTime.Now.Year.ToString(), out int Port);
+            bool isNumeric = int.TryParse(DateTime.Now.Year.ToString(), out int Port);
 
             if (isNumeric == true)
             {
@@ -47,6 +47,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             }
             else
             {
+                ExpandPort();
                 Log.Info("PROXY: Local Proxy Server has Fully Initialized (" + From + ")");
 
                 var hostConfigs = new HostConfiguration()

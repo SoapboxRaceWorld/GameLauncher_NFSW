@@ -253,11 +253,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
 
                     if (String.IsNullOrEmpty(ServerObjectResponse.Error) || ServerObjectResponse.Error == "SERVER FULL")
                     {
-                        Tokens.UserId = ServerObjectResponse.UserId;
-                        Tokens.LoginToken = ServerObjectResponse.Token;
-
                         if (Method == "Login")
                         {
+                            Tokens.UserId = ServerObjectResponse.UserId;
+                            Tokens.LoginToken = ServerObjectResponse.Token;
+
                             if (!String.IsNullOrEmpty(ServerObjectResponse.Warning))
                             {
                                 Tokens.Warning = ServerObjectResponse.Warning;

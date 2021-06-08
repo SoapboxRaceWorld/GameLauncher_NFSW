@@ -1189,19 +1189,21 @@ namespace GameLauncher
 
         private void StartGame(string UserID, string LoginToken)
         {
-            if (InformationCache.SelectedServerData.Name == "Freeroam Sparkserver")
+            if (InformationCache.ModernAuthSupport == true)
             {
                 if (ServerProxy.Host == null)
                 {
                     ServerProxy.Instance.Start("Start Game");
                 }
-                /* Force start proxy and enable it */
-                FunctionStatus.DisableProxy = false;
             }
 
             _nfswstarted = new Thread(() =>
             {
-                if (FunctionStatus.DisableProxy == true || ServerProxy.Host == null)
+                if (ServerProxy.Host != null)
+                {
+                    LaunchGame(UserID, LoginToken, "http://127.0.0.1:" + ServerProxy.ProxyPort + "/nfsw/Engine.svc", this);
+                }
+                else
                 {
                     Uri convert = new Uri(InformationCache.SelectedServerData.IpAddress);
 
@@ -1215,10 +1217,6 @@ namespace GameLauncher
                     }
 
                     LaunchGame(UserID, LoginToken, InformationCache.SelectedServerData.IpAddress, this);
-                }
-                else
-                {
-                    LaunchGame(UserID, LoginToken, "http://127.0.0.1:" + ServerProxy.ProxyPort + "/nfsw/Engine.svc", this);
                 }
             })
             { IsBackground = true };
@@ -1325,7 +1323,7 @@ namespace GameLauncher
                     }
                 }
 
-                if (FunctionStatus.DisableProxy == true)
+                if (FileSettingsSave.Proxy == "1")
                 {
                     if (ProcessID == 0)
                     {
@@ -1829,7 +1827,7 @@ namespace GameLauncher
                     }
                     else
                     {
-                        var secondsToCloseLauncher = 10;
+                        int secondsToCloseLauncher = 10;
 
                         ExtractingProgress.Value = 100;
                         ExtractingProgress.Width = 519;
@@ -2560,7 +2558,7 @@ namespace GameLauncher
                 VisualsAPIChecker.PingAPIStatus();
             }
 
-            Log.Debug("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + FunctionStatus.DisableProxy);
+            Log.Debug("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + FileSettingsSave.Proxy);
 
             Shown += (x, y) =>
             {

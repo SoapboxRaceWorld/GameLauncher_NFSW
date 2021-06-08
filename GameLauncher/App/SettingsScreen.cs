@@ -513,12 +513,10 @@ namespace GameLauncher.App
                 if (FileSettingsSave.Proxy == "1")
                 {
                     ServerProxy.Instance.Stop("Settings Screen");
-                    FunctionStatus.DisableProxy = true;
                 }
                 else
                 {
                     ServerProxy.Instance.Start("Settings Screen");
-                    FunctionStatus.DisableProxy = false;
                 }
 
                 _restartRequired = true;
