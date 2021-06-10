@@ -94,42 +94,6 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 }
             }
 
-            if (uri == "/events/gettreasurehunteventsession")
-            {
-                PersonaTreasure = 0;
-                TotalTreasure = 15;
-                TEDay = 0;
-
-                SBRW_XML.LoadXml(serverreply);
-                var xPersonaTreasure = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/CoinsCollected").InnerText);
-                for (var i = 0; i < 15; i++)
-                {
-                    if ((xPersonaTreasure & (1 << (15 - i))) != 0) PersonaTreasure++;
-                }
-
-                TotalTreasure = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/NumCoins").InnerText);
-                TEDay = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/Streak").InnerText);
-            }
-
-            if (uri == "/events/notifycoincollected")
-            {
-                PersonaTreasure++;
-
-                _presence.Details = "Collecting gems (" + PersonaTreasure + " of " + TotalTreasure + ")";
-                _presence.State = LauncherRPC;
-                _presence.Assets = new Assets
-                {
-                    LargeImageText = PersonaName + " - Level: " + PersonaLevel,
-                    LargeImageKey = PersonaAvatarId,
-                    SmallImageText = "Treasure Hunt - Day: " + TEDay,
-                    SmallImageKey = "gamemode_treasure"
-                };
-                _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
-
-                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
-            }
-
-
             if (uri == "/User/SecureLoginPersona")
             {
                 LoggedPersonaId = GET.Split(';').Last().Split('=').Last();
@@ -199,70 +163,41 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 }
             }
 
-            if (uri == "/matchmaking/leavelobby" || uri == "/matchmaking/declineinvite")
+            if (uri == "/events/gettreasurehunteventsession")
             {
-                _presence.Details = "Driving " + PersonaCarName;
-                _presence.State = LauncherRPC;
-                _presence.Assets = new Assets
-                {
-                    LargeImageText = PersonaName + " - Level: " + PersonaLevel,
-                    LargeImageKey = PersonaAvatarId,
-                    SmallImageText = "In-Freeroam",
-                    SmallImageKey = "gamemode_freeroam"
-                };
-                _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
-
-                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
-
-                eventTerminatedManually = true;
-                FunctionStatus.CanCloseGame = true;
-            }
-
-            /* IN LOBBY */
-            if (uri == "/matchmaking/acceptinvite")
-            {
-                FunctionStatus.CanCloseGame = false;
+                /* Treasure Hunt Streak/Gems From Server */
+                PersonaTreasure = 0;
+                TotalTreasure = 15;
+                TEDay = 0;
 
                 SBRW_XML.LoadXml(serverreply);
-                var eventIdNode = SBRW_XML.SelectSingleNode("LobbyInfo/EventId");
-
-                if (eventIdNode != null)
+                var xPersonaTreasure = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/CoinsCollected").InnerText);
+                for (var i = 0; i < 15; i++)
                 {
-                    EventID = Convert.ToInt32(eventIdNode.InnerText);
-
-                    _presence.Details = "In Lobby: " + EventsList.GetEventName(EventID);
-                    _presence.State = serverName;
-                    _presence.Assets = new Assets
-                    {
-                        LargeImageText = PersonaName + " - Level: " + PersonaLevel,
-                        LargeImageKey = PersonaAvatarId,
-                        SmallImageText = EventsList.GetEventName(Convert.ToInt32(EventID)),
-                        SmallImageKey = EventsList.GetEventType(Convert.ToInt32(EventID))
-                    };
-                    _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
-
-                    if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
-
-                    eventTerminatedManually = false;
+                    if ((xPersonaTreasure & (1 << (15 - i))) != 0) PersonaTreasure++;
                 }
+
+                TotalTreasure = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/NumCoins").InnerText);
+                TEDay = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/Streak").InnerText);
             }
 
-            if (uri == "/matchmaking/joinqueueracenow")
+            if (uri == "/events/notifycoincollected")
             {
-                _presence.Details = "Searching for event...";
+                /* Actively Collection Treasure Hunt Gems */
+                PersonaTreasure++;
+
+                _presence.Details = "Collecting G sems (" + PersonaTreasure + " of " + TotalTreasure + ")";
                 _presence.State = LauncherRPC;
                 _presence.Assets = new Assets
                 {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                     LargeImageKey = PersonaAvatarId,
-                    SmallImageText = "In-Freeroam",
-                    SmallImageKey = "gamemode_freeroam"
+                    SmallImageText = "Treasure Hunt - Day: " + TEDay,
+                    SmallImageKey = "gamemode_treasure"
                 };
                 _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
                 if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
-
-                eventTerminatedManually = true;
             }
 
             /* IN SAFEHOUSE/FREEROAM */
@@ -295,14 +230,87 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
             }
 
+            if (uri == "/matchmaking/leavelobby" || uri == "/matchmaking/declineinvite")
+            {
+                /* Display Current Car in Freeroam */
+                _presence.Details = "Driving " + PersonaCarName;
+                _presence.State = LauncherRPC;
+                _presence.Assets = new Assets
+                {
+                    LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                    LargeImageKey = PersonaAvatarId,
+                    SmallImageText = "In-Freeroam",
+                    SmallImageKey = "gamemode_freeroam"
+                };
+                _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
+
+                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
+
+                if (uri == "/matchmaking/leavelobby")
+                {
+                    AntiCheat.DisableChecks(false);
+                }
+
+                eventTerminatedManually = true;
+                FunctionStatus.CanCloseGame = true;
+            }
+            /* IN LOBBY */
+            else if (uri == "/matchmaking/acceptinvite")
+            {
+                /* Accept (Group/Search) Event Invite */
+                FunctionStatus.CanCloseGame = false;
+
+                SBRW_XML.LoadXml(serverreply);
+                var eventIdNode = SBRW_XML.SelectSingleNode("LobbyInfo/EventId");
+
+                if (eventIdNode != null)
+                {
+                    EventID = Convert.ToInt32(eventIdNode.InnerText);
+
+                    _presence.Details = "In Lobby: " + EventsList.GetEventName(EventID);
+                    _presence.State = serverName;
+                    _presence.Assets = new Assets
+                    {
+                        LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                        LargeImageKey = PersonaAvatarId,
+                        SmallImageText = EventsList.GetEventName(Convert.ToInt32(EventID)),
+                        SmallImageKey = EventsList.GetEventType(Convert.ToInt32(EventID))
+                    };
+                    _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
+
+                    if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
+
+                    eventTerminatedManually = false;
+                }
+            }
+            else if (uri == "/matchmaking/joinqueueracenow")
+            {
+                /* Searching for Events */
+                _presence.Details = "Searching for Event";
+                _presence.State = LauncherRPC;
+                _presence.Assets = new Assets
+                {
+                    LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                    LargeImageKey = PersonaAvatarId,
+                    SmallImageText = "In-Freeroam",
+                    SmallImageKey = "gamemode_freeroam"
+                };
+                _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
+
+                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
+
+                eventTerminatedManually = true;
+            }
+
             /* IN EVENT */
             if (Regex.Match(uri, "/matchmaking/launchevent").Success)
             {
+                /* Singleplayer Event (Launch) */
                 FunctionStatus.CanCloseGame = false;
 
                 EventID = Convert.ToInt32(splitted_uri[3]);
 
-                _presence.Details = "In Event: " + EventsList.GetEventName(EventID);
+                _presence.Details = "Loading Event: " + EventsList.GetEventName(EventID);
                 _presence.State = serverName;
                 _presence.Assets = new Assets
                 {
@@ -317,26 +325,9 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
                 eventTerminatedManually = false;
             }
-            if (uri == "/event/arbitration")
+            else if (uri == "/event/launched" && eventTerminatedManually == false)
             {
-                _presence.Details = "In Event: " + EventsList.GetEventName(EventID);
-                _presence.State = serverName;
-                _presence.Assets = new Assets
-                {
-                    LargeImageText = PersonaName + " - Level: " + PersonaLevel,
-                    LargeImageKey = PersonaAvatarId,
-                    SmallImageText = EventsList.GetEventName(EventID),
-                    SmallImageKey = EventsList.GetEventType(EventID)
-                };
-                _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
-
-                AntiCheat.DisableChecks();
-                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
-
-                eventTerminatedManually = false;
-            }
-            if (uri == "/event/launched" && eventTerminatedManually == false)
-            {
+                /* Once the Race Starts */
                 _presence.Details = "In Event: " + EventsList.GetEventName(EventID);
                 _presence.State = serverName;
                 _presence.Assets = new Assets
@@ -352,6 +343,25 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 AntiCheat.EnableChecks();
 
                 if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
+            }
+            else if (uri == "/event/arbitration")
+            {
+                /* Once the Race Finishes */
+                _presence.Details = "Finished Event: " + EventsList.GetEventName(EventID);
+                _presence.State = serverName;
+                _presence.Assets = new Assets
+                {
+                    LargeImageText = PersonaName + " - Level: " + PersonaLevel,
+                    LargeImageKey = PersonaAvatarId,
+                    SmallImageText = EventsList.GetEventName(EventID),
+                    SmallImageKey = EventsList.GetEventType(EventID)
+                };
+                _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
+
+                AntiCheat.DisableChecks(true);
+                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
+
+                eventTerminatedManually = false;
             }
 
             /* CARS RELATED */

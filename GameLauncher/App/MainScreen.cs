@@ -1328,13 +1328,13 @@ namespace GameLauncher
                     if (ProcessID == 0)
                     {
                         ProcessID++;
-                        AntiCheat.LocalEnablechecks();
+                        AntiCheat.EnableChecks();
                     }
 
                     if (FunctionStatus.ExternalToolsWasUsed == true && ProcessID == 1)
                     {
                         ProcessID++;
-                        AntiCheat.DisableChecks();
+                        AntiCheat.DisableChecks(true);
                     }
                 }
 
@@ -1389,7 +1389,7 @@ namespace GameLauncher
                 nfswProcess.Exited += (sender2, e2) =>
                 {
                     _nfswPid = 0;
-                    var exitCode = nfswProcess.ExitCode;
+                    int exitCode = nfswProcess.ExitCode;
 
                     if (FunctionStatus.GameKilledBySpeedBugCheck == true)
                     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
+using System;
 
 namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
@@ -73,6 +74,51 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
             else
             {
                 return "Unknown";
+            }
+        }
+
+        public static void MUFRTime(string Mode)
+        {
+            if (Mode == "0")
+            {
+                int seconds = InformationCache.RestartTimer;
+
+                if (seconds >= 2592000)
+                {
+                    InformationCache.RestartTimer = seconds - 2592000;
+                }
+                else if (seconds >= 86400)
+                {
+                    InformationCache.RestartTimer = seconds - 86400;
+                }
+                else if (seconds >= 3600)
+                {
+                    InformationCache.RestartTimer = seconds - 3600;
+                }
+                else if (seconds >= 1800)
+                {
+                    InformationCache.RestartTimer = seconds - 1800;
+                }
+                else if (seconds >= 600)
+                {
+                    InformationCache.RestartTimer = seconds - 600;
+                }
+                else if (seconds >= 60)
+                {
+                    InformationCache.RestartTimer = seconds - 60;
+                }
+                else if (seconds >= 0)
+                {
+                    InformationCache.RestartTimer = seconds - 30;
+                }
+                else
+                {
+                    InformationCache.RestartTimer = 0;
+                }
+            }
+            else
+            {
+                InformationCache.RestartTimer = 0;
             }
         }
     }

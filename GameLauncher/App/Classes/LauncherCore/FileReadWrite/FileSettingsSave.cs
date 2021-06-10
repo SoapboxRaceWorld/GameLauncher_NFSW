@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
@@ -17,9 +16,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public static string Lang = !string.IsNullOrEmpty(settingFile.Read("Language")) ? settingFile.Read("Language") : "EN";
 
-        public static string Proxy = !string.IsNullOrEmpty(settingFile.Read("DisableProxy")) ? settingFile.Read("DisableProxy") : "0";
+        public static string Proxy = (!string.IsNullOrEmpty(settingFile.Read("DisableProxy")) 
+                                      && (settingFile.Read("DisableProxy") == "1" || settingFile.Read("DisableProxy") == "0")) ? settingFile.Read("DisableProxy") : "0";
 
-        public static string RPC = !string.IsNullOrEmpty(settingFile.Read("DisableRPC")) ? settingFile.Read("DisableRPC") : "0";
+        public static string RPC = (!string.IsNullOrEmpty(settingFile.Read("DisableRPC")) 
+                                    && (settingFile.Read("DisableRPC") == "1" || settingFile.Read("DisableRPC") == "0")) ? settingFile.Read("DisableRPC") : "0";
 
         public static string IgnoreVersion = !string.IsNullOrEmpty(settingFile.Read("IgnoreUpdateVersion")) ? settingFile.Read("IgnoreUpdateVersion") : string.Empty;
 
@@ -178,32 +179,6 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 else if (WindowsProductVersion.CachedWindowsNumber != 6.1 && settingFile.KeyExists("PatchesApplied"))
                 {
                     settingFile.DeleteKey("PatchesApplied");
-                }
-            }
-
-            /* Key Entries to Check for Valid "Range" */
-
-            if (!string.IsNullOrEmpty(Proxy))
-            {
-                if (Proxy == "1" || Proxy == "0")
-                {
-                    /* Nothing */
-                }
-                else
-                {
-                    Proxy = "0";
-                }                    
-            }
-
-            if (!string.IsNullOrEmpty(RPC))
-            {
-                if (RPC == "1" || RPC == "0")
-                {
-                    /* Nothing */
-                }
-                else
-                {
-                    RPC = "0";
                 }
             }
 
