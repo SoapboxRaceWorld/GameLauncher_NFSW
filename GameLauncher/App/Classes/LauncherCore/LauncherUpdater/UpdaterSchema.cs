@@ -41,6 +41,9 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("prerelease")]
+        public bool PreRelease { get; set; }
+
         [JsonProperty("assets")]
         public List<AssetModel> Assets { get; set; }
 

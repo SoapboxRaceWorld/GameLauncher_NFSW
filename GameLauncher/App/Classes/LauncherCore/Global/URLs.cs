@@ -14,7 +14,7 @@
 
         public static string ModNet = "https://cdn.soapboxrace.world";
 
-        public static string GitHub_Launcher = "https://api.github.com/repos/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest";
+        public static string GitHub_Launcher = "https://api.github.com/repos/DavidCarbon-SBRW/Test/releases";
 
         public static string GitHub_Updater = "https://api.github.com/repos/SoapboxRaceWorld/GameLauncherUpdater/releases/latest";
 
