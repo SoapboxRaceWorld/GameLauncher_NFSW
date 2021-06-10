@@ -55,73 +55,70 @@ namespace GameLauncher.App.Classes.LauncherCore
 
         public static void EnableChecks()
         {
-            if (FileSettingsSave.Proxy == "0")
+            Process process = Process.GetProcessById(process_id);
+            IntPtr processHandle = Kernel32.OpenProcess(0x0010, false, process.Id);
+            int baseAddress = process.MainModule.BaseAddress.ToInt32();
+
+            thread = new Thread(() =>
             {
-                Process process = Process.GetProcessById(process_id);
-                IntPtr processHandle = Kernel32.OpenProcess(0x0010, false, process.Id);
-                int baseAddress = process.MainModule.BaseAddress.ToInt32();
-
-                thread = new Thread(() =>
+                while (true)
                 {
-                    while (true)
+                    foreach (var oneAddress in addresses)
                     {
-                        foreach (var oneAddress in addresses)
+                        int bytesRead = 0;
+                        byte[] buffer = new byte[4];
+                        Kernel32.ReadProcessMemory((int)processHandle, baseAddress + oneAddress, buffer, buffer.Length, ref bytesRead);
+
+                        String checkInt = "0x" + BitConverter.ToString(buffer).Replace("-", String.Empty);
+
+                        if (oneAddress == 418534 && checkInt != "0x3B010F84" && detect_MULTIHACK == false) { detect_MULTIHACK = true; }
+                        if (oneAddress == 3788216 && checkInt != "0x807DFB00" && detect_FAST_POWERUPS == false) { detect_FAST_POWERUPS = true; }
+                        if (oneAddress == 4552702 && checkInt != "0x76390F2E" && detect_SPEEDHACK == false) { detect_SPEEDHACK = true; }
+                        if (oneAddress == 4476396 && checkInt != "0x84C00F84" && detect_SMOOTH_WALLS == false) { detect_SMOOTH_WALLS = true; }
+                        if (oneAddress == 4506534 && checkInt != "0x74170F57" && detect_TANK_MODE == false) { detect_TANK_MODE = true; }
+                        if (oneAddress == 4587060 && checkInt != "0x74228B16" && detect_WALLHACK == false) { detect_WALLHACK = true; }
+                        if (oneAddress == 4820249 && checkInt != "0x0F845403" && detect_PURSUITBOT == false) { detect_PURSUITBOT = true; }
+                        if (oneAddress == 4486168 && checkInt != "0xF30F1086")
                         {
-                            int bytesRead = 0;
-                            byte[] buffer = new byte[4];
-                            Kernel32.ReadProcessMemory((int)processHandle, baseAddress + oneAddress, buffer, buffer.Length, ref bytesRead);
+                            if (checkInt.Substring(0, 4) == "0xE8" && detect_MULTIHACK == false) { detect_MULTIHACK = true; }
+                            if (checkInt.Substring(0, 4) == "0xE9" && detect_DRIFTMOD == false) { detect_DRIFTMOD = true; }
+                        }
 
-                            String checkInt = "0x" + BitConverter.ToString(buffer).Replace("-", String.Empty);
-
-                            if (oneAddress == 418534 && checkInt != "0x3B010F84" && detect_MULTIHACK == false) { detect_MULTIHACK = true; }
-                            if (oneAddress == 3788216 && checkInt != "0x807DFB00" && detect_FAST_POWERUPS == false) { detect_FAST_POWERUPS = true; }
-                            if (oneAddress == 4552702 && checkInt != "0x76390F2E" && detect_SPEEDHACK == false) { detect_SPEEDHACK = true; }
-                            if (oneAddress == 4476396 && checkInt != "0x84C00F84" && detect_SMOOTH_WALLS == false) { detect_SMOOTH_WALLS = true; }
-                            if (oneAddress == 4506534 && checkInt != "0x74170F57" && detect_TANK_MODE == false) { detect_TANK_MODE = true; }
-                            if (oneAddress == 4587060 && checkInt != "0x74228B16" && detect_WALLHACK == false) { detect_WALLHACK = true; }
-                            if (oneAddress == 4820249 && checkInt != "0x0F845403" && detect_PURSUITBOT == false) { detect_PURSUITBOT = true; }
-                            if (oneAddress == 4486168 && checkInt != "0xF30F1086")
+                        if (FileSettingsSave.Proxy == "1")
+                        {
+                            if (
+                            detect_MULTIHACK == true || detect_FAST_POWERUPS == true || detect_SPEEDHACK == true ||
+                            detect_SMOOTH_WALLS == true || detect_TANK_MODE == true || detect_WALLHACK == true ||
+                            detect_DRIFTMOD == true || detect_PURSUITBOT == true || detect_PMASKER == true)
                             {
-                                if (checkInt.Substring(0, 4) == "0xE8" && detect_MULTIHACK == false) { detect_MULTIHACK = true; }
-                                if (checkInt.Substring(0, 4) == "0xE9" && detect_DRIFTMOD == false) { detect_DRIFTMOD = true; }
+                                FunctionStatus.ExternalToolsWasUsed = true;
                             }
-                            
-                            if (FileSettingsSave.Proxy == "1")
+                        }
+                        else if (FileSettingsSave.Proxy == "0")
+                        {
+                            /* ProfileMasker */
+                            if (oneAddress == 8972152)
                             {
-                                if (
-                                detect_MULTIHACK == true || detect_FAST_POWERUPS == true || detect_SPEEDHACK == true ||
-                                detect_SMOOTH_WALLS == true || detect_TANK_MODE == true || detect_WALLHACK == true ||
-                                detect_DRIFTMOD == true || detect_PURSUITBOT == true || detect_PMASKER == true)
+                                byte[] buffer16 = new byte[16];
+
+                                Kernel32.ReadProcessMemory((int)processHandle, (int)(BitConverter.ToUInt32(buffer, 0) + 0x89), buffer16, buffer16.Length, ref bytesRead);
+                                String MemoryUsername = Encoding.UTF8.GetString(buffer16, 0, buffer16.Length);
+
+                                Console.WriteLine(MemoryUsername.Substring(0, DiscordGamePresence.PersonaName.Length));
+                                Console.WriteLine(DiscordGamePresence.PersonaName);
+
+                                if (MemoryUsername.Substring(0, DiscordGamePresence.PersonaName.Length) != DiscordGamePresence.PersonaName && detect_PMASKER == false)
                                 {
-                                    FunctionStatus.ExternalToolsWasUsed = true;
-                                }
-                            }
-                            else if (FileSettingsSave.Proxy == "0")
-                            {
-                                /* ProfileMasker */
-                                if (oneAddress == 8972152)
-                                {
-                                    byte[] buffer16 = new byte[16];
-
-                                    Kernel32.ReadProcessMemory((int)processHandle, (int)(BitConverter.ToUInt32(buffer, 0) + 0x89), buffer16, buffer16.Length, ref bytesRead);
-                                    String MemoryUsername = Encoding.UTF8.GetString(buffer16, 0, buffer16.Length);
-
-                                    Console.WriteLine(MemoryUsername.Substring(0, DiscordGamePresence.PersonaName.Length));
-                                    Console.WriteLine(DiscordGamePresence.PersonaName);
-
-                                    if (MemoryUsername.Substring(0, DiscordGamePresence.PersonaName.Length) != DiscordGamePresence.PersonaName && detect_PMASKER == false)
-                                    {
-                                        detect_PMASKER = true;
-                                    }
+                                    detect_PMASKER = true;
                                 }
                             }
                         }
-                        Thread.Sleep(100);
                     }
-                })
-                { IsBackground = true };
-                thread.Start();
-            }
+                    Thread.Sleep(100);
+                }
+            })
+            { IsBackground = true };
+            thread.Start();
         }
 
         public static void DisableChecks(bool CompletedEvent)
