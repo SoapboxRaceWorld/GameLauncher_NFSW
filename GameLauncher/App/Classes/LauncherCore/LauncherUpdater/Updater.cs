@@ -10,7 +10,6 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using System.Net;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.InsiderKit;
-using System.Collections.Generic;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -22,7 +21,6 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
         public static string CurrentLauncherBuild = Application.ProductVersion;
         private static string LatestLauncherBuild;
-        public static string BuildMode = (EnableInsiderBetaTester.Allowed() == true) ? "Beta" : "Stable";
 
         public LauncherUpdateCheck(PictureBox statusImage, Label statusText, Label statusDescription)
         {
@@ -66,34 +64,13 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         FunctionStatus.TLS();
                         WebClient Client = new WebClient();
                         Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        var json_data = Client.DownloadString(URLs.GitHub_Launcher + ((EnableInsiderBetaTester.Allowed() == true) ? null : "/latest"));
+                        var json_data = Client.DownloadString(URLs.GitHub_Launcher);
+                        GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
 
-                        if (EnableInsiderBetaTester.Allowed() == true)
+                        if (GHAPI.TagName != null)
                         {
-                            List<GitHubRelease> VersonList = new List<GitHubRelease>();
-                            var JsonList = JsonConvert.DeserializeObject<List<GitHubRelease>>(json_data);
-
-                            foreach (var NoCatList in VersonList)
-                            {
-                                var VersionIndex = JsonList.Find(i => Equals(i.PreRelease, true));
-
-                                if (VersionIndex.TagName != null)
-                                {
-                                    LatestLauncherBuild = VersionIndex.TagName;
-                                    Log.Info("LAUNCHER UPDATE: GitHub Latest Version -> " + VersionIndex.TagName);
-                                }
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
-
-                            if (GHAPI.TagName != null)
-                            {
-                                LatestLauncherBuild = GHAPI.TagName;
-                                Log.Info("LAUNCHER UPDATE: GitHub Latest Version -> " + GHAPI.TagName);
-                            }
+                            LatestLauncherBuild = GHAPI.TagName;
+                            Log.Info("LAUNCHER UPDATE: GitHub Latest Version -> " + GHAPI.TagName);
                         }
                     }
                     catch (Exception error)
@@ -189,7 +166,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         {
                             if (File.Exists("GameLauncherUpdater.exe"))
                             {
-                                Process.Start(@"GameLauncherUpdater.exe", "Beta " + Process.GetCurrentProcess().Id.ToString());
+                                Process.Start(@"GameLauncherUpdater.exe", Process.GetCurrentProcess().Id.ToString());
                             }
                             else
                             {
