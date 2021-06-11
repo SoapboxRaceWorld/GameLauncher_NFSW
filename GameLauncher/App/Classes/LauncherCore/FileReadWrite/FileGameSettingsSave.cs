@@ -351,7 +351,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
             if (Type == "Attributes")
             {
-                if (InsiderKit.EnableInsiderDeveloper.Allowed() == true || InsiderKit.EnableInsiderBetaTester.Allowed() == true)
+                if (InsiderKit.EnableInsiderDeveloper.Allowed() || InsiderKit.EnableInsiderBetaTester.Allowed())
                 {
                     Log.Debug("USX File: Comparing Values for '" + FullNodePath + "' CURRENT: '" + UserSettingsFile.SelectSingleNode(FullNodePath).Attributes[AttributeName].Value +
                               "' COMPARING NEW: '" + ValueComparison + "'");
@@ -364,7 +364,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             }
             else
             {
-                if (InsiderKit.EnableInsiderDeveloper.Allowed() == true || InsiderKit.EnableInsiderBetaTester.Allowed() == true)
+                if (InsiderKit.EnableInsiderDeveloper.Allowed() || InsiderKit.EnableInsiderBetaTester.Allowed())
                 {
                     Log.Debug("USX File: Comparing Values for '" + FullNodePath + "' CURRENT: '" + UserSettingsFile.SelectSingleNode(FullNodePath).InnerText + 
                               "' COMPARING NEW: '" + ValueComparison + "'");

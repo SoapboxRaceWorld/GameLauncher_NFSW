@@ -36,7 +36,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         public static string LauncherRPC = "SBRW Launcher: v" + Theming.PrivacyRPCBuild;
         public static int PersonaTreasure = 0;
         public static int TotalTreasure = 15;
-        public static int TEDay = 0;
+        public static int THDay = 0;
         public static List<string> PersonaIds = new List<string>();
 
         public static void HandleGameState(string uri, string serverreply, string GET)
@@ -168,7 +168,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 /* Treasure Hunt Streak/Gems From Server */
                 PersonaTreasure = 0;
                 TotalTreasure = 15;
-                TEDay = 0;
+                THDay = 0;
 
                 SBRW_XML.LoadXml(serverreply);
                 var xPersonaTreasure = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/CoinsCollected").InnerText);
@@ -178,7 +178,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 }
 
                 TotalTreasure = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/NumCoins").InnerText);
-                TEDay = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/Streak").InnerText);
+                THDay = Convert.ToInt32(SBRW_XML.SelectSingleNode("TreasureHuntEventSession/Streak").InnerText);
             }
 
             if (uri == "/events/notifycoincollected")
@@ -186,13 +186,21 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 /* Actively Collection Treasure Hunt Gems */
                 PersonaTreasure++;
 
-                _presence.Details = "Collecting G sems (" + PersonaTreasure + " of " + TotalTreasure + ")";
+                if (PersonaTreasure != TotalTreasure)
+                {
+                    _presence.Details = "Collecting Gems (" + PersonaTreasure + " of " + TotalTreasure + ")";
+                }
+                else if (PersonaTreasure == TotalTreasure)
+                {
+                    _presence.Details = "Finished Collecting Gems (" + PersonaTreasure + " of " + TotalTreasure + ")";
+                }
+
                 _presence.State = LauncherRPC;
                 _presence.Assets = new Assets
                 {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                     LargeImageKey = PersonaAvatarId,
-                    SmallImageText = "Treasure Hunt - Day: " + TEDay,
+                    SmallImageText = "Treasure Hunt - Day: " + THDay,
                     SmallImageKey = "gamemode_treasure"
                 };
                 _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();

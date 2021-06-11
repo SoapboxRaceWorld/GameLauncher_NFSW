@@ -28,7 +28,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 {
                     JSONResolutions += "{\"resolution\": \"" + vDevMode.dmPelsWidth + "x" + vDevMode.dmPelsHeight + "\", \"dmPelsWidth\": \"" +
                         vDevMode.dmPelsWidth + "\", \"dmPelsHeight\": \"" + vDevMode.dmPelsHeight + "\"},";
-                    if (EnableInsiderDeveloper.Allowed() == true)
+                    if (EnableInsiderDeveloper.Allowed())
                     {
                         Log.Debug("SCREENRESOLUTIONS: " + AmountOfRes + " Width: " + vDevMode.dmPelsWidth + " Height: " + vDevMode.dmPelsHeight +
                             " Color: " + (1 << vDevMode.dmBitsPerPel) + " Frequency: " + vDevMode.dmDisplayFrequency);
@@ -43,7 +43,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 }
                 JSONResolutions += "]";
 
-                if (EnableInsiderDeveloper.Allowed() == true)
+                if (EnableInsiderDeveloper.Allowed())
                 {
                     Log.Debug("SCREENRESOLUTIONS: LIST -> " + JSONResolutions);
                 }

@@ -107,11 +107,11 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 if (Revisions > 0)
                 {
                     string WhatBuildAmI;
-                    if (EnableInsiderDeveloper.Allowed() == true)
+                    if (EnableInsiderDeveloper.Allowed())
                     {
                         WhatBuildAmI = "Developer";
                     }
-                    else if (EnableInsiderBetaTester.Allowed() == true)
+                    else if (EnableInsiderBetaTester.Allowed())
                     {
                         WhatBuildAmI = "Beta";
                     }

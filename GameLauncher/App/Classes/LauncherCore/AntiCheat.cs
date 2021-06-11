@@ -133,73 +133,80 @@ namespace GameLauncher.App.Classes.LauncherCore
             if (detect_PURSUITBOT == true)      cheats_detected |= 128;
             if (detect_PMASKER == true)         cheats_detected |= 256;
 
-            if (cheats_detected != 0 && CompletedEvent == true)
+            if (cheats_detected != 0)
             {
-                try
+                if (cheats_detected == 64 && CompletedEvent == false) 
+                { 
+                    /* You Know the Rules and So Do I */
+                }
+                else
                 {
-                    if (FileSettingsSave.Proxy == "0")
+                    try
                     {
-                        foreach (string report_url in URLs.AntiCheatFD)
+                        if (FileSettingsSave.Proxy == "0")
                         {
-                            if (Completed == 0)
+                            foreach (string report_url in URLs.AntiCheatFD)
                             {
-                                Completed++;
-                                FunctionStatus.ExternalToolsWasUsed = true;
-                            }
-
-                            if (report_url.EndsWith("?"))
-                            {
-                                FunctionStatus.TLS();
-                                WebClient update_data = new WebClient();
-                                update_data.CancelAsync();
-                                update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion);
-                                update_data.DownloadStringAsync(new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&persona_name=" + persona_name + "&event_session=" + event_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + persona_id + "&launcher_hash=" + WebClientWithTimeout.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt()));
-                            }
-                            else
-                            {
-                                FunctionStatus.TLS();
-                                Uri sendReport = new Uri(report_url);
-
-                                var request = (HttpWebRequest)WebRequest.Create(sendReport);
-                                var postData = "serverip=" + serverip + "&user_id=" + user_id + "&persona_name=" + persona_name + "&event_session=" + event_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + persona_id + "&launcher_hash=" + WebClientWithTimeout.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt();
-
-                                var data = Encoding.ASCII.GetBytes(postData);
-                                request.Method = "POST";
-                                request.ContentType = "application/x-www-form-urlencoded";
-                                request.ContentLength = data.Length;
-
-                                using (var stream = request.GetRequestStream())
+                                if (Completed == 0)
                                 {
-                                    stream.Write(data, 0, data.Length);
+                                    Completed++;
+                                    FunctionStatus.ExternalToolsWasUsed = true;
                                 }
 
-                                var response = (HttpWebResponse)request.GetResponse();
-                                String responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (Completed != URLs.AntiCheatSD.Length)
-                        {
-                            foreach (string report_url in URLs.AntiCheatSD)
-                            {
-                                Completed++;
                                 if (report_url.EndsWith("?"))
                                 {
                                     FunctionStatus.TLS();
                                     WebClient update_data = new WebClient();
                                     update_data.CancelAsync();
                                     update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion);
-                                    update_data.DownloadStringAsync(new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&launcher_hash=" + WebClientWithTimeout.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt()));
+                                    update_data.DownloadStringAsync(new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&persona_name=" + persona_name + "&event_session=" + event_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + persona_id + "&launcher_hash=" + WebClientWithTimeout.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt()));
+                                }
+                                else
+                                {
+                                    FunctionStatus.TLS();
+                                    Uri sendReport = new Uri(report_url);
+
+                                    var request = (HttpWebRequest)WebRequest.Create(sendReport);
+                                    var postData = "serverip=" + serverip + "&user_id=" + user_id + "&persona_name=" + persona_name + "&event_session=" + event_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&persona_id=" + persona_id + "&launcher_hash=" + WebClientWithTimeout.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt();
+
+                                    var data = Encoding.ASCII.GetBytes(postData);
+                                    request.Method = "POST";
+                                    request.ContentType = "application/x-www-form-urlencoded";
+                                    request.ContentLength = data.Length;
+
+                                    using (var stream = request.GetRequestStream())
+                                    {
+                                        stream.Write(data, 0, data.Length);
+                                    }
+
+                                    var response = (HttpWebResponse)request.GetResponse();
+                                    String responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (Completed != URLs.AntiCheatSD.Length)
+                            {
+                                foreach (string report_url in URLs.AntiCheatSD)
+                                {
+                                    Completed++;
+                                    if (report_url.EndsWith("?"))
+                                    {
+                                        FunctionStatus.TLS();
+                                        WebClient update_data = new WebClient();
+                                        update_data.CancelAsync();
+                                        update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion);
+                                        update_data.DownloadStringAsync(new Uri(report_url + "serverip=" + serverip + "&user_id=" + user_id + "&cheat_type=" + cheats_detected + "&hwid=" + HardwareID.FingerPrint.Value() + "&launcher_hash=" + WebClientWithTimeout.Value() + "&launcher_certificate=" + CertificateStore.LauncherSerial + "&hwid_fallback=" + HardwareID.FingerPrint.ValueAlt()));
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                catch { }
+                    catch { }
 
-                TimeConversions.MUFRTime(FileSettingsSave.Proxy);
+                    TimeConversions.MUFRTime(FileSettingsSave.Proxy);
+                }
             }
 
             detect_MULTIHACK = detect_FAST_POWERUPS = detect_SPEEDHACK = detect_SMOOTH_WALLS = detect_TANK_MODE = detect_WALLHACK = detect_DRIFTMOD = detect_PURSUITBOT = detect_PMASKER = false;

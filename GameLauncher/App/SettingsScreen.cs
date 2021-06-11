@@ -385,7 +385,7 @@ namespace GameLauncher.App
                 char[] charsToTrim = { '/' };
                 string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
 
-                if(EnableInsiderDeveloper.Allowed() == true)
+                if(EnableInsiderDeveloper.Allowed())
                 {
                     Log.Info("SETTINGS VERIFYHASH: Checking Characters in URL");
                     Log.Info("SETTINGS VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);

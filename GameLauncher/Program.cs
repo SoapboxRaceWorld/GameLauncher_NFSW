@@ -310,10 +310,10 @@ namespace GameLauncher
                 }
             }
 
-            if (EnableInsiderDeveloper.Allowed() == true || EnableInsiderBetaTester.Allowed() == true)
+            if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
             {
                 string Insider = "BETA INSIDER";
-                if (EnableInsiderDeveloper.Allowed() == true)
+                if (EnableInsiderDeveloper.Allowed())
                 {
                     Insider = "DEV INSIDER";
                 }
@@ -321,7 +321,7 @@ namespace GameLauncher
             }
             else
             {
-                Log.Build("BUILD: GameLauncher " + Application.ProductVersion);
+                Log.Build("BUILD: GameLauncher " + Application.ProductVersion + "_" + InsiderInfo.BuildNumberOnly());
             }
 
             Log.Info("LAUNCHER: Detecting OS");

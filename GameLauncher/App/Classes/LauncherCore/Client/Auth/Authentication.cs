@@ -121,7 +121,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     {
                         sbrwXml.LoadXml(LoginResponse);
 
-                        if (EnableInsiderDeveloper.Allowed() == true)
+                        if (EnableInsiderDeveloper.Allowed())
                         {
                             Log.Info("Authentication: Loaded XML -> " + sbrwXml.OuterXml);
                         }
@@ -294,7 +294,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
         {
             try
             {
-                if (EnableInsiderDeveloper.Allowed() == true || EnableInsiderBetaTester.Allowed() == true)
+                if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
                 {
                     Log.Info("XMLSERVERCORE: Attmempting to Read XML [NodePath: '" + FullNodePath + "' Attribute: '" + AttributeName + "']");
                 }
@@ -302,7 +302,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 {
                     if (LocationData.SelectSingleNode(FullNodePath).InnerText == null)
                     {
-                        if (EnableInsiderDeveloper.Allowed() == true || EnableInsiderBetaTester.Allowed() == true)
+                        if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
                         {
                             Log.Info("XMLSERVERCORE: EMPTY VALUE - LAUNCHER");
                         }
@@ -315,7 +315,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 {
                     if (LocationData.SelectSingleNode(FullNodePath) == null)
                     {
-                        if (EnableInsiderDeveloper.Allowed() == true || EnableInsiderBetaTester.Allowed() == true)
+                        if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
                         {
                             Log.Info("XMLSERVERCORE: INVALID NODE - LAUNCHER");
                         }
@@ -331,13 +331,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             }
             catch (Exception Error)
             {
-                if (EnableInsiderDeveloper.Allowed() == true || EnableInsiderBetaTester.Allowed() == true)
+                if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
                 {
                     Log.Error("XMLSERVERCORE: Unable to Read XML [NodePath: '" + FullNodePath + "' Attribute: '" + AttributeName + "']" + Error.Message);
                 }
                 if (Type == "InnerText")
                 {
-                    if (EnableInsiderDeveloper.Allowed() == true || EnableInsiderBetaTester.Allowed() == true)
+                    if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
                     {
                         Log.Error("XMLSERVERCORE: ERROR VALUE - LAUNCHER");
                     }
@@ -345,7 +345,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 }
                 else if (Type == "NodeOnly")
                 {
-                    if (EnableInsiderDeveloper.Allowed() == true || EnableInsiderBetaTester.Allowed() == true)
+                    if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
                     {
                         Log.Error("XMLSERVERCORE: ERROR NODE - LAUNCHER");
                     }
