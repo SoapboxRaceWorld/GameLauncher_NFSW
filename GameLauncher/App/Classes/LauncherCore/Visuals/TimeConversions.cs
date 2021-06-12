@@ -81,6 +81,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         {
             if (Mode == "0")
             {
+                if (AntiCheat.SpeedTicket == 0)
+                {
+                    AntiCheat.SpeedTicket++;
+                    AntiCheat.IAmSpeed = 250;
+                }
+                else if (AntiCheat.SpeedTicket == 1)
+                {
+                    AntiCheat.SpeedTicket++;
+                    AntiCheat.IAmSpeed = 125;
+                }
+
                 int seconds = InformationCache.RestartTimer;
 
                 if (seconds >= 2592000)
@@ -99,9 +110,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 {
                     InformationCache.RestartTimer = seconds - 1800;
                 }
+                else if (seconds >= 900)
+                {
+                    InformationCache.RestartTimer = seconds - 900;
+                }
                 else if (seconds >= 600)
                 {
                     InformationCache.RestartTimer = seconds - 600;
+                }
+                else if (seconds >= 300)
+                {
+                    InformationCache.RestartTimer = seconds - 300;
                 }
                 else if (seconds >= 60)
                 {

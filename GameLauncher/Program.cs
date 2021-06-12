@@ -44,7 +44,8 @@ namespace GameLauncher
                 if (NFSW.IsNFSWRunning())
                 {
                     MessageBox.Show(null, "An instance of Need for Speed: World is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    Application.ExitThread();
+                    LauncherMustClose = true;
+                    Application.Exit();
                 }
 
                 /* INFO: this is here because this dll is necessary for downloading game files and I want to make it async.

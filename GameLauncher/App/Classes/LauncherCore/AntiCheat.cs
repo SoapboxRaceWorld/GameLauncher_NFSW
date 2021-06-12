@@ -28,6 +28,8 @@ namespace GameLauncher.App.Classes.LauncherCore
         public static int cheats_detected = 0;
         public static Thread thread = new Thread(() => { });
         public static int Completed = 0;
+        public static int IAmSpeed = 500;
+        public static int SpeedTicket = 0;
 
         /* INTERNAL */
         public static bool detect_MULTIHACK     = false;
@@ -39,8 +41,9 @@ namespace GameLauncher.App.Classes.LauncherCore
         public static bool detect_DRIFTMOD      = false;
         public static bool detect_PURSUITBOT    = false;
         public static bool detect_PMASKER       = false;
+        public static bool detect_GHOSTING      = false;
 
-        public static List<int> addresses = new List<int> 
+        public static List<int> addresses = new List<int>
         {
             418534,  /* GMZ_MULTIHACK */
             3788216, /* FAST_POWERUPS */
@@ -50,7 +53,8 @@ namespace GameLauncher.App.Classes.LauncherCore
             4587060, /* WALLHACK */
             4486168, /* DRIFTMOD/MULTIHACK */
             4820249, /* PURSUITBOT (NO COPS VARIATION) */
-            8972152 /* PROFILEMASKER! */
+            8972152, /* PROFILEMASKER */
+            4573882  /* GHOSTING */
         };
 
         public static void EnableChecks()
@@ -78,6 +82,8 @@ namespace GameLauncher.App.Classes.LauncherCore
                         if (oneAddress == 4506534 && checkInt != "0x74170F57" && detect_TANK_MODE == false) { detect_TANK_MODE = true; }
                         if (oneAddress == 4587060 && checkInt != "0x74228B16" && detect_WALLHACK == false) { detect_WALLHACK = true; }
                         if (oneAddress == 4820249 && checkInt != "0x0F845403" && detect_PURSUITBOT == false) { detect_PURSUITBOT = true; }
+                        if (oneAddress == 4573882 && checkInt != "0x85FF0F84" && detect_GHOSTING == false) { detect_GHOSTING = true; }
+
                         if (oneAddress == 4486168 && checkInt != "0xF30F1086")
                         {
                             if (checkInt.Substring(0, 4) == "0xE8" && detect_MULTIHACK == false) { detect_MULTIHACK = true; }
@@ -89,7 +95,8 @@ namespace GameLauncher.App.Classes.LauncherCore
                             if (
                             detect_MULTIHACK == true || detect_FAST_POWERUPS == true || detect_SPEEDHACK == true ||
                             detect_SMOOTH_WALLS == true || detect_TANK_MODE == true || detect_WALLHACK == true ||
-                            detect_DRIFTMOD == true || detect_PURSUITBOT == true || detect_PMASKER == true)
+                            detect_DRIFTMOD == true || detect_PURSUITBOT == true || detect_PMASKER == true || 
+                            detect_GHOSTING == true)
                             {
                                 FunctionStatus.ExternalToolsWasUsed = true;
                             }
@@ -114,7 +121,7 @@ namespace GameLauncher.App.Classes.LauncherCore
                             }
                         }
                     }
-                    Thread.Sleep(100);
+                    Thread.Sleep(IAmSpeed);
                 }
             })
             { IsBackground = true };
@@ -132,6 +139,7 @@ namespace GameLauncher.App.Classes.LauncherCore
             if (detect_DRIFTMOD == true)        cheats_detected |= 64;
             if (detect_PURSUITBOT == true)      cheats_detected |= 128;
             if (detect_PMASKER == true)         cheats_detected |= 256;
+            if (detect_GHOSTING == true)        cheats_detected |= 512;
 
             if (cheats_detected != 0)
             {
