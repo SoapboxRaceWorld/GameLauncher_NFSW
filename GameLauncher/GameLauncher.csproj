@@ -152,7 +152,7 @@
     <Compile Include="App\AddServer.Designer.cs">
       <DependentUpon>AddServer.cs</DependentUpon>
     </Compile>
-    <Compile Include="App\Classes\LauncherCore\AntiCheat.cs" />
+    <Compile Include="App\Classes\LauncherCore\Client\AntiCheat.cs" />
     <Compile Include="App\Classes\LauncherCore\API\APIChecker.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\Authentication.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\Tokens.cs" />

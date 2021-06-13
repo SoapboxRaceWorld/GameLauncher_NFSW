@@ -39,7 +39,7 @@ using GameLauncher.App.Classes.SystemPlatform;
 using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
-using GameLauncher.App.Classes.LauncherCore;
+using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Client.Auth;
 
 namespace GameLauncher
@@ -1298,6 +1298,16 @@ namespace GameLauncher
             {
                 Process[] allOfThem = Process.GetProcessesByName("nfsw");
 
+                if (ProcessID == 0)
+                {
+                    ProcessID++;
+                    InformationCache.RestartTimer -= 120;
+                }
+                else
+                {
+                    InformationCache.RestartTimer -= 60;
+                }
+
                 if (InformationCache.RestartTimer == 300)
                 {
                     Notification.Visible = true;
@@ -1325,13 +1335,13 @@ namespace GameLauncher
 
                 if (FileSettingsSave.Proxy == "1")
                 {
-                    if (ProcessID == 0)
+                    if (ProcessID == 1)
                     {
                         ProcessID++;
                         AntiCheat.EnableChecks();
                     }
 
-                    if (FunctionStatus.ExternalToolsWasUsed == true && ProcessID == 1)
+                    if (FunctionStatus.ExternalToolsWasUsed == true && ProcessID == 2)
                     {
                         ProcessID++;
                         AntiCheat.DisableChecks(true);
@@ -1345,33 +1355,26 @@ namespace GameLauncher
                     long p = oneProcess.MainWindowHandle.ToInt64();
                     TimeSpan t = TimeSpan.FromSeconds(InformationCache.RestartTimer);
 
-                    string secondsToShutDownNamed = string.Empty;
+                    String secondsToShutDownNamed = String.Empty;
 
-                    if (!DetectLinux.LinuxDetected())
+                    /* Proper Formatting */
+                    List<string> list_of_times = new List<string>();
+                    if (t.Days != 0) list_of_times.Add(t.Days + (t.Days != 1 ? " Days" : " Day"));
+                    if (t.Hours != 0) list_of_times.Add(t.Hours + (t.Hours != 1 ? " Hours" : " Hour"));
+                    if (t.Minutes != 0) list_of_times.Add(t.Minutes + (t.Minutes != 1 ? " Minutes" : " Minute"));
+                    if (t.Days == 0 && t.Hours == 0 && t.Minutes == 0) list_of_times.Add("Less than a Minute Remaining");
+
+                    if (list_of_times.Count() >= 3 && (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed()))
                     {
-                        /* Proper Formatting */
-                        List<string> list_of_times = new List<string>();
-                        if (t.Days != 0) list_of_times.Add(t.Days + (t.Days != 1 ? " Days" : " Day"));
-                        if (t.Hours != 0) list_of_times.Add(t.Hours + (t.Hours != 1 ? " Hours" : " Hour"));
-                        if (t.Minutes != 0) list_of_times.Add(t.Minutes + (t.Minutes != 1 ? " Minutes" : " Minute"));
-                        if (t.Seconds != 0) list_of_times.Add(t.Seconds + (t.Seconds != 1 ? " Seconds" : " Second"));
-
-                        if (list_of_times.Count() >= 3 && (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed()))
-                        {
-                            secondsToShutDownNamed = list_of_times[0] + ", " + list_of_times[1] + ", " + list_of_times[2];
-                        }
-                        else if (list_of_times.Count() >= 2)
-                        {
-                            secondsToShutDownNamed = list_of_times[0] + ", " + list_of_times[1];
-                        }
-                        else
-                        {
-                            secondsToShutDownNamed = list_of_times[0];
-                        }
+                        secondsToShutDownNamed = list_of_times[0] + ", " + list_of_times[1] + ", " + list_of_times[2];
+                    }
+                    else if (list_of_times.Count() >= 2)
+                    {
+                        secondsToShutDownNamed = list_of_times[0] + ", " + list_of_times[1];
                     }
                     else
                     {
-                        secondsToShutDownNamed = string.Format("{0:D2}:{1:D2}:{2:D2}", t.Hours, t.Minutes, t.Seconds);
+                        secondsToShutDownNamed = list_of_times[0];
                     }
 
                     if (InformationCache.RestartTimer == 0)
@@ -1381,11 +1384,9 @@ namespace GameLauncher
 
                     User32.SetWindowText((IntPtr)p, "NEED FOR SPEED™ WORLD | Server: " + InformationCache.SelectedServerData.Name + " | " + DiscordGamePresence.LauncherRPC + " | Force Restart In: " + secondsToShutDownNamed);
                 }
-
-                --InformationCache.RestartTimer;
             };
 
-            shutdowntimer.Interval = 1000;
+            shutdowntimer.Interval = 60000;
             shutdowntimer.Enabled = true;
 
             if (nfswProcess != null)
@@ -1406,18 +1407,18 @@ namespace GameLauncher
 
                     if (exitCode == 0)
                     {
-                        if (AntiCheat.thread != null)
+                        if (AntiCheat.Secret != null)
                         {
-                            AntiCheat.thread.Abort();
+                            AntiCheat.Secret.Abort();
                         }
 
                         CloseBTN_Click(null, null);
                     }
                     else
                     {
-                        if (AntiCheat.thread != null)
+                        if (AntiCheat.Secret != null)
                         {
-                            AntiCheat.thread.Abort();
+                            AntiCheat.Secret.Abort();
                         }
 
                         x.BeginInvoke(new Action(() =>

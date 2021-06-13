@@ -8,6 +8,7 @@ using DiscordButton = DiscordRPC.Button;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
+using GameLauncher.App.Classes.LauncherCore.Client;
 
 namespace GameLauncher.App.Classes.LauncherCore.RPC
 {
