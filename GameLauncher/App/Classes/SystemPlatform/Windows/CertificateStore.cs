@@ -27,7 +27,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         public static string RootCASubjectName = "CN=Carbon Crew CA, OU=Certificate Authority, O=Carbon Crew Productions, C=US";
         public static string RootCASerial = "7449A8EB07C997A6";
         /* Serial Number of Exe */
-        public static string LauncherSerial = "NOT-SIGNED";
+        public static string LauncherSerial;
 
         /* Retrive CA Information */
         public static void Latest()

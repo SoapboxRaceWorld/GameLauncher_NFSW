@@ -14,9 +14,6 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 {
     class DiscordGamePresence
     {
-        /* Default Discord ID */
-        public static string DiscordRPCID = "540651192179752970";
-
         public static RichPresence _presence = new RichPresence();
 
         /* Some checks */

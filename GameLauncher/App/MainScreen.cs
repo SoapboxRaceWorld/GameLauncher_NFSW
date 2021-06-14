@@ -323,7 +323,7 @@ namespace GameLauncher
             /* Kill DiscordRPC */
             if (DiscordLauncherPresense.Client != null)
             {
-                DiscordLauncherPresense.Stop();
+                DiscordLauncherPresense.Stop("Close");
             }
 
             if (ServerProxy.Host != null)
@@ -1174,6 +1174,7 @@ namespace GameLauncher
             }
 
             SettingsButton.BackgroundImage = Theming.GearButtonClick;
+            DiscordLauncherPresense.Status("Settings", null);
             new SettingsScreen().ShowDialog();
         }
 
@@ -1212,7 +1213,8 @@ namespace GameLauncher
                         Match match = Regex.Match(convert.Host, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
                         if (!match.Success)
                         {
-                            InformationCache.SelectedServerData.IpAddress = InformationCache.SelectedServerData.IpAddress.Replace(convert.Host, FunctionStatus.HostName2IP(convert.Host));
+                            InformationCache.SelectedServerData.IpAddress = 
+                            InformationCache.SelectedServerData.IpAddress.Replace(convert.Host, FunctionStatus.HostName2IP(convert.Host));
                         }
                     }
 
@@ -1223,7 +1225,7 @@ namespace GameLauncher
 
             _nfswstarted.Start();
 
-            DiscordLauncherPresense.Status("In-Game", InformationCache.SelectedServerData.DiscordPresenceKey);
+            DiscordLauncherPresense.Status("In-Game", null);
         }
 
         /* Check Serverlist API Status Upon Main Screen load - DavidCarbon */
@@ -1573,8 +1575,7 @@ namespace GameLauncher
 
                 try
                 {
-                    DiscordLauncherPresense.Status("Download ModNet", null);
-
+                    DiscordLauncherPresense.Status("Checking ModNet", null);
                     /* Get Remote ModNet list to process for checking required ModNet files are present and current */
                     FunctionStatus.TLS();
                     String modules = new WebClient().DownloadString(URLs.ModNet + "/launcher-modules/modules.json");
@@ -1603,6 +1604,8 @@ namespace GameLauncher
                                     File.Delete(FileSettingsSave.GameInstallation + "\\" + ModNetList);
                                 }
 
+                                DiscordLauncherPresense.Status("Download ModNet", ModNetList);
+
                                 FunctionStatus.TLS();
                                 WebClient newModNetFilesDownload = new WebClient();
                                 newModNetFilesDownload.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
@@ -1621,6 +1624,7 @@ namespace GameLauncher
                     catch (Exception error)
                     {
                         Log.Error("MODNET CORE: " + error.Message);
+                        DiscordLauncherPresense.Status("Download ModNet Error", null);
                         CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                         MessageBox.Show(null, $"There was an error with ModNet Files Check:\n{error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -1767,6 +1771,7 @@ namespace GameLauncher
                     catch (Exception error)
                     {
                         Log.Error("LAUNCHER " + error.Message);
+                        DiscordLauncherPresense.Status("Download Server Mods Error", null);
                         CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                         MessageBox.Show(null, $"There was an error with Server Mods Check:\n{error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -1776,6 +1781,7 @@ namespace GameLauncher
                 catch (Exception error)
                 {
                     Log.Error("LAUNCHER " + error.Message);
+                    DiscordLauncherPresense.Status("Download ModNet Error", null);
                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                     MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -1807,10 +1813,7 @@ namespace GameLauncher
         /* Launch game */
         private void LaunchGame()
         {
-            if (InformationCache.SelectedServerData.DiscordAppId != null)
-            {
-                DiscordLauncherPresense.Start("New RPC", InformationCache.SelectedServerData.DiscordAppId);
-            }
+            DiscordLauncherPresense.Start("New RPC", DiscordLauncherPresense.ApplicationID());
 
             try
             {
@@ -2251,6 +2254,7 @@ namespace GameLauncher
             }
 
             PlayProgressText.Text = "Ready!".ToUpper();
+            DiscordLauncherPresense.Download = false;
             DiscordLauncherPresense.Status("Idle Ready", null);
 
             EnablePlayButton();

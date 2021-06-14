@@ -384,7 +384,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 }
             }
 
-            DiscordLauncherPresense.Start("Start Up", "540651192179752970");
+            DiscordLauncherPresense.Start("Start Up", "576154452348633108");
 
             Log.Visuals("CORE: Starting MainScreen");
             Application.Run(new MainScreen());

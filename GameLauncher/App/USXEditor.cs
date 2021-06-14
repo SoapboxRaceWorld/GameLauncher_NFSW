@@ -9,6 +9,7 @@ using GameLauncher.App.Classes.SystemPlatform.Linux;
 using System.Diagnostics;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 
 namespace GameLauncher.App
 {
@@ -21,6 +22,7 @@ namespace GameLauncher.App
         {
             if (File.Exists(FileGameSettings.UserSettingsLocation))
             {
+                DiscordLauncherPresense.Status("User XML Editor", null);
                 Log.Debug("UXE: Success, a UserSettings.xml file was found!");
                 if (new FileInfo(FileGameSettings.UserSettingsLocation).IsReadOnly == true)
                 {
@@ -36,6 +38,10 @@ namespace GameLauncher.App
                 ResolutionsListUpdater.Get();
                 InitializeComponent();
                 SetVisuals();
+                this.Closing += (x, y) =>
+                {
+                    DiscordLauncherPresense.Status("Settings", null);
+                };
             }
             else
             {

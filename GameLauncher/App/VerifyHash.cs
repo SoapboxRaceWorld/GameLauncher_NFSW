@@ -36,6 +36,7 @@ namespace GameLauncher.App
 
         public VerifyHash()
         {
+            DiscordLauncherPresense.Status("Verify", null);
             InitializeComponent();
 
             this.Closing += (x, y) =>
@@ -51,6 +52,8 @@ namespace GameLauncher.App
                         GameScanner(false);
                     }
                 }
+
+                DiscordLauncherPresense.Status("Settings", null);
             };
 
             SetVisuals();
@@ -107,7 +110,7 @@ namespace GameLauncher.App
 
         private void StartGameScanner()
         {
-            DiscordLauncherPresense.Status("Verify", null);
+            DiscordLauncherPresense.Status("Verify Scan", null);
 
             Log.Info("VERIFY HASH: Checking and Deleting '.orig' Files");
 
@@ -220,12 +223,15 @@ namespace GameLauncher.App
 
         private void Integrity()
         {
+            DiscordLauncherPresense.Status("Verify Good", null);
+            isScanning = false;
             FileSettingsSave.GameIntegrity = "Good";
             FileSettingsSave.SaveSettings();
         }
 
         private void CorruptedFilesFound()
         {
+            DiscordLauncherPresense.Status("Verify Bad", null);
             /* START Show Redownloader Progress*/
             StartScanner.Visible = false;
             StopScanner.Visible = false;
@@ -300,6 +306,7 @@ namespace GameLauncher.App
             {
                 this.BeginInvoke((MethodInvoker)delegate
                 {
+                    DiscordLauncherPresense.Status("Verify", null);
                     DownloadProgressText.Text = "Downloaded File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + CurrentDownloadingFile;
                     DownloadProgressBar.Value = redownloadedCount * 100 / CurrentFileListLength;
                 });

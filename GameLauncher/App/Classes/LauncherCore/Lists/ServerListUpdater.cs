@@ -65,7 +65,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     fileItems.Select(si =>
                     {
                         si.DistributionUrl = "";
-                        si.DiscordPresenceKey = "";
                         si.Id = SHA.HashPassword($"{si.Name}:{si.Id}:{si.IpAddress}");
                         si.IsSpecial = false;
                         si.Category = "CUSTOM";
@@ -81,7 +80,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 {
                     Name = "Offline Built-In Server",
                     Category = "OFFLINE",
-                    DiscordPresenceKey = "",
                     IsSpecial = false,
                     DistributionUrl = "",
                     IpAddress = "http://localhost:4416/sbrw/Engine.svc",
@@ -95,7 +93,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 {
                     Name = "Local Debug Server",
                     Category = "DEBUG",
-                    DiscordPresenceKey = "",
                     IsSpecial = false,
                     DistributionUrl = "",
                     IpAddress = "http://localhost:8680",

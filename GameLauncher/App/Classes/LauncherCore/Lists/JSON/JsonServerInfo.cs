@@ -36,6 +36,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists.JSON
         public string webPanelUrl { get; set; }
         public string iconUrl { get; set; }
         public string webRecoveryUrl { get; set; }
+        public string discordApplicationID { get; set; }
         public string passwordResetUrl { get; set; }
         public string freeroamMapSocket { get; set; }
         public List<string> freeroamServers { get; set; }

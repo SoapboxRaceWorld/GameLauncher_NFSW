@@ -2,6 +2,7 @@
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.LauncherCore.Client.Auth;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
@@ -21,6 +22,11 @@ namespace GameLauncher.App
         public RegisterScreen()
         {
             InitializeComponent();
+            DiscordLauncherPresense.Status("Register", InformationCache.SelectedServerData.Name);
+            this.Closing += (x, y) =>
+            {
+                DiscordLauncherPresense.Status("Idle Ready", null);
+            };
             SetVisuals();
         }
 

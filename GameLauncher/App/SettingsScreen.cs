@@ -41,6 +41,10 @@ namespace GameLauncher.App
         {
             InitializeComponent();
             SetVisuals();
+            this.Closing += (x, y) =>
+            {
+                DiscordLauncherPresense.Status("Idle Ready", null);
+            };
         }
 
         private void SetVisuals()
@@ -532,7 +536,7 @@ namespace GameLauncher.App
                     /* Kill DiscordRPC */
                     if (DiscordLauncherPresense.Client != null)
                     {
-                        DiscordLauncherPresense.Stop();
+                        DiscordLauncherPresense.Stop("Close");
                     }
                 }
 
