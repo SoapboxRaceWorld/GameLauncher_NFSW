@@ -2,6 +2,7 @@
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.LauncherCore.Client.Auth;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
@@ -22,7 +23,7 @@ namespace GameLauncher.App
         public RegisterScreen()
         {
             InitializeComponent();
-            DiscordLauncherPresense.Status("Register", InformationCache.SelectedServerData.Name);
+            DiscordLauncherPresense.Status("Register", ServerListUpdater.ServerName("Register"));
             this.Closing += (x, y) =>
             {
                 DiscordLauncherPresense.Status("Idle Ready", null);
@@ -131,7 +132,7 @@ namespace GameLauncher.App
                     String token = (_ticketRequired) ? RegisterTicket.Text : null;
 
                     Tokens.IPAddress = InformationCache.SelectedServerData.IpAddress;
-                    Tokens.ServerName = InformationCache.SelectedServerData.Name;
+                    Tokens.ServerName = ServerListUpdater.ServerName("Register");
 
                     if (InformationCache.ModernAuthSupport == false)
                     {
@@ -325,7 +326,7 @@ namespace GameLauncher.App
             /* Functions                     /
             /********************************/
 
-            CurrentWindowInfo.Text = "REGISTER ON \n" + InformationCache.SelectedServerData.Name.ToUpper();
+            CurrentWindowInfo.Text = "REGISTER ON \n" + ServerListUpdater.ServerName("Register").ToUpper();
 
             try
             {

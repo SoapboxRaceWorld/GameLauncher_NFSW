@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.Logger;
@@ -56,7 +57,16 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                         {
                             string origPath = realLoc + ".orig";
 
-                            if (!File.Exists(realLoc))
+                            if (IsSymbolic(realLoc) && File.Exists(realLoc))
+                            {
+                                File.Delete(realLoc);
+                                if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
+                                {
+                                    Log.Info("CLEANLINKS: Removed Symbolic File " + realLoc);
+                                }
+                                continue;
+                            }
+                            else if (!File.Exists(realLoc))
                             {
                                 FileErrors++;
 
@@ -77,16 +87,22 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                                     continue;
                                 }
                             }
-
-                            if (!File.Exists(origPath))
+                            else if (!File.Exists(origPath))
                             {
-                                File.Delete(realLoc);
+                                if (File.Exists(realLoc))
+                                {
+                                    File.Delete(realLoc);
+                                }
                                 continue;
                             }
 
                             try
                             {
-                                File.Delete(realLoc);
+                                if (File.Exists(realLoc))
+                                {
+                                    File.Delete(realLoc);
+                                }
+                                
                                 File.Move(origPath, realLoc);
                             }
                             catch (Exception ex)
@@ -99,14 +115,27 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                         }
                         else
                         {
-                            if (!Directory.Exists(realLoc))
+                            if (IsSymbolic(realLoc) && Directory.Exists(realLoc))
+                            {
+                                Directory.Delete(realLoc, true);
+                                if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
+                                {
+                                    Log.Info("CLEANLINKS: Removed Symbolic Folder " + realLoc);
+                                }
+                                continue;
+                            }
+                            else if (!Directory.Exists(realLoc))
                             {
                                 FileErrors++;
 
                                 Log.Error("CLEANLINKS: .links file includes nonexistent directory. Skipping Directory: " + realLoc);
                                 continue;
                             }
-                            Directory.Delete(realLoc, true);
+
+                            if (Directory.Exists(realLoc))
+                            {
+                                Directory.Delete(realLoc, true);
+                            }
                         }
                     }
 
@@ -123,6 +152,19 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
             catch (Exception ex)
             {
                 Log.Error("CLEANLINKS: " + ex.Message);
+            }
+        }
+
+        public static bool IsSymbolic(string path)
+        {
+            try
+            {
+                FileInfo pathInfo = new FileInfo(path);
+                return pathInfo.Attributes.HasFlag(FileAttributes.ReparsePoint);
+            }
+            catch
+            {
+                return false;
             }
         }
     }

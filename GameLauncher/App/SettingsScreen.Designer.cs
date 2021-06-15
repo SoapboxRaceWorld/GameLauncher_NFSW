@@ -175,7 +175,6 @@ namespace GameLauncher.App
             this.SettingsVFilesButton.Text = "Verify GameFiles";
             this.SettingsVFilesButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsVFilesButton.UseVisualStyleBackColor = false;
-            this.SettingsVFilesButton.Click += new System.EventHandler(this.SettingsVFilesButton_Click);
             // 
             // SettingsGamePathText
             // 

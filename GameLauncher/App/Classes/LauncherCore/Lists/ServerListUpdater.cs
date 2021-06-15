@@ -155,5 +155,37 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
             return "Unknown";
         }
+
+        /* Server Name */
+        /** Returns a Server Name by first checking if the Server has provided one
+         *  if so use that, otherwise it will see if the ServerList has provide one
+         *  if not then it will see if its a custom server, which will provide "Custom"
+         *  otherwise it will be "uknown" **/
+        public static string ServerName(string State)
+        {
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.serverName))
+            {
+                return InformationCache.SelectedServerJSON.serverName;
+            }
+            else if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerData.Name))
+            {
+                return InformationCache.SelectedServerData.Name;
+            }
+            else if (InformationCache.SelectedServerCategory == "CUSTOM")
+            {
+                if (State == "Register")
+                {
+                    return "Custom Server";
+                }
+                else
+                {
+                    return "Custom";
+                }
+            }
+            else
+            {
+                return "Unknown";
+            }
+        }
     }
 }

@@ -56,6 +56,7 @@ namespace GameLauncher
         private bool _isDownloading = true;
         private bool _disableLogout = false;
         private bool _restartLauncher = false;
+        private bool _serverListError = false;
 
         public static String getTempNa = Path.GetTempFileName();
 
@@ -226,33 +227,42 @@ namespace GameLauncher
 
                 Log.Core("SERVERLIST: Checking if server exists on our database");
 
-                if (ServerListUpdater.CleanList.FindIndex(i => string.Equals(i.IpAddress, FileAccountSave.ChoosenGameServer)) != 0)
+                try
                 {
-                    Log.Core("SERVERLIST: Server found! Checking ID");
-                    var index = ServerListUpdater.CleanList.FindIndex(i => string.Equals(i.IpAddress, FileAccountSave.ChoosenGameServer));
-
-                    Log.Core("SERVERLIST: ID is " + index);
-                    if (index >= 0)
+                    if (ServerListUpdater.CleanList.FindIndex(i => string.Equals(i.IpAddress, FileAccountSave.ChoosenGameServer)) != 0)
                     {
-                        Log.Core("SERVERLIST: ID set correctly");
-                        ServerPick.SelectedIndex = index;
-                    }
-                }
-                else
-                {
-                    Log.Warning("SERVERLIST: Unable to find anything, assuming default");
-                    ServerPick.SelectedIndex = 1;
-                    Log.Warning("SERVERLIST: Deleting unknown entry");
-                    FileAccountSave.ChoosenGameServer = string.Empty;
-                    FileAccountSave.SaveAccount();
-                }
+                        Log.Core("SERVERLIST: Server found! Checking ID");
+                        var index = ServerListUpdater.CleanList.FindIndex(i => string.Equals(i.IpAddress, FileAccountSave.ChoosenGameServer));
 
-                Log.Core("SERVERLIST: Triggering server change");
-                if (ServerPick.SelectedIndex == 1)
-                {
-                    ServerPick_SelectedIndexChanged(sender, e);
+                        Log.Core("SERVERLIST: ID is " + index);
+                        if (index >= 0)
+                        {
+                            Log.Core("SERVERLIST: ID set correctly");
+                            ServerPick.SelectedIndex = index;
+                        }
+                    }
+                    else
+                    {
+                        Log.Warning("SERVERLIST: Unable to find anything, assuming default");
+                        ServerPick.SelectedIndex = 1;
+                        Log.Warning("SERVERLIST: Deleting unknown entry");
+                        FileAccountSave.ChoosenGameServer = string.Empty;
+                        FileAccountSave.SaveAccount();
+                    }
+
+                    Log.Core("SERVERLIST: Triggering server change");
+                    if (ServerPick.SelectedIndex == 1)
+                    {
+                        ServerPick_SelectedIndexChanged(sender, e);
+                    }
+
+                    Log.Core("SERVERLIST: All done");
                 }
-                Log.Core("SERVERLIST: All done");
+                catch (Exception Error)
+                {
+                    _serverListError = true;
+                    Log.Error("SERVERLIST: " + Error.Message);
+                }
             }
 
             Log.Core("LAUNCHER: Re-checking InstallationDirectory: " + FileSettingsSave.GameInstallation);
@@ -440,7 +450,7 @@ namespace GameLauncher
             String realpass;
 
             Tokens.IPAddress = InformationCache.SelectedServerData.IpAddress;
-            Tokens.ServerName = InformationCache.SelectedServerData.Name;
+            Tokens.ServerName = ServerListUpdater.ServerName("Login");
 
             InformationCache.UserAgent = InformationCache.SelectedServerData.ForceUserAgent ?? null;
 
@@ -553,7 +563,7 @@ namespace GameLauncher
 
             LoginButton.ForeColor = Theming.SixTextForeColor;
             var verticalImageUrl = "";
-            VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.Name) + ".bin");
+            VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(ServerListUpdater.ServerName("Ping")) + ".bin");
             VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
 
             string numPlayers = "";
@@ -647,7 +657,7 @@ namespace GameLauncher
                 }
                 else
                 {
-                    if (InformationCache.SelectedServerData.Name == "Offline Built-In Server")
+                    if (ServerListUpdater.ServerName("Ping") == "Offline Built-In Server")
                     {
                         DisableSocialPanelandClearIt();
                         numPlayers = "∞";
@@ -903,7 +913,7 @@ namespace GameLauncher
                         pingSender.PingCompleted += (sender3, e3) => {
                             PingReply reply = e3.Reply;
 
-                            if (reply.Status == IPStatus.Success && InformationCache.SelectedServerData.Name != "Offline Built-In Server")
+                            if (reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
                             {
                                 if (this.ServerPingStatusText.InvokeRequired)
                                 {
@@ -955,7 +965,7 @@ namespace GameLauncher
                             if (e4.TotalBytesToReceive > 2000000)
                             {
                                 client2.CancelAsync();
-                                Log.Warning("Unable to Cache " + InformationCache.SelectedServerData.Name + " Server Banner! {Over 2MB?}");
+                                Log.Warning("Unable to Cache " + ServerListUpdater.ServerName("Ping") + " Server Banner! {Over 2MB?}");
                             }
                         };
 
@@ -964,14 +974,14 @@ namespace GameLauncher
                             if (e4.Cancelled)
                             {
                                 /* Load cached banner! */
-                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.Name) + ".bin");
+                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(ServerListUpdater.ServerName("Ping")) + ".bin");
                                 VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                 return;
                             }
                             else if (e4.Error != null)
                             {
                                 /* Load cached banner! */
-                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.Name) + ".bin");
+                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(ServerListUpdater.ServerName("Ping")) + ".bin");
                                 VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                 return;
                             }
@@ -988,7 +998,7 @@ namespace GameLauncher
 
                                     if (VerticalBanners.GetFileExtension(verticalImageUrl) != "gif")
                                     {
-                                        File.WriteAllBytes(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.Name) + ".bin", memoryStream.ToArray());
+                                        File.WriteAllBytes(".BannerCache/" + SHA.HashPassword(ServerListUpdater.ServerName("Ping")) + ".bin", memoryStream.ToArray());
                                     }
                                 }
                                 catch (Exception ex)
@@ -1002,7 +1012,7 @@ namespace GameLauncher
                     else
                     {
                         /* Load cached banner! */
-                        VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.Name) + ".bin");
+                        VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(ServerListUpdater.ServerName("Ping")) + ".bin");
                         VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                     }
                 }
@@ -1168,14 +1178,21 @@ namespace GameLauncher
         /* SETTINGS PAGE LAYOUT */
         private void SettingsButton_Click(object sender, EventArgs e)
         {
-            if (InformationCache.CDNListStatus != "Loaded")
+            if (_serverListError == true)
             {
-                CDNListUpdater.GetList();
+                MessageBox.Show(null, "Launcher had encounterd a Server List Error\nSettings is Locked out as a Safety Precaution\n Until the issue is Resolved on your end", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            else
+            {
+                if (InformationCache.CDNListStatus != "Loaded")
+                {
+                    CDNListUpdater.GetList();
+                }
 
-            SettingsButton.BackgroundImage = Theming.GearButtonClick;
-            DiscordLauncherPresense.Status("Settings", null);
-            new SettingsScreen().ShowDialog();
+                SettingsButton.BackgroundImage = Theming.GearButtonClick;
+                DiscordLauncherPresense.Status("Settings", null);
+                new SettingsScreen().ShowDialog();
+            }
         }
 
         private void SettingsButton_MouseEnter(object sender, EventArgs e)
@@ -1314,7 +1331,7 @@ namespace GameLauncher
                 {
                     Notification.Visible = true;
                     Notification.BalloonTipIcon = ToolTipIcon.Info;
-                    Notification.BalloonTipTitle = "Force Restart - " + InformationCache.SelectedServerData.Name;
+                    Notification.BalloonTipTitle = "Force Restart - " + ServerListUpdater.ServerName("In-Game");
                     Notification.BalloonTipText = "Game is going to shut down in 5 minutes. Please restart it manually before the launcher does it.";
                     Notification.ShowBalloonTip(5000);
                     Notification.Dispose();
@@ -1384,7 +1401,7 @@ namespace GameLauncher
                         secondsToShutDownNamed = "Waiting for event to finish.";
                     }
 
-                    User32.SetWindowText((IntPtr)p, "NEED FOR SPEED™ WORLD | Server: " + InformationCache.SelectedServerData.Name + " | " + DiscordGamePresence.LauncherRPC + " | Force Restart In: " + secondsToShutDownNamed);
+                    User32.SetWindowText((IntPtr)p, "NEED FOR SPEED™ WORLD | Server: " + ServerListUpdater.ServerName("In-Game") + " | " + DiscordGamePresence.LauncherRPC + " | Force Restart In: " + secondsToShutDownNamed);
                 }
             };
 
@@ -1566,7 +1583,7 @@ namespace GameLauncher
             if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
 
             Log.Core("LAUNCHER: Installing ModNet");
-            PlayProgressText.Text = ("Detecting ModNet Support for " + InformationCache.SelectedServerData.Name).ToUpper();
+            PlayProgressText.Text = ("Detecting ModNet Support for " + ServerListUpdater.ServerName("ModNet")).ToUpper();
             String jsonModNet = ModNetHandler.ModNetSupported(InformationCache.SelectedServerData.IpAddress);
 
             if (jsonModNet != String.Empty)
@@ -1825,7 +1842,7 @@ namespace GameLauncher
                   )
                 {
                     ServerProxy.Instance.SetServerUrl(InformationCache.SelectedServerData.IpAddress);
-                    ServerProxy.Instance.SetServerName(InformationCache.SelectedServerData.Name);
+                    ServerProxy.Instance.SetServerName(ServerListUpdater.ServerName("Proxy"));
 
                     AntiCheat.user_id = _userId;
                     AntiCheat.serverip = new Uri(InformationCache.SelectedServerData.IpAddress).Host;

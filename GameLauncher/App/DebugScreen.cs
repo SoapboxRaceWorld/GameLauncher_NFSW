@@ -11,6 +11,7 @@ using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists;
 
 namespace GameLauncher.App
 {
@@ -156,7 +157,7 @@ namespace GameLauncher.App
                 new ListType{ Name = "Firewall Rule - Launcher", Value =  FileSettingsSave.FirewallLauncherStatus},
                 new ListType{ Name = "Firewall Rule - Game", Value =  FileSettingsSave.FirewallGameStatus},
                 new ListType{ Name = "", Value = "" },
-                new ListType{ Name = "Server Name", Value = InformationCache.SelectedServerData.Name},
+                new ListType{ Name = "Server Name", Value = ServerListUpdater.ServerName("Debug")},
                 new ListType{ Name = "Server Address", Value = InformationCache.SelectedServerData.IpAddress},
                 new ListType{ Name = "CDN Address", Value = FileSettingsSave.CDN},
                 new ListType{ Name = "ProxyPort", Value = ServerProxy.ProxyPort.ToString()},

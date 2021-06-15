@@ -251,7 +251,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 else if (State == "Verify Bad")
                 {
                     Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                    Presence.State = "Downloading Missing Game Files";
+                    Presence.State = "Downloaded " + Status + " Missing Game Files";
                     Presence.Assets = new Assets
                     {
                         LargeImageText = "Launcher",

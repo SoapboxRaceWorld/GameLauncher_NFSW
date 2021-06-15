@@ -107,20 +107,28 @@ namespace GameLauncher.App
 
         private void CDNSource_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (((CDNList)CDNSource.SelectedItem).IsSpecial)
+            try
             {
-                CDNSource.SelectedIndex = 1;
-                return;
+                if (((CDNList)CDNSource.SelectedItem).IsSpecial)
+                {
+                    CDNSource.SelectedIndex = 1;
+                    return;
+                }
             }
+            catch { }
         }
 
         private void GameLangSource_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (((LangObject)GameLangSource.SelectedItem).IsSpecial)
+            try
             {
-                GameLangSource.SelectedIndex = 1;
-                return;
+                if (((LangObject)GameLangSource.SelectedItem).IsSpecial)
+                {
+                    GameLangSource.SelectedIndex = 1;
+                    return;
+                }
             }
+            catch { }
         }
 
         private void CheckListStatus()

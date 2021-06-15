@@ -12,10 +12,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
     {
         private static readonly string ThemeFolder = AppDomain.CurrentDomain.BaseDirectory + "Theme";
 
-        /* Enable or Disable Verify Hash Button */
-
-        public static bool ButtonVerifyHash = true;
-
 
         /* Discord RPC Privacy Build Number */
 

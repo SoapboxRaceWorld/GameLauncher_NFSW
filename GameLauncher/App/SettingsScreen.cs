@@ -36,6 +36,7 @@ namespace GameLauncher.App
         private bool _restartRequired;
         private string _newLauncherPath;
         private string _newGameFilesPath;
+        private string FinalCDNURL;
 
         public SettingsScreen()
         {
@@ -202,6 +203,7 @@ namespace GameLauncher.App
             /* Events                        /
             /********************************/
 
+            SettingsVFilesButton.Click += new EventHandler(FunctionEvents.SettingsVFilesButton_Click);
             SettingsCDNPick.DrawItem += new DrawItemEventHandler(SettingsCDNPick_DrawItem);
             SettingsLanguage.DrawItem += new DrawItemEventHandler(SettingsLanguage_DrawItem);
 
@@ -385,39 +387,47 @@ namespace GameLauncher.App
 
             try
             {
-                string SavedCDN = FileSettingsSave.CDN;
-                char[] charsToTrim = { '/' };
-                string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
-
-                if(EnableInsiderDeveloper.Allowed())
+                Log.Info("SETTINGS VERIFYHASH: Checking Characters in URL");
+                if (FileSettingsSave.CDN.EndsWith("/"))
                 {
-                    Log.Info("SETTINGS VERIFYHASH: Checking Characters in URL");
+                    char[] charsToTrim = { '/' };
+                    FinalCDNURL = FileSettingsSave.CDN.TrimEnd(charsToTrim);
                     Log.Info("SETTINGS VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
-                    Theming.ButtonVerifyHash = true;
                 }
                 else
                 {
-                    if (FunctionStatus.IsVerifyHashDisabled == true)
+                    FinalCDNURL = FileSettingsSave.CDN;
+                }
+            }
+            catch (Exception Error)
+            {
+                FinalCDNURL = FileSettingsSave.CDN;
+                Log.Error("SETTINGS CDN URL TRIM: " + Error.Message);
+            }
+
+            try
+            {
+                if (EnableInsiderDeveloper.Allowed())
+                {
+                    FunctionStatus.DoesCDNSupportVerifyHash = true;
+                }
+                else
+                {
+                    switch (APIChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat"))
                     {
-                        Theming.ButtonVerifyHash = false;
-                    }
-                    else
-                    {
-                        switch (APIChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat"))
-                        {
-                            case APIStatus.Online:
-                                Theming.ButtonVerifyHash = true;
-                                break;
-                            default:
-                                Theming.ButtonVerifyHash = false;
-                                break;
-                        }
+                        case APIStatus.Online:
+                            FunctionStatus.DoesCDNSupportVerifyHash = true;
+                            break;
+                        default:
+                            FunctionStatus.DoesCDNSupportVerifyHash = false;
+                            break;
                     }
                 }
-
-                SettingsVFilesButton.Enabled = Theming.ButtonVerifyHash;
             }
-            catch { }
+            catch (Exception Error)
+            {
+                Log.Error("SETTINGS VERIFYHASH: " + Error.Message);
+            }
 
             /********************************/
             /* CDN, APIs, & Restore Last CDN /
@@ -594,12 +604,6 @@ namespace GameLauncher.App
         private void SettingsCancel_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        /* Settings Verify Hash */
-        private void SettingsVFilesButton_Click(object sender, EventArgs e)
-        {
-            new VerifyHash().ShowDialog();
         }
 
         /* Settings UserSettings XML Editor */

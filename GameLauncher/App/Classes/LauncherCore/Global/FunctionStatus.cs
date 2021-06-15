@@ -71,6 +71,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* Allows Registration Button to be Enabled/Disabled */
         public static bool AllowRegistration;
 
+        /* If Verify Hash (.dat) File Exists on Server */
+        public static bool DoesCDNSupportVerifyHash = false;
+
         /* Verify Hash Status */
         public static bool IsVerifyHashDisabled = false;
 
