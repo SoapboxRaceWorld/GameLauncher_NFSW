@@ -74,6 +74,7 @@ namespace GameLauncher
         private string _loginWelcomeTime = "";
         private string _loginToken = "";
         private string _userId = "";
+        private static int UpdateInterval = 60000;
 
         public static String ModNetFileNameInUse = String.Empty;
         readonly Queue<Uri> modFilesDownloadUrls = new Queue<Uri>();
@@ -1180,7 +1181,7 @@ namespace GameLauncher
         {
             if (_serverListError == true)
             {
-                MessageBox.Show(null, "Launcher had encounterd a Server List Error\nSettings is Locked out as a Safety Precaution\n Until the issue is Resolved on your end", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(null, "Launcher had encounterd a Server List Error\nSettings is Locked out as a Safety Precaution\nUntil the issue is Resolved on your end", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
@@ -1286,6 +1287,11 @@ namespace GameLauncher
 
         private void LaunchGame(string UserID, string LoginToken, string ServerIP, Form x)
         {
+            if (FileSettingsSave.Proxy == "1")
+            {
+                UpdateInterval = 30000;
+            }
+
             var psi = new ProcessStartInfo();
 
             if (DetectLinux.LinuxDetected())
@@ -1320,11 +1326,26 @@ namespace GameLauncher
                 if (ProcessID == 0)
                 {
                     ProcessID++;
-                    InformationCache.RestartTimer -= 120;
+
+                    if (FileSettingsSave.Proxy == "0")
+                    {
+                        InformationCache.RestartTimer -= 120;
+                    }
+                    else
+                    {
+                        InformationCache.RestartTimer -= 60;
+                    }
                 }
                 else
                 {
-                    InformationCache.RestartTimer -= 60;
+                    if (FileSettingsSave.Proxy == "0")
+                    {
+                        InformationCache.RestartTimer -= 60;
+                    }
+                    else
+                    {
+                        InformationCache.RestartTimer -= 30;
+                    }
                 }
 
                 if (InformationCache.RestartTimer == 300)
@@ -1405,7 +1426,7 @@ namespace GameLauncher
                 }
             };
 
-            shutdowntimer.Interval = 60000;
+            shutdowntimer.Interval = UpdateInterval;
             shutdowntimer.Enabled = true;
 
             if (nfswProcess != null)

@@ -511,14 +511,35 @@ namespace GameLauncher.App
                 _restartRequired = true;
             }
 
-            if (FileSettingsSave.CDN != ((CDNList)SettingsCDNPick.SelectedItem).Url)
+            if (!string.IsNullOrWhiteSpace(((CDNList)SettingsCDNPick.SelectedItem).Url))
             {
-                SettingsCDNCurrentText.Text = "CHANGED CDN";
-                SettingsCDNCurrent.Text = ((CDNList)SettingsCDNPick.SelectedItem).Url;
-                FileSettingsSave.CDN = ((CDNList)SettingsCDNPick.SelectedItem).Url;
-                _restartRequired = true;
+                string SelectedCDNFromList = ((CDNList)SettingsCDNPick.SelectedItem).Url;
+                string FinalCDNURL;
+
+                if (SelectedCDNFromList.EndsWith("/"))
+                {
+                    char[] charsToTrim = { '/' };
+                    FinalCDNURL = SelectedCDNFromList.TrimEnd(charsToTrim);
+                }
+                else
+                {
+                    FinalCDNURL = ((CDNList)SettingsCDNPick.SelectedItem).Url;
+                }
+
+                if (FileSettingsSave.CDN != FinalCDNURL)
+                {
+                    SettingsCDNCurrentText.Text = "CHANGED CDN";
+                    SettingsCDNCurrent.Text = FinalCDNURL;
+                    FileSettingsSave.CDN = FinalCDNURL;
+                    _restartRequired = true;
+                }
+            }
+            else
+            {
+                Log.Error("SETTINGS: Selected CDN does not contain a URL, Unable to Save Contents");
             }
 
+            
             String disableProxy = (SettingsProxyCheckbox.Checked == true) ? "1" : "0";
             if (FileSettingsSave.Proxy != disableProxy)
             {
@@ -527,13 +548,20 @@ namespace GameLauncher.App
                 if (FileSettingsSave.Proxy == "1")
                 {
                     ServerProxy.Instance.Stop("Settings Screen");
+
+                    if (InformationCache.SelectedServerJSON.modernAuthSupport == "true" || FileAccountSave.ChoosenGameServer.StartsWith("https:"))
+                    {
+                        string IsServerSavedOrSelected = FileAccountSave.ChoosenGameServer.StartsWith("https:") ? "Saved" : "Selected";
+                        string ServerNameOrGeneric = !string.IsNullOrEmpty(InformationCache.SelectedServerJSON.serverName) ? 
+                                                     InformationCache.SelectedServerJSON.serverName : "The " + IsServerSavedOrSelected + " Server";
+                        MessageBox.Show(null, ServerNameOrGeneric + " requires Proxy to be Enabled." +
+                            "\nThe launcher will turn on Proxy even if you have chosen to Disable it", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
                 else
                 {
                     ServerProxy.Instance.Start("Settings Screen");
                 }
-
-                _restartRequired = true;
             }
 
             String disableRPC = (SettingsDiscordRPCCheckbox.Checked == true) ? "1" : "0";
@@ -551,11 +579,6 @@ namespace GameLauncher.App
                 }
 
                 _restartRequired = true;
-            }
-
-            if (_restartRequired)
-            {
-                MessageBox.Show(null, "In order to see settings changes, you need to restart launcher manually.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             /* Actually lets check those 2 files */
@@ -596,6 +619,11 @@ namespace GameLauncher.App
             /* Save Settings */
             FileSettingsSave.SaveSettings();
             FileGameSettings.Save("Suppress", "Language Only");
+
+            if (_restartRequired)
+            {
+                MessageBox.Show(null, "In order to see settings changes, you need to restart launcher manually.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
 
             Close();
         }

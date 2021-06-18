@@ -193,8 +193,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
                 if (isNumeric == true)
                 {
-                    ServerProxy.ProxyPort = Port;
-                    UsingCustomProxyPort = true;
+                    if (Port > 0)
+                    {
+                        ServerProxy.ProxyPort = Port;
+                        UsingCustomProxyPort = true;
+                    }
                 }
             }
 

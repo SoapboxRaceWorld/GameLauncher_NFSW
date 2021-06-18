@@ -328,20 +328,15 @@ namespace GameLauncher
             Log.Info("LAUNCHER: Detecting OS");
             if (DetectLinux.LinuxDetected())
             {
-                WindowsProductVersion.CachedWindowsNumber = 0;
                 InformationCache.OSName = DetectLinux.Distro();
                 Log.System("SYSTEM: Detected OS: " + InformationCache.OSName);
             }
             else
             {
-                if (WindowsProductVersion.CachedWindowsNumber < 6.0)
-                {
-                    WindowsProductVersion.GetWindowsNumber();
-                }
-                InformationCache.OSName = WindowsProductVersion.ConvertWindowsNumberToName(WindowsProductVersion.CachedWindowsNumber);
-
+                InformationCache.OSName = WindowsProductVersion.ConvertWindowsNumberToName();
                 Log.System("SYSTEM: Detected OS: " + InformationCache.OSName);
-                Log.System("SYSTEM: OS Details: " + Environment.OSVersion);
+                Log.System("SYSTEM: Windows Build: " + WindowsProductVersion.GetWindowsBuildNumber());
+                Log.System("SYSTEM: NT Version: " + Environment.OSVersion);
                 Log.System("SYSTEM: Video Card: " + HardwareInfo.GPU.CardName());
                 Log.System("SYSTEM: Driver Version: " + HardwareInfo.GPU.DriverVersion());
             }

@@ -221,11 +221,20 @@ namespace GameLauncher.App
                 }
             }
 
-            if (((CDNList)CDNSource.SelectedItem).Url != null)
+            if (!string.IsNullOrWhiteSpace(((CDNList)CDNSource.SelectedItem).Url))
             {
                 string ChoosenCDN = ((CDNList)CDNSource.SelectedItem).Url;
-                char[] charsToTrim = { '/' };
-                string FinalCDNURL = ChoosenCDN.TrimEnd(charsToTrim);
+                string FinalCDNURL;
+
+                if (ChoosenCDN.EndsWith("/"))
+                {
+                    char[] charsToTrim = { '/' };
+                    FinalCDNURL = ChoosenCDN.TrimEnd(charsToTrim);
+                }
+                else
+                {
+                    FinalCDNURL = ((CDNList)CDNSource.SelectedItem).Url;
+                }
 
                 SelectedCDN.CDNUrl = FinalCDNURL;
 
