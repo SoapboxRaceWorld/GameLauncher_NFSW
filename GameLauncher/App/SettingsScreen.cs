@@ -549,12 +549,9 @@ namespace GameLauncher.App
                 {
                     ServerProxy.Instance.Stop("Settings Screen");
 
-                    if (InformationCache.SelectedServerJSON.modernAuthSupport == "true" || FileAccountSave.ChoosenGameServer.StartsWith("https:"))
+                    if (FileAccountSave.ChoosenGameServer.StartsWith("https") || InformationCache.SelectedServerJSON.modernAuthSupport.ToLower() == "true")
                     {
-                        string IsServerSavedOrSelected = FileAccountSave.ChoosenGameServer.StartsWith("https:") ? "Saved" : "Selected";
-                        string ServerNameOrGeneric = !string.IsNullOrEmpty(InformationCache.SelectedServerJSON.serverName) ? 
-                                                     InformationCache.SelectedServerJSON.serverName : "The " + IsServerSavedOrSelected + " Server";
-                        MessageBox.Show(null, ServerNameOrGeneric + " requires Proxy to be Enabled." +
+                        MessageBox.Show(null, ServerListUpdater.ServerName("Settings") + " requires Proxy to be Enabled." +
                             "\nThe launcher will turn on Proxy even if you have chosen to Disable it", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }

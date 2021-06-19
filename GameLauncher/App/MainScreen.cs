@@ -841,7 +841,7 @@ namespace GameLauncher
 
                         try
                         {
-                            if (InformationCache.SelectedServerJSON.modernAuthSupport == "true")
+                            if (InformationCache.SelectedServerJSON.modernAuthSupport.ToLower() == "true")
                             {
                                 if (stringToUri.Scheme == "https")
                                 {

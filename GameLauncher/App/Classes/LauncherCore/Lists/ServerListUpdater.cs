@@ -12,6 +12,7 @@ using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
@@ -176,6 +177,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 if (State == "Register")
                 {
                     return "Custom Server";
+                }
+                else if (State == "Settings")
+                {
+                    if (FileAccountSave.ChoosenGameServer.StartsWith("https"))
+                    {
+                        return "The Saved Server";
+                    }
+                    else
+                    {
+                        return "The Selected Server";
+                    }
                 }
                 else
                 {
