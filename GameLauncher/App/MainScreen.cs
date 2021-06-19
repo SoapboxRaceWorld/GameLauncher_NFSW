@@ -1483,6 +1483,7 @@ namespace GameLauncher
                             else if(exitCode == -5) errorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
                             else if(exitCode == -6) errorMsg = "Server was unable to resolve your request";
                             /* ModLoader */
+                            else if(exitCode == 1450) errorMsg = "ModNet: Unable to load ModLoader. Please Exclude Game Files with your Antivirus Software";
                             else if(exitCode == 2) errorMsg = "ModNet: Game was launched with invalid command line parameters.";
                             else if(exitCode == 3) errorMsg = "ModNet: .links file should not exist upon startup!";
                             else if(exitCode == 4) errorMsg = "ModNet: An Unhandled Error Appeared";
