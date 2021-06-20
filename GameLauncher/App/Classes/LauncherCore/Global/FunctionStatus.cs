@@ -342,7 +342,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                     case FolderType.IsRootFolder:
                         String constructMsg = String.Empty;
                         Directory.CreateDirectory("Game Files");
-                        constructMsg += "Using this location for Game Files is not allowed.\nThe following list are NOT allowed:\n\n";
+                        constructMsg += "Using this location for Game Files is not allowed.\n\n";
+                        constructMsg += "The following locations are also NOT allowed:\n";
                         constructMsg += "• X:\\nfsw.exe (Root of Drive, such as C:\\ or D:\\, must be in a folder)\n";
                         constructMsg += "• C:\\Program Files\n";
                         constructMsg += "• C:\\Program Files (x86)\n";
