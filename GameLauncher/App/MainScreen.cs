@@ -1348,6 +1348,21 @@ namespace GameLauncher
                     }
                 }
 
+                if (FileSettingsSave.Proxy == "1")
+                {
+                    if (ProcessID == 1)
+                    {
+                        ProcessID++;
+                        AntiCheat.EnableChecks();
+                    }
+
+                    if (FunctionStatus.ExternalToolsWasUsed == true && ProcessID == 2)
+                    {
+                        ProcessID++;
+                        AntiCheat.DisableChecks(true);
+                    }
+                }
+
                 if (InformationCache.RestartTimer == 300)
                 {
                     Notification.Visible = true;
@@ -1370,21 +1385,6 @@ namespace GameLauncher
                     else
                     {
                         InformationCache.RestartTimer = 0;
-                    }
-                }
-
-                if (FileSettingsSave.Proxy == "1")
-                {
-                    if (ProcessID == 1)
-                    {
-                        ProcessID++;
-                        AntiCheat.EnableChecks();
-                    }
-
-                    if (FunctionStatus.ExternalToolsWasUsed == true && ProcessID == 2)
-                    {
-                        ProcessID++;
-                        AntiCheat.DisableChecks(true);
                     }
                 }
 
