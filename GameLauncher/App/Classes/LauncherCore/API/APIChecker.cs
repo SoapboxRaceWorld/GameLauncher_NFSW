@@ -17,10 +17,15 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 try
                 {
                     FunctionStatus.TLS();
-                    HttpWebRequest requestAPIStatus = (HttpWebRequest)HttpWebRequest.Create(APIURI);
+                    Uri ConvertedAPIURI = new Uri(APIURI);
+                    /* Releases Connection Socket after 30 seconds */
+                    ServicePointManager.FindServicePoint(ConvertedAPIURI).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+                    HttpWebRequest requestAPIStatus = (HttpWebRequest)WebRequest.Create(ConvertedAPIURI);
                     requestAPIStatus.AllowAutoRedirect = false; /* Find out if this site is up and don't follow a redirector */
                     requestAPIStatus.Method = "GET";
                     requestAPIStatus.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+                    requestAPIStatus.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+                    requestAPIStatus.KeepAlive = false;
                     serverResponse = (HttpWebResponse)requestAPIStatus.GetResponse();
                     Log.Info("CORE: " + APIURI + " is Online!");
                     return APIStatus.Online;

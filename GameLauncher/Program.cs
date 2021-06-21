@@ -260,6 +260,7 @@ namespace GameLauncher
             File.Delete("communication.log");
             File.Delete("launcher.log");
             Log.StartLogging();
+            Log.Info("CURRENT DATE: "+ DateTime.Now.ToString("MM/dd/yyyy"));
 
             /* Deletes Folders that will Crash the Launcher (Cleanup Migration) */
             try

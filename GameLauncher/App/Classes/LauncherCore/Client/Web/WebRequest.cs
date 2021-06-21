@@ -40,6 +40,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 
             if (!address.AbsolutePath.Contains("auth")) Log.UrlCall("WEBCLIENTWITHTIMEOUT: Calling URL -> " + address);
 
+            ServicePointManager.FindServicePoint(address).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
             request.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-HWID"] = HardwareID.FingerPrint.Value();
