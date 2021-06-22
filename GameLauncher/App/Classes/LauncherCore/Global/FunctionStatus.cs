@@ -363,8 +363,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && (FileSettingsSave.WindowsDefenderStatus == "Not Excluded" || FileSettingsSave.WindowsDefenderStatus == "Unknown"))
                 {
                     Log.Core("WINDOWS DEFENDER: Windows 10 Detected! Running Exclusions for Core Folders");
-                    WindowsDefenderFirstRun();
-
+                    WindowsDefender("Add-Launcher", "Complete Exclude", AppDomain.CurrentDomain.BaseDirectory, FileSettingsSave.GameInstallation, "Launcher");
                 }
                 else if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && !string.IsNullOrEmpty(FileSettingsSave.WindowsDefenderStatus))
                 {
@@ -395,7 +394,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             Application.Run(new MainScreen());
         }
 
-        public static void WindowsDefenderFirstRun()
+        public static void WindowsDefender(string Type, string Mode, string Path, string SecondPath, string Notes)
         {
             try
             {
@@ -404,16 +403,69 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                     /* Create Windows Defender Exclusion */
                     try
                     {
-                        Log.Info("WINDOWS DEFENDER: Excluding Core Folders");
-                        /* Add Exclusion to Windows Defender */
-                        using (PowerShell ps = PowerShell.Create())
+                        if (Type == "Add-Launcher" || Type == "Add-Game")
                         {
-                            ps.AddScript($"Add-MpPreference -ExclusionPath \"{AppDomain.CurrentDomain.BaseDirectory}\"");
-                            ps.AddScript($"Add-MpPreference -ExclusionPath \"{FileSettingsSave.GameInstallation}\"");
-                            var result = ps.Invoke();
-                        }
+                            if (Mode == "Complete Exclude")
+                            {
+                                /* Add Exclusion to Windows Defender */
+                                using (PowerShell ps = PowerShell.Create())
+                                {
+                                    ps.AddScript($"Add-MpPreference -ExclusionPath \"{Path}\"");
+                                    if (Directory.Exists(SecondPath))
+                                    {
+                                        ps.AddScript($"Add-MpPreference -ExclusionPath \"{SecondPath}\"");
+                                    }
+                                    var result = ps.Invoke();
+                                }
+                            }
+                            else
+                            {
+                                Log.Warning("WINDOWS DEFENDER: Unknown Function Call in 'WindowsDefender' with Add Sub-Section. Please Check Code in Visual Studio");
+                            }
 
-                        FileSettingsSave.WindowsDefenderStatus = "Excluded";
+                            FileSettingsSave.WindowsDefenderStatus = "Excluded";
+
+                            Log.Info("WINDOWS DEFENDER: Excluded " + Notes + " Folder");
+                        }
+                        else if (Type == "Reset-Launcher" || Type == "Reset-Game")
+                        {
+                            if (Mode == "Complete Reset")
+                            {
+                                /* Add Exclusion to Windows Defender */
+                                using (PowerShell ps = PowerShell.Create())
+                                {
+                                    ps.AddScript($"Remove-MpPreference -ExclusionPath \"{Path}\"");
+                                    ps.AddScript($"Remove-MpPreference -ExclusionPath \"{SecondPath}\"");
+                                    var result = ps.Invoke();
+                                }
+
+                                FileSettingsSave.WindowsDefenderStatus = "Not Excluded";
+                            }
+                            else if (Mode == "Update Reset")
+                            {
+                                /* Remove current Exclusion and Add new location for Exclusion (Game Files Only!) */
+                                using (PowerShell ps = PowerShell.Create())
+                                {
+                                    ps.AddScript($"Remove-MpPreference -ExclusionPath \"{Path}\"");
+                                    if (Directory.Exists(SecondPath))
+                                    {
+                                        ps.AddScript($"Add-MpPreference -ExclusionPath \"{SecondPath}\"");
+                                    }
+                                    var result = ps.Invoke();
+                                }                                
+                            }
+                            else
+                            {
+                                Log.Warning("WINDOWS DEFENDER: Unknown Function Call in 'WindowsDefender' with Reset Sub-Section. Please Check Code in Visual Studio");
+                            }
+
+                            Log.Warning("WINDOWS DEFENDER: " + Notes + " Folders");
+                        }
+                        else
+                        {
+                            Log.Warning("WINDOWS DEFENDER: Unknown Function Call in 'WindowsDefender'. Please Check Code in Visual Studio");
+                        }
+                        
                         FileSettingsSave.SaveSettings();
                     }
                     catch (Exception ex)
@@ -432,6 +484,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             catch (Exception ex)
             {
                 Log.Error("WINDOWS DEFENDER: " + ex.Message);
+                FileSettingsSave.WindowsDefenderStatus = "Not Supported";
+                FileSettingsSave.SaveSettings();
             }
         }
 

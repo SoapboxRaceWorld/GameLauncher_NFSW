@@ -467,7 +467,7 @@ namespace GameLauncher.App
             /* TODO: Inform player about custom languagepack used. */
             if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") 
             {
-                MessageBox.Show(null, "Please Note: If a Server does not Provide Language Pack, it will Fallback to English instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(null, "Please Note: If a Server does not Provide Language Pack, it will Fallback to English Language Pack instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !DetectLinux.LinuxDetected())
@@ -476,10 +476,10 @@ namespace GameLauncher.App
             }
             else if (FileSettingsSave.GameInstallation != _newGameFilesPath)
             {
-                CheckGameFilesDirectoryPrevention();
-
                 if (!DetectLinux.LinuxDetected())
                 {
+                    CheckGameFilesDirectoryPrevention();
+
                     string GameName = "SBRW - Game";
 
                     /* Remove current Firewall for the Game Files and Add new one (If Possible) */
@@ -793,28 +793,14 @@ namespace GameLauncher.App
 
         private void WindowsDefenderGameFilesDirctoryChange()
         {
-            /* Check if New Game! Files is not in Banned Folder Locations */
-            CheckGameFilesDirectoryPrevention();
-
-            try
-            {
-                /* Remove current Exclusion and Add new location for Exclusion */
-                using (PowerShell ps = PowerShell.Create())
-                {
-                    Log.Warning("WINDOWS DEFENDER: Removing OLD Game Files Directory: " + FileSettingsSave.GameInstallation);
-                    ps.AddScript($"Remove-MpPreference -ExclusionPath \"{FileSettingsSave.GameInstallation}\"");
-                    Log.Core("WINDOWS DEFENDER: Excluding NEW Game Files Directory: " + _newGameFilesPath);
-                    ps.AddScript($"Add-MpPreference -ExclusionPath \"{_newGameFilesPath}\"");
-                    var result = ps.Invoke();
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error("WINDOWS DEFENDER: " + ex.Message);
-            }
-
             if (!DetectLinux.LinuxDetected())
             {
+                /* Check if New Game! Files is not in Banned Folder Locations */
+                CheckGameFilesDirectoryPrevention();
+
+                /* Remove current Exclusion and Add new location for Exclusion */
+                FunctionStatus.WindowsDefender("Reset-Game", "Update Reset", FileSettingsSave.GameInstallation, _newGameFilesPath, "Updated Game Files");
+
                 string GameName = "SBRW - Game";
 
                 /* Remove current Firewall for the Game Files and Add new one (If Possible) */
