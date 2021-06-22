@@ -20,6 +20,7 @@ using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
+using System.Reflection;
 
 namespace GameLauncher.App
 {
@@ -37,6 +38,7 @@ namespace GameLauncher.App
         private string _newLauncherPath;
         private string _newGameFilesPath;
         private string FinalCDNURL;
+        private bool FirewallEnabled = FirewallHelper.FirewallStatus();
 
         public SettingsScreen()
         {
@@ -94,6 +96,8 @@ namespace GameLauncher.App
                 SecondaryFontSize = 8f;
             }
             Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            ResetFirewallRulesButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ResetWindowsDefenderButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsAboutButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsGamePathText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsGameFiles.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
@@ -166,6 +170,16 @@ namespace GameLauncher.App
             SettingsClearServerModCacheButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
             SettingsClearServerModCacheButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
 
+            ResetFirewallRulesButton.ForeColor = Theming.BlueForeColorButton;
+            ResetFirewallRulesButton.BackColor = Theming.BlueBackColorButton;
+            ResetFirewallRulesButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            ResetFirewallRulesButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            ResetWindowsDefenderButton.ForeColor = Theming.BlueForeColorButton;
+            ResetWindowsDefenderButton.BackColor = Theming.BlueBackColorButton;
+            ResetWindowsDefenderButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            ResetWindowsDefenderButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
             /* Label Links */
             SettingsGameFilesCurrent.LinkColor = Theming.SettingsLink;
             SettingsGameFilesCurrent.ActiveLinkColor = Theming.SettingsActiveLink;
@@ -203,7 +217,6 @@ namespace GameLauncher.App
             /* Events                        /
             /********************************/
 
-            SettingsVFilesButton.Click += new EventHandler(FunctionEvents.SettingsVFilesButton_Click);
             SettingsCDNPick.DrawItem += new DrawItemEventHandler(SettingsCDNPick_DrawItem);
             SettingsLanguage.DrawItem += new DrawItemEventHandler(SettingsLanguage_DrawItem);
 
@@ -222,6 +235,40 @@ namespace GameLauncher.App
             /********************************/
 
             FileGameSettings.Read("Language Only");
+
+            /********************************/
+            /* Sets Red Buttons/Disables     /
+            /********************************/
+
+            if (FunctionStatus.IsVerifyHashDisabled)
+            {
+                SettingsVFilesButton.ForeColor = Theming.RedForeColorButton;
+                SettingsVFilesButton.BackColor = Theming.RedBackColorButton;
+                SettingsVFilesButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                SettingsVFilesButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+            }
+
+            if ((!FirewallManager.IsServiceRunning && !FirewallEnabled) || 
+                (FileSettingsSave.FirewallLauncherStatus != "Excluded" && FileSettingsSave.FirewallGameStatus != "Excluded") || 
+                FunctionStatus.IsFirewallResetDisabled || DetectLinux.LinuxDetected())
+            {
+                FunctionStatus.IsFirewallResetDisabled = true;
+                ResetFirewallRulesButton.ForeColor = Theming.RedForeColorButton;
+                ResetFirewallRulesButton.BackColor = Theming.RedBackColorButton;
+                ResetFirewallRulesButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                ResetFirewallRulesButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+            }
+
+            if ((FileSettingsSave.WindowsDefenderStatus != "Excluded") || DetectLinux.LinuxDetected() || 
+                FunctionStatus.IsWindowsSecurityResetDisabled || (WindowsProductVersion.CachedWindowsNumber < 10.0) ||
+                (!ManagementSearcher.SecurityCenter("AntivirusEnabled") && !ManagementSearcher.SecurityCenter("AntispywareEnabled")))
+            {
+                FunctionStatus.IsWindowsSecurityResetDisabled = true;
+                ResetWindowsDefenderButton.ForeColor = Theming.RedForeColorButton;
+                ResetWindowsDefenderButton.BackColor = Theming.RedBackColorButton;
+                ResetWindowsDefenderButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                ResetWindowsDefenderButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+            }
         }
 
         /********************************/
@@ -924,9 +971,17 @@ namespace GameLauncher.App
             {
                 if (!string.IsNullOrEmpty(FileSettingsSave.CDN))
                 {
-                    string SavedCDN = FileSettingsSave.CDN;
-                    char[] charsToTrim = { '/' };
-                    string FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
+                    string FinalCDNURL;
+
+                    if (FileSettingsSave.CDN.EndsWith("/"))
+                    {
+                        char[] charsToTrim = { '/' };
+                        FinalCDNURL = FileSettingsSave.CDN.TrimEnd(charsToTrim);
+                    }
+                    else
+                    {
+                        FinalCDNURL = FileSettingsSave.CDN;
+                    }
 
                     Log.Core("SETTINGS CDNLIST: Found something!");
                     Log.Core("SETTINGS CDNLIST: Checking if CDN exists on our database");
@@ -944,8 +999,7 @@ namespace GameLauncher.App
                         }
                         else if (index < 0)
                         {
-                            Log.Warning("SETTINGS CDNLIST: Checking ID Against OLD Standard");
-                            RememberLastCDNOldStandard();
+                            SettingsCDNPick.SelectedIndex = 1;
                         }
                     }
                     else
@@ -993,6 +1047,10 @@ namespace GameLauncher.App
                             Log.Core("SETTINGS LANGLIST: ID set correctly");
                             SettingsLanguage.SelectedIndex = index;
                         }
+                        else if (index < 0)
+                        {
+                            SettingsLanguage.SelectedIndex = 1;
+                        }
                     }
                     else
                     {
@@ -1011,49 +1069,6 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS LANGLIST: " + Error.Message);
-            }
-        }
-
-        /* This is for Main API which still includes a trailing slash - DavidCarbon */
-        private void RememberLastCDNOldStandard()
-        {
-            /* Last Selected CDN */
-
-            try
-            {
-                if (!string.IsNullOrEmpty(FileSettingsSave.CDN))
-                {
-                    string FinalCDNURL = FileSettingsSave.CDN + "/";
-
-                    if (CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
-                    {
-                        var index = CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
-
-                        if (index >= 0)
-                        {
-                            Log.Warning("SETTINGS CDNLIST: Found ID Based on OLD Standard");
-                            SettingsCDNPick.SelectedIndex = index;
-                        }
-                        else if (index < 0)
-                        {
-                            Log.Warning("SETTINGS CDNLIST: Failed to Detect Standard!");
-                            SettingsCDNPick.SelectedIndex = 1;
-                            Log.Warning("SETTINGS CDNLIST: Displaying First CDN in List!");
-                        }
-                    }
-                    else
-                    {
-                        SettingsCDNPick.SelectedIndex = 1;
-                    }
-                }
-                else
-                {
-                    SettingsCDNPick.SelectedIndex = 1;
-                }
-            }
-            catch (Exception Error)
-            {
-                Log.Error("SETTINGS CDNLIST: " + Error.Message);
             }
         }
 
@@ -1122,6 +1137,155 @@ namespace GameLauncher.App
         private void Graybutton_hover_MouseUp(object sender, EventArgs e)
         {
             SettingsCancel.Image = Theming.GrayButtonHover;
+        }
+
+        private void ResetFirewallRulesButton_Click(object sender, EventArgs e)
+        {
+            if (FunctionStatus.IsFirewallResetDisabled)
+            {
+                if (!FirewallHelper.RuleExist("Path", "SBRW - Game", FileSettingsSave.GameInstallation + "\\nfsw.exe") ||
+                    !FirewallHelper.RuleExist("Path", "SBRW - Game Launcher", Assembly.GetEntryAssembly().Location))
+                {
+                    if (DetectLinux.LinuxDetected())
+                    {
+                        MessageBox.Show(null, "Firewall is Not Supported on Non-Windows Systems", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else if (!FirewallManager.IsServiceRunning || !FirewallEnabled)
+                    {
+                        MessageBox.Show(null, "Firewall Service is Not Running. Please Either Enable or Exclude it Manually", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show(null, "You have already Reset Firewall Rules", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(null, "Hello Developers! How do you do Today?", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                ResetFirewallRulesButton.ForeColor = Theming.RedForeColorButton;
+                ResetFirewallRulesButton.BackColor = Theming.RedBackColorButton;
+                ResetFirewallRulesButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                ResetFirewallRulesButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+            }
+            else
+            {
+                DialogResult frameworkError = MessageBox.Show(null, "This will Reset the Firewall Rules that were done for you!" +
+                "\n\nClicking Yes and Launcher will Re-create the values Again on Next Launch." +
+                "\nClick No and Launcher will Not do any changes", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (frameworkError == DialogResult.Yes)
+                {
+                    if (!DetectLinux.LinuxDetected())
+                    {
+                        string GameName = "SBRW - Game";
+                        string GamePath = FileSettingsSave.GameInstallation + "\\nfsw.exe";
+
+                        string groupKeyGame = "Need for Speed: World";
+                        string descriptionGame = groupKeyGame;
+
+                        /* Inbound & Outbound */
+                        FirewallHelper.DoesRulesExist("Reset", "Path", GameName, GamePath, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+
+                        string LauncherName = "SBRW - Game Launcher";
+                        string LauncherPath = Assembly.GetEntryAssembly().Location;
+
+                        string UpdaterName = "SBRW - Game Launcher Updater";
+                        string UpdaterPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "GameLauncherUpdater.exe");
+
+                        string groupKeyLauncher = "Game Launcher for Windows";
+                        string descriptionLauncher = "Soapbox Race World";
+
+                        /* Inbound & Outbound */
+                        FirewallHelper.DoesRulesExist("Reset", "Path", LauncherName, LauncherPath, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
+                        FirewallHelper.DoesRulesExist("Reset", "Path", UpdaterName, UpdaterPath, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
+                        FunctionStatus.IsFirewallResetDisabled = true;
+                        FileSettingsSave.FirewallGameStatus = FileSettingsSave.FirewallLauncherStatus = "Not Excluded";
+                    }
+                }
+            }
+        }
+
+        private void ResetWindowsDefenderButton_Click(object sender, EventArgs e)
+        {
+            if (FunctionStatus.IsWindowsSecurityResetDisabled)
+            {
+                if (DetectLinux.LinuxDetected())
+                {
+                    MessageBox.Show(null, "Windows Security (Defender) is Not Supported on Non-Windows Systems", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else if (WindowsProductVersion.CachedWindowsNumber < 10.0)
+                {
+                    MessageBox.Show(null, "Windows Security (Defender) does not Exist Before Windows 10." +
+                        "\nUnsupported Feature on Current Platform, Sorry.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else if (!ManagementSearcher.SecurityCenter("AntivirusEnabled") && !ManagementSearcher.SecurityCenter("AntispywareEnabled"))
+                {
+                    MessageBox.Show(null, "Windows Security (Defender) is Disabled or Turned Off." +
+                        "\nThis is not recommended, instead opt to turn it ON, to allow Launcher to create Exclusions", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else if ((ManagementSearcher.SecurityCenter("AntivirusEnabled") && ManagementSearcher.SecurityCenter("AntispywareEnabled")) && 
+                    FunctionStatus.IsWindowsSecurityResetDisabled)
+                {
+                    MessageBox.Show(null, "You have already Reset Windows Security (Defender) Exclusions", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show(null, "It is Possible that Windows Defender is not Your Default AntiVirus Provider." +
+                        "\nPlease Manually Exclude it with the other AntiVirus Program", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                ResetWindowsDefenderButton.ForeColor = Theming.RedForeColorButton;
+                ResetWindowsDefenderButton.BackColor = Theming.RedBackColorButton;
+                ResetWindowsDefenderButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                ResetWindowsDefenderButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+            }
+            else
+            {
+                DialogResult frameworkError = MessageBox.Show(null, "This will Reset the Windows Security (Defender) Exclusions that were done for you!" +
+                "\n\nClicking Yes and Launcher will Re-create the values Again on Next Launch." +
+                "\nClick No and Launcher will Not do any changes", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (frameworkError == DialogResult.Yes)
+                {
+                    if (!DetectLinux.LinuxDetected())
+                    {
+                        if (WindowsProductVersion.CachedWindowsNumber >= 10.0)
+                        {
+                            FunctionStatus.WindowsDefender("Reset-Launcher", "Complete Reset", AppDomain.CurrentDomain.BaseDirectory, FileSettingsSave.GameInstallation, "Removed Game and Launcher");
+                            FunctionStatus.IsWindowsSecurityResetDisabled = true;
+                        }
+                        else
+                        {
+                            Log.Warning("SETTINGS: A Non-Windows 10 User has Mangaed to Enter this Sector!");
+                        }
+                    }
+                }
+            }
+        }
+
+        /* Settings Verify Hash */
+        private void SettingsVFilesButton_Click(object sender, EventArgs e)
+        {
+            if (FunctionStatus.IsVerifyHashDisabled)
+            {
+                MessageBox.Show(null, "You have already did a Verify Game Files Scan" +
+                    "\nPlease Restart Launcher to do a new Verify Game Files Scan", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                SettingsVFilesButton.ForeColor = Theming.RedForeColorButton;
+                SettingsVFilesButton.BackColor = Theming.RedBackColorButton;
+                SettingsVFilesButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                SettingsVFilesButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+            }
+            else if (FunctionStatus.DoesCDNSupportVerifyHash == false)
+            {
+                MessageBox.Show(null, "The current saved CDN does not support Verify Game Files Scan" +
+                    "\nPlease Choose Another CDN from the list", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                new VerifyHash().ShowDialog();
+            }
         }
     }
 }

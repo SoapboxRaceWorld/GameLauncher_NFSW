@@ -30,25 +30,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             new About().ShowDialog();
         }
 
-        /* Settings Verify Hash */
-        public static void SettingsVFilesButton_Click(object sender, EventArgs e)
-        {
-            if (FunctionStatus.IsVerifyHashDisabled)
-            {
-                MessageBox.Show(null, "You have already did a Verify Game Files Scan" +
-                    "\nPlease Restart Launcher to do a new Verify Game Files Scan", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else if (FunctionStatus.DoesCDNSupportVerifyHash == false)
-            {
-                MessageBox.Show(null, "The current saved CDN does not support Verify Game Files Scan" +
-                    "\nPlease Choose Another CDN from the list", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-            else
-            {
-                new VerifyHash().ShowDialog();
-            }
-        }
-
         public static void RegisterText_LinkClicked(object sender, EventArgs e)
         {
             if (FunctionStatus.AllowRegistration)

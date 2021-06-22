@@ -193,6 +193,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Color YellowMouseOverBackColorButton = Color.FromArgb(44, 58, 76);
 
 
+        public static Color RedBackColorButton = Color.FromArgb(22, 29, 38);
+
+        public static Color RedBorderColorButton = Color.FromArgb(168, 0, 0);
+
+        public static Color RedForeColorButton = Color.FromArgb(210, 4, 45); 
+
+        public static Color RedMouseOverBackColorButton = Color.FromArgb(44, 58, 76);
+
+
         /* Main Text Colors */
 
         /* Silver */
@@ -770,6 +779,26 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                     if (!string.IsNullOrEmpty(ThemeFile.Read("YellowMouseOverBackColorButton")))
                     {
                         YellowMouseOverBackColorButton = ToColor(ThemeFile.Read("YellowMouseOverBackColorButton"));
+                    }
+
+                    if (!string.IsNullOrEmpty(ThemeFile.Read("RedBackColorButton")))
+                    {
+                        RedBackColorButton = ToColor(ThemeFile.Read("RedBackColorButton"));
+                    }
+
+                    if (!string.IsNullOrEmpty(ThemeFile.Read("RedBorderColorButton")))
+                    {
+                        RedBorderColorButton = ToColor(ThemeFile.Read("RedBorderColorButton"));
+                    }
+
+                    if (!string.IsNullOrEmpty(ThemeFile.Read("RedForeColorButton")))
+                    {
+                        RedForeColorButton = ToColor(ThemeFile.Read("RedForeColorButton"));
+                    }
+
+                    if (!string.IsNullOrEmpty(ThemeFile.Read("RedMouseOverBackColorButton")))
+                    {
+                        RedMouseOverBackColorButton = ToColor(ThemeFile.Read("RedMouseOverBackColorButton"));
                     }
 
                     /* Text Colors */

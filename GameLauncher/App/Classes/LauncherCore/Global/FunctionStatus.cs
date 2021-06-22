@@ -77,6 +77,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* Verify Hash Status */
         public static bool IsVerifyHashDisabled = false;
 
+        /* Firewall Status */
+        public static bool IsFirewallResetDisabled = false;
+
+        /* Windows Security (Defender) Status */
+        public static bool IsWindowsSecurityResetDisabled = false;
+
         /* Visual API Status */
         public static bool IsVisualAPIsChecked = false;
 

@@ -564,7 +564,7 @@ namespace GameLauncher
 
             LoginButton.ForeColor = Theming.SixTextForeColor;
             var verticalImageUrl = "";
-            VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(ServerListUpdater.ServerName("Ping")) + ".bin");
+            VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin");
             VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
 
             string numPlayers = "";
@@ -975,14 +975,14 @@ namespace GameLauncher
                             if (e4.Cancelled)
                             {
                                 /* Load cached banner! */
-                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(ServerListUpdater.ServerName("Ping")) + ".bin");
+                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin");
                                 VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                 return;
                             }
                             else if (e4.Error != null)
                             {
                                 /* Load cached banner! */
-                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(ServerListUpdater.ServerName("Ping")) + ".bin");
+                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin");
                                 VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                 return;
                             }
@@ -999,7 +999,7 @@ namespace GameLauncher
 
                                     if (VerticalBanners.GetFileExtension(verticalImageUrl) != "gif")
                                     {
-                                        File.WriteAllBytes(".BannerCache/" + SHA.HashPassword(ServerListUpdater.ServerName("Ping")) + ".bin", memoryStream.ToArray());
+                                        File.WriteAllBytes(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin", memoryStream.ToArray());
                                     }
                                 }
                                 catch (Exception ex)
@@ -1013,7 +1013,7 @@ namespace GameLauncher
                     else
                     {
                         /* Load cached banner! */
-                        VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(ServerListUpdater.ServerName("Ping")) + ".bin");
+                        VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin");
                         VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                     }
                 }
