@@ -30,6 +30,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         public static string LauncherSerial;
 
         /* Retrive CA Information */
+        /// <summary>
+        /// Retrives the Root CA JSON file with the latest details of the Certificate
+        /// </summary>
+        /// <remarks>Sets the Certificate Details For Launcher Comparison</remarks>
         public static void Latest()
         {
             if (!DetectLinux.LinuxDetected())

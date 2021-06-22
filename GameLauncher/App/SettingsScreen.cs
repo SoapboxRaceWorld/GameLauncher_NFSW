@@ -50,6 +50,10 @@ namespace GameLauncher.App
             };
         }
 
+        /// <summary>
+        /// Sets the Button, Image, Text, and Fonts. Enables/Disables Certain Elements of the Screen for Certain Platforms. Also contains functions that act as helper functions
+        /// </summary>
+        /// <remarks>Settings Screen Visuals</remarks>
         private void SetVisuals()
         {
             /*******************************/
@@ -275,6 +279,10 @@ namespace GameLauncher.App
         /* Draw Events                   /
         /********************************/
 
+        /// <summary>
+        /// Sets the Category for the CDN Drop Down Menu with its set of Colors
+        /// </summary>
+        /// <remarks>Dropdown Menu Visual</remarks>
         private void SettingsCDNPick_DrawItem(object sender, DrawItemEventArgs e)
         {
             var font = (sender as ComboBox).Font;
@@ -320,6 +328,10 @@ namespace GameLauncher.App
             }
         }
 
+        /// <summary>
+        /// Sets the Category for the Language Drop Down Menu with its set of Colors
+        /// </summary>
+        /// <remarks>Dropdown Menu Visual</remarks>
         private void SettingsLanguage_DrawItem(object sender, DrawItemEventArgs e)
         {
             var font = (sender as ComboBox).Font;
@@ -999,7 +1011,8 @@ namespace GameLauncher.App
                         }
                         else if (index < 0)
                         {
-                            SettingsCDNPick.SelectedIndex = 1;
+                            Log.Warning("SETTINGS CDNLIST: Checking ID Against OLD Standard");
+                            RememberLastCDNOldStandard();
                         }
                     }
                     else
@@ -1007,6 +1020,49 @@ namespace GameLauncher.App
                         Log.Warning("SETTINGS CDNLIST: Unable to find anything, assuming default");
                         SettingsCDNPick.SelectedIndex = 1;
                         Log.Warning("SETTINGS CDNLIST: Unknown entry value is " + FinalCDNURL);
+                    }
+                }
+                else
+                {
+                    SettingsCDNPick.SelectedIndex = 1;
+                }
+            }
+            catch (Exception Error)
+            {
+                Log.Error("SETTINGS CDNLIST: " + Error.Message);
+            }
+        }
+
+        /* This is for Main API which still includes a trailing slash - DavidCarbon */
+        private void RememberLastCDNOldStandard()
+        {
+            /* Last Selected CDN */
+
+            try
+            {
+                if (!string.IsNullOrEmpty(FileSettingsSave.CDN))
+                {
+                    string FinalCDNURL = FileSettingsSave.CDN + "/";
+
+                    if (CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
+                    {
+                        var index = CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
+
+                        if (index >= 0)
+                        {
+                            Log.Warning("SETTINGS CDNLIST: Found ID Based on OLD Standard");
+                            SettingsCDNPick.SelectedIndex = index;
+                        }
+                        else if (index < 0)
+                        {
+                            Log.Warning("SETTINGS CDNLIST: Failed to Detect Standard!");
+                            SettingsCDNPick.SelectedIndex = 1;
+                            Log.Warning("SETTINGS CDNLIST: Displaying First CDN in List!");
+                        }
+                    }
+                    else
+                    {
+                        SettingsCDNPick.SelectedIndex = 1;
                     }
                 }
                 else
