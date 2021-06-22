@@ -6,20 +6,27 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
     class Time
     {
         /* Current Time Stamp  */
-        public static long GetStamp(bool valid = false)
+        public static string GetTime(string Mode)
         {
-            long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
-
-            if (valid == true)
+            try
             {
-                ticks /= 10000000;
+                if (Mode == "Date")
+                {
+                    return DateTime.Now.ToString("MM/dd/yyyy");
+                }
+                else if (Mode == "Time")
+                {
+                    return DateTime.Now.ToString("HH:mm:ss.ff");
+                }
+                else
+                {
+                    return string.Empty;
+                }
             }
-            else
+            catch
             {
-                ticks /= 10000;
+                return "Unknown Time/Date";
             }
-
-            return ticks;
         }
 
         /* Count Down Timer */

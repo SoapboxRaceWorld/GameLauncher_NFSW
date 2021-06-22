@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Management.Automation;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFirewallHelper;
@@ -38,7 +37,7 @@ namespace GameLauncher.App
         private string _newLauncherPath;
         private string _newGameFilesPath;
         private string FinalCDNURL;
-        private bool FirewallEnabled = FirewallHelper.FirewallStatus();
+        private bool FirewallEnabled = DetectLinux.LinuxDetected() ? false : FirewallManager.IsServiceRunning;
 
         public SettingsScreen()
         {
@@ -252,7 +251,7 @@ namespace GameLauncher.App
                 SettingsVFilesButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
             }
 
-            if ((!FirewallManager.IsServiceRunning && !FirewallEnabled) || 
+            if ((!FirewallHelper.FirewallStatus() && !FirewallEnabled) || 
                 (FileSettingsSave.FirewallLauncherStatus != "Excluded" && FileSettingsSave.FirewallGameStatus != "Excluded") || 
                 FunctionStatus.IsFirewallResetDisabled || DetectLinux.LinuxDetected())
             {
@@ -1206,7 +1205,7 @@ namespace GameLauncher.App
                     {
                         MessageBox.Show(null, "Firewall is Not Supported on Non-Windows Systems", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-                    else if (!FirewallManager.IsServiceRunning || !FirewallEnabled)
+                    else if (!FirewallHelper.FirewallStatus() || !FirewallEnabled)
                     {
                         MessageBox.Show(null, "Firewall Service is Not Running. Please Either Enable or Exclude it Manually", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -1215,9 +1214,17 @@ namespace GameLauncher.App
                         MessageBox.Show(null, "You have already Reset Firewall Rules", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
+                else if (DetectLinux.LinuxDetected())
+                {
+                    MessageBox.Show(null, "Firewall is Not Supported on Non-Windows Systems", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else if (!FirewallHelper.FirewallStatus() || !FirewallEnabled)
+                {
+                    MessageBox.Show(null, "Firewall Service is Not Running. Please Either Enable or Exclude it Manually", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
                 else
                 {
-                    MessageBox.Show(null, "Hello Developers! How do you do Today?", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(null, "Hello Developers! How do you do Today? Wait, You're not a Developer? Oh oh...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 ResetFirewallRulesButton.ForeColor = Theming.RedForeColorButton;

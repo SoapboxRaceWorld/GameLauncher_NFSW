@@ -594,7 +594,6 @@ namespace GameLauncher
             WebClient client = new WebClient();
             client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
 
-            var artificialPingStart = Time.GetStamp();
             VerticalBanner.BackColor = Color.Transparent;
 
             var stringToUri = new Uri(InformationCache.SelectedServerData.IpAddress + "/GetServerInformation");
@@ -607,8 +606,6 @@ namespace GameLauncher
             client.DownloadStringCompleted += (sender2, e2) =>
             {
                 aTimer.Enabled = false;
-
-                var artificialPingEnd = Time.GetStamp();
 
                 if (e2.Cancelled)
                 {
