@@ -480,24 +480,23 @@ namespace GameLauncher.App
 
                 if (!DetectLinux.LinuxDetected())
                 {
-                    /* Remove current Firewall for the Game Files */
-                    string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
+                    string GameName = "SBRW - Game";
 
-                    if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.FirewallStatus() == true)
+                    /* Remove current Firewall for the Game Files and Add new one (If Possible) */
+                    string OldGamePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
+                    string NewGamePath = Path.Combine(_newGameFilesPath + "\\nfsw.exe");
+
+                    string groupKeyGame = "Need for Speed: World";
+                    string descriptionGame = groupKeyGame;
+
+                    if (File.Exists(OldGamePath) && FirewallHelper.FirewallStatus() == true)
                     {
-                        if (FirewallHelper.RuleExist("SBRW - Game") == true)
+                        /* Inbound & Outbound */
+                        FirewallHelper.DoesRulesExist("Reset", "Path", GameName, OldGamePath, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+
+                        if (File.Exists(NewGamePath))
                         {
-                            bool removeFirewallRule = true;
-                            bool firstTimeRun = true;
-
-                            string nameOfGame = "SBRW - Game";
-                            string localOfGame = CurrentGameFilesExePath;
-
-                            string groupKeyGame = "Need for Speed: World";
-                            string descriptionGame = groupKeyGame;
-
-                            /* Inbound & Outbound */
-                            FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+                            FirewallHelper.DoesRulesExist("Add-Game", "Path", GameName, NewGamePath, groupKeyGame, descriptionGame, FirewallProtocol.Any);
                         }
                     }
                 }
@@ -814,24 +813,26 @@ namespace GameLauncher.App
                 Log.Error("WINDOWS DEFENDER: " + ex.Message);
             }
 
-            /* Remove current Firewall for the Game Files */
-            string CurrentGameFilesExePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
-
-            if (File.Exists(CurrentGameFilesExePath) && FirewallHelper.FirewallStatus() == true)
+            if (!DetectLinux.LinuxDetected())
             {
-                if (FirewallHelper.RuleExist("SBRW - Game") == true)
+                string GameName = "SBRW - Game";
+
+                /* Remove current Firewall for the Game Files and Add new one (If Possible) */
+                string OldGamePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
+                string NewGamePath = Path.Combine(_newGameFilesPath + "\\nfsw.exe");
+
+                string groupKeyGame = "Need for Speed: World";
+                string descriptionGame = groupKeyGame;
+
+                if (File.Exists(OldGamePath) && FirewallHelper.FirewallStatus() == true)
                 {
-                    bool removeFirewallRule = true;
-                    bool firstTimeRun = true;
-
-                    string nameOfGame = "SBRW - Game";
-                    string localOfGame = CurrentGameFilesExePath;
-
-                    string groupKeyGame = "Need for Speed: World";
-                    string descriptionGame = groupKeyGame;
-
                     /* Inbound & Outbound */
-                    FirewallHelper.DoesRulesExist(removeFirewallRule, firstTimeRun, nameOfGame, localOfGame, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+                    FirewallHelper.DoesRulesExist("Reset", "Path", GameName, OldGamePath, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+
+                    if (File.Exists(NewGamePath))
+                    {
+                        FirewallHelper.DoesRulesExist("Add-Game", "Path", GameName, NewGamePath, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+                    }
                 }
             }
 
