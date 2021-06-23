@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
@@ -15,6 +16,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
         public static void GetList()
         {
+            DiscordLauncherPresense.Status("Start Up", "Creating Language List");
+
             List<LangObject> langInfos = new List<LangObject>();
 
             String json_language = String.Empty;

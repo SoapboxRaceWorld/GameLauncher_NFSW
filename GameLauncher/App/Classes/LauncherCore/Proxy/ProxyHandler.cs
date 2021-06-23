@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Url = Flurl.Url;
+using UrlFlurl = Flurl.Url;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.RPC;
@@ -38,6 +38,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 CommunicationLogEntryType.Error,
                 new CommunicationLogLauncherError(exception.Message, context.Request.Path,
                     context.Request.Method));
+            
+            context.Request.Dispose();
             await SubmitError(exception);
 
             return new TextResponse(HttpStatusCode.BadRequest, exception.Message);
@@ -56,8 +58,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             path = path.Substring("/nfsw/Engine.svc".Length);
 
-            Url resolvedUrl = new Url(ServerProxy.Instance.GetServerUrl()).AppendPathSegment(path);
-
+            UrlFlurl resolvedUrl = new UrlFlurl(ServerProxy.Instance.GetServerUrl()).AppendPathSegment(path);
+            FlurlClient Test = new FlurlClient();
             foreach (var queryParamName in context.Request.Query)
             {
                 resolvedUrl = resolvedUrl.SetQueryParam(queryParamName, context.Request.Query[queryParamName],
@@ -153,6 +155,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 CommunicationLogEntryType.Response, new CommunicationLogResponse(
                     responseBody, resolvedUrl.ToString(), method));
 
+            context.Request.Dispose();
+            responseMessage.Dispose();
+            await request.DeleteAsync();
+
             return Response;
         }
 
@@ -183,7 +189,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             try
             {
                 var mainsrv = DetectLinux.LinuxDetected() ? URLs.Main.Replace("https", "http") : URLs.Main;
-                Url url = new Url(mainsrv + "/error-report");
+                UrlFlurl url = new UrlFlurl(mainsrv + "/error-report");
                 await url.PostJsonAsync(new
                 {
                     message = exception.Message ?? "no message",

@@ -1,5 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
@@ -38,6 +39,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             if (!DetectLinux.LinuxDetected())
             {
+                DiscordLauncherPresense.Status("Start Up", "Checking Root Certificate Authority");
+
                 try
                 {
                     FunctionStatus.TLS();

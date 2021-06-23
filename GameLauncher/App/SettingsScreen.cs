@@ -739,20 +739,55 @@ namespace GameLauncher.App
         /* Settings Change Game Files Location */
         private void SettingsGameFiles_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.OpenFileDialog changeGameFilesPath = new System.Windows.Forms.OpenFileDialog
+            if (!DetectLinux.LinuxDetected())
             {
-                InitialDirectory = "C:\\",
-                ValidateNames = false,
-                CheckFileExists = false,
-                CheckPathExists = true,
-                Title = "Select the location to Find or Download nfsw.exe",
-                FileName = "Select Game Files Folder"
-            };
-            if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
+                System.Windows.Forms.OpenFileDialog changeGameFilesPath = new System.Windows.Forms.OpenFileDialog
+                {
+                    InitialDirectory = "C:\\",
+                    ValidateNames = false,
+                    CheckFileExists = false,
+                    CheckPathExists = true,
+                    Title = "Select the location to Find or Download nfsw.exe",
+                    FileName = "Select Game Files Folder"
+                };
+                
+                if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
+                {
+                    _newGameFilesPath = Path.GetDirectoryName(changeGameFilesPath.FileName);
+                    SettingsGameFilesCurrentText.Text = "NEW DIRECTORY";
+                    SettingsGameFilesCurrent.Text = _newGameFilesPath;
+                }
+
+                changeGameFilesPath.Dispose();
+            }
+            else
             {
-                _newGameFilesPath = Path.GetDirectoryName(changeGameFilesPath.FileName);
-                SettingsGameFilesCurrentText.Text = "NEW DIRECTORY";
-                SettingsGameFilesCurrent.Text = _newGameFilesPath;
+                string GameFilesLocal = Prompt.ShowDialog("Please Enter a Games File Path", "GameLauncher", "GameFiles");
+
+                if (string.IsNullOrWhiteSpace(GameFilesLocal))
+                {
+                    MessageBox.Show(null, "Game Files Path can not be Empty. Please Try Again", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                else
+                {
+                    try
+                    {
+                        if (!Directory.Exists(Path.GetDirectoryName(GameFilesLocal)))
+                        {
+                            MessageBox.Show(null, "Game Files Path Folder Does not Exist. Please create the Folder and Try Again", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            return;
+                        }
+                        else
+                        {
+                            _newGameFilesPath = Path.GetDirectoryName(GameFilesLocal);
+                        }
+                    }
+                    catch
+                    {
+                        MessageBox.Show(null, "Encounterd a Game Files Path Error. Please Input a Valid Path", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
             }
         }
 

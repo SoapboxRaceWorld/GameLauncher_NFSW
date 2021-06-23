@@ -12,21 +12,40 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 {
     class DiscordLauncherPresense
     {
-        /* Discord RPC Client */
+        /// <summary>
+        /// Launcher's Discord RPC Client
+        /// </summary>
+        /// <remarks>Discord RPC Client</remarks>
         public static DiscordRpcClient Client;
 
-        /* User's Discord ID */
+        /// <summary>
+        /// User's Discord ID Cache and is Set Once by Startuo or During Operation of Launcher's State
+        /// </summary>
+        /// <remarks>User's Discord ID</remarks>
         public static string UserID = String.Empty;
 
-        /* Discord Presense (To Show Status) */
+        /// <summary>
+        /// Launcher's Discord Presense To Show Statuss
+        /// </summary>
+        /// <remarks>Instance of Discord Presense</remarks>
         public static RichPresence Presence = new RichPresence();
 
-        /* Used to Set Discord Buttons */
+        /// <summary>
+        /// Used to Set Discord Buttons on RPC Status
+        /// </summary>
+        /// <remarks>Instance of Discord Buttons</remarks>
         public static List<DiscordButton> ButtonsList = new List<DiscordButton>();
 
-        /* Used to prevent Displaying RPC when there is an Error (Displays The Simple Error in RPC) */
+        /// <summary>
+        /// Used to prevent Displaying RPC when there is an Error (Displays a Simple Error Message in RPC)
+        /// </summary>
+        /// <remarks>Displays Launcher Errors in RPC</remarks>
         public static bool Download = true;
 
+        /// <summary>
+        /// Sets the current Status of the Launcher's State
+        /// </summary>
+        /// <remarks>RPC Status</remarks>
         public static void Status(string State, string Status)
         {
             ButtonsList.Clear();
@@ -327,6 +346,10 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 Client.SetPresence(Presence);
         }
 
+        /// <summary>
+        /// Starts Game Launcher's RPC Status. If a Discord Client is Running on the Machine, it will Display the status on the User's Profile.
+        /// </summary>
+        /// <remarks>Displays Launcher and Server Status</remarks>
         public static void Start(string State, string RPCID)
         {
             try
@@ -390,12 +413,20 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             }
         }
 
+        /// <summary>
+        /// Invokes a new Instance of RPC
+        /// </summary>
+        /// <remarks>Starts a new RPC for Launcher</remarks>
         public static void Update()
         {
             if (Client != null)
                 Client.Invoke();
         }
 
+        /// <summary>
+        /// Invokes a Stop Command to RPC by Clearing Current Status before Disposing RPC
+        /// </summary>
+        /// <remarks>Clears and Stops RPC</remarks>
         public static void Stop(string State)
         {
             if (Client != null)
@@ -410,6 +441,10 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             }
         }
 
+        /// <summary>
+        /// Retives Discord Application ID by first checking the Server JSON, with the Server List being Second, and the Fallback being the Launcher's ID
+        /// </summary>
+        /// <remarks>Server's Discord Application ID</remarks>
         public static string ApplicationID()
         {
             if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.discordApplicationID))

@@ -1,8 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using GameLauncher.App.Classes.Logger;
 using Nancy;
 using Nancy.Bootstrapper;
 

@@ -92,7 +92,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             }
             else
             {
-                string send = Prompt.ShowDialog("Please specify your email address.", "GameLauncher");
+                string send = Prompt.ShowDialog("Please specify your email address.", "GameLauncher", null);
 
                 if (send != String.Empty)
                 {
@@ -101,6 +101,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                     {
                         FunctionStatus.TLS();
                         Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IpAddress + "/RecoveryPassword/forgotPassword");
+                        ServicePointManager.FindServicePoint(resetPasswordUrl).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
                         var request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
                         var postData = "email=" + send;
@@ -108,6 +109,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                         request.Method = "POST";
                         request.ContentType = "application/x-www-form-urlencoded";
                         request.ContentLength = data.Length;
+                        request.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
                         using (var stream = request.GetRequestStream())
                         {

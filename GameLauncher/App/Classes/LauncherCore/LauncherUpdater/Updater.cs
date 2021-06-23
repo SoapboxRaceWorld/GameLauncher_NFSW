@@ -10,6 +10,7 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using System.Net;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -33,6 +34,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
         {
             if (!DetectLinux.LinuxDetected())
             {
+                DiscordLauncherPresense.Status("Start Up", "Checking Latest Launcher Release Information");
+
                 bool MainAPI = true;
 
                 try

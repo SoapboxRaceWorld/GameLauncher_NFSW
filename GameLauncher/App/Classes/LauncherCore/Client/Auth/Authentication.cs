@@ -40,14 +40,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 else if (Connection == "Secure")
                 {
                     FunctionStatus.TLS();
-                    var ServerUrl = Tokens.IPAddress + "/User/modernAuth";
+                    string ServerUrl = Tokens.IPAddress + "/User/modernAuth";
                     if (Method == "Register")
                     {
                         ServerUrl = Tokens.IPAddress + "/User/modernRegister";
                     }
-                    HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(ServerUrl);
+
+                    Uri SendRequest = new Uri(ServerUrl);
+                    ServicePointManager.FindServicePoint(SendRequest).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+
+                    HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(SendRequest);
                     httpWebRequest.ContentType = "application/json";
                     httpWebRequest.Method = "POST";
+                    httpWebRequest.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
                     using (StreamWriter streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                     {

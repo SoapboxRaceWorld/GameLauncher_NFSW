@@ -8,7 +8,6 @@ namespace GameLauncher.App.Classes
 {
     public partial class SplashScreen : Form
     {
-        public static int i = 0;
         public SplashScreen()
         {
             InitializeComponent();
@@ -35,16 +34,9 @@ namespace GameLauncher.App.Classes
 
         private void Clock_Tick(object sender, EventArgs e)
         {
-            i++;
-
-            if (InformationCache.ServerListStatus == "Loaded" || FunctionStatus.LoadingComplete == true)
+            if (InformationCache.ServerListStatus == "Loaded" || FunctionStatus.LoadingComplete || FunctionStatus.LauncherForceClose)
             {
                 Clock.Start();
-                Application.OpenForms["SplashScreen"].Close();
-            }
-            else if (i >= 300)
-            {
-                Log.Error("SPLASH SCREEN: Launcher might have hanged? 5 Mintinues had passed so I'm closing the form");
 
                 try
                 {

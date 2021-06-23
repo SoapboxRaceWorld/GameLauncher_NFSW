@@ -13,6 +13,7 @@ using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
@@ -24,6 +25,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
         public static void GetList()
         {
+            DiscordLauncherPresense.Status("Start Up", "Creating Server List");
+
             List<ServerList> serverInfos = new List<ServerList>();
 
             foreach (var serverListURL in URLs.ServerList)

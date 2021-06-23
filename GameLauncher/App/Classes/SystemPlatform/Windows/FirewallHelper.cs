@@ -1,4 +1,5 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using NetFwTypeLib;
@@ -319,28 +320,37 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             try
             {
-                if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == true)
+                if (DetectLinux.LinuxDetected())
                 {
-                    string LauncherName = "SBRW - Game Launcher";
-                    string LauncherPath = Assembly.GetEntryAssembly().Location;
-
-                    string UpdaterName = "SBRW - Game Launcher Updater";
-                    string UpdaterPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "GameLauncherUpdater.exe");
-
-                    string groupKeyLauncher = "Game Launcher for Windows";
-                    string descriptionLauncher = "Soapbox Race World";
-
-                    /* Inbound & Outbound */
-                    FirewallHelper.DoesRulesExist("Add-Launcher", "Path", LauncherName, LauncherPath, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
-                    FirewallHelper.DoesRulesExist("Add-Launcher", "Path", UpdaterName, UpdaterPath, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
-                }
-                else if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == false)
-                {
-                    FileSettingsSave.FirewallLauncherStatus = "Turned Off";
+                    /* Not Supported */
                 }
                 else
                 {
-                    FileSettingsSave.FirewallLauncherStatus = "Service Stopped";
+                    DiscordLauncherPresense.Status("Start Up", "Checking Firewall Exclusions");
+
+                    if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == true)
+                    {
+                        string LauncherName = "SBRW - Game Launcher";
+                        string LauncherPath = Assembly.GetEntryAssembly().Location;
+
+                        string UpdaterName = "SBRW - Game Launcher Updater";
+                        string UpdaterPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "GameLauncherUpdater.exe");
+
+                        string groupKeyLauncher = "Game Launcher for Windows";
+                        string descriptionLauncher = "Soapbox Race World";
+
+                        /* Inbound & Outbound */
+                        FirewallHelper.DoesRulesExist("Add-Launcher", "Path", LauncherName, LauncherPath, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
+                        FirewallHelper.DoesRulesExist("Add-Launcher", "Path", UpdaterName, UpdaterPath, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
+                    }
+                    else if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == false)
+                    {
+                        FileSettingsSave.FirewallLauncherStatus = "Turned Off";
+                    }
+                    else
+                    {
+                        FileSettingsSave.FirewallLauncherStatus = "Service Stopped";
+                    }
                 }
             }
             catch (Exception error)

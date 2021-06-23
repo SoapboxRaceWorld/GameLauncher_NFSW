@@ -10,31 +10,31 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
     {
         public static IniFile settingFile = new IniFile("Settings.ini");
 
-        public static string GameInstallation = !string.IsNullOrEmpty(settingFile.Read("InstallationDirectory")) ? settingFile.Read("InstallationDirectory") : string.Empty;
+        public static string GameInstallation = !string.IsNullOrWhiteSpace(settingFile.Read("InstallationDirectory")) ? settingFile.Read("InstallationDirectory") : string.Empty;
 
-        public static string CDN = !string.IsNullOrEmpty(settingFile.Read("CDN")) ? settingFile.Read("CDN") : "http://localhost/";
+        public static string CDN = !string.IsNullOrWhiteSpace(settingFile.Read("CDN")) ? settingFile.Read("CDN") : "http://localhost/";
 
-        public static string Lang = !string.IsNullOrEmpty(settingFile.Read("Language")) ? settingFile.Read("Language") : "EN";
+        public static string Lang = !string.IsNullOrWhiteSpace(settingFile.Read("Language")) ? settingFile.Read("Language") : "EN";
 
-        public static string Proxy = (!string.IsNullOrEmpty(settingFile.Read("DisableProxy")) 
+        public static string Proxy = (!string.IsNullOrWhiteSpace(settingFile.Read("DisableProxy")) 
                                       && (settingFile.Read("DisableProxy") == "1" || settingFile.Read("DisableProxy") == "0")) ? settingFile.Read("DisableProxy") : "0";
 
-        public static string RPC = (!string.IsNullOrEmpty(settingFile.Read("DisableRPC")) 
+        public static string RPC = (!string.IsNullOrWhiteSpace(settingFile.Read("DisableRPC")) 
                                     && (settingFile.Read("DisableRPC") == "1" || settingFile.Read("DisableRPC") == "0")) ? settingFile.Read("DisableRPC") : "0";
 
-        public static string IgnoreVersion = !string.IsNullOrEmpty(settingFile.Read("IgnoreUpdateVersion")) ? settingFile.Read("IgnoreUpdateVersion") : string.Empty;
+        public static string IgnoreVersion = !string.IsNullOrWhiteSpace(settingFile.Read("IgnoreUpdateVersion")) ? settingFile.Read("IgnoreUpdateVersion") : string.Empty;
 
-        public static string FirewallLauncherStatus = !string.IsNullOrEmpty(settingFile.Read("FirewallLauncher")) ? settingFile.Read("FirewallLauncher") : "Unknown";
+        public static string FirewallLauncherStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FirewallLauncher")) ? settingFile.Read("FirewallLauncher") : "Unknown";
 
-        public static string FirewallGameStatus = !string.IsNullOrEmpty(settingFile.Read("FirewallGame")) ? settingFile.Read("FirewallGame") : "Unknown";
+        public static string FirewallGameStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FirewallGame")) ? settingFile.Read("FirewallGame") : "Unknown";
 
-        public static string WindowsDefenderStatus = !string.IsNullOrEmpty(settingFile.Read("WindowsDefender")) ? settingFile.Read("WindowsDefender") : "Unknown";
+        public static string WindowsDefenderStatus = !string.IsNullOrWhiteSpace(settingFile.Read("WindowsDefender")) ? settingFile.Read("WindowsDefender") : "Unknown";
 
-        public static string Win7UpdatePatches = !string.IsNullOrEmpty(settingFile.Read("PatchesApplied")) ? settingFile.Read("PatchesApplied") : string.Empty;
+        public static string Win7UpdatePatches = !string.IsNullOrWhiteSpace(settingFile.Read("PatchesApplied")) ? settingFile.Read("PatchesApplied") : string.Empty;
 
-        public static string FilePermissionStatus = !string.IsNullOrEmpty(settingFile.Read("FilePermission")) ? settingFile.Read("FilePermission") : "Not Set";
+        public static string FilePermissionStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FilePermission")) ? settingFile.Read("FilePermission") : "Not Set";
 
-        public static string GameIntegrity = !string.IsNullOrEmpty(settingFile.Read("GameIntegrity")) ? settingFile.Read("GameIntegrity") : "Unknown";
+        public static string GameIntegrity = !string.IsNullOrWhiteSpace(settingFile.Read("GameIntegrity")) ? settingFile.Read("GameIntegrity") : "Unknown";
 
         public static void NullSafeSettings()
         {
@@ -82,7 +82,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             {
                 settingFile.Write("InstallationDirectory", GameInstallation);
             }
-            else if (!File.Exists(GameInstallation) && !string.IsNullOrEmpty(GameInstallation))
+            else if (!File.Exists(GameInstallation) && !string.IsNullOrWhiteSpace(GameInstallation))
             {
                 Directory.CreateDirectory(GameInstallation);
             }
@@ -166,7 +166,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 }
                 else if (WindowsProductVersion.CachedWindowsNumber < 10.0)
                 {
-                    if (settingFile.KeyExists("WindowsDefender") || !string.IsNullOrEmpty(settingFile.Read("WindowsDefender")))
+                    if (settingFile.KeyExists("WindowsDefender") || !string.IsNullOrWhiteSpace(settingFile.Read("WindowsDefender")))
                     {
                         settingFile.DeleteKey("WindowsDefender");
                     }
@@ -187,7 +187,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             /** Proxy Port Number **/
             bool UsingCustomProxyPort = false;
 
-            if (!string.IsNullOrEmpty(settingFile.Read("ProxyPort")))
+            if (!string.IsNullOrWhiteSpace(settingFile.Read("ProxyPort")))
             {
                 bool isNumeric = int.TryParse(settingFile.Read("ProxyPort"), out int Port);
 

@@ -194,11 +194,10 @@ namespace GameLauncher.App
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(((LangObject)GameLangSource.SelectedItem).INI_Value))
+            if (!string.IsNullOrWhiteSpace(((LangObject)GameLangSource.SelectedItem).INI_Value))
             {
                 FileSettingsSave.Lang = ((LangObject)GameLangSource.SelectedItem).INI_Value;
                 FileGameSettingsData.Language = ((LangObject)GameLangSource.SelectedItem).XML_Value;
-                FileGameSettings.Save("Suppress", "Language Only");
             }
 
             if (((LangObject)GameLangSource.SelectedItem).Category == "Custom")

@@ -1,4 +1,5 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using Newtonsoft.Json;
@@ -21,6 +22,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
         {
             if (!DetectLinux.LinuxDetected())
             {
+                DiscordLauncherPresense.Status("Start Up", "Checking Launcher and Updater Release Information");
+
                 /* Update this text file if a new GameLauncherUpdater.exe has been delployed - DavidCarbon */
                 try
                 {
