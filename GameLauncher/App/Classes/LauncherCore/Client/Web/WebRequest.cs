@@ -17,7 +17,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 
         public static string Value()
         {
-            if (string.IsNullOrEmpty(Hash))
+            if (string.IsNullOrWhiteSpace(Hash))
             {
                 Hash = SHA.HashFile(AppDomain.CurrentDomain.FriendlyName);
             }

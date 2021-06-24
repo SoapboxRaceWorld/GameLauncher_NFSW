@@ -34,7 +34,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     }
                     else
                     {
-                        LoginResponse = wc.DownloadString(Tokens.IPAddress + "/User/createUser?email=" + Email + "&password=" + Password + (!String.IsNullOrEmpty(Token) ? "&inviteTicket=" + Token : ""));
+                        LoginResponse = wc.DownloadString(Tokens.IPAddress + "/User/createUser?email=" + Email + "&password=" + Password + (!String.IsNullOrWhiteSpace(Token) ? "&inviteTicket=" + Token : ""));
                     }
                 }
                 else if (Connection == "Secure")
@@ -112,7 +112,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
 
             if (Connection == "Non Secure")
             {
-                if (string.IsNullOrEmpty(LoginResponse))
+                if (string.IsNullOrWhiteSpace(LoginResponse))
                 {
                     Tokens.Error = "Server Seems to be Offline.";
                 }
@@ -191,9 +191,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                                 }
                             }
 
-                            if (string.IsNullOrEmpty(msgBoxInfo) || msgBoxInfo == "SERVER FULL")
+                            if (string.IsNullOrWhiteSpace(msgBoxInfo) || msgBoxInfo == "SERVER FULL")
                             {
-                                if (Method == "Login" && string.IsNullOrEmpty(msgBoxInfo))
+                                if (Method == "Login" && string.IsNullOrWhiteSpace(msgBoxInfo))
                                 {
                                     Tokens.UserId = XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/UserId", "InnerText");
                                     Tokens.LoginToken = XMLServerCore.NodeReader(sbrwXml, "InnerText", "LoginStatusVO/LoginToken", "InnerText");
@@ -239,7 +239,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             }
             else if (Connection == "Secure")
             {
-                if (String.IsNullOrEmpty(LoginResponse))
+                if (String.IsNullOrWhiteSpace(LoginResponse))
                 {
                     Tokens.Error = "Server seems to be offline.";
                 }
@@ -256,14 +256,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                         ServerObjectResponse = JsonConvert.DeserializeObject<ModernAuthObject>(ServerErrorResponse);
                     }
 
-                    if (String.IsNullOrEmpty(ServerObjectResponse.Error) || ServerObjectResponse.Error == "SERVER FULL")
+                    if (String.IsNullOrWhiteSpace(ServerObjectResponse.Error) || ServerObjectResponse.Error == "SERVER FULL")
                     {
                         if (Method == "Login")
                         {
                             Tokens.UserId = ServerObjectResponse.UserId;
                             Tokens.LoginToken = ServerObjectResponse.Token;
 
-                            if (!String.IsNullOrEmpty(ServerObjectResponse.Warning))
+                            if (!String.IsNullOrWhiteSpace(ServerObjectResponse.Warning))
                             {
                                 Tokens.Warning = ServerObjectResponse.Warning;
                             }

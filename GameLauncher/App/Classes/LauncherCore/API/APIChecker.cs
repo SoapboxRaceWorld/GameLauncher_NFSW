@@ -10,7 +10,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
     {
         public static APIStatus CheckStatus(string APIURI)
         {
-            if (!string.IsNullOrEmpty(APIURI))
+            if (!string.IsNullOrWhiteSpace(APIURI))
             {
                 HttpWebResponse serverResponse = null;
 

@@ -291,19 +291,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 {
                     IniFile ThemeFile = new IniFile("Theme.ini");
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("ThemeName")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ThemeName")))
                     {
                         ThemeName = ThemeFile.Read("ThemeName");
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("ThemeAuthor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ThemeAuthor")))
                     {
                         ThemeAuthor = ThemeFile.Read("ThemeAuthor");
                     }
 
                     /* Logo */
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("Logo")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("Logo")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("Logo")))
                         {
@@ -311,7 +311,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("LogoSplashScreen")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("LogoSplashScreen")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("LogoSplashScreen")))
                         {
@@ -321,7 +321,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
                     /* Main Backgrounds */
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("SettingsScreenBG")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SettingsScreenBG")))
                     {
                         if (File.Exists(ThemeFolder + "\\SettingsScreen\\" + ThemeFile.Read("SettingsScreenBG")))
                         {
@@ -329,7 +329,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("MainScreenBG")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("MainScreenBG")))
                     {
                         if (File.Exists(ThemeFolder + "\\MainScreen\\" + ThemeFile.Read("MainScreenBG")))
                         {
@@ -337,7 +337,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("SocialPanelBG")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SocialPanelBG")))
                     {
                         if (File.Exists(ThemeFolder + "\\MainScreen\\" + ThemeFile.Read("SocialPanelBG")))
                         {
@@ -345,7 +345,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("RegisterScreenBG")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("RegisterScreenBG")))
                     {
                         if (File.Exists(ThemeFolder + "\\RegisterScreen\\" + ThemeFile.Read("RegisterScreenBG")))
                         {
@@ -353,7 +353,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("USXEScreenBG")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("USXEScreenBG")))
                     {
                         if (File.Exists(ThemeFolder + "\\USXEScreen\\" + ThemeFile.Read("USXEScreenBG")))
                         {
@@ -363,7 +363,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
                     /* MainScreen Icons */
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("UpdateErrorIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("UpdateErrorIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("UpdateErrorIcon")))
                         {
@@ -371,7 +371,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("UpdateSuccessIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("UpdateSuccessIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("UpdateSuccessIcon")))
                         {
@@ -379,7 +379,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("UpdateUnkownIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("UpdateUnkownIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("UpdateUnkownIcon")))
                         {
@@ -387,7 +387,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("UpdateWarningIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("UpdateWarningIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("UpdateWarningIcon")))
                         {
@@ -395,7 +395,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("APICheckingIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("APICheckingIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("APICheckingIcon")))
                         {
@@ -403,7 +403,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("APIErrorIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("APIErrorIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("APIErrorIcon")))
                         {
@@ -411,7 +411,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("APISuccessIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("APISuccessIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("APISuccessIcon")))
                         {
@@ -419,7 +419,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("APIUnkownIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("APIUnkownIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("APIUnkownIcon")))
                         {
@@ -427,7 +427,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("ServerCheckingIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ServerCheckingIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerCheckingIcon")))
                         {
@@ -435,7 +435,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("ServerOfflineIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ServerOfflineIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerOfflineIcon")))
                         {
@@ -443,7 +443,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("ServerSuccessIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ServerSuccessIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerSuccessIcon")))
                         {
@@ -451,7 +451,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("ServerUnknownIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ServerUnknownIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerUnknownIcon")))
                         {
@@ -461,7 +461,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
                     /* Social Panel Icons */
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("DiscordIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DiscordIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("DiscordIcon")))
                         {
@@ -469,7 +469,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("DiscordIconDisabled")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DiscordIconDisabled")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("DiscordIconDisabled")))
                         {
@@ -477,7 +477,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("FacebookIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("FacebookIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("FacebookIcon")))
                         {
@@ -485,7 +485,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("FacebookIconDisabled")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("FacebookIconDisabled")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("FacebookIconDisabled")))
                         {
@@ -493,7 +493,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("HomeIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("HomeIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("HomeIcon")))
                         {
@@ -501,7 +501,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("HomeIconDisabled")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("HomeIconDisabled")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("HomeIconDisabled")))
                         {
@@ -509,7 +509,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("TwitterIcon")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("TwitterIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("TwitterIcon")))
                         {
@@ -517,7 +517,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("TwitterIconDisabled")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("TwitterIconDisabled")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("TwitterIconDisabled")))
                         {
@@ -527,7 +527,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
                     /* Image Buttons */
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("GrayButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GrayButton")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GrayButton")))
                         {
@@ -535,7 +535,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("GrayButtonClick")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GrayButtonClick")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GrayButtonClick")))
                         {
@@ -543,7 +543,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("GrayButtonHover")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GrayButtonHover")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GrayButtonHover")))
                         {
@@ -551,7 +551,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("GreenButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GreenButton")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GreenButton")))
                         {
@@ -559,7 +559,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("GreenButtonClick")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GreenButtonClick")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GreenButtonClick")))
                         {
@@ -567,7 +567,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("GreenButtonHover")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GreenButtonHover")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GreenButtonHover")))
                         {
@@ -575,7 +575,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("CloseButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("CloseButton")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("CloseButton")))
                         {
@@ -583,7 +583,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("CloseButtonClick")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("CloseButtonClick")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("CloseButtonClick")))
                         {
@@ -591,7 +591,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("CloseButtonHover")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("CloseButtonHover")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("CloseButtonHover")))
                         {
@@ -599,7 +599,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("GearButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GearButton")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButton")))
                         {
@@ -607,7 +607,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("GearButtonClick")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GearButtonClick")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonClick")))
                         {
@@ -615,7 +615,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("GearButtonHover")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GearButtonHover")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonHover")))
                         {
@@ -623,7 +623,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("PlayButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("PlayButton")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("PlayButton")))
                         {
@@ -631,7 +631,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("PlayButtonClick")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("PlayButtonClick")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("PlayButtonClick")))
                         {
@@ -639,7 +639,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("PlayButtonHover")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("PlayButtonHover")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("PlayButtonHover")))
                         {
@@ -649,7 +649,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
                     /* Custom Inputs Borders */
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("BorderTicket")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("BorderTicket")))
                     {
                         if (File.Exists(ThemeFolder + "\\Inputs\\" + ThemeFile.Read("BorderTicket")))
                         {
@@ -657,7 +657,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("BorderTicketError")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("BorderTicketError")))
                     {
                         if (File.Exists(ThemeFolder + "\\Inputs\\" + ThemeFile.Read("BorderTicketError")))
                         {
@@ -665,7 +665,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("BorderEmail")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("BorderEmail")))
                     {
                         if (File.Exists(ThemeFolder + "\\Inputs\\" + ThemeFile.Read("BorderEmail")))
                         {
@@ -673,7 +673,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("BorderEmailError")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("BorderEmailError")))
                     {
                         if (File.Exists(ThemeFolder + "\\Inputs\\" + ThemeFile.Read("BorderEmailError")))
                         {
@@ -681,7 +681,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("BorderPassword")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("BorderPassword")))
                     {
                         if (File.Exists(ThemeFolder + "\\Inputs\\" + ThemeFile.Read("BorderPassword")))
                         {
@@ -689,7 +689,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("BorderPasswordError")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("BorderPasswordError")))
                     {
                         if (File.Exists(ThemeFolder + "\\Inputs\\" + ThemeFile.Read("BorderPasswordError")))
                         {
@@ -699,7 +699,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
                     /* ProgressBar and Outline */
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("ProgressBarOutline")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ProgressBarOutline")))
                     {
                         if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Read("ProgressBarOutline")))
                         {
@@ -707,7 +707,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("ProgressBarSuccess")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ProgressBarSuccess")))
                     {
                         if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Read("ProgressBarSuccess")))
                         {
@@ -715,7 +715,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("ProgressBarPreload")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ProgressBarPreload")))
                     {
                         if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Read("ProgressBarPreload")))
                         {
@@ -723,7 +723,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("ProgressBarWarning")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ProgressBarWarning")))
                     {
                         if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Read("ProgressBarWarning")))
                         {
@@ -731,7 +731,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("ProgressBarError")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ProgressBarError")))
                     {
                         if (File.Exists(ThemeFolder + "\\ProgressBar\\" + ThemeFile.Read("ProgressBarError")))
                         {
@@ -741,229 +741,229 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
                     /* WinForm Buttons */
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("BlueBackColorButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("BlueBackColorButton")))
                     {
                         BlueBackColorButton = ToColor(ThemeFile.Read("BlueBackColorButton"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("BlueBorderColorButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("BlueBorderColorButton")))
                     {
                         BlueBorderColorButton = ToColor(ThemeFile.Read("BlueBorderColorButton"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("BlueForeColorButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("BlueForeColorButton")))
                     {
                         BlueForeColorButton = ToColor(ThemeFile.Read("BlueForeColorButton"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("BlueMouseOverBackColorButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("BlueMouseOverBackColorButton")))
                     {
                         BlueMouseOverBackColorButton = ToColor(ThemeFile.Read("BlueMouseOverBackColorButton"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("YellowBackColorButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("YellowBackColorButton")))
                     {
                         YellowBackColorButton = ToColor(ThemeFile.Read("YellowBackColorButton"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("YellowBorderColorButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("YellowBorderColorButton")))
                     {
                         YellowBorderColorButton = ToColor(ThemeFile.Read("YellowBorderColorButton"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("YellowForeColorButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("YellowForeColorButton")))
                     {
                         YellowForeColorButton = ToColor(ThemeFile.Read("YellowForeColorButton"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("YellowMouseOverBackColorButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("YellowMouseOverBackColorButton")))
                     {
                         YellowMouseOverBackColorButton = ToColor(ThemeFile.Read("YellowMouseOverBackColorButton"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("RedBackColorButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("RedBackColorButton")))
                     {
                         RedBackColorButton = ToColor(ThemeFile.Read("RedBackColorButton"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("RedBorderColorButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("RedBorderColorButton")))
                     {
                         RedBorderColorButton = ToColor(ThemeFile.Read("RedBorderColorButton"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("RedForeColorButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("RedForeColorButton")))
                     {
                         RedForeColorButton = ToColor(ThemeFile.Read("RedForeColorButton"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("RedMouseOverBackColorButton")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("RedMouseOverBackColorButton")))
                     {
                         RedMouseOverBackColorButton = ToColor(ThemeFile.Read("RedMouseOverBackColorButton"));
                     }
 
                     /* Text Colors */
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("MainTextForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("MainTextForeColor")))
                     {
                         MainTextForeColor = ToColor(ThemeFile.Read("MainTextForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("SecondaryTextForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SecondaryTextForeColor")))
                     {
                         SecondaryTextForeColor = ToColor(ThemeFile.Read("SecondaryTextForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("ThirdTextForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ThirdTextForeColor")))
                     {
                         ThirdTextForeColor = ToColor(ThemeFile.Read("ThirdTextForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("FourthTextForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("FourthTextForeColor")))
                     {
                         FourthTextForeColor = ToColor(ThemeFile.Read("FourthTextForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("FivithTextForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("FivithTextForeColor")))
                     {
                         FivithTextForeColor = ToColor(ThemeFile.Read("FivithTextForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("SucessForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SucessForeColor")))
                     {
                         Sucess = ToColor(ThemeFile.Read("SucessForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("ErrorForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ErrorForeColor")))
                     {
                         Error = ToColor(ThemeFile.Read("ErrorForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("AlertForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("AlertForeColor")))
                     {
                         Alert = ToColor(ThemeFile.Read("AlertForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("VerticalBannerBackColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("VerticalBannerBackColor")))
                     {
                         VerticalBannerBackColor = ToColor(ThemeFile.Read("VerticalBannerBackColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("ExtractingProgressColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ExtractingProgressColor")))
                     {
                         ExtractingProgressColor = ToColor(ThemeFile.Read("ExtractingProgressColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("MainScreenTransparencyKey")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("MainScreenTransparencyKey")))
                     {
                         MainScreenTransparencyKey = ToColor(ThemeFile.Read("MainScreenTransparencyKey"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("SettingsScreenTransparencyKey")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SettingsScreenTransparencyKey")))
                     {
                         SettingsScreenTransparencyKey = ToColor(ThemeFile.Read("SettingsScreenTransparencyKey"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("SplashScreenTransparencyKey")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SplashScreenTransparencyKey")))
                     {
                         SplashScreenTransparencyKey = ToColor(ThemeFile.Read("SplashScreenTransparencyKey"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("RegisterScreenTransparencyKey")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("RegisterScreenTransparencyKey")))
                     {
                         RegisterScreenTransparencyKey = ToColor(ThemeFile.Read("RegisterScreenTransparencyKey"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("USXEEScreenTransparencyKey")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("USXEEScreenTransparencyKey")))
                     {
                         USXEETransparencyKey = ToColor(ThemeFile.Read("USXEEScreenTransparencyKey"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("InputForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("InputForeColor")))
                     {
                         Input = ToColor(ThemeFile.Read("InputForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("LinkForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("LinkForeColor")))
                     {
                         Link = ToColor(ThemeFile.Read("LinkForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("ActiveLinkForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ActiveLinkForeColor")))
                     {
                         ActiveLink = ToColor(ThemeFile.Read("ActiveLinkForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("SettingsLinkForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SettingsLinkForeColor")))
                     {
                         SettingsLink = ToColor(ThemeFile.Read("SettingsLinkForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("SettingsActiveLinkForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SettingsActiveLinkForeColor")))
                     {
                         SettingsActiveLink = ToColor(ThemeFile.Read("SettingsActiveLinkForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("SettingsCheckBoxesForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SettingsCheckBoxesForeColor")))
                     {
                         SettingsCheckBoxes = ToColor(ThemeFile.Read("SettingsCheckBoxesForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("SeventhTextForeColorForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SeventhTextForeColorForeColor")))
                     {
                         SeventhTextForeColor = ToColor(ThemeFile.Read("SeventhTextForeColorForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormTextForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("WinFormTextForeColor")))
                     {
                         WinFormTextForeColor = ToColor(ThemeFile.Read("WinFormTextForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormSecondaryTextForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("WinFormSecondaryTextForeColor")))
                     {
                         WinFormSecondaryTextForeColor = ToColor(ThemeFile.Read("WinFormSecondaryTextForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormBGForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("WinFormBGForeColor")))
                     {
                         WinFormTBGForeColor = ToColor(ThemeFile.Read("WinFormBGForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormBGDarkerForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("WinFormBGDarkerForeColor")))
                     {
                         WinFormTBGDarkerForeColor = ToColor(ThemeFile.Read("WinFormBGDarkerForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormSuccessTextForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("WinFormSuccessTextForeColor")))
                     {
                         WinFormSuccessTextForeColor = ToColor(ThemeFile.Read("WinFormSuccessTextForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormWarningTextForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("WinFormWarningTextForeColor")))
                     {
                         WinFormWarningTextForeColor = ToColor(ThemeFile.Read("WinFormWarningTextForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormErrorTextForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("WinFormErrorTextForeColor")))
                     {
                         WinFormErrorTextForeColor = ToColor(ThemeFile.Read("WinFormErrorTextForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("WinFormGridForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("WinFormGridForeColor")))
                     {
                         WinFormGridForeColor = ToColor(ThemeFile.Read("WinFormGridForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("AboutBGForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("AboutBGForeColor")))
                     {
                         AboutBGForeColor = ToColor(ThemeFile.Read("AboutBGForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("AboutTextForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("AboutTextForeColor")))
                     {
                         AboutTextForeColor = ToColor(ThemeFile.Read("AboutTextForeColor"));
                     }
 
-                    if (!string.IsNullOrEmpty(ThemeFile.Read("PrivacyRPCBuild")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("PrivacyRPCBuild")))
                     {
                         PrivacyRPCBuild = ThemeFile.Read("PrivacyRPCBuild");
                     }

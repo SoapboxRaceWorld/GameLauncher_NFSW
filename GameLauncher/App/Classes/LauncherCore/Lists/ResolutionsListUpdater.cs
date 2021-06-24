@@ -36,7 +36,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     AmountOfRes++;
                 }
 
-                if (!string.IsNullOrEmpty(FileGameSettingsData.ScreenWidth) && !string.IsNullOrEmpty(FileGameSettingsData.ScreenHeight))
+                if (!string.IsNullOrWhiteSpace(FileGameSettingsData.ScreenWidth) && !string.IsNullOrWhiteSpace(FileGameSettingsData.ScreenHeight))
                 {
                     JSONResolutions += "{\"resolution\": \"" + FileGameSettingsData.ScreenWidth + "x" + FileGameSettingsData.ScreenHeight +
                             "\", \"dmPelsWidth\": \"" + FileGameSettingsData.ScreenWidth + "\", \"dmPelsHeight\": \"" + FileGameSettingsData.ScreenHeight + "\"}";

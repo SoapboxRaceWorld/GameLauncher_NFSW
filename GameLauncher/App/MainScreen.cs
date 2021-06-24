@@ -119,7 +119,7 @@ namespace GameLauncher
             Log.Core("CORE: Setting Parent Window location");
             InformationCache.ParentScreenLocation = Location;
 
-            if (!string.IsNullOrEmpty(InsiderInfo.BuildNumber()))
+            if (!string.IsNullOrWhiteSpace(InsiderInfo.BuildNumber()))
             {
                 if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
                 {
@@ -155,7 +155,7 @@ namespace GameLauncher
             MainPassword.Text = FileAccountSave.UserRawPassword;
 
             Log.Core("LAUNCHER: Checking for password");
-            if (!string.IsNullOrEmpty(FileAccountSave.UserHashedPassword))
+            if (!string.IsNullOrWhiteSpace(FileAccountSave.UserHashedPassword))
             {
                 _loginEnabled = true;
                 _serverEnabled = true;
@@ -172,8 +172,8 @@ namespace GameLauncher
                 LoginButton.ForeColor = Theming.SixTextForeColor;
             }
 
-            if (!string.IsNullOrEmpty(FileAccountSave.UserRawEmail) && 
-                (!string.IsNullOrEmpty(FileAccountSave.UserHashedPassword) || !string.IsNullOrEmpty(FileAccountSave.UserRawPassword)))
+            if (!string.IsNullOrWhiteSpace(FileAccountSave.UserRawEmail) && 
+                (!string.IsNullOrWhiteSpace(FileAccountSave.UserHashedPassword) || !string.IsNullOrWhiteSpace(FileAccountSave.UserRawPassword)))
             {
                 Log.Core("LAUNCHER: Restoring last saved email and password");
                 RememberMe.Checked = true;
@@ -186,7 +186,7 @@ namespace GameLauncher
             ServerPick.DataSource = ServerListUpdater.CleanList;
 
             /* Display Server List Dialog if Server IP Doesn't Exist */
-            if (string.IsNullOrEmpty(FileAccountSave.ChoosenGameServer))
+            if (string.IsNullOrWhiteSpace(FileAccountSave.ChoosenGameServer))
             {
                 new SelectServer().ShowDialog();
 
@@ -206,7 +206,7 @@ namespace GameLauncher
             Log.Core("SERVERLIST: Checking if server is set on INI File");
             try
             {
-                if (string.IsNullOrEmpty(FileAccountSave.ChoosenGameServer))
+                if (string.IsNullOrWhiteSpace(FileAccountSave.ChoosenGameServer))
                 {
                     Log.Warning("SERVERLIST: Failed to find anything... assuming " + ((ServerList)ServerPick.SelectedItem).IpAddress);
                     FileAccountSave.ChoosenGameServer = ((ServerList)ServerPick.SelectedItem).IpAddress;
@@ -221,7 +221,7 @@ namespace GameLauncher
             }
 
             Log.Core("SERVERLIST: Re-Checking if server is set on INI File");
-            if (!string.IsNullOrEmpty(FileAccountSave.ChoosenGameServer))
+            if (!string.IsNullOrWhiteSpace(FileAccountSave.ChoosenGameServer))
             {
                 Log.Core("SERVERLIST: Found something!");
                 _skipServerTrigger = true;
@@ -271,7 +271,7 @@ namespace GameLauncher
             var drive = Path.GetPathRoot(FileSettingsSave.GameInstallation);
             if (!Directory.Exists(drive))
             {
-                if (!string.IsNullOrEmpty(drive))
+                if (!string.IsNullOrWhiteSpace(drive))
                 {
                     var newdir = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
                     FileSettingsSave.GameInstallation = newdir;
@@ -279,13 +279,13 @@ namespace GameLauncher
                     Log.Error(string.Format("LAUNCHER: Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir));
 
                     string TempEmailCache = string.Empty;
-                    if (!string.IsNullOrEmpty(MainEmail.Text))
+                    if (!string.IsNullOrWhiteSpace(MainEmail.Text))
                     {
                         TempEmailCache = MainEmail.Text;
                         MainEmail.Text = "EMAIL IS HIDDEN";
                     }
                     MessageBox.Show(null, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    if (!string.IsNullOrEmpty(TempEmailCache))
+                    if (!string.IsNullOrWhiteSpace(TempEmailCache))
                     {
                         MainEmail.Text = TempEmailCache;
                     }
@@ -381,7 +381,7 @@ namespace GameLauncher
 
         private void Loginbuttonenabler(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(MainEmail.Text) || string.IsNullOrEmpty(MainPassword.Text))
+            if (string.IsNullOrWhiteSpace(MainEmail.Text) || string.IsNullOrWhiteSpace(MainPassword.Text))
             {
                 _loginEnabled = false;
                 LoginButton.BackgroundImage = Theming.GrayButton;
@@ -431,13 +431,13 @@ namespace GameLauncher
             if (_isDownloading)
             {
                 string TempEmailCache = string.Empty;
-                if (!string.IsNullOrEmpty(MainEmail.Text))
+                if (!string.IsNullOrWhiteSpace(MainEmail.Text))
                 {
                     TempEmailCache = MainEmail.Text;
                     MainEmail.Text = "EMAIL IS HIDDEN";
                 }
                 MessageBox.Show(null, "Please wait while launcher is still downloading gamefiles.", "GameLauncher", MessageBoxButtons.OK);
-                if (!string.IsNullOrEmpty(TempEmailCache))
+                if (!string.IsNullOrWhiteSpace(TempEmailCache))
                 {
                     MainEmail.Text = TempEmailCache;
                 }
@@ -475,7 +475,7 @@ namespace GameLauncher
             }
             catch { }
 
-            if (String.IsNullOrEmpty(Tokens.Error))
+            if (String.IsNullOrWhiteSpace(Tokens.Error))
             {
                 _userId = Tokens.UserId;
                 _loginToken = Tokens.LoginToken;
@@ -488,7 +488,7 @@ namespace GameLauncher
                 FileAccountSave.UserRawPassword = MainPassword.Text.ToString();
                 FileAccountSave.SaveAccount();
 
-                if (!String.IsNullOrEmpty(Tokens.Warning))
+                if (!String.IsNullOrWhiteSpace(Tokens.Warning))
                 {
                     MainEmail.Text = "EMAIL IS HIDDEN";
                     MessageBox.Show(null, Tokens.Warning, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -685,7 +685,7 @@ namespace GameLauncher
 
                         try
                         {
-                            if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.bannerUrl))
+                            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.bannerUrl))
                             {
                                 bool result;
 
@@ -722,7 +722,7 @@ namespace GameLauncher
                         /* Discord Invite Display */
                         try
                         {
-                            if (string.IsNullOrEmpty(InformationCache.SelectedServerJSON.discordUrl))
+                            if (string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordUrl))
                             {
                                 DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled;
                                 DiscordInviteLink.Enabled = false;
@@ -742,7 +742,7 @@ namespace GameLauncher
                         /* Homepage Display */
                         try
                         {
-                            if (string.IsNullOrEmpty(InformationCache.SelectedServerJSON.homePageUrl))
+                            if (string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.homePageUrl))
                             {
                                 HomePageIcon.BackgroundImage = Theming.HomeIconDisabled;
                                 HomePageLink.Enabled = false;
@@ -762,7 +762,7 @@ namespace GameLauncher
                         /* Facebook Group Display */
                         try
                         {
-                            if (string.IsNullOrEmpty(InformationCache.SelectedServerJSON.facebookUrl) || InformationCache.SelectedServerJSON.facebookUrl == "Your facebook page url")
+                            if (string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.facebookUrl) || InformationCache.SelectedServerJSON.facebookUrl == "Your facebook page url")
                             {
                                 FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled;
                                 FacebookGroupLink.Enabled = false;
@@ -782,7 +782,7 @@ namespace GameLauncher
                         /* Twitter Account Display */
                         try
                         {
-                            if (string.IsNullOrEmpty(InformationCache.SelectedServerJSON.twitterUrl))
+                            if (string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.twitterUrl))
                             {
                                 TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled;
                                 TwitterAccountLink.Enabled = false;
@@ -951,7 +951,7 @@ namespace GameLauncher
                     _serverEnabled = true;
 
                     if (!Directory.Exists(".BannerCache")) { Directory.CreateDirectory(".BannerCache"); }
-                    if (!string.IsNullOrEmpty(verticalImageUrl))
+                    if (!string.IsNullOrWhiteSpace(verticalImageUrl))
                     {
                         FunctionStatus.TLS();
                         WebClient client2 = new WebClient();
@@ -1569,8 +1569,7 @@ namespace GameLauncher
 
             if (!DetectLinux.LinuxDetected())
             {
-                var installDir = FileSettingsSave.GameInstallation;
-                DriveInfo driveInfo = new DriveInfo(installDir);
+                DriveInfo driveInfo = new DriveInfo(FileSettingsSave.GameInstallation);
 
                 if (!string.Equals(driveInfo.DriveFormat, "NTFS", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -2283,7 +2282,7 @@ namespace GameLauncher
             }
 
             /* Windows Firewall Runner */
-            if (!string.IsNullOrEmpty(FileSettingsSave.FirewallGameStatus))
+            if (!string.IsNullOrWhiteSpace(FileSettingsSave.FirewallGameStatus))
             {
                 FirewallFunctions.GameFiles();
                 FileORFolderPermissionsFunctions.Folders();
@@ -2347,13 +2346,13 @@ namespace GameLauncher
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Error);
 
             string TempEmailCache = string.Empty;
-            if (!string.IsNullOrEmpty(MainEmail.Text))
+            if (!string.IsNullOrWhiteSpace(MainEmail.Text))
             {
                 TempEmailCache = MainEmail.Text;
                 MainEmail.Text = "EMAIL IS HIDDEN";
             }
             MessageBox.Show(null, "Failed to download gamefiles. \n\nCDN might be offline. \n\nPlease select a different CDN on Next Screen", "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            if (!string.IsNullOrEmpty(TempEmailCache))
+            if (!string.IsNullOrWhiteSpace(TempEmailCache))
             {
                 MainEmail.Text = TempEmailCache;
             }
@@ -2376,13 +2375,13 @@ namespace GameLauncher
         private void OnShowMessage(string message, string header)
         {
             string TempEmailCache = string.Empty;
-            if (!string.IsNullOrEmpty(MainEmail.Text))
+            if (!string.IsNullOrWhiteSpace(MainEmail.Text))
             {
                 TempEmailCache = MainEmail.Text;
                 MainEmail.Text = "EMAIL IS HIDDEN";
             }
             MessageBox.Show(message, header);
-            if (!string.IsNullOrEmpty(TempEmailCache))
+            if (!string.IsNullOrWhiteSpace(TempEmailCache))
             {
                 MainEmail.Text = TempEmailCache;
             }

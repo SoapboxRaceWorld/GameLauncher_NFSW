@@ -45,11 +45,11 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             String _serverPanelLink = InformationCache.SelectedServerJSON.webPanelUrl;
             String _serverWebsiteLink = InformationCache.SelectedServerJSON.homePageUrl;
             String _serverDiscordLink = InformationCache.SelectedServerJSON.discordUrl;
-            if (!String.IsNullOrEmpty(_serverWebsiteLink) || !String.IsNullOrEmpty(_serverDiscordLink) || !String.IsNullOrEmpty(_serverPanelLink))
+            if (!String.IsNullOrWhiteSpace(_serverWebsiteLink) || !String.IsNullOrWhiteSpace(_serverDiscordLink) || !String.IsNullOrWhiteSpace(_serverPanelLink))
             {
                 DiscordLauncherPresense.ButtonsList.Clear();
 
-                if (!String.IsNullOrEmpty(_serverPanelLink))
+                if (!String.IsNullOrWhiteSpace(_serverPanelLink))
                 {
                     /* Let's format it now, if possible */
                     if (AntiCheat.persona_id == String.Empty || AntiCheat.persona_name == String.Empty)
@@ -73,7 +73,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         });
                     }
                 }
-                else if (!String.IsNullOrEmpty(_serverWebsiteLink) && _serverWebsiteLink != _serverDiscordLink)
+                else if (!String.IsNullOrWhiteSpace(_serverWebsiteLink) && _serverWebsiteLink != _serverDiscordLink)
                 {
                     DiscordLauncherPresense.ButtonsList.Add(new DiscordButton()
                     {
@@ -82,7 +82,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     });
                 }
 
-                if (!String.IsNullOrEmpty(_serverDiscordLink))
+                if (!String.IsNullOrWhiteSpace(_serverDiscordLink))
                 {
                     DiscordLauncherPresense.ButtonsList.Add(new DiscordButton()
                     {

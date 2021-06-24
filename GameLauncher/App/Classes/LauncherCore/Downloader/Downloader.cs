@@ -198,7 +198,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             string[] array = (string[])parameters;
             string text = array[0];
             string text2 = array[1];
-            if (!string.IsNullOrEmpty(text2))
+            if (!string.IsNullOrWhiteSpace(text2))
             {
                 text = text + "/" + text2;
             }
@@ -266,7 +266,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                         }
                         num7 = ((num8 > num7) ? num8 : num7);
                         string text4 = xmlNode.SelectSingleNode("path").InnerText;
-                        if (!string.IsNullOrEmpty(text3))
+                        if (!string.IsNullOrWhiteSpace(text3))
                         {
                             int num9 = text4.IndexOf("/");
                             if (num9 >= 0)
@@ -351,7 +351,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                         }
                         string text5 = xmlNode2.SelectSingleNode("path").InnerText;
                         string innerText2 = xmlNode2.SelectSingleNode("file").InnerText;
-                        if (!string.IsNullOrEmpty(text3))
+                        if (!string.IsNullOrWhiteSpace(text3))
                         {
                             int num14 = text5.IndexOf("/");
                             if (num14 >= 0)
@@ -663,7 +663,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             string[] array = (string[])parameters;
             string str = array[0].Trim();
             string text = array[1].Trim();
-            if (!string.IsNullOrEmpty(text))
+            if (!string.IsNullOrWhiteSpace(text))
             {
                 str = str + "/" + text;
             }
@@ -700,7 +700,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     {
                         string text3 = xmlNode.SelectSingleNode("path").InnerText;
                         string innerText = xmlNode.SelectSingleNode("file").InnerText;
-                        if (!string.IsNullOrEmpty(text2))
+                        if (!string.IsNullOrWhiteSpace(text2))
                         {
                             int num5 = text3.IndexOf("/");
                             if (num5 >= 0)

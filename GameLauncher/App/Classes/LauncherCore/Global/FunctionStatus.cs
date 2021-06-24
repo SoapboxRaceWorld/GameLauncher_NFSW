@@ -3,7 +3,6 @@ using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
@@ -315,10 +314,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
                         try
                         {
-                            string GameFolderPath = string.Empty;
-
                             if (!DetectLinux.LinuxDetected())
                             {
+                                string GameFolderPath = string.Empty;
+
                                 CommonOpenFileDialog FolderDialog = new CommonOpenFileDialog
                                 {
                                     EnsurePathExists = true,
@@ -337,84 +336,79 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                 }
 
                                 FolderDialog.Dispose();
-                            }
-                            else
-                            {
-                                string GameFolderPathLocal = Prompt.ShowDialog("Please Enter a Games File Path", "GameLauncher", "GameFiles");
 
-                                if (!string.IsNullOrWhiteSpace(GameFolderPathLocal))
+                                if (!string.IsNullOrWhiteSpace(GameFolderPath))
                                 {
-                                    try
+                                    DiscordLauncherPresense.Status("Start Up", "Verifying Game Files Folder Location");
+
+                                    if (!HasWriteAccessToFolder(GameFolderPath))
                                     {
-                                        if (Directory.Exists(Path.GetDirectoryName(GameFolderPathLocal)))
+                                        Log.Error("LAUNCHER: Not enough permissions. Exiting.");
+                                        string ErrorMessage = "You don't have enough permission to select this path as installation folder. Please select another directory.";
+                                        MessageBox.Show(null, ErrorMessage, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                        LauncherForceClose = true;
+                                        LauncherForceCloseReason = ErrorMessage;
+                                    }
+                                    else
+                                    {
+                                        if (GameFolderPath.Length == 3)
                                         {
-                                            GameFolderPath = Path.GetDirectoryName(GameFolderPathLocal);
+                                            Directory.CreateDirectory("Game Files");
+                                            Log.Warning("LAUNCHER: Installing NFSW in root of the harddisk is not allowed.");
+                                            MessageBox.Show(null, string.Format("Installing NFSW in root of the harddisk is not allowed. " +
+                                                "Instead, we will install it on {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                            FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
+                                            FileSettingsSave.SaveSettings();
+                                            FileGameSettings.Save("Suppress", "Language Only");
+                                        }
+                                        else if (GameFolderPath == AppDomain.CurrentDomain.BaseDirectory)
+                                        {
+                                            Directory.CreateDirectory("Game Files");
+                                            Log.Warning("LAUNCHER: Installing NFSW in same directory where the launcher resides is disadvised.");
+                                            MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. " +
+                                                "Instead, we will install it on {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                            FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
+                                            FileSettingsSave.SaveSettings();
+                                            FileGameSettings.Save("Suppress", "Language Only");
                                         }
                                         else
                                         {
-                                            MessageBox.Show(null, "Invalid Game Files Path. Launcher will now Close", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                            Log.Core("LAUNCHER: Directory Set: " + GameFolderPath);
+                                            FileSettingsSave.GameInstallation = GameFolderPath;
+                                            FileSettingsSave.SaveSettings();
+                                            FileGameSettings.Save("Suppress", "Language Only");
+                                        }
+
+                                        if (!Directory.Exists(FileSettingsSave.GameInstallation))
+                                        {
+                                            Log.Core("LAUNCHER: Craeted Directory: " + GameFolderPath);
+                                            Directory.CreateDirectory(GameFolderPath);
                                         }
                                     }
-                                    catch
-                                    {
-                                        MessageBox.Show(null, "Encounterd a Game Files Path Error. Launcher will now Close", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                    }
                                 }
                                 else
                                 {
-                                    MessageBox.Show(null, "Invalid Game Files Path. Launcher will now Close", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                }
-                            }
-
-                            if (!string.IsNullOrWhiteSpace(GameFolderPath))
-                            {
-                                DiscordLauncherPresense.Status("Start Up", "Verifying Game Files Folder Location");
-
-                                if (!HasWriteAccessToFolder(GameFolderPath))
-                                {
-                                    Log.Error("LAUNCHER: Not enough permissions. Exiting.");
-                                    string ErrorMessage = "You don't have enough permission to select this path as installation folder. Please select another directory.";
-                                    MessageBox.Show(null, ErrorMessage, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                     LauncherForceClose = true;
-                                    LauncherForceCloseReason = ErrorMessage;
-                                }
-
-                                if (GameFolderPath.Length == 3)
-                                {
-                                    Directory.CreateDirectory("Game Files");
-                                    Log.Warning("LAUNCHER: Installing NFSW in root of the harddisk is not allowed.");
-                                    MessageBox.Show(null, string.Format("Installing NFSW in root of the harddisk is not allowed. " +
-                                        "Instead, we will install it on {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                    FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
-                                    FileSettingsSave.SaveSettings();
-                                    FileGameSettings.Save("Suppress", "Language Only");
-                                }
-                                else if (GameFolderPath == AppDomain.CurrentDomain.BaseDirectory)
-                                {
-                                    Directory.CreateDirectory("Game Files");
-                                    Log.Warning("LAUNCHER: Installing NFSW in same directory where the launcher resides is disadvised.");
-                                    MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. " +
-                                        "Instead, we will install it on {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                    FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
-                                    FileSettingsSave.SaveSettings();
-                                    FileGameSettings.Save("Suppress", "Language Only");
-                                }
-                                else
-                                {
-                                    if (Directory.Exists(GameFolderPath))
-                                    {
-                                        Log.Core("LAUNCHER: Craeted Directory: " + GameFolderPath);
-                                        Directory.CreateDirectory(GameFolderPath);
-                                    }
-                                    Log.Core("LAUNCHER: Directory Set: " + GameFolderPath);
-                                    FileSettingsSave.GameInstallation = GameFolderPath;
-                                    FileSettingsSave.SaveSettings();
-                                    FileGameSettings.Save("Suppress", "Language Only");
                                 }
                             }
                             else
                             {
-                                LauncherForceClose = true;
+                                if (string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
+                                {
+                                    try
+                                    {
+                                        FileSettingsSave.GameInstallation = Path.GetFullPath("GameFiles");
+                                    }
+                                    catch
+                                    {
+                                        FileSettingsSave.GameInstallation = "GameFiles";
+                                    }
+                                }
+
+                                if (!Directory.Exists(FileSettingsSave.GameInstallation))
+                                {
+                                    Directory.CreateDirectory(FileSettingsSave.GameInstallation);
+                                }
                             }
                         }
                         catch (Exception Error)

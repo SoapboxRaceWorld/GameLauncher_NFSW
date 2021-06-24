@@ -5,7 +5,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
     public static class Prompt
     {
-        public static string ShowDialog(string text, string caption, string Mode)
+        public static string ShowDialog(string text, string caption)
         {
             Form prompt = new Form()
             {
@@ -29,15 +29,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
             prompt.Controls.Add(textLabel);
             prompt.AcceptButton = confirmation;
 
-            if (Mode == "GameFiles")
-            {
-                MessageBox.Show(null, "Due to a Unknown File Browser Dialog Bug Crash on " + DetectLinux.Distro() +
-                                    ".The Launcher currently requires you to manually input (type or paste) the Game Files Path", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
-            var CustomPrompt = prompt.ShowDialog();
-
-            return CustomPrompt == DialogResult.OK ? textBox.Text : string.Empty;
+            return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : string.Empty;
         }
     }
 }

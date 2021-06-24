@@ -103,7 +103,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
         public void ChangeVisualStatus()
         {
-            if (!string.IsNullOrEmpty(LatestLauncherBuild))
+            if (!string.IsNullOrWhiteSpace(LatestLauncherBuild))
             {
                 var Revisions = CurrentLauncherBuild.CompareTo(LatestLauncherBuild);
 
@@ -128,7 +128,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     text.ForeColor = Theming.Alert;
                     description.Text = "Version: v" + Application.ProductVersion;
 
-                    if (!string.IsNullOrEmpty(FileSettingsSave.IgnoreVersion))
+                    if (!string.IsNullOrWhiteSpace(FileSettingsSave.IgnoreVersion))
                     {
                         FileSettingsSave.IgnoreVersion = String.Empty;
                         FileSettingsSave.SaveSettings();

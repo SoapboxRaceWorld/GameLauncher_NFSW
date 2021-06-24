@@ -122,7 +122,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     LargeImageText = "Launcher",
                     LargeImageKey = "nfsw",
                     SmallImageText = string.Empty,
-                    SmallImageKey = !string.IsNullOrEmpty(CertificateStore.LauncherSerial) ? "official" : "unofficial"
+                    SmallImageKey = !string.IsNullOrWhiteSpace(CertificateStore.LauncherSerial) ? "official" : "unofficial"
                 };
                 Presence.Buttons = ButtonsList.ToArray();
             }
@@ -303,13 +303,13 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         SmallImageKey = "ingame"
                     };
 
-                    if (!String.IsNullOrEmpty(InformationCache.SelectedServerJSON.homePageUrl) ||
-                        !String.IsNullOrEmpty(InformationCache.SelectedServerJSON.discordUrl) ||
-                        !String.IsNullOrEmpty(InformationCache.SelectedServerJSON.webPanelUrl))
+                    if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.homePageUrl) ||
+                        !String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordUrl) ||
+                        !String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webPanelUrl))
                     {
                         ButtonsList.Clear();
 
-                        if (!String.IsNullOrEmpty(InformationCache.SelectedServerJSON.webPanelUrl))
+                        if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webPanelUrl))
                         {
                             /* Let's format it now, if possible */
                             ButtonsList.Add(new DiscordButton()
@@ -318,7 +318,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                                 Url = InformationCache.SelectedServerJSON.webPanelUrl.Split(new string[] { "{sep}" }, StringSplitOptions.None)[0]
                             });
                         }
-                        else if (!String.IsNullOrEmpty(InformationCache.SelectedServerJSON.homePageUrl) &&
+                        else if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.homePageUrl) &&
                             InformationCache.SelectedServerJSON.homePageUrl != InformationCache.SelectedServerJSON.discordUrl)
                         {
                             ButtonsList.Add(new DiscordButton()
@@ -328,7 +328,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                             });
                         }
 
-                        if (!String.IsNullOrEmpty(InformationCache.SelectedServerJSON.discordUrl))
+                        if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordUrl))
                         {
                             ButtonsList.Add(new DiscordButton()
                             {
@@ -447,11 +447,11 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         /// <remarks>Server's Discord Application ID</remarks>
         public static string ApplicationID()
         {
-            if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.discordApplicationID))
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordApplicationID))
             {
                 return InformationCache.SelectedServerJSON.discordApplicationID;
             }
-            else if (!string.IsNullOrEmpty(InformationCache.SelectedServerData.DiscordAppId))
+            else if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerData.DiscordAppId))
             {
                 return InformationCache.SelectedServerData.DiscordAppId;
             }

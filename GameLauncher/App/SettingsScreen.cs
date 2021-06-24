@@ -516,7 +516,7 @@ namespace GameLauncher.App
         private void SettingsSave_Click(object sender, EventArgs e)
         {
             /* TODO null check */
-            if (!string.IsNullOrEmpty(((LangObject)SettingsLanguage.SelectedItem).INI_Value))
+            if (!string.IsNullOrWhiteSpace(((LangObject)SettingsLanguage.SelectedItem).INI_Value))
             {
                 FileSettingsSave.Lang = ((LangObject)SettingsLanguage.SelectedItem).INI_Value;
                 FileGameSettingsData.Language = ((LangObject)SettingsLanguage.SelectedItem).XML_Value;
@@ -762,31 +762,13 @@ namespace GameLauncher.App
             }
             else
             {
-                string GameFilesLocal = Prompt.ShowDialog("Please Enter a Games File Path", "GameLauncher", "GameFiles");
+                FolderBrowserDialog changeGameFilesPath = new FolderBrowserDialog();
 
-                if (string.IsNullOrWhiteSpace(GameFilesLocal))
+                if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
                 {
-                    MessageBox.Show(null, "Game Files Path can not be Empty. Please Try Again", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-                else
-                {
-                    try
-                    {
-                        if (!Directory.Exists(Path.GetDirectoryName(GameFilesLocal)))
-                        {
-                            MessageBox.Show(null, "Game Files Path Folder Does not Exist. Please create the Folder and Try Again", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            return;
-                        }
-                        else
-                        {
-                            _newGameFilesPath = Path.GetDirectoryName(GameFilesLocal);
-                        }
-                    }
-                    catch
-                    {
-                        MessageBox.Show(null, "Encounterd a Game Files Path Error. Please Input a Valid Path", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
+                    _newGameFilesPath = Path.GetFullPath(changeGameFilesPath.SelectedPath);
+                    SettingsGameFilesCurrentText.Text = "NEW DIRECTORY";
+                    SettingsGameFilesCurrent.Text = _newGameFilesPath;
                 }
             }
         }
@@ -858,7 +840,7 @@ namespace GameLauncher.App
 
         private void IsChangedCDNDown()
         {
-            if (!string.IsNullOrEmpty(((CDNList)SettingsCDNPick.SelectedItem).Url))
+            if (!string.IsNullOrWhiteSpace(((CDNList)SettingsCDNPick.SelectedItem).Url))
             {
                 SettingsCDNText.Text = "CDN: PINGING";
                 SettingsCDNText.ForeColor = Theming.SecondaryTextForeColor;
@@ -1015,7 +997,7 @@ namespace GameLauncher.App
 
             try
             {
-                if (!string.IsNullOrEmpty(FileSettingsSave.CDN))
+                if (!string.IsNullOrWhiteSpace(FileSettingsSave.CDN))
                 {
                     string FinalCDNURL;
 
@@ -1074,7 +1056,7 @@ namespace GameLauncher.App
 
             try
             {
-                if (!string.IsNullOrEmpty(FileSettingsSave.CDN))
+                if (!string.IsNullOrWhiteSpace(FileSettingsSave.CDN))
                 {
                     string FinalCDNURL = FileSettingsSave.CDN + "/";
 
@@ -1119,7 +1101,7 @@ namespace GameLauncher.App
 
             try
             {
-                if (!string.IsNullOrEmpty(FileSettingsSave.Lang))
+                if (!string.IsNullOrWhiteSpace(FileSettingsSave.Lang))
                 {
                     string SavedLang = FileSettingsSave.Lang.Trim();
 
@@ -1165,7 +1147,7 @@ namespace GameLauncher.App
         /* CDN Display Playing Game! - DavidCarbon */
         private async void IsCDNDownGame()
         {
-            if (!string.IsNullOrEmpty(FileSettingsSave.CDN))
+            if (!string.IsNullOrWhiteSpace(FileSettingsSave.CDN))
             {
                 SettingsCDNCurrent.LinkColor = Theming.SecondaryTextForeColor;
                 Log.Info("SETTINGS PINGING CDN: Checking Current CDN from Settings.ini");

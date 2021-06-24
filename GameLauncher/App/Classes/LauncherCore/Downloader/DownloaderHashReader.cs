@@ -59,7 +59,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                 string base64String = null;
                 if (File.Exists(str))
                 {
-                    if (string.IsNullOrEmpty(this._fileList[str].Old))
+                    if (string.IsNullOrWhiteSpace(this._fileList[str].Old))
                     {
                         try
                         {
@@ -158,7 +158,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             {
                 string innerText = xmlNodes.SelectSingleNode("path").InnerText;
                 string str = xmlNodes.SelectSingleNode("file").InnerText;
-                if (!string.IsNullOrEmpty(patchPath))
+                if (!string.IsNullOrWhiteSpace(patchPath))
                 {
                     int num = innerText.IndexOf("/");
                     innerText = (num < 0 ? patchPath : innerText.Replace(innerText.Substring(0, num), patchPath));
@@ -274,7 +274,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                         {
                             string empty = string.Empty;
                             empty = (!writeOldHashes ? this._fileList[key].New : this._fileList[key].Old);
-                            if (!File.Exists(key) || string.IsNullOrEmpty(empty))
+                            if (!File.Exists(key) || string.IsNullOrWhiteSpace(empty))
                             {
                                 continue;
                             }

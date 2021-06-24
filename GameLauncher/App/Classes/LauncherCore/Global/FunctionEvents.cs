@@ -1,5 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using System;
 using System.Diagnostics;
@@ -34,7 +35,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         {
             if (FunctionStatus.AllowRegistration)
             {
-                if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.webSignupUrl))
+                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webSignupUrl))
                 {
                     Process.Start(InformationCache.SelectedServerJSON.webSignupUrl);
                     MessageBox.Show(null, "A browser window has been opened to complete registration on " + InformationCache.SelectedServerJSON.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -59,31 +60,31 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         public static void DiscordInviteLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.discordUrl))
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordUrl))
                 Process.Start(InformationCache.SelectedServerJSON.discordUrl);
         }
 
         public static void HomePageLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.homePageUrl))
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.homePageUrl))
                 Process.Start(InformationCache.SelectedServerJSON.homePageUrl);
         }
 
         public static void FacebookGroupLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.facebookUrl))
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.facebookUrl))
                 Process.Start(InformationCache.SelectedServerJSON.facebookUrl);
         }
 
         public static void TwitterAccountLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.facebookUrl))
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.facebookUrl))
                 Process.Start(InformationCache.SelectedServerJSON.twitterUrl);
         }
 
         public static void ForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.webRecoveryUrl))
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webRecoveryUrl))
             {
                 Process.Start(InformationCache.SelectedServerJSON.webRecoveryUrl);
                 MessageBox.Show(null, "A browser window has been opened to complete password recovery on " +
@@ -92,39 +93,48 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             }
             else
             {
-                string send = Prompt.ShowDialog("Please specify your email address.", "GameLauncher", null);
+                string send = Prompt.ShowDialog("Please specify your email address.", "GameLauncher");
 
-                if (send != String.Empty)
+                if (string.IsNullOrWhiteSpace(send))
                 {
-                    String responseString;
-                    try
+                    if (!IsEmailValid.Validate(send))
                     {
-                        FunctionStatus.TLS();
-                        Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IpAddress + "/RecoveryPassword/forgotPassword");
-                        ServicePointManager.FindServicePoint(resetPasswordUrl).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
-
-                        var request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
-                        var postData = "email=" + send;
-                        var data = Encoding.ASCII.GetBytes(postData);
-                        request.Method = "POST";
-                        request.ContentType = "application/x-www-form-urlencoded";
-                        request.ContentLength = data.Length;
-                        request.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
-
-                        using (var stream = request.GetRequestStream())
+                        MessageBox.Show(null, "Email Address is not Valid. Please Check and Try Again", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else
+                    {
+                        try
                         {
-                            stream.Write(data, 0, data.Length);
+                            FunctionStatus.TLS();
+                            Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IpAddress + "/RecoveryPassword/forgotPassword");
+                            ServicePointManager.FindServicePoint(resetPasswordUrl).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+
+                            var request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
+                            var postData = "email=" + send;
+                            var data = Encoding.ASCII.GetBytes(postData);
+                            request.Method = "POST";
+                            request.ContentType = "application/x-www-form-urlencoded";
+                            request.ContentLength = data.Length;
+                            request.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+
+                            using (var stream = request.GetRequestStream())
+                            {
+                                stream.Write(data, 0, data.Length);
+                            }
+
+                            var response = (HttpWebResponse)request.GetResponse();
+                            MessageBox.Show(null, new StreamReader(response.GetResponseStream()).ReadToEnd(), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
-
-                        var response = (HttpWebResponse)request.GetResponse();
-                        responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                    }
-                    catch
-                    {
-                        responseString = "Failed to send email!";
-                    }
-
-                    MessageBox.Show(null, responseString, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        catch
+                        {
+                            MessageBox.Show(null, "Failed to send email!", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }                
+                }
+                else
+                {
+                    MessageBox.Show(null, "Email Address can not be Empty. Please Check and Try Again", "GameLauncher", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }

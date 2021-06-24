@@ -73,9 +73,9 @@ namespace GameLauncher.App
         {
             data.AutoGenerateColumns = true;
 
-            string Password = (!String.IsNullOrEmpty(FileAccountSave.UserHashedPassword)) ? "True" : "False";
-            string ProxyStatus = (!String.IsNullOrEmpty(FileSettingsSave.Proxy)) ? "False" : "True";
-            string RPCStatus = (!String.IsNullOrEmpty(FileSettingsSave.RPC)) ? "False" : "True";
+            string Password = (!String.IsNullOrWhiteSpace(FileAccountSave.UserHashedPassword)) ? "True" : "False";
+            string ProxyStatus = (!String.IsNullOrWhiteSpace(FileSettingsSave.Proxy)) ? "False" : "True";
+            string RPCStatus = (!String.IsNullOrWhiteSpace(FileSettingsSave.RPC)) ? "False" : "True";
 
             string Antivirus = String.Empty;
             string Firewall = String.Empty;
@@ -85,9 +85,9 @@ namespace GameLauncher.App
             {
                 try
                 {
-                    Antivirus = (String.IsNullOrEmpty(SecurityCenter("AntiVirusProduct"))) ? "---" : SecurityCenter("AntiVirusProduct");
-                    Firewall = (String.IsNullOrEmpty(SecurityCenter("FirewallProduct"))) ? "Built-In" : SecurityCenter("FirewallProduct");
-                    AntiSpyware = (String.IsNullOrEmpty(SecurityCenter("AntiSpywareProduct"))) ? "---" : SecurityCenter("AntiSpywareProduct");
+                    Antivirus = (String.IsNullOrWhiteSpace(SecurityCenter("AntiVirusProduct"))) ? "---" : SecurityCenter("AntiVirusProduct");
+                    Firewall = (String.IsNullOrWhiteSpace(SecurityCenter("FirewallProduct"))) ? "Built-In" : SecurityCenter("FirewallProduct");
+                    AntiSpyware = (String.IsNullOrWhiteSpace(SecurityCenter("AntiSpywareProduct"))) ? "---" : SecurityCenter("AntiSpywareProduct");
                 }
                 catch
                 {

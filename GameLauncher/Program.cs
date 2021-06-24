@@ -399,94 +399,94 @@ namespace GameLauncher
                             FunctionStatus.LauncherForceClose = true;
                             break;
                     }
-
-                    if (FunctionStatus.LauncherForceClose)
-                    {
-                        FunctionStatus.ErrorCloseLauncher("Closing From Invalid Launcher Location");
-                    }
-                    else
-                    {
-                        if (!FunctionStatus.HasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath)))
-                        {
-                            MessageBox.Show("Unable to do a Test Write to Launcher Folder\nPermission Issue");
-                        }
-
-                        if (!FunctionStatus.HasWriteAccessToFolder(FileSettingsSave.GameInstallation) && !string.IsNullOrEmpty(FileSettingsSave.GameInstallation))
-                        {
-                            MessageBox.Show("Unable to do a Test Write to Game Files Folder\nPermission Issue");
-                        }
-
-                        /* Windows Firewall Runner */
-                        if (!string.IsNullOrEmpty(FileSettingsSave.FirewallLauncherStatus))
-                        {
-                            FirewallFunctions.Launcher();
-                        }
-
-                        /* Windows 7 Fix */
-                        if (WindowsProductVersion.CachedWindowsNumber == 6.1 && string.IsNullOrEmpty(FileSettingsSave.Win7UpdatePatches))
-                        {
-                            DiscordLauncherPresense.Status("Start Up", "Checking Windows 7 TLS/SSL Update");
-
-                            if (ManagementSearcher.GetInstalledHotFix("KB3020369") == false || ManagementSearcher.GetInstalledHotFix("KB3125574") == false)
-                            {
-                                String messageBoxPopupKB = String.Empty;
-                                messageBoxPopupKB = "Hey Windows 7 User, we've detected a potential issue of some missing Updates that are required.\n";
-                                messageBoxPopupKB += "We found that these Windows Update packages are showing as not installed:\n\n";
-
-                                if (ManagementSearcher.GetInstalledHotFix("KB3020369") == false) messageBoxPopupKB += "- Update KB3020369\n";
-                                if (ManagementSearcher.GetInstalledHotFix("KB3125574") == false) messageBoxPopupKB += "- Update KB3125574\n";
-
-                                messageBoxPopupKB += "\nAditionally, we must add a value to the registry:\n";
-
-                                messageBoxPopupKB += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n/SCHANNEL/Protocols/TLS 1.2/Client\n";
-                                messageBoxPopupKB += "- Value: DisabledByDefault -> 0\n\n";
-
-                                messageBoxPopupKB += "Would you like to add those values?";
-                                DialogResult replyPatchWin7 = MessageBox.Show(null, messageBoxPopupKB, "SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                                if (replyPatchWin7 == DialogResult.Yes)
-                                {
-                                    RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
-                                    key.SetValue("DisabledByDefault", 0x0);
-
-                                    MessageBox.Show(null, "Registry option set, Remember that the changes may require a system reboot to take effect", "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                    FileSettingsSave.Win7UpdatePatches = "1";
-                                }
-                                else
-                                {
-                                    MessageBox.Show(null, "Roger that, There may be some issues connecting to the servers.", "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                    FileSettingsSave.Win7UpdatePatches = "0";
-                                }
-
-                                FileSettingsSave.SaveSettings();
-                            }
-                        }
-                    }
-
-                    if (!File.Exists("servers.json"))
-                    {
-                        try
-                        {
-                            File.WriteAllText("servers.json", "[]");
-                        }
-                        catch { /* ignored */ }
-                    }
-
-                    if (!string.IsNullOrEmpty(FileSettingsSave.GameInstallation))
-                    {
-                        var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
-                        ModNetHandler.CleanLinks(linksPath);
-                    }
-
-                    if (FileSettingsSave.Proxy == "0")
-                    {
-                        Log.Info("PROXY: Starting Proxy (From Startup)");
-                        ServerProxy.Instance.Start("Splash Screen [Program.cs]");
-                    }
-
-                    /* (Starts Function Chain) Check if Redistributable Packages are Installed */
-                    Redistributable.Check();
                 }
+
+                if (FunctionStatus.LauncherForceClose)
+                {
+                    FunctionStatus.ErrorCloseLauncher("Closing From Invalid Launcher Location");
+                }
+                else
+                {
+                    if (!FunctionStatus.HasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath)))
+                    {
+                        MessageBox.Show("Unable to do a Test Write to Launcher Folder\nPermission Issue");
+                    }
+
+                    if (!FunctionStatus.HasWriteAccessToFolder(FileSettingsSave.GameInstallation) && !string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
+                    {
+                        MessageBox.Show("Unable to do a Test Write to Game Files Folder\nPermission Issue");
+                    }
+
+                    /* Windows Firewall Runner */
+                    if (!string.IsNullOrWhiteSpace(FileSettingsSave.FirewallLauncherStatus))
+                    {
+                        FirewallFunctions.Launcher();
+                    }
+
+                    /* Windows 7 Fix */
+                    if (WindowsProductVersion.CachedWindowsNumber == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Win7UpdatePatches))
+                    {
+                        DiscordLauncherPresense.Status("Start Up", "Checking Windows 7 TLS/SSL Update");
+
+                        if (ManagementSearcher.GetInstalledHotFix("KB3020369") == false || ManagementSearcher.GetInstalledHotFix("KB3125574") == false)
+                        {
+                            String messageBoxPopupKB = String.Empty;
+                            messageBoxPopupKB = "Hey Windows 7 User, we've detected a potential issue of some missing Updates that are required.\n";
+                            messageBoxPopupKB += "We found that these Windows Update packages are showing as not installed:\n\n";
+
+                            if (ManagementSearcher.GetInstalledHotFix("KB3020369") == false) messageBoxPopupKB += "- Update KB3020369\n";
+                            if (ManagementSearcher.GetInstalledHotFix("KB3125574") == false) messageBoxPopupKB += "- Update KB3125574\n";
+
+                            messageBoxPopupKB += "\nAditionally, we must add a value to the registry:\n";
+
+                            messageBoxPopupKB += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n/SCHANNEL/Protocols/TLS 1.2/Client\n";
+                            messageBoxPopupKB += "- Value: DisabledByDefault -> 0\n\n";
+
+                            messageBoxPopupKB += "Would you like to add those values?";
+                            DialogResult replyPatchWin7 = MessageBox.Show(null, messageBoxPopupKB, "SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                            if (replyPatchWin7 == DialogResult.Yes)
+                            {
+                                RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
+                                key.SetValue("DisabledByDefault", 0x0);
+
+                                MessageBox.Show(null, "Registry option set, Remember that the changes may require a system reboot to take effect", "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                FileSettingsSave.Win7UpdatePatches = "1";
+                            }
+                            else
+                            {
+                                MessageBox.Show(null, "Roger that, There may be some issues connecting to the servers.", "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                FileSettingsSave.Win7UpdatePatches = "0";
+                            }
+
+                            FileSettingsSave.SaveSettings();
+                        }
+                    }
+                }
+
+                if (!File.Exists("servers.json"))
+                {
+                    try
+                    {
+                        File.WriteAllText("servers.json", "[]");
+                    }
+                    catch { /* ignored */ }
+                }
+
+                if (!string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
+                {
+                    var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
+                    ModNetHandler.CleanLinks(linksPath);
+                }
+
+                if (FileSettingsSave.Proxy == "0")
+                {
+                    Log.Info("PROXY: Starting Proxy (From Startup)");
+                    ServerProxy.Instance.Start("Splash Screen [Program.cs]");
+                }
+
+                /* (Starts Function Chain) Check if Redistributable Packages are Installed */
+                Redistributable.Check();
             }
         }            
     }

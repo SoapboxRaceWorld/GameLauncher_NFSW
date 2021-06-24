@@ -43,7 +43,7 @@ namespace GameLauncher.App
                 RegisterEmailBorder.Image = Theming.BorderEmailError;
 
             }
-            else if (IsEmailValid.Validate(RegisterEmail.Text) == false)
+            else if (!IsEmailValid.Validate(RegisterEmail.Text))
             {
                 registerErrors.Add("Please enter a valid e-mail address.");
                 RegisterEmailBorder.Image = Theming.BorderEmailError;

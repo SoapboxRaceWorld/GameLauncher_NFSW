@@ -284,33 +284,40 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
     {
         public static void GameFiles()
         {
-            try
+            if (!DetectLinux.LinuxDetected())
             {
-                /* First Time Run */
-                if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == true)
+                try
                 {
-                    string GameName = "SBRW - Game";
-                    string GamePath = FileSettingsSave.GameInstallation + "\\nfsw.exe";
+                    /* First Time Run */
+                    if (FirewallManager.IsServiceRunning && FirewallHelper.FirewallStatus())
+                    {
+                        string GameName = "SBRW - Game";
+                        string GamePath = FileSettingsSave.GameInstallation + "\\nfsw.exe";
 
-                    string groupKeyGame = "Need for Speed: World";
-                    string descriptionGame = groupKeyGame;
+                        string groupKeyGame = "Need for Speed: World";
+                        string descriptionGame = groupKeyGame;
 
-                    /* Inbound & Outbound */
-                    FirewallHelper.DoesRulesExist("Add-Game", "Path", GameName, GamePath, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+                        /* Inbound & Outbound */
+                        FirewallHelper.DoesRulesExist("Add-Game", "Path", GameName, GamePath, groupKeyGame, descriptionGame, FirewallProtocol.Any);
+                    }
+                    else if (FirewallManager.IsServiceRunning && FirewallHelper.FirewallStatus() == false)
+                    {
+                        FileSettingsSave.FirewallGameStatus = "Turned Off";
+                    }
+                    else
+                    {
+                        FileSettingsSave.FirewallGameStatus = "Service Stopped";
+                    }
                 }
-                else if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == false)
+                catch (Exception error)
                 {
-                    FileSettingsSave.FirewallGameStatus = "Turned Off";
-                }
-                else
-                {
-                    FileSettingsSave.FirewallGameStatus = "Service Stopped";
+                    Log.Error("FIREWALL: " + error.Message);
+                    FileSettingsSave.FirewallGameStatus = "Error";
                 }
             }
-            catch (Exception error)
+            else
             {
-                Log.Error("FIREWALL: " + error.Message);
-                FileSettingsSave.FirewallGameStatus = "Error";
+                FileSettingsSave.FirewallGameStatus = "Not Supported";
             }
 
             FileSettingsSave.SaveSettings();
@@ -318,17 +325,13 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
         public static void Launcher()
         {
-            try
+            if (!DetectLinux.LinuxDetected())
             {
-                if (DetectLinux.LinuxDetected())
-                {
-                    /* Not Supported */
-                }
-                else
+                try
                 {
                     DiscordLauncherPresense.Status("Start Up", "Checking Firewall Exclusions");
 
-                    if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == true)
+                    if (FirewallManager.IsServiceRunning && FirewallHelper.FirewallStatus())
                     {
                         string LauncherName = "SBRW - Game Launcher";
                         string LauncherPath = Assembly.GetEntryAssembly().Location;
@@ -343,7 +346,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         FirewallHelper.DoesRulesExist("Add-Launcher", "Path", LauncherName, LauncherPath, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
                         FirewallHelper.DoesRulesExist("Add-Launcher", "Path", UpdaterName, UpdaterPath, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
                     }
-                    else if (FirewallManager.IsServiceRunning == true && FirewallHelper.FirewallStatus() == false)
+                    else if (FirewallManager.IsServiceRunning && FirewallHelper.FirewallStatus() == false)
                     {
                         FileSettingsSave.FirewallLauncherStatus = "Turned Off";
                     }
@@ -352,11 +355,15 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         FileSettingsSave.FirewallLauncherStatus = "Service Stopped";
                     }
                 }
+                catch (Exception error)
+                {
+                    Log.Error("FIREWALL: " + error.Message);
+                    FileSettingsSave.FirewallLauncherStatus = "Error";
+                }
             }
-            catch (Exception error)
+            else
             {
-                Log.Error("FIREWALL: " + error.Message);
-                FileSettingsSave.FirewallLauncherStatus = "Error";
+                FileSettingsSave.FirewallLauncherStatus = "Not Supported";
             }
 
             FileSettingsSave.SaveSettings();

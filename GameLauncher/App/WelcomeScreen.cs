@@ -39,6 +39,11 @@ namespace GameLauncher.App
 
             VersionLabel.Text = "Version: v" + Application.ProductVersion;
 
+            if (DetectLinux.LinuxDetected())
+            {
+                ButtonSave.Text = "Save Settings and Game Language";
+            }
+
             /*******************************/
             /* Set Font                     /
             /*******************************/
@@ -64,9 +69,9 @@ namespace GameLauncher.App
             GameLangText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             GameLangSource.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             CDNSource.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            Save.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ButtonSave.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             ListStatusText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            APIErrorButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ButtonAPIError.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             VersionLabel.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
 
             /********************************/
@@ -82,15 +87,15 @@ namespace GameLauncher.App
             DownloadSourceText.ForeColor = Theming.WinFormTextForeColor;
             GameLangSource.ForeColor = Theming.WinFormTextForeColor;
 
-            APIErrorButton.ForeColor = Theming.BlueForeColorButton;
-            APIErrorButton.BackColor = Theming.BlueBackColorButton;
-            APIErrorButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            APIErrorButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+            ButtonAPIError.ForeColor = Theming.BlueForeColorButton;
+            ButtonAPIError.BackColor = Theming.BlueBackColorButton;
+            ButtonAPIError.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            ButtonAPIError.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
 
-            Save.ForeColor = Theming.BlueForeColorButton;
-            Save.BackColor = Theming.BlueBackColorButton;
-            Save.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            Save.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+            ButtonSave.ForeColor = Theming.BlueForeColorButton;
+            ButtonSave.BackColor = Theming.BlueBackColorButton;
+            ButtonSave.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            ButtonSave.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
 
             VersionLabel.ForeColor = Theming.WinFormTextForeColor;
 
@@ -268,7 +273,7 @@ namespace GameLauncher.App
 
         private void APIErrorFormElements(bool hideElements = true)
         {
-            APIErrorButton.Visible = hideElements;
+            ButtonAPIError.Visible = hideElements;
         }
 
         private void SettingsFormElements(bool hideElements = true)
@@ -283,7 +288,7 @@ namespace GameLauncher.App
             GameLangSource.Visible = hideElements;
             DownloadSourceText.Visible = hideElements;
             CDNSource.Visible = hideElements;
-            Save.Visible = hideElements;
+            ButtonSave.Visible = hideElements;
         }
 
         public void CDNSource_DrawItem(object sender, DrawItemEventArgs e)

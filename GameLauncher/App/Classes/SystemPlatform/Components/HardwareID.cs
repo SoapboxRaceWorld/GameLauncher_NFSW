@@ -34,7 +34,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
 
             public static string Value()
             {
-                if (string.IsNullOrEmpty(License_IB))
+                if (string.IsNullOrWhiteSpace(License_IB))
                 {
                     if (DetectLinux.LinuxDetected())
                     {
@@ -42,11 +42,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                     }
                     else if (!DetectLinux.LinuxDetected())
                     {
-                        if (string.IsNullOrEmpty(FunctionStatus.RegistryRead("License_IB")))
+                        if (string.IsNullOrWhiteSpace(FunctionStatus.RegistryRead("License_IB")))
                         {
                             FunctionStatus.RegistryWrite("License_IB", Level_One_Value());
 
-                            if (string.IsNullOrEmpty(FunctionStatus.RegistryRead("License_IB")))
+                            if (string.IsNullOrWhiteSpace(FunctionStatus.RegistryRead("License_IB")))
                             {
                                 License_IB = Level_One_Value();
                             }
@@ -74,7 +74,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
 
             public static string ValueAlt()
             {
-                if (string.IsNullOrEmpty(License_IA))
+                if (string.IsNullOrWhiteSpace(License_IA))
                 {
                     if (DetectLinux.LinuxDetected())
                     {
@@ -82,11 +82,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                     }
                     else if (!DetectLinux.LinuxDetected())
                     {
-                        if (string.IsNullOrEmpty(FunctionStatus.RegistryRead("License_IA")))
+                        if (string.IsNullOrWhiteSpace(FunctionStatus.RegistryRead("License_IA")))
                         {
                             FunctionStatus.RegistryWrite("License_IA", Level_Two_Value());
 
-                            if (string.IsNullOrEmpty(FunctionStatus.RegistryRead("License_IA")))
+                            if (string.IsNullOrWhiteSpace(FunctionStatus.RegistryRead("License_IA")))
                             {
                                 License_IA = Level_Two_Value();
                             }
@@ -114,7 +114,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
 
             public static string Level_One_Value()
             {
-                if (string.IsNullOrEmpty(License_B))
+                if (string.IsNullOrWhiteSpace(License_B))
                 {
                     License_B = GetHash(CpuId() + BaseId() + DiskId() + VideoId());
                 }
@@ -124,7 +124,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
 
             public static string Level_Two_Value()
             {
-                if (string.IsNullOrEmpty(License_A))
+                if (string.IsNullOrWhiteSpace(License_A))
                 {
                     License_A = GetHash(CpuId() + BaseId() + BiosId() + VideoId());
                 }
@@ -134,7 +134,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
 
             public static string Level_Three_Value()
             {
-                if (string.IsNullOrEmpty(License_C))
+                if (string.IsNullOrWhiteSpace(License_C))
                 {
                     var machineId = File.ReadAllLines("/etc/machine-id")[0];
                     var idBytes = Encoding.ASCII.GetBytes(machineId);
@@ -195,7 +195,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                 ManagementObjectCollection moc = mc.GetInstances();
                 foreach (ManagementObject mo in moc)
                 {
-                    if (string.IsNullOrEmpty(result))
+                    if (string.IsNullOrWhiteSpace(result))
                     {
                         try
                         {
@@ -216,13 +216,13 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
             private static string CpuId()
             {
                 string retVal = Identifier("Win32_Processor", "UniqueId");
-                if (string.IsNullOrEmpty(retVal))
+                if (string.IsNullOrWhiteSpace(retVal))
                 {
                     retVal = Identifier("Win32_Processor", "ProcessorId");
-                    if (string.IsNullOrEmpty(retVal))
+                    if (string.IsNullOrWhiteSpace(retVal))
                     {
                         retVal = Identifier("Win32_Processor", "Name");
-                        if (string.IsNullOrEmpty(retVal))
+                        if (string.IsNullOrWhiteSpace(retVal))
                         {
                             retVal = Identifier("Win32_Processor", "Manufacturer");
                         }
@@ -237,7 +237,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
             private static string BiosId()
             {
                 string retVal = Identifier("Win32_BIOS", "SerialNumber");
-                if (string.IsNullOrEmpty(retVal))
+                if (string.IsNullOrWhiteSpace(retVal))
                 {
                     retVal = Identifier("Win32_BIOS", "Name");
                 }

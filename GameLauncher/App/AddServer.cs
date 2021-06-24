@@ -112,13 +112,13 @@ namespace GameLauncher.App
 
             String wellFormattedURL = "";
 
-            if (IsNullOrEmpty(ServerAddress.Text))
+            if (IsNullOrWhiteSpace(ServerAddress.Text))
             {
                 DrawErrorAroundTextBox(ServerAddress);
                 success = false;
             }
 
-            if (IsNullOrEmpty(ServerName.Text))
+            if (IsNullOrWhiteSpace(ServerName.Text))
             {
                 DrawErrorAroundTextBox(ServerName);
                 success = false;
@@ -150,7 +150,7 @@ namespace GameLauncher.App
 
                 GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(serverLoginResponse);
 
-                if (IsNullOrEmpty(json.serverName))
+                if (IsNullOrWhiteSpace(json.serverName))
                 {
                     DrawErrorAroundTextBox(ServerAddress);
                     success = false;

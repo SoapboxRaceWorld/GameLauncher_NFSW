@@ -1295,7 +1295,7 @@ namespace GameLauncher.App
             }
 
             string SavedResolution = FileGameSettingsData.ScreenWidth + "x" + FileGameSettingsData.ScreenHeight;
-            if (!string.IsNullOrEmpty(SavedResolution))
+            if (!string.IsNullOrWhiteSpace(SavedResolution))
             {
                 try
                 {
