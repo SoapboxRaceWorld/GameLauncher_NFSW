@@ -18,20 +18,23 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
     {
         public static void DoesRulesExist(string Type, string Mode, string AppName, string AppPath, string groupKey, string description, FirewallProtocol protocol)
         {
-            if (FirewallManager.IsServiceRunning == true && !DetectLinux.LinuxDetected())
+            if (!DetectLinux.LinuxDetected())
             {
-                if (FirewallStatus() == true)
+                if (FirewallManager.IsServiceRunning)
                 {
-                    CheckIfRuleExists(Type, Mode, AppName, AppPath, groupKey, description, protocol);
+                    if (FirewallStatus() == true)
+                    {
+                        CheckIfRuleExists(Type, Mode, AppName, AppPath, groupKey, description, protocol);
+                    }
+                    else
+                    {
+                        Log.Warning("WINDOWS FIREWALL: Turned Off [Not by Launcher]");
+                    }
                 }
-                else
+                else if (!FirewallManager.IsServiceRunning)
                 {
-                    Log.Warning("WINDOWS FIREWALL: Turned Off [Not by Launcher]");
+                    Log.Warning("WINDOWS FIREWALL: Service is Stopped [Not by Launcher]");
                 }
-            }
-            else if (FirewallManager.IsServiceRunning == false && !DetectLinux.LinuxDetected())
-            {
-                Log.Warning("WINDOWS FIREWALL: Service is Stopped [Not by Launcher]");
             }
             else if (DetectLinux.LinuxDetected())
             {

@@ -436,10 +436,24 @@ namespace GameLauncher.App
             {
                 SettingsClearCommunicationLogButton.Enabled = true;
             }
+            else
+            {
+                SettingsClearCommunicationLogButton.ForeColor = Theming.RedForeColorButton;
+                SettingsClearCommunicationLogButton.BackColor = Theming.RedBackColorButton;
+                SettingsClearCommunicationLogButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                SettingsClearCommunicationLogButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+            }
 
             if (Directory.Exists(FileSettingsSave.GameInstallation + "/.data"))
             {
                 SettingsClearServerModCacheButton.Enabled = true;
+            }
+            else
+            {
+                SettingsClearServerModCacheButton.ForeColor = Theming.RedForeColorButton;
+                SettingsClearServerModCacheButton.BackColor = Theming.RedBackColorButton;
+                SettingsClearServerModCacheButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                SettingsClearServerModCacheButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
             }
 
             var crashLogFilesDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
@@ -447,6 +461,13 @@ namespace GameLauncher.App
             if (crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp").Count() != 0)
             {
                 SettingsClearCrashLogsButton.Enabled = true;
+            }
+            else
+            {
+                SettingsClearCrashLogsButton.ForeColor = Theming.RedForeColorButton;
+                SettingsClearCrashLogsButton.BackColor = Theming.RedBackColorButton;
+                SettingsClearCrashLogsButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                SettingsClearCrashLogsButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
             }
 
             try
@@ -700,19 +721,35 @@ namespace GameLauncher.App
         /* Settings Clear ModNet Cache */
         private void SettingsClearServerModCacheButton_Click(object sender, EventArgs e)
         {
-            Directory.Delete(FileSettingsSave.GameInstallation + "/.data", true);
-            Directory.Delete(FileSettingsSave.GameInstallation + "/MODS", true);
-            Log.Warning("LAUNCHER: User Confirmed to Delete Server Mods Cache");
-            MessageBox.Show(null, "Deleted Server Mods Cache", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            SettingsClearServerModCacheButton.Enabled = false;
+            DialogResult SettingsClearServerModCacheConfirmation = MessageBox.Show(null, "Warning you are about the Delete Server Mods Cache" +
+            "\nBy Deleting the Cache, you will have to Redownload the Server Mods Again." +
+            "\n\nClick Yes to Delete Mods Cache \nor \nClick No to Keep Mods Cache", "GameLauncher",
+            MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (SettingsClearServerModCacheConfirmation == DialogResult.Yes)
+            {
+                Directory.Delete(FileSettingsSave.GameInstallation + "/.data", true);
+                Directory.Delete(FileSettingsSave.GameInstallation + "/MODS", true);
+                Log.Warning("LAUNCHER: User Confirmed to Delete Server Mods Cache");
+                SettingsClearServerModCacheButton.ForeColor = Theming.RedForeColorButton;
+                SettingsClearServerModCacheButton.BackColor = Theming.RedBackColorButton;
+                SettingsClearServerModCacheButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                SettingsClearServerModCacheButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+                SettingsClearServerModCacheButton.Enabled = false;
+                MessageBox.Show(null, "Deleted Server Mods Cache", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         /* Settings Clear Communication Logs */
         private void SettingsClearCommunicationLogButton_Click(object sender, EventArgs e)
         {
             File.Delete(FileSettingsSave.GameInstallation + "/NFSWO_COMMUNICATION_LOG.txt");
-            MessageBox.Show(null, "Deleted NFSWO Communication Log", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            SettingsClearCommunicationLogButton.ForeColor = Theming.RedForeColorButton;
+            SettingsClearCommunicationLogButton.BackColor = Theming.RedBackColorButton;
+            SettingsClearCommunicationLogButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+            SettingsClearCommunicationLogButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
             SettingsClearCommunicationLogButton.Enabled = false;
+            MessageBox.Show(null, "Deleted NFSWO Communication Log", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         /* Settings Clear Game Crash Logs */
@@ -735,8 +772,12 @@ namespace GameLauncher.App
                 file.Delete();
             }
 
-            MessageBox.Show(null, "Deleted Crash Logs", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            SettingsClearCrashLogsButton.ForeColor = Theming.RedForeColorButton;
+            SettingsClearCrashLogsButton.BackColor = Theming.RedBackColorButton;
+            SettingsClearCrashLogsButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+            SettingsClearCrashLogsButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
             SettingsClearCrashLogsButton.Enabled = false;
+            MessageBox.Show(null, "Deleted Crash Logs", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         /* Settings Change Game Files Location */
