@@ -217,7 +217,6 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.Assets.SmallImageText = "In-Freeroam";
                     _presence.Assets.SmallImageKey = "gamemode_freeroam";
                     _presence.State = LauncherRPC;
-
                     FunctionStatus.CanCloseGame = true;
                 }
                 else
@@ -225,8 +224,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.Details = "In Safehouse";
                     _presence.Assets.SmallImageText = "In-Safehouse";
                     _presence.Assets.SmallImageKey = "gamemode_safehouse";
-                    FunctionStatus.CanCloseGame = false;
                     _presence.State = serverName;
+                    FunctionStatus.CanCloseGame = false;
                 }
 
                 _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
@@ -279,7 +278,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     {
                         LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                         LargeImageKey = PersonaAvatarId,
-                        SmallImageText = EventsList.GetEventName(Convert.ToInt32(EventID)),
+                        SmallImageText = LauncherRPC,
                         SmallImageKey = EventsList.GetEventType(Convert.ToInt32(EventID))
                     };
                     _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
@@ -322,7 +321,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                     LargeImageKey = PersonaAvatarId,
-                    SmallImageText = EventsList.GetEventName(EventID),
+                    SmallImageText = LauncherRPC,
                     SmallImageKey = EventsList.GetEventType(EventID)
                 };
                 _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
@@ -340,7 +339,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                     LargeImageKey = PersonaAvatarId,
-                    SmallImageText = EventsList.GetEventName(EventID),
+                    SmallImageText = LauncherRPC,
                     SmallImageKey = EventsList.GetEventType(EventID)
                 };
                 _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
@@ -359,7 +358,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 {
                     LargeImageText = PersonaName + " - Level: " + PersonaLevel,
                     LargeImageKey = PersonaAvatarId,
-                    SmallImageText = EventsList.GetEventName(EventID),
+                    SmallImageText = LauncherRPC,
                     SmallImageKey = EventsList.GetEventType(EventID)
                 };
                 _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
