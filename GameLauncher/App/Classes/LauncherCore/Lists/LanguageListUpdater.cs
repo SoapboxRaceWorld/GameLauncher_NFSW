@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
@@ -91,8 +92,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 Log.Error("LIST CORE: Error occurred while Sorting LANG List: " + error.Message);
             }
 
-            /* (Start Process) Check ServerList Status */
-            ServerListUpdater.GetList();
+            /* Run the API Checks to Make Sure it Visually Displayed Correctly */
+            VisualsAPIChecker.PingAPIStatus("Startup", "Loading");
         }
     }
 }

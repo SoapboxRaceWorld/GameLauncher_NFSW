@@ -47,7 +47,7 @@
             this.ChangelogBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ChangelogBox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ChangelogBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ChangelogBox.Location = new System.Drawing.Point(12, 64);
+            this.ChangelogBox.Location = new System.Drawing.Point(12, 82);
             this.ChangelogBox.Margin = new System.Windows.Forms.Padding(0);
             this.ChangelogBox.Name = "ChangelogBox";
             this.ChangelogBox.Padding = new System.Windows.Forms.Padding(0);
@@ -80,7 +80,7 @@
             this.UpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.UpdateButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.UpdateButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.UpdateButton.Location = new System.Drawing.Point(149, 230);
+            this.UpdateButton.Location = new System.Drawing.Point(82, 252);
             this.UpdateButton.Name = "UpdateButton";
             this.UpdateButton.Size = new System.Drawing.Size(75, 23);
             this.UpdateButton.TabIndex = 1;
@@ -98,13 +98,12 @@
             // 
             // UpdateText
             // 
-            this.UpdateText.AutoSize = true;
             this.UpdateText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.UpdateText.Location = new System.Drawing.Point(64, 17);
             this.UpdateText.Name = "UpdateText";
-            this.UpdateText.Size = new System.Drawing.Size(53, 14);
+            this.UpdateText.Size = new System.Drawing.Size(322, 62);
             this.UpdateText.TabIndex = 4;
-            this.UpdateText.Text = "Update";
+            this.UpdateText.Text = "An update is available. Would you like to update?Your version: ";
             // 
             // SkipButton
             // 
@@ -114,7 +113,7 @@
             this.SkipButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SkipButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SkipButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SkipButton.Location = new System.Drawing.Point(311, 230);
+            this.SkipButton.Location = new System.Drawing.Point(244, 252);
             this.SkipButton.Name = "SkipButton";
             this.SkipButton.Size = new System.Drawing.Size(75, 23);
             this.SkipButton.TabIndex = 6;
@@ -130,7 +129,7 @@
             this.IgnoreButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.IgnoreButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IgnoreButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.IgnoreButton.Location = new System.Drawing.Point(230, 230);
+            this.IgnoreButton.Location = new System.Drawing.Point(163, 252);
             this.IgnoreButton.Name = "IgnoreButton";
             this.IgnoreButton.Size = new System.Drawing.Size(75, 23);
             this.IgnoreButton.TabIndex = 2;
@@ -144,11 +143,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.CancelButton = this.IgnoreButton;
-            this.ClientSize = new System.Drawing.Size(398, 262);
-            this.Controls.Add(this.SkipButton);
+            this.ClientSize = new System.Drawing.Size(398, 292);
             this.Controls.Add(this.UpdateText);
             this.Controls.Add(this.UpdateIcon);
             this.Controls.Add(this.ChangelogBox);
+            this.Controls.Add(this.SkipButton);
             this.Controls.Add(this.UpdateButton);
             this.Controls.Add(this.IgnoreButton);
             this.DoubleBuffered = true;
@@ -167,7 +166,6 @@
             this.ChangelogBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.UpdateIcon)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 

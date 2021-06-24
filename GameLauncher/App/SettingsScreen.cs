@@ -47,6 +47,8 @@ namespace GameLauncher.App
             {
                 DiscordLauncherPresense.Status("Idle Ready", null);
             };
+
+            DiscordLauncherPresense.Status("Settings", null);
         }
 
         /// <summary>
@@ -284,47 +286,51 @@ namespace GameLauncher.App
         /// <remarks>Dropdown Menu Visual</remarks>
         private void SettingsCDNPick_DrawItem(object sender, DrawItemEventArgs e)
         {
-            var font = (sender as ComboBox).Font;
-            Brush backgroundColor;
-            Brush textColor;
-            Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
-            Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
-            Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
-            Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
-
-            var cdnListText = "";
-
-            if (sender is ComboBox cb)
+            try
             {
-                if (cb.Items[e.Index] is CDNList si)
+                var font = (sender as ComboBox).Font;
+                Brush backgroundColor;
+                Brush textColor;
+                Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
+                Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
+                Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
+                Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
+
+                var cdnListText = "";
+
+                if (sender is ComboBox cb)
                 {
-                    cdnListText = si.Name;
+                    if (cb.Items[e.Index] is CDNList si)
+                    {
+                        cdnListText = si.Name;
+                    }
                 }
-            }
 
-            if (cdnListText.StartsWith("<GROUP>"))
-            {
-                font = new Font(font, FontStyle.Bold);
-                e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
-                e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
-            }
-            else
-            {
-                font = new Font(font, FontStyle.Bold);
-                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                if (cdnListText.StartsWith("<GROUP>"))
                 {
-                    backgroundColor = SystemBrushes.Highlight;
-                    textColor = SystemBrushes.HighlightText;
+                    font = new Font(font, FontStyle.Bold);
+                    e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
+                    e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
                 }
                 else
                 {
-                    backgroundColor = customBGColor;
-                    textColor = customTextColor;
-                }
+                    font = new Font(font, FontStyle.Bold);
+                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                    {
+                        backgroundColor = SystemBrushes.Highlight;
+                        textColor = SystemBrushes.HighlightText;
+                    }
+                    else
+                    {
+                        backgroundColor = customBGColor;
+                        textColor = customTextColor;
+                    }
 
-                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                e.Graphics.DrawString("    " + cdnListText, font, textColor, e.Bounds);
+                    e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                    e.Graphics.DrawString("    " + cdnListText, font, textColor, e.Bounds);
+                }
             }
+            catch { }
         }
 
         /// <summary>
@@ -491,10 +497,7 @@ namespace GameLauncher.App
             /* CDN, APIs, & Restore Last CDN /
             /********************************/
 
-            if (InformationCache.CDNListStatus != "Loaded")
-            {
-                CDNListUpdater.GetList();
-            }
+            VisualsAPIChecker.PingAPIStatus("CDN List", "Settings");
 
             SettingsCDNPick.DisplayMember = "Name";
             SettingsCDNPick.DataSource = CDNListUpdater.CleanList;

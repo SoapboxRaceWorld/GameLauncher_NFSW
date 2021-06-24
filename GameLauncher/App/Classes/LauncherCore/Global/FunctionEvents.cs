@@ -141,60 +141,64 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         public static void ComboBox1_DrawItem(object sender, DrawItemEventArgs e)
         {
-            var font = (sender as ComboBox).Font;
-            Brush backgroundColor;
-            Brush textColor;
-
-            var serverListText = "";
-            int onlineStatus = 2; /* 0 = offline | 1 = online | 2 = checking */
-
-            if (sender is ComboBox cb)
+            try
             {
-                if (cb.Items[e.Index] is ServerList si)
+                var font = (sender as ComboBox).Font;
+                Brush backgroundColor;
+                Brush textColor;
+
+                var serverListText = "";
+                int onlineStatus = 2; /* 0 = offline | 1 = online | 2 = checking */
+
+                if (sender is ComboBox cb)
                 {
-                    serverListText = si.Name;
-                    onlineStatus = InformationCache.ServerStatusBook.ContainsKey(si.Id) ? InformationCache.ServerStatusBook[si.Id] : 2;
+                    if (cb.Items[e.Index] is ServerList si)
+                    {
+                        serverListText = si.Name;
+                        onlineStatus = InformationCache.ServerStatusBook.ContainsKey(si.Id) ? InformationCache.ServerStatusBook[si.Id] : 2;
+                    }
                 }
-            }
 
-            if (serverListText.StartsWith("<GROUP>"))
-            {
-                font = new Font(font, FontStyle.Bold);
-                e.Graphics.FillRectangle(Brushes.White, e.Bounds);
-                e.Graphics.DrawString(serverListText.Replace("<GROUP>", string.Empty), font, Brushes.Black, e.Bounds);
-            }
-            else
-            {
-                font = new Font(font, FontStyle.Regular);
-                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                if (serverListText.StartsWith("<GROUP>"))
                 {
-                    backgroundColor = SystemBrushes.Highlight;
-                    textColor = SystemBrushes.HighlightText;
+                    font = new Font(font, FontStyle.Bold);
+                    e.Graphics.FillRectangle(Brushes.White, e.Bounds);
+                    e.Graphics.DrawString(serverListText.Replace("<GROUP>", string.Empty), font, Brushes.Black, e.Bounds);
                 }
                 else
                 {
-                    if (onlineStatus == 2)
+                    font = new Font(font, FontStyle.Regular);
+                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
                     {
-                        /* CHECKING */
-                        backgroundColor = Brushes.Khaki;
-                    }
-                    else if (onlineStatus == 1)
-                    {
-                        /* ONLINE */
-                        backgroundColor = Brushes.PaleGreen;
+                        backgroundColor = SystemBrushes.Highlight;
+                        textColor = SystemBrushes.HighlightText;
                     }
                     else
                     {
-                        /* OFFLINE */
-                        backgroundColor = Brushes.LightCoral;
+                        if (onlineStatus == 2)
+                        {
+                            /* CHECKING */
+                            backgroundColor = Brushes.Khaki;
+                        }
+                        else if (onlineStatus == 1)
+                        {
+                            /* ONLINE */
+                            backgroundColor = Brushes.PaleGreen;
+                        }
+                        else
+                        {
+                            /* OFFLINE */
+                            backgroundColor = Brushes.LightCoral;
+                        }
+
+                        textColor = Brushes.Black;
                     }
 
-                    textColor = Brushes.Black;
+                    e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                    e.Graphics.DrawString("    " + serverListText, font, textColor, e.Bounds);
                 }
-
-                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                e.Graphics.DrawString("    " + serverListText, font, textColor, e.Bounds);
             }
+            catch { }
         }
     }
 }

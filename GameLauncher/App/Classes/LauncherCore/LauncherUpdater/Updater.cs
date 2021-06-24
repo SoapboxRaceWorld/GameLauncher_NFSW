@@ -11,6 +11,7 @@ using System.Net;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -32,12 +33,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
         public static void Latest()
         {
-            if (!DetectLinux.LinuxDetected())
+            DiscordLauncherPresense.Status("Start Up", "Checking Latest Launcher Release Information");
+
+            if (VisualsAPIChecker.UnitedAPI)
             {
-                DiscordLauncherPresense.Status("Start Up", "Checking Latest Launcher Release Information");
-
-                bool MainAPI = true;
-
                 try
                 {
                     FunctionStatus.TLS();
@@ -54,38 +53,35 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 }
                 catch (Exception error)
                 {
-                    MainAPI = false;
                     Log.Error("LAUNCHER UPDATE: " + error.Message);
                 }
+            }
 
-                if (MainAPI != true)
+            if (!VisualsAPIChecker.UnitedAPI)
+            {
+                try
                 {
-                    bool GitHubAPI = true;
+                    FunctionStatus.TLS();
+                    WebClient Client = new WebClient();
+                    Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    var json_data = Client.DownloadString(URLs.GitHub_Launcher);
+                    GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
 
-                    try
+                    if (GHAPI.TagName != null)
                     {
-                        FunctionStatus.TLS();
-                        WebClient Client = new WebClient();
-                        Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        var json_data = Client.DownloadString(URLs.GitHub_Launcher);
-                        GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
+                        LatestLauncherBuild = GHAPI.TagName;
+                        Log.Info("LAUNCHER UPDATE: GitHub Latest Version -> " + GHAPI.TagName);
+                    }
+                }
+                catch (Exception error)
+                {
+                    VisualsAPIChecker.GitHubAPI = false;
+                    Log.Error("LAUNCHER UPDATE: GitHub " + error.Message);
+                }
 
-                        if (GHAPI.TagName != null)
-                        {
-                            LatestLauncherBuild = GHAPI.TagName;
-                            Log.Info("LAUNCHER UPDATE: GitHub Latest Version -> " + GHAPI.TagName);
-                        }
-                    }
-                    catch (Exception error)
-                    {
-                        GitHubAPI = false;
-                        Log.Error("LAUNCHER UPDATE: GitHub " + error.Message);
-                    }
-
-                    if (GitHubAPI != true)
-                    {
-                        Log.Error("LAUNCHER UPDATE: Failed to Retrive Latest Build Information from two APIs ");
-                    }
+                if (!VisualsAPIChecker.GitHubAPI)
+                {
+                    Log.Error("LAUNCHER UPDATE: Failed to Retrive Latest Build Information from two APIs ");
                 }
             }
 
@@ -174,6 +170,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                             else
                             {
                                 Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
+                                MessageBox.Show(null, "Opened your Web Browser to the Game Launcher's GitHub Latest Release Page " +
+                                    "to Download the New Version", "GameLauncher", MessageBoxButtons.OK);
                             }
                         };
 
@@ -191,6 +189,13 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     }
                     FileSettingsSave.SaveSettings();
                 }
+            }
+            else if (!VisualsAPIChecker.GitHubAPI)
+            {
+                text.Text = "Launcher Status:\n - API Version Error";
+                status.BackgroundImage = Theming.UpdateIconUnknown;
+                text.ForeColor = Theming.ThirdTextForeColor;
+                description.Text = "Version: v" + Application.ProductVersion;
             }
             else
             {

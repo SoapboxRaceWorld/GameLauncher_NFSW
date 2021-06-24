@@ -28,10 +28,7 @@ namespace GameLauncher.App
             /* Load CDN List                /
             /*******************************/
 
-            if (FileSettingsSave.CDN != "Loaded")
-            {
-                CDNListUpdater.GetList();
-            }
+            VisualsAPIChecker.PingAPIStatus("CDN List", "Welcome");
 
             /*******************************/
             /* Set Hardcoded Text           /
@@ -138,40 +135,40 @@ namespace GameLauncher.App
 
         private void CheckListStatus()
         {
-            if (VisualsAPIChecker.UnitedAPI != false)
+            if (!VisualsAPIChecker.UnitedAPI)
             {
                 ListStatusText.Text = "United List - Online";
                 StatusCheck = true;
             }
             
-            if (VisualsAPIChecker.UnitedAPI != true)
+            if (!VisualsAPIChecker.UnitedAPI)
             {
-                if (VisualsAPIChecker.CarbonAPI == true)
+                if (VisualsAPIChecker.CarbonAPI)
                 {
                     ListStatusText.Text = "Carbon List - Online";
                     StatusCheck = true;
                 }
             }
 
-            if (VisualsAPIChecker.CarbonAPI != true)
+            if (!VisualsAPIChecker.CarbonAPI)
             {
-                if (VisualsAPIChecker.CarbonAPITwo == true)
+                if (VisualsAPIChecker.CarbonAPITwo)
                 {
                     ListStatusText.Text = "Carbon 2nd List - Online";
                     StatusCheck = true;
                 }
             }
 
-            if (VisualsAPIChecker.CarbonAPITwo != true)
+            if (!VisualsAPIChecker.CarbonAPITwo)
             {
-                if (VisualsAPIChecker.WOPLAPI == true)
+                if (VisualsAPIChecker.WOPLAPI)
                 {
                     ListStatusText.Text = "WOPL List - Online";
                     StatusCheck = true;
                 }
             }
 
-            if (VisualsAPIChecker.WOPLAPI != true)
+            if (!VisualsAPIChecker.WOPLAPI)
             {
                 ListStatusText.Text = "API Lists Connection - Error";
             }
@@ -186,7 +183,6 @@ namespace GameLauncher.App
                 APIErrorFormElements(false);
                 SettingsFormElements(true);
                 WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
-                PreloadServerList();
             }
         }
 
@@ -250,14 +246,6 @@ namespace GameLauncher.App
             }
         }
 
-        private void PreloadServerList()
-        {
-            if (InformationCache.ServerListStatus != "Loaded")
-            {
-                ServerListUpdater.GetList();
-            }
-        }
-
         private void QuitWithoutSaving_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -268,7 +256,6 @@ namespace GameLauncher.App
             APIErrorFormElements(false);
             SettingsFormElements();
             WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
-            PreloadServerList();
         }
 
         private void APIErrorFormElements(bool hideElements = true)
@@ -293,92 +280,100 @@ namespace GameLauncher.App
 
         public void CDNSource_DrawItem(object sender, DrawItemEventArgs e)
         {
-            var font = (sender as ComboBox).Font;
-            Brush backgroundColor;
-            Brush textColor;
-            Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
-            Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
-            Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
-            Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
-
-            var cdnListText = "";
-
-            if (sender is ComboBox cb)
+            try
             {
-                if (cb.Items[e.Index] is CDNList si)
+                var font = (sender as ComboBox).Font;
+                Brush backgroundColor;
+                Brush textColor;
+                Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
+                Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
+                Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
+                Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
+
+                var cdnListText = "";
+
+                if (sender is ComboBox cb)
                 {
-                    cdnListText = si.Name;
+                    if (cb.Items[e.Index] is CDNList si)
+                    {
+                        cdnListText = si.Name;
+                    }
                 }
-            }
 
-            if (cdnListText.StartsWith("<GROUP>"))
-            {
-                font = new Font(font, FontStyle.Bold);
-                e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
-                e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
-            }
-            else
-            {
-                font = new Font(font, FontStyle.Bold);
-                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                if (cdnListText.StartsWith("<GROUP>"))
                 {
-                    backgroundColor = SystemBrushes.Highlight;
-                    textColor = SystemBrushes.HighlightText;
+                    font = new Font(font, FontStyle.Bold);
+                    e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
+                    e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
                 }
                 else
                 {
-                    backgroundColor = customBGColor;
-                    textColor = customTextColor;
-                }
+                    font = new Font(font, FontStyle.Bold);
+                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                    {
+                        backgroundColor = SystemBrushes.Highlight;
+                        textColor = SystemBrushes.HighlightText;
+                    }
+                    else
+                    {
+                        backgroundColor = customBGColor;
+                        textColor = customTextColor;
+                    }
 
-                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                e.Graphics.DrawString(cdnListText, font, textColor, e.Bounds);
+                    e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                    e.Graphics.DrawString(cdnListText, font, textColor, e.Bounds);
+                }
             }
+            catch { }
         }
 
         private void GameLangSource_DrawItem(object sender, DrawItemEventArgs e)
         {
-            var font = (sender as ComboBox).Font;
-            Brush backgroundColor;
-            Brush textColor;
-            Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
-            Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
-            Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
-            Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
-
-            var langListText = "";
-
-            if (sender is ComboBox cb)
+            try
             {
-                if (cb.Items[e.Index] is LangObject si)
+                var font = (sender as ComboBox).Font;
+                Brush backgroundColor;
+                Brush textColor;
+                Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
+                Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
+                Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
+                Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
+
+                var langListText = "";
+
+                if (sender is ComboBox cb)
                 {
-                    langListText = si.Name;
+                    if (cb.Items[e.Index] is LangObject si)
+                    {
+                        langListText = si.Name;
+                    }
                 }
-            }
 
-            if (langListText.StartsWith("<GROUP>"))
-            {
-                font = new Font(font, FontStyle.Bold);
-                e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
-                e.Graphics.DrawString(langListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
-            }
-            else
-            {
-                font = new Font(font, FontStyle.Bold);
-                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                if (langListText.StartsWith("<GROUP>"))
                 {
-                    backgroundColor = SystemBrushes.Highlight;
-                    textColor = SystemBrushes.HighlightText;
+                    font = new Font(font, FontStyle.Bold);
+                    e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
+                    e.Graphics.DrawString(langListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
                 }
                 else
                 {
-                    backgroundColor = customBGColor;
-                    textColor = customTextColor;
-                }
+                    font = new Font(font, FontStyle.Bold);
+                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                    {
+                        backgroundColor = SystemBrushes.Highlight;
+                        textColor = SystemBrushes.HighlightText;
+                    }
+                    else
+                    {
+                        backgroundColor = customBGColor;
+                        textColor = customTextColor;
+                    }
 
-                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                e.Graphics.DrawString("    " + langListText, font, textColor, e.Bounds);
+                    e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                    e.Graphics.DrawString("    " + langListText, font, textColor, e.Bounds);
+                }
             }
+            catch { }
         }
     }
 }

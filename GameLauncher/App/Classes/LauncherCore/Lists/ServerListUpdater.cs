@@ -29,35 +29,31 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
             List<ServerList> serverInfos = new List<ServerList>();
 
-            foreach (var serverListURL in URLs.ServerList)
+            try
             {
+                Log.UrlCall("LIST CORE: Loading Server List from: " + URLs.OnlineServerList);
+                FunctionStatus.TLS();
+                WebClient Client = new WebClient();
+                Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + 
+                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                var response = Client.DownloadString(URLs.OnlineServerList);
+                Log.UrlCall("LIST CORE: Loaded Server List from: " + URLs.OnlineServerList);
+
                 try
                 {
-                    Log.UrlCall("LIST CORE: Loading Server List from: " + serverListURL);
-                    FunctionStatus.TLS();
-                    WebClient Client = new WebClient();
-                    Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    var response = Client.DownloadString(serverListURL);
-                    Log.UrlCall("LIST CORE: Loaded Server List from: " + serverListURL);
-
-                    try
-                    {
-                        serverInfos.AddRange(
-                            JsonConvert.DeserializeObject<List<ServerList>>(response));
-                        InformationCache.ServerListStatus = "Loaded";
-                        break;
-                    }
-                    catch (Exception error)
-                    {
-                        Log.Error("LIST CORE: Error occurred while deserializing Server List from [" + serverListURL + "]: " + error.Message);
-                        InformationCache.ServerListStatus = "Error";
-                    }
+                    serverInfos.AddRange(JsonConvert.DeserializeObject<List<ServerList>>(response));
+                    InformationCache.ServerListStatus = "Loaded";
                 }
                 catch (Exception error)
                 {
-                    Log.Error("LIST CORE: Error occurred while loading Server List from [" + serverListURL + "]: " + error.Message);
+                    Log.Error("LIST CORE: Error occurred while deserializing Server List from [" + URLs.OnlineServerList + "]: " + error.Message);
                     InformationCache.ServerListStatus = "Error";
                 }
+            }
+            catch (Exception error)
+            {
+                Log.Error("LIST CORE: Error occurred while loading Server List from [" + URLs.OnlineServerList + "]: " + error.Message);
+                InformationCache.ServerListStatus = "Error";
             }
 
             if (File.Exists("servers.json"))

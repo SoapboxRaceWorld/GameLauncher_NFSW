@@ -5,6 +5,8 @@ using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
+using System;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 
 namespace GameLauncher.App
 {
@@ -21,8 +23,25 @@ namespace GameLauncher.App
                 InitializeComponent();
                 SetVisuals();
 
-                FunctionStatus.TLS();
-                ChangelogText.Text = new WebClient().DownloadString(URLs.Main + "/launcher/changelog");
+                if (VisualsAPIChecker.UnitedAPI)
+                {
+                    try
+                    {
+                        FunctionStatus.TLS();
+                        ChangelogText.Text = new WebClient().DownloadString(URLs.Main + "/launcher/changelog");
+                    }
+                    catch (Exception Error)
+                    {
+                        ChangelogText.Text = "\n" + Error.Message;
+                        ChangelogBox.Text = "Changelog Error:";
+                    }
+                }
+                else
+                {
+                    ChangelogText.Text = "\nUnited API Is Currently Down. Unable to Retrive Changelog";
+                    ChangelogBox.Text = "Changelog Error:";
+                }
+
                 ChangelogText.Select(0, 0);
                 ChangelogText.SelectionLength = 0;
                 ChangelogText.TabStop = false;

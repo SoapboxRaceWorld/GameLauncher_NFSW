@@ -1,4 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.Logger;
 using System;
 using System.Net;
@@ -121,54 +123,159 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
         public static bool WOPLAPI = true;
 
-        public static void PingAPIStatus()
+        public static bool GitHubAPI = true;
+
+        public static bool LoadedServerList = false;
+
+        public static bool LoadedCDNList = false;
+
+        public static void PingAPIStatus(string Mode, string From)
         {
-            switch (APIChecker.CheckStatus(URLs.Main + "/serverlist.json"))
+            if (!LoadedServerList || !LoadedCDNList)
             {
-                case APIStatus.Online:
-                    break;
-                default:
-                    UnitedAPI = false;
-                    break;
-            }
-
-            if (UnitedAPI == false)
-            {
-                switch (APIChecker.CheckStatus(URLs.Static + "/serverlist.json"))
+                switch (APIChecker.CheckStatus(URLs.Main + "/" + ((!LoadedServerList)? "serverlist.json" : "cdn_list.json")))
                 {
                     case APIStatus.Online:
+                        if (!LoadedServerList)
+                        {
+                            URLs.OnlineServerList = URLs.Main + "/serverlist.json";
+                        }
+                        else if (!LoadedCDNList)
+                        {
+                            URLs.OnlineCDNList = URLs.Main + "/cdn_list.json";
+                        }
                         break;
                     default:
-                        CarbonAPI = false;
+                        UnitedAPI = false;
                         break;
+                }
+
+                if (!UnitedAPI)
+                {
+                    switch (APIChecker.CheckStatus(URLs.Static + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json")))
+                    {
+                        case APIStatus.Online:
+                            if (!LoadedServerList)
+                            {
+                                URLs.OnlineServerList = URLs.Static + "/serverlist.json";
+                            }
+                            else if (!LoadedCDNList)
+                            {
+                                URLs.OnlineCDNList = URLs.Static + "/cdn_list.json";
+                            }
+                            break;
+                        default:
+                            CarbonAPI = false;
+                            break;
+                    }
+                }
+
+                if (!CarbonAPI)
+                {
+                    switch (APIChecker.CheckStatus(URLs.Static_Alt + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json")))
+                    {
+                        case APIStatus.Online:
+                            if (!LoadedServerList)
+                            {
+                                URLs.OnlineServerList = URLs.Static_Alt + "/serverlist.json";
+                            }
+                            else if (!LoadedCDNList)
+                            {
+                                URLs.OnlineCDNList = URLs.Static_Alt + "/cdn_list.json";
+                            }
+                            break;
+                        default:
+                            CarbonAPITwo = false;
+                            break;
+                    }
+                }
+
+                if (!CarbonAPITwo)
+                {
+                    switch (APIChecker.CheckStatus(URLs.WOPL + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json")))
+                    {
+                        case APIStatus.Online:
+                            if (!LoadedServerList)
+                            {
+                                URLs.OnlineServerList = URLs.WOPL + "/serverlist.json";
+                            }
+                            else if (!LoadedCDNList)
+                            {
+                                URLs.OnlineCDNList = URLs.WOPL + "/cdn_list.json";
+                            }
+                            break;
+                        default:
+                            WOPLAPI = false;
+                            break;
+                    }
                 }
             }
 
-            if (CarbonAPI == false)
+            if (Mode == "Startup")
             {
-                switch (APIChecker.CheckStatus(URLs.Static_Alt + "/serverlist.json"))
+                if (!LoadedServerList)
                 {
-                    case APIStatus.Online:
-                        break;
-                    default:
-                        CarbonAPITwo = false;
-                        break;
+                    LoadedServerList = true;
+
+                    /* Check If Launcher Failed to Connect to any APIs */
+                    if (!WOPLAPI)
+                    {
+                        DiscordLauncherPresense.Status("Start Up", "Launcher Encountered API Errors");
+
+                        DialogResult restartAppNoApis = MessageBox.Show(null, "Unable to Connect to Any Server List API. Please check your connection." +
+                        "\n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To Any Server List API",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                        if (restartAppNoApis == DialogResult.No)
+                        {
+                            MessageBox.Show("Please keep in Mind Launcher Might Crash Past This Point. Make sure to Resolve the Issue Next Time",
+                                "GameLauncher Will Continue, When It Failed To Connect To API");
+                            Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and Will Continue");
+                        }
+
+                        if (restartAppNoApis == DialogResult.Yes)
+                        {
+                            FunctionStatus.LauncherForceClose = true;
+                        }
+                    }
+
+                    if (FunctionStatus.LauncherForceClose)
+                    {
+                        FunctionStatus.ErrorCloseLauncher("Closing From API Check Error");
+                    }
+                    else
+                    {
+                        FunctionStatus.IsVisualAPIsChecked = true;
+
+                        /* (Start Process) Check ServerList Status */
+                        ServerListUpdater.GetList();
+                    }
                 }
             }
-
-            if (CarbonAPITwo == false)
+            else if (Mode == "CDN List")
             {
-                switch (APIChecker.CheckStatus(URLs.WOPL + "/serverlist.json"))
+                if (!LoadedCDNList)
                 {
-                    case APIStatus.Online:
-                        break;
-                    default:
-                        WOPLAPI = false;
-                        break;
+                    LoadedCDNList = true;
+
+                    /* Check If Launcher Failed to Connect to any APIs */
+                    if (!WOPLAPI)
+                    {
+                        MessageBox.Show(null, "Unable to Connect to Any CDN List API. Please check your connection." +
+                        "\n\nCDN Dropdown List will not be Available in on " + From + " Screen",
+                        "GameLauncher has Stopped, Failed To Connect To Any CDN List API", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+
+                    /*******************************/
+                    /* Load CDN List                /
+                    /*******************************/
+
+                    if (InformationCache.CDNListStatus != "Loaded")
+                    {
+                        CDNListUpdater.GetList();
+                    }
                 }
             }
-
-            FunctionStatus.IsVisualAPIsChecked = true;
         }
     }
 }

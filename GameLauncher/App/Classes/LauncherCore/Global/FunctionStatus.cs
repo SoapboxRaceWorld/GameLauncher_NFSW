@@ -2,6 +2,7 @@
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
@@ -256,7 +257,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         public static void ErrorCloseLauncher(string Notes)
         {
-            DiscordLauncherPresense.Stop("Close");
+            /* Kill DiscordRPC */
+            if (DiscordLauncherPresense.Client != null)
+            {
+                DiscordLauncherPresense.Stop("Close");
+            }
+
+            if (ServerProxy.Host != null)
+            {
+                ServerProxy.Instance.Stop("Force Close");
+            }
+            
             Log.Warning("LAUNCHER: Exiting (" + Notes + ")");
             if (!string.IsNullOrWhiteSpace(LauncherForceCloseReason))
             {
@@ -477,7 +488,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 }
 
                 /* Check If Launcher Failed to Connect to any APIs */
-                if (VisualsAPIChecker.WOPLAPI == false)
+                if (!VisualsAPIChecker.WOPLAPI)
                 {
                     DiscordLauncherPresense.Status("Start Up", "Launcher Encountered API Errors");
 
