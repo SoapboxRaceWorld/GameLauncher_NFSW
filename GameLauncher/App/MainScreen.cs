@@ -340,13 +340,12 @@ namespace GameLauncher
                 Process.GetProcessById(oneProcess.Id).Kill();
             }
 
-            /* Kill DiscordRPC */
-            if (DiscordLauncherPresense.Client != null)
+            if (DiscordLauncherPresense.Running())
             {
                 DiscordLauncherPresense.Stop("Close");
             }
 
-            if (ServerProxy.Host != null)
+            if (ServerProxy.Running())
             {
                 ServerProxy.Instance.Stop("Main Screen");
             }
@@ -859,15 +858,18 @@ namespace GameLauncher
 
                         try
                         {
-                            if (InformationCache.SelectedServerJSON.modernAuthSupport.ToLower() == "true")
+                            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.modernAuthSupport))
                             {
-                                if (stringToUri.Scheme == "https")
+                                if (InformationCache.SelectedServerJSON.modernAuthSupport.ToLower() == "true")
                                 {
-                                    InformationCache.ModernAuthSupport = true;
-                                }
-                                else
-                                {
-                                    InformationCache.ModernAuthSupport = false;
+                                    if (stringToUri.Scheme == "https")
+                                    {
+                                        InformationCache.ModernAuthSupport = true;
+                                    }
+                                    else
+                                    {
+                                        InformationCache.ModernAuthSupport = false;
+                                    }
                                 }
                             }
                             else
@@ -1222,9 +1224,9 @@ namespace GameLauncher
 
         private void StartGame(string UserID, string LoginToken)
         {
-            if (InformationCache.ModernAuthSupport == true)
+            if (InformationCache.ModernAuthSupport)
             {
-                if (ServerProxy.Host == null)
+                if (!ServerProxy.Running())
                 {
                     ServerProxy.Instance.Start("Start Game");
                 }
@@ -1232,7 +1234,7 @@ namespace GameLauncher
 
             _nfswstarted = new Thread(() =>
             {
-                if (ServerProxy.Host != null)
+                if (ServerProxy.Running())
                 {
                     LaunchGame(UserID, LoginToken, "http://127.0.0.1:" + ServerProxy.ProxyPort + "/nfsw/Engine.svc", this);
                 }
@@ -1304,7 +1306,7 @@ namespace GameLauncher
 
         private void LaunchGame(string UserID, string LoginToken, string ServerIP, Form x)
         {
-            if (FileSettingsSave.Proxy == "1")
+            if (!ServerProxy.Running())
             {
                 UpdateInterval = 30000;
             }
@@ -1344,7 +1346,7 @@ namespace GameLauncher
                 {
                     ProcessID++;
 
-                    if (FileSettingsSave.Proxy == "0")
+                    if (ServerProxy.Running())
                     {
                         InformationCache.RestartTimer -= 120;
                     }
@@ -1355,7 +1357,7 @@ namespace GameLauncher
                 }
                 else
                 {
-                    if (FileSettingsSave.Proxy == "0")
+                    if (ServerProxy.Running())
                     {
                         InformationCache.RestartTimer -= 60;
                     }
@@ -1365,7 +1367,7 @@ namespace GameLauncher
                     }
                 }
 
-                if (FileSettingsSave.Proxy == "1")
+                if (!ServerProxy.Running())
                 {
                     if (ProcessID == 1)
                     {
@@ -1373,7 +1375,7 @@ namespace GameLauncher
                         AntiCheat.EnableChecks();
                     }
 
-                    if (FunctionStatus.ExternalToolsWasUsed == true && ProcessID == 2)
+                    if (FunctionStatus.ExternalToolsWasUsed && ProcessID == 2)
                     {
                         ProcessID++;
                         AntiCheat.DisableChecks(true);
@@ -1391,7 +1393,7 @@ namespace GameLauncher
                 }                
                 else if (InformationCache.RestartTimer <= 0)
                 {
-                    if (FunctionStatus.CanCloseGame == true)
+                    if (FunctionStatus.CanCloseGame)
                     {
                         foreach (var oneProcess in allOfThem)
                         {
@@ -1457,9 +1459,9 @@ namespace GameLauncher
                     _nfswPid = 0;
                     int exitCode = nfswProcess.ExitCode;
 
-                    if (FunctionStatus.GameKilledBySpeedBugCheck == true)
+                    if (FunctionStatus.GameKilledBySpeedBugCheck)
                     {
-                        if (FunctionStatus.ExternalToolsWasUsed == true) exitCode = 2017;
+                        if (FunctionStatus.ExternalToolsWasUsed) exitCode = 2017;
                         else exitCode = 2137;
                     }
 

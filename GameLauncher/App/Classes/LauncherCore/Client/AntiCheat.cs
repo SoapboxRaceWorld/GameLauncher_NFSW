@@ -8,8 +8,8 @@ using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
-using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform;
@@ -91,7 +91,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                             if (checkInt.Substring(0, 4) == "0xE9" && detect_DRIFTMOD == false) { detect_DRIFTMOD = true; }
                         }
 
-                        if (FileSettingsSave.Proxy == "1")
+                        if (!ServerProxy.Running())
                         {
                             if (
                             detect_MULTIHACK == true || detect_FAST_POWERUPS == true || detect_SPEEDHACK == true ||
@@ -102,7 +102,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                                 FunctionStatus.ExternalToolsWasUsed = true;
                             }
                         }
-                        else if (FileSettingsSave.Proxy == "0")
+                        else if (ServerProxy.Running())
                         {
                             /* ProfileMasker */
                             if (oneAddress == 8972152)
@@ -152,7 +152,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                 {
                     try
                     {
-                        if (FileSettingsSave.Proxy == "0")
+                        if (ServerProxy.Running())
                         {
                             foreach (string report_url in URLs.AntiCheatFD)
                             {
@@ -226,7 +226,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                     }
                     catch { }
 
-                    TimeConversions.MUFRTime(FileSettingsSave.Proxy);
+                    TimeConversions.MUFRTime();
                 }
             }
 

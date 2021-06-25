@@ -34,7 +34,7 @@ namespace GameLauncher.App.Classes
 
         private void Clock_Tick(object sender, EventArgs e)
         {
-            if (InformationCache.ServerListStatus == "Loaded" || FunctionStatus.LoadingComplete || FunctionStatus.LauncherForceClose)
+            if (FunctionStatus.LoadingComplete || FunctionStatus.LauncherForceClose)
             {
                 Clock.Start();
 

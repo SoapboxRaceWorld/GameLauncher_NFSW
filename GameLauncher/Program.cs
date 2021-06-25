@@ -184,7 +184,7 @@ namespace GameLauncher
 
         private static void StartSplashScreen()
         {
-            if (IsSplashScreenLive == false)
+            if (!IsSplashScreenLive)
             {
                 Application.Run(new SplashScreen());
             }
@@ -194,7 +194,7 @@ namespace GameLauncher
 
         private static void Start()
         {
-            DiscordLauncherPresense.Start("Start Up", "576154452348633108");
+            DiscordLauncherPresense.Start("Start Up", null);
 
             if (!DetectLinux.LinuxDetected())
             {
@@ -355,10 +355,6 @@ namespace GameLauncher
                     Log.System("SYSTEM: Driver Version: " + HardwareInfo.GPU.DriverVersion());
                 }
 
-                DiscordLauncherPresense.Status("Start Up", "Doing NullSafe ini Files");
-                FileSettingsSave.NullSafeSettings();
-                FileAccountSave.NullSafeAccount();
-
                 /* Set Launcher Directory */
                 Log.Info("CORE: Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
                 Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
@@ -391,7 +387,7 @@ namespace GameLauncher
                             MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                             /* Close Splash Screen (Just in Case) */
-                            if (IsSplashScreenLive == true)
+                            if (IsSplashScreenLive)
                             {
                                 SplashScreen.Abort();
                             }
@@ -416,6 +412,10 @@ namespace GameLauncher
                     {
                         MessageBox.Show("Unable to do a Test Write to Game Files Folder\nPermission Issue");
                     }
+
+                    DiscordLauncherPresense.Status("Start Up", "Doing NullSafe ini Files");
+                    FileSettingsSave.NullSafeSettings();
+                    FileAccountSave.NullSafeAccount();
 
                     /* Windows Firewall Runner */
                     if (!string.IsNullOrWhiteSpace(FileSettingsSave.FirewallLauncherStatus))

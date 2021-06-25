@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
+using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 
@@ -81,10 +82,6 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             else if (!settingFile.KeyExists("InstallationDirectory"))
             {
                 settingFile.Write("InstallationDirectory", GameInstallation);
-            }
-            else if (!File.Exists(GameInstallation) && !string.IsNullOrWhiteSpace(GameInstallation))
-            {
-                Directory.CreateDirectory(GameInstallation);
             }
 
             if (!settingFile.KeyExists("CDN"))
@@ -191,21 +188,22 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             {
                 bool isNumeric = int.TryParse(settingFile.Read("ProxyPort"), out int Port);
 
-                if (isNumeric == true)
+                if (isNumeric)
                 {
                     if (Port > 0)
                     {
                         ServerProxy.ProxyPort = Port;
                         UsingCustomProxyPort = true;
+                        Log.Info("SETTINGS FILE: Custom Proxy Port -> " + Port);
                     }
                 }
             }
 
-            if (UsingCustomProxyPort == false)
+            if (!UsingCustomProxyPort)
             {
                 bool isNumeric = int.TryParse(DateTime.Now.Year.ToString(), out int Port);
 
-                if (isNumeric == true)
+                if (isNumeric)
                 {
                     ServerProxy.ProxyPort = new Random().Next(2017, Port);
                 }
@@ -213,6 +211,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 {
                     ServerProxy.ProxyPort = new Random().Next(2017, 2021);
                 }
+
+                Log.Info("SETTINGS FILE: Random Generated Default Port -> " + ServerProxy.ProxyPort);
             }
 
             /* Key Entries to Remove (No Longer Needed) */

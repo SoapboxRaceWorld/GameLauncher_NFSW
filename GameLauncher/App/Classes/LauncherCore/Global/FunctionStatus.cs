@@ -257,13 +257,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         public static void ErrorCloseLauncher(string Notes)
         {
-            /* Kill DiscordRPC */
-            if (DiscordLauncherPresense.Client != null)
+            if (DiscordLauncherPresense.Running())
             {
                 DiscordLauncherPresense.Stop("Close");
             }
 
-            if (ServerProxy.Host != null)
+            if (ServerProxy.Running())
             {
                 ServerProxy.Instance.Stop("Force Close");
             }
@@ -279,7 +278,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         public static void FirstTimeRun()
         {
-            if (string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
+            LoadingComplete = true;
+
+            if (!string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
             {
                 Log.Core("LAUNCHER: Checking InstallationDirectory: " + FileSettingsSave.GameInstallation);
             }
@@ -389,12 +390,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                             FileSettingsSave.SaveSettings();
                                             FileGameSettings.Save("Suppress", "Language Only");
                                         }
-
-                                        if (!Directory.Exists(FileSettingsSave.GameInstallation))
-                                        {
-                                            Log.Core("LAUNCHER: Craeted Directory: " + GameFolderPath);
-                                            Directory.CreateDirectory(GameFolderPath);
-                                        }
                                     }
                                 }
                                 else
@@ -415,9 +410,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                         FileSettingsSave.GameInstallation = "GameFiles";
                                     }
                                 }
+                            }
 
+                            if (!string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
+                            {
                                 if (!Directory.Exists(FileSettingsSave.GameInstallation))
                                 {
+                                    Log.Core("LAUNCHER: Created Game Files Directory: " + FileSettingsSave.GameInstallation);
                                     Directory.CreateDirectory(FileSettingsSave.GameInstallation);
                                 }
                             }

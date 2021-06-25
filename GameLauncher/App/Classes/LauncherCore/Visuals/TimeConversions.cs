@@ -1,6 +1,7 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Client;
 using System;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
 
 namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
@@ -78,9 +79,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
             }
         }
 
-        public static void MUFRTime(string Mode)
+        public static void MUFRTime()
         {
-            if (Mode == "0")
+            if (ServerProxy.Running())
             {
                 if (AntiCheat.SpeedTicket == 0)
                 {

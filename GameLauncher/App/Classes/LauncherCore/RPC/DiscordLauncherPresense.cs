@@ -19,6 +19,12 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         public static DiscordRpcClient Client;
 
         /// <summary>
+        /// Boolean Value on If RPC is Running
+        /// </summary>
+        /// <returns>True or False</returns>
+        public static bool Running() => Client != null;
+
+        /// <summary>
         /// User's Discord ID Cache and is Set Once by Startuo or During Operation of Launcher's State
         /// </summary>
         /// <remarks>User's Discord ID</remarks>
@@ -342,7 +348,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 }
             }
 
-            if (Client != null && InformationCache.SelectedServerCategory != "DEV")
+            if (Running() && InformationCache.SelectedServerCategory != "DEV")
                 Client.SetPresence(Presence);
         }
 
@@ -360,7 +366,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     {
                         Log.Core("DISCORD: Initializing Rich Presense Core");
 
-                        Client = new DiscordRpcClient(RPCID);
+                        Client = new DiscordRpcClient("576154452348633108");
 
                         Client.OnReady += (sender, e) =>
                         {
@@ -372,6 +378,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         {
                             Log.Error("DISCORD: " + Error.Message);
                         };
+                        Client.SkipIdenticalPresence = true;
+                        Client.ShutdownOnly = true;
 
                         Client.Initialize();
                         Update();
@@ -394,7 +402,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         }
                         else
                         {
-                            Stop("Update");
+                            Stop("Close");
                         }
                     }
                     else
@@ -419,7 +427,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         /// <remarks>Starts a new RPC for Launcher</remarks>
         public static void Update()
         {
-            if (Client != null)
+            if (Running())
                 Client.Invoke();
         }
 
@@ -429,13 +437,13 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         /// <remarks>Clears and Stops RPC</remarks>
         public static void Stop(string State)
         {
-            if (Client != null)
+            if (Running())
             {
                 if (State == "Close")
                 {
                     Client.ClearPresence();
                 }
-
+                
                 Client.Dispose();
                 Client = null;
             }

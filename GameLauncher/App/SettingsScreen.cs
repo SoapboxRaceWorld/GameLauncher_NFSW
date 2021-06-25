@@ -628,9 +628,12 @@ namespace GameLauncher.App
 
                 if (FileSettingsSave.Proxy == "1")
                 {
-                    ServerProxy.Instance.Stop("Settings Screen");
+                    if (ServerProxy.Running())
+                    {
+                        ServerProxy.Instance.Stop("Settings Screen");
+                    }
 
-                    if (FileAccountSave.ChoosenGameServer.StartsWith("https") || InformationCache.SelectedServerJSON.modernAuthSupport.ToLower() == "true")
+                    if (FileAccountSave.ChoosenGameServer.StartsWith("https") || InformationCache.ModernAuthSupport)
                     {
                         MessageBox.Show(null, ServerListUpdater.ServerName("Settings") + " requires Proxy to be Enabled." +
                             "\nThe launcher will turn on Proxy even if you have chosen to Disable it", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -638,7 +641,10 @@ namespace GameLauncher.App
                 }
                 else
                 {
-                    ServerProxy.Instance.Start("Settings Screen");
+                    if (!ServerProxy.Running())
+                    {
+                        ServerProxy.Instance.Start("Settings Screen");
+                    }
                 }
             }
 
@@ -649,14 +655,18 @@ namespace GameLauncher.App
 
                 if (FileSettingsSave.RPC == "1")
                 {
-                    /* Kill DiscordRPC */
-                    if (DiscordLauncherPresense.Client != null)
+                    if (DiscordLauncherPresense.Running())
                     {
                         DiscordLauncherPresense.Stop("Close");
                     }
                 }
-
-                _restartRequired = true;
+                else
+                {
+                    if (!DiscordLauncherPresense.Running())
+                    {
+                        DiscordLauncherPresense.Start("Start Up", null);
+                    }
+                }
             }
 
             /* Actually lets check those 2 files */

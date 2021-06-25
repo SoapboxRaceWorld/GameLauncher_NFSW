@@ -86,12 +86,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             }
 
             /* (End Process) Close Splash Screen */
-            if (Program.IsSplashScreenLive == true)
+            if (Program.IsSplashScreenLive)
             {
                 Program.SplashScreen.Abort();
             }
-
-            FunctionStatus.LoadingComplete = true;
 
             /* Do First Time Run Checks */
             FunctionStatus.FirstTimeRun();

@@ -203,7 +203,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 };
                 _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
-                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
+                if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
             }
 
             /* IN SAFEHOUSE/FREEROAM */
@@ -232,7 +232,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 _presence.Assets.LargeImageKey = PersonaAvatarId;
                 _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
-                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
+                if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
             }
 
             if (uri == "/matchmaking/leavelobby" || uri == "/matchmaking/declineinvite")
@@ -249,7 +249,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 };
                 _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
-                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
+                if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
 
                 if (uri == "/matchmaking/leavelobby")
                 {
@@ -283,7 +283,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     };
                     _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
-                    if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
+                    if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
 
                     eventTerminatedManually = false;
                 }
@@ -302,7 +302,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 };
                 _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
-                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
+                if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
 
                 eventTerminatedManually = true;
             }
@@ -326,7 +326,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 };
                 _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
-                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
+                if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
 
                 eventTerminatedManually = false;
             }
@@ -347,7 +347,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 AntiCheat.event_id = EventID;
                 AntiCheat.EnableChecks();
 
-                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
+                if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
             }
             else if (uri == "/event/arbitration")
             {
@@ -364,7 +364,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
 
                 AntiCheat.DisableChecks(true);
-                if (DiscordLauncherPresense.Client != null) DiscordLauncherPresense.Client.SetPresence(_presence);
+                if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
 
                 eventTerminatedManually = false;
             }
