@@ -1151,8 +1151,7 @@ namespace GameLauncher.App
                 new { ShaderDetail = "Minimum", Value = "0" },
                 new { ShaderDetail = "Low", Value = "1" },
                 new { ShaderDetail = "Medium", Value = "2" },
-                new { ShaderDetail = "High", Value = "3" },
-                new { ShaderDetail = "Maximum", Value = "4" }
+                new { ShaderDetail = "High", Value = "4" }
             };
             comboBoxShaderDetail.DisplayMember = "ShaderDetail";
             comboBoxShaderDetail.ValueMember = "Value";
