@@ -581,9 +581,10 @@ namespace GameLauncher
             ServerStatusIcon.BackgroundImage = Theming.ServerIconChecking;
 
             LoginButton.ForeColor = Theming.SixTextForeColor;
-            string verticalImageUrl = string.Empty;
             VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin");
+            VerticalBanner.BackColor = Color.Transparent;
 
+            string verticalImageUrl = string.Empty;
             string numPlayers = string.Empty;
             string numRegistered = string.Empty;
 
