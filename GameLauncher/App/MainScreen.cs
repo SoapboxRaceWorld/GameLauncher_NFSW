@@ -700,44 +700,36 @@ namespace GameLauncher
                         {
                             if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.bannerUrl))
                             {
-                                bool result;
+                                bool ServerBannerResult;
 
                                 try
                                 {
-                                    result = Uri.TryCreate(InformationCache.SelectedServerJSON.bannerUrl, UriKind.Absolute, out Uri uriResult) && 
+                                    ServerBannerResult = Uri.TryCreate(InformationCache.SelectedServerJSON.bannerUrl, UriKind.Absolute, out Uri uriResult) && 
                                     (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                 }
-                                catch
-                                {
-                                    result = false;
-                                }
+                                catch {  ServerBannerResult = false; }
 
-                                if (result)
-                                {
-                                    verticalImageUrl = InformationCache.SelectedServerJSON.bannerUrl;
-                                }
-                                else
-                                {
-                                    verticalImageUrl = null;
-                                }
+                                verticalImageUrl = ServerBannerResult ? InformationCache.SelectedServerJSON.bannerUrl : string.Empty;
                             }
                             else
                             {
-                                verticalImageUrl = null;
+                                verticalImageUrl = string.Empty;
                             }
                         }
-                        catch
-                        {
-                            verticalImageUrl = null;
-                        }
+                        catch { }
 
                         /* Social Panel Core */
 
                         /* Discord Invite Display */
                         try
                         {
-                            bool ServerDiscordLink = Uri.TryCreate(InformationCache.SelectedServerJSON.discordUrl, UriKind.Absolute, out Uri uriResult) &&
-                                                     (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                            bool ServerDiscordLink;
+                            try
+                            {
+                                ServerDiscordLink = Uri.TryCreate(InformationCache.SelectedServerJSON.discordUrl, UriKind.Absolute, out Uri uriResult) &&
+                                                         (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                            }
+                            catch { ServerDiscordLink = false; }
 
                             DiscordIcon.BackgroundImage = ServerDiscordLink ? Theming.DiscordIcon : Theming.DiscordIconDisabled;
                             DiscordInviteLink.Enabled = ServerDiscordLink;
@@ -748,8 +740,13 @@ namespace GameLauncher
                         /* Homepage Display */
                         try
                         {
-                            bool ServerWebsiteLink = Uri.TryCreate(InformationCache.SelectedServerJSON.homePageUrl, UriKind.Absolute, out Uri uriResult) &&
+                            bool ServerWebsiteLink;
+                            try
+                            {
+                                ServerWebsiteLink = Uri.TryCreate(InformationCache.SelectedServerJSON.homePageUrl, UriKind.Absolute, out Uri uriResult) &&
                                           (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                            }
+                            catch { ServerWebsiteLink = false; }
 
                             HomePageIcon.BackgroundImage = ServerWebsiteLink ? Theming.HomeIcon : Theming.HomeIconDisabled;
                             HomePageLink.Enabled = ServerWebsiteLink;
@@ -760,8 +757,13 @@ namespace GameLauncher
                         /* Facebook Group Display */
                         try
                         {
-                            bool ServerFacebookLink = Uri.TryCreate(InformationCache.SelectedServerJSON.facebookUrl, UriKind.Absolute, out Uri uriResult) &&
+                            bool ServerFacebookLink;
+                            try
+                            {
+                                ServerFacebookLink = Uri.TryCreate(InformationCache.SelectedServerJSON.facebookUrl, UriKind.Absolute, out Uri uriResult) &&
                                                      (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                            }
+                            catch { ServerFacebookLink = false; }
 
                             FacebookIcon.BackgroundImage = ServerFacebookLink ? Theming.FacebookIcon : Theming.FacebookIconDisabled;
                             FacebookGroupLink.Enabled = ServerFacebookLink;
@@ -840,10 +842,7 @@ namespace GameLauncher
                                 InformationCache.ModernAuthSupport = false;
                             }
                         }
-                        catch
-                        {
-                            InformationCache.ModernAuthSupport = false;
-                        }
+                        catch { }
 
                         if (InformationCache.SelectedServerJSON.maxOnlinePlayers != 0)
                         {
@@ -889,37 +888,55 @@ namespace GameLauncher
                         //¯\_(ツ)_/¯
                     }
 
-                    if (!DetectLinux.LinuxDetected())
+                    Ping CheckMate = null;
+
+                    try
                     {
-                        ServerPingStatusText.ForeColor = Theming.FivithTextForeColor;
-
-                        Ping pingSender = new Ping();
-                        pingSender.SendAsync(ServerURI.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
-                        pingSender.PingCompleted += (sender3, e3) => {
-                            PingReply reply = e3.Reply;
-
-                            if (reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
+                        CheckMate = new Ping();
+                        CheckMate.PingCompleted += (sender3, e3) => {
+                            if (e3.Reply != null)
                             {
-                                if (this.ServerPingStatusText.InvokeRequired)
+                                if (e3.Reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
                                 {
-                                    ServerStatusDesc.Invoke(new Action(delegate () {
-                                        ServerPingStatusText.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), reply.RoundtripTime + "ms");
-                                    }));
+                                    if (this.ServerPingStatusText.InvokeRequired)
+                                    {
+                                        ServerPingStatusText.Invoke(new Action(delegate () {
+                                            ServerPingStatusText.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), e3.Reply.RoundtripTime + "ms");
+                                        }));
+                                    }
+                                    else
+                                    {
+                                        this.ServerPingStatusText.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), e3.Reply.RoundtripTime + "ms");
+                                    }
+
+                                    Log.Info("SERVER PING: " + e3.Reply.RoundtripTime + "ms for " + ServerListUpdater.ServerName("Ping"));
                                 }
                                 else
                                 {
-                                    this.ServerPingStatusText.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), reply.RoundtripTime + "ms");
+                                    Log.Warning("SERVER PING: " + ServerListUpdater.ServerName("Ping") + " is " + e3.Reply.Status);
                                 }
                             }
                             else
                             {
-                                this.ServerPingStatusText.Text = string.Format(string.Empty);
+                                Log.Warning("SERVER PING:  Unable to Ping" + ServerListUpdater.ServerName("Ping"));
                             }
                         };
+                        CheckMate.SendAsync(ServerURI.Host, 5000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
                     }
-                    else
+                    catch (PingException Error)
                     {
-                        this.ServerPingStatusText.Text = string.Format(string.Empty);
+                        Log.Error("PINGING: " + Error.Message);
+                    }
+                    catch (Exception Error)
+                    {
+                        Log.Error("PING: " + Error.Message);
+                    }
+                    finally
+                    {
+                        if (CheckMate != null)
+                        {
+                            CheckMate.Dispose();
+                        }
                     }
 
                     /* for thread safety */
@@ -2496,6 +2513,7 @@ namespace GameLauncher
             CurrentWindowInfo.ForeColor = Theming.FivithTextForeColor;
 
             LauncherStatusDesc.ForeColor = Theming.FivithTextForeColor;
+            ServerPingStatusText.ForeColor = Theming.FivithTextForeColor;
             ServerStatusDesc.ForeColor = Theming.FivithTextForeColor;
             APIStatusDesc.ForeColor = Theming.FivithTextForeColor;
 
@@ -2611,6 +2629,12 @@ namespace GameLauncher
             /********************************/
 
             SelectServerBtn.Visible = EnableInsiderDeveloper.Allowed();
+
+            /********************************/
+            /* Set Hardcoded Text            /
+            /********************************/
+
+            ServerPingStatusText.Text = string.Empty;
 
             /********************************/
             /* Functions                     /

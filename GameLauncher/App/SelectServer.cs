@@ -104,6 +104,7 @@ namespace GameLauncher.App
                                 ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
                                 ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
                                 ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
+                                ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
                             }
                             else
                             {
@@ -112,35 +113,41 @@ namespace GameLauncher.App
                                 ServerListRenderer.Items[serverid].SubItems[3].Text = content.onlineNumber.ToString();
                                 ServerListRenderer.Items[serverid].SubItems[4].Text = content.numberOfRegistered.ToString();
 
-                                /* PING */
-                                if (!DetectLinux.LinuxDetected())
-                                {
-                                    try
-                                    {
-                                        Ping pingSender = new Ping();
-                                        Uri StringToUri = new Uri(serverurl);
-                                        pingSender.SendAsync(StringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
-                                        pingSender.PingCompleted += (sender3, e3) => {
-                                            PingReply reply = e3.Reply;
+                                Ping CheckMate = null;
 
-                                            if (reply.Status == IPStatus.Success && servername != "Offline Built-In Server")
+                                try
+                                {
+                                    Uri StringToUri = new Uri(serverurl);
+                                    CheckMate = new Ping();
+                                    CheckMate.PingCompleted += (sender3, e3) => {
+                                        if (e3.Reply != null)
+                                        {
+                                            if (e3.Reply.Status == IPStatus.Success && servername != "Offline Built-In Server")
                                             {
-                                                ServerListRenderer.Items[serverid].SubItems[5].Text = reply.RoundtripTime + "ms";
+                                                ServerListRenderer.Items[serverid].SubItems[5].Text = e3.Reply.RoundtripTime + "ms";
                                             }
                                             else
                                             {
-                                                ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                                                ServerListRenderer.Items[serverid].SubItems[5].Text = "!?";
                                             }
-                                        };
-                                    }
-                                    catch
-                                    {
-                                        ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
-                                    }
+                                        }
+                                        else
+                                        {
+                                            ServerListRenderer.Items[serverid].SubItems[5].Text = "N/A";
+                                        }
+                                    };
+                                    CheckMate.SendAsync(StringToUri.Host, 5000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
                                 }
-                                else
+                                catch
                                 {
-                                    ServerListRenderer.Items[serverid].SubItems[5].Text = "N/A";
+                                    ServerListRenderer.Items[serverid].SubItems[5].Text = "?";
+                                }
+                                finally
+                                {
+                                    if (CheckMate != null)
+                                    {
+                                        CheckMate.Dispose();
+                                    }
                                 }
                             }
                         }
