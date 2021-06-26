@@ -67,7 +67,6 @@ namespace GameLauncher.App
                     comboBoxBaseTextureFilter.SelectedIndex = 0;
                     comboBoxAnisotropicLevel.SelectedIndex = 0;
                     comboBoxCarEnvironmentDetail.SelectedIndex = 0;
-                    comboBoxCarReflection.SelectedIndex = 0;
                     comboBoxWorldGlobalDetail.SelectedIndex = 0;
                     comboBoxWorldRoadReflection.SelectedIndex = 0;
                     comboBoxWorldRoadTexture.SelectedIndex = 0;
@@ -95,7 +94,6 @@ namespace GameLauncher.App
                     comboBoxBaseTextureFilter.SelectedIndex = 0;
                     comboBoxAnisotropicLevel.SelectedIndex = 0;
                     comboBoxCarEnvironmentDetail.SelectedIndex = 1;
-                    comboBoxCarReflection.SelectedIndex = 1;
                     comboBoxWorldGlobalDetail.SelectedIndex = 1;
                     comboBoxWorldRoadReflection.SelectedIndex = 0;
                     comboBoxWorldRoadTexture.SelectedIndex = 0;
@@ -123,7 +121,6 @@ namespace GameLauncher.App
                     comboBoxBaseTextureFilter.SelectedIndex = 1;
                     comboBoxAnisotropicLevel.SelectedIndex = 0;
                     comboBoxCarEnvironmentDetail.SelectedIndex = 2;
-                    comboBoxCarReflection.SelectedIndex = 2;
                     comboBoxWorldGlobalDetail.SelectedIndex = 3;
                     comboBoxWorldRoadReflection.SelectedIndex = 1;
                     comboBoxWorldRoadTexture.SelectedIndex = 1;
@@ -151,7 +148,6 @@ namespace GameLauncher.App
                     comboBoxBaseTextureFilter.SelectedIndex = 2;
                     comboBoxAnisotropicLevel.SelectedIndex = 3;
                     comboBoxCarEnvironmentDetail.SelectedIndex = 3;
-                    comboBoxCarReflection.SelectedIndex = 3;
                     comboBoxWorldGlobalDetail.SelectedIndex = 2;
                     comboBoxWorldRoadReflection.SelectedIndex = 1;
                     comboBoxWorldRoadTexture.SelectedIndex = 1;
@@ -179,7 +175,6 @@ namespace GameLauncher.App
                     comboBoxBaseTextureFilter.SelectedIndex = 2;
                     comboBoxAnisotropicLevel.SelectedIndex = 4;
                     comboBoxCarEnvironmentDetail.SelectedIndex = 4;
-                    comboBoxCarReflection.SelectedIndex = 4;
                     comboBoxWorldGlobalDetail.SelectedIndex = 4;
                     comboBoxWorldRoadReflection.SelectedIndex = 2;
                     comboBoxWorldRoadTexture.SelectedIndex = 2;
@@ -207,7 +202,6 @@ namespace GameLauncher.App
                     comboBoxBaseTextureFilter.SelectedIndex = CheckValidRange("BaseTextureFilter", "0-2", FileGameSettingsData.BaseTextureFilter);
                     comboBoxAnisotropicLevel.SelectedIndex = CheckValidRange("AnisotropicLevel", "0-4", FileGameSettingsData.BaseTextureMaxAni);
                     comboBoxCarEnvironmentDetail.SelectedIndex = CheckValidRange("CarEnvironmentDetail", "0-4", FileGameSettingsData.CarLODLevel);
-                    comboBoxCarReflection.SelectedIndex = CheckValidRange("CarReflection", "0-4", FileGameSettingsData.CarEnvironmentMapEnable);
                     comboBoxWorldGlobalDetail.SelectedIndex = CheckValidRange("WorldGlobalDetail", "0-4", FileGameSettingsData.GlobalDetailLevel);
                     comboBoxWorldRoadReflection.SelectedIndex = CheckValidRange("WorldRoadReflection", "0-2", FileGameSettingsData.RoadReflectionEnable);
                     comboBoxWorldRoadTexture.SelectedIndex = CheckValidRange("WorldRoadTexture", "0-2", FileGameSettingsData.RoadTextureFilter);
@@ -289,7 +283,7 @@ namespace GameLauncher.App
             FileGameSettingsData.MotionBlurEnable = (radioMotionBlurOff.Checked == true) ? "0" : "1";
             FileGameSettingsData.RoadTextureLODBias = (radioRoadLODBiasOff.Checked == true) ? "0" : "1";
             FileGameSettingsData.BaseTextureLODBias = (radioBaseTextureLODOff.Checked == true) ? "0" : "1";
-            FileGameSettingsData.CarEnvironmentMapEnable = (radioCarDetailLODOff.Checked == true) ? "0" : "1";
+            FileGameSettingsData.CarLODLevel = (radioCarDetailLODOff.Checked == true) ? "0" : "1";
             FileGameSettingsData.OverBrightEnable = (radioOverBrightOff.Checked == true) ? "0" : "1";
             FileGameSettingsData.ParticleSystemEnable = (radioParticleSysOff.Checked == true) ? "0" : "1";
             FileGameSettingsData.VisualTreatment = (radioVisualTreatOff.Checked == true) ? "0" : "1";
@@ -300,8 +294,7 @@ namespace GameLauncher.App
             FileGameSettingsData.PerformanceLevel = comboBoxPerformanceLevel.SelectedValue.ToString();
             FileGameSettingsData.BaseTextureFilter = comboBoxBaseTextureFilter.SelectedValue.ToString();
             FileGameSettingsData.BaseTextureMaxAni = comboBoxAnisotropicLevel.SelectedValue.ToString();
-            FileGameSettingsData.CarLODLevel = comboBoxCarEnvironmentDetail.SelectedValue.ToString();
-            FileGameSettingsData.CarEnvironmentMapEnable = comboBoxCarReflection.SelectedValue.ToString();
+            FileGameSettingsData.CarEnvironmentMapEnable = comboBoxCarEnvironmentDetail.SelectedValue.ToString();
             FileGameSettingsData.GlobalDetailLevel = comboBoxWorldGlobalDetail.SelectedValue.ToString();
             FileGameSettingsData.RoadReflectionEnable = comboBoxWorldRoadReflection.SelectedValue.ToString();
             FileGameSettingsData.RoadTextureFilter = comboBoxWorldRoadTexture.SelectedValue.ToString();
@@ -793,7 +786,6 @@ namespace GameLauncher.App
             labelRoadLODBias.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelRoadAniso.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelCarModel.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
-            labelCarReflection.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelCDLODBias.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelFilterLvl.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelBTLODBias.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
@@ -856,7 +848,6 @@ namespace GameLauncher.App
             comboBoxWorldRoadTexture.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             comboBoxWorldRoadAniso.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             comboBoxCarEnvironmentDetail.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
-            comboBoxCarReflection.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             comboBoxBaseTextureFilter.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             comboBoxAnisotropicLevel.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
 
@@ -921,7 +912,6 @@ namespace GameLauncher.App
             labelRoadLODBias.ForeColor = Theming.MainTextForeColor;
             labelRoadAniso.ForeColor = Theming.MainTextForeColor;
             labelCarModel.ForeColor = Theming.MainTextForeColor;
-            labelCarReflection.ForeColor = Theming.MainTextForeColor;
             labelCDLODBias.ForeColor = Theming.MainTextForeColor;
             labelFilterLvl.ForeColor = Theming.MainTextForeColor;
             labelBTLODBias.ForeColor = Theming.MainTextForeColor;
@@ -1007,8 +997,6 @@ namespace GameLauncher.App
             comboBoxWorldRoadAniso.BackColor = Theming.CDNMenuBGForeColor;
             comboBoxCarEnvironmentDetail.ForeColor = Theming.CDNMenuTextForeColor;
             comboBoxCarEnvironmentDetail.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxCarReflection.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxCarReflection.BackColor = Theming.CDNMenuBGForeColor;
             comboBoxBaseTextureFilter.ForeColor = Theming.CDNMenuTextForeColor;
             comboBoxBaseTextureFilter.BackColor = Theming.CDNMenuBGForeColor;
             comboBoxAnisotropicLevel.ForeColor = Theming.CDNMenuTextForeColor;
@@ -1093,18 +1081,6 @@ namespace GameLauncher.App
             comboBoxCarEnvironmentDetail.DisplayMember = "CarEnvironmentDetail";
             comboBoxCarEnvironmentDetail.ValueMember = "Value";
             comboBoxCarEnvironmentDetail.DataSource = CarEnvironmentDetailList;
-
-            /* CarReflection ComboBox */
-            var CarReflectionList = new[] {
-                new { CarReflection = "Minimum", Value = "0" },
-                new { CarReflection = "Low", Value = "1" },
-                new { CarReflection = "Medium", Value = "2" },
-                new { CarReflection = "High", Value = "3" },
-                new { CarReflection = "Maximum", Value = "4" }
-            };
-            comboBoxCarReflection.DisplayMember = "CarReflection";
-            comboBoxCarReflection.ValueMember = "Value";
-            comboBoxCarReflection.DataSource = CarReflectionList;
 
             /* WorldGlobalDetail ComboBox */
             var WorldGlobalDetailList = new[] {
