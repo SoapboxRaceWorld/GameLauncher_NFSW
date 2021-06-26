@@ -41,6 +41,7 @@ using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
 using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Client.Auth;
+using GameLauncher.App.Classes.LauncherCore.Support;
 
 namespace GameLauncher
 {
@@ -66,14 +67,10 @@ namespace GameLauncher
         private DateTime _downloadStartTime;
         private Downloader _downloader;
 
-        private static MemoryStream _serverBanner = null;
-        public string _serverWebsiteLink = "";
-        public string _serverFacebookLink = "";
-        public string _serverDiscordLink = "";
-        public string _serverTwitterLink = "";
-        private string _loginWelcomeTime = "";
-        private string _loginToken = "";
-        private string _userId = "";
+        private static MemoryStream _serverRawBanner = null;
+        private string _loginWelcomeTime = string.Empty;
+        private string _loginToken = string.Empty;
+        private string _userId = string.Empty;
         private static int UpdateInterval = 60000;
 
         public static String ModNetFileNameInUse = String.Empty;
@@ -135,7 +132,7 @@ namespace GameLauncher
             Log.Core("LAUNCHER: NFSW Download Source is now: " + FileSettingsSave.CDN);
 
             Log.Visuals("CORE: Applyinng ContextMenu");
-            translatedBy.Text = "";
+            translatedBy.Text = string.Empty;
             ContextMenu = new ContextMenu();
             ContextMenu.MenuItems.Add(new MenuItem("About", FunctionEvents.AboutButton_Click));
             ContextMenu.MenuItems.Add(new MenuItem("Donate", (b, n) => { Process.Start("https://paypal.me/metonator95"); }));
@@ -356,16 +353,6 @@ namespace GameLauncher
             var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
             ModNetHandler.CleanLinks(linksPath);
 
-            try
-            {
-                if (_serverBanner != null)
-                {
-                    _serverBanner.Dispose();
-                    _serverBanner.Close();
-                }
-            }
-            catch { }
-
             /* Leave this here. Its to properly close the launcher from Visual Studio (And Close the Launcher a well) 
              * If the Boolen is true it will restart the Application
              */
@@ -568,7 +555,7 @@ namespace GameLauncher
             {
                 ServerStatusText.Text = "Launcher Offline:\n - Unknown";
                 ServerStatusText.ForeColor = Theming.ThirdTextForeColor;
-                ServerStatusDesc.Text = "";
+                ServerStatusDesc.Text = string.Empty;
                 ServerStatusIcon.BackgroundImage = Theming.ServerIconUnkown;
                 return;
             }
@@ -590,16 +577,15 @@ namespace GameLauncher
 
             ServerStatusText.Text = "Server Status:\n - Pinging";
             ServerStatusText.ForeColor = Theming.SecondaryTextForeColor;
-            ServerStatusDesc.Text = "";
+            ServerStatusDesc.Text = string.Empty;
             ServerStatusIcon.BackgroundImage = Theming.ServerIconChecking;
 
             LoginButton.ForeColor = Theming.SixTextForeColor;
-            var verticalImageUrl = "";
+            string verticalImageUrl = string.Empty;
             VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin");
-            VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
 
-            string numPlayers = "";
-            string numRegistered = "";
+            string numPlayers = string.Empty;
+            string numRegistered = string.Empty;
 
             if (ServerPick.GetItemText(ServerPick.SelectedItem) == "Offline Built-In Server")
             {
@@ -623,9 +609,6 @@ namespace GameLauncher
             ServicePointManager.FindServicePoint(ServerURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
             WebClient client = new WebClient();
             client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-
-            VerticalBanner.BackColor = Color.Transparent;
-
             client.DownloadStringAsync(ServerURI);
 
             System.Timers.Timer aTimer = new System.Timers.Timer(10000);
@@ -752,81 +735,48 @@ namespace GameLauncher
                         /* Discord Invite Display */
                         try
                         {
-                            if (string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordUrl))
-                            {
-                                DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled;
-                                DiscordInviteLink.Enabled = false;
-                                _serverDiscordLink = null;
-                                DiscordInviteLink.Text = "";
-                            }
-                            else
-                            {
-                                DiscordIcon.BackgroundImage = Theming.DiscordIcon;
-                                DiscordInviteLink.Enabled = true;
-                                _serverDiscordLink = InformationCache.SelectedServerJSON.discordUrl;
-                                DiscordInviteLink.Text = "Discord Invite";
-                            }
+                            bool ServerDiscordLink = Uri.TryCreate(InformationCache.SelectedServerJSON.discordUrl, UriKind.Absolute, out Uri uriResult) &&
+                                                     (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+                            DiscordIcon.BackgroundImage = ServerDiscordLink ? Theming.DiscordIcon : Theming.DiscordIconDisabled;
+                            DiscordInviteLink.Enabled = ServerDiscordLink;
+                            DiscordInviteLink.Text = ServerDiscordLink ? "Discord Invite" : string.Empty;
                         }
                         catch { }
 
                         /* Homepage Display */
                         try
                         {
-                            if (string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.homePageUrl))
-                            {
-                                HomePageIcon.BackgroundImage = Theming.HomeIconDisabled;
-                                HomePageLink.Enabled = false;
-                                _serverWebsiteLink = null;
-                                HomePageLink.Text = "";
-                            }
-                            else
-                            {
-                                HomePageIcon.BackgroundImage = Theming.HomeIcon;
-                                HomePageLink.Enabled = true;
-                                _serverWebsiteLink = InformationCache.SelectedServerJSON.homePageUrl;
-                                HomePageLink.Text = "Home Page";
-                            }
+                            bool ServerWebsiteLink = Uri.TryCreate(InformationCache.SelectedServerJSON.homePageUrl, UriKind.Absolute, out Uri uriResult) &&
+                                          (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+                            HomePageIcon.BackgroundImage = ServerWebsiteLink ? Theming.HomeIcon : Theming.HomeIconDisabled;
+                            HomePageLink.Enabled = ServerWebsiteLink;
+                            HomePageLink.Text = ServerWebsiteLink ? "Home Page" : string.Empty;
                         }
                         catch { }
 
                         /* Facebook Group Display */
                         try
                         {
-                            if (string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.facebookUrl) || 
-                            InformationCache.SelectedServerJSON.facebookUrl == "Your facebook page url")
-                            {
-                                FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled;
-                                FacebookGroupLink.Enabled = false;
-                                _serverFacebookLink = null;
-                                FacebookGroupLink.Text = "";
-                            }
-                            else
-                            {
-                                FacebookIcon.BackgroundImage = Theming.FacebookIcon;
-                                FacebookGroupLink.Enabled = true;
-                                _serverFacebookLink = InformationCache.SelectedServerJSON.facebookUrl;
-                                FacebookGroupLink.Text = "Facebook Page";
-                            }
+                            bool ServerFacebookLink = Uri.TryCreate(InformationCache.SelectedServerJSON.facebookUrl, UriKind.Absolute, out Uri uriResult) &&
+                                                     (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+                            FacebookIcon.BackgroundImage = ServerFacebookLink ? Theming.FacebookIcon : Theming.FacebookIconDisabled;
+                            FacebookGroupLink.Enabled = ServerFacebookLink;
+                            FacebookGroupLink.Text = ServerFacebookLink ? "Facebook Page" : string.Empty;
                         }
                         catch { }
 
                         /* Twitter Account Display */
                         try
                         {
-                            if (string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.twitterUrl))
-                            {
-                                TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled;
-                                TwitterAccountLink.Enabled = false;
-                                _serverTwitterLink = null;
-                                TwitterAccountLink.Text = "";
-                            }
-                            else
-                            {
-                                TwitterIcon.BackgroundImage = Theming.TwitterIcon;
-                                TwitterAccountLink.Enabled = true;
-                                _serverTwitterLink = InformationCache.SelectedServerJSON.twitterUrl;
-                                TwitterAccountLink.Text = "Twitter Feed";
-                            }
+                            bool ServerTwitterLink = Uri.TryCreate(InformationCache.SelectedServerJSON.twitterUrl, UriKind.Absolute, out Uri uriResult) &&
+                                                     (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+                            TwitterIcon.BackgroundImage = ServerTwitterLink ? Theming.TwitterIcon : Theming.TwitterIconDisabled;
+                            TwitterAccountLink.Enabled = ServerTwitterLink;
+                            TwitterAccountLink.Text = ServerTwitterLink ? "Twitter Feed" : string.Empty;
                         }
                         catch { }
 
@@ -962,13 +912,13 @@ namespace GameLauncher
                             }
                             else
                             {
-                                this.ServerPingStatusText.Text = string.Format("");
+                                this.ServerPingStatusText.Text = string.Format(string.Empty);
                             }
                         };
                     }
                     else
                     {
-                        this.ServerPingStatusText.Text = string.Format("");
+                        this.ServerPingStatusText.Text = string.Format(string.Empty);
                     }
 
                     /* for thread safety */
@@ -1010,46 +960,59 @@ namespace GameLauncher
                             {
                                 /* Load cached banner! */
                                 VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin");
-                                VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                 return;
                             }
                             else if (e4.Error != null)
                             {
                                 /* Load cached banner! */
                                 VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin");
-                                VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                 return;
                             }
                             else
                             {
                                 try
                                 {
-                                    if (_serverBanner != null)
+                                    try
                                     {
-                                        _serverBanner.Dispose();
-                                        _serverBanner.Close();
+                                        if (_serverRawBanner != null)
+                                        {
+                                            _serverRawBanner.Dispose();
+                                            _serverRawBanner.Close();
+                                        }
                                     }
+                                    catch { }
 
-                                    VerticalBanner.Image = Image.FromStream(_serverBanner = new MemoryStream(e4.Result));
-                                    VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
-
-                                    if (VerticalBanners.GetFileExtension(verticalImageUrl) != "gif")
+                                    _serverRawBanner = new MemoryStream(e4.Result)
                                     {
-                                        File.WriteAllBytes(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin", _serverBanner.ToArray());
+                                        Position = 0
+                                    };
+
+                                    VerticalBanner.Image = Image.FromStream(_serverRawBanner);
+
+                                    if (VerticalBanners.GetFileExtension(verticalImageUrl) == "gif")
+                                    {
+                                        Image.FromStream(_serverRawBanner).Save(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin");
+                                    }
+                                    else
+                                    {
+                                        File.WriteAllBytes(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin", _serverRawBanner.ToArray());
                                     }
                                 }
                                 catch (Exception Error)
                                 {
                                     Log.Error("SERVER BANNER: " + Error.Message);
-                                    VerticalBanner.Image = null;
+                                    VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                 }
                             }
                         };
                     }
-                    else
+                    else if (File.Exists(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin"))
                     {
                         /* Load cached banner! */
                         VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin");
+                    }
+                    else
+                    {
                         VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                     }
                 }
@@ -1066,19 +1029,15 @@ namespace GameLauncher
             /* Home */
             HomePageIcon.BackgroundImage = Theming.HomeIconDisabled;
             HomePageLink.Enabled = false;
-            _serverWebsiteLink = null;
             /* Discord */
             DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled;
             DiscordInviteLink.Enabled = false;
-            _serverDiscordLink = null;
             /* Facebook */
             FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled;
             FacebookGroupLink.Enabled = false;
-            _serverFacebookLink = null;
             /* Twitter */
             TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled;
             TwitterAccountLink.Enabled = false;
-            _serverTwitterLink = null;
             /* Scenery */
             SceneryGroupText.Text = "But It's Me!";
             /* Restart Timer */
@@ -1891,7 +1850,7 @@ namespace GameLauncher
                 ExtractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
                 ExtractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
             });
-            PlayProgressTextTimer.Text = "";
+            PlayProgressTextTimer.Text = string.Empty;
         }
 
         /* Launch game */
@@ -1929,7 +1888,7 @@ namespace GameLauncher
 
                         while (secondsToCloseLauncher > 0)
                         {
-                            PlayProgressTextTimer.Text = "";
+                            PlayProgressTextTimer.Text = string.Empty;
                             PlayProgressText.Text = string.Format("Loading game. Launcher will minimize in {0} seconds.", secondsToCloseLauncher).ToUpper();
                             Time.SecondsRemaining(1);
                             secondsToCloseLauncher--;
@@ -1940,8 +1899,8 @@ namespace GameLauncher
                             CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                         }
 
-                        PlayProgressTextTimer.Text = "";
-                        PlayProgressText.Text = "";
+                        PlayProgressTextTimer.Text = string.Empty;
+                        PlayProgressText.Text = string.Empty;
 
                         WindowState = FormWindowState.Minimized;
                         ShowInTaskbar = false;
@@ -2092,7 +2051,7 @@ namespace GameLauncher
                 _downloadStartTime = DateTime.Now;
                 PlayProgressTextTimer.Text = "Downloading: Core GameFiles".ToUpper();
                 Log.Info("DOWNLOAD: Getting Core Game Files");
-                _downloader.StartDownload(FileSettingsSave.CDN, "", FileSettingsSave.GameInstallation, false, false, 1130632198);
+                _downloader.StartDownload(FileSettingsSave.CDN, string.Empty, FileSettingsSave.GameInstallation, false, false, 1130632198);
             }
             else
             {
@@ -2165,7 +2124,7 @@ namespace GameLauncher
             else
             {
                 OnDownloadFinished();
-                PlayProgressTextTimer.Text = "";
+                PlayProgressTextTimer.Text = string.Empty;
                 Log.Info("DOWNLOAD: Game Files Download is Complete!");
             }
         }
@@ -2272,7 +2231,7 @@ namespace GameLauncher
                             if (numFiles == current)
                             {
                                 PlayProgressTextTimer.Visible = false;
-                                PlayProgressTextTimer.Text = "";
+                                PlayProgressTextTimer.Text = string.Empty;
 
                                 _isDownloading = false;
                                 OnDownloadFinished();

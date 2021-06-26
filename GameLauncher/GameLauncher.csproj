@@ -180,6 +180,7 @@
     <Compile Include="App\Classes\LauncherCore\Lists\ResolutionsListUpdater.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\JSON\JsonServerModNet.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\DiscordLauncherPresense.cs" />
+    <Compile Include="App\Classes\LauncherCore\Support\BitmapHandler.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\Email\IsEmailValid.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\JSON\IsJSONValid.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\VerifyTrust\IsExeVerified.cs" />
@@ -187,9 +188,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="App\Classes\LauncherCore\Visuals\Theming.cs" />
-    <Compile Include="App\Classes\LauncherCore\Visuals\Time.cs" />
-    <Compile Include="App\Classes\LauncherCore\Visuals\TimeConversions.cs" />
-    <Compile Include="App\Classes\LauncherCore\Visuals\VerticalBanners.cs" />
+    <Compile Include="App\Classes\LauncherCore\Support\Time.cs" />
+    <Compile Include="App\Classes\LauncherCore\Support\TimeConversions.cs" />
+    <Compile Include="App\Classes\LauncherCore\Support\VerticalBanners.cs" />
     <Compile Include="App\Classes\SystemPlatform\Components\HardwareID.cs" />
     <Compile Include="App\Classes\SystemPlatform\Components\HardwareInfo.cs" />
     <Compile Include="App\Classes\SystemPlatform\Linux\DetectLinux.cs" />

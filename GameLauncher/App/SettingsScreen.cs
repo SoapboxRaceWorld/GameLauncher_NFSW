@@ -37,7 +37,7 @@ namespace GameLauncher.App
         private string _newLauncherPath;
         private string _newGameFilesPath;
         private string FinalCDNURL;
-        private bool FirewallEnabled = DetectLinux.LinuxDetected() ? false : FirewallManager.IsServiceRunning;
+        private readonly bool FirewallEnabled = DetectLinux.LinuxDetected() ? false : FirewallManager.IsServiceRunning;
 
         public SettingsScreen()
         {

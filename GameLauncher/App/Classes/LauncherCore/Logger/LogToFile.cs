@@ -1,4 +1,4 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Visuals;
+﻿using GameLauncher.App.Classes.LauncherCore.Support;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
