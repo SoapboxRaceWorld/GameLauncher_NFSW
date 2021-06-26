@@ -8,7 +8,6 @@ using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using System.Net;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
@@ -40,9 +39,11 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 try
                 {
                     FunctionStatus.TLS();
+                    Uri URLCall = new Uri(URLs.Main + "/update.php?version=" + Application.ProductVersion);
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     WebClient Client = new WebClient();
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    var json_data = Client.DownloadString(URLs.Main + "/update.php?version=" + Application.ProductVersion);
+                    var json_data = Client.DownloadString(URLCall);
                     UpdateCheckResponse MAPI = JsonConvert.DeserializeObject<UpdateCheckResponse>(json_data);
 
                     if (MAPI.Payload.LatestVersion != null)
@@ -62,9 +63,11 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 try
                 {
                     FunctionStatus.TLS();
+                    Uri URLCall = new Uri(URLs.GitHub_Launcher);
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     WebClient Client = new WebClient();
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    var json_data = Client.DownloadString(URLs.GitHub_Launcher);
+                    var json_data = Client.DownloadString(URLCall);
                     GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
 
                     if (GHAPI.TagName != null)

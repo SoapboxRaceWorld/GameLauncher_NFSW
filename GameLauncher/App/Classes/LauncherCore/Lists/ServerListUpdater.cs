@@ -33,10 +33,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
             {
                 Log.UrlCall("LIST CORE: Loading Server List from: " + URLs.OnlineServerList);
                 FunctionStatus.TLS();
+                Uri URLCall = new Uri(URLs.OnlineServerList);
+                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 WebClient Client = new WebClient();
                 Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + 
                 " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                var response = Client.DownloadString(URLs.OnlineServerList);
+                var response = Client.DownloadString(URLCall);
                 Log.UrlCall("LIST CORE: Loaded Server List from: " + URLs.OnlineServerList);
 
                 try

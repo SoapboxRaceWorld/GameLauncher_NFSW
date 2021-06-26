@@ -327,12 +327,14 @@ namespace GameLauncher.App
                         CurrentDownloadingFile = text;
 
                         FunctionStatus.TLS();
+                        Uri URLCall = new Uri(address);
+                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
                         using (WebClient client = new WebClient())
                         {
                             client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                             client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged);
                             client.DownloadFileCompleted += new AsyncCompletedEventHandler(Client_DownloadFileCompleted);
-                            client.DownloadFileAsync(new Uri(address), text2);
+                            client.DownloadFileAsync(URLCall, text2);
                             while (client.IsBusy) { }
                         }
                     }

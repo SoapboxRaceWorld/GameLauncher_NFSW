@@ -94,9 +94,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     try
                     {
                         FunctionStatus.TLS();
+                        Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x86.exe");
+                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         WebClient Client = new WebClient();
                         Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        Client.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x86.exe", "VC_redist.x86.exe");
+                        Client.DownloadFile(URLCall, "VC_redist.x86.exe");
                     }
                     catch (Exception error)
                     {
@@ -146,9 +148,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         try
                         {
                             FunctionStatus.TLS();
+                            Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x64.exe");
+                            ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             WebClient Client = new WebClient();
                             Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                            Client.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x64.exe", "VC_redist.x64.exe");
+                            Client.DownloadFile(URLCall, "VC_redist.x64.exe");
                         }
                         catch (Exception error)
                         {

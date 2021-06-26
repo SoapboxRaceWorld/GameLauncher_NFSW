@@ -21,6 +21,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
             {
                 FunctionStatus.TLS();
                 Uri newModNetUri = new Uri(ServerIP + "/Modding/GetModInfo");
+                ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 WebClient x = new WebClient();
                 return x.DownloadString(newModNetUri);
             }

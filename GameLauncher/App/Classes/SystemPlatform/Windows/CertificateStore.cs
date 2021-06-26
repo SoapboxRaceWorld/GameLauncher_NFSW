@@ -44,10 +44,12 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 try
                 {
                     FunctionStatus.TLS();
+                    Uri URLCall = new Uri("http://crl.carboncrew.org/RCA-Info.json");
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     WebClient Client = new WebClient();
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                     /* Download Up to Date Certificate Status */
-                    var json_data = Client.DownloadString("http://crl.carboncrew.org/RCA-Info.json");
+                    var json_data = Client.DownloadString(URLCall);
                     JsonRootCA API = JsonConvert.DeserializeObject<JsonRootCA>(json_data);
 
                     if (API.CN != null)
@@ -136,9 +138,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         if (IsROOTCAInstalled == false)
                         {
                             FunctionStatus.TLS();
+                            Uri URLCall = new Uri(RootCAFileURL);
+                            ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             WebClient Client = new WebClient();
                             Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                            Client.DownloadFile(RootCAFileURL, CertSaveLocation);
+                            Client.DownloadFile(URLCall, CertSaveLocation);
 
                             X509Store store = new X509Store(StoreName.Root,
                             StoreLocation.LocalMachine);

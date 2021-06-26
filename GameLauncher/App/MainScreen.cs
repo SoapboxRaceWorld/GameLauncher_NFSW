@@ -66,6 +66,7 @@ namespace GameLauncher
         private DateTime _downloadStartTime;
         private Downloader _downloader;
 
+        private static MemoryStream _serverBanner = null;
         public string _serverWebsiteLink = "";
         public string _serverFacebookLink = "";
         public string _serverDiscordLink = "";
@@ -355,6 +356,16 @@ namespace GameLauncher
             var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
             ModNetHandler.CleanLinks(linksPath);
 
+            try
+            {
+                if (_serverBanner != null)
+                {
+                    _serverBanner.Dispose();
+                    _serverBanner.Close();
+                }
+            }
+            catch { }
+
             /* Leave this here. Its to properly close the launcher from Visual Studio (And Close the Launcher a well) 
              * If the Boolen is true it will restart the Application
              */
@@ -608,13 +619,14 @@ namespace GameLauncher
             }
 
             FunctionStatus.TLS();
+            Uri ServerURI = new Uri(InformationCache.SelectedServerData.IpAddress + "/GetServerInformation");
+            ServicePointManager.FindServicePoint(ServerURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
             WebClient client = new WebClient();
             client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
 
             VerticalBanner.BackColor = Color.Transparent;
 
-            var stringToUri = new Uri(InformationCache.SelectedServerData.IpAddress + "/GetServerInformation");
-            client.DownloadStringAsync(stringToUri);
+            client.DownloadStringAsync(ServerURI);
 
             System.Timers.Timer aTimer = new System.Timers.Timer(10000);
             aTimer.Elapsed += (x, y) => { client.CancelAsync(); };
@@ -862,7 +874,7 @@ namespace GameLauncher
                             {
                                 if (InformationCache.SelectedServerJSON.modernAuthSupport.ToLower() == "true")
                                 {
-                                    if (stringToUri.Scheme == "https")
+                                    if (ServerURI.Scheme == "https")
                                     {
                                         InformationCache.ModernAuthSupport = true;
                                     }
@@ -931,7 +943,7 @@ namespace GameLauncher
                         ServerPingStatusText.ForeColor = Theming.FivithTextForeColor;
 
                         Ping pingSender = new Ping();
-                        pingSender.SendAsync(stringToUri.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
+                        pingSender.SendAsync(ServerURI.Host, 1000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
                         pingSender.PingCompleted += (sender3, e3) => {
                             PingReply reply = e3.Reply;
 
@@ -978,10 +990,11 @@ namespace GameLauncher
                     if (!string.IsNullOrWhiteSpace(verticalImageUrl))
                     {
                         FunctionStatus.TLS();
+                        Uri URICall = new Uri(verticalImageUrl);
+                        ServicePointManager.FindServicePoint(URICall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         WebClient client2 = new WebClient();
                         client2.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        Uri stringToUri3 = new Uri(verticalImageUrl);
-                        client2.DownloadDataAsync(stringToUri3);
+                        client2.DownloadDataAsync(URICall);
                         client2.DownloadProgressChanged += (sender4, e4) =>
                         {
                             if (e4.TotalBytesToReceive > 2000000)
@@ -1011,21 +1024,23 @@ namespace GameLauncher
                             {
                                 try
                                 {
-                                    Image image;
-                                    var memoryStream = new MemoryStream(e4.Result);
-                                    image = Image.FromStream(memoryStream);
+                                    if (_serverBanner != null)
+                                    {
+                                        _serverBanner.Dispose();
+                                        _serverBanner.Close();
+                                    }
 
-                                    VerticalBanner.Image = image;
+                                    VerticalBanner.Image = Image.FromStream(_serverBanner = new MemoryStream(e4.Result));
                                     VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
 
                                     if (VerticalBanners.GetFileExtension(verticalImageUrl) != "gif")
                                     {
-                                        File.WriteAllBytes(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin", memoryStream.ToArray());
+                                        File.WriteAllBytes(".BannerCache/" + SHA.HashPassword(InformationCache.SelectedServerData.IpAddress) + ".bin", _serverBanner.ToArray());
                                     }
                                 }
-                                catch (Exception ex)
+                                catch (Exception Error)
                                 {
-                                    Log.Error("SERVER BANNER: " + ex.Message);
+                                    Log.Error("SERVER BANNER: " + Error.Message);
                                     VerticalBanner.Image = null;
                                 }
                             }
@@ -1543,7 +1558,7 @@ namespace GameLauncher
             while (isDownloadingModNetFiles == false)
             {
                 CurrentModFileCount++;
-                var url = modFilesDownloadUrls.Dequeue();
+                Uri url = modFilesDownloadUrls.Dequeue();
                 string FileName = url.ToString().Substring(url.ToString().LastIndexOf("/") + 1, (url.ToString().Length - url.ToString().LastIndexOf("/") - 1));
 
                 ModNetFileNameInUse = FileName;
@@ -1551,6 +1566,7 @@ namespace GameLauncher
                 try
                 {
                     FunctionStatus.TLS();
+                    ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(10).TotalMilliseconds;
                     WebClient client2 = new WebClient();
                     client2.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
 
@@ -1637,7 +1653,10 @@ namespace GameLauncher
                     DiscordLauncherPresense.Status("Checking ModNet", null);
                     /* Get Remote ModNet list to process for checking required ModNet files are present and current */
                     FunctionStatus.TLS();
-                    String modules = new WebClient().DownloadString(URLs.ModNet + "/launcher-modules/modules.json");
+                    Uri ModNetURI = new Uri(URLs.ModNet + "/launcher-modules/modules.json");
+                    ServicePointManager.FindServicePoint(ModNetURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    WebClient ModNetJsonURI = new WebClient();
+                    String modules = ModNetJsonURI.DownloadString(ModNetURI);
 
                     try
                     {
@@ -1668,10 +1687,12 @@ namespace GameLauncher
                                 DiscordLauncherPresense.Status("Download ModNet", ModNetList);
 
                                 FunctionStatus.TLS();
+                                Uri URLCall = new Uri(URLs.ModNet + "/launcher-modules/" + ModNetList);
+                                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                 WebClient newModNetFilesDownload = new WebClient();
                                 newModNetFilesDownload.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + 
                                     " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                                newModNetFilesDownload.DownloadFile(URLs.ModNet + "/launcher-modules/" + ModNetList, FileSettingsSave.GameInstallation + "/" + ModNetList);
+                                newModNetFilesDownload.DownloadFile(URLCall, FileSettingsSave.GameInstallation + "/" + ModNetList);
                             }
                             else
                             {

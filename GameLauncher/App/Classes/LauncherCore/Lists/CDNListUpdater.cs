@@ -29,8 +29,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
             {
                 Log.UrlCall("LIST CORE: Loading CDN List from: " + URLs.OnlineCDNList);
                 FunctionStatus.TLS();
+                Uri URLCall = new Uri(URLs.OnlineCDNList);
+                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 var wc = new WebClient();
-                var responseList = wc.DownloadString(URLs.OnlineCDNList);
+                var responseList = wc.DownloadString(URLCall);
                 Log.UrlCall("LIST CORE: Loaded CDN List from: " + URLs.OnlineCDNList);
 
                 try

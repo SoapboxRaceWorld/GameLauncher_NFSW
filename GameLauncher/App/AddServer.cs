@@ -144,8 +144,10 @@ namespace GameLauncher.App
             try
             {
                 FunctionStatus.TLS();
-                var client = new WebClient();
                 Uri StringToUri = new Uri(wellFormattedURL + "/GetServerInformation");
+                ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                WebClient client = new WebClient();
+                
                 var serverLoginResponse = client.DownloadString(StringToUri);
 
                 GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(serverLoginResponse);

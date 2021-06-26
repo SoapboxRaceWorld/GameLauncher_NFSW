@@ -28,7 +28,10 @@ namespace GameLauncher.App
                     try
                     {
                         FunctionStatus.TLS();
-                        ChangelogText.Text = new WebClient().DownloadString(URLs.Main + "/launcher/changelog");
+                        Uri URLCall = new Uri(URLs.Main + "/launcher/changelog");
+                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                        WebClient Client = new WebClient();
+                        ChangelogText.Text = Client.DownloadString(URLCall);
                     }
                     catch (Exception Error)
                     {

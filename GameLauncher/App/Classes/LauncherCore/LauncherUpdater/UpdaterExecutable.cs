@@ -28,9 +28,11 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 try
                 {
                     FunctionStatus.TLS();
+                    Uri URLCall = new Uri(URLs.GitHub_Updater);
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     WebClient Client = new WebClient();
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    var json_data = Client.DownloadString(URLs.GitHub_Updater);
+                    var json_data = Client.DownloadString(URLCall);
                     try
                     {
                         GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
@@ -66,6 +68,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     try
                     {
                         FunctionStatus.TLS();
+                        Uri URLCall = new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
+                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         WebClient Client = new WebClient();
                         Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                         Client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
@@ -75,7 +79,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                                 File.Delete("GameLauncherUpdater.exe");
                             }
                         };
-                        Client.DownloadFile(new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
+                        Client.DownloadFile(URLCall, "GameLauncherUpdater.exe");
                     }
                     catch (Exception ex)
                     {
@@ -107,9 +111,11 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         try
                         {
                             FunctionStatus.TLS();
+                            Uri URLCall = new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
+                            ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             WebClient Client = new WebClient();
                             Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                            Client.DownloadFile(new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe"), "GameLauncherUpdater.exe");
+                            Client.DownloadFile(URLCall, "GameLauncherUpdater.exe");
                         }
                         catch (Exception ex)
                         {

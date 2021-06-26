@@ -85,15 +85,17 @@ namespace GameLauncher.App
 
                 try
                 {
-                    FunctionStatus.TLS();
-                    WebClient breachCheck = new WebClient();
                     String checkPassword = SHA.HashPassword(RegisterPassword.Text.ToString()).ToUpper();
-
                     var regex = new Regex(@"([0-9A-Z]{5})([0-9A-Z]{35})").Split(checkPassword);
-
                     String range = regex[1];
+
+                    FunctionStatus.TLS();
+                    Uri URLCall = new Uri("https://api.pwnedpasswords.com/range/" + range);
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    WebClient breachCheck = new WebClient();
+
                     String verify = regex[2];
-                    String serverReply = breachCheck.DownloadString("https://api.pwnedpasswords.com/range/" + range);
+                    String serverReply = breachCheck.DownloadString(URLCall);
 
                     string[] hashes = serverReply.Split('\n');
                     foreach (string hash in hashes)
@@ -330,9 +332,9 @@ namespace GameLauncher.App
 
             try
             {
-                if (string.IsNullOrEmpty(InformationCache.SelectedServerJSON.requireTicket) || InformationCache.SelectedServerJSON.requireTicket == "true")
+                if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.requireTicket))
                 {
-                    _ticketRequired = true;
+                    _ticketRequired = InformationCache.SelectedServerJSON.requireTicket.ToLower() == "true";
                 }
                 else
                 {
