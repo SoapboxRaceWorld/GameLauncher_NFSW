@@ -893,35 +893,46 @@ namespace GameLauncher
                     try
                     {
                         CheckMate = new Ping();
-                        CheckMate.PingCompleted += (sender3, e3) => {
-                            if (e3.Reply != null)
+                        CheckMate.PingCompleted += (_sender, _e) => {
+                            if (_e.Cancelled)
                             {
-                                if (e3.Reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
+                                Log.Warning("SERVER PING: Ping Canceled for " + ServerListUpdater.ServerName("Ping"));
+                            }
+                            else if (_e.Error != null)
+                            {
+                                Log.Error("SERVER PING: Ping Failed for " + ServerListUpdater.ServerName("Ping") + " -> " + _e.Error.ToString());
+                            }
+                            else if (_e.Reply != null)
+                            {
+                                if (_e.Reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
                                 {
                                     if (this.ServerPingStatusText.InvokeRequired)
                                     {
                                         ServerPingStatusText.Invoke(new Action(delegate () {
-                                            ServerPingStatusText.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), e3.Reply.RoundtripTime + "ms");
+                                            ServerPingStatusText.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), _e.Reply.RoundtripTime + "ms");
                                         }));
                                     }
                                     else
                                     {
-                                        this.ServerPingStatusText.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), e3.Reply.RoundtripTime + "ms");
+                                        this.ServerPingStatusText.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), _e.Reply.RoundtripTime + "ms");
                                     }
 
-                                    Log.Info("SERVER PING: " + e3.Reply.RoundtripTime + "ms for " + ServerListUpdater.ServerName("Ping"));
+                                    Log.Info("SERVER PING: " + _e.Reply.RoundtripTime + "ms for " + ServerListUpdater.ServerName("Ping"));
                                 }
                                 else
                                 {
-                                    Log.Warning("SERVER PING: " + ServerListUpdater.ServerName("Ping") + " is " + e3.Reply.Status);
+                                    Log.Warning("SERVER PING: " + ServerListUpdater.ServerName("Ping") + " is " + _e.Reply.Status);
                                 }
                             }
                             else
                             {
-                                Log.Warning("SERVER PING:  Unable to Ping" + ServerListUpdater.ServerName("Ping"));
+                                Log.Warning("SERVER PING:  Unable to Ping " + ServerListUpdater.ServerName("Ping"));
                             }
+
+                            ((AutoResetEvent)_e.UserState).Set();
                         };
-                        CheckMate.SendAsync(ServerURI.Host, 5000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
+
+                        CheckMate.SendAsync(ServerURI.Host, 5000, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
                     }
                     catch (PingException Error)
                     {

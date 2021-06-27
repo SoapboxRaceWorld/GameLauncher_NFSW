@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Net;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net.NetworkInformation;
@@ -135,8 +134,10 @@ namespace GameLauncher.App
                                         {
                                             ServerListRenderer.Items[serverid].SubItems[5].Text = "N/A";
                                         }
+
+                                        ((AutoResetEvent)e3.UserState).Set();
                                     };
-                                    CheckMate.SendAsync(StringToUri.Host, 5000, new byte[1], new PingOptions(64, true), new AutoResetEvent(false));
+                                    CheckMate.SendAsync(StringToUri.Host, 5000, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
                                 }
                                 catch
                                 {
