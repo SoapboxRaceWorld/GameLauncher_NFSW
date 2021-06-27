@@ -14,7 +14,7 @@ namespace GameLauncher.App
     {
         private readonly List<AboutNoteBlock> patchNoteBlocks = new List<AboutNoteBlock>();
         private static readonly string AboutXMLRevision = "2.1.8.A";
-        private static readonly string AboutXML = "/Launcher/SBRW/Official/" + AboutXMLRevision + "/ about.xml";
+        private static readonly string AboutXML = "/Launcher/SBRW/Official/" + AboutXMLRevision + "/about.xml";
 
         public About()
         {

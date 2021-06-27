@@ -97,7 +97,7 @@
             this.PatchButton2.Size = new System.Drawing.Size(195, 47);
             this.PatchButton2.TabIndex = 2;
             this.PatchButton2.TabStop = false;
-            this.PatchButton2.Text = "Open ReadMe";
+            this.PatchButton2.Text = "Open Licenses";
             this.PatchButton2.UseVisualStyleBackColor = false;
             this.PatchButton2.Click += new System.EventHandler(this.OnClickButton);
             // 
