@@ -937,10 +937,12 @@ namespace GameLauncher
                     catch (PingException Error)
                     {
                         Log.Error("PINGING: " + Error.Message);
+                        Log.Error("PINGING: " + Error.InnerException);
                     }
                     catch (Exception Error)
                     {
                         Log.Error("PING: " + Error.Message);
+                        Log.Error("PING: " + Error.InnerException);
                     }
                     finally
                     {

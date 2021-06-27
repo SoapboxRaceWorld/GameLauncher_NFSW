@@ -95,7 +95,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             {
                 string send = Prompt.ShowDialog("Please specify your email address.", "GameLauncher");
 
-                if (string.IsNullOrWhiteSpace(send))
+                if (!string.IsNullOrWhiteSpace(send))
                 {
                     if (!IsEmailValid.Validate(send))
                     {

@@ -34,7 +34,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     }
                     else
                     {
-                        LoginResponse = wc.DownloadString(Tokens.IPAddress + "/User/createUser?email=" + Email + "&password=" + Password + (!String.IsNullOrWhiteSpace(Token) ? "&inviteTicket=" + Token : ""));
+                        LoginResponse = wc.DownloadString(Tokens.IPAddress + "/User/createUser?email=" + Email + 
+                            "&password=" + Password + (!String.IsNullOrWhiteSpace(Token) ? "&inviteTicket=" + Token : ""));
                     }
                 }
                 else if (Connection == "Secure")
@@ -119,7 +120,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 else
                 {
                     XmlDocument sbrwXml = new XmlDocument();
-                    var msgBoxInfo = "";
+                    var msgBoxInfo = string.Empty;
                     bool XMLIsErrorFree = true;
 
                     try
@@ -205,14 +206,32 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                                 }
                                 else if (Method == "Register")
                                 {
+                                    string MessageSuccess;
+                                    string MessageServerWelcome = string.Empty;
+
+                                    if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.messageSrv))
+                                    {
+                                        if (InformationCache.SelectedServerJSON.messageSrv.ToLower().Contains("welcome"))
+                                        {
+                                            MessageServerWelcome = InformationCache.SelectedServerJSON.messageSrv + "\n";
+                                        }
+                                        else
+                                        {
+                                            MessageServerWelcome = "Welcome: " + InformationCache.SelectedServerJSON.messageSrv + "\n";
+                                        }
+                                    }
+
                                     if (msgBoxInfo == "SERVER FULL")
                                     {
-                                        Tokens.Success = string.Format("Successfully registered on {0}. However, the Server is currently full. Therefore you cannot play on it right now.", Tokens.ServerName);
+                                        MessageSuccess = string.Format(MessageServerWelcome + "Successfully registered on {0}. However, server is actually full, " +
+                                            "therefore you cannot play it right now.", Tokens.ServerName);
                                     }
                                     else
                                     {
-                                        Tokens.Success = string.Format("Successfully registered on {0}. You can log in now.", Tokens.ServerName);
+                                        MessageSuccess = string.Format(MessageServerWelcome + "Successfully registered on {0}. You can log in now.", Tokens.ServerName);
                                     }
+
+                                    Tokens.Success = MessageSuccess;
                                 }
                                 else
                                 {
@@ -270,14 +289,32 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                         }
                         else if (Method == "Register")
                         {
+                            string MessageSuccess;
+                            string MessageServerWelcome = string.Empty;
+
+                            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.messageSrv))
+                            {
+                                if (InformationCache.SelectedServerJSON.messageSrv.ToLower().Contains("welcome"))
+                                {
+                                    MessageServerWelcome = InformationCache.SelectedServerJSON.messageSrv + "\n";
+                                }
+                                else
+                                {
+                                    MessageServerWelcome = "Welcome: " + InformationCache.SelectedServerJSON.messageSrv + "\n";
+                                }
+                            }
+
                             if (ServerObjectResponse.Error == "SERVER FULL")
                             {
-                                Tokens.Success = string.Format("Successfully registered on {0}. However, server is actually full, therefore you cannot play it right now.", Tokens.ServerName);
+                                MessageSuccess = string.Format(MessageServerWelcome + "Successfully registered on {0}. However, server is actually full, " +
+                                    "therefore you cannot play it right now.", Tokens.ServerName);
                             }
                             else
                             {
-                                Tokens.Success = string.Format("Successfully registered on {0}. You can log in now.", Tokens.ServerName);
+                                MessageSuccess = string.Format(MessageServerWelcome + "Successfully registered on {0}. You can log in now.", Tokens.ServerName);
                             }
+
+                            Tokens.Success = MessageSuccess;
                         }
                     }
                     else
