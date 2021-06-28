@@ -16,7 +16,7 @@ using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
-using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.Client;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
@@ -69,6 +69,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             IFlurlRequest request = resolvedUrl.AllowAnyHttpStatus();
 
+
             foreach (var header in context.Request.Headers)
             {
                 /* Don't send Content-Length for GET requests */
@@ -100,6 +101,20 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             }
 
             var GETContent = string.Join(";", queryParams.Select(x => x.Key + "=" + x.Value).ToArray());
+
+            if (path == "/event/arbitration") 
+            {
+                requestBody = requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + Convert.ToInt32(AntiCheat.cheats_detected) + "</Konami>");
+                foreach (var header in context.Request.Headers) 
+                {
+                    if(header.Key.ToLowerInvariant() == "content-length") 
+                    {
+                        int KonamiCode = Convert.ToInt32(header.Value.First()) + 
+                            ("<Konami>" + Convert.ToInt32(AntiCheat.cheats_detected) + "</Konami>").Length;
+                        request = request.WithHeader(header.Key, KonamiCode);
+                    }
+                }
+            }
 
             switch (method)
             {

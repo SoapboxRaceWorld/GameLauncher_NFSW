@@ -329,7 +329,18 @@ namespace GameLauncher.App
 
                         FunctionStatus.TLS();
                         Uri URLCall = new Uri(address);
-                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+                        int Timeout = (int)TimeSpan.FromMinutes(5).TotalMilliseconds;
+
+                        if (address.Contains("copspeechdat"))
+                        {
+                            Timeout = (int)TimeSpan.FromMinutes(30).TotalMilliseconds;
+                        }
+                        else if (address.Contains("nfs09mx.mus"))
+                        {
+                            Timeout = (int)TimeSpan.FromMinutes(15).TotalMilliseconds;
+                        }
+
+                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = Timeout;
                         using (WebClient client = new WebClient())
                         {
                             client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");

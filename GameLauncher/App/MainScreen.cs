@@ -2365,12 +2365,11 @@ namespace GameLauncher
 
         private void OnDownloadFailed(Exception error)
         {
-            Log.Error("CDN DOWNLOADER: " + error.Message);
-
             string failureMessage;
             try
             {
-
+                Log.Error("CDN DOWNLOADER: " + error.Message);
+                Log.Error("CDN DOWNLOADER: " + error.InnerException);
                 failureMessage = error.Message;
             }
             catch

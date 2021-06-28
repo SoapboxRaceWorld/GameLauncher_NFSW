@@ -112,10 +112,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                                 Kernel32.ReadProcessMemory((int)processHandle, (int)(BitConverter.ToUInt32(buffer, 0) + 0x89), buffer16, buffer16.Length, ref bytesRead);
                                 String MemoryUsername = Encoding.UTF8.GetString(buffer16, 0, buffer16.Length);
 
-                                Console.WriteLine(MemoryUsername.Substring(0, DiscordGamePresence.PersonaName.Length));
-                                Console.WriteLine(DiscordGamePresence.PersonaName);
-
-                                if (MemoryUsername.Substring(0, DiscordGamePresence.PersonaName.Length) != DiscordGamePresence.PersonaName && detect_PMASKER == false)
+                                if (MemoryUsername.Substring(0, DiscordGamePresence.PersonaName.Length).ToLower() != DiscordGamePresence.PersonaName.ToLower() && detect_PMASKER == false)
                                 {
                                     detect_PMASKER = true;
                                 }
