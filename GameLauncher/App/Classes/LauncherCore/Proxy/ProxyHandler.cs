@@ -16,6 +16,7 @@ using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.InsiderKit;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
@@ -154,10 +155,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
                 CommunicationLogEntryType.Response, new CommunicationLogResponse(
                     responseBody, resolvedUrl.ToString(), method));
-
-            context.Request.Dispose();
-            responseMessage.Dispose();
-            await request.DeleteAsync();
 
             return Response;
         }

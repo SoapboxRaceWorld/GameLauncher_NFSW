@@ -4,7 +4,7 @@
     class InsiderInfo
     {
         /* Current month, day, year (2 digits), and letter! Ex: 12-15-20-A */
-        public static string InsiderBuildNumber = "06-27-21-B";
+        public static string InsiderBuildNumber = "06-27-21-D";
 
         public static string BuildNumberOnly()
         {
