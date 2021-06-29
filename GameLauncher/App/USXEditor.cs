@@ -1017,7 +1017,7 @@ namespace GameLauncher.App
 
             /* AudioMode ComboBox */
             var AudioModeList = new[] {
-                new { Sound = "Stero", Value = "1" },
+                new { Sound = "Stereo", Value = "1" },
                 new { Sound = "Surround", Value = "2" }
             };
             comboAudioMode.DisplayMember = "Sound";
