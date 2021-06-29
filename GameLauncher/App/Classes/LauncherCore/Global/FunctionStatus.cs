@@ -183,7 +183,45 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         {
             ServicePointManager.DnsRefreshTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
             ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+            try
+            {
+                /* TLS 1.3 */
+                ServicePointManager.SecurityProtocol |= (SecurityProtocolType)12288 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+            }
+            catch (NotSupportedException Error)
+            {
+                Log.Error("SecurityProtocol: Tls13 -> " + Error.Message);
+
+                try
+                {
+                    /* TLS 1.2 */
+                    ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                }
+                catch (NotSupportedException ErrorTls12)
+                {
+                    Log.Error("SecurityProtocol: Tls12 -> " + ErrorTls12.Message);
+
+                    try
+                    {
+                        /* TLS 1.1 */
+                        ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                    }
+                    catch (NotSupportedException ErrorTls11)
+                    {
+                        Log.Error("SecurityProtocol: Tls11 -> " + ErrorTls11.Message);
+
+                        try
+                        {
+                            /* TLS 1.0 */
+                            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls;
+                        }
+                        catch (NotSupportedException ErrorTls)
+                        {
+                            Log.Error("SecurityProtocol: Tls -> " + ErrorTls.Message);
+                        }
+                    }
+                }
+            }
             ServicePointManager.ServerCertificateValidationCallback = (Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) =>
             {
                 bool isOk = true;
