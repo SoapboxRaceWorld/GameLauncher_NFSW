@@ -98,15 +98,15 @@ namespace GameLauncher.App
                 };
 
                 FunctionStatus.IsVerifyHashDisabled = true;
-                StartScan.Start();
-                Log.Info("VERIFY HASH: Started Scanner");
                 isScanning = true;
+                Log.Info("VERIFY HASH: Started Scanner");
+                StartScan.Start();
             }
             else if (startScan == false)
             {
-                StartScan.Abort();
-                Log.Info("VERIFY HASH: Stopped Scanner");
                 isScanning = false;
+                Log.Info("VERIFY HASH: Stopped Scanner");
+                StartScan.Abort();
             }
         }
 
@@ -258,9 +258,8 @@ namespace GameLauncher.App
 
                 Log.Info("VERIFY HASH: Scan Completed");
 
-                if (InvalidFileList.Any() != true)
+                if (!InvalidFileList.Any())
                 {
-                    GameScanner(false);
                     StartScanner.Visible = false;
                     StopScanner.Visible = false;
                     ScanProgressText.Text = "Scan Complete. No Files Missing or Invalid!";
@@ -271,6 +270,7 @@ namespace GameLauncher.App
                     VerifyHashText.ForeColor = Theming.WinFormSuccessTextForeColor;
                     VerifyHashText.Text = "Excellent News! There are ZERO\nmissing or invalid Gamefiles!";
                     Integrity();
+                    GameScanner(false);
                 }
                 else
                 {
@@ -385,14 +385,14 @@ namespace GameLauncher.App
                 if (redownloadedCount == currentCount)
                 {
                     Integrity();
-                    Log.Info("Re-downloaded Count: " + redownloadedCount + " Current File Count: " + currentCount);
+                    Log.Info("VERIFY HASH: Re-downloaded Count: " + redownloadedCount + " Current File Count: " + currentCount);
 
                     DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
                     VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
                     VerifyHashText.Text = "Yay! Scanning and Downloading \nis now completed on Gamefiles";
-                    GameScanner(false);
                     StartScanner.Visible = false;
                     StopScanner.Visible = false;
+                    GameScanner(false);
                 }
             }
         }

@@ -8,6 +8,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public class NancyGzipCompression : IApplicationStartup
     {
+        public static MemoryStream content = null;
+
         public void Initialize(IPipelines pipelines)
         {
             pipelines.AfterRequest += CheckForCompression;
@@ -25,11 +27,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         private static void CompressResponse(Response response)
         {
+            if (content != null)
+            {
+                /* Dispose Current Memory */
+                content.Dispose();
+            }
+
             response.Headers["Content-Encoding"] = "gzip";
             response.Headers["Connection"] = "close";
 
             /* Ask System to Allocate Memory */
-            var content = new MemoryStream();
+            content = new MemoryStream();
             /* Response Contents is now feed into Allocated Memory */
             response.Contents(content);
             /* Set Position for data in Allocated Memory */
