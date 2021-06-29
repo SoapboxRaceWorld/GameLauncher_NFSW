@@ -413,6 +413,28 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     }
                 }
             }
+
+            //Extending Safehouse
+            if (uri.Contains("catalog"))
+            {                   
+                if (GET.Contains("categoryName=NFSW_NA_EP_VINYLS_Category"))    _presence.Details = "In Safehouse - Applying Vinyls";
+                if (GET.Contains("clientProductType=PAINTS_BODY"))              _presence.Details = "In Safehouse - Applying Colors";
+                if (GET.Contains("clientProductType=PERFORMANCEPART"))          _presence.Details = "In Safehouse - Applying Performance Parts";
+                if (GET.Contains("clientProductType=VISUALPART"))               _presence.Details = "In Safehouse - Applying Visual Parts";
+                if (GET.Contains("clientProductType=SKILLMODPART"))             _presence.Details = "In Safehouse - Applying Skillmods";
+                if (GET.Contains("clientProductType=PRESETCAR"))                _presence.Details = "In Safehouse - Purchasing Car";
+                if (GET.Contains("categoryName=BoosterPacks"))                  _presence.Details = "In Safehouse - Opening Cardpacks";
+
+                _presence.Assets = new Assets();
+                _presence.Assets.SmallImageText = "In-Safehouse";
+                _presence.Assets.SmallImageKey = "gamemode_safehouse";
+                _presence.State = serverName;
+                _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
+                _presence.Assets.LargeImageKey = PersonaAvatarId;
+                _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
+
+                if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
+            }
         }
     }
 }
