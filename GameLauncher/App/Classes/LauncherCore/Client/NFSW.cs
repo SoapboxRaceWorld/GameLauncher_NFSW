@@ -32,11 +32,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
             }
         }
 
-        public static bool DetectByProcess()
+        public static bool DetectGameProcess()
         {
-            Process[] nfswProcess = Process.GetProcessesByName("nfsw");
+            Process[] Game = Process.GetProcessesByName("nfsw");
 
-            if (nfswProcess.Length == 0)
+            if (Game.Length == 0)
             {
                 return false;
             }
@@ -46,9 +46,23 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
             }
         }
 
-        public static bool IsNFSWRunning()
+        public static bool DetectGameLauncherSimplified()
         {
-            return DetectByMutex() || DetectByProcess();
+            Process[] Launcher = Process.GetProcessesByName("GameLauncherSimplified");
+
+            if (Launcher.Length == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public static bool IsRunning()
+        {
+            return DetectByMutex() || DetectGameProcess() || DetectGameLauncherSimplified();
         }
     }
 }

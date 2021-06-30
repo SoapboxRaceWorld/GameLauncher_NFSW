@@ -293,7 +293,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             }
         }
 
-        public static void ErrorCloseLauncher(string Notes)
+        public static void ErrorCloseLauncher(string Notes, bool Boolen)
         {
             if (DiscordLauncherPresense.Running())
             {
@@ -311,7 +311,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 MessageBox.Show(null, "Launcher Ecountered an Error and It Must Close. Below is a Summary of the Error" +
                 "\n" + LauncherForceCloseReason, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            Application.Exit();
+
+            if (Boolen)
+            {
+                Application.Restart();
+            }
+            else
+            {
+                Application.Exit();
+            }
         }
 
         public static void FirstTimeRun()
@@ -354,7 +362,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
                 if (LauncherForceClose)
                 {
-                    ErrorCloseLauncher("Closing From Welcome Dialog");
+                    ErrorCloseLauncher("Closing From Welcome Dialog", false);
                 }
                 else
                 {
@@ -471,7 +479,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
             if (LauncherForceClose)
             {
-                ErrorCloseLauncher("Closing From Folder Dialog");
+                ErrorCloseLauncher("Closing From Folder Dialog", false);
             }
             else
             {
@@ -545,7 +553,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
                 if (LauncherForceClose)
                 {
-                    ErrorCloseLauncher("Closing From API Error");
+                    ErrorCloseLauncher("Closing From API Error", false);
                 }
                 else
                 {

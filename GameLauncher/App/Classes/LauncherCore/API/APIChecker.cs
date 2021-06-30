@@ -241,7 +241,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
                     if (FunctionStatus.LauncherForceClose)
                     {
-                        FunctionStatus.ErrorCloseLauncher("Closing From API Check Error");
+                        FunctionStatus.ErrorCloseLauncher("Closing From API Check Error", false);
                     }
                     else
                     {

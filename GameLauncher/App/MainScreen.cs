@@ -200,7 +200,7 @@ namespace GameLauncher
 
             if (FunctionStatus.LauncherForceClose)
             {
-                FunctionStatus.ErrorCloseLauncher("Closing From SelectServer Dialog");
+                FunctionStatus.ErrorCloseLauncher("Closing From SelectServer Dialog", false);
             }
             else
             {
