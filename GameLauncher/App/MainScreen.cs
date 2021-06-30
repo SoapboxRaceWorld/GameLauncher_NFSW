@@ -1556,10 +1556,9 @@ namespace GameLauncher
                 try
                 {
                     FunctionStatus.TLS();
-                    ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(10).TotalMilliseconds;
+                    ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(30).TotalMilliseconds;
                     WebClient client2 = new WebClient();
                     client2.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-
                     client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged_RELOADED);
                     client2.DownloadFileCompleted += (test, stuff) =>
                     {
@@ -1634,7 +1633,7 @@ namespace GameLauncher
             PlayProgressText.Text = ("Detecting ModNet Support for " + ServerListUpdater.ServerName("ModNet")).ToUpper();
             String jsonModNet = ModNetHandler.ModNetSupported(InformationCache.SelectedServerData.IpAddress);
 
-            if (jsonModNet != String.Empty)
+            if (!String.IsNullOrWhiteSpace(jsonModNet))
             {
                 PlayProgressText.Text = "ModNet support detected, setting up...".ToUpper();
 
@@ -1747,18 +1746,16 @@ namespace GameLauncher
                         EventsList.remoteEventsList = String.Empty;
                     }
 
-                    /* get new index */
+                    /* Get Server Mod Index */
+                    FunctionStatus.TLS();
                     Uri newIndexFile = new Uri(json2.basePath + "/index.json");
                     Log.Core("CORE: Loading Server Mods List");
-                    FunctionStatus.TLS();
+                    ServicePointManager.FindServicePoint(newIndexFile).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     String jsonindex = new WebClient().DownloadString(newIndexFile);
 
                     try
                     {
                         IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
-
-                        int CountFilesTotal = 0;
-                        CountFilesTotal = json3.entries.Count;
 
                         String ModFolderCache = Path.Combine(FileSettingsSave.GameInstallation, "MODS", MDFive.HashPassword(json2.serverID).ToLower());
                         if (!Directory.Exists(ModFolderCache)) Directory.CreateDirectory(ModFolderCache);
