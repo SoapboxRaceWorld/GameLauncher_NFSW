@@ -66,7 +66,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             }
 
             double osVersionInfo = GetWindowsNumber();
-            if (osVersionInfo == 10) return "Windows 10" + BitType;
+            if (osVersionInfo == 11) return "Windows 11" + BitType;
+            else if (osVersionInfo == 10) return "Windows 10" + BitType;
             else if (osVersionInfo == 6.3) return "Windows 8.1" + BitType;
             else if (osVersionInfo == 6.2) return "Windows 8" + BitType;
             else if (osVersionInfo == 6.1) return "Windows 7" + BitType;

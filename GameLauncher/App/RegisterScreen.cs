@@ -37,7 +37,7 @@ namespace GameLauncher.App
 
             List<string> registerErrors = new List<string>();
 
-            if (string.IsNullOrEmpty(RegisterEmail.Text))
+            if (string.IsNullOrWhiteSpace(RegisterEmail.Text))
             {
                 registerErrors.Add("Please enter your e-mail.");
                 RegisterEmailBorder.Image = Theming.BorderEmailError;
@@ -49,19 +49,19 @@ namespace GameLauncher.App
                 RegisterEmailBorder.Image = Theming.BorderEmailError;
             }
 
-            if (string.IsNullOrEmpty(RegisterTicket.Text) && _ticketRequired)
+            if (string.IsNullOrWhiteSpace(RegisterTicket.Text) && _ticketRequired)
             {
                 registerErrors.Add("Please enter your ticket.");
                 RegisterTicketBorder.Image = Theming.BorderTicketError;
             }
 
-            if (string.IsNullOrEmpty(RegisterPassword.Text))
+            if (string.IsNullOrWhiteSpace(RegisterPassword.Text))
             {
                 registerErrors.Add("Please enter your password.");
                 RegisterPasswordBorder.Image = Theming.BorderPasswordError;
             }
 
-            if (string.IsNullOrEmpty(RegisterConfirmPassword.Text))
+            if (string.IsNullOrWhiteSpace(RegisterConfirmPassword.Text))
             {
                 registerErrors.Add("Please confirm your password.");
                 RegisterConfirmPasswordBorder.Image = Theming.BorderPasswordError;
@@ -148,7 +148,7 @@ namespace GameLauncher.App
                         Authentication.Client("Register", "Secure", username, realpass, token);
                     }
 
-                    if (!String.IsNullOrEmpty(Tokens.Success))
+                    if (!String.IsNullOrWhiteSpace(Tokens.Success))
                     {
                         DialogResult Success = MessageBox.Show(null, Tokens.Success, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
@@ -333,7 +333,7 @@ namespace GameLauncher.App
 
             try
             {
-                if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.requireTicket))
+                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.requireTicket))
                 {
                     _ticketRequired = InformationCache.SelectedServerJSON.requireTicket.ToLower() == "true";
                 }
@@ -342,10 +342,7 @@ namespace GameLauncher.App
                     _ticketRequired = false;
                 }
             }
-            catch
-            {
-                _ticketRequired = false;
-            }
+            catch { }
 
             /* Show Ticket Box if its Required  */
             RegisterTicket.Visible = _ticketRequired;
