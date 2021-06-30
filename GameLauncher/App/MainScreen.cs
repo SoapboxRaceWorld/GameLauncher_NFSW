@@ -114,10 +114,6 @@ namespace GameLauncher
                             "Please close the game before closing launcher.", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     y.Cancel = true;
                 }
-                else
-                {
-                    CloseBTN_Click(null, null);
-                }
             };
         }
 
