@@ -63,6 +63,7 @@ namespace GameLauncher
         private int _lastSelectedServerId;
         private int _nfswPid;
         private Thread _nfswstarted;
+        private static int ProcessID = 0;
 
         private DateTime _downloadStartTime;
         private Downloader _downloader;
@@ -105,6 +106,19 @@ namespace GameLauncher
         {
             InitializeComponent();
             SetVisuals();
+            this.Closing += (x, y) =>
+            {
+                if (FunctionStatus.LauncherBattlePass)
+                {
+                    MessageBox.Show(null, "Please close the game before closing launcher.",
+                            "Please close the game before closing launcher.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    y.Cancel = true;
+                }
+                else
+                {
+                    CloseBTN_Click(null, null);
+                }
+            };
         }
 
         private void MainScreen_Load(object sender, EventArgs e)
@@ -1339,7 +1353,8 @@ namespace GameLauncher
             nfswProcess.ProcessorAffinity = (IntPtr)processorAffinity;
 
             AntiCheat.process_id = nfswProcess.Id;
-            int ProcessID = 0;
+            CloseBTN.Visible = false;
+            FunctionStatus.LauncherBattlePass = true;
 
             /* TIMER HERE */
             System.Timers.Timer shutdowntimer = new System.Timers.Timer();
@@ -1359,6 +1374,16 @@ namespace GameLauncher
                     {
                         InformationCache.RestartTimer -= 60;
                     }
+
+                    try
+                    {
+                        this.BeginInvoke((MethodInvoker)delegate
+                        {
+                            WindowState = FormWindowState.Minimized;
+                            ShowInTaskbar = false;
+                        });
+                    }
+                    catch { }
                 }
                 else
                 {
@@ -1464,12 +1489,22 @@ namespace GameLauncher
                     _nfswPid = 0;
                     int exitCode = nfswProcess.ExitCode;
 
+                    FunctionStatus.LauncherBattlePass = false;
+                    try
+                    {
+                        this.BeginInvoke((MethodInvoker)delegate
+                        {
+                            CloseBTN.Visible = true;
+                        });
+                    }
+                    catch { }
+
                     if (FunctionStatus.GameKilledBySpeedBugCheck)
                     {
                         if (FunctionStatus.ExternalToolsWasUsed) exitCode = 2017;
                         else exitCode = 2137;
                     }
-
+                    
                     if (exitCode == 0)
                     {
                         if (AntiCheat.Secret != null)
@@ -1909,29 +1944,11 @@ namespace GameLauncher
                     }
                     else
                     {
-                        int secondsToCloseLauncher = 10;
-
                         ExtractingProgress.Value = 100;
                         ExtractingProgress.Width = 519;
 
-                        while (secondsToCloseLauncher > 0)
-                        {
-                            PlayProgressTextTimer.Text = string.Empty;
-                            PlayProgressText.Text = string.Format("Loading game. Launcher will minimize in {0} seconds.", secondsToCloseLauncher).ToUpper();
-                            Time.SecondsRemaining(1);
-                            secondsToCloseLauncher--;
-                        }
-
-                        if (secondsToCloseLauncher == 0)
-                        {
-                            CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                        }
-
                         PlayProgressTextTimer.Text = string.Empty;
-                        PlayProgressText.Text = string.Empty;
-
-                        WindowState = FormWindowState.Minimized;
-                        ShowInTaskbar = false;
+                        PlayProgressText.Text = "Loading game. Launcher will minimize once Game has Loaded".ToUpper();
 
                         ContextMenu = new ContextMenu();
                         ContextMenu.MenuItems.Add(new MenuItem("Donate", (b, n) => { Process.Start("https://paypal.me/metonator95"); }));

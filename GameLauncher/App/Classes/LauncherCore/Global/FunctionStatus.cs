@@ -104,6 +104,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* Detect and Set System Language */
         public static CultureInfo Lang = CultureInfo.CurrentUICulture;
 
+        /* Prevents Launcher from bring Closed when Game is Loading */
+        public static bool LauncherBattlePass = false;
+
         /* Checks if we have Write Permissions */
         public static bool HasWriteAccessToFolder(string path)
         {
