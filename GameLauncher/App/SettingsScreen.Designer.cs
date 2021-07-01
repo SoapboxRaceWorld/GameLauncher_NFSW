@@ -240,7 +240,6 @@ namespace GameLauncher.App
             // SettingsUEditorButton
             // 
             this.SettingsUEditorButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.SettingsUEditorButton.Enabled = false;
             this.SettingsUEditorButton.FlatAppearance.BorderColor = System.Drawing.Color.DarkGoldenrod;
             this.SettingsUEditorButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.SettingsUEditorButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -253,7 +252,6 @@ namespace GameLauncher.App
             this.SettingsUEditorButton.Text = "Edit UserSettings";
             this.SettingsUEditorButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsUEditorButton.UseVisualStyleBackColor = false;
-            this.SettingsUEditorButton.Visible = false;
             this.SettingsUEditorButton.Click += new System.EventHandler(this.SettingsUEditorButton_Click);
             // 
             // SettingsWordFilterCheck
