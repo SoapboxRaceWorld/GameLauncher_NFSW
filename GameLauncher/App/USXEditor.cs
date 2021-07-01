@@ -226,7 +226,7 @@ namespace GameLauncher.App
 
                 if (comboBoxPerformanceLevel.SelectedIndex == 5)
                 {
-                    Size = new Size(596, 842);
+                    Size = new Size(559, 771);
                     comboResolutions.Visible = false;
 
                     if (AmountofCenterTimes == 0)
@@ -237,7 +237,7 @@ namespace GameLauncher.App
                 }
                 else
                 {
-                    Size = new Size(290, 842);
+                    Size = new Size(286, 771);
 
                     if (ResolutionsListLoaded == true)
                     {
@@ -785,7 +785,7 @@ namespace GameLauncher.App
             labelRoadTexture.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelRoadLODBias.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelRoadAniso.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
-            labelCarModel.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            labelCarEnvMap.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelCDLODBias.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelFilterLvl.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelBTLODBias.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
@@ -911,7 +911,7 @@ namespace GameLauncher.App
             labelRoadTexture.ForeColor = Theming.MainTextForeColor;
             labelRoadLODBias.ForeColor = Theming.MainTextForeColor;
             labelRoadAniso.ForeColor = Theming.MainTextForeColor;
-            labelCarModel.ForeColor = Theming.MainTextForeColor;
+            labelCarEnvMap.ForeColor = Theming.MainTextForeColor;
             labelCDLODBias.ForeColor = Theming.MainTextForeColor;
             labelFilterLvl.ForeColor = Theming.MainTextForeColor;
             labelBTLODBias.ForeColor = Theming.MainTextForeColor;
