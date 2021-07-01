@@ -89,11 +89,11 @@
     <Reference Include="DiscordRPC, Version=1.0.175.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DiscordRichPresence.1.0.175\lib\net35\DiscordRPC.dll</HintPath>
     </Reference>
-    <Reference Include="Flurl, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.3.0.1\lib\net461\Flurl.dll</HintPath>
+    <Reference Include="Flurl, Version=3.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.3.0.2\lib\net461\Flurl.dll</HintPath>
     </Reference>
-    <Reference Include="Flurl.Http, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.Http.3.0.1\lib\net461\Flurl.Http.dll</HintPath>
+    <Reference Include="Flurl.Http, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.Http.3.2.0\lib\net461\Flurl.Http.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -152,17 +152,17 @@
     <Compile Include="App\AddServer.Designer.cs">
       <DependentUpon>AddServer.cs</DependentUpon>
     </Compile>
-    <Compile Include="App\Classes\LauncherCore\AntiCheat.cs" />
-    <Compile Include="App\Classes\LauncherCore\APICheckers\APIStatusChecker.cs" />
-    <Compile Include="App\Classes\LauncherCore\APICheckers\VisualsAPIChecker.cs" />
-    <Compile Include="App\Classes\LauncherCore\Client\Auth\ClassicAuth.cs" />
-    <Compile Include="App\Classes\LauncherCore\Client\Auth\ModernAuth.cs" />
+    <Compile Include="App\Classes\LauncherCore\Client\AntiCheat.cs" />
+    <Compile Include="App\Classes\LauncherCore\API\APIChecker.cs" />
+    <Compile Include="App\Classes\LauncherCore\Client\Auth\Authentication.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\Tokens.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Web\WebRequest.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderAddons.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\Downloader.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileAccountSave.cs" />
+    <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileGameSettingsSave.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileSettingsSave.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\EnumTypes.cs" />
     <Compile Include="App\Classes\LauncherCore\Global\FunctionEvents.cs" />
@@ -172,44 +172,38 @@
     <Compile Include="App\Classes\LauncherCore\LauncherUpdater\UpdaterExecutable.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonCDNList.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonLanguage.cs" />
+    <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonResolutions.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonRootCA.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonServerInfo.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonServerList.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\LanguageListUpdater.cs" />
-    <Compile Include="App\Classes\LauncherCore\ModNet\ModNetLinksCleanup.cs" />
+    <Compile Include="App\Classes\LauncherCore\Lists\ResolutionsListUpdater.cs" />
+    <Compile Include="App\Classes\LauncherCore\ModNet\JSON\JsonServerModNet.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\DiscordLauncherPresense.cs" />
+    <Compile Include="App\Classes\LauncherCore\Support\BitmapHandler.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\Email\IsEmailValid.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\JSON\IsJSONValid.cs" />
+    <Compile Include="App\Classes\LauncherCore\Validator\VerifyTrust\IsExeVerified.cs" />
     <Compile Include="App\Classes\LauncherCore\Visuals\ProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="App\Classes\LauncherCore\Visuals\Theming.cs" />
-    <Compile Include="App\Classes\LauncherCore\Visuals\Time.cs" />
-    <Compile Include="App\Classes\LauncherCore\Visuals\TimeConversions.cs" />
-    <Compile Include="App\Classes\LauncherCore\Visuals\VerticalBanners.cs" />
+    <Compile Include="App\Classes\LauncherCore\Support\Time.cs" />
+    <Compile Include="App\Classes\LauncherCore\Support\TimeConversions.cs" />
+    <Compile Include="App\Classes\LauncherCore\Support\VerticalBanners.cs" />
     <Compile Include="App\Classes\SystemPlatform\Components\HardwareID.cs" />
     <Compile Include="App\Classes\SystemPlatform\Components\HardwareInfo.cs" />
     <Compile Include="App\Classes\SystemPlatform\Linux\DetectLinux.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderCommand.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderException.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\DownloadFailed.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\DownloadFinished.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\DownloadManager.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\HashManager.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\ProgressUpdated.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\ShowExtract.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\ShowMessage.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\UncompressionException.cs" />
-    <Compile Include="App\Classes\LauncherCore\Downloader\VerifyCommand.cs" />
+    <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderHandler.cs" />
+    <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderHashReader.cs" />
     <Compile Include="App\Classes\LauncherCore\LauncherUpdater\UpdaterSchema.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\ExtractResource.cs" />
     <Compile Include="App\Classes\LauncherCore\Hash\MD5.cs" />
     <Compile Include="App\Classes\LauncherCore\Hash\SHA.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\IniFile.cs" />
-    <Compile Include="App\Classes\LauncherCore\InsiderKit\EnableInsider.cs" />
+    <Compile Include="App\Classes\LauncherCore\InsiderKit\KitEnabler.cs" />
     <Compile Include="App\Classes\LauncherCore\Logger\LogToFile.cs" />
-    <Compile Include="App\Classes\LauncherCore\ModNet\ModManager.cs" />
-    <Compile Include="App\Classes\LauncherCore\ModNet\ModNetReloaded.cs" />
+    <Compile Include="App\Classes\LauncherCore\ModNet\ModNetHandler.cs" />
     <Compile Include="App\Classes\SystemPlatform\NativeFunctions.cs" />
     <Compile Include="App\Classes\LauncherCore\LauncherUpdater\Updater.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\NFSW.cs" />
@@ -228,6 +222,7 @@
     <Compile Include="App\Classes\LauncherCore\RPC\DiscordGamePresence.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\EventList.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\CertificateStore.cs" />
+    <Compile Include="App\Classes\SystemPlatform\Windows\ScreenResolutions.cs" />
     <Compile Include="App\RegisterScreen.cs">
       <SubType>Form</SubType>
     </Compile>

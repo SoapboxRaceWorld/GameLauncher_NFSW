@@ -10,19 +10,15 @@ using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists;
 
 namespace GameLauncher.App
 {
     public partial class DebugWindow : Form
     {
-        public string ServerIP = String.Empty;
-        public string ServerName = String.Empty;
-
-        public DebugWindow(string serverIP, string serverName)
+        public DebugWindow()
         {
-            ServerIP = serverIP;
-            ServerName = serverName;
-
             InitializeComponent();
             ApplyEmbeddedFonts();
         }
@@ -77,9 +73,9 @@ namespace GameLauncher.App
         {
             data.AutoGenerateColumns = true;
 
-            string Password = (!String.IsNullOrEmpty(FileAccountSave.UserHashedPassword)) ? "True" : "False";
-            string ProxyStatus = (!String.IsNullOrEmpty(FileSettingsSave.Proxy)) ? "False" : "True";
-            string RPCStatus = (!String.IsNullOrEmpty(FileSettingsSave.RPC)) ? "False" : "True";
+            string Password = (!String.IsNullOrWhiteSpace(FileAccountSave.UserHashedPassword)) ? "True" : "False";
+            string ProxyStatus = (!String.IsNullOrWhiteSpace(FileSettingsSave.Proxy)) ? "False" : "True";
+            string RPCStatus = (!String.IsNullOrWhiteSpace(FileSettingsSave.RPC)) ? "False" : "True";
 
             string Antivirus = String.Empty;
             string Firewall = String.Empty;
@@ -89,9 +85,9 @@ namespace GameLauncher.App
             {
                 try
                 {
-                    Antivirus = (String.IsNullOrEmpty(SecurityCenter("AntiVirusProduct"))) ? "---" : SecurityCenter("AntiVirusProduct");
-                    Firewall = (String.IsNullOrEmpty(SecurityCenter("FirewallProduct"))) ? "Built-In" : SecurityCenter("FirewallProduct");
-                    AntiSpyware = (String.IsNullOrEmpty(SecurityCenter("AntiSpywareProduct"))) ? "---" : SecurityCenter("AntiSpywareProduct");
+                    Antivirus = (String.IsNullOrWhiteSpace(SecurityCenter("AntiVirusProduct"))) ? "---" : SecurityCenter("AntiVirusProduct");
+                    Firewall = (String.IsNullOrWhiteSpace(SecurityCenter("FirewallProduct"))) ? "Built-In" : SecurityCenter("FirewallProduct");
+                    AntiSpyware = (String.IsNullOrWhiteSpace(SecurityCenter("AntiSpywareProduct"))) ? "---" : SecurityCenter("AntiSpywareProduct");
                 }
                 catch
                 {
@@ -161,8 +157,8 @@ namespace GameLauncher.App
                 new ListType{ Name = "Firewall Rule - Launcher", Value =  FileSettingsSave.FirewallLauncherStatus},
                 new ListType{ Name = "Firewall Rule - Game", Value =  FileSettingsSave.FirewallGameStatus},
                 new ListType{ Name = "", Value = "" },
-                new ListType{ Name = "Server Name", Value = ServerName},
-                new ListType{ Name = "Server Address", Value = ServerIP},
+                new ListType{ Name = "Server Name", Value = ServerListUpdater.ServerName("Debug")},
+                new ListType{ Name = "Server Address", Value = InformationCache.SelectedServerData.IpAddress},
                 new ListType{ Name = "CDN Address", Value = FileSettingsSave.CDN},
                 new ListType{ Name = "ProxyPort", Value = ServerProxy.ProxyPort.ToString()},
                 new ListType{ Name = "", Value = "" },
@@ -185,7 +181,7 @@ namespace GameLauncher.App
             }
             settings.AddRange(new[]
             {
-                new ListType{ Name = "HWID", Value = HardwareID.FingerPrint.Value()},
+                new ListType{ Name = "HWID", Value = HardwareID.FingerPrint.Level_One_Value()},
                 new ListType{ Name = "Operating System", Value = OS},
                 new ListType{ Name = "Environment Version", Value = Environment.OSVersion.Version.ToString() },
                 new ListType{ Name = "Screen Resolution", Value = Screen.PrimaryScreen.Bounds.Width + "x" + Screen.PrimaryScreen.Bounds.Height }

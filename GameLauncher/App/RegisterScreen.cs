@@ -1,6 +1,9 @@
 ﻿using GameLauncher.App.Classes.Auth;
 using GameLauncher.App.Classes.Hash;
+using GameLauncher.App.Classes.LauncherCore.Client.Auth;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
@@ -20,6 +23,11 @@ namespace GameLauncher.App
         public RegisterScreen()
         {
             InitializeComponent();
+            DiscordLauncherPresense.Status("Register", ServerListUpdater.ServerName("Register"));
+            this.Closing += (x, y) =>
+            {
+                DiscordLauncherPresense.Status("Idle Ready", null);
+            };
             SetVisuals();
         }
 
@@ -29,31 +37,31 @@ namespace GameLauncher.App
 
             List<string> registerErrors = new List<string>();
 
-            if (string.IsNullOrEmpty(RegisterEmail.Text))
+            if (string.IsNullOrWhiteSpace(RegisterEmail.Text))
             {
                 registerErrors.Add("Please enter your e-mail.");
                 RegisterEmailBorder.Image = Theming.BorderEmailError;
 
             }
-            else if (IsEmailValid.Validate(RegisterEmail.Text) == false)
+            else if (!IsEmailValid.Validate(RegisterEmail.Text))
             {
                 registerErrors.Add("Please enter a valid e-mail address.");
                 RegisterEmailBorder.Image = Theming.BorderEmailError;
             }
 
-            if (string.IsNullOrEmpty(RegisterTicket.Text) && _ticketRequired)
+            if (string.IsNullOrWhiteSpace(RegisterTicket.Text) && _ticketRequired)
             {
                 registerErrors.Add("Please enter your ticket.");
                 RegisterTicketBorder.Image = Theming.BorderTicketError;
             }
 
-            if (string.IsNullOrEmpty(RegisterPassword.Text))
+            if (string.IsNullOrWhiteSpace(RegisterPassword.Text))
             {
                 registerErrors.Add("Please enter your password.");
                 RegisterPasswordBorder.Image = Theming.BorderPasswordError;
             }
 
-            if (string.IsNullOrEmpty(RegisterConfirmPassword.Text))
+            if (string.IsNullOrWhiteSpace(RegisterConfirmPassword.Text))
             {
                 registerErrors.Add("Please confirm your password.");
                 RegisterConfirmPasswordBorder.Image = Theming.BorderPasswordError;
@@ -77,14 +85,17 @@ namespace GameLauncher.App
 
                 try
                 {
-                    WebClient breachCheck = new WebClient();
                     String checkPassword = SHA.HashPassword(RegisterPassword.Text.ToString()).ToUpper();
-
                     var regex = new Regex(@"([0-9A-Z]{5})([0-9A-Z]{35})").Split(checkPassword);
-
                     String range = regex[1];
+
+                    FunctionStatus.TLS();
+                    Uri URLCall = new Uri("https://api.pwnedpasswords.com/range/" + range);
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    WebClient breachCheck = new WebClient();
+
                     String verify = regex[2];
-                    String serverReply = breachCheck.DownloadString("https://api.pwnedpasswords.com/range/" + range);
+                    String serverReply = breachCheck.DownloadString(URLCall);
 
                     string[] hashes = serverReply.Split('\n');
                     foreach (string hash in hashes)
@@ -93,7 +104,8 @@ namespace GameLauncher.App
                         if (splitChecks[0] == verify)
                         {
                             var passwordCheckReply = MessageBox.Show(null, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1]) + 
-                                " times, you should consider using different one.\r\nAlternatively you can use unsafe password anyway. Use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                                " times, you should consider using different one.\n\nAlternatively you can use the unsafe password anyway." +
+                                "\nWould you like to Use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                             if (passwordCheckReply == DialogResult.Yes)
                             {
                                 allowReg = true;
@@ -114,7 +126,7 @@ namespace GameLauncher.App
                     allowReg = true;
                 }
 
-                if (allowReg == true)
+                if (allowReg)
                 {
                     Tokens.Clear();
 
@@ -123,20 +135,20 @@ namespace GameLauncher.App
                     String token = (_ticketRequired) ? RegisterTicket.Text : null;
 
                     Tokens.IPAddress = InformationCache.SelectedServerData.IpAddress;
-                    Tokens.ServerName = InformationCache.SelectedServerData.Name;
+                    Tokens.ServerName = ServerListUpdater.ServerName("Register");
 
                     if (InformationCache.ModernAuthSupport == false)
                     {
                         realpass = SHA.HashPassword(RegisterPassword.Text.ToString()).ToLower();
-                        ClassicAuth.Register(username, realpass, token);
+                        Authentication.Client("Register", "Non Secure", username, realpass, token);
                     }
                     else
                     {
                         realpass = RegisterPassword.Text.ToString();
-                        ModernAuth.Register(username, realpass, token);
+                        Authentication.Client("Register", "Secure", username, realpass, token);
                     }
 
-                    if (!String.IsNullOrEmpty(Tokens.Success))
+                    if (!String.IsNullOrWhiteSpace(Tokens.Success))
                     {
                         DialogResult Success = MessageBox.Show(null, Tokens.Success, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
@@ -152,7 +164,7 @@ namespace GameLauncher.App
                 }
                 else
                 {
-                    var message = "There were some errors while registering, please fix them:\n\n";
+                    var message = "There were some errors while registering. Please fix them:\n\n";
 
                     foreach (var error in registerErrors)
                     {
@@ -317,23 +329,20 @@ namespace GameLauncher.App
             /* Functions                     /
             /********************************/
 
-            CurrentWindowInfo.Text = "REGISTER ON \n" + InformationCache.SelectedServerData.Name.ToUpper();
+            CurrentWindowInfo.Text = "REGISTER ON \n" + ServerListUpdater.ServerName("Register").ToUpper();
 
             try
             {
-                if (string.IsNullOrEmpty(InformationCache.SelectedServerJSON.requireTicket) || InformationCache.SelectedServerJSON.requireTicket == "true")
+                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.requireTicket))
                 {
-                    _ticketRequired = true;
+                    _ticketRequired = InformationCache.SelectedServerJSON.requireTicket.ToLower() == "true";
                 }
                 else
                 {
                     _ticketRequired = false;
                 }
             }
-            catch
-            {
-                _ticketRequired = false;
-            }
+            catch { }
 
             /* Show Ticket Box if its Required  */
             RegisterTicket.Visible = _ticketRequired;

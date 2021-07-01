@@ -11,17 +11,18 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Url = Flurl.Url;
+using UrlFlurl = Flurl.Url;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.LauncherCore.Client;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public class ProxyHandler : IApplicationStartup
     {
-        private UTF8Encoding UTF8 = new UTF8Encoding(false);
+        private readonly UTF8Encoding UTF8 = new UTF8Encoding(false);
 
         public void Initialize(IPipelines pipelines)
         {
@@ -38,6 +39,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 CommunicationLogEntryType.Error,
                 new CommunicationLogLauncherError(exception.Message, context.Request.Path,
                     context.Request.Method));
+            
+            context.Request.Dispose();
             await SubmitError(exception);
 
             return new TextResponse(HttpStatusCode.BadRequest, exception.Message);
@@ -56,15 +59,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             path = path.Substring("/nfsw/Engine.svc".Length);
 
-            Url resolvedUrl = new Url(ServerProxy.Instance.GetServerUrl()).AppendPathSegment(path);
-
+            UrlFlurl resolvedUrl = new UrlFlurl(ServerProxy.Instance.GetServerUrl()).AppendPathSegment(path);
+            FlurlClient Test = new FlurlClient();
             foreach (var queryParamName in context.Request.Query)
             {
                 resolvedUrl = resolvedUrl.SetQueryParam(queryParamName, context.Request.Query[queryParamName],
                     NullValueHandling.Ignore);
             }
 
-            IFlurlRequest request = resolvedUrl.AllowAnyHttpStatus().WithTimeout(TimeSpan.FromSeconds(30));
+            IFlurlRequest request = resolvedUrl.AllowAnyHttpStatus();
+
 
             foreach (var header in context.Request.Headers)
             {
@@ -97,6 +101,20 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             }
 
             var GETContent = string.Join(";", queryParams.Select(x => x.Key + "=" + x.Value).ToArray());
+
+            if (path == "/event/arbitration") 
+            {
+                requestBody = requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + Convert.ToInt32(AntiCheat.cheats_detected) + "</Konami>");
+                foreach (var header in context.Request.Headers) 
+                {
+                    if(header.Key.ToLowerInvariant() == "content-length") 
+                    {
+                        int KonamiCode = Convert.ToInt32(header.Value.First()) + 
+                            ("<Konami>" + Convert.ToInt32(AntiCheat.cheats_detected) + "</Konami>").Length;
+                        request = request.WithHeader(header.Key, KonamiCode);
+                    }
+                }
+            }
 
             switch (method)
             {
@@ -141,17 +159,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 await SubmitError(e);
             }
 
+            TextResponse Response = new TextResponse(responseBody,
+                responseMessage.ResponseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
+            {
+                StatusCode = (HttpStatusCode)statusCode
+            };;
+
             queryParams.Clear();
 
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
                 CommunicationLogEntryType.Response, new CommunicationLogResponse(
                     responseBody, resolvedUrl.ToString(), method));
 
-            return new TextResponse(responseBody,
-                responseMessage.ResponseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
-            {
-                StatusCode = (HttpStatusCode)statusCode
-            }; ;
+            return Response;
         }
 
         private static string CleanFromUnknownChars(string s)
@@ -181,7 +201,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             try
             {
                 var mainsrv = DetectLinux.LinuxDetected() ? URLs.Main.Replace("https", "http") : URLs.Main;
-                Url url = new Url(mainsrv + "/error-report");
+                UrlFlurl url = new UrlFlurl(mainsrv + "/error-report");
                 await url.PostJsonAsync(new
                 {
                     message = exception.Message ?? "no message",

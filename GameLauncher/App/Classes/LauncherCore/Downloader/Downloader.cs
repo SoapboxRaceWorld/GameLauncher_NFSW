@@ -33,7 +33,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
         public static string mCurrentServerVersion = string.Empty;
         private bool mDownloading;
         public int mHashThreads;
-        readonly DownloadManager mDownloadManager;
+        readonly DownloaderHandler mDownloadManager;
         private static XmlDocument mIndexCached = null;
         private static bool mStopFlag = false;
         public static Label label2;
@@ -86,7 +86,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
         {
             this.mHashThreads = hashThreads;
             this.mFE = fe;
-            this.mDownloadManager = new DownloadManager(downloadThreads, downloadChunks);
+            this.mDownloadManager = new DownloaderHandler(downloadThreads, downloadChunks);
         }
 
         public void StartDownload(string indexUrl, string package, string patchPath, bool calculateHashes, bool useIndexCache, int downloadSize)
@@ -198,7 +198,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             string[] array = (string[])parameters;
             string text = array[0];
             string text2 = array[1];
-            if (!string.IsNullOrEmpty(text2))
+            if (!string.IsNullOrWhiteSpace(text2))
             {
                 text = text + "/" + text2;
             }
@@ -243,8 +243,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     this.mDownloadManager.Initialize(indexFile, text);
                     if (flag)
                     {
-                        HashManager.Instance.Clear();
-                        HashManager.Instance.Start(indexFile, text3, text2 + ".hsh", this.mHashThreads);
+                        DownloaderHashReader.Instance.Clear();
+                        DownloaderHashReader.Instance.Start(indexFile, text3, text2 + ".hsh", this.mHashThreads);
                     }
                     int num7 = 0;
                     List<string> list = new List<string>();
@@ -266,7 +266,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                         }
                         num7 = ((num8 > num7) ? num8 : num7);
                         string text4 = xmlNode.SelectSingleNode("path").InnerText;
-                        if (!string.IsNullOrEmpty(text3))
+                        if (!string.IsNullOrWhiteSpace(text3))
                         {
                             int num9 = text4.IndexOf("/");
                             if (num9 >= 0)
@@ -294,7 +294,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                                 i++;
                             }
                         }
-                        else if (!HashManager.Instance.HashesMatch(fileName))
+                        else if (!DownloaderHashReader.Instance.HashesMatch(fileName))
                         {
                             if (i <= num10)
                             {
@@ -351,7 +351,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                         }
                         string text5 = xmlNode2.SelectSingleNode("path").InnerText;
                         string innerText2 = xmlNode2.SelectSingleNode("file").InnerText;
-                        if (!string.IsNullOrEmpty(text3))
+                        if (!string.IsNullOrWhiteSpace(text3))
                         {
                             int num14 = text5.IndexOf("/");
                             if (num14 >= 0)
@@ -372,7 +372,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                             num6 = int.Parse(xmlNode2.SelectSingleNode("section").InnerText);
                         }
                         string text7 = null;
-                        if (xmlNode2.SelectSingleNode("hash") != null && HashManager.Instance.HashesMatch(text6))
+                        if (xmlNode2.SelectSingleNode("hash") != null && DownloaderHashReader.Instance.HashesMatch(text6))
                         {
                             num16 += num15;
                             if (xmlNode3 != null)
@@ -594,7 +594,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                     if (!Downloader.mStopFlag)
                     {
-                        HashManager.Instance.WriteHashCache(text2 + ".hsh", false);
+                        DownloaderHashReader.Instance.WriteHashCache(text2 + ".hsh", false);
                     }
                     if (Downloader.mStopFlag)
                     {
@@ -650,7 +650,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             {
                 if (flag)
                 {
-                    HashManager.Instance.Clear();
+                    DownloaderHashReader.Instance.Clear();
                 }
                 this.mDownloadManager.Clear();
                 GC.Collect();
@@ -663,7 +663,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             string[] array = (string[])parameters;
             string str = array[0].Trim();
             string text = array[1].Trim();
-            if (!string.IsNullOrEmpty(text))
+            if (!string.IsNullOrWhiteSpace(text))
             {
                 str = str + "/" + text;
             }
@@ -691,8 +691,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     webClient.Headers.Add("Accept-Encoding", "gzip,deflate");
                     webClient.Headers.Add("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
                     XmlNodeList xmlNodeList = indexFile.SelectNodes("/index/fileinfo");
-                    HashManager.Instance.Clear();
-                    HashManager.Instance.Start(indexFile, text2, text + ".hsh", this.mHashThreads);
+                    DownloaderHashReader.Instance.Clear();
+                    DownloaderHashReader.Instance.Start(indexFile, text2, text + ".hsh", this.mHashThreads);
                     long num2 = 0L;
                     ulong num3 = 0uL;
                     ulong num4 = 0uL;
@@ -700,7 +700,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     {
                         string text3 = xmlNode.SelectSingleNode("path").InnerText;
                         string innerText = xmlNode.SelectSingleNode("file").InnerText;
-                        if (!string.IsNullOrEmpty(text2))
+                        if (!string.IsNullOrWhiteSpace(text2))
                         {
                             int num5 = text3.IndexOf("/");
                             if (num5 >= 0)
@@ -716,7 +716,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                         int num6 = int.Parse(xmlNode.SelectSingleNode("length").InnerText);
                         if (xmlNode.SelectSingleNode("hash") != null)
                         {
-                            if (!HashManager.Instance.HashesMatch(text4))
+                            if (!DownloaderHashReader.Instance.HashesMatch(text4))
                             {
                                 num3 += ulong.Parse(xmlNode.SelectSingleNode("length").InnerText);
                                 ulong num7;
@@ -770,7 +770,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                     if (flag3)
                     {
-                        HashManager.Instance.WriteHashCache(text + ".hsh", true);
+                        DownloaderHashReader.Instance.WriteHashCache(text + ".hsh", true);
                     }
                     if (flag4)
                     {
@@ -803,7 +803,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             {
                 if (flag2)
                 {
-                    HashManager.Instance.Clear();
+                    DownloaderHashReader.Instance.Clear();
                 }
                 GC.Collect();
             }

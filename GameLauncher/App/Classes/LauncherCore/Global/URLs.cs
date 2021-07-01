@@ -8,7 +8,7 @@
 
         public static string Static = "https://api-sbrw.davidcarbon.download";
 
-        public static string Static_Alt = "https://api2-sbrw.davidcarbon.download";
+        public static string Static_Alt = "http://api2-sbrw.davidcarbon.download";
 
         public static string WOPL = "http://worldonline.pl";
 
@@ -18,21 +18,9 @@
 
         public static string GitHub_Updater = "https://api.github.com/repos/SoapboxRaceWorld/GameLauncherUpdater/releases/latest";
 
-        public static string[] ServerList = new string[]
-        {
-            Main + "/serverlist.json",
-            Static + "/serverlist.json",
-            Static_Alt + "/serverlist.json",
-            WOPL + "/serverlist.json"
-        };
+        public static string OnlineServerList = "http://localhost/serverlist.json";
 
-        public static string[] CDNList = new string[]
-        {
-            Main + "/cdn_list.json",
-            Static + "/cdn_list.json",
-            Static_Alt + "/cdn_list.json",
-            WOPL + "/cdn_list.json"
-        };
+        public static string OnlineCDNList = "http://localhost/cdn_list.json";
 
         public static string[] AntiCheatFD = new string[]
         {

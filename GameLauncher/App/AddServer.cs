@@ -10,6 +10,7 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.Hash;
+using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App
 {
@@ -111,13 +112,13 @@ namespace GameLauncher.App
 
             String wellFormattedURL = "";
 
-            if (IsNullOrEmpty(ServerAddress.Text))
+            if (IsNullOrWhiteSpace(ServerAddress.Text))
             {
                 DrawErrorAroundTextBox(ServerAddress);
                 success = false;
             }
 
-            if (IsNullOrEmpty(ServerName.Text))
+            if (IsNullOrWhiteSpace(ServerName.Text))
             {
                 DrawErrorAroundTextBox(ServerName);
                 success = false;
@@ -142,13 +143,16 @@ namespace GameLauncher.App
 
             try
             {
-                var client = new WebClient();
+                FunctionStatus.TLS();
                 Uri StringToUri = new Uri(wellFormattedURL + "/GetServerInformation");
+                ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                WebClient client = new WebClient();
+                
                 var serverLoginResponse = client.DownloadString(StringToUri);
 
                 GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(serverLoginResponse);
 
-                if (IsNullOrEmpty(json.serverName))
+                if (IsNullOrWhiteSpace(json.serverName))
                 {
                     DrawErrorAroundTextBox(ServerAddress);
                     success = false;

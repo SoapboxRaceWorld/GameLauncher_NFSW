@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
+using System.Net;
 using System.Windows.Forms;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using Microsoft.Win32;
 
@@ -67,36 +70,35 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
     class Redistributable
     {
-        public static async Task CheckAsync()
+        public static void Check()
         {
             if (!DetectLinux.LinuxDetected())
             {
-                await Task.Run(() => Installed());
-            }
-        }
+                DiscordLauncherPresense.Status("Start Up", "Checking Redistributable Package Visual Code 2015 to 2019");
 
-        public static void Installed()
-        {
-            if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
-            {
-                var result = MessageBox.Show(
-                    "You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nThis may restart your computer. \n \nClick OK to install it.",
-                    "Compatibility",
-                    MessageBoxButtons.OKCancel,
-                    MessageBoxIcon.Warning);
-
-                if (result != DialogResult.OK)
+                if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
                 {
-                    MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                    return;
-                }
+                    var result = MessageBox.Show(
+                        "You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nThis may restart your computer. \n \nClick OK to install it.",
+                        "Compatibility",
+                        MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Warning);
 
-                using (WebClientWithTimeout Client = new WebClientWithTimeout())
-                {
+                    if (result != DialogResult.OK)
+                    {
+                        MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                        return;
+                    }
+
                     try
                     {
-                        Client.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x86.exe", "VC_redist.x86.exe");
+                        FunctionStatus.TLS();
+                        Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x86.exe");
+                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                        WebClient Client = new WebClient();
+                        Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        Client.DownloadFile(URLCall, "VC_redist.x86.exe");
                     }
                     catch (Exception error)
                     {
@@ -125,30 +127,32 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                                 MessageBoxIcon.Error);
                     }
                 }
-            }
 
-            if (Environment.Is64BitOperatingSystem == true)
-            {
-                if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x64))
+                if (Environment.Is64BitOperatingSystem == true)
                 {
-                    var result = MessageBox.Show(
-                        "You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nThis may restart your computer. \n \nClick OK to install it.",
-                        "Compatibility",
-                        MessageBoxButtons.OKCancel,
-                        MessageBoxIcon.Warning);
-
-                    if (result != DialogResult.OK)
+                    if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x64))
                     {
-                        MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
-                        return;
-                    }
+                        var result = MessageBox.Show(
+                            "You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nThis may restart your computer. \n \nClick OK to install it.",
+                            "Compatibility",
+                            MessageBoxButtons.OKCancel,
+                            MessageBoxIcon.Warning);
 
-                    using (WebClientWithTimeout Client = new WebClientWithTimeout())
-                    {
+                        if (result != DialogResult.OK)
+                        {
+                            MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                            return;
+                        }
+
                         try
                         {
-                            Client.DownloadFile("https://aka.ms/vs/16/release/VC_redist.x64.exe", "VC_redist.x64.exe");
+                            FunctionStatus.TLS();
+                            Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x64.exe");
+                            ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                            WebClient Client = new WebClient();
+                            Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            Client.DownloadFile(URLCall, "VC_redist.x64.exe");
                         }
                         catch (Exception error)
                         {
@@ -179,6 +183,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     }
                 }
             }
+
+            /* (Start Process) */
+            HardwareID.FingerPrint.Get();
         }
     }
 }

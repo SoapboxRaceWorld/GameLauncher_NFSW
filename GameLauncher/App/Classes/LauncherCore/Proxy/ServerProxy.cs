@@ -6,14 +6,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public class ServerProxy : Singleton<ServerProxy>
     {
-        public static int ProxyPort = new Random().Next(2017, DateTime.Now.Year);
+        public static int ProxyPort;
 
         private string _serverUrl;
         private string _serverName;
         public static NancyHost Host;
 
-        public string GetServerUrl() => _serverUrl;
+        /// <summary>
+        /// Boolean Value on Launcher Proxy if its Running
+        /// </summary>
+        /// <returns>True or False</returns>
+        public static bool Running() => Host != null;
 
+        public string GetServerUrl() => _serverUrl;
         public void SetServerUrl(string serverUrl)
         {
             _serverUrl = serverUrl;
@@ -27,7 +32,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         public void Start(string From)
         {
-            if (Host != null)
+            if (Running())
             {
                 Log.Warning("PROXY: Local Proxy Server Already Running! (" + From + ")");
             }
@@ -51,10 +56,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         public void Stop(string From)
         {
-            if (Host != null)
+            if (Running())
             {
                 Log.Info("PROXY: Local Proxy Server has Shutdown (" + From + ")");
                 Host.Stop();
+                Host.Dispose();
                 Host = null;
             }
             else

@@ -219,8 +219,8 @@ namespace GameLauncher.App
             this.Controls.Add(this.RegisterConfirmPassword);
             this.Controls.Add(this.RegisterAgree);
             this.Controls.Add(this.RegisterConfirmPasswordBorder);
-            this.Controls.Add(this.RegisterTicketBorder);
             this.Controls.Add(this.RegisterTicket);
+            this.Controls.Add(this.RegisterTicketBorder);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "RegisterScreen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

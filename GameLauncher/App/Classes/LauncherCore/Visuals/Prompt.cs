@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using GameLauncher.App.Classes.SystemPlatform.Linux;
+using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
@@ -28,7 +29,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
             prompt.Controls.Add(textLabel);
             prompt.AcceptButton = confirmation;
 
-            return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
+            return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : string.Empty;
         }
     }
 }

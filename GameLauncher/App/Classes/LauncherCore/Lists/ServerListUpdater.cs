@@ -10,6 +10,10 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using System.Globalization;
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using System.Windows.Forms;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
@@ -21,35 +25,37 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
         public static void GetList()
         {
+            DiscordLauncherPresense.Status("Start Up", "Creating Server List");
+
             List<ServerList> serverInfos = new List<ServerList>();
 
-            foreach (var serverListURL in URLs.ServerList)
+            try
             {
+                Log.UrlCall("LIST CORE: Loading Server List from: " + URLs.OnlineServerList);
+                FunctionStatus.TLS();
+                Uri URLCall = new Uri(URLs.OnlineServerList);
+                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                WebClient Client = new WebClient();
+                Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + 
+                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                var response = Client.DownloadString(URLCall);
+                Log.UrlCall("LIST CORE: Loaded Server List from: " + URLs.OnlineServerList);
+
                 try
                 {
-                    Log.UrlCall("LIST CORE: Loading Server List from: " + serverListURL);
-                    var wc = new WebClient();
-                    var response = wc.DownloadString(serverListURL);
-                    Log.UrlCall("LIST CORE: Loaded Server List from: " + serverListURL);
-
-                    try
-                    {
-                        serverInfos.AddRange(
-                            JsonConvert.DeserializeObject<List<ServerList>>(response));
-                        InformationCache.ServerListStatus = "Loaded";
-                        break;
-                    }
-                    catch (Exception error)
-                    {
-                        Log.Error("LIST CORE: Error occurred while deserializing Server List from [" + serverListURL + "]: " + error.Message);
-                        InformationCache.ServerListStatus = "Error";
-                    }
+                    serverInfos.AddRange(JsonConvert.DeserializeObject<List<ServerList>>(response));
+                    InformationCache.ServerListStatus = "Loaded";
                 }
                 catch (Exception error)
                 {
-                    Log.Error("LIST CORE: Error occurred while loading Server List from [" + serverListURL + "]: " + error.Message);
+                    Log.Error("LIST CORE: Error occurred while deserializing Server List from [" + URLs.OnlineServerList + "]: " + error.Message);
                     InformationCache.ServerListStatus = "Error";
                 }
+            }
+            catch (Exception error)
+            {
+                Log.Error("LIST CORE: Error occurred while loading Server List from [" + URLs.OnlineServerList + "]: " + error.Message);
+                InformationCache.ServerListStatus = "Error";
             }
 
             if (File.Exists("servers.json"))
@@ -61,7 +67,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     fileItems.Select(si =>
                     {
                         si.DistributionUrl = "";
-                        si.DiscordPresenceKey = "";
                         si.Id = SHA.HashPassword($"{si.Name}:{si.Id}:{si.IpAddress}");
                         si.IsSpecial = false;
                         si.Category = "CUSTOM";
@@ -77,7 +82,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 {
                     Name = "Offline Built-In Server",
                     Category = "OFFLINE",
-                    DiscordPresenceKey = "",
                     IsSpecial = false,
                     DistributionUrl = "",
                     IpAddress = "http://localhost:4416/sbrw/Engine.svc",
@@ -91,7 +95,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 {
                     Name = "Local Debug Server",
                     Category = "DEBUG",
-                    DiscordPresenceKey = "",
                     IsSpecial = false,
                     DistributionUrl = "",
                     IpAddress = "http://localhost:8680",
@@ -133,6 +136,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     CleanList.Add(CList);
                 }
             }
+
+            /* (Start Process) Check Up to Date Certificate Status */
+            CertificateStore.Latest();
         }
 
         /* Converts 2 Letter Country Code and Returns Full Country Name (In English) */
@@ -150,6 +156,49 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
             }
 
             return "Unknown";
+        }
+
+        /* Server Name */
+        /** Returns a Server Name by first checking if the Server has provided one
+         *  if so use that, otherwise it will see if the ServerList has provide one
+         *  if not then it will see if its a custom server, which will provide "Custom"
+         *  otherwise it will be "uknown" **/
+        public static string ServerName(string State)
+        {
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.serverName))
+            {
+                return InformationCache.SelectedServerJSON.serverName;
+            }
+            else if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerData.Name))
+            {
+                return InformationCache.SelectedServerData.Name;
+            }
+            else if (InformationCache.SelectedServerCategory == "CUSTOM")
+            {
+                if (State == "Register")
+                {
+                    return "Custom Server";
+                }
+                else if (State == "Settings")
+                {
+                    if (FileAccountSave.ChoosenGameServer.StartsWith("https"))
+                    {
+                        return "The Saved Server";
+                    }
+                    else
+                    {
+                        return "The Selected Server";
+                    }
+                }
+                else
+                {
+                    return "Custom";
+                }
+            }
+            else
+            {
+                return "Unknown";
+            }
         }
     }
 }

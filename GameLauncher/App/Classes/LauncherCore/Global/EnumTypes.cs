@@ -37,16 +37,4 @@
         Unknown,
         Null
     }
-
-    /* Used with System Language Function in FunctionStatus.cs
-    /* Or
-    * Other Conditionals */
-    enum SystemLang
-    {
-        English,
-        German,
-        Spanish,
-        Russian,
-        NotSupported
-    }
 }

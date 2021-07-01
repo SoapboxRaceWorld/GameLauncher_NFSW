@@ -3,6 +3,7 @@ using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
 using System;
 using System.Collections.Generic;
 using DiscordButton = DiscordRPC.Button;
@@ -11,18 +12,46 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 {
     class DiscordLauncherPresense
     {
-        /* Discord RPC Client */
+        /// <summary>
+        /// Launcher's Discord RPC Client
+        /// </summary>
+        /// <remarks>Discord RPC Client</remarks>
         public static DiscordRpcClient Client;
 
-        /* User's Discord ID */
+        /// <summary>
+        /// Boolean Value on If RPC is Running
+        /// </summary>
+        /// <returns>True or False</returns>
+        public static bool Running() => Client != null;
+
+        /// <summary>
+        /// User's Discord ID Cache and is Set Once by Startuo or During Operation of Launcher's State
+        /// </summary>
+        /// <remarks>User's Discord ID</remarks>
         public static string UserID = String.Empty;
 
-        /* Discord Presense (To Show Status) */
+        /// <summary>
+        /// Launcher's Discord Presense To Show Statuss
+        /// </summary>
+        /// <remarks>Instance of Discord Presense</remarks>
         public static RichPresence Presence = new RichPresence();
 
-        /* Used to Set Discord Buttons */
+        /// <summary>
+        /// Used to Set Discord Buttons on RPC Status
+        /// </summary>
+        /// <remarks>Instance of Discord Buttons</remarks>
         public static List<DiscordButton> ButtonsList = new List<DiscordButton>();
 
+        /// <summary>
+        /// Used to prevent Displaying RPC when there is an Error (Displays a Simple Error Message in RPC)
+        /// </summary>
+        /// <remarks>Displays Launcher Errors in RPC</remarks>
+        public static bool Download = true;
+
+        /// <summary>
+        /// Sets the current Status of the Launcher's State
+        /// </summary>
+        /// <remarks>RPC Status</remarks>
         public static void Status(string State, string Status)
         {
             ButtonsList.Clear();
@@ -44,40 +73,49 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
                 Presence.Assets = new Assets
                 {
-                    LargeImageText = "SBRW",
+                    LargeImageText = "Launcher",
                     LargeImageKey = "nfsw"
                 };
             }
             else if (State == "Unpack Game Files")
             {
+                Download = true;
                 Presence.State = Status;
                 Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
                 Presence.Assets = new Assets
                 {
-                    LargeImageText = "SBRW",
-                    LargeImageKey = "nfsw"
+                    LargeImageText = "Launcher",
+                    LargeImageKey = "nfsw",
+                    SmallImageText = string.Empty,
+                    SmallImageKey = "files_success"
                 };
                 Presence.Buttons = ButtonsList.ToArray();
             }
             else if (State == "Download Game Files")
             {
+                Download = true;
                 Presence.State = Status;
                 Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
                 Presence.Assets = new Assets
                 {
-                    LargeImageText = "SBRW",
-                    LargeImageKey = "nfsw"
+                    LargeImageText = "Launcher",
+                    LargeImageKey = "nfsw",
+                    SmallImageText = string.Empty,
+                    SmallImageKey = "files"
                 };
                 Presence.Buttons = ButtonsList.ToArray();
             }
             else if (State == "Download Game Files Error")
             {
+                Download = true;
                 Presence.State = "Game Download Error";
                 Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
                 Presence.Assets = new Assets
                 {
-                    LargeImageText = "SBRW",
-                    LargeImageKey = "nfsw"
+                    LargeImageText = "Launcher",
+                    LargeImageKey = "nfsw",
+                    SmallImageText = string.Empty,
+                    SmallImageKey = "files_error"
                 };
                 Presence.Buttons = ButtonsList.ToArray();
             }
@@ -87,159 +125,347 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
                 Presence.Assets = new Assets
                 {
-                    LargeImageText = "SBRW",
-                    LargeImageKey = "nfsw"
+                    LargeImageText = "Launcher",
+                    LargeImageKey = "nfsw",
+                    SmallImageText = string.Empty,
+                    SmallImageKey = !string.IsNullOrWhiteSpace(CertificateStore.LauncherSerial) ? "official" : "unofficial"
+                };
+                Presence.Buttons = ButtonsList.ToArray();
+            }
+            else if (State == "Checking ModNet")
+            {
+                Presence.State = "Checking ModNet";
+                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                Presence.Assets = new Assets
+                {
+                    LargeImageText = "Launcher",
+                    LargeImageKey = "nfsw",
+                    SmallImageText = string.Empty,
+                    SmallImageKey = "files_alert"
+                };
+                Presence.Buttons = ButtonsList.ToArray();
+            }
+            else if (State == "ModNet File Check Passed")
+            {
+                Presence.State = "Has ModNet File: " + Status;
+                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                Presence.Assets = new Assets
+                {
+                    LargeImageText = "Launcher",
+                    LargeImageKey = "nfsw",
+                    SmallImageText = string.Empty,
+                    SmallImageKey = "files_success"
                 };
                 Presence.Buttons = ButtonsList.ToArray();
             }
             else if (State == "Download ModNet")
             {
-                Presence.State = "Checking ModNet Files!";
+                Presence.State = "Downloading ModNet Files";
                 Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
                 Presence.Assets = new Assets
                 {
-                    LargeImageText = "SBRW",
-                    LargeImageKey = "nfsw"
+                    LargeImageText = "Launcher",
+                    LargeImageKey = "nfsw",
+                    SmallImageText = string.Empty,
+                    SmallImageKey = "files"
+                };
+                Presence.Buttons = ButtonsList.ToArray();
+            }
+            else if (State == "Download ModNet Error")
+            {
+                Presence.State = "ModNet Encounterd an Error";
+                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                Presence.Assets = new Assets
+                {
+                    LargeImageText = "Launcher",
+                    LargeImageKey = "nfsw",
+                    SmallImageText = string.Empty,
+                    SmallImageKey = "files_error"
                 };
                 Presence.Buttons = ButtonsList.ToArray();
             }
             else if (State == "Download Server Mods")
             {
-                Presence.State = "Downloading Server Mods!";
+                Presence.State = "Downloading Server Mods";
                 Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
                 Presence.Assets = new Assets
                 {
-                    LargeImageText = "SBRW",
-                    LargeImageKey = "nfsw"
-                };
-                Presence.Buttons = ButtonsList.ToArray();
-            }
-            else if (State == "Verify")
-            {
-                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                Presence.State = "Validating Game Files!";
-                Presence.Assets = new Assets
-                {
-                    LargeImageText = "SBRW",
-                    LargeImageKey = "nfsw"
-                };
-            }
-            else if (State == "In-Game")
-            {
-                Presence.State = InformationCache.SelectedServerData.Name;
-                Presence.Details = "In-Game";
-                Presence.Assets = new Assets
-                {
-                    LargeImageText = "Need for Speed: World",
+                    LargeImageText = "Launcher",
                     LargeImageKey = "nfsw",
-                    SmallImageText = InformationCache.SelectedServerData.Name,
-                    SmallImageKey = Status
+                    SmallImageText = string.Empty,
+                    SmallImageKey = "files"
                 };
-
-                if (!String.IsNullOrEmpty(InformationCache.SelectedServerJSON.homePageUrl) || 
-                    !String.IsNullOrEmpty(InformationCache.SelectedServerJSON.discordUrl) || 
-                    !String.IsNullOrEmpty(InformationCache.SelectedServerJSON.webPanelUrl))
+                Presence.Buttons = ButtonsList.ToArray();
+            }
+            else if (State == "Download Server Mods Error")
+            {
+                Presence.State = "Server Mod Download Error";
+                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                Presence.Assets = new Assets
                 {
-                    ButtonsList.Clear();
-
-                    if (!String.IsNullOrEmpty(InformationCache.SelectedServerJSON.webPanelUrl))
-                    {
-                        /* Let's format it now, if possible */
-                        ButtonsList.Add(new DiscordButton()
-                        {
-                            Label = "View Panel",
-                            Url = InformationCache.SelectedServerJSON.webPanelUrl.Split(new string[] { "{sep}" }, StringSplitOptions.None)[0]
-                        });
-                    }
-                    else if (!String.IsNullOrEmpty(InformationCache.SelectedServerJSON.homePageUrl) && 
-                        InformationCache.SelectedServerJSON.homePageUrl != InformationCache.SelectedServerJSON.discordUrl)
-                    {
-                        ButtonsList.Add(new DiscordButton()
-                        {
-                            Label = "Website",
-                            Url = InformationCache.SelectedServerJSON.homePageUrl
-                        });
-                    }
-
-                    if (!String.IsNullOrEmpty(InformationCache.SelectedServerJSON.discordUrl))
-                    {
-                        ButtonsList.Add(new DiscordButton()
-                        {
-                            Label = "Discord",
-                            Url = InformationCache.SelectedServerJSON.discordUrl
-                        });
-                    }
-                }
-
+                    LargeImageText = "Launcher",
+                    LargeImageKey = "nfsw",
+                    SmallImageText = string.Empty,
+                    SmallImageKey = "files_error"
+                };
                 Presence.Buttons = ButtonsList.ToArray();
             }
 
-            if (Client != null && InformationCache.SelectedServerCategory != "DEV")
+            if (Download == false)
+            {
+                if (State == "Register")
+                {
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.State = "On Registration Screen";
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "screen_register"
+                    };
+                }
+                if (State == "Settings")
+                {
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.State = "On Settings Screen";
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "screen_settings"
+                    };
+                }
+                else if (State == "User XML Editor")
+                {
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.State = "On User XML Editor Screen";
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "screen_uxe"
+                    };
+                }
+                else if (State == "Verify")
+                {
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.State = "On Verify Game Files Screen";
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "screen_verify"
+                    };
+                }
+                else if (State == "Verify Scan")
+                {
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.State = "Verifying Game Files";
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "verify_files_scan"
+                    };
+                }
+                else if (State == "Verify Bad")
+                {
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.State = "Downloaded " + Status + " Missing Game Files";
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "verify_files_bad"
+                    };
+                }
+                else if (State == "Verify Good")
+                {
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.State = "Finished Validating Game Files";
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "verify_files_good"
+                    };
+                }
+                else if (State == "In-Game")
+                {
+                    Presence.State = InformationCache.SelectedServerData.Name;
+                    Presence.Details = "In-Game";
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Need for Speed: World",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "ingame"
+                    };
+
+                    if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.homePageUrl) ||
+                        !String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordUrl) ||
+                        !String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webPanelUrl))
+                    {
+                        ButtonsList.Clear();
+
+                        if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webPanelUrl))
+                        {
+                            /* Let's format it now, if possible */
+                            ButtonsList.Add(new DiscordButton()
+                            {
+                                Label = "View Panel",
+                                Url = InformationCache.SelectedServerJSON.webPanelUrl.Split(new string[] { "{sep}" }, StringSplitOptions.None)[0]
+                            });
+                        }
+                        else if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.homePageUrl) &&
+                            InformationCache.SelectedServerJSON.homePageUrl != InformationCache.SelectedServerJSON.discordUrl)
+                        {
+                            ButtonsList.Add(new DiscordButton()
+                            {
+                                Label = "Website",
+                                Url = InformationCache.SelectedServerJSON.homePageUrl
+                            });
+                        }
+
+                        if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordUrl))
+                        {
+                            ButtonsList.Add(new DiscordButton()
+                            {
+                                Label = "Discord",
+                                Url = InformationCache.SelectedServerJSON.discordUrl
+                            });
+                        }
+                    }
+
+                    Presence.Buttons = ButtonsList.ToArray();
+                }
+            }
+
+            if (Running() && InformationCache.SelectedServerCategory != "DEV")
                 Client.SetPresence(Presence);
         }
 
+        /// <summary>
+        /// Starts Game Launcher's RPC Status. If a Discord Client is Running on the Machine, it will Display the status on the User's Profile.
+        /// </summary>
+        /// <remarks>Displays Launcher and Server Status</remarks>
         public static void Start(string State, string RPCID)
         {
-            if (FileSettingsSave.RPC == "0")
+            try
             {
-                if (State == "Start Up")
+                if (FileSettingsSave.RPC == "0")
                 {
-                    Log.Core("DISCORD: Initializing Rich Presense Core");
-
-                    Client = new DiscordRpcClient(RPCID);
-
-                    Client.OnReady += (sender, e) =>
+                    if (State == "Start Up")
                     {
-                        Log.Info("DISCORD: Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
-                        UserID = e.User.ID.ToString();
-                    };
+                        Log.Core("DISCORD: Initializing Rich Presense Core");
 
-                    Client.OnError += (sender, e) =>
-                    {
-                        Log.Error($"DISCORD: Discord Error\n{e.Message}");
-                    };
+                        Client = new DiscordRpcClient("576154452348633108");
 
-                    Client.Initialize();
-                    Update();
-                }
-                else if (State == "New RPC")
-                {
-                    if (InformationCache.SelectedServerCategory != "DEV")
-                    {
-                        Log.Core("DISCORD: Initializing Rich Presense Core For Server");
+                        Client.OnReady += (sender, e) =>
+                        {
+                            Log.Info("DISCORD: Discord ready. Detected user: " + e.User.Username + ". Discord version: " + e.Version);
+                            UserID = e.User.ID.ToString();
+                        };
 
-                        Stop();
-                        Client = new DiscordRpcClient(RPCID);
+                        Client.OnError += (sender, Error) =>
+                        {
+                            Log.Error("DISCORD: " + Error.Message);
+                        };
+                        Client.SkipIdenticalPresence = true;
+                        Client.ShutdownOnly = true;
+
                         Client.Initialize();
+                        Update();
+                    }
+                    else if (State == "New RPC")
+                    {
+                        if (InformationCache.SelectedServerCategory != "DEV")
+                        {
+                            Log.Core("DISCORD: Initializing Rich Presense Core For Server");
+
+                            Stop("Update");
+                            Client = new DiscordRpcClient(RPCID);
+
+                            Client.OnError += (sender, Error) =>
+                            {
+                                Log.Error("DISCORD: " + Error.Message);
+                            };
+
+                            Client.Initialize();
+                        }
+                        else
+                        {
+                            Stop("Close");
+                        }
                     }
                     else
                     {
-                        Stop();
+                        Log.Error("DISCORD: Unable to Determine The RPC State");
                     }
                 }
                 else
                 {
-                    Log.Error("DISCORD: Unable to Determine The RPC State");
+                    Log.Warning("DISCORD: User Disabled Rich Presense Core From Launcher Settings");
                 }
             }
-            else
+            catch (Exception Error)
             {
-                Log.Warning("DISCORD: User Disabled Rich Presense Core From Launcher Settings");
+                Log.Error("DISCORD: " + Error.Message);
             }
         }
 
+        /// <summary>
+        /// Invokes a new Instance of RPC
+        /// </summary>
+        /// <remarks>Starts a new RPC for Launcher</remarks>
         public static void Update()
         {
-            if (Client != null)
+            if (Running())
                 Client.Invoke();
         }
 
-        public static void Stop()
+        /// <summary>
+        /// Invokes a Stop Command to RPC by Clearing Current Status before Disposing RPC
+        /// </summary>
+        /// <remarks>Clears and Stops RPC</remarks>
+        public static void Stop(string State)
         {
-            if (Client != null)
+            if (Running())
             {
+                if (State == "Close")
+                {
+                    Client.ClearPresence();
+                }
+                
                 Client.Dispose();
                 Client = null;
+            }
+        }
+
+        /// <summary>
+        /// Retives Discord Application ID by first checking the Server JSON, with the Server List being Second, and the Fallback being the Launcher's ID
+        /// </summary>
+        /// <remarks>Server's Discord Application ID</remarks>
+        public static string ApplicationID()
+        {
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordApplicationID))
+            {
+                return InformationCache.SelectedServerJSON.discordApplicationID;
+            }
+            else if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerData.DiscordAppId))
+            {
+                return InformationCache.SelectedServerData.DiscordAppId;
+            }
+            else
+            {
+                return "540651192179752970";
             }
         }
     }

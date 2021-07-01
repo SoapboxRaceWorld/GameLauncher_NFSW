@@ -1,5 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using System;
 using System.Diagnostics;
@@ -34,7 +35,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         {
             if (FunctionStatus.AllowRegistration)
             {
-                if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.webSignupUrl))
+                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webSignupUrl))
                 {
                     Process.Start(InformationCache.SelectedServerJSON.webSignupUrl);
                     MessageBox.Show(null, "A browser window has been opened to complete registration on " + InformationCache.SelectedServerJSON.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -59,31 +60,31 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         public static void DiscordInviteLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.discordUrl))
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordUrl))
                 Process.Start(InformationCache.SelectedServerJSON.discordUrl);
         }
 
         public static void HomePageLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.homePageUrl))
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.homePageUrl))
                 Process.Start(InformationCache.SelectedServerJSON.homePageUrl);
         }
 
         public static void FacebookGroupLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.facebookUrl))
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.facebookUrl))
                 Process.Start(InformationCache.SelectedServerJSON.facebookUrl);
         }
 
         public static void TwitterAccountLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.facebookUrl))
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.facebookUrl))
                 Process.Start(InformationCache.SelectedServerJSON.twitterUrl);
         }
 
         public static void ForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(InformationCache.SelectedServerJSON.webRecoveryUrl))
+            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webRecoveryUrl))
             {
                 Process.Start(InformationCache.SelectedServerJSON.webRecoveryUrl);
                 MessageBox.Show(null, "A browser window has been opened to complete password recovery on " +
@@ -94,94 +95,110 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             {
                 string send = Prompt.ShowDialog("Please specify your email address.", "GameLauncher");
 
-                if (send != String.Empty)
+                if (!string.IsNullOrWhiteSpace(send))
                 {
-                    String responseString;
-                    try
+                    if (!IsEmailValid.Validate(send))
                     {
-                        Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IpAddress + "/RecoveryPassword/forgotPassword");
-
-                        var request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
-                        var postData = "email=" + send;
-                        var data = Encoding.ASCII.GetBytes(postData);
-                        request.Method = "POST";
-                        request.ContentType = "application/x-www-form-urlencoded";
-                        request.ContentLength = data.Length;
-
-                        using (var stream = request.GetRequestStream())
+                        MessageBox.Show(null, "Email Address is not Valid. Please Check and Try Again", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else
+                    {
+                        try
                         {
-                            stream.Write(data, 0, data.Length);
+                            FunctionStatus.TLS();
+                            Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IpAddress + "/RecoveryPassword/forgotPassword");
+                            ServicePointManager.FindServicePoint(resetPasswordUrl).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+
+                            var request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
+                            var postData = "email=" + send;
+                            var data = Encoding.ASCII.GetBytes(postData);
+                            request.Method = "POST";
+                            request.ContentType = "application/x-www-form-urlencoded";
+                            request.ContentLength = data.Length;
+                            request.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+
+                            using (var stream = request.GetRequestStream())
+                            {
+                                stream.Write(data, 0, data.Length);
+                            }
+
+                            var response = (HttpWebResponse)request.GetResponse();
+                            MessageBox.Show(null, new StreamReader(response.GetResponseStream()).ReadToEnd(), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
-
-                        var response = (HttpWebResponse)request.GetResponse();
-                        responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                    }
-                    catch
-                    {
-                        responseString = "Failed to send email!";
-                    }
-
-                    MessageBox.Show(null, responseString, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        catch
+                        {
+                            MessageBox.Show(null, "Failed to send email!", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }                
+                }
+                else
+                {
+                    MessageBox.Show(null, "Email Address can not be Empty. Please Check and Try Again", "GameLauncher", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
 
         public static void ComboBox1_DrawItem(object sender, DrawItemEventArgs e)
         {
-            var font = (sender as ComboBox).Font;
-            Brush backgroundColor;
-            Brush textColor;
-
-            var serverListText = "";
-            int onlineStatus = 2; /* 0 = offline | 1 = online | 2 = checking */
-
-            if (sender is ComboBox cb)
+            try
             {
-                if (cb.Items[e.Index] is ServerList si)
+                var font = (sender as ComboBox).Font;
+                Brush backgroundColor;
+                Brush textColor;
+
+                var serverListText = "";
+                int onlineStatus = 2; /* 0 = offline | 1 = online | 2 = checking */
+
+                if (sender is ComboBox cb)
                 {
-                    serverListText = si.Name;
-                    onlineStatus = InformationCache.ServerStatusBook.ContainsKey(si.Id) ? InformationCache.ServerStatusBook[si.Id] : 2;
+                    if (cb.Items[e.Index] is ServerList si)
+                    {
+                        serverListText = si.Name;
+                        onlineStatus = InformationCache.ServerStatusBook.ContainsKey(si.Id) ? InformationCache.ServerStatusBook[si.Id] : 2;
+                    }
                 }
-            }
 
-            if (serverListText.StartsWith("<GROUP>"))
-            {
-                font = new Font(font, FontStyle.Bold);
-                e.Graphics.FillRectangle(Brushes.White, e.Bounds);
-                e.Graphics.DrawString(serverListText.Replace("<GROUP>", string.Empty), font, Brushes.Black, e.Bounds);
-            }
-            else
-            {
-                font = new Font(font, FontStyle.Regular);
-                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                if (serverListText.StartsWith("<GROUP>"))
                 {
-                    backgroundColor = SystemBrushes.Highlight;
-                    textColor = SystemBrushes.HighlightText;
+                    font = new Font(font, FontStyle.Bold);
+                    e.Graphics.FillRectangle(Brushes.White, e.Bounds);
+                    e.Graphics.DrawString(serverListText.Replace("<GROUP>", string.Empty), font, Brushes.Black, e.Bounds);
                 }
                 else
                 {
-                    if (onlineStatus == 2)
+                    font = new Font(font, FontStyle.Regular);
+                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
                     {
-                        /* CHECKING */
-                        backgroundColor = Brushes.Khaki;
-                    }
-                    else if (onlineStatus == 1)
-                    {
-                        /* ONLINE */
-                        backgroundColor = Brushes.PaleGreen;
+                        backgroundColor = SystemBrushes.Highlight;
+                        textColor = SystemBrushes.HighlightText;
                     }
                     else
                     {
-                        /* OFFLINE */
-                        backgroundColor = Brushes.LightCoral;
+                        if (onlineStatus == 2)
+                        {
+                            /* CHECKING */
+                            backgroundColor = Brushes.Khaki;
+                        }
+                        else if (onlineStatus == 1)
+                        {
+                            /* ONLINE */
+                            backgroundColor = Brushes.PaleGreen;
+                        }
+                        else
+                        {
+                            /* OFFLINE */
+                            backgroundColor = Brushes.LightCoral;
+                        }
+
+                        textColor = Brushes.Black;
                     }
 
-                    textColor = Brushes.Black;
+                    e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                    e.Graphics.DrawString("    " + serverListText, font, textColor, e.Bounds);
                 }
-
-                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                e.Graphics.DrawString("    " + serverListText, font, textColor, e.Bounds);
             }
+            catch { }
         }
     }
 }

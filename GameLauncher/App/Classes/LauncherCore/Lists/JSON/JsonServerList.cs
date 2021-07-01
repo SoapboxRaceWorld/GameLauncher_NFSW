@@ -20,9 +20,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists.JSON
         [JsonProperty("category")]
         public string Category { get; set; }
 
-        [JsonProperty("discord_presence_key")]
-        public string DiscordPresenceKey { get; set; }
-
         [JsonProperty("forceUserAgent")]
         public string ForceUserAgent { get; set; }
 

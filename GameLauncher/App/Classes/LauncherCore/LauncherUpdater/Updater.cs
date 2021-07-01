@@ -7,9 +7,10 @@ using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
-using System.Threading.Tasks;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using System.Net;
+using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -29,87 +30,106 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             description = statusDescription;
         }
 
-        public static async Task Latest()
+        public static void Latest()
         {
-            if (!DetectLinux.LinuxDetected())
-            {
-                await Task.Run(() => Check());
-            }
-        }
+            DiscordLauncherPresense.Status("Start Up", "Checking Latest Launcher Release Information");
 
-        public static void Check()
-        {
-            bool MainAPI = true;
-
-            using (WebClientWithTimeout Client = new WebClientWithTimeout())
+            if (VisualsAPIChecker.UnitedAPI)
             {
                 try
                 {
-                    var json_data = Client.DownloadString(URLs.Main + "/update.php?version=" + Application.ProductVersion);
+                    FunctionStatus.TLS();
+                    Uri URLCall = new Uri(URLs.Main + "/update.php?version=" + Application.ProductVersion);
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    WebClient Client = new WebClient();
+                    Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    var json_data = Client.DownloadString(URLCall);
                     UpdateCheckResponse MAPI = JsonConvert.DeserializeObject<UpdateCheckResponse>(json_data);
 
                     if (MAPI.Payload.LatestVersion != null)
                     {
                         LatestLauncherBuild = MAPI.Payload.LatestVersion;
-                        Log.Info("UPDATER: Latest Version -> " + MAPI.Payload.LatestVersion);
+                        Log.Info("LAUNCHER UPDATE: Latest Version -> " + MAPI.Payload.LatestVersion);
                     }
                 }
                 catch (Exception error)
                 {
-                    MainAPI = false;
-                    Log.Error("LAUNCHER UPDATER: " + error.Message);
+                    Log.Error("LAUNCHER UPDATE: " + error.Message);
                 }
             }
 
-            if (MainAPI != true)
+            if (!VisualsAPIChecker.UnitedAPI)
             {
-                bool GitHubAPI = true;
-
-                using (WebClientWithTimeout Client = new WebClientWithTimeout())
+                try
                 {
-                    try
-                    {
-                        var json_data = Client.DownloadString(URLs.GitHub_Launcher);
-                        GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
+                    FunctionStatus.TLS();
+                    Uri URLCall = new Uri(URLs.GitHub_Launcher);
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    WebClient Client = new WebClient();
+                    Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    var json_data = Client.DownloadString(URLCall);
+                    GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
 
-                        if (GHAPI.TagName != null)
-                        {
-                            LatestLauncherBuild = GHAPI.TagName;
-                            Log.Info("UPDATER: Latest Version -> " + GHAPI.TagName);
-                        }
-                    }
-                    catch (Exception error)
+                    if (GHAPI.TagName != null)
                     {
-                        GitHubAPI = false;
-                        Log.Error("LAUNCHER UPDATER: " + error.Message);
+                        LatestLauncherBuild = GHAPI.TagName;
+                        Log.Info("LAUNCHER UPDATE: GitHub Latest Version -> " + GHAPI.TagName);
                     }
                 }
-
-                if (GitHubAPI != true)
+                catch (Exception error)
                 {
-                    Log.Error("UPDATER: Failed to Retrive Latest Build Information from two APIs ");
+                    VisualsAPIChecker.GitHubAPI = false;
+                    Log.Error("LAUNCHER UPDATE: GitHub " + error.Message);
+                }
+
+                if (!VisualsAPIChecker.GitHubAPI)
+                {
+                    Log.Error("LAUNCHER UPDATE: Failed to Retrive Latest Build Information from two APIs ");
                 }
             }
+
+            /* (End Process) Close Splash Screen */
+            if (Program.IsSplashScreenLive)
+            {
+                Program.SplashScreen.Abort();
+            }
+
+            /* Do First Time Run Checks */
+            FunctionStatus.FirstTimeRun();
         }
 
         public void ChangeVisualStatus()
         {
-            if (!string.IsNullOrEmpty(LatestLauncherBuild))
+            if (!string.IsNullOrWhiteSpace(LatestLauncherBuild))
             {
                 var Revisions = CurrentLauncherBuild.CompareTo(LatestLauncherBuild);
 
                 if (Revisions > 0)
                 {
-                    text.Text = "Launcher Status:\n - Insider Build";
+                    string WhatBuildAmI;
+                    if (EnableInsiderDeveloper.Allowed())
+                    {
+                        WhatBuildAmI = "Developer";
+                    }
+                    else if (EnableInsiderBetaTester.Allowed())
+                    {
+                        WhatBuildAmI = "Beta";
+                    }
+                    else
+                    {
+                        WhatBuildAmI = "Unofficial";
+                    }
+
+                    text.Text = "Launcher Status:\n - " + WhatBuildAmI + " Build";
                     status.BackgroundImage = Theming.UpdateIconWarning;
                     text.ForeColor = Theming.Alert;
                     description.Text = "Version: v" + Application.ProductVersion;
 
-                    if (!string.IsNullOrEmpty(FileSettingsSave.IgnoreVersion))
+                    if (!string.IsNullOrWhiteSpace(FileSettingsSave.IgnoreVersion))
                     {
                         FileSettingsSave.IgnoreVersion = String.Empty;
                         FileSettingsSave.SaveSettings();
-                        Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. You're now on the Insider Build Branch!");
+                        Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. You are currenly using a " + WhatBuildAmI + " Build!");
                     }
                 }
                 else if (Revisions == 0)
@@ -151,6 +171,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                             else
                             {
                                 Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
+                                MessageBox.Show(null, "Opened your Web Browser to the Game Launcher's GitHub Latest Release Page " +
+                                    "to Download the New Version", "GameLauncher", MessageBoxButtons.OK);
                             }
                         };
 
@@ -168,6 +190,13 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     }
                     FileSettingsSave.SaveSettings();
                 }
+            }
+            else if (!VisualsAPIChecker.GitHubAPI)
+            {
+                text.Text = "Launcher Status:\n - API Version Error";
+                status.BackgroundImage = Theming.UpdateIconUnknown;
+                text.ForeColor = Theming.ThirdTextForeColor;
+                description.Text = "Version: v" + Application.ProductVersion;
             }
             else
             {

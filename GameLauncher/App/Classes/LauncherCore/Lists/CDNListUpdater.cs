@@ -25,33 +25,31 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
         {
             List<CDNList> cdnInfos = new List<CDNList>();
 
-            foreach (var cdnListURL in URLs.CDNList)
+            try
             {
+                Log.UrlCall("LIST CORE: Loading CDN List from: " + URLs.OnlineCDNList);
+                FunctionStatus.TLS();
+                Uri URLCall = new Uri(URLs.OnlineCDNList);
+                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                var wc = new WebClient();
+                var responseList = wc.DownloadString(URLCall);
+                Log.UrlCall("LIST CORE: Loaded CDN List from: " + URLs.OnlineCDNList);
+
                 try
                 {
-                    Log.UrlCall("LIST CORE: Loading CDN List from: " + cdnListURL);
-                    var wc = new WebClient();
-                    var responseList = wc.DownloadString(cdnListURL);
-                    Log.UrlCall("LIST CORE: Loaded CDN List from: " + cdnListURL);
-
-                    try
-                    {
-                        cdnInfos.AddRange(
-                            JsonConvert.DeserializeObject<List<CDNList>>(responseList));
-                        InformationCache.CDNListStatus = "Loaded";
-                        break;
-                    }
-                    catch (Exception error)
-                    {
-                        Log.Error("LIST CORE: Error occurred while deserializing CDN List from [" + cdnListURL + "]: " + error.Message);
-                        InformationCache.CDNListStatus = "Error";
-                    }
+                    cdnInfos.AddRange(JsonConvert.DeserializeObject<List<CDNList>>(responseList));
+                    InformationCache.CDNListStatus = "Loaded";
                 }
                 catch (Exception error)
                 {
-                    Log.Error("LIST CORE: Error occurred while loading CDN List from [" + cdnListURL + "]: " + error.Message);
+                    Log.Error("LIST CORE: Error occurred while deserializing CDN List from [" + URLs.OnlineCDNList + "]: " + error.Message);
                     InformationCache.CDNListStatus = "Error";
                 }
+            }
+            catch (Exception error)
+            {
+                Log.Error("LIST CORE: Error occurred while loading CDN List from [" + URLs.OnlineCDNList + "]: " + error.Message);
+                InformationCache.CDNListStatus = "Error";
             }
 
             /* Create Final CDN List without Categories */

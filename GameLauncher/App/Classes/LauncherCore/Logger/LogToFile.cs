@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.LauncherCore.Support;
+using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace GameLauncher.App.Classes.Logger
         private static String filename = String.Empty;
         public Log(String file = "launcher.log") => filename = file;
         public static void StartLogging() => Task.Run(() => TaskKernel());
-        private static void ToFile(string text, string errorname = "DEBUG") => buffer.Enqueue($"[{errorname}] {text}");
+        private static void ToFile(string text, string errorname = "DEBUG") => buffer.Enqueue(Time.GetTime("Time") + " [" + errorname + "] " + text);
         public static void Debug(string text) => ToFile(text, "DEBUG");
         public static void Info(string text) => ToFile(text, " INFO");
         public static void Warning(string text) => ToFile(text, " WARN");
@@ -51,7 +52,8 @@ namespace GameLauncher.App.Classes.Logger
     {
         readonly static ConcurrentQueue<string> buffer = new ConcurrentQueue<string>();
         public static void StartVerifyLogging() => Task.Run(() => VerifyTaskKernel());
-        private static void ToFile(string text, string errorname = "DEBUG") => buffer.Enqueue($"[{errorname}] {text}");
+        private static void ToFile(string text, string errorname = "DEBUG") => buffer.Enqueue(Time.GetTime("Time") + " [" + errorname + "] " + text);
+        public static void Error(string text) => ToFile(text, "   ERROR");
         public static void Info(string text) => ToFile(text, "    INFO");
         public static void Valid(string text) => ToFile(text, "   VAILD");
         public static void Invalid(string text) => ToFile(text, " INVALID");

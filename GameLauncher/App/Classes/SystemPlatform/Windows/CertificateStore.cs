@@ -1,13 +1,17 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust;
 using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Windows
 {
@@ -23,26 +27,29 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         public static string RootCACommonName = "Carbon Crew CA";
         public static string RootCASubjectName = "CN=Carbon Crew CA, OU=Certificate Authority, O=Carbon Crew Productions, C=US";
         public static string RootCASerial = "7449A8EB07C997A6";
+        /* Serial Number of Exe */
+        public static string LauncherSerial;
 
-        public static async Task LatestAsync()
+        /* Retrive CA Information */
+        /// <summary>
+        /// Retrives the Root CA JSON file with the latest details of the Certificate
+        /// </summary>
+        /// <remarks>Sets the Certificate Details For Launcher Comparison</remarks>
+        public static void Latest()
         {
             if (!DetectLinux.LinuxDetected())
             {
-                /* Retrive CA Information */
-                await Task.Run(() => Check());
-                /* Install Custom Root Certificate */
-                Compare();
-            }
-        }
+                DiscordLauncherPresense.Status("Start Up", "Checking Root Certificate Authority");
 
-        public static void Check()
-        {
-            using (WebClientWithTimeout Client = new WebClientWithTimeout())
-            {
                 try
                 {
+                    FunctionStatus.TLS();
+                    Uri URLCall = new Uri("http://crl.carboncrew.org/RCA-Info.json");
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    WebClient Client = new WebClient();
+                    Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                     /* Download Up to Date Certificate Status */
-                    var json_data = Client.DownloadString("http://crl.carboncrew.org/RCA-Info.json");
+                    var json_data = Client.DownloadString(URLCall);
                     JsonRootCA API = JsonConvert.DeserializeObject<JsonRootCA>(json_data);
 
                     if (API.CN != null)
@@ -91,85 +98,100 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 {
                     Log.Error("LAUNCHER UPDATER: " + error.Message);
                 }
-            }
-        }
 
-        public static void Compare()
-        {
-            if (RootCASerial != "7449A8EB07C997A6")
-            {
-                try
+                /* Install Custom Root Certificate (If Default Values aren't used) */
+                if (RootCASerial != "7449A8EB07C997A6")
                 {
-                    X509Store store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
-                    store.Open(OpenFlags.ReadWrite);
-
-                    var certificatesThumbPrint = store.Certificates.Find(X509FindType.FindByThumbprint,
-                        RootCASerial, false);
-
-                    for (int i = 0; i < store.Certificates.Count; i++)
+                    try
                     {
-                        if (store.Certificates[i].SerialNumber == RootCASerial)
+                        X509Store store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
+                        store.Open(OpenFlags.ReadWrite);
+
+                        var certificatesThumbPrint = store.Certificates.Find(X509FindType.FindByThumbprint,
+                            RootCASerial, false);
+
+                        for (int i = 0; i < store.Certificates.Count; i++)
                         {
-                            Log.Info("CERTIFICATE STORE: Found Root CA [" + store.Certificates[i].Subject + "]");
-                            Log.Info("CERTIFICATE STORE: Serial Number [" + store.Certificates[i].SerialNumber + "]");
-                            IsROOTCAInstalled = true;
-                        }
-                        else if (store.Certificates[i].SerialNumber != RootCASerial && store.Certificates[i].Subject == RootCASubjectName)
-                        {
-                            Log.Info("CERTIFICATE STORE: Removing OLD Root CA [" + store.Certificates[i].Subject + "]");
-                            Log.Info("CERTIFICATE STORE: Serial Number [" + store.Certificates[i].SerialNumber + "]");
-                            store.Remove(store.Certificates[i]);
+                            if (store.Certificates[i].SerialNumber == RootCASerial)
+                            {
+                                Log.Info("CERTIFICATE STORE: Found Root CA [" + store.Certificates[i].Subject + "]");
+                                Log.Info("CERTIFICATE STORE: Serial Number [" + store.Certificates[i].SerialNumber + "]");
+                                IsROOTCAInstalled = true;
+                            }
+                            else if (store.Certificates[i].SerialNumber != RootCASerial && store.Certificates[i].Subject == RootCASubjectName)
+                            {
+                                Log.Info("CERTIFICATE STORE: Removing OLD Root CA [" + store.Certificates[i].Subject + "]");
+                                Log.Info("CERTIFICATE STORE: Serial Number [" + store.Certificates[i].SerialNumber + "]");
+                                store.Remove(store.Certificates[i]);
+                            }
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("CERTIFICATE STORE: Failed to Run. " + ex.Message);
-                }
+                    catch (Exception ex)
+                    {
+                        Log.Error("CERTIFICATE STORE: Failed to Run. " + ex.Message);
+                    }
 
-                InstallNewRootCA();
-            }
-            else 
-            {
-                Log.Warning("CERTIFICATE STORE: Default Information was detected. Not running additional Function Calls");
-            }
-        }
+                    string CertSaveLocation = AppDomain.CurrentDomain.BaseDirectory + RootCAFileName + ".cer";
 
-        private static void InstallNewRootCA()
-        {
-            string CertSaveLocation = AppDomain.CurrentDomain.BaseDirectory + RootCAFileName + ".cer";
+                    try
+                    {
+                        if (IsROOTCAInstalled == false)
+                        {
+                            FunctionStatus.TLS();
+                            Uri URLCall = new Uri(RootCAFileURL);
+                            ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                            WebClient Client = new WebClient();
+                            Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            Client.DownloadFile(URLCall, CertSaveLocation);
 
-            try
-            {
-                if (IsROOTCAInstalled == false)
-                {
-                    WebClient webClient = new WebClient();
-                    webClient.DownloadFile(RootCAFileURL, CertSaveLocation);
-
-                    X509Store store = new X509Store(StoreName.Root,
-                    StoreLocation.LocalMachine);
-                    store.Open(OpenFlags.ReadWrite);
-                    X509Certificate2Collection collection = new X509Certificate2Collection();
-                    X509Certificate2 cert = new X509Certificate2(CertSaveLocation);
-                    byte[] encodedCert = cert.GetRawCertData();
-                    Log.Info("CERTIFICATE STORE: We are now installing [" + RootCACommonName + "] certificate into the Trusted Root Certificate store ...");
-                    store.Add(cert);
-                    Log.Info("CERTIFICATE STORE: Done! [" + RootCACommonName + "] certificate was installed successfully.");
-                    store.Close();
+                            X509Store store = new X509Store(StoreName.Root,
+                            StoreLocation.LocalMachine);
+                            store.Open(OpenFlags.ReadWrite);
+                            X509Certificate2Collection collection = new X509Certificate2Collection();
+                            X509Certificate2 cert = new X509Certificate2(CertSaveLocation);
+                            byte[] encodedCert = cert.GetRawCertData();
+                            Log.Info("CERTIFICATE STORE: We are now installing [" + RootCACommonName + "] certificate into the Trusted Root Certificate store ...");
+                            store.Add(cert);
+                            Log.Info("CERTIFICATE STORE: Done! [" + RootCACommonName + "] certificate was installed successfully.");
+                            store.Close();
+                        }
+                        else
+                        {
+                            if (File.Exists(CertSaveLocation))
+                            {
+                                Log.Info("CERTIFICATE STORE: Removed [" + RootCACommonName + "] certificate from launcher folder.");
+                                File.Delete(CertSaveLocation);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("CERTIFICATE STORE: Failed to Install. " + ex.Message);
+                    }
                 }
                 else
                 {
-                    if (File.Exists(CertSaveLocation))
-                    {
-                        Log.Info("CERTIFICATE STORE: Removed [" + RootCACommonName + "] certificate from launcher folder.");
-                        File.Delete(CertSaveLocation);
-                    }
+                    Log.Warning("CERTIFICATE STORE: Default Information was detected. Not running additional Function Calls");
                 }
             }
-            catch (Exception ex)
+
+            try
             {
-                Log.Error("CERTIFICATE STORE: Failed to Install. " + ex.Message);
+                Assembly assembly = Assembly.LoadFrom(Application.ExecutablePath);
+                Module module = assembly.GetModules().First();
+                X509Certificate certificate = module.GetSignerCertificate();
+                if (certificate != null)
+                {
+                    LauncherSerial = certificate.GetSerialNumberString();
+                }
             }
+            catch (Exception error)
+            {
+                Log.Error("CERTIFICATE CHECK: " + error.Message);
+            }
+
+            /* (Start Process) Check if Launcher Is Signed or Not */
+            IsExeVerified.Check();
         }
     }
 }

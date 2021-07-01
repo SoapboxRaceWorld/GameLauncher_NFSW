@@ -13,6 +13,8 @@ namespace GameLauncher.App
     public partial class About : Form
     {
         private readonly List<AboutNoteBlock> patchNoteBlocks = new List<AboutNoteBlock>();
+        private static readonly string AboutXMLRevision = "2.1.8.A";
+        private static readonly string AboutXML = "/Launcher/SBRW/Official/" + AboutXMLRevision + "/about.xml";
 
         public About()
         {
@@ -94,8 +96,9 @@ namespace GameLauncher.App
         {
             try
             {
+                FunctionStatus.TLS();
                 XmlDocument doc = new XmlDocument();
-                doc.Load(URLs.Static_Alt + "/about.xml");
+                doc.Load(URLs.Static_Alt + AboutXML);
 
                 foreach (XmlNode node in doc.DocumentElement)
                 {

@@ -1,8 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using GameLauncher.App.Classes.Logger;
 using Nancy;
 using Nancy.Bootstrapper;
 
@@ -10,6 +8,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
     public class NancyGzipCompression : IApplicationStartup
     {
+        public static MemoryStream content = null;
+
         public void Initialize(IPipelines pipelines)
         {
             pipelines.AfterRequest += CheckForCompression;
@@ -17,48 +17,40 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         private static void CheckForCompression(NancyContext context)
         {
-            try
+            if (!RequestIsGzipCompatible(context.Request))
             {
-                if (!RequestIsGzipCompatible(context.Request))
-                {
-                    return;
-                }
+                return;
+            }
 
-                CompressResponse(context.Response);
-            }
-            catch (Exception error)
-            {
-                Log.Error("PROXY: " + error.Message);
-            }
+            CompressResponse(context.Response);
         }
 
         private static void CompressResponse(Response response)
         {
-            try
+            if (content != null)
             {
-                response.Headers["Content-Encoding"] = "gzip";
-                response.Headers["Connection"] = "close";
+                /* Dispose Current Memory */
+                content.Dispose();
+            }
 
-                /* Ask System to Allocate Memory */
-                var content = new MemoryStream();
-                /* Response Contents is now feed into Allocated Memory */
-                response.Contents(content);
-                /* Set Position for data in Allocated Memory */
-                content.Position = 0;
-                /* Read the Contents from Allocated Memory */
-                response.Contents = responseStream =>
-                {
-                    using (var gzip = new GZipStream(responseStream, CompressionMode.Compress, true))
-                    {
-                        /* Instead of Feeding content Raw (Which can potentially cause OoM) Lets read it from Allocated Memory */
-                        gzip.Write(content.ToArray(), 0, (int)content.Length);
-                    }
-                };
-            }
-            catch (Exception error)
+            response.Headers["Content-Encoding"] = "gzip";
+            response.Headers["Connection"] = "close";
+
+            /* Ask System to Allocate Memory */
+            content = new MemoryStream();
+            /* Response Contents is now feed into Allocated Memory */
+            response.Contents(content);
+            /* Set Position for data in Allocated Memory */
+            content.Position = 0;
+            /* Read the Contents from Allocated Memory */
+            response.Contents = responseStream =>
             {
-                Log.Error("PROXY: " + error.Message);
-            }
+                using (var gzip = new GZipStream(responseStream, CompressionMode.Compress, true))
+                {
+                    /* Instead of Feeding content Raw (Which can potentially cause OoM) Lets read it from Allocated Memory */
+                    gzip.Write(content.ToArray(), 0, (int)content.Length);
+                }
+            };
 
             /* Different Solutions With Different OoM Errors */
             /* https://gist.github.com/DavidCarbon/e0b37e7bc58b5e1a46f6dfedc87c966d */
