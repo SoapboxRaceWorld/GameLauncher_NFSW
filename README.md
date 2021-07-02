@@ -3,6 +3,7 @@ A Rewrite of GameLauncher taken from Need For Speed: World
 
 ## Features
 - [X] Game Client Downloader
+- [X] UserSettings.xml Editor
 - [X] Game Files Validator
 - [X] Firewall Checker
 - [X] Windows Defender (Windows 10 Only)
@@ -12,3 +13,4 @@ A Rewrite of GameLauncher taken from Need For Speed: World
 ### Screenshot
 ![](screenshot.png)
 ![](screenshot2.png)
+![](screenshot3.png)
