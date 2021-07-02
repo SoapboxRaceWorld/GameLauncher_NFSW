@@ -103,7 +103,7 @@ namespace GameLauncher.App
                     comboBoxShaderDetail.SelectedIndex = 1;
 
                     SetCorrectElementValues("BaseTextureLODBias", "0");
-                    SetCorrectElementValues("CarEnvironmentMapEnable", "0");
+                    SetCorrectElementValues("CarEnvironmentMapEnable", "1");
                     SetCorrectElementValues("MaxSkidMarks", "0");
                     SetCorrectElementValues("RoadTextureLODBias", "0");
                     SetCorrectElementValues("MotionBlurEnable", "0");
@@ -130,7 +130,7 @@ namespace GameLauncher.App
                     comboBoxShaderDetail.SelectedIndex = 1;
 
                     SetCorrectElementValues("BaseTextureLODBias", "0");
-                    SetCorrectElementValues("CarEnvironmentMapEnable", "1");
+                    SetCorrectElementValues("CarEnvironmentMapEnable", "2");
                     SetCorrectElementValues("MaxSkidMarks", "1");
                     SetCorrectElementValues("RoadTextureLODBias", "0");
                     SetCorrectElementValues("MotionBlurEnable", "0");
@@ -157,7 +157,7 @@ namespace GameLauncher.App
                     comboBoxShaderDetail.SelectedIndex = 3;
 
                     SetCorrectElementValues("BaseTextureLODBias", "0");
-                    SetCorrectElementValues("CarEnvironmentMapEnable", "1");
+                    SetCorrectElementValues("CarEnvironmentMapEnable", "2");
                     SetCorrectElementValues("MaxSkidMarks", "2");
                     SetCorrectElementValues("RoadTextureLODBias", "0");
                     SetCorrectElementValues("MotionBlurEnable", "0");
@@ -184,7 +184,7 @@ namespace GameLauncher.App
                     comboBoxShaderDetail.SelectedIndex = 4;
 
                     SetCorrectElementValues("BaseTextureLODBias", "0");
-                    SetCorrectElementValues("CarEnvironmentMapEnable", "1");
+                    SetCorrectElementValues("CarEnvironmentMapEnable", "3");
                     SetCorrectElementValues("MaxSkidMarks", "2");
                     SetCorrectElementValues("RoadTextureLODBias", "0");
                     SetCorrectElementValues("MotionBlurEnable", "0");
@@ -201,7 +201,7 @@ namespace GameLauncher.App
                     /* Custom */
                     comboBoxBaseTextureFilter.SelectedIndex = CheckValidRange("BaseTextureFilter", "0-2", FileGameSettingsData.BaseTextureFilter);
                     comboBoxAnisotropicLevel.SelectedIndex = CheckValidRange("AnisotropicLevel", "0-4", FileGameSettingsData.BaseTextureMaxAni);
-                    comboBoxCarEnvironmentDetail.SelectedIndex = CheckValidRange("CarEnvironmentDetail", "0-4", FileGameSettingsData.CarLODLevel);
+                    comboBoxCarEnvironmentDetail.SelectedIndex = CheckValidRange("CarEnvironmentDetail", "0-4", FileGameSettingsData.CarEnvironmentMapEnable);
                     comboBoxWorldGlobalDetail.SelectedIndex = CheckValidRange("WorldGlobalDetail", "0-4", FileGameSettingsData.GlobalDetailLevel);
                     comboBoxWorldRoadReflection.SelectedIndex = CheckValidRange("WorldRoadReflection", "0-2", FileGameSettingsData.RoadReflectionEnable);
                     comboBoxWorldRoadTexture.SelectedIndex = CheckValidRange("WorldRoadTexture", "0-2", FileGameSettingsData.RoadTextureFilter);
@@ -274,7 +274,7 @@ namespace GameLauncher.App
             FileGameSettingsData.EnableAero = (radioAeroOff.Checked == true) ? "0" : "1";
             FileGameSettingsData.ScreenWindowed = (radioWindowedOff.Checked == true) ? "0" : "1";
             FileGameSettingsData.Damage = (radioDamageOn.Checked == true) ? "0" : "1";
-            FileGameSettingsData.SpeedUnits = (radioKPH.Checked == true) ? "0" : "1";
+            FileGameSettingsData.SpeedUnits = (radioKmH.Checked == true) ? "0" : "1";
 
             FileGameSettingsData.Transmission = comboBoxTransmisson.SelectedValue.ToString();
             FileGameSettingsData.AudioMode = comboAudioMode.SelectedValue.ToString();
@@ -802,8 +802,8 @@ namespace GameLauncher.App
             radioAQHigh.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             radioDamageOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             radioDamageOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
-            radioKPH.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
-            radioMPH.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            radioKmH.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            radioMpH.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             radioMotionBlurOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             radioMotionBlurOff.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             radioOverBrightOn.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
@@ -928,8 +928,8 @@ namespace GameLauncher.App
             radioAQHigh.ForeColor = Theming.MainTextForeColor;
             radioDamageOn.ForeColor = Theming.MainTextForeColor;
             radioDamageOff.ForeColor = Theming.MainTextForeColor;
-            radioKPH.ForeColor = Theming.MainTextForeColor;
-            radioMPH.ForeColor = Theming.MainTextForeColor;
+            radioKmH.ForeColor = Theming.MainTextForeColor;
+            radioMpH.ForeColor = Theming.MainTextForeColor;
             radioMotionBlurOn.ForeColor = Theming.MainTextForeColor;
             radioMotionBlurOff.ForeColor = Theming.MainTextForeColor;
             radioOverBrightOn.ForeColor = Theming.MainTextForeColor;
@@ -1262,11 +1262,11 @@ namespace GameLauncher.App
 
             if (FileGameSettingsData.SpeedUnits == "0")
             {
-                radioKPH.Checked = true;
+                radioKmH.Checked = true;
             }
             else
             {
-                radioMPH.Checked = true;
+                radioMpH.Checked = true;
             }
 
             string SavedResolution = FileGameSettingsData.ScreenWidth + "x" + FileGameSettingsData.ScreenHeight;

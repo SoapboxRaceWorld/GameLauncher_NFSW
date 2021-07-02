@@ -125,8 +125,8 @@ namespace GameLauncher.App
             this.numericResHeight = new System.Windows.Forms.NumericUpDown();
             this.panelSpeedUnits = new System.Windows.Forms.Panel();
             this.labelGPOUnits = new System.Windows.Forms.Label();
-            this.radioKPH = new System.Windows.Forms.RadioButton();
-            this.radioMPH = new System.Windows.Forms.RadioButton();
+            this.radioKmH = new System.Windows.Forms.RadioButton();
+            this.radioMpH = new System.Windows.Forms.RadioButton();
             this.panelVisualDamage = new System.Windows.Forms.Panel();
             this.labelGPODamage = new System.Windows.Forms.Label();
             this.radioDamageOn = new System.Windows.Forms.RadioButton();
@@ -1432,8 +1432,8 @@ namespace GameLauncher.App
             // 
             this.panelSpeedUnits.BackColor = System.Drawing.Color.Transparent;
             this.panelSpeedUnits.Controls.Add(this.labelGPOUnits);
-            this.panelSpeedUnits.Controls.Add(this.radioKPH);
-            this.panelSpeedUnits.Controls.Add(this.radioMPH);
+            this.panelSpeedUnits.Controls.Add(this.radioKmH);
+            this.panelSpeedUnits.Controls.Add(this.radioMpH);
             this.panelSpeedUnits.Location = new System.Drawing.Point(16, 639);
             this.panelSpeedUnits.Name = "panelSpeedUnits";
             this.panelSpeedUnits.Size = new System.Drawing.Size(242, 24);
@@ -1452,33 +1452,33 @@ namespace GameLauncher.App
             this.labelGPOUnits.Text = "Speed Units:";
             this.labelGPOUnits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // radioKPH
+            // radioKmH
             // 
-            this.radioKPH.AutoSize = true;
-            this.radioKPH.BackColor = System.Drawing.Color.Transparent;
-            this.radioKPH.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioKPH.Location = new System.Drawing.Point(125, 2);
-            this.radioKPH.Name = "radioKPH";
-            this.radioKPH.Size = new System.Drawing.Size(52, 18);
-            this.radioKPH.TabIndex = 30;
-            this.radioKPH.TabStop = true;
-            this.radioKPH.Tag = "UnitsKPH";
-            this.radioKPH.Text = "Kp/H";
-            this.radioKPH.UseVisualStyleBackColor = false;
+            this.radioKmH.AutoSize = true;
+            this.radioKmH.BackColor = System.Drawing.Color.Transparent;
+            this.radioKmH.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioKmH.Location = new System.Drawing.Point(125, 2);
+            this.radioKmH.Name = "radioKmH";
+            this.radioKmH.Size = new System.Drawing.Size(55, 18);
+            this.radioKmH.TabIndex = 30;
+            this.radioKmH.TabStop = true;
+            this.radioKmH.Tag = "UnitsKMH";
+            this.radioKmH.Text = "Km/H";
+            this.radioKmH.UseVisualStyleBackColor = false;
             // 
-            // radioMPH
+            // radioMpH
             // 
-            this.radioMPH.AutoSize = true;
-            this.radioMPH.BackColor = System.Drawing.Color.Transparent;
-            this.radioMPH.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioMPH.Location = new System.Drawing.Point(182, 2);
-            this.radioMPH.Name = "radioMPH";
-            this.radioMPH.Size = new System.Drawing.Size(55, 18);
-            this.radioMPH.TabIndex = 31;
-            this.radioMPH.TabStop = true;
-            this.radioMPH.Tag = "UnitsMPH";
-            this.radioMPH.Text = "Mp/H";
-            this.radioMPH.UseVisualStyleBackColor = false;
+            this.radioMpH.AutoSize = true;
+            this.radioMpH.BackColor = System.Drawing.Color.Transparent;
+            this.radioMpH.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioMpH.Location = new System.Drawing.Point(182, 2);
+            this.radioMpH.Name = "radioMpH";
+            this.radioMpH.Size = new System.Drawing.Size(55, 18);
+            this.radioMpH.TabIndex = 31;
+            this.radioMpH.TabStop = true;
+            this.radioMpH.Tag = "UnitsMpH";
+            this.radioMpH.Text = "Mp/H";
+            this.radioMpH.UseVisualStyleBackColor = false;
             // 
             // panelVisualDamage
             // 
@@ -2110,8 +2110,8 @@ namespace GameLauncher.App
         private System.Windows.Forms.PictureBox ingameVideoOptions;
         private System.Windows.Forms.Panel panelSpeedUnits;
         private System.Windows.Forms.Label labelGPOUnits;
-        private System.Windows.Forms.RadioButton radioKPH;
-        private System.Windows.Forms.RadioButton radioMPH;
+        private System.Windows.Forms.RadioButton radioKmH;
+        private System.Windows.Forms.RadioButton radioMpH;
         private System.Windows.Forms.Panel panelVisualDamage;
         private System.Windows.Forms.Label labelGPODamage;
         private System.Windows.Forms.RadioButton radioDamageOn;
