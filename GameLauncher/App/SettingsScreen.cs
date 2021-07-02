@@ -620,7 +620,6 @@ namespace GameLauncher.App
                 Log.Error("SETTINGS: Selected CDN does not contain a URL, Unable to Save Contents");
             }
 
-            
             String disableProxy = (SettingsProxyCheckbox.Checked == true) ? "1" : "0";
             if (FileSettingsSave.Proxy != disableProxy)
             {
@@ -676,13 +675,20 @@ namespace GameLauncher.App
             }
 
             /* Delete/Enable profwords filter here */
-            if (SettingsWordFilterCheck.Checked)
+            try
             {
-                if (File.Exists(FileSettingsSave.GameInstallation + "/profwords")) File.Move(FileSettingsSave.GameInstallation + "/profwords", FileSettingsSave.GameInstallation + "/profwords_dis");
+                if (SettingsWordFilterCheck.Checked)
+                {
+                    if (File.Exists(FileSettingsSave.GameInstallation + "/profwords")) File.Move(FileSettingsSave.GameInstallation + "/profwords", FileSettingsSave.GameInstallation + "/profwords_dis");
+                }
+                else
+                {
+                    if (File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis")) File.Move(FileSettingsSave.GameInstallation + "/profwords_dis", FileSettingsSave.GameInstallation + "/profwords");
+                }
             }
-            else
+            catch (Exception Error)
             {
-                if (File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis")) File.Move(FileSettingsSave.GameInstallation + "/profwords_dis", FileSettingsSave.GameInstallation + "/profwords");
+                Log.Error("SETTINGS SAVE:" + Error.Message);
             }
 
             /* Create Custom Settings.ini for LangPicker.asi module */
@@ -690,17 +696,28 @@ namespace GameLauncher.App
             {
                 if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) 
                 {
-                    Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
+                    try
+                    {
+                        Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
+                    }
+                    catch {}
                 }
-
-                IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
-                LanguagePickerFile.Write("Language", ((LangObject)SettingsLanguage.SelectedItem).INI_Value);
-            } 
-            else 
+                try
+                {
+                    IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                    LanguagePickerFile.Write("Language", ((LangObject)SettingsLanguage.SelectedItem).INI_Value);
+                }
+                catch {}
+            }
+            else
             {
                 if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini")) 
                 {
-                    File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                    try
+                    {
+                        File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                    }
+                    catch{}
                 }
             }
 
