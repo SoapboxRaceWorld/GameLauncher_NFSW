@@ -6,6 +6,7 @@ using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
 using System.Diagnostics;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
@@ -226,7 +227,14 @@ namespace GameLauncher.App
 
                 if (comboBoxPerformanceLevel.SelectedIndex == 5)
                 {
-                    Size = new Size(559, 771);
+                    if (WindowsProductVersion.GetWindowsNumber() >= 10)
+                    {
+                        Size = new Size(564, 726);
+                    }
+                    else
+                    {
+                        Size = new Size(554, 712);
+                    }
                     comboResolutions.Visible = false;
 
                     if (AmountofCenterTimes == 0)
@@ -237,7 +245,15 @@ namespace GameLauncher.App
                 }
                 else
                 {
-                    Size = new Size(286, 771);
+                    if (WindowsProductVersion.GetWindowsNumber() >= 10)
+                    {
+                        Size = new Size(292, 726);
+                    }
+                    else
+                                        {
+                        Size = new Size(282, 712);
+                    }
+
 
                     if (ResolutionsListLoaded == true)
                     {
