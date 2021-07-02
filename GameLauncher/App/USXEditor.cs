@@ -250,7 +250,7 @@ namespace GameLauncher.App
                         Size = new Size(292, 726);
                     }
                     else
-                                        {
+                    {
                         Size = new Size(282, 712);
                     }
 

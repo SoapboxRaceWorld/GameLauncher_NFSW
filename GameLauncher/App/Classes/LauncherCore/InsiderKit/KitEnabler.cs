@@ -40,7 +40,7 @@
     /* This is only used for Beta Testers (Treated like a Public Release) */
     class EnableInsiderBetaTester
     {
-        public static bool Enabled = true;
+        public static bool Enabled = false;
 
         public static bool Allowed()
         {
