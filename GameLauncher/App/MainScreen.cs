@@ -1944,7 +1944,17 @@ namespace GameLauncher
                         ExtractingProgress.Width = 519;
 
                         PlayProgressTextTimer.Text = string.Empty;
-                        PlayProgressText.Text = "Loading game. Launcher will minimize once Game has Loaded".ToUpper();
+                        if (this.PlayProgressText.InvokeRequired)
+                        {
+                            PlayProgressText.Invoke(new Action(delegate ()
+                            {
+                                PlayProgressText.Text = Text = "Loading game. Launcher will minimize once Game has Loaded".ToUpper();
+                            }));
+                        }
+                        else
+                        {
+                            PlayProgressText.Text = "Loading game. Launcher will minimize once Game has Loaded".ToUpper();
+                        }
 
                         ContextMenu = new ContextMenu();
                         ContextMenu.MenuItems.Add(new MenuItem("Donate", (b, n) => { Process.Start("https://paypal.me/metonator95"); }));

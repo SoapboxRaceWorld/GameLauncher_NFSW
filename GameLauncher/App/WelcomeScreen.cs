@@ -134,10 +134,9 @@ namespace GameLauncher.App
 
         private void CheckListStatus()
         {
-            if (!VisualsAPIChecker.UnitedAPI)
+            if (VisualsAPIChecker.UnitedAPI)
             {
                 ListStatusText.Text = "United List - Online";
-                StatusCheck = true;
             }
             
             if (!VisualsAPIChecker.UnitedAPI)
@@ -145,7 +144,6 @@ namespace GameLauncher.App
                 if (VisualsAPIChecker.CarbonAPI)
                 {
                     ListStatusText.Text = "Carbon List - Online";
-                    StatusCheck = true;
                 }
             }
 
@@ -154,7 +152,6 @@ namespace GameLauncher.App
                 if (VisualsAPIChecker.CarbonAPITwo)
                 {
                     ListStatusText.Text = "Carbon 2nd List - Online";
-                    StatusCheck = true;
                 }
             }
 
@@ -163,16 +160,19 @@ namespace GameLauncher.App
                 if (VisualsAPIChecker.WOPLAPI)
                 {
                     ListStatusText.Text = "WOPL List - Online";
+                }
+                else
+                {
                     StatusCheck = true;
                 }
             }
 
-            if (!VisualsAPIChecker.WOPLAPI)
+            if (!VisualsAPIChecker.WOPLAPI && CDNListUpdater.CleanList.Count == 0)
             {
                 ListStatusText.Text = "API Lists Connection - Error";
             }
 
-            if (StatusCheck == false)
+            if (StatusCheck)
             {
                 WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
                 APIErrorFormElements();
