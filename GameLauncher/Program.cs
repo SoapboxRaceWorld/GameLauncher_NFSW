@@ -62,7 +62,7 @@ namespace GameLauncher
 
                 if (FunctionStatus.LauncherForceClose)
                 {
-                    FunctionStatus.ErrorCloseLauncher("User Tried to Launch SBRW Launcehr with one Running Already", false);
+                    FunctionStatus.ErrorCloseLauncher("User Tried to Launch SBRW Launcher with one Running Already", false);
                 }
                 else
                 {
