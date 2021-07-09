@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Cache;
@@ -10,6 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform;
 
 namespace GameLauncher.App.Classes.LauncherCore.Downloader
@@ -126,6 +126,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             Downloader.mStopFlag = true;
             if (this.mDownloadManager != null && this.mDownloadManager.ManagerRunning)
             {
+                Log.Info("CDN DOWNLOADER: Stopping Game Files Download");
                 this.mDownloadManager.CancelAllDownloads();
             }
         }
@@ -184,9 +185,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception Error)
             {
-                MessageBox.Show("GetIndexFile Exception: " + ex.ToString());
+                Log.Error("GET INDEX FILE: " + Error.Message);
+                Log.ErrorInner("GET INDEX FILE: " + Error.ToString());
+
                 result = null;
             }
             return result;
@@ -524,7 +527,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
 
                                         this.mFE.BeginInvoke(this.mProgressUpdated, args3);
                                     }
-                                    catch { Process.GetProcessById(Process.GetCurrentProcess().Id).Kill(); }
+                                    catch { }
                                 }
                             }
                             if (xmlNode3 != null)
@@ -566,7 +569,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                                     object[] xxxxxx = new object[] { text6, fileschecked, num4 };
                                     this.mFE.BeginInvoke(this.mShowExtract, xxxxxx);
                                 }
-                                catch { Process.GetProcessById(Process.GetCurrentProcess().Id).Kill(); }
+                                catch { }
 
                                 if (num24 != 0)
                                 {
@@ -612,16 +615,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                 }
             }
-            catch (DownloaderException ex)
+            catch (DownloaderException Error)
             {
-                MessageBox.Show("Download DownloaderException: " + ex.ToString());
+                Log.Error("CDN DOWNLOADER: [Download] (DownloaderException) -> " + Error.Message);
+                Log.ErrorInner("CDN DOWNLOADER: [Download] (DownloaderException) -> " + Error.ToString());
+
                 if (this.mDownloadFailed != null)
                 {
                     try
                     {
                         this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
                         {
-                            ex
+                            Error
                         });
                     }
                     catch
@@ -629,16 +634,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                 }
             }
-            catch (Exception ex2)
+            catch (Exception Error)
             {
-                MessageBox.Show("Download Exception: " + ex2.ToString());
+                Log.Error("CDN DOWNLOADER: [Download] -> " + Error.Message);
+                Log.ErrorInner("CDN DOWNLOADER: [Download] -> " + Error.ToString());
+
                 if (this.mDownloadFailed != null)
                 {
                     try
                     {
                         this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
                         {
-                            ex2
+                            Error
                         });
                     }
                     catch
@@ -785,18 +792,24 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                 }
             }
-            catch (DownloaderException ex)
+            catch (DownloaderException Error)
             {
+                Log.Error("CDN DOWNLOADER: [Verify] (DownloaderException) -> " + Error.Message);
+                Log.ErrorInner("CDN DOWNLOADER: [Verify] (DownloaderException) -> " + Error.ToString());
+
                 this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
                 {
-                    ex
+                    Error
                 });
             }
-            catch (Exception ex2)
+            catch (Exception Error)
             {
+                Log.Error("CDN DOWNLOADER: [Verify] -> " + Error.Message);
+                Log.ErrorInner("CDN DOWNLOADER: [Verify]  -> " + Error.ToString());
+
                 this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
                 {
-                    ex2
+                    Error
                 });
             }
             finally

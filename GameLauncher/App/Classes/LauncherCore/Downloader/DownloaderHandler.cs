@@ -1,4 +1,5 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.Logger;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -122,9 +123,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                 }
             }
-            catch (Exception exception1)
+            catch (Exception Error)
             {
-                Exception exception = exception1;
+                Log.Error("CDN DOWNLOADER: [BACKGROUND DO WORK] -> " + Error.Message);
+                Log.ErrorInner("CDN DOWNLOADER: [BACKGROUND DO WORK] -> " + Error.ToString());
+                Exception exception = Error;
                 lock (this._workers)
                 {
                     this._workers.Remove((BackgroundWorker)sender);

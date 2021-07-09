@@ -9,6 +9,7 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.Client;
+using GameLauncher.App.Classes.Logger;
 
 namespace GameLauncher.App.Classes.LauncherCore.RPC
 {
@@ -133,8 +134,10 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         PersonaIds.Add(node.SelectSingleNode("PersonaId").InnerText);
                     }
                 }
-                catch (Exception)
+                catch (Exception Error)
                 {
+                    Log.Error("DISCORD GAME PRESENSE: " + Error.Message);
+                    Log.ErrorInner("DISCORD GAME PRESENSE: " + Error.ToString());
                 }
             }
 

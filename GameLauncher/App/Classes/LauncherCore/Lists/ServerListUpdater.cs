@@ -46,15 +46,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     serverInfos.AddRange(JsonConvert.DeserializeObject<List<ServerList>>(response));
                     InformationCache.ServerListStatus = "Loaded";
                 }
-                catch (Exception error)
+                catch (Exception Error)
                 {
-                    Log.Error("LIST CORE: Error occurred while deserializing Server List from [" + URLs.OnlineServerList + "]: " + error.Message);
+                    Log.Error("LIST CORE: Error occurred while deserializing Server List from [" + URLs.OnlineServerList + "]: " + Error.Message);
+                    Log.ErrorInner("LIST CORE: " + Error.ToString());
                     InformationCache.ServerListStatus = "Error";
                 }
             }
-            catch (Exception error)
+            catch (Exception Error)
             {
-                Log.Error("LIST CORE: Error occurred while loading Server List from [" + URLs.OnlineServerList + "]: " + error.Message);
+                Log.Error("LIST CORE: Error occurred while loading Server List from [" + URLs.OnlineServerList + "]: " + Error.Message);
+                Log.ErrorInner("LIST CORE: " + Error.ToString());
                 InformationCache.ServerListStatus = "Error";
             }
 
@@ -67,7 +69,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     fileItems.Select(si =>
                     {
                         si.DistributionUrl = "";
-                        si.Id = SHA.HashPassword($"{si.Name}:{si.Id}:{si.IpAddress}");
+                        si.Id = SHA.Hashes($"{si.Name}:{si.Id}:{si.IpAddress}");
                         si.IsSpecial = false;
                         si.Category = "CUSTOM";
 

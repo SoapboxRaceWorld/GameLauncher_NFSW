@@ -134,42 +134,31 @@ namespace GameLauncher.App
 
         private void CheckListStatus()
         {
-            if (VisualsAPIChecker.UnitedAPI)
-            {
-                ListStatusText.Text = "United List - Online";
-            }
-            
+            ListStatusText.Text = "United List - Online";
+
             if (!VisualsAPIChecker.UnitedAPI)
             {
-                if (VisualsAPIChecker.CarbonAPI)
-                {
-                    ListStatusText.Text = "Carbon List - Online";
-                }
-            }
+                ListStatusText.Text = "Carbon List - Online";
 
-            if (!VisualsAPIChecker.CarbonAPI)
-            {
-                if (VisualsAPIChecker.CarbonAPITwo)
+                if (!VisualsAPIChecker.CarbonAPI)
                 {
                     ListStatusText.Text = "Carbon 2nd List - Online";
-                }
-            }
 
-            if (!VisualsAPIChecker.CarbonAPITwo)
-            {
-                if (VisualsAPIChecker.WOPLAPI)
-                {
-                    ListStatusText.Text = "WOPL List - Online";
-                }
-                else
-                {
-                    StatusCheck = true;
-                }
-            }
+                    if (!VisualsAPIChecker.CarbonAPITwo)
+                    {
+                        ListStatusText.Text = "WOPL List - Online";
 
-            if (!VisualsAPIChecker.WOPLAPI && CDNListUpdater.CleanList.Count == 0)
-            {
-                ListStatusText.Text = "API Lists Connection - Error";
+                        if (!VisualsAPIChecker.WOPLAPI)
+                        {
+                            StatusCheck = true;
+
+                            if(CDNListUpdater.CleanList.Count == 0)
+                            {
+                                ListStatusText.Text = "API Lists Connection - Error";
+                            }
+                        }
+                    }
+                }
             }
 
             if (StatusCheck)

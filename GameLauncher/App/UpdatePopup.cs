@@ -7,6 +7,7 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using System;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
+using GameLauncher.App.Classes.Logger;
 
 namespace GameLauncher.App
 {
@@ -35,6 +36,9 @@ namespace GameLauncher.App
                     }
                     catch (Exception Error)
                     {
+                        Log.Error("UPDATE POPUP: " + Error.Message);
+                        Log.ErrorInner("UPDATE POPUP: " + Error.InnerException.Message);
+
                         ChangelogText.Text = "\n" + Error.Message;
                         ChangelogBox.Text = "Changelog Error:";
                     }

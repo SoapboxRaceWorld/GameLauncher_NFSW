@@ -25,16 +25,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.JSON
                     var obj = JToken.Parse(strInput);
                     return true;
                 }
-                catch (JsonReaderException jex)
+                catch (JsonReaderException Error)
                 {
                     /* Exception in parsing json */
-                    Log.Error(jex.Message);
+                    Log.Error("VALID JSON: " + Error.Message);
+                    Log.ErrorInner("VALID JSON: " + Error.ToString());
                     return false;
                 }
-                catch (Exception ex)
+                catch (Exception Error)
                 {
                     /* General Exception */
-                    Log.Error(ex.ToString());
+                    Log.Error("VALID JSON: " + Error.Message);
+                    Log.ErrorInner("VALID JSON: " + Error.ToString());
                     return false;
                 }
             }

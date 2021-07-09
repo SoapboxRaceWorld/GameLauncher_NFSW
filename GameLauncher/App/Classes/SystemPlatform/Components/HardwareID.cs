@@ -1,9 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Management;
 using System.Security.Cryptography;
 using System.Text;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Components
@@ -22,11 +24,13 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
 
             private static string License_IB = string.Empty;
 
+            private static string License_IC = string.Empty;
+
             public static void Get()
             {
-                string Temp;
-                Temp = Value();
-                Temp = ValueAlt();
+                License_IC = Value();
+                License_IC = ValueAlt();
+                License_IC = string.Empty;
 
                 /* (Start Process) Sets Up Langauge List */
                 LanguageListUpdater.GetList();
@@ -191,23 +195,32 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
             private static string Identifier(string wmiClass, string wmiProperty)
             {
                 string result = string.Empty;
-                ManagementClass mc = new ManagementClass(wmiClass);
-                ManagementObjectCollection moc = mc.GetInstances();
-                foreach (ManagementObject mo in moc)
+
+                try
                 {
-                    if (string.IsNullOrWhiteSpace(result))
+                    ManagementClass mc = new ManagementClass(wmiClass);
+                    ManagementObjectCollection moc = mc.GetInstances();
+                    foreach (ManagementObject mo in moc)
                     {
-                        try
+                        if (string.IsNullOrWhiteSpace(result))
                         {
-                            var tmp = mo[wmiProperty];
-                            if (tmp != null)
+                            try
                             {
-                                result = tmp.ToString();
+                                var tmp = mo[wmiProperty];
+                                if (tmp != null)
+                                {
+                                    result = tmp.ToString();
+                                }
+                                break;
                             }
-                            break;
+                            catch { }
                         }
-                        catch { }
                     }
+                }
+                catch (Exception Error)
+                {
+                    Log.Error("ID: " + Error.Message);
+                    Log.ErrorInner("ID: " + Error.ToString());
                 }
 
                 return result;

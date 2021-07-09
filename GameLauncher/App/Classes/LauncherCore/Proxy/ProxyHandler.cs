@@ -33,8 +33,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
         private async Task<TextResponse> OnError(NancyContext context, Exception exception)
         {
             Log.Error($"PROXY HANDLER [handling {context.Request.Path}]");
-            Log.Error($"\tMESSAGE: {exception.Message}");
-            Log.Error($"\t{exception.StackTrace}");
+            Log.Error($"\nMESSAGE: {exception.Message}");
+            Log.ErrorInner("\nINNER MESSAGE: " + exception.ToString());
+            Log.Error($"\nSTACK TRACE: {exception.StackTrace}");
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY",
                 CommunicationLogEntryType.Error,
                 new CommunicationLogLauncherError(exception.Message, context.Request.Path,
@@ -151,12 +152,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             {
                 DiscordGamePresence.HandleGameState(path, responseBody, GETContent);
             }
-            catch (Exception e)
+            catch (Exception Error)
             {
                 Log.Error($"DISCORD RPC ERROR [handling {context.Request.Path}]");
-                Log.Error($"\tMESSAGE: {e.Message}");
-                Log.Error($"\t{e.StackTrace}");
-                await SubmitError(e);
+                Log.Error($"\nMESSAGE: {Error.Message}");
+                Log.ErrorInner("\nINNER MESSAGE: " + Error.ToString());
+                Log.Error($"\nSTACK TRACE: {Error.StackTrace}");
+                await SubmitError(Error);
             }
 
             TextResponse Response = new TextResponse(responseBody,
@@ -208,9 +210,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     stackTrace = exception.StackTrace ?? "no stack trace"
                 });
             }
-            catch (Exception error)
+            catch (Exception Error)
             {
-                Log.Error("PROXY HANDLER: " + error.Message);
+                Log.Error("PROXY HANDLER: " + Error.Message);
+                Log.ErrorInner("PROXY HANDLER: " + Error.ToString());
             }
         }
     }

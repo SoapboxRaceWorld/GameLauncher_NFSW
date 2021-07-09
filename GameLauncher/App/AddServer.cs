@@ -11,6 +11,7 @@ using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.Logger;
 
 namespace GameLauncher.App
 {
@@ -189,16 +190,19 @@ namespace GameLauncher.App
                         Name = ServerName.Text,
                         IpAddress = wellFormattedURL,
                         IsSpecial = false,
-                        Id = SHA.HashPassword(uriResult.Host)
+                        Id = SHA.Hashes(uriResult.Host)
                     });
 
                     File.WriteAllText("servers.json", JsonConvert.SerializeObject(servers));
 
                     MessageBox.Show(null, "New server will be added on next start of launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                catch (Exception ex)
+                catch (Exception Error)
                 {
-                    MessageBox.Show(null, "Failed to add new server. " + ex.Message, "GameLauncher", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                    Log.Error("ADD SERVER: " + Error.Message);
+                    Log.ErrorInner("ADD SERVER: " + Error.ToString());
+
+                    MessageBox.Show(null, "Failed to add new server. " + Error.Message, "GameLauncher", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
                 }
 
                 CancelButton_Click(sender, e);

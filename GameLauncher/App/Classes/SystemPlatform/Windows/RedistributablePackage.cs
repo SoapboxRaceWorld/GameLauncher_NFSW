@@ -99,9 +99,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                         Client.DownloadFile(URLCall, "VC_redist.x86.exe");
                     }
-                    catch (Exception error)
+                    catch (Exception Error)
                     {
-                        Log.Error("LAUNCHER UPDATER: " + error.Message);
+                        Log.Error("VISUAL STUDIO: " + Error.Message);
+                        Log.ErrorInner("VISUAL STUDIO: " + Error.ToString());
                     }
 
                     if (File.Exists("VC_redist.x86.exe"))
@@ -153,9 +154,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                             Client.DownloadFile(URLCall, "VC_redist.x64.exe");
                         }
-                        catch (Exception error)
+                        catch (Exception Error)
                         {
-                            Log.Error("LAUNCHER UPDATER: " + error.Message);
+                            Log.Error("VISUAL STUDIO: " + Error.Message);
+                            Log.ErrorInner("VISUAL STUDIO: " + Error.ToString());
                         }
 
                         if (File.Exists("VC_redist.x64.exe"))

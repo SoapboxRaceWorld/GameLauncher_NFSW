@@ -1,5 +1,4 @@
-﻿using DiscordRPC;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -17,6 +16,7 @@ using GameLauncher.App.Classes.LauncherCore.RPC;
 using System.ComponentModel;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.Support;
+using System.Diagnostics;
 
 namespace GameLauncher.App
 {
@@ -35,6 +35,8 @@ namespace GameLauncher.App
         public static Thread StartScan;
         public bool isScanning = false;
         public static string CurrentDownloadingFile = String.Empty;
+        public static int DeletionError = 0;
+        public static bool DeletionErrorBypass = false;
 
         public VerifyHash()
         {
@@ -90,19 +92,26 @@ namespace GameLauncher.App
 
         public void GameScanner(bool startScan)
         {
-            if (startScan == true)
+            if (startScan)
             {
-                StartScan = new Thread(new ThreadStart(StartGameScanner))
+                if (!FunctionStatus.IsVerifyHashDisabled)
                 {
-                    Name = "FileScanner"
-                };
+                    StartScan = new Thread(new ThreadStart(StartGameScanner))
+                    {
+                        Name = "FileScanner"
+                    };
 
-                FunctionStatus.IsVerifyHashDisabled = true;
-                isScanning = true;
-                Log.Info("VERIFY HASH: Started Scanner");
-                StartScan.Start();
+                    isScanning = true;
+                    Log.Info("VERIFY HASH: Started Scanner");
+                    StartScan.Start();
+                }
+                else
+                {
+                    MessageBox.Show("Verify Hash had Started a Full Scan Before." +
+                        "\nTo do another Scan, Please Restart Launcher to do a New Scan.", "VerifyHash", MessageBoxButtons.OK);
+                }
             }
-            else if (startScan == false)
+            else if (!startScan)
             {
                 isScanning = false;
                 Log.Info("VERIFY HASH: Stopped Scanner");
@@ -118,87 +127,142 @@ namespace GameLauncher.App
 
             DirectoryInfo InstallationDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
 
-            foreach (var foundFolders in InstallationDirectory.GetDirectories())
+            try
             {
-                foreach (var file in InstallationDirectory.EnumerateFiles("*.orig"))
+                foreach (var foundFolders in InstallationDirectory.GetDirectories())
                 {
-                    LogVerify.Deleted("File: " + file);
-                    file.Delete();
-                }
-
-                foreach (var file in foundFolders.EnumerateFiles("*.orig"))
-                {
-                    LogVerify.Deleted("File: " + file);
-                    file.Delete();
-                }
-
-                foreach (var file in InstallationDirectory.EnumerateDirectories())
-                {
-                    if (ModNetHandler.IsSymbolic(file.FullName))
+                    foreach (var file in InstallationDirectory.EnumerateFiles("*.orig"))
                     {
-                        if (Directory.Exists(foundFolders.FullName))
+                        try
                         {
-                            try
-                            {
-                                LogVerify.Deleted("Folder: " + file);
-                                Directory.Delete(file.FullName, true);
-                            }
-                            catch (Exception Error)
-                            {
-                                LogVerify.Error(Error.Message);
-                            }
+                            LogVerify.Deleted("File: " + file);
+                            file.Delete();
                         }
-                        else if (File.Exists(foundFolders.FullName))
+                        catch (Exception Error)
                         {
-                            try
+                            DeletionError++;
+                            LogVerify.Error("File: " + file + " Error: " + Error.Message);
+                            LogVerify.ErrorInner("File: " + file + " Error: " + Error.ToString());
+                        }
+                    }
+
+                    foreach (var file in foundFolders.EnumerateFiles("*.orig"))
+                    {
+                        try
+                        {
+                            LogVerify.Deleted("File: " + file);
+                            file.Delete();
+                        }
+                        catch (Exception Error)
+                        {
+                            DeletionError++;
+                            LogVerify.Error("File: " + file + " Error: " + Error.Message);
+                            LogVerify.ErrorInner("File: " + file + " Error: " + Error.ToString());
+                        }
+                    }
+
+                    foreach (var file in InstallationDirectory.EnumerateDirectories())
+                    {
+                        if (ModNetHandler.IsSymbolic(file.FullName))
+                        {
+                            if (Directory.Exists(foundFolders.FullName))
                             {
-                                LogVerify.Deleted("File: " + file);
-                                File.Delete(file.FullName);
+                                try
+                                {
+                                    LogVerify.Deleted("Folder: " + file);
+                                    Directory.Delete(file.FullName, true);
+                                }
+                                catch (Exception Error)
+                                {
+                                    DeletionError++;
+                                    LogVerify.Error("Folder: " + file + " Error: " + Error.Message);
+                                    LogVerify.ErrorInner("Folder: " + file + " Error: " + Error.ToString());
+                                }
                             }
-                            catch (Exception Error)
+                            else if (File.Exists(foundFolders.FullName))
                             {
-                                LogVerify.Error(Error.Message);
+                                try
+                                {
+                                    LogVerify.Deleted("File: " + file);
+                                    File.Delete(file.FullName);
+                                }
+                                catch (Exception Error)
+                                {
+                                    DeletionError++;
+                                    LogVerify.Error("File: " + file + " Error: " + Error.Message);
+                                    LogVerify.ErrorInner("File: " + file + " Error: " + Error.ToString());
+                                }
                             }
                         }
                     }
-                }
 
-                foreach (var file in foundFolders.EnumerateDirectories())
-                {
-                    if (ModNetHandler.IsSymbolic(file.FullName))
+                    foreach (var file in foundFolders.EnumerateDirectories())
                     {
-                        if (Directory.Exists(foundFolders.FullName))
+                        if (ModNetHandler.IsSymbolic(file.FullName))
                         {
-                            try
+                            if (Directory.Exists(foundFolders.FullName))
                             {
-                                LogVerify.Deleted("Folder: " + file);
-                                Directory.Delete(file.FullName, true);
+                                try
+                                {
+                                    LogVerify.Deleted("Folder: " + file);
+                                    Directory.Delete(file.FullName, true);
+                                }
+                                catch (Exception Error)
+                                {
+                                    DeletionError++;
+                                    LogVerify.Error("Folder: " + file + " Error: " + Error.Message);
+                                    LogVerify.ErrorInner("Folder: " + file + " Error: " + Error.ToString());
+                                }
                             }
-                            catch (Exception Error)
+                            else if (File.Exists(foundFolders.FullName))
                             {
-                                LogVerify.Error(Error.Message);
-                            }
-                        }
-                        else if (File.Exists(foundFolders.FullName))
-                        {
-                            try
-                            {
-                                LogVerify.Deleted("File: " + file);
-                                File.Delete(file.FullName);
-                            }
-                            catch (Exception Error)
-                            {
-                                LogVerify.Error(Error.Message);
+                                try
+                                {
+                                    LogVerify.Deleted("File: " + file);
+                                    File.Delete(file.FullName);
+                                }
+                                catch (Exception Error)
+                                {
+                                    DeletionError++;
+                                    LogVerify.Error("File: " + file + " Error: " + Error.Message);
+                                    LogVerify.ErrorInner("Folder: " + file + " Error: " + Error.ToString());
+                                }
                             }
                         }
                     }
                 }
             }
+            catch (Exception Error)
+            {
+                Log.Error("VERIFY HASH: " + Error.Message);
+                Log.ErrorInner("VERIFY HASH: " + Error.ToString());
+            }
 
-            Log.Info("VERIFY HASH: Completed check for '.orig' Files and Symbolic Folders");
+            if (DeletionError == 0)
+            {
+                Log.Info("VERIFY HASH: Completed check for '.orig' Files and Symbolic Folders, BUT Encounterd a File or Folder Deletion Error. " +
+                "Check Verify.log for More Details");
+
+                if (MessageBox.Show("Verify Hash had encountered File or Folder Deletion Errors." +
+                "\nWould you like to Open Verify.Log and Stop the Scanner?", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    if (File.Exists("Verify.log"))
+                    {
+                        Process.Start("Verify.log");
+                    }
+
+                    StopScanner_Click(null, null);
+                }
+            }
+            else
+            {
+                Log.Info("VERIFY HASH: Completed check for '.orig' Files and Symbolic Folders");
+            }
 
             try
             {
+                FunctionStatus.IsVerifyHashDisabled = true;
+
                 String[] getFilesToCheck;
 
                 if (File.Exists("checksums.dat"))
@@ -241,7 +305,7 @@ namespace GameLauncher.App
                     }
                     else
                     {
-                        if (FileHash != SHA.HashFile(RealPathToFile).Trim())
+                        if (FileHash != SHA.Files(RealPathToFile).Trim())
                         {
                             InvalidFileList.Add(FileName);
                             LogVerify.Invalid("File: " + FileName);
@@ -280,9 +344,10 @@ namespace GameLauncher.App
                     CorruptedFilesFound();
                 }
             }
-            catch (Exception ex)
+            catch (Exception Error)
             {
-                Log.Error("VERIFY HASH: " + ex.Message);
+                Log.Error("VERIFY HASH: " + Error.Message);
+                Log.ErrorInner("VERIFY HASH: " + Error.ToString());
             }
         }
 
@@ -316,8 +381,17 @@ namespace GameLauncher.App
                         string address = FinalCDNURL + "/unpacked" + text.Replace("\\", "/");
                         if (File.Exists(text2))
                         {
-                            LogVerify.Deleted("File: " + text2);
-                            File.Delete(text2);
+                            try
+                            {
+                                LogVerify.Deleted("File: " + text2);
+                                File.Delete(text2);
+                            }
+                            catch (Exception Error)
+                            {
+                                DeletionError++;
+                                LogVerify.Error("File: " + text2 + " Error: " + Error.Message);
+                                LogVerify.ErrorInner("File: " + text2 + " Error: " + Error.ToString());
+                            }                            
                         }
 
                         if (!new FileInfo(text2).Directory.Exists)
@@ -343,7 +417,8 @@ namespace GameLauncher.App
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = Timeout;
                         using (WebClient client = new WebClient())
                         {
-                            client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + 
+                                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                             client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged);
                             client.DownloadFileCompleted += new AsyncCompletedEventHandler(Client_DownloadFileCompleted);
                             client.DownloadFileAsync(URLCall, text2);
@@ -353,6 +428,7 @@ namespace GameLauncher.App
                     catch (Exception Error)
                     {
                         Log.Error("VERIFY HASH: " + Error.Message);
+                        Log.ErrorInner("VERIFY HASH: " + Error.ToString());
                     }
                 }
             }
@@ -401,7 +477,9 @@ namespace GameLauncher.App
         {
             this.BeginInvoke((MethodInvoker)delegate
             {
-                DownloadProgressText.Text = "Downloading File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + CurrentDownloadingFile + "\n" + TimeConversions.FormatFileSize(e.BytesReceived) + " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive);
+                DownloadProgressText.Text = "Downloading File [ " + redownloadedCount + " / " 
+                + currentCount + " ]:\n" + CurrentDownloadingFile + "\n" + TimeConversions.FormatFileSize(e.BytesReceived) + " of " 
+                + TimeConversions.FormatFileSize(e.TotalBytesToReceive);
             });
 
             Application.DoEvents();
@@ -409,16 +487,16 @@ namespace GameLauncher.App
 
         private void StartScanner_Click(object sender, EventArgs e)
         {
-            GameScanner(true);
             StartScanner.Visible = false;
             StopScanner.Visible = true;
+            GameScanner(true);
         }
 
         private void StopScanner_Click(object sender, EventArgs e)
         {
-            GameScanner(false);
             StartScanner.Visible = true;
             StopScanner.Visible = false;
+            GameScanner(false);
         }
 
         private void SetVisuals() 

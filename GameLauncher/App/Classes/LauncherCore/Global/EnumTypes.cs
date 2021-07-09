@@ -37,4 +37,19 @@
         Unknown,
         Null
     }
+    /* Used with CheckHash Function in MainScreen.cs and RegisterScreen.cs
+    /* Or
+    * Other Conditionals */
+    /// <summary>
+    /// (Name Only) Hash Standard Name that is used for Checking functions
+    /// </summary>
+    /// <returns>Hash Standard Name</returns>
+    enum AuthHash
+    {
+        H10,
+        H11,
+        H12,
+        H13,
+        Unknown
+    }
 }

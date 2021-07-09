@@ -7,7 +7,7 @@ namespace GameLauncher.App.Classes.Hash
 {
     class MDFive
     {
-        public static string HashPassword(string input)
+        public static string Hashes(string input)
         {
             HashAlgorithm algorithm = MD5.Create();
             StringBuilder sb = new StringBuilder();
@@ -19,7 +19,7 @@ namespace GameLauncher.App.Classes.Hash
             return sb.ToString();
         }
 
-        public static string HashFile(string filename)
+        public static string Files(string filename)
         {
             if (!File.Exists(filename)) return String.Empty;
 

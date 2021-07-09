@@ -106,6 +106,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                     if (serverResponse != null)
                     {
                         serverResponse.Close();
+                        serverResponse.Dispose();
                     }
                 }
             }

@@ -45,9 +45,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
                         Log.Info("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
                     }
-                    catch (Exception error)
+                    catch (Exception Error)
                     {
-                        Log.Error("LAUNCHER UPDATER: " + error.Message);
+                        Log.Error("LAUNCHER UPDATER: " + Error.Message);
+                        Log.ErrorInner("LAUNCHER UPDATER: " + Error.ToString());
                     }
 
                     if (LatestUpdaterBuildVersion == "1.0.0.4")
@@ -55,9 +56,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         Log.Info("LAUNCHER UPDATER: Fail Safe Latest Version -> " + LatestUpdaterBuildVersion);
                     }
                 }
-                catch (Exception error)
+                catch (Exception Error)
                 {
-                    Log.Error("LAUNCHER UPDATER: Failed to get new version file: " + error.Message);
+                    Log.Error("LAUNCHER UPDATER: Failed to get new version file: " + Error.Message);
+                    Log.ErrorInner("LAUNCHER UPDATER: " + Error.ToString());
                 }
 
                 /* Check if File needs to be Downloaded or Require an Update */
@@ -81,9 +83,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         };
                         Client.DownloadFile(URLCall, "GameLauncherUpdater.exe");
                     }
-                    catch (Exception ex)
+                    catch (Exception Error)
                     {
-                        Log.Error("LAUCHER UPDATER: Failed to download updater. " + ex.Message);
+                        Log.Error("LAUNCHER UPDATER: Failed to download updater. " + Error.Message);
+                        Log.ErrorInner("LAUNCHER UPDATER: " + Error.ToString());
                     }
                 }
                 else if (File.Exists("GameLauncherUpdater.exe"))
@@ -117,9 +120,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                             Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                             Client.DownloadFile(URLCall, "GameLauncherUpdater.exe");
                         }
-                        catch (Exception ex)
+                        catch (Exception Error)
                         {
-                            Log.Error("LAUNCHER UPDATER: Failed to download new updater. " + ex.Message);
+                            Log.Error("LAUNCHER UPDATER: Failed to download new updater. " + Error.Message);
+                            Log.ErrorInner("LAUNCHER UPDATE: " + Error.ToString());
                         }
                     }
                 }

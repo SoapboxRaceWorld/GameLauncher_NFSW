@@ -52,9 +52,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         Log.Info("LAUNCHER UPDATE: Latest Version -> " + MAPI.Payload.LatestVersion);
                     }
                 }
-                catch (Exception error)
+                catch (Exception Error)
                 {
-                    Log.Error("LAUNCHER UPDATE: " + error.Message);
+                    Log.Error("LAUNCHER UPDATE: " + Error.Message);
+                    Log.ErrorInner("LAUNCHER UPDATE: " + Error.ToString());
                 }
             }
 
@@ -76,10 +77,11 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         Log.Info("LAUNCHER UPDATE: GitHub Latest Version -> " + GHAPI.TagName);
                     }
                 }
-                catch (Exception error)
+                catch (Exception Error)
                 {
                     VisualsAPIChecker.GitHubAPI = false;
-                    Log.Error("LAUNCHER UPDATE: GitHub " + error.Message);
+                    Log.Error("LAUNCHER UPDATE: GitHub " + Error.Message);
+                    Log.ErrorInner("LAUNCHER UPDATE: " + Error.ToString());
                 }
 
                 if (!VisualsAPIChecker.GitHubAPI)

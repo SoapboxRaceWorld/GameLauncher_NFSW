@@ -20,6 +20,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
         private static string ServerErrorResponse;
         private static HttpWebResponse ServerResponse;
 
+        /// <summary>
+        /// Form Url or Post Request to the Server for Login and Registration
+        /// </summary>
+        /// <remarks>Non Secure: Uses regualar URL Request. Secure: Uses Post Request</remarks>
+        /// <returns>Receives UserId and Auth Key for Login. Sends Email and Password to Server</returns>
+        /// <param name="Connection">Connection Type: "Non Secure" or "Secure"</param>
+        /// <param name="Method">Form Type: "Login" or "Register"</param>
         public static void Client(string Method, string Connection, String Email, String Password, String Token)
         {
             try
@@ -85,6 +92,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             }
             catch (WebException Error)
             {
+                Log.Error("CLIENT (LOGIN/REGISTER): " + Error.Message);
+                if (!string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                {
+                    Log.ErrorInner("CLIENT (LOGIN/REGISTER): " + Error.InnerException.Message);
+                }
+
                 if (Connection == "Non Secure" || Connection == "Secure")
                 {
                     ServerResponse = (HttpWebResponse)Error.Response;
@@ -134,6 +147,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     }
                     catch (Exception Error)
                     {
+                        Log.Error("XML LOGIN ERROR: " + Error.Message);
+                        if (!string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                        {
+                            Log.ErrorInner("XML LOGIN ERROR: " + Error.InnerException.Message);
+                        }
+
                         XMLIsErrorFree = false;
                         msgBoxInfo = "An error occured: " + Error.Message;
                     }
@@ -328,6 +347,46 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 Log.Error("Authentication: [Tokens] Can not Determine Function with Specified Type -> " + Connection);
             }
         }
+
+        /// <summary>
+        /// Hash Method (Used how to Authenticate Logins)
+        /// </summary>
+        /// <returns>A hash type standard that is used on the server</returns>
+        public static AuthHash HashType(string Type)
+        {
+            if (!string.IsNullOrWhiteSpace(Type))
+            {
+                if (Type == "1.0" || Type == "true")
+                {
+                    /* Raw Email and Password */
+                    return AuthHash.H10;
+                }
+                else if (Type == "1.1" || Type == "false")
+                {
+                    /* Raw Email and Hashed Password (Default Standard) */
+                    return AuthHash.H11;
+                }
+                else if (Type == "1.2")
+                {
+                    /* Hashed Email and Password in SHA */
+                    return AuthHash.H12;
+                }
+                else if (Type == "1.3")
+                {
+                    /* Hashed Email and Password in 256 */
+                    return AuthHash.H13;
+                }
+                else
+                {
+                    return AuthHash.Unknown;
+                }
+            }
+            else
+            {
+                /* Raw Email and Hashed Password (Default Standard) */
+                return AuthHash.H11;
+            }
+        }
     }
 
     class XMLServerCore
@@ -376,6 +435,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
                 {
                     Log.Error("XMLSERVERCORE: Unable to Read XML [NodePath: '" + FullNodePath + "' Attribute: '" + AttributeName + "']" + Error.Message);
+                    if (!string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                    {
+                        Log.ErrorInner("XMLSERVERCORE: " + Error.InnerException.Message);
+                    }
                 }
                 if (Type == "InnerText")
                 {
@@ -401,11 +464,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
         }
     }
 
+    /// <summary>
+    /// Form JSON for Requests
+    /// </summary>
+    /// <returns>Used for ensuring certain Login or Register function checks</returns>
     public class ModernAuthObject
     {
+        ///<value>Gets a Auth Token. Used to Login into the Server</value>
         public string Token { get; set; }
+        ///<value>Gets a UserID. Used to tell the Server which Account to use</value>
         public string UserId { get; set; }
+        ///<value>Gets a Warning Code. Used to inform the user about an issue, but can still login in</value>
         public string Warning { get; set; }
+        ///<value>Gets a Error Code. Used to inform the user about an issue and can not proceed to login into the server</value>
         public string Error { get; set; }
     }
 }

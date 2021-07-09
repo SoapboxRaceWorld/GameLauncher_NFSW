@@ -19,7 +19,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
         {
             if (string.IsNullOrWhiteSpace(Hash))
             {
-                Hash = SHA.HashFile(AppDomain.CurrentDomain.FriendlyName);
+                Hash = SHA.Files(AppDomain.CurrentDomain.FriendlyName);
             }
 
             return Hash;

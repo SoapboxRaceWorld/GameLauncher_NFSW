@@ -197,6 +197,7 @@ namespace GameLauncher
                         finally
                         {
                             mutex.Close();
+                            mutex.Dispose();
                         }
                     }
                 }
@@ -322,9 +323,10 @@ namespace GameLauncher
                         Directory.Delete(RoamingAppData + "\\WorldUnited.gg", true);
                     }
                 }
-                catch (Exception error)
+                catch (Exception Error)
                 {
-                    Log.Error("LAUNCHER MIGRATION: " + error.Message);
+                    Log.Error("LAUNCHER MIGRATION: " + Error.Message);
+                    Log.ErrorInner("LAUNCHER MIGRATION: " + Error.ToString());
                 }
 
                 DiscordLauncherPresense.Status("Start Up", "Checking if UserSettings XML Exists");
@@ -339,9 +341,10 @@ namespace GameLauncher
                         }
                         File.WriteAllBytes(FileGameSettings.UserSettingsLocation, ExtractResource.AsByte("GameLauncher.Resources.UserSettings.UserSettings.xml"));
                     }
-                    catch (Exception error)
+                    catch (Exception Error)
                     {
-                        Log.Error("LAUNCHER XML: " + error.Message);
+                        Log.Error("LAUNCHER XML: " + Error.Message);
+                        Log.ErrorInner("LAUNCHER XML: " + Error.ToString());
                     }
                 }
 

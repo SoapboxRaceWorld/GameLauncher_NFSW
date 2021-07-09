@@ -65,9 +65,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
 
                     return hr == 0;
                 }
-                catch (Exception error)
+                catch (Exception Error)
                 {
-                    Log.Error("SIGNED: " + error.Message);
+                    Log.Error("SIGNED: " + Error.Message);
+                    Log.ErrorInner("SIGNED: " + Error.ToString());
                     return false;
                 }                
             }

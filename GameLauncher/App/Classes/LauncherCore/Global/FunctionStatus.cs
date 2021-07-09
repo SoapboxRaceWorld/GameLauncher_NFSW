@@ -37,14 +37,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* System Language */
         public static string CurrentLanguage = "EN";
 
-        /* Sets Game Launchers User Agent (If Required) */
-        public static string UserAgent;
-
         /* System OS Name */
         public static string OSName;
 
+        /* Selected Server Requires Proxy (Due to being https Only) */
+        public static bool ModernAuthSecureChannel = false;
+
         /* Selected Server Auth Support */
-        public static bool ModernAuthSupport = false;
+        public static bool ModernAuthEnabled = false;
+
+        /* Selected Server ModernAuth Hash Type (Used for Login) */
+        public static string ModernAuthHashType;
 
         /* Selected Server Category */
         public static string SelectedServerCategory;
@@ -253,10 +256,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         }
 
         /// <summary>
-        /// This C# code reads a key from the windows registry.
+        /// Reads a key from the Windows Registry.
         /// </summary>
-        /// <param name="keyName">
-        /// <returns></returns>
+        /// <returns>Registry Key Value or if it Doesn't Exist it Returns a Null Value</returns>
+        /// <param name="keyName">Registry Key Entry</param>
         public static string RegistryRead(string keyName)
         {
             string subKey = "SOFTWARE\\Soapbox Race World\\Launcher";
@@ -272,15 +275,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             catch (Exception error)
             {
                 Log.Error("REGISTRYKEY: READ " + error.Message);
+                Log.Error("REGISTRYKEY: READ " + error.InnerException);
                 return null;
             }
         }
 
         /// <summary>
-        /// This C# code writes a key to the windows registry.
+        /// Writes a key to the Windows Registry.
         /// </summary>
-        /// <param name="keyName">
-        /// <param name="value">
+        /// <param name="keyName">Registry Key Entry</param>
+        /// <param name="value">Inner Value to write to for Key Entry</param>
         public static void RegistryWrite(string keyName, string value)
         {
             string subKey = "SOFTWARE\\Soapbox Race World\\Launcher";
@@ -296,6 +300,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             }
         }
 
+        /// <summary>
+        /// Used to Force Close Launcher when Launcher encounters an error during Startup
+        /// </summary>
+        /// <param name="Notes">Required: Where the Launcher is Closing From</param>
+        /// <param name="Boolen">True: Restarts Launcher | False: Closes Launcher</param>
         public static void ErrorCloseLauncher(string Notes, bool Boolen)
         {
             if (DiscordLauncherPresense.Running())

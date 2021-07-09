@@ -81,6 +81,10 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 catch (Exception Error)
                 {
                     Log.Error("USX File: " + Error.Message);
+                    if (!string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                    {
+                        Log.ErrorInner("USX Fille: " + Error.InnerException.Message);
+                    }
                 }
             }
             else
@@ -290,6 +294,10 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             catch (Exception Error)
             {
                 Log.Error("USX File: " + Error.Message);
+                if (!string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                {
+                    Log.ErrorInner("USX File: " + Error.InnerException.Message);
+                }
             }
         }
 
@@ -345,6 +353,10 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 {
                     Log.Error("USX File: Unable to Create XML Node [Type: '" + Type + "' NodePath: '" + NodePath + "' SingleNode: '" +
                                 SingleNode + "' AttributeName: '" + AttributeName + "' AttributeValue: '" + AttributeValue + "']" + Error.Message);
+                    if (!string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                    {
+                        Log.ErrorInner("USX File: " + Error.InnerException.Message);
+                    }
                     return;
                 }
             }
@@ -402,6 +414,10 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             catch (Exception Error)
             {
                 Log.Error("USX File: Unable to Read XML Node [NodePath: '" + FullNodePath + "' AttributeName: '" + AttributeName + "']" + Error.Message);
+                if (!string.IsNullOrWhiteSpace(Error.InnerException.Message))
+                {
+                    Log.ErrorInner("USX File: " + Error.InnerException.Message);
+                }
                 return "ERROR";
             }
         }

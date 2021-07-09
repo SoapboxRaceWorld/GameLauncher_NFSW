@@ -127,6 +127,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             catch (FirewallWASNotSupportedException Error)
             {
                 Log.Error("WINDOWS FIREWALL: " + Error.Message);
+                Log.ErrorInner("WINDOWS FIREWALL: " + Error.ToString());
                 AddDefaultApplicationRule(Type, AppName, AppPath, direction, protocol, firewallLogNote);
                 ErrorFree = false;
             }
@@ -166,6 +167,13 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             catch (FirewallWASNotSupportedException Error)
             {
                 Log.Error("WINDOWS FIREWALL: " + Error.Message);
+                Log.ErrorInner("WINDOWS FIREWALL: " + Error.ToString());
+                ErrorFree = false;
+            }
+            catch (Exception Error)
+            {
+                Log.Error("WINDOWS FIREWALL: " + Error.Message);
+                Log.ErrorInner("WINDOWS FIREWALL: " + Error.ToString());
                 ErrorFree = false;
             }
 
@@ -195,10 +203,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         FirewallManager.Instance.Rules.Remove(rule);
                         Log.Warning("WINDOWS FIREWALL: Removed " + AppName + " {" + firewallLogNote + "} From Firewall!");
                     }
-                    catch (Exception ex)
+                    catch (Exception Error)
                     {
                         ErrorFree = false;
-                        Log.Error("WINDOWS FIREWALL: " + ex.Message);
+                        Log.Error("WINDOWS FIREWALL: " + Error.Message);
+                        Log.ErrorInner("WINDOWS FIREWALL: " + Error.ToString());
                     }
                 }
             }
@@ -250,6 +259,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             catch (Exception Error)
             {
                 Log.Error("WINDOWS FIREWALL: FindRules -> " + Error.Message);
+                Log.ErrorInner("WINDOWS FIREWALL: " + Error.ToString());
             }
 
             return Enumerable.Empty<IFirewallRule>();
@@ -312,9 +322,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         FileSettingsSave.FirewallGameStatus = "Service Stopped";
                     }
                 }
-                catch (Exception error)
+                catch (Exception Error)
                 {
-                    Log.Error("FIREWALL: " + error.Message);
+                    Log.Error("FIREWALL: " + Error.Message);
+                    Log.ErrorInner("FIREWALL: " + Error.ToString());
                     FileSettingsSave.FirewallGameStatus = "Error";
                 }
             }
@@ -358,9 +369,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         FileSettingsSave.FirewallLauncherStatus = "Service Stopped";
                     }
                 }
-                catch (Exception error)
+                catch (Exception Error)
                 {
-                    Log.Error("FIREWALL: " + error.Message);
+                    Log.Error("FIREWALL: " + Error.Message);
+                    Log.ErrorInner("FIREWALL: " + Error.ToString());
                     FileSettingsSave.FirewallLauncherStatus = "Error";
                 }
             }

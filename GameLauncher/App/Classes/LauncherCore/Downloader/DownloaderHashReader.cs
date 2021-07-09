@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.Logger;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -71,9 +72,26 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                                 }
                             }
                         }
-                        catch (Exception exception1)
+                        catch (Exception Error)
                         {
-                            Exception exception = exception1;
+                            Log.Error("CDN DOWNLOADER: [If File Exists] -> " + Error.Message);
+                            Log.ErrorInner("CDN DOWNLOADER: [If File Exists] -> " + Error.ToString());
+
+                            try
+                            {
+                                using (FileStream fileStream = new FileStream(str, FileMode.Open))
+                                {
+                                    using (MD5 mD5 = MD5.Create())
+                                    {
+                                        base64String = Convert.ToBase64String(mD5.ComputeHash(fileStream));
+                                    }
+                                }
+                            }
+                            catch (Exception Error_2)
+                            {
+                                Log.Error("CDN DOWNLOADER: [If File Exists] -> " + Error_2.Message);
+                                Log.ErrorInner("CDN DOWNLOADER: [If File Exists] -> " + Error_2.ToString());
+                            }
                         }
                     }
                     else
@@ -144,9 +162,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     Thread.Sleep(100);
                 }
             }
-            catch (Exception exception1)
+            catch (Exception Error)
             {
-                Exception exception = exception1;
+                Exception exception = Error;
                 return false;
             }
             return @new;
@@ -217,9 +235,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                         cryptoStream = null;
                         this._fileList.Clear();
                     }
-                    catch (Exception exception1)
+                    catch (Exception Error)
                     {
-                        Exception exception = exception1;
+                        Log.Error("CDN DOWNLOADER: [Start] -> " + Error.Message);
+                        Log.ErrorInner("CDN DOWNLOADER: [Start] -> " + Error.ToString());
+                        Exception exception = Error;
                         this._fileList.Clear();
                     }
                 }
@@ -228,14 +248,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     if (streamReader != null)
                     {
                         streamReader.Close();
+                        streamReader.Dispose();
                     }
                     if (cryptoStream != null)
                     {
                         cryptoStream.Close();
+                        cryptoStream.Dispose();
                     }
                     if (fileStream != null)
                     {
                         fileStream.Close();
+                        fileStream.Dispose();
                     }
                     File.Delete(string.Concat("HashFile", hashFileNameSuffix));
                 }
@@ -282,9 +305,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                             streamWriter.WriteLine(string.Format("{0}\t{1}\t{2}", key, empty, lastWriteTime.Ticks));
                         }
                     }
-                    catch (Exception exception1)
+                    catch (Exception Error)
                     {
-                        Exception exception = exception1;
+                        Log.Error("CDN DOWNLOADER: [WriteHashCache] -> " + Error.Message);
+                        Log.ErrorInner("CDN DOWNLOADER: [WriteHashCache] -> " + Error.ToString());
+                        Exception exception = Error;
                     }
                 }
                 finally
@@ -297,10 +322,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     if (cryptoStream != null)
                     {
                         cryptoStream.Close();
+                        cryptoStream.Dispose();
                     }
                     if (fileStream != null)
                     {
                         fileStream.Close();
+                        fileStream.Dispose();
                     }
                 }
             }

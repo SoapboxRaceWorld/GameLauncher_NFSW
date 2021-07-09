@@ -488,6 +488,7 @@ namespace GameLauncher.App
             {
                 FinalCDNURL = FileSettingsSave.CDN;
                 Log.Error("SETTINGS CDN URL TRIM: " + Error.Message);
+                Log.ErrorInner("SETTINGS CDN URL TRIM: " + Error.ToString());
             }
 
             try
@@ -512,6 +513,7 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS VERIFYHASH: " + Error.Message);
+                Log.ErrorInner("SETTINGS VERIFYHASH: " + Error.ToString());
             }
 
             /********************************/
@@ -632,7 +634,7 @@ namespace GameLauncher.App
                         ServerProxy.Instance.Stop("Settings Screen");
                     }
 
-                    if (FileAccountSave.ChoosenGameServer.StartsWith("https") || InformationCache.ModernAuthSupport)
+                    if (FileAccountSave.ChoosenGameServer.StartsWith("https") || InformationCache.ModernAuthSecureChannel)
                     {
                         MessageBox.Show(null, ServerListUpdater.ServerName("Settings") + " requires Proxy to be Enabled." +
                             "\nThe launcher will turn on Proxy even if you have chosen to Disable it", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -689,6 +691,7 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS SAVE:" + Error.Message);
+                Log.ErrorInner("SETTINGS SAVE: " + Error.ToString());
             }
 
             /* Create Custom Settings.ini for LangPicker.asi module */
@@ -1117,6 +1120,7 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS CDNLIST: " + Error.Message);
+                Log.ErrorInner("SETTINGS CDNLIST: " + Error.ToString());
             }
         }
 
@@ -1160,6 +1164,7 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS CDNLIST: " + Error.Message);
+                Log.ErrorInner("SETTINGS CDNLIST: " + Error.ToString());
             }
         }
 
@@ -1212,6 +1217,7 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS LANGLIST: " + Error.Message);
+                Log.ErrorInner("SETTINGS LANGLIST: " + Error.ToString());
             }
         }
 

@@ -94,9 +94,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         }
                     }
                 }
-                catch (Exception error)
+                catch (Exception Error)
                 {
-                    Log.Error("LAUNCHER UPDATER: " + error.Message);
+                    Log.Error("LAUNCHER UPDATER: " + Error.Message);
+                    Log.ErrorInner("LAUNCHER UPDATER: " + Error.ToString());
                 }
 
                 /* Install Custom Root Certificate (If Default Values aren't used) */
@@ -126,9 +127,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             }
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception Error)
                     {
-                        Log.Error("CERTIFICATE STORE: Failed to Run. " + ex.Message);
+                        Log.Error("CERTIFICATE STORE: Failed to Run. " + Error.Message);
+                        Log.ErrorInner("CERTIFICATE STORE: " + Error.ToString());
                     }
 
                     string CertSaveLocation = AppDomain.CurrentDomain.BaseDirectory + RootCAFileName + ".cer";
@@ -164,9 +166,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             }
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception Error)
                     {
-                        Log.Error("CERTIFICATE STORE: Failed to Install. " + ex.Message);
+                        Log.Error("CERTIFICATE STORE: Failed to Install. " + Error.Message);
+                        Log.ErrorInner("CERTIFICATE STORE: " + Error.ToString());
                     }
                 }
                 else
@@ -185,9 +188,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     LauncherSerial = certificate.GetSerialNumberString();
                 }
             }
-            catch (Exception error)
+            catch (Exception Error)
             {
-                Log.Error("CERTIFICATE CHECK: " + error.Message);
+                Log.Error("CERTIFICATE CHECK: " + Error.Message);
+                Log.ErrorInner("CERTIFICATE CHECK: " + Error.ToString());
             }
 
             /* (Start Process) Check if Launcher Is Signed or Not */

@@ -40,15 +40,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     cdnInfos.AddRange(JsonConvert.DeserializeObject<List<CDNList>>(responseList));
                     InformationCache.CDNListStatus = "Loaded";
                 }
-                catch (Exception error)
+                catch (Exception Error)
                 {
-                    Log.Error("LIST CORE: Error occurred while deserializing CDN List from [" + URLs.OnlineCDNList + "]: " + error.Message);
+                    Log.Error("LIST CORE: Error occurred while deserializing CDN List from [" + URLs.OnlineCDNList + "]: " + Error.Message);
+                    Log.ErrorInner("LIST CORE: " + Error.ToString());
                     InformationCache.CDNListStatus = "Error";
                 }
             }
-            catch (Exception error)
+            catch (Exception Error)
             {
-                Log.Error("LIST CORE: Error occurred while loading CDN List from [" + URLs.OnlineCDNList + "]: " + error.Message);
+                Log.Error("LIST CORE: Error occurred while loading CDN List from [" + URLs.OnlineCDNList + "]: " + Error.Message);
+                Log.ErrorInner("LIST CORE: " + Error.ToString());
                 InformationCache.CDNListStatus = "Error";
             }
 

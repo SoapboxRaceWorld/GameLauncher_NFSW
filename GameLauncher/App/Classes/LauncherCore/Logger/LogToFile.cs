@@ -13,17 +13,19 @@ namespace GameLauncher.App.Classes.Logger
         public Log(String file = "launcher.log") => filename = file;
         public static void StartLogging() => Task.Run(() => TaskKernel());
         private static void ToFile(string text, string errorname = "DEBUG") => buffer.Enqueue(Time.GetTime("Time") + " [" + errorname + "] " + text);
-        public static void Debug(string text) => ToFile(text, "DEBUG");
-        public static void Info(string text) => ToFile(text, " INFO");
-        public static void Warning(string text) => ToFile(text, " WARN");
-        public static void Error(string text) => ToFile(text, "ERROR");
-        public static void UrlCall(string text) => ToFile(text, "  URL");
-        public static void System(string text) => ToFile(text, "SYSTM");
-        public static void Build(string text) => ToFile(text, "BUILD");
-        public static void Visuals(string text) => ToFile(text, "VISUL");
-        public static void Api(string text) => ToFile(text, "  API");
-        public static void Core(string text) => ToFile(text, " CORE");
-
+        public static void Debug(string text) => ToFile(text, "      DEBUG");
+        public static void Info(string text) => ToFile(text, "       INFO");
+        public static void Warning(string text) => ToFile(text, "       WARN");
+        public static void Error(string text) => ToFile(text, "      ERROR");
+        public static void ErrorInner(string text) => ToFile(text, "INNER ERROR");
+        public static void UrlCall(string text) => ToFile(text, "        URL");
+        public static void System(string text) => ToFile(text, "      SYSTM");
+        public static void Build(string text) => ToFile(text, "      BUILD");
+        public static void Visuals(string text) => ToFile(text, "      VISUL");
+        public static void Api(string text) => ToFile(text, "        API");
+        public static void Core(string text) => ToFile(text, "       CORE");
+        public static void CoreInner(string text) => ToFile(text, "       CORE");
+        //"      "
         private static async void TaskKernel()
         {
             while (true)
@@ -53,13 +55,14 @@ namespace GameLauncher.App.Classes.Logger
         readonly static ConcurrentQueue<string> buffer = new ConcurrentQueue<string>();
         public static void StartVerifyLogging() => Task.Run(() => VerifyTaskKernel());
         private static void ToFile(string text, string errorname = "DEBUG") => buffer.Enqueue(Time.GetTime("Time") + " [" + errorname + "] " + text);
-        public static void Error(string text) => ToFile(text, "   ERROR");
-        public static void Info(string text) => ToFile(text, "    INFO");
-        public static void Valid(string text) => ToFile(text, "   VAILD");
-        public static void Invalid(string text) => ToFile(text, " INVALID");
-        public static void Deleted(string text) => ToFile(text, " DELETED");
-        public static void Missing(string text) => ToFile(text, " MISSING");
-        public static void Downloaded(string text) => ToFile(text, "REPLACED");
+        public static void Error(string text) => ToFile(text, "         ERROR");
+        public static void ErrorInner(string text) => ToFile(text, "INNER ERROR");
+        public static void Info(string text) => ToFile(text, "          INFO");
+        public static void Valid(string text) => ToFile(text, "         VAILD");
+        public static void Invalid(string text) => ToFile(text, "       INVALID");
+        public static void Deleted(string text) => ToFile(text, "       DELETED");
+        public static void Missing(string text) => ToFile(text, "       MISSING");
+        public static void Downloaded(string text) => ToFile(text, "      REPLACED");
  
         private static async void VerifyTaskKernel()
         {

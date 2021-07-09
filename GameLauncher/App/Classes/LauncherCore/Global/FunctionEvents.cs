@@ -2,6 +2,7 @@
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.Logger;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -125,9 +126,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                             var response = (HttpWebResponse)request.GetResponse();
                             MessageBox.Show(null, new StreamReader(response.GetResponseStream()).ReadToEnd(), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
-                        catch
+                        catch (Exception Error)
                         {
-                            MessageBox.Show(null, "Failed to send email!", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            Log.Error("REGISTRATION: " + Error.Message);
+                            Log.ErrorInner("REGISTRATION: " + Error.ToString());
+                            MessageBox.Show(null, "Failed to send email!" +
+                                "\n" + Error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }                
                 }

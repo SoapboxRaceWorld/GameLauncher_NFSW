@@ -29,6 +29,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
             catch (Exception Error)
             {
                 Log.Error("VERTICAL BANNER: " + Error.Message);
+                Log.ErrorInner("VERTICAL BANNER: " + Error.ToString());
                 return null;
             }
         }

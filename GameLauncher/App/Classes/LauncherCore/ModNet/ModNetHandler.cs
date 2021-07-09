@@ -28,6 +28,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
             catch (Exception Error)
             {
                 Log.Error("LAUNCHER: Umable to Retrive Modding Information -> " + Error.Message);
+                Log.ErrorInner("LAUNCHER: " + Error.ToString());
                 return String.Empty;
             }
         }
@@ -106,12 +107,13 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                                 
                                 File.Move(origPath, realLoc);
                             }
-                            catch (Exception ex)
+                            catch (Exception Error)
                             {
                                 FileErrors++;
 
                                 Log.Error("CLEANLINKS: Error while deleting a file: {realLoc}");
-                                Log.Error("CLEANLINKS: " + ex.Message);
+                                Log.Error("CLEANLINKS: " + Error.Message);
+                                Log.ErrorInner("CLEANLINKS: " + Error.ToString());
                             }
                         }
                         else
@@ -150,9 +152,10 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                     File.Delete(linksPath);
                 }
             }
-            catch (Exception ex)
+            catch (Exception Error)
             {
-                Log.Error("CLEANLINKS: " + ex.Message);
+                Log.Error("CLEANLINKS: " + Error.Message);
+                Log.ErrorInner("CLEANLINKS: " + Error.ToString());
             }
         }
 

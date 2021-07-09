@@ -418,6 +418,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             catch (Exception Error)
             {
                 Log.Error("DISCORD: " + Error.Message);
+                Log.ErrorInner("DISCORD: " + Error.ToString());
             }
         }
 

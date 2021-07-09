@@ -6,6 +6,7 @@ using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
+using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using System;
 using System.Collections.Generic;
@@ -85,7 +86,7 @@ namespace GameLauncher.App
 
                 try
                 {
-                    String checkPassword = SHA.HashPassword(RegisterPassword.Text.ToString()).ToUpper();
+                    String checkPassword = SHA.Hashes(RegisterPassword.Text.ToString()).ToUpper();
                     var regex = new Regex(@"([0-9A-Z]{5})([0-9A-Z]{35})").Split(checkPassword);
                     String range = regex[1];
 
@@ -130,22 +131,43 @@ namespace GameLauncher.App
                 {
                     Tokens.Clear();
 
-                    String username = RegisterEmail.Text.ToString();
-                    String realpass;
-                    String token = (_ticketRequired) ? RegisterTicket.Text : null;
+                    String Email;
+                    String Password;
+                    String Ticket = (_ticketRequired) ? RegisterTicket.Text : null;
 
                     Tokens.IPAddress = InformationCache.SelectedServerData.IpAddress;
                     Tokens.ServerName = ServerListUpdater.ServerName("Register");
 
-                    if (InformationCache.ModernAuthSupport == false)
+                    switch (Authentication.HashType(InformationCache.ModernAuthHashType))
                     {
-                        realpass = SHA.HashPassword(RegisterPassword.Text.ToString()).ToLower();
-                        Authentication.Client("Register", "Non Secure", username, realpass, token);
+                        case AuthHash.H10:
+                            Email = RegisterEmail.Text.ToString();
+                            Password = RegisterPassword.Text.ToString();
+                            break;
+                        case AuthHash.H11:
+                            Email = RegisterEmail.Text.ToString();
+                            Password = SHA.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                            break;
+                        case AuthHash.H12:
+                            Email = SHA.Hashes(RegisterEmail.Text.ToString()).ToLower();
+                            Password = SHA.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                            break;
+                        case AuthHash.H13:
+                            Email = SHATwoFiveSix.Hashes(RegisterEmail.Text.ToString()).ToLower();
+                            Password = SHATwoFiveSix.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                            break;
+                        default:
+                            Log.Error("HASH TYPE: Unknown Hash Standard that was Provided");
+                            return;
+                    }
+
+                    if (!InformationCache.ModernAuthSecureChannel)
+                    {
+                        Authentication.Client("Register", "Non Secure", Email, Password, Ticket);
                     }
                     else
                     {
-                        realpass = RegisterPassword.Text.ToString();
-                        Authentication.Client("Register", "Secure", username, realpass, token);
+                        Authentication.Client("Register", "Secure", Email, Password, Ticket);
                     }
 
                     if (!String.IsNullOrWhiteSpace(Tokens.Success))
