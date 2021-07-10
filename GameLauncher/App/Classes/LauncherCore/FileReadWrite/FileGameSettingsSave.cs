@@ -24,6 +24,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         public static string Camera = "2";
         public static string Transmission = "2";
         public static string Damage = "1";
+        public static string Moments = "1";
         public static string SpeedUnits = "1";
         /* Physics */
         public static string CameraPOV = "2";
@@ -124,6 +125,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                                                      NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "transmission") : "2";
                 FileGameSettingsData.Damage = (NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "damage") != "ERROR") ?
                                                NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "damage") : "1";
+                FileGameSettingsData.Moments = (NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "moments") != "ERROR") ?
+                                               NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "moments") : "1";
                 FileGameSettingsData.SpeedUnits = (NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "speedUnits") != "ERROR") ?
                                                    NodeReader("Attributes", "Settings/UI/Gameplay/GamePlayOptions", "speedUnits") : "1";
                 /* Physics */
@@ -234,6 +237,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "camera", FileGameSettingsData.CameraPOV, FileGameSettingsData.CameraPOV);
                     NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "transmission", FileGameSettingsData.Transmission, FileGameSettingsData.Transmission);
                     NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "damage", FileGameSettingsData.Damage, FileGameSettingsData.Damage);
+                    NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "moments", FileGameSettingsData.Moments, FileGameSettingsData.Moments);
                     NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "speedUnits", FileGameSettingsData.SpeedUnits, FileGameSettingsData.SpeedUnits);
                     /* Physics */
                     NodeUpdater("InnerText", "Settings/Physics", "CameraPOV", "Type", "int", FileGameSettingsData.CameraPOV);
