@@ -292,9 +292,12 @@ namespace GameLauncher.App
             FileGameSettingsData.Damage = (radioDamageOn.Checked == true) ? "0" : "1";
             FileGameSettingsData.SpeedUnits = (radioKmH.Checked == true) ? "0" : "1";
 
-            FileGameSettingsData.Transmission = comboBoxTransmisson.SelectedValue.ToString();
-            FileGameSettingsData.AudioMode = comboAudioMode.SelectedValue.ToString();
-            FileGameSettingsData.CameraPOV = comboBoxCamera.SelectedValue.ToString();
+            FileGameSettingsData.TransmissionType = comboBoxTransmisson.SelectedValue.ToString(); // Physics
+            FileGameSettingsData.Transmission = comboBoxTransmisson.SelectedValue.ToString(); // GamePlayOptions
+            FileGameSettingsData.AudioMode = comboAudioMode.SelectedValue.ToString(); // GamePlayOptions
+            FileGameSettingsData.AudioM = comboAudioMode.SelectedValue.ToString(); //VideoConfig
+            FileGameSettingsData.CameraPOV = comboBoxCamera.SelectedValue.ToString(); // Physics
+            FileGameSettingsData.Camera = comboBoxCamera.SelectedValue.ToString(); // GamePlayOptions
 
             FileGameSettingsData.MotionBlurEnable = (radioMotionBlurOff.Checked == true) ? "0" : "1";
             FileGameSettingsData.RoadTextureLODBias = (radioRoadLODBiasOff.Checked == true) ? "0" : "1";
@@ -1205,7 +1208,14 @@ namespace GameLauncher.App
             /*********************************************************************/
 
             /* Bugfix: Set the Size Ahead of Time and it will change after setting the PerformanceLevel Index */
-            Size = new Size(290, 842);
+            if (WindowsProductVersion.GetWindowsNumber() >= 10)
+            {
+                Size = new Size(292, 726);
+            }
+            else
+            {
+                Size = new Size(282, 712);
+            }
 
             if (ResolutionsListLoaded == true)
             {

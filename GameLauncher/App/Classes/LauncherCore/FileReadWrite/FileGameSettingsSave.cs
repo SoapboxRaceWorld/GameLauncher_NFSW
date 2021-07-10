@@ -13,7 +13,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         /* Language */
         public static string Language = "EN";
         /* Audio */
-        public static string AudioMode = "0";
+        public static string AudioMode = "1";
         public static string MasterAudio = "100";
         public static string SFXAudio = "52";
         public static string CarAudio = "52";
@@ -29,6 +29,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         public static string CameraPOV = "2";
         public static string TransmissionType = "1";
         /* VideoConfig */
+        public static string AudioM = "1";
         public static string AudioQuality = "0";
         public static string Brightness = "0";
         public static string EnableAero = "0";
@@ -131,6 +132,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 FileGameSettingsData.TransmissionType = (NodeReader("InnerText", "Settings/Physics/TransmissionType", null) != "ERROR") ?
                                                          NodeReader("InnerText", "Settings/Physics/TransmissionType", null) : "1";
                 /* VideoConfig */
+                FileGameSettingsData.AudioM = (NodeReader("InnerText", "Settings/VideoConfig/audiomode", null) != "ERROR") ?
+                                                     NodeReader("InnerText", "Settings/VideoConfig/audiomode", null) : "0";
                 FileGameSettingsData.AudioQuality = (NodeReader("InnerText", "Settings/VideoConfig/audioquality", null) != "ERROR") ?
                                                      NodeReader("InnerText", "Settings/VideoConfig/audioquality", null) : "0";
                 FileGameSettingsData.Brightness = (NodeReader("InnerText", "Settings/VideoConfig/brightness", null) != "ERROR") ?
