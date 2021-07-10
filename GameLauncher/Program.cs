@@ -21,6 +21,7 @@ using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
+using System.Text;
 
 namespace GameLauncher
 {
@@ -30,8 +31,8 @@ namespace GameLauncher
         public static Thread SplashScreen;
         public static bool IsSplashScreenLive = false;
         public static bool LauncherMustRestart = false;
-        private static readonly string LocalAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        private static readonly string RoamingAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        private static readonly string LocalAppData = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)));
+        private static readonly string RoamingAppData = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)));
 
         [STAThread]
         static void Main()
@@ -75,10 +76,12 @@ namespace GameLauncher
                         {
                             using (WebClientWithTimeout wc = new WebClientWithTimeout())
                             {
+                                wc.Encoding = Encoding.UTF8;
                                 wc.DownloadFile(new Uri(URLs.File + "/LZMA.dll"), "LZMA.dll");
                             }
 
-                            DialogResult restartApp = MessageBox.Show(null, "Downloaded Missing LZMA.dll File. \nPlease Restart Launcher, Thanks!", "GameLauncher Restart Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                            DialogResult restartApp = MessageBox.Show(null, "Downloaded Missing LZMA.dll File." +
+                                "\nPlease Restart Launcher, Thanks!", "GameLauncher Restart Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                             FunctionStatus.LauncherForceClose = true;
 
@@ -115,8 +118,10 @@ namespace GameLauncher
                                     "Nancy.dll - 2.0.0",
                                     "Nancy.Hosting.Self.dll - 2.0.0",
                                     "Newtonsoft.Json.dll - 13.0.1",
-                                    "System.Runtime.InteropServices.RuntimeInformation.dll - 4.6.24705.01. Commit Hash: 4d1af962ca0fede10beb01d197367c2f90e92c97",
-                                    "System.ValueTuple.dll - 4.6.26515.06 @BuiltBy: dlab-DDVSOWINAGE059 @Branch: release/2.1 @SrcCode: https://github.com/dotnet/corefx/tree/30ab651fcb4354552bd4891619a0bdd81e0ebdbf",
+                                    "System.Runtime.InteropServices.RuntimeInformation.dll - 4.6.24705.01. " +
+                                    "Commit Hash: 4d1af962ca0fede10beb01d197367c2f90e92c97",
+                                    "System.ValueTuple.dll - 4.6.26515.06 @BuiltBy: dlab-DDVSOWINAGE059 " +
+                                    "@Branch: release/2.1 @SrcCode: https://github.com/dotnet/corefx/tree/30ab651fcb4354552bd4891619a0bdd81e0ebdbf",
                                     "WindowsFirewallHelper.dll - 2.0.4.70-beta2"
                                 };
 
@@ -128,7 +133,8 @@ namespace GameLauncher
                                     {
                                         var splitFileVersion = file.Split(new string[] { " - " }, StringSplitOptions.None);
 
-                                        if (!File.Exists(Directory.GetCurrentDirectory() + "\\" + splitFileVersion[0]))
+                                        if (!File.Exists(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(
+                                            Directory.GetCurrentDirectory())) + "\\" + splitFileVersion[0]))
                                         {
                                             missingfiles.Add(splitFileVersion[0] + " - Not Found");
                                         }
@@ -154,7 +160,8 @@ namespace GameLauncher
                                                     {
                                                         if (version != splitFileVersion[1])
                                                         {
-                                                            missingfiles.Add(splitFileVersion[0] + " - Invalid Version (" + splitFileVersion[1] + " != " + version + ")");
+                                                            missingfiles.Add(splitFileVersion[0] + " - Invalid Version " +
+                                                                "(" + splitFileVersion[1] + " != " + version + ")");
                                                         }
                                                     }
                                                 }
@@ -191,7 +198,8 @@ namespace GameLauncher
                             }
                             else
                             {
-                                MessageBox.Show(null, "An instance of SBRW Launcher is already running", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                MessageBox.Show(null, "An instance of SBRW Launcher is already running", 
+                                    "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
                         }
                         finally
@@ -236,7 +244,8 @@ namespace GameLauncher
                         else
                         {
                             DialogResult frameworkError = MessageBox.Show(null, "This application requires a minimum version of the .NET Framework:\n" +
-                                " .NETFramework, Version=v4.6.1 \n\nDo you want to install this .NET Framework version now?", "GameLauncher.exe - This application could not be started.", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                                " .NETFramework, Version=v4.6.1 \n\nDo you want to install this .NET Framework version now?", 
+                                "GameLauncher.exe - This application could not be started.", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
                             if (frameworkError == DialogResult.Yes)
                             {
@@ -254,7 +263,8 @@ namespace GameLauncher
                     else
                     {
                         DialogResult frameworkError = MessageBox.Show(null, "This application requires a version equal to or newer than the .NET Framework:\n" +
-                            " .NETFramework, Version=v4.6.2 \n\nDo you want to install this .NET Framework version now?", "GameLauncher.exe - This application could not be started.", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                            " .NETFramework, Version=v4.6.2 \n\nDo you want to install this .NET Framework version now?", 
+                            "GameLauncher.exe - This application could not be started.", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
                         if (frameworkError == DialogResult.Yes)
                         {
@@ -380,15 +390,17 @@ namespace GameLauncher
                 }
 
                 /* Set Launcher Directory */
-                Log.Info("CORE: Setting up current directory: " + Path.GetDirectoryName(Application.ExecutablePath));
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+                Log.Info("CORE: Setting up current directory: " + Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Path.GetDirectoryName(
+                    Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Application.ExecutablePath))))));
+                Directory.SetCurrentDirectory(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Path.GetDirectoryName(Encoding.UTF8.GetString(
+                    Encoding.UTF8.GetBytes(Application.ExecutablePath))))));
 
                 if (!DetectLinux.LinuxDetected())
                 {
                     DiscordLauncherPresense.Status("Start Up", "Checking Launcher Folder Location");
                     Log.Info("CORE: Checking current directory");
 
-                    switch (FunctionStatus.CheckFolder(Directory.GetCurrentDirectory()))
+                    switch (FunctionStatus.CheckFolder(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Directory.GetCurrentDirectory()))))
                     {
                         case FolderType.IsTempFolder:
                         case FolderType.IsUsersFolders:
@@ -427,7 +439,7 @@ namespace GameLauncher
                 }
                 else
                 {
-                    if (!FunctionStatus.HasWriteAccessToFolder(Path.GetDirectoryName(Application.ExecutablePath)))
+                    if (!FunctionStatus.HasWriteAccessToFolder(Path.GetDirectoryName(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Application.ExecutablePath)))))
                     {
                         MessageBox.Show("Unable to do a Test Write to Launcher Folder\nPermission Issue");
                     }
@@ -474,12 +486,14 @@ namespace GameLauncher
                                 RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
                                 key.SetValue("DisabledByDefault", 0x0);
 
-                                MessageBox.Show(null, "Registry option set, Remember that the changes may require a system reboot to take effect", "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBox.Show(null, "Registry option set, Remember that the changes may require a system reboot to take effect", 
+                                    "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 FileSettingsSave.Win7UpdatePatches = "1";
                             }
                             else
                             {
-                                MessageBox.Show(null, "Roger that, There may be some issues connecting to the servers.", "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBox.Show(null, "Roger that, There may be some issues connecting to the servers.", 
+                                    "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 FileSettingsSave.Win7UpdatePatches = "0";
                             }
 

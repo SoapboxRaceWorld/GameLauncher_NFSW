@@ -20,6 +20,7 @@ using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using System.Reflection;
+using System.Text;
 
 namespace GameLauncher.App
 {
@@ -488,7 +489,8 @@ namespace GameLauncher.App
             {
                 FinalCDNURL = FileSettingsSave.CDN;
                 Log.Error("SETTINGS CDN URL TRIM: " + Error.Message);
-                Log.ErrorInner("SETTINGS CDN URL TRIM: " + Error.ToString());
+                Log.Error("SETTINGS CDN URL TRIM [HResult]: " + Error.HResult);
+                Log.ErrorInner("SETTINGS CDN URL TRIM [Full Report]: " + Error.ToString());
             }
 
             try
@@ -513,7 +515,8 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS VERIFYHASH: " + Error.Message);
-                Log.ErrorInner("SETTINGS VERIFYHASH: " + Error.ToString());
+                Log.Error("SETTINGS VERIFYHASH [HResult]: " + Error.HResult);
+                Log.ErrorInner("SETTINGS VERIFYHASH [Full Report]: " + Error.ToString());
             }
 
             /********************************/
@@ -691,7 +694,8 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS SAVE:" + Error.Message);
-                Log.ErrorInner("SETTINGS SAVE: " + Error.ToString());
+                Log.Error("SETTINGS SAVE [HResult]:" + Error.HResult);
+                Log.ErrorInner("SETTINGS SAVE [Full Report]: " + Error.ToString());
             }
 
             /* Create Custom Settings.ini for LangPicker.asi module */
@@ -758,56 +762,86 @@ namespace GameLauncher.App
 
             if (SettingsClearServerModCacheConfirmation == DialogResult.Yes)
             {
-                Directory.Delete(FileSettingsSave.GameInstallation + "/.data", true);
-                Directory.Delete(FileSettingsSave.GameInstallation + "/MODS", true);
-                Log.Warning("LAUNCHER: User Confirmed to Delete Server Mods Cache");
-                SettingsClearServerModCacheButton.ForeColor = Theming.RedForeColorButton;
-                SettingsClearServerModCacheButton.BackColor = Theming.RedBackColorButton;
-                SettingsClearServerModCacheButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-                SettingsClearServerModCacheButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
-                SettingsClearServerModCacheButton.Enabled = false;
-                MessageBox.Show(null, "Deleted Server Mods Cache", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                try
+                {
+                    Directory.Delete(FileSettingsSave.GameInstallation + "/.data", true);
+                    Directory.Delete(FileSettingsSave.GameInstallation + "/MODS", true);
+                    Log.Warning("LAUNCHER: User Confirmed to Delete Server Mods Cache");
+                    SettingsClearServerModCacheButton.ForeColor = Theming.RedForeColorButton;
+                    SettingsClearServerModCacheButton.BackColor = Theming.RedBackColorButton;
+                    SettingsClearServerModCacheButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                    SettingsClearServerModCacheButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+                    SettingsClearServerModCacheButton.Enabled = false;
+                    MessageBox.Show(null, "Deleted Server Mods Cache", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception Error)
+                {
+                    Log.Error("SETTINGS CLEAR: " + Error.Message);
+                    Log.Error("SETTINGS CLEAR [HResult]: " + Error.HResult);
+                    Log.ErrorInner("SETTINGS CLEAR [Full Report]: " + Error.ToString());
+                    MessageBox.Show(null, "Unable to Delete Server Mods Cache\n" + Error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
 
         /* Settings Clear Communication Logs */
         private void SettingsClearCommunicationLogButton_Click(object sender, EventArgs e)
         {
-            File.Delete(FileSettingsSave.GameInstallation + "/NFSWO_COMMUNICATION_LOG.txt");
-            SettingsClearCommunicationLogButton.ForeColor = Theming.RedForeColorButton;
-            SettingsClearCommunicationLogButton.BackColor = Theming.RedBackColorButton;
-            SettingsClearCommunicationLogButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-            SettingsClearCommunicationLogButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
-            SettingsClearCommunicationLogButton.Enabled = false;
-            MessageBox.Show(null, "Deleted NFSWO Communication Log", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try
+            {
+                File.Delete(FileSettingsSave.GameInstallation + "/NFSWO_COMMUNICATION_LOG.txt");
+                SettingsClearCommunicationLogButton.ForeColor = Theming.RedForeColorButton;
+                SettingsClearCommunicationLogButton.BackColor = Theming.RedBackColorButton;
+                SettingsClearCommunicationLogButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                SettingsClearCommunicationLogButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+                SettingsClearCommunicationLogButton.Enabled = false;
+                MessageBox.Show(null, "Deleted NFSWO Communication Log", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception Error)
+            {
+                Log.Error("SETTINGS CLEAR: " + Error.Message);
+                Log.Error("SETTINGS CLEAR [HResult]: " + Error.HResult);
+                Log.ErrorInner("SETTINGS CLEAR [Full Report]: " + Error.ToString());
+                MessageBox.Show(null, "Unable to Delete NFSWO Communication Log\n" + Error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
 
         /* Settings Clear Game Crash Logs */
         private void SettingsClearCrashLogsButton_Click(object sender, EventArgs e)
         {
-            var crashLogFilesDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
-
-            foreach (var file in crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp"))
+            try
             {
-                file.Delete();
-            }
+                var crashLogFilesDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
 
-            foreach (var file in crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.txt"))
+                foreach (var file in crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp"))
+                {
+                    file.Delete();
+                }
+
+                foreach (var file in crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.txt"))
+                {
+                    file.Delete();
+                }
+
+                foreach (var file in crashLogFilesDirectory.EnumerateFiles("NFSCrashDump_CL0*.dmp"))
+                {
+                    file.Delete();
+                }
+
+                SettingsClearCrashLogsButton.ForeColor = Theming.RedForeColorButton;
+                SettingsClearCrashLogsButton.BackColor = Theming.RedBackColorButton;
+                SettingsClearCrashLogsButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                SettingsClearCrashLogsButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+                SettingsClearCrashLogsButton.Enabled = false;
+                MessageBox.Show(null, "Deleted Crash Logs", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception Error)
             {
-                file.Delete();
+                Log.Error("SETTINGS CLEAR: " + Error.Message);
+                Log.Error("SETTINGS CLEAR [HResult]: " + Error.HResult);
+                Log.ErrorInner("SETTINGS CLEAR [Full Report]: " + Error.ToString());
+                MessageBox.Show(null, "Unable to Delete Crash Logs\n" + Error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-
-            foreach (var file in crashLogFilesDirectory.EnumerateFiles("NFSCrashDump_CL0*.dmp"))
-            {
-                file.Delete();
-            }
-
-            SettingsClearCrashLogsButton.ForeColor = Theming.RedForeColorButton;
-            SettingsClearCrashLogsButton.BackColor = Theming.RedBackColorButton;
-            SettingsClearCrashLogsButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-            SettingsClearCrashLogsButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
-            SettingsClearCrashLogsButton.Enabled = false;
-            MessageBox.Show(null, "Deleted Crash Logs", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         /* Settings Change Game Files Location */
@@ -827,7 +861,7 @@ namespace GameLauncher.App
                 
                 if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
                 {
-                    _newGameFilesPath = Path.GetDirectoryName(changeGameFilesPath.FileName);
+                    _newGameFilesPath = Path.GetDirectoryName(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(changeGameFilesPath.FileName)));
                     SettingsGameFilesCurrentText.Text = "NEW DIRECTORY";
                     SettingsGameFilesCurrent.Text = _newGameFilesPath;
                 }
@@ -840,7 +874,7 @@ namespace GameLauncher.App
 
                 if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
                 {
-                    _newGameFilesPath = Path.GetFullPath(changeGameFilesPath.SelectedPath);
+                    _newGameFilesPath = Path.GetFullPath(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(changeGameFilesPath.SelectedPath)));
                     SettingsGameFilesCurrentText.Text = "NEW DIRECTORY";
                     SettingsGameFilesCurrent.Text = _newGameFilesPath;
                 }
@@ -1120,7 +1154,8 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS CDNLIST: " + Error.Message);
-                Log.ErrorInner("SETTINGS CDNLIST: " + Error.ToString());
+                Log.Error("SETTINGS CDNLIST [HResult]: " + Error.HResult);
+                Log.ErrorInner("SETTINGS CDNLIST [Full Report]: " + Error.ToString());
             }
         }
 
@@ -1164,7 +1199,8 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS CDNLIST: " + Error.Message);
-                Log.ErrorInner("SETTINGS CDNLIST: " + Error.ToString());
+                Log.Error("SETTINGS CDNLIST [HResult]: " + Error.HResult);
+                Log.ErrorInner("SETTINGS CDNLIST [Full Report]: " + Error.ToString());
             }
         }
 
@@ -1217,7 +1253,8 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS LANGLIST: " + Error.Message);
-                Log.ErrorInner("SETTINGS LANGLIST: " + Error.ToString());
+                Log.Error("SETTINGS LANGLIST [HResult]: " + Error.HResult);
+                Log.ErrorInner("SETTINGS LANGLIST [Full Report]: " + Error.ToString());
             }
         }
 

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Windows
@@ -47,9 +48,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     Uri URLCall = new Uri("http://crl.carboncrew.org/RCA-Info.json");
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     WebClient Client = new WebClient();
+                    Client.Encoding = Encoding.UTF8;
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                     /* Download Up to Date Certificate Status */
-                    var json_data = Client.DownloadString(URLCall);
+                    string json_data = Client.DownloadString(URLCall);
                     JsonRootCA API = JsonConvert.DeserializeObject<JsonRootCA>(json_data);
 
                     if (API.CN != null)
@@ -97,7 +99,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 catch (Exception Error)
                 {
                     Log.Error("LAUNCHER UPDATER: " + Error.Message);
-                    Log.ErrorInner("LAUNCHER UPDATER: " + Error.ToString());
+                    Log.Error("LAUNCHER UPDATER [HResult]: " + Error.HResult);
+                    Log.ErrorInner("LAUNCHER UPDATER [Full Report]: " + Error.ToString());
                 }
 
                 /* Install Custom Root Certificate (If Default Values aren't used) */
@@ -130,10 +133,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     catch (Exception Error)
                     {
                         Log.Error("CERTIFICATE STORE: Failed to Run. " + Error.Message);
-                        Log.ErrorInner("CERTIFICATE STORE: " + Error.ToString());
+                        Log.Error("CERTIFICATE STORE [HResult]: " + Error.HResult);
+                        Log.ErrorInner("CERTIFICATE STORE [Full Report]: " + Error.ToString());
                     }
 
-                    string CertSaveLocation = AppDomain.CurrentDomain.BaseDirectory + RootCAFileName + ".cer";
+                    string CertSaveLocation = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory)) + RootCAFileName + ".cer";
 
                     try
                     {
@@ -143,6 +147,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             Uri URLCall = new Uri(RootCAFileURL);
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             WebClient Client = new WebClient();
+                            Client.Encoding = Encoding.UTF8;
                             Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                             Client.DownloadFile(URLCall, CertSaveLocation);
 
@@ -169,7 +174,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     catch (Exception Error)
                     {
                         Log.Error("CERTIFICATE STORE: Failed to Install. " + Error.Message);
-                        Log.ErrorInner("CERTIFICATE STORE: " + Error.ToString());
+                        Log.Error("CERTIFICATE STORE [HResult]: " + Error.HResult);
+                        Log.ErrorInner("CERTIFICATE STORE [Full Report]: " + Error.ToString());
                     }
                 }
                 else
@@ -180,7 +186,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
             try
             {
-                Assembly assembly = Assembly.LoadFrom(Application.ExecutablePath);
+                Assembly assembly = Assembly.LoadFrom(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Application.ExecutablePath)));
                 Module module = assembly.GetModules().First();
                 X509Certificate certificate = module.GetSignerCertificate();
                 if (certificate != null)
@@ -191,7 +197,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             catch (Exception Error)
             {
                 Log.Error("CERTIFICATE CHECK: " + Error.Message);
-                Log.ErrorInner("CERTIFICATE CHECK: " + Error.ToString());
+                Log.Error("CERTIFICATE CHECK [HResult]: " + Error.HResult);
+                Log.ErrorInner("CERTIFICATE CHECK [Full Report]: " + Error.ToString());
             }
 
             /* (Start Process) Check if Launcher Is Signed or Not */

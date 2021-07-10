@@ -10,6 +10,7 @@ using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using System.Text;
 
 namespace GameLauncher.App
 {
@@ -95,6 +96,7 @@ namespace GameLauncher.App
                         try
                         {
                             WebClientWithTimeout getdata = new WebClientWithTimeout();
+                            getdata.Encoding = Encoding.UTF8;
                             GetServerInformation content = JsonConvert.DeserializeObject<GetServerInformation>(getdata.DownloadString(serverurl));
 
                             if (content == null)

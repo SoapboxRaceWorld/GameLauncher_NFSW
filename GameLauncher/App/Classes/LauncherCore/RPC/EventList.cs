@@ -1,6 +1,7 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using Newtonsoft.Json;
 using System;
+using System.Text;
 
 namespace GameLauncher.App.Classes.LauncherCore.RPC
 {
@@ -13,7 +14,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             /* Let's load the "From Server" version first */
             if (remoteEventsList != String.Empty)
             {
-                dynamic dynJson = JsonConvert.DeserializeObject(remoteEventsList);
+                dynamic dynJson = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(remoteEventsList)));
 
                 foreach (var item in dynJson)
                 {
@@ -27,7 +28,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             /* If we don't have a Server version, load "default" version */
             if (remoteEventsList == String.Empty)
             {
-                dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.LauncherCore.RPC.JSON.events.json"));
+                dynamic dynJson = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(
+                    Encoding.UTF8.GetBytes(ExtractResource.AsString("GameLauncher.App.Classes.LauncherCore.RPC.JSON.events.json"))));
 
                 foreach (var item in dynJson)
                 {
@@ -47,7 +49,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             /* Let's load the "From Server" version first */
             if (remoteEventsList != String.Empty)
             {
-                dynamic dynJson = JsonConvert.DeserializeObject(remoteEventsList);
+                dynamic dynJson = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(remoteEventsList)));
 
                 foreach (var item in dynJson)
                 {
@@ -61,7 +63,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             /* If we don't have a Server version, load "default" version */
             if (remoteEventsList != String.Empty)
             {
-                dynamic dynJson = JsonConvert.DeserializeObject(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.events.json"));
+                dynamic dynJson = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(
+                    Encoding.UTF8.GetBytes(ExtractResource.AsString("GameLauncher.App.Classes.RPC.JSON.events.json"))));
 
                 foreach (var item in dynJson)
                 {

@@ -32,7 +32,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 catch (Exception Error)
                 {
                     Log.Error("FILE PERMISSION: " + Error.Message);
-                    Log.ErrorInner("FILE PERMISSION: " + Error.ToString());
+                    Log.Error("FILE PERMISSION [HResult]: " + Error.HResult);
+                    Log.ErrorInner("FILE PERMISSION [Full Report]: " + Error.ToString());
                 }
             }
         }
@@ -58,7 +59,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 catch (Exception Error)
                 {
                     Log.Error("FOLDER PERMISSION: " + Error.Message);
-                    Log.ErrorInner("FOLDER PERMISSION: " + Error.ToString());
+                    Log.Error("FOLDER PERMISSION [HResult]: " + Error.HResult);
+                    Log.ErrorInner("FOLDER PERMISSION [Full Report]: " + Error.ToString());
                 }
             }
         }
@@ -93,8 +95,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 }
                 catch (Exception Error)
                 {
-                    Log.Info("FILE PERMISSION: [" + path + "] Encounterd an Error" + Error.Message);
-                    Log.ErrorInner("FILE PERMISSION: " + Error.ToString());
+                    Log.Error("FILE PERMISSION: [" + path + "] Encounterd an Error" + Error.Message);
+                    Log.Error("FILE PERMISSION [HResult]: " + Error.HResult);
+                    Log.ErrorInner("FILE PERMISSION [Full Report]: " + Error.ToString());
                     return false;
                 }
             }
@@ -135,8 +138,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 }
                 catch (Exception Error)
                 {
-                    Log.Info("FOLDER PERMISSION: [" + path + "] Encounterd an Error" + Error.Message);
-                    Log.ErrorInner("FOLDER PERMISSION: " + Error.ToString());
+                    Log.Error("FOLDER PERMISSION: [" + path + "] Encounterd an Error" + Error.Message);
+                    Log.Error("FOLDER PERMISSION [HResult]: " + Error.HResult);
+                    Log.ErrorInner("FOLDER PERMISSION [Full Report]: " + Error.ToString());
                     return false;
                 }
             }
@@ -199,7 +203,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             catch (Exception Error)
             {
                 Log.Error("PERMISSIONS: " + Error.Message);
-                Log.ErrorInner("PERMISSIONS: " + Error.ToString());
+                Log.Error("PERMISSIONS [HResult]: " + Error.HResult);
+                Log.ErrorInner("PERMISSIONS [Full Report]: " + Error.ToString());
                 FileSettingsSave.FilePermissionStatus = "Error";
             }
 

@@ -101,8 +101,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("VISUAL STUDIO: " + Error.Message);
-                        Log.ErrorInner("VISUAL STUDIO: " + Error.ToString());
+                        Log.Error("REDISTRIBUTABLE: " + Error.Message);
+                        Log.Error("REDISTRIBUTABLE [HResult]: " + Error.HResult);
+                        Log.ErrorInner("REDISTRIBUTABLE [Full Report]: " + Error.ToString());
                     }
 
                     if (File.Exists("VC_redist.x86.exe"))
@@ -156,8 +157,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         }
                         catch (Exception Error)
                         {
-                            Log.Error("VISUAL STUDIO: " + Error.Message);
-                            Log.ErrorInner("VISUAL STUDIO: " + Error.ToString());
+                            Log.Error("REDISTRIBUTABLE x64: " + Error.Message);
+                            Log.Error("REDISTRIBUTABLE x64 [HResult]: " + Error.HResult);
+                            Log.ErrorInner("REDISTRIBUTABLE x64 [Full Report]: " + Error.ToString());
                         }
 
                         if (File.Exists("VC_redist.x64.exe"))

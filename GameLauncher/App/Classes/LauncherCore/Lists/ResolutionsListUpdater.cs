@@ -55,7 +55,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 catch (Exception Error)
                 {
                     Log.Error("SCREENRESOLUTIONS: Error occurred while deserializing LANG List: " + Error.Message);
-                    Log.ErrorInner("SCREENRESOLUTIONS: " + Error.ToString());
+                    Log.Error("SCREENRESOLUTIONS [HResult]: " + Error.HResult);
+                    Log.ErrorInner("SCREENRESOLUTIONS [Full Report]: " + Error.ToString());
                 }
 
                 try
@@ -71,13 +72,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 catch (Exception Error)
                 {
                     Log.Error("SCREENRESOLUTIONS: Error occurred while Sorting LANG List: " + Error.Message);
-                    Log.ErrorInner("SCREENRESOLUTIONS " + Error.ToString());
+                    Log.ErrorInner("SCREENRESOLUTIONS [HResult]: " + Error.HResult);
+                    Log.ErrorInner("SCREENRESOLUTIONS [Full Report] " + Error.ToString());
                 }
             }
             catch (Exception Error)
             {
                 Log.Error("SCREENRESOLUTIONS: " + Error.Message);
-                Log.ErrorInner("SCREENRESOLUTIONS " + Error.ToString());
+                Log.Error("SCREENRESOLUTIONS [HResult]: " + Error.HResult);
+                Log.ErrorInner("SCREENRESOLUTIONS [Full Report]: " + Error.ToString());
             }
         }
     }

@@ -29,14 +29,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.JSON
                 {
                     /* Exception in parsing json */
                     Log.Error("VALID JSON: " + Error.Message);
-                    Log.ErrorInner("VALID JSON: " + Error.ToString());
+                    Log.Error("VALID JSON [HResult]: " + Error.HResult);
+                    Log.ErrorInner("VALID JSON [Full Reports]: " + Error.ToString());
                     return false;
                 }
                 catch (Exception Error)
                 {
                     /* General Exception */
                     Log.Error("VALID JSON: " + Error.Message);
-                    Log.ErrorInner("VALID JSON: " + Error.ToString());
+                    Log.Error("VALID JSON [HResult]: " + Error.HResult);
+                    Log.ErrorInner("VALID JSON [Full Reports]: " + Error.ToString());
                     return false;
                 }
             }

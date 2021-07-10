@@ -93,10 +93,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             catch (WebException Error)
             {
                 Log.Error("CLIENT (LOGIN/REGISTER): " + Error.Message);
-                if (!string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                {
-                    Log.ErrorInner("CLIENT (LOGIN/REGISTER): " + Error.InnerException.Message);
-                }
+                Log.ErrorInner("CLIENT (LOGIN/REGISTER) [HResult]: " + Error.HResult);
+                Log.ErrorInner("CLIENT (LOGIN/REGISTER) [Full Report]: " + Error.ToString());
 
                 if (Connection == "Non Secure" || Connection == "Secure")
                 {
@@ -148,10 +146,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     catch (Exception Error)
                     {
                         Log.Error("XML LOGIN ERROR: " + Error.Message);
-                        if (!string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                        {
-                            Log.ErrorInner("XML LOGIN ERROR: " + Error.InnerException.Message);
-                        }
+                        Log.Error("XML LOGIN ERROR: [HResult] " + Error.HResult);
+                        Log.ErrorInner("XML LOGIN ERROR: [Full Report] " + Error.ToString());
 
                         XMLIsErrorFree = false;
                         msgBoxInfo = "An error occured: " + Error.Message;
@@ -356,35 +352,31 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
         {
             if (!string.IsNullOrWhiteSpace(Type))
             {
-                if (Type == "1.0" || Type == "true")
+                switch (Type)
                 {
-                    /* Raw Email and Password */
-                    return AuthHash.H10;
-                }
-                else if (Type == "1.1" || Type == "false")
-                {
-                    /* Raw Email and Hashed Password (Default Standard) */
-                    return AuthHash.H11;
-                }
-                else if (Type == "1.2")
-                {
-                    /* Hashed Email and Password in SHA */
-                    return AuthHash.H12;
-                }
-                else if (Type == "1.3")
-                {
-                    /* Hashed Email and Password in 256 */
-                    return AuthHash.H13;
-                }
-                else
-                {
-                    return AuthHash.Unknown;
+                    case "1.0":
+                    case "true":
+                        return AuthHash.H10;
+                    case "1.1":
+                        return AuthHash.H11;
+                    case "1.2":
+                    case "false":
+                        return AuthHash.H12;
+                    case "1.3":
+                        return AuthHash.H13;
+                    case "2.0":
+                        return AuthHash.H20;
+                    case "2.1":
+                        return AuthHash.H21;
+                    case "2.2":
+                        return AuthHash.H22;
+                    default:
+                        return AuthHash.Unknown;
                 }
             }
             else
             {
-                /* Raw Email and Hashed Password (Default Standard) */
-                return AuthHash.H11;
+                return AuthHash.H12;
             }
         }
     }
@@ -435,10 +427,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
                 {
                     Log.Error("XMLSERVERCORE: Unable to Read XML [NodePath: '" + FullNodePath + "' Attribute: '" + AttributeName + "']" + Error.Message);
-                    if (!string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                    {
-                        Log.ErrorInner("XMLSERVERCORE: " + Error.InnerException.Message);
-                    }
+                    Log.ErrorInner("XMLSERVERCORE: [HResult] " + Error.HResult);
+                    Log.ErrorInner("XMLSERVERCORE: [Full Report] " + Error.ToString());
                 }
                 if (Type == "InnerText")
                 {

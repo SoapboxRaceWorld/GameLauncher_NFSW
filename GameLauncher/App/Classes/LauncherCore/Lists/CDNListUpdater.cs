@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using System.Text;
+using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
@@ -31,8 +33,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 FunctionStatus.TLS();
                 Uri URLCall = new Uri(URLs.OnlineCDNList);
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                var wc = new WebClient();
-                var responseList = wc.DownloadString(URLCall);
+                WebClient wc = new WebClient();
+                wc.Encoding = Encoding.UTF8;
+                wc.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
+                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                string responseList = wc.DownloadString(URLCall);
                 Log.UrlCall("LIST CORE: Loaded CDN List from: " + URLs.OnlineCDNList);
 
                 try
@@ -43,14 +48,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 catch (Exception Error)
                 {
                     Log.Error("LIST CORE: Error occurred while deserializing CDN List from [" + URLs.OnlineCDNList + "]: " + Error.Message);
-                    Log.ErrorInner("LIST CORE: " + Error.ToString());
+                    Log.Error("LIST CORE [HResult]: " + Error.HResult);
+                    Log.ErrorInner("LIST CORE [Full Report]: " + Error.ToString());
                     InformationCache.CDNListStatus = "Error";
                 }
             }
             catch (Exception Error)
             {
                 Log.Error("LIST CORE: Error occurred while loading CDN List from [" + URLs.OnlineCDNList + "]: " + Error.Message);
-                Log.ErrorInner("LIST CORE: " + Error.ToString());
+                Log.Error("LIST CORE [HResult]: " + Error.HResult);
+                Log.ErrorInner("LIST CORE [Full Report]: " + Error.ToString());
                 InformationCache.CDNListStatus = "Error";
             }
 

@@ -10,6 +10,7 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.Logger;
+using System.Text;
 
 namespace GameLauncher.App.Classes.LauncherCore.RPC
 {
@@ -23,6 +24,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         private static bool eventTerminatedManually = false;
         private static int EventID;
         private static string carslotsXML = String.Empty;
+        private static bool inSafeHouse = false;
 
         /* Some data related, can be touched. */
         public static string PersonaId = String.Empty;
@@ -137,7 +139,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 catch (Exception Error)
                 {
                     Log.Error("DISCORD GAME PRESENSE: " + Error.Message);
-                    Log.ErrorInner("DISCORD GAME PRESENSE: " + Error.ToString());
+                    Log.Error("DISCORD GAME PRESENSE [HResult]: " + Error.HResult);
+                    Log.ErrorInner("DISCORD GAME PRESENSE [Full Report]: " + Error.ToString());
                 }
             }
 
@@ -221,6 +224,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.Assets.SmallImageKey = "gamemode_freeroam";
                     _presence.State = LauncherRPC;
                     FunctionStatus.CanCloseGame = true;
+                    inSafeHouse = false;
                 }
                 else
                 {
@@ -229,6 +233,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.Assets.SmallImageKey = "gamemode_safehouse";
                     _presence.State = serverName;
                     FunctionStatus.CanCloseGame = false;
+                    inSafeHouse = true;
                 }
 
                 _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
@@ -391,7 +396,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     {
                         if (DefaultID == current)
                         {
-                            PersonaCarName = CarsList.GetCarName(node.SelectSingleNode("CustomCar/Name").InnerText);
+                            PersonaCarName = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes
+                                (CarsList.GetCarName(node.SelectSingleNode("CustomCar/Name").InnerText)));
                         }
                         current++;
                     }
@@ -410,7 +416,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         {
                             if (receivedId == node.SelectSingleNode("Id").InnerText)
                             {
-                                PersonaCarName = CarsList.GetCarName(node.SelectSingleNode("CustomCar/Name").InnerText);
+                                PersonaCarName = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(
+                                    CarsList.GetCarName(node.SelectSingleNode("CustomCar/Name").InnerText)));
                             }
                         }
                     }
@@ -418,7 +425,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             }
 
             //Extending Safehouse
-            if (uri.Contains("catalog"))
+            if (uri.Contains("catalog") && inSafeHouse)
             {                   
                 if (GET.Contains("categoryName=NFSW_NA_EP_VINYLS_Category"))    _presence.Details = "In Safehouse - Applying Vinyls";
                 if (GET.Contains("clientProductType=PAINTS_BODY"))              _presence.Details = "In Safehouse - Applying Colors";

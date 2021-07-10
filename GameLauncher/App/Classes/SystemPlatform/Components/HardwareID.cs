@@ -209,7 +209,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                                 var tmp = mo[wmiProperty];
                                 if (tmp != null)
                                 {
-                                    result = tmp.ToString();
+                                    result = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(tmp.ToString()));
                                 }
                                 break;
                             }
@@ -220,7 +220,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                 catch (Exception Error)
                 {
                     Log.Error("ID: " + Error.Message);
-                    Log.ErrorInner("ID: " + Error.ToString());
+                    Log.Error("ID [HResult]: " + Error.HResult);
+                    Log.ErrorInner("ID [Full Report]: " + Error.ToString());
                 }
 
                 return result;

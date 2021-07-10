@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
@@ -31,8 +32,11 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     Uri URLCall = new Uri(URLs.GitHub_Updater);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     WebClient Client = new WebClient();
+                    Client.Encoding = Encoding.UTF8;
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    var json_data = Client.DownloadString(URLCall);
+
+                    string json_data = Client.DownloadString(URLCall);
+
                     try
                     {
                         GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
@@ -48,7 +52,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     catch (Exception Error)
                     {
                         Log.Error("LAUNCHER UPDATER: " + Error.Message);
-                        Log.ErrorInner("LAUNCHER UPDATER: " + Error.ToString());
+                        Log.Error("LAUNCHER UPDATER [HResult]: " + Error.HResult);
+                        Log.ErrorInner("LAUNCHER UPDATER [Full Report]: " + Error.ToString());
                     }
 
                     if (LatestUpdaterBuildVersion == "1.0.0.4")
@@ -73,6 +78,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         Uri URLCall = new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         WebClient Client = new WebClient();
+                        Client.Encoding = Encoding.UTF8;
                         Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                         Client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
                         {
@@ -86,12 +92,14 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     catch (Exception Error)
                     {
                         Log.Error("LAUNCHER UPDATER: Failed to download updater. " + Error.Message);
-                        Log.ErrorInner("LAUNCHER UPDATER: " + Error.ToString());
+                        Log.Error("LAUNCHER UPDATER [HResult]: " + Error.HResult);
+                        Log.ErrorInner("LAUNCHER UPDATER [Full Report]: " + Error.ToString());
                     }
                 }
                 else if (File.Exists("GameLauncherUpdater.exe"))
                 {
-                    String GameLauncherUpdaterLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameLauncherUpdater.exe");
+                    String GameLauncherUpdaterLocation = Path.Combine(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory)), 
+                    "GameLauncherUpdater.exe");
                     var LauncherUpdaterBuild = FileVersionInfo.GetVersionInfo(GameLauncherUpdaterLocation);
                     var LauncherUpdaterBuildNumber = LauncherUpdaterBuild.FileVersion;
                     var UpdaterBuildNumberResult = LauncherUpdaterBuildNumber.CompareTo(LatestUpdaterBuildVersion);
@@ -117,13 +125,15 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                             Uri URLCall = new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             WebClient Client = new WebClient();
+                            Client.Encoding = Encoding.UTF8;
                             Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                             Client.DownloadFile(URLCall, "GameLauncherUpdater.exe");
                         }
                         catch (Exception Error)
                         {
                             Log.Error("LAUNCHER UPDATER: Failed to download new updater. " + Error.Message);
-                            Log.ErrorInner("LAUNCHER UPDATE: " + Error.ToString());
+                            Log.ErrorInner("LAUNCHER UPDATE [HResult]: " + Error.HResult);
+                            Log.ErrorInner("LAUNCHER UPDATE [Full Report]: " + Error.ToString());
                         }
                     }
                 }

@@ -74,8 +74,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                         }
                         catch (Exception Error)
                         {
-                            Log.Error("CDN DOWNLOADER: [If File Exists] -> " + Error.Message);
-                            Log.ErrorInner("CDN DOWNLOADER: [If File Exists] -> " + Error.ToString());
+                            Log.Error("CDN DOWNLOADER: " + Error.Message);
+                            Log.Error("CDN DOWNLOADER [HResult]: " + Error.HResult);
+                            Log.ErrorInner("CDN DOWNLOADER [Full Report]: " + Error.ToString());
 
                             try
                             {
@@ -89,8 +90,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                             }
                             catch (Exception Error_2)
                             {
-                                Log.Error("CDN DOWNLOADER: [If File Exists] -> " + Error_2.Message);
-                                Log.ErrorInner("CDN DOWNLOADER: [If File Exists] -> " + Error_2.ToString());
+                                Log.Error("CDN DOWNLOADER: " + Error_2.Message);
+                                Log.Error("CDN DOWNLOADER [HResult]: " + Error_2.HResult);
+                                Log.ErrorInner("CDN DOWNLOADER [Full Report]: " + Error_2.ToString());
                             }
                         }
                     }
@@ -237,8 +239,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("CDN DOWNLOADER: [Start] -> " + Error.Message);
-                        Log.ErrorInner("CDN DOWNLOADER: [Start] -> " + Error.ToString());
+                        Log.Error("CDN DOWNLOADER: " + Error.Message);
+                        Log.Error("CDN DOWNLOADER [HResult]: " + Error.HResult);
+                        Log.ErrorInner("CDN DOWNLOADER [Full Report]: " + Error.ToString());
                         Exception exception = Error;
                         this._fileList.Clear();
                     }
@@ -307,8 +310,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("CDN DOWNLOADER: [WriteHashCache] -> " + Error.Message);
-                        Log.ErrorInner("CDN DOWNLOADER: [WriteHashCache] -> " + Error.ToString());
+                        Log.Error("CDN DOWNLOADER: " + Error.Message);
+                        Log.Error("CDN DOWNLOADER [HResult]: " + Error.HResult);
+                        Log.ErrorInner("CDN DOWNLOADER [Full Report]: " + Error.ToString());
                         Exception exception = Error;
                     }
                 }

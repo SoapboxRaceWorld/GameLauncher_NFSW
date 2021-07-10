@@ -125,8 +125,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             }
             catch (Exception Error)
             {
-                Log.Error("CDN DOWNLOADER: [BACKGROUND DO WORK] -> " + Error.Message);
-                Log.ErrorInner("CDN DOWNLOADER: [BACKGROUND DO WORK] -> " + Error.ToString());
+                Log.Error("CDN DOWNLOADER: " + Error.Message);
+                Log.Error("CDN DOWNLOADER [HResult]: " + Error.HResult);
+                Log.ErrorInner("CDN DOWNLOADER [Full Report]: " + Error.ToString());
                 Exception exception = Error;
                 lock (this._workers)
                 {

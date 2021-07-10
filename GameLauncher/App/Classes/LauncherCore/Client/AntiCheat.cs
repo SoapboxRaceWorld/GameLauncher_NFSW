@@ -170,6 +170,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                                     update_data.CancelAsync();
                                     update_data.Headers.Add ("user-agent", "GameLauncher " + Application.ProductVersion + " - (" + InsiderInfo.BuildNumberOnly() + ")");
                                     update_data.Headers.Add("os-version", NTVersion);
+                                    update_data.Encoding = Encoding.UTF8;
                                     update_data.DownloadStringAsync(sendReport);
                                 }
                                 else
@@ -215,6 +216,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                                         update_data.CancelAsync();
                                         update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " - (" + InsiderInfo.BuildNumberOnly() + ")");
                                         update_data.Headers.Add("os-version", NTVersion);
+                                        update_data.Encoding = Encoding.UTF8;
                                         update_data.DownloadStringAsync(sendReport);
                                     }
                                 }

@@ -187,8 +187,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             }
             catch (Exception Error)
             {
-                Log.Error("GET INDEX FILE: " + Error.Message);
-                Log.ErrorInner("GET INDEX FILE: " + Error.ToString());
+                Log.Error("CDN DOWNLOADER: " + Error.Message);
+                Log.Error("CDN DOWNLOADER [HResult]: " + Error.HResult);
+                Log.ErrorInner("CDN DOWNLOADER [Full Report]: " + Error.ToString());
 
                 result = null;
             }
@@ -617,8 +618,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             }
             catch (DownloaderException Error)
             {
-                Log.Error("CDN DOWNLOADER: [Download] (DownloaderException) -> " + Error.Message);
-                Log.ErrorInner("CDN DOWNLOADER: [Download] (DownloaderException) -> " + Error.ToString());
+                Log.Error("CDN DOWNLOADER: " + Error.Message);
+                Log.Error("CDN DOWNLOADER [HResult]: " + Error.HResult);
+                Log.ErrorInner("CDN DOWNLOADER [Full Report]: " + Error.ToString());
 
                 if (this.mDownloadFailed != null)
                 {
@@ -636,8 +638,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             }
             catch (Exception Error)
             {
-                Log.Error("CDN DOWNLOADER: [Download] -> " + Error.Message);
-                Log.ErrorInner("CDN DOWNLOADER: [Download] -> " + Error.ToString());
+                Log.Error("CDN DOWNLOADER: " + Error.Message);
+                Log.Error("CDN DOWNLOADER [HResult]: " + Error.HResult);
+                Log.ErrorInner("CDN DOWNLOADER [Full Report]: " + Error.ToString());
 
                 if (this.mDownloadFailed != null)
                 {
@@ -794,8 +797,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             }
             catch (DownloaderException Error)
             {
-                Log.Error("CDN DOWNLOADER: [Verify] (DownloaderException) -> " + Error.Message);
-                Log.ErrorInner("CDN DOWNLOADER: [Verify] (DownloaderException) -> " + Error.ToString());
+                Log.Error("CDN DOWNLOADER: " + Error.Message);
+                Log.Error("CDN DOWNLOADER [HResult]: " + Error.HResult);
+                Log.ErrorInner("CDN DOWNLOADER [Full Report]: " + Error.ToString());
 
                 this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
                 {
@@ -804,8 +808,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             }
             catch (Exception Error)
             {
-                Log.Error("CDN DOWNLOADER: [Verify] -> " + Error.Message);
-                Log.ErrorInner("CDN DOWNLOADER: [Verify]  -> " + Error.ToString());
+                Log.Error("CDN DOWNLOADER: " + Error.Message);
+                Log.Error("CDN DOWNLOADER [HResult]: " + Error.HResult);
+                Log.ErrorInner("CDN DOWNLOADER [Full Report]: " + Error.ToString());
 
                 this.mFE.BeginInvoke(this.mDownloadFailed, new object[]
                 {

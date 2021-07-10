@@ -2,6 +2,7 @@
 using GameLauncher.App.Classes.Logger;
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
@@ -12,7 +13,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
 
         public static void Check()
         {
-            LauncherSigned = CheckExeVerified.Signed(Application.ExecutablePath);
+            LauncherSigned = CheckExeVerified.Signed(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Application.ExecutablePath)));
             Log.Info("SIGNED: " + LauncherSigned);
 
             /* (Start Process) Check If Updater Exists or Requires an Update */
@@ -68,9 +69,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
                 catch (Exception Error)
                 {
                     Log.Error("SIGNED: " + Error.Message);
-                    Log.ErrorInner("SIGNED: " + Error.ToString());
+                    Log.Error("SIGNED [HResult]: " + Error.HResult);
+                    Log.ErrorInner("SIGNED [Full Report]: " + Error.ToString());
                     return false;
-                }                
+                }
             }
 
             return false;

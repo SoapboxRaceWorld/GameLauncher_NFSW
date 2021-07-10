@@ -21,12 +21,12 @@ namespace GameLauncher.App.Classes.Hash
 
         public static string Files(string filename)
         {
-            if (!File.Exists(filename)) return String.Empty;
+            if (!File.Exists(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(filename)))) return String.Empty;
 
             MD5 md5 = new MD5CryptoServiceProvider();
             byte[] retVal = new byte[] { };
 
-            using (var test = File.OpenRead(filename))
+            using (var test = File.OpenRead(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(filename))))
             {
                 retVal = md5.ComputeHash(test);
             }

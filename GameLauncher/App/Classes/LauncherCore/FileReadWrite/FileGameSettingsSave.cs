@@ -2,6 +2,7 @@
 using GameLauncher.App.Classes.Logger;
 using System;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -66,7 +67,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
     class FileGameSettings
     {
-        public static string UserSettingsLocation = Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml";
+        public static string UserSettingsLocation = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(
+            Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml"));
 
         public static XmlDocument UserSettingsFile = new XmlDocument();
 
@@ -81,10 +83,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 catch (Exception Error)
                 {
                     Log.Error("USX File: " + Error.Message);
-                    if (!string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                    {
-                        Log.ErrorInner("USX Fille: " + Error.InnerException.Message);
-                    }
+                    Log.ErrorInner("USX Fille [HResult]: " + Error.HResult);
+                    Log.ErrorInner("USX Fille [Full Report]: " + Error.ToString());
                 }
             }
             else
@@ -294,10 +294,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             catch (Exception Error)
             {
                 Log.Error("USX File: " + Error.Message);
-                if (!string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                {
-                    Log.ErrorInner("USX File: " + Error.InnerException.Message);
-                }
+                Log.Error("USX File [HResult]: " + Error.HResult);
+                Log.Error("USX File [Full Report;: " + Error.ToString());
             }
         }
 
@@ -353,10 +351,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 {
                     Log.Error("USX File: Unable to Create XML Node [Type: '" + Type + "' NodePath: '" + NodePath + "' SingleNode: '" +
                                 SingleNode + "' AttributeName: '" + AttributeName + "' AttributeValue: '" + AttributeValue + "']" + Error.Message);
-                    if (!string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                    {
-                        Log.ErrorInner("USX File: " + Error.InnerException.Message);
-                    }
+                    Log.Error("USX File [HResult]: " + Error.HResult);
+                    Log.ErrorInner("USX File [Full Report]: " + Error.ToString());
                     return;
                 }
             }
@@ -414,10 +410,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             catch (Exception Error)
             {
                 Log.Error("USX File: Unable to Read XML Node [NodePath: '" + FullNodePath + "' AttributeName: '" + AttributeName + "']" + Error.Message);
-                if (!string.IsNullOrWhiteSpace(Error.InnerException.Message))
-                {
-                    Log.ErrorInner("USX File: " + Error.InnerException.Message);
-                }
+                Log.Error("USX File [HResult]: " + Error.HResult);
+                Log.ErrorInner("USX File [Full Report]: " + Error.ToString());
                 return "ERROR";
             }
         }

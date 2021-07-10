@@ -56,7 +56,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
             catch (Exception Error)
             {
                 Log.Error("SUPPORT CLASS: GrayScale -> " + Error.Message);
-                Log.ErrorInner("SUPPORT CLASS: GrayScale -> " + Error.ToString());
+                Log.Error("SUPPORT CLASS [HResult]: GrayScale -> " + Error.HResult);
+                Log.ErrorInner("SUPPORT CLASS [Full Report]: GrayScale -> " + Error.ToString());
                 return null;
             }
         }

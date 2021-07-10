@@ -8,6 +8,7 @@ using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using System.IO;
+using GameLauncher.App.Classes.Logger;
 
 namespace GameLauncher.App
 {
@@ -189,24 +190,33 @@ namespace GameLauncher.App
                 FileGameSettingsData.Language = ((LangObject)GameLangSource.SelectedItem).XML_Value;
             }
 
-            if (((LangObject)GameLangSource.SelectedItem).Category == "Custom")
+            try
             {
-                /* Create Custom Settings.ini for LangPicker.asi module */
-                if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts"))
+                if (((LangObject)GameLangSource.SelectedItem).Category == "Custom")
                 {
-                    Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
-                }
+                    /* Create Custom Settings.ini for LangPicker.asi module */
+                    if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts"))
+                    {
+                        Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
+                    }
 
-                IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
-                LanguagePickerFile.Write("Language", ((LangObject)GameLangSource.SelectedItem).INI_Value);
-                MessageBox.Show(null, "Please Note: If a Server does not Provide Language Pack, it will Fallback to English instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini"))
-                {
-                    File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                    IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                    LanguagePickerFile.Write("Language", ((LangObject)GameLangSource.SelectedItem).INI_Value);
+                    MessageBox.Show(null, "Please Note: If a Server does not Provide Language Pack, it will Fallback to English instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
+                else
+                {
+                    if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini"))
+                    {
+                        File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                    }
+                }
+            }
+            catch (Exception Error)
+            {
+                Log.Error("WELCOME SCREEN: " + Error.Message);
+                Log.Error("WELCOME SCREEN [HResult]: " + Error.HResult);
+                Log.ErrorInner("WELCOME SCREEN [Full Report]: " + Error.ToString());
             }
 
             if (!string.IsNullOrWhiteSpace(((CDNList)CDNSource.SelectedItem).Url))

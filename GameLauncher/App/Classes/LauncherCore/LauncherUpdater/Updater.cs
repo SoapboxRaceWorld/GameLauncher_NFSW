@@ -11,6 +11,7 @@ using System.Net;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
+using System.Text;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -42,8 +43,9 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     Uri URLCall = new Uri(URLs.Main + "/update.php?version=" + Application.ProductVersion);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     WebClient Client = new WebClient();
+                    Client.Encoding = Encoding.UTF8;
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    var json_data = Client.DownloadString(URLCall);
+                    string json_data = Client.DownloadString(URLCall);
                     UpdateCheckResponse MAPI = JsonConvert.DeserializeObject<UpdateCheckResponse>(json_data);
 
                     if (MAPI.Payload.LatestVersion != null)
@@ -55,7 +57,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 catch (Exception Error)
                 {
                     Log.Error("LAUNCHER UPDATE: " + Error.Message);
-                    Log.ErrorInner("LAUNCHER UPDATE: " + Error.ToString());
+                    Log.Error("LAUNCHER UPDATE [HResult]: " + Error.HResult);
+                    Log.ErrorInner("LAUNCHER UPDATE [Full Report]: " + Error.ToString());
                 }
             }
 
@@ -67,8 +70,9 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     Uri URLCall = new Uri(URLs.GitHub_Launcher);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     WebClient Client = new WebClient();
+                    Client.Encoding = Encoding.UTF8;
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    var json_data = Client.DownloadString(URLCall);
+                    string json_data = Client.DownloadString(URLCall);
                     GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
 
                     if (GHAPI.TagName != null)
@@ -80,8 +84,9 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 catch (Exception Error)
                 {
                     VisualsAPIChecker.GitHubAPI = false;
-                    Log.Error("LAUNCHER UPDATE: GitHub " + Error.Message);
-                    Log.ErrorInner("LAUNCHER UPDATE: " + Error.ToString());
+                    Log.Error("LAUNCHER UPDATE: [GitHub] " + Error.Message);
+                    Log.Error("LAUNCHER UPDATE [HResult]: [GitHub] " + Error.HResult);
+                    Log.ErrorInner("LAUNCHER UPDATE [Full Report]: " + Error.ToString());
                 }
 
                 if (!VisualsAPIChecker.GitHubAPI)

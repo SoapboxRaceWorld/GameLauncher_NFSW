@@ -79,7 +79,8 @@ namespace GameLauncher
         int CurrentModFileCount = 0;
         int TotalModFileCount = 0;
 
-        readonly String filename_pack = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GameFiles.sbrwpack");
+        readonly String filename_pack = Path.Combine(Encoding.UTF8.GetString(
+            Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory)), "GameFiles.sbrwpack");
 
         private void MoveWindow_MouseDown(object sender, MouseEventArgs e)
         {
@@ -122,7 +123,8 @@ namespace GameLauncher
                     catch (Exception Error)
                     {
                         Log.Error("CDN DOWNLOADER: [STOP] (DownloaderException) -> " + Error.Message);
-                        Log.ErrorInner("CDN DOWNLOADER: [STOP] (DownloaderException) -> " + Error.ToString());
+                        Log.Error("CDN DOWNLOADER [HResult]: [STOP] (DownloaderException) -> " + Error.HResult);
+                        Log.ErrorInner("CDN DOWNLOADER [Full Report]: [STOP] (DownloaderException) -> " + Error.ToString());
                     }
                 }
             };
@@ -284,7 +286,8 @@ namespace GameLauncher
                     catch (Exception Error)
                     {
                         Log.Error("SERVERLIST: " + Error.Message);
-                        Log.ErrorInner("SERVERLIST: " + Error.ToString());
+                        Log.Error("SERVERLIST [HResult]: " + Error.HResult);
+                        Log.ErrorInner("SERVERLIST [Full Report]: " + Error.ToString());
                     }
                 }
 
@@ -485,13 +488,25 @@ namespace GameLauncher
                     break;
                 case AuthHash.H11:
                     Email = MainEmail.Text.ToString();
-                    Password = SHA.Hashes(MainPassword.Text.ToString()).ToLower();
+                    Password = MDFive.Hashes(MainPassword.Text.ToString()).ToLower();
                     break;
                 case AuthHash.H12:
-                    Email = SHA.Hashes(MainEmail.Text.ToString()).ToLower();
+                    Email = MainEmail.Text.ToString();
                     Password = SHA.Hashes(MainPassword.Text.ToString()).ToLower();
                     break;
                 case AuthHash.H13:
+                    Email = MainEmail.Text.ToString();
+                    Password = SHATwoFiveSix.Hashes(MainPassword.Text.ToString()).ToLower();
+                    break;
+                case AuthHash.H20:
+                    Email = MDFive.Hashes(MainEmail.Text.ToString()).ToLower();
+                    Password = MDFive.Hashes(MainPassword.Text.ToString()).ToLower();
+                    break;
+                case AuthHash.H21:
+                    Email = SHA.Hashes(MainEmail.Text.ToString()).ToLower();
+                    Password = SHA.Hashes(MainPassword.Text.ToString()).ToLower();
+                    break;
+                case AuthHash.H22:
                     Email = SHATwoFiveSix.Hashes(MainEmail.Text.ToString()).ToLower();
                     Password = SHATwoFiveSix.Hashes(MainPassword.Text.ToString()).ToLower();
                     break;
@@ -539,20 +554,37 @@ namespace GameLauncher
                     case AuthHash.H11:
                         FileAccountSave.SavedGameServerHash = "1.1";
                         FileAccountSave.UserHashedEmail = string.Empty;
-                        FileAccountSave.UserHashedPassword = SHA.Hashes(MainPassword.Text.ToString()).ToLower();
+                        FileAccountSave.UserHashedPassword = MDFive.Hashes(MainPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H12:
                         FileAccountSave.SavedGameServerHash = "1.2";
-                        FileAccountSave.UserHashedEmail = SHA.Hashes(MainEmail.Text.ToString()).ToLower();
+                        FileAccountSave.UserHashedEmail = string.Empty;
                         FileAccountSave.UserHashedPassword = SHA.Hashes(MainPassword.Text.ToString()).ToLower();
                         break;
                     case AuthHash.H13:
                         FileAccountSave.SavedGameServerHash = "1.3";
+                        FileAccountSave.UserHashedEmail = string.Empty;
+                        FileAccountSave.UserHashedPassword = SHATwoFiveSix.Hashes(MainPassword.Text.ToString()).ToLower();
+                        break;
+                    case AuthHash.H20:
+                        FileAccountSave.SavedGameServerHash = "2.0";
+                        FileAccountSave.UserHashedEmail = MDFive.Hashes(MainEmail.Text.ToString()).ToLower();
+                        FileAccountSave.UserHashedPassword = MDFive.Hashes(MainPassword.Text.ToString()).ToLower();
+                        break;
+                    case AuthHash.H21:
+                        FileAccountSave.SavedGameServerHash = "2.1";
+                        FileAccountSave.UserHashedEmail = SHA.Hashes(MainEmail.Text.ToString()).ToLower();
+                        FileAccountSave.UserHashedPassword = SHA.Hashes(MainPassword.Text.ToString()).ToLower();
+                        break;
+                    case AuthHash.H22:
+                        FileAccountSave.SavedGameServerHash = "2.2";
                         FileAccountSave.UserHashedEmail = SHATwoFiveSix.Hashes(MainEmail.Text.ToString()).ToLower();
                         FileAccountSave.UserHashedPassword = SHATwoFiveSix.Hashes(MainPassword.Text.ToString()).ToLower();
                         break;
                     default:
                         FileAccountSave.SavedGameServerHash = "Unknown";
+                        FileAccountSave.UserHashedEmail = string.Empty;
+                        FileAccountSave.UserHashedPassword = string.Empty;
                         Log.Error("HASH TYPE: Unknown Hash Standard that was Provided");
                         return;
                 }
@@ -628,7 +660,6 @@ namespace GameLauncher
             InformationCache.SelectedServerData = (ServerList)ServerPick.SelectedItem;
 
             /* Reset ModernAuth Values from here */
-            InformationCache.ModernAuthEnabled = false;
             InformationCache.ModernAuthSecureChannel = false;
             InformationCache.ModernAuthHashType = string.Empty;
 
@@ -678,6 +709,7 @@ namespace GameLauncher
             Uri ServerURI = new Uri(InformationCache.SelectedServerData.IpAddress + "/GetServerInformation");
             ServicePointManager.FindServicePoint(ServerURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
             WebClient client = new WebClient();
+            client.Encoding = Encoding.UTF8;
             client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
             client.DownloadStringAsync(ServerURI);
 
@@ -892,16 +924,13 @@ namespace GameLauncher
 
                         try
                         {
-                            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.enforceLauncherProxy))
+                            if (ServerURI.Scheme == "https")
                             {
-                                if (InformationCache.SelectedServerJSON.enforceLauncherProxy.ToLower() == "true")
-                                {
-                                    InformationCache.ModernAuthSecureChannel = true;
-                                }
-                                else
-                                {
-                                    InformationCache.ModernAuthSecureChannel = false;
-                                }
+                                InformationCache.ModernAuthSecureChannel = true;
+                            }
+                            else if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.enforceLauncherProxy))
+                            {
+                                InformationCache.ModernAuthSecureChannel = InformationCache.SelectedServerJSON.enforceLauncherProxy.ToLower() == "true";
                             }
                             else if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.modernAuthSecureChannelOverRide))
                             {
@@ -923,10 +952,6 @@ namespace GameLauncher
                                     InformationCache.ModernAuthSecureChannel = false;
                                 }
                             }
-                            else if (ServerURI.Scheme == "https")
-                            {
-                                InformationCache.ModernAuthSecureChannel = true;
-                            }
                             else
                             {
                                 InformationCache.ModernAuthSecureChannel = false;
@@ -939,11 +964,10 @@ namespace GameLauncher
                             if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.modernAuthSupport))
                             {
                                 InformationCache.ModernAuthHashType = InformationCache.SelectedServerJSON.modernAuthSupport.ToLower();
-                                InformationCache.ModernAuthEnabled = true;
                             }
                             else
                             {
-                                InformationCache.ModernAuthEnabled = false;
+                                InformationCache.ModernAuthHashType = string.Empty;
                             }
                         }
                         catch { }
@@ -1054,12 +1078,14 @@ namespace GameLauncher
                     catch (PingException Error)
                     {
                         Log.Error("PINGING: " + Error.Message);
-                        Log.ErrorInner("PINGING: " + Error.ToString());
+                        Log.Error("PINGING [HResult]: " + Error.HResult);
+                        Log.ErrorInner("PINGING [Full Report]: " + Error.ToString());
                     }
                     catch (Exception Error)
                     {
                         Log.Error("PING: " + Error.Message);
-                        Log.ErrorInner("PING: " + Error.ToString());
+                        Log.Error("PING [HResult]: " + Error.HResult);
+                        Log.ErrorInner("PING [Full Report]: " + Error.ToString());
                     }
                     finally
                     {
@@ -1078,6 +1104,7 @@ namespace GameLauncher
                         Uri URICall = new Uri(verticalImageUrl);
                         ServicePointManager.FindServicePoint(URICall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         WebClient client2 = new WebClient();
+                        client2.Encoding = Encoding.UTF8;
                         client2.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                         client2.DownloadDataAsync(URICall);
                         client2.DownloadProgressChanged += (sender4, e4) =>
@@ -1136,7 +1163,8 @@ namespace GameLauncher
                                 catch (Exception Error)
                                 {
                                     Log.Error("SERVER BANNER: " + Error.Message);
-                                    Log.ErrorInner("SERVER BANNER: " + Error.ToString());
+                                    Log.Error("SERVER BANNER [HResult]: " + Error.HResult);
+                                    Log.ErrorInner("SERVER BANNER [Full Report]: " + Error.ToString());
                                     VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                 }
                             }
@@ -1684,6 +1712,7 @@ namespace GameLauncher
                     FunctionStatus.TLS();
                     ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(30).TotalMilliseconds;
                     WebClient client2 = new WebClient();
+                    client2.Encoding = Encoding.UTF8;
                     client2.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                     client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged_RELOADED);
                     client2.DownloadFileCompleted += (test, stuff) =>
@@ -1705,7 +1734,8 @@ namespace GameLauncher
                 catch (Exception Error)
                 {
                     Log.Error("MODNET SERVER FILES: " + Error.Message);
-                    Log.ErrorInner("MODNET SERVER FILES: " + Error.ToString());
+                    Log.Error("MODNET SERVER FILES [HResult]: " + Error.HResult);
+                    Log.ErrorInner("MODNET SERVER FILES [Full Report]: " + Error.ToString());
                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                 }
 
@@ -1773,6 +1803,7 @@ namespace GameLauncher
                     Uri ModNetURI = new Uri(URLs.ModNet + "/launcher-modules/modules.json");
                     ServicePointManager.FindServicePoint(ModNetURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     WebClient ModNetJsonURI = new WebClient();
+                    ModNetJsonURI.Encoding = Encoding.UTF8;
                     String modules = ModNetJsonURI.DownloadString(ModNetURI);
 
                     try
@@ -1807,6 +1838,7 @@ namespace GameLauncher
                                 Uri URLCall = new Uri(URLs.ModNet + "/launcher-modules/" + ModNetList);
                                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                 WebClient newModNetFilesDownload = new WebClient();
+                                newModNetFilesDownload.Encoding = Encoding.UTF8;
                                 newModNetFilesDownload.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + 
                                     " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                                 newModNetFilesDownload.DownloadFile(URLCall, FileSettingsSave.GameInstallation + "/" + ModNetList);
@@ -1824,7 +1856,8 @@ namespace GameLauncher
                     catch (Exception Error)
                     {
                         Log.Error("MODNET CORE: " + Error.Message);
-                        Log.ErrorInner("MODNET CORE: " + Error.ToString());
+                        Log.Error("MODNET CORE [HResult]: " + Error.HResult);
+                        Log.ErrorInner("MODNET CORE [Full Report]: " + Error.ToString());
 
                         DiscordLauncherPresense.Status("Download ModNet Error", null);
                         CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
@@ -1842,19 +1875,31 @@ namespace GameLauncher
                     try
                     {
                         FunctionStatus.TLS();
-                        remoteCarsFile = new WebClient().DownloadString(json2.basePath + "/cars.json");
+                        Uri URLCall = new Uri(json2.basePath + "/cars.json");
+                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                        WebClient CarsJson = new WebClient();
+                        CarsJson.Encoding = Encoding.UTF8;
+                        CarsJson.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
+                        " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        remoteCarsFile = CarsJson.DownloadString(URLCall);
                     }
                     catch { }
 
                     try
                     {
                         FunctionStatus.TLS();
-                        remoteEventsFile = new WebClient().DownloadString(json2.basePath + "/events.json");
+                        Uri URLCall = new Uri(json2.basePath + "/events.json");
+                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                        WebClient EventsJson = new WebClient();
+                        EventsJson.Encoding = Encoding.UTF8;
+                        EventsJson.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
+                        " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        remoteEventsFile = EventsJson.DownloadString(URLCall);
                     }
                     catch { }
 
                     /* Version 1.3 @metonator - DavidCarbon */
-                    if (IsJSONValid.ValidJson(remoteCarsFile) == true)
+                    if (IsJSONValid.ValidJson(remoteCarsFile))
                     {
                         Log.Info("DISCORD: Found RemoteRPC List for cars.json");
                         CarsList.remoteCarsList = remoteCarsFile;
@@ -1865,7 +1910,7 @@ namespace GameLauncher
                         CarsList.remoteCarsList = String.Empty;
                     }
 
-                    if (IsJSONValid.ValidJson(remoteEventsFile) == true)
+                    if (IsJSONValid.ValidJson(remoteEventsFile))
                     {
                         Log.Info("DISCORD: Found RemoteRPC List for events.json");
                         EventsList.remoteEventsList = remoteEventsFile;
@@ -1876,12 +1921,17 @@ namespace GameLauncher
                         EventsList.remoteEventsList = String.Empty;
                     }
 
+                    Log.Core("CORE: Loading Server Mods List");
                     /* Get Server Mod Index */
                     FunctionStatus.TLS();
                     Uri newIndexFile = new Uri(json2.basePath + "/index.json");
-                    Log.Core("CORE: Loading Server Mods List");
                     ServicePointManager.FindServicePoint(newIndexFile).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    String jsonindex = new WebClient().DownloadString(newIndexFile);
+                    WebClient ServerModsList = new WebClient();
+                    ServerModsList.Encoding = Encoding.UTF8;
+                    ServerModsList.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
+                    " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    
+                    String jsonindex = ServerModsList.DownloadString(newIndexFile);
 
                     try
                     {
@@ -1906,7 +1956,8 @@ namespace GameLauncher
                                 catch (Exception Error)
                                 {
                                     Log.Error($"LAUNCHER: Failed To Remove Stale Mod Package [{file}]: {Error.Message}");
-                                    Log.ErrorInner("LAUNCHER: " + Error.ToString());
+                                    Log.Error("LAUNCHER [HResult]: " + Error.HResult);
+                                    Log.ErrorInner("LAUNCHER [Full Report]: " + Error.ToString());
                                 }
                             }
                         }
@@ -1946,7 +1997,8 @@ namespace GameLauncher
                                 catch (Exception Error)
                                 {
                                     Log.Error($"LAUNCHER: Failed To Remove Old Mod Package [{modfile.Name}]: {Error.Message}");
-                                    Log.ErrorInner("LAUNCHER: " + Error.ToString());
+                                    Log.Error("LAUNCHER [HResult]: " + Error.HResult);
+                                    Log.ErrorInner("LAUNCHER [Full Report]: " + Error.ToString());
                                 }
 
                                 modFilesDownloadUrls.Enqueue(new Uri(json2.basePath + "/" + modfile.Name));
@@ -1972,8 +2024,9 @@ namespace GameLauncher
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("LAUNCHER " + Error.Message);
-                        Log.ErrorInner("LAUNCHER: " + Error.ToString());
+                        Log.Error("LAUNCHER: " + Error.Message);
+                        Log.Error("LAUNCHER [HResult]: " + Error.HResult);
+                        Log.ErrorInner("LAUNCHER [Full Report]: " + Error.ToString());
 
                         DiscordLauncherPresense.Status("Download Server Mods Error", null);
                         CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
@@ -1984,8 +2037,9 @@ namespace GameLauncher
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("LAUNCHER " + Error.Message);
-                    Log.ErrorInner("LAUNCHER: " + Error.ToString());
+                    Log.Error("LAUNCHER: " + Error.Message);
+                    Log.Error("LAUNCHER [HResult]: " + Error.HResult);
+                    Log.ErrorInner("LAUNCHER [Full Report]: " + Error.ToString());
                     DiscordLauncherPresense.Status("Download ModNet Error", null);
                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                     MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{Error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2060,6 +2114,8 @@ namespace GameLauncher
                             PlayProgressText.Text = "Loading game. Launcher will minimize once Game has Loaded".ToUpper();
                         }
 
+                        CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+
                         ContextMenu = new ContextMenu();
                         ContextMenu.MenuItems.Add(new MenuItem("Donate", (b, n) => { Process.Start("https://paypal.me/metonator95"); }));
                         ContextMenu.MenuItems.Add("-");
@@ -2084,7 +2140,8 @@ namespace GameLauncher
             catch (Exception Error)
             {
                 Log.Error("GAME LAUNCH: " + Error.Message);
-                Log.ErrorInner("GAME LAUNCH: " + Error.ToString());
+                Log.Error("GAME LAUNCH [HResult]: " + Error.HResult);
+                Log.ErrorInner("GAME LAUNCH [Full Report]: " + Error.ToString());
                 CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                 MessageBox.Show(null, Error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -2253,6 +2310,7 @@ namespace GameLauncher
                 speechFile = FunctionStatus.SpeechFiles(FileSettingsSave.Lang).ToUpper();
 
                 WebClientWithTimeout wc = new WebClientWithTimeout();
+                wc.Encoding = Encoding.UTF8;
                 String response = wc.DownloadString(FileSettingsSave.CDN + "/" + speechFile + "/index.xml");
 
                 response = response.Substring(3, response.Length - 3);
@@ -2495,7 +2553,8 @@ namespace GameLauncher
             try
             {
                 Log.Error("CDN DOWNLOADER: " + Error.Message);
-                Log.ErrorInner("CDN DOWNLOADER: " + Error.ToString());
+                Log.Error("CDN DOWNLOADER [HResult]: " + Error.HResult);
+                Log.ErrorInner("CDN DOWNLOADER [Full Report]: " + Error.ToString());
                 failureMessage = Error.Message;
             }
             catch
@@ -2789,6 +2848,7 @@ namespace GameLauncher
                         try
                         {
                             WebClientWithTimeout pingServer = new WebClientWithTimeout();
+                            pingServer.Encoding = Encoding.UTF8;
                             pingServer.DownloadString(server.IpAddress + "/GetServerInformation");
 
                             if (!InformationCache.ServerStatusBook.ContainsKey(server.Id))

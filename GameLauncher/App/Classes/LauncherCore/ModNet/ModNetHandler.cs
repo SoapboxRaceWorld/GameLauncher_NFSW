@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Text;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
@@ -23,12 +24,14 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                 Uri newModNetUri = new Uri(ServerIP + "/Modding/GetModInfo");
                 ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 WebClient x = new WebClient();
+                x.Encoding = Encoding.UTF8;
                 return x.DownloadString(newModNetUri);
             }
             catch (Exception Error)
             {
                 Log.Error("LAUNCHER: Umable to Retrive Modding Information -> " + Error.Message);
-                Log.ErrorInner("LAUNCHER: " + Error.ToString());
+                Log.Error("LAUNCHER [HResult]: " + Error.HResult);
+                Log.ErrorInner("LAUNCHER [Full Report]: " + Error.ToString());
                 return String.Empty;
             }
         }
@@ -113,7 +116,8 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
 
                                 Log.Error("CLEANLINKS: Error while deleting a file: {realLoc}");
                                 Log.Error("CLEANLINKS: " + Error.Message);
-                                Log.ErrorInner("CLEANLINKS: " + Error.ToString());
+                                Log.Error("CLEANLINKS [HResult]: " + Error.HResult);
+                                Log.ErrorInner("CLEANLINKS [Full Report]: " + Error.ToString());
                             }
                         }
                         else
@@ -155,7 +159,8 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
             catch (Exception Error)
             {
                 Log.Error("CLEANLINKS: " + Error.Message);
-                Log.ErrorInner("CLEANLINKS: " + Error.ToString());
+                Log.Error("CLEANLINKS [HResult]: " + Error.HResult);
+                Log.ErrorInner("CLEANLINKS [Full Report]: " + Error.ToString());
             }
         }
 

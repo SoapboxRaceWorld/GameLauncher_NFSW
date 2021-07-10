@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -94,6 +95,7 @@ namespace GameLauncher.App
                     Uri URLCall = new Uri("https://api.pwnedpasswords.com/range/" + range);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     WebClient breachCheck = new WebClient();
+                    breachCheck.Encoding = Encoding.UTF8;
 
                     String verify = regex[2];
                     String serverReply = breachCheck.DownloadString(URLCall);
@@ -146,13 +148,25 @@ namespace GameLauncher.App
                             break;
                         case AuthHash.H11:
                             Email = RegisterEmail.Text.ToString();
-                            Password = SHA.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                            Password = MDFive.Hashes(RegisterPassword.Text.ToString()).ToLower();
                             break;
                         case AuthHash.H12:
-                            Email = SHA.Hashes(RegisterEmail.Text.ToString()).ToLower();
+                            Email = RegisterEmail.Text.ToString();
                             Password = SHA.Hashes(RegisterPassword.Text.ToString()).ToLower();
                             break;
                         case AuthHash.H13:
+                            Email = RegisterEmail.Text.ToString();
+                            Password = SHATwoFiveSix.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                            break;
+                        case AuthHash.H20:
+                            Email = MDFive.Hashes(RegisterEmail.Text.ToString()).ToLower();
+                            Password = MDFive.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                            break;
+                        case AuthHash.H21:
+                            Email = SHA.Hashes(RegisterEmail.Text.ToString()).ToLower();
+                            Password = SHA.Hashes(RegisterPassword.Text.ToString()).ToLower();
+                            break;
+                        case AuthHash.H22:
                             Email = SHATwoFiveSix.Hashes(RegisterEmail.Text.ToString()).ToLower();
                             Password = SHATwoFiveSix.Hashes(RegisterPassword.Text.ToString()).ToLower();
                             break;

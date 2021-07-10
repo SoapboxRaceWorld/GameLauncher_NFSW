@@ -18,6 +18,7 @@ using System.Management.Automation;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Global
@@ -43,11 +44,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* Selected Server Requires Proxy (Due to being https Only) */
         public static bool ModernAuthSecureChannel = false;
 
-        /* Selected Server Auth Support */
-        public static bool ModernAuthEnabled = false;
-
         /* Selected Server ModernAuth Hash Type (Used for Login) */
-        public static string ModernAuthHashType;
+        public static string ModernAuthHashType = string.Empty;
 
         /* Selected Server Category */
         public static string SelectedServerCategory;
@@ -115,8 +113,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         {
             try
             {
-                File.Create(path + "temp.txt").Close();
-                File.Delete(path + "temp.txt");
+                File.Create(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(path)) + "temp.txt").Close();
+                File.Delete(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(path)) + "temp.txt");
             }
             catch
             {
@@ -367,8 +365,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 {
                     Log.Warning("LAUNCHER: CDN Source URL was Empty! Setting a Null Safe URL 'http://localhost'");
                     FileSettingsSave.CDN = "http://localhost";
-                    Log.Core("LAUNCHER: Installation Directory was Empty! Creating and Setting Directory at " + AppDomain.CurrentDomain.BaseDirectory + "\\Game Files");
-                    FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
+                    Log.Core("LAUNCHER: Installation Directory was Empty! Creating and Setting Directory at " + 
+                        Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory)) + "\\Game Files");
+                    FileSettingsSave.GameInstallation = Encoding.UTF8.GetString(
+                        Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory)) + "\\Game Files";
                     FileSettingsSave.SaveSettings();
                 }
 
@@ -399,9 +399,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
                                 if (FolderDialog.ShowDialog() == CommonFileDialogResult.Ok)
                                 {
-                                    if (!string.IsNullOrWhiteSpace(FolderDialog.FileName))
+                                    if (!string.IsNullOrWhiteSpace(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(FolderDialog.FileName))))
                                     {
-                                        GameFolderPath = FolderDialog.FileName;
+                                        GameFolderPath = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(FolderDialog.FileName));
                                     }
                                 }
 
@@ -426,8 +426,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                             Directory.CreateDirectory("Game Files");
                                             Log.Warning("LAUNCHER: Installing NFSW in root of the harddisk is not allowed.");
                                             MessageBox.Show(null, string.Format("Installing NFSW in root of the harddisk is not allowed. " +
-                                                "Instead, we will install it on {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                            FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
+                                                "Instead, we will install it on {0}.", Encoding.UTF8.GetString(
+                                                    Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory))
+                                                + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                            FileSettingsSave.GameInstallation = Encoding.UTF8.GetString(
+                                                Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory)) 
+                                                + "\\Game Files";
                                             FileSettingsSave.SaveSettings();
                                             FileGameSettings.Save("Suppress", "Language Only");
                                         }
@@ -436,8 +440,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                             Directory.CreateDirectory("Game Files");
                                             Log.Warning("LAUNCHER: Installing NFSW in same directory where the launcher resides is disadvised.");
                                             MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. " +
-                                                "Instead, we will install it on {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                            FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
+                                                "Instead, we will install it on {0}.", Encoding.UTF8.GetString(
+                                                    Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory))
+                                                + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                            FileSettingsSave.GameInstallation = Encoding.UTF8.GetString(
+                                                Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory))
+                                                + "\\Game Files";
                                             FileSettingsSave.SaveSettings();
                                             FileGameSettings.Save("Suppress", "Language Only");
                                         }
@@ -461,7 +469,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                 {
                                     try
                                     {
-                                        FileSettingsSave.GameInstallation = Path.GetFullPath("GameFiles");
+                                        FileSettingsSave.GameInstallation = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Path.GetFullPath("GameFiles")));
                                     }
                                     catch
                                     {
@@ -505,8 +513,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                             Directory.CreateDirectory("Game Files");
                             Log.Error("LAUNCHER: Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
                             MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed.\n" +
-                                "Instead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
+                                "Instead, we will install it at {0}.", 
+                                Encoding.UTF8.GetString(
+                                    Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory)) + "Game Files"), 
+                                "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            FileSettingsSave.GameInstallation = Encoding.UTF8.GetString(
+                                Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory)) + "\\Game Files";
                             break;
 
                         case FolderType.IsTempFolder:
@@ -523,20 +535,25 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                             constructMsg += "• C:\\Program Files (x86)\n";
                             constructMsg += "• C:\\Users (Includes 'Desktop', 'Documents', 'Downloads')\n";
                             constructMsg += "• C:\\Windows\n\n";
-                            constructMsg += "Instead, we will install the NFSW Game at " + AppDomain.CurrentDomain.BaseDirectory + "\\Game Files\n";
+                            constructMsg += "Instead, we will install the NFSW Game at " + 
+                                Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory)) + "\\Game Files\n";
 
                             MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             Log.Error("LAUNCHER: Installing NFSW in a Restricted Location is not allowed.");
-                            FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
+                            FileSettingsSave.GameInstallation = Encoding.UTF8.GetString
+                                (Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory)) + "\\Game Files";
                             break;
                     }
                     FileSettingsSave.SaveSettings();
 
                     /* Windows Defender (Windows 10) */
-                    if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && (FileSettingsSave.WindowsDefenderStatus == "Not Excluded" || FileSettingsSave.WindowsDefenderStatus == "Unknown"))
+                    if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && 
+                        (FileSettingsSave.WindowsDefenderStatus == "Not Excluded" || FileSettingsSave.WindowsDefenderStatus == "Unknown"))
                     {
                         Log.Core("WINDOWS DEFENDER: Windows 10 Detected! Running Exclusions for Core Folders");
-                        WindowsDefender("Add-Launcher", "Complete Exclude", AppDomain.CurrentDomain.BaseDirectory, FileSettingsSave.GameInstallation, "Launcher");
+                        WindowsDefender("Add-Launcher", "Complete Exclude", Encoding.UTF8.GetString(
+                            Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory))
+                            , FileSettingsSave.GameInstallation, "Launcher");
                     }
                     else if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && !string.IsNullOrWhiteSpace(FileSettingsSave.WindowsDefenderStatus))
                     {
@@ -549,7 +566,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 {
                     DiscordLauncherPresense.Status("Start Up", "Launcher Encountered API Errors");
 
-                    DialogResult restartAppNoApis = MessageBox.Show(null, "There's no internet connection, Launcher might crash \n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    DialogResult restartAppNoApis = MessageBox.Show(null, "There's no internet connection, Launcher might crash." +
+                        "\n\nClick Yes to Close Launcher" +
+                        "\nor" +
+                        "\nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                     if (restartAppNoApis == DialogResult.No)
                     {
@@ -593,10 +613,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                 /* Add Exclusion to Windows Defender */
                                 using (PowerShell ps = PowerShell.Create())
                                 {
-                                    ps.AddScript($"Add-MpPreference -ExclusionPath \"{Path}\"");
+                                    ps.AddScript($"Add-MpPreference -ExclusionPath \"{Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Path))}\"");
                                     if (Directory.Exists(SecondPath))
                                     {
-                                        ps.AddScript($"Add-MpPreference -ExclusionPath \"{SecondPath}\"");
+                                        ps.AddScript($"Add-MpPreference -ExclusionPath \"{Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(SecondPath))}\"");
                                     }
                                     var result = ps.Invoke();
                                 }
@@ -617,8 +637,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                 /* Add Exclusion to Windows Defender */
                                 using (PowerShell ps = PowerShell.Create())
                                 {
-                                    ps.AddScript($"Remove-MpPreference -ExclusionPath \"{Path}\"");
-                                    ps.AddScript($"Remove-MpPreference -ExclusionPath \"{SecondPath}\"");
+                                    ps.AddScript($"Remove-MpPreference -ExclusionPath \"{Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Path))}\"");
+                                    ps.AddScript($"Remove-MpPreference -ExclusionPath \"{Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(SecondPath))}\"");
                                     var result = ps.Invoke();
                                 }
 
@@ -629,10 +649,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                 /* Remove current Exclusion and Add new location for Exclusion (Game Files Only!) */
                                 using (PowerShell ps = PowerShell.Create())
                                 {
-                                    ps.AddScript($"Remove-MpPreference -ExclusionPath \"{Path}\"");
+                                    ps.AddScript($"Remove-MpPreference -ExclusionPath \"{Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Path))}\"");
                                     if (Directory.Exists(SecondPath))
                                     {
-                                        ps.AddScript($"Add-MpPreference -ExclusionPath \"{SecondPath}\"");
+                                        ps.AddScript($"Add-MpPreference -ExclusionPath \"{Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(SecondPath))}\"");
                                     }
                                     var result = ps.Invoke();
                                 }                                

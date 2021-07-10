@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.RPC;
+using System.Text;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
@@ -36,9 +37,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 Uri URLCall = new Uri(URLs.OnlineServerList);
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 WebClient Client = new WebClient();
+                Client.Encoding = Encoding.UTF8;
                 Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + 
                 " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                var response = Client.DownloadString(URLCall);
+                string response = Client.DownloadString(URLCall);
                 Log.UrlCall("LIST CORE: Loaded Server List from: " + URLs.OnlineServerList);
 
                 try
@@ -49,14 +51,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 catch (Exception Error)
                 {
                     Log.Error("LIST CORE: Error occurred while deserializing Server List from [" + URLs.OnlineServerList + "]: " + Error.Message);
-                    Log.ErrorInner("LIST CORE: " + Error.ToString());
+                    Log.Error("LIST CORE [HResult]: " + Error.HResult);
+                    Log.ErrorInner("LIST CORE [Full Report]: " + Error.ToString());
                     InformationCache.ServerListStatus = "Error";
                 }
             }
             catch (Exception Error)
             {
                 Log.Error("LIST CORE: Error occurred while loading Server List from [" + URLs.OnlineServerList + "]: " + Error.Message);
-                Log.ErrorInner("LIST CORE: " + Error.ToString());
+                Log.Error("LIST CORE [HResult]: " + Error.HResult);
+                Log.ErrorInner("LIST CORE [Full Report]: " + Error.ToString());
                 InformationCache.ServerListStatus = "Error";
             }
 

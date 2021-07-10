@@ -129,7 +129,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                         catch (Exception Error)
                         {
                             Log.Error("REGISTRATION: " + Error.Message);
-                            Log.ErrorInner("REGISTRATION: " + Error.ToString());
+                            Log.Error("REGISTRATION [HResult]: " + Error.HResult);
+                            Log.ErrorInner("REGISTRATION [Full Report]: " + Error.ToString());
                             MessageBox.Show(null, "Failed to send email!" +
                                 "\n" + Error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }

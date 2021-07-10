@@ -127,7 +127,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             catch (FirewallWASNotSupportedException Error)
             {
                 Log.Error("WINDOWS FIREWALL: " + Error.Message);
-                Log.ErrorInner("WINDOWS FIREWALL: " + Error.ToString());
+                Log.Error("WINDOWS FIREWALL [HResult]: " + Error.HResult);
+                Log.ErrorInner("WINDOWS FIREWALL [Full Report]: " + Error.ToString());
                 AddDefaultApplicationRule(Type, AppName, AppPath, direction, protocol, firewallLogNote);
                 ErrorFree = false;
             }
@@ -167,13 +168,15 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             catch (FirewallWASNotSupportedException Error)
             {
                 Log.Error("WINDOWS FIREWALL: " + Error.Message);
-                Log.ErrorInner("WINDOWS FIREWALL: " + Error.ToString());
+                Log.Error("WINDOWS FIREWALL [HResult]: " + Error.HResult);
+                Log.ErrorInner("WINDOWS FIREWALL [Full Report]: " + Error.ToString());
                 ErrorFree = false;
             }
             catch (Exception Error)
             {
                 Log.Error("WINDOWS FIREWALL: " + Error.Message);
-                Log.ErrorInner("WINDOWS FIREWALL: " + Error.ToString());
+                Log.Error("WINDOWS FIREWALL [HResult]: " + Error.HResult);
+                Log.ErrorInner("WINDOWS FIREWALL [Full Report]: " + Error.ToString());
                 ErrorFree = false;
             }
 
@@ -207,7 +210,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     {
                         ErrorFree = false;
                         Log.Error("WINDOWS FIREWALL: " + Error.Message);
-                        Log.ErrorInner("WINDOWS FIREWALL: " + Error.ToString());
+                        Log.Error("WINDOWS FIREWALL [HResult]: " + Error.HResult);
+                        Log.ErrorInner("WINDOWS FIREWALL [Full Report]: " + Error.ToString());
                     }
                 }
             }
@@ -259,7 +263,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             catch (Exception Error)
             {
                 Log.Error("WINDOWS FIREWALL: FindRules -> " + Error.Message);
-                Log.ErrorInner("WINDOWS FIREWALL: " + Error.ToString());
+                Log.Error("WINDOWS FIREWALL [HResult]: " + Error.HResult);
+                Log.ErrorInner("WINDOWS FIREWALL [Full Report]: " + Error.ToString());
             }
 
             return Enumerable.Empty<IFirewallRule>();
@@ -325,7 +330,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 catch (Exception Error)
                 {
                     Log.Error("FIREWALL: " + Error.Message);
-                    Log.ErrorInner("FIREWALL: " + Error.ToString());
+                    Log.Error("FIREWALL [HResult]: " + Error.HResult);
+                    Log.ErrorInner("FIREWALL [Full Report]: " + Error.ToString());
                     FileSettingsSave.FirewallGameStatus = "Error";
                 }
             }
@@ -372,7 +378,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 catch (Exception Error)
                 {
                     Log.Error("FIREWALL: " + Error.Message);
-                    Log.ErrorInner("FIREWALL: " + Error.ToString());
+                    Log.Error("FIREWALL [HResult]: " + Error.HResult);
+                    Log.ErrorInner("FIREWALL [Full Report]: " + Error.ToString());
                     FileSettingsSave.FirewallLauncherStatus = "Error";
                 }
             }

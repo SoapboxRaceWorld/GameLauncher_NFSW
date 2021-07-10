@@ -8,6 +8,7 @@ using GameLauncher.App.Classes.SystemPlatform.Linux;
 using System;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.Logger;
+using System.Text;
 
 namespace GameLauncher.App
 {
@@ -32,12 +33,15 @@ namespace GameLauncher.App
                         Uri URLCall = new Uri(URLs.Main + "/launcher/changelog");
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         WebClient Client = new WebClient();
+                        Client.Encoding = Encoding.UTF8;
+                        Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                         ChangelogText.Text = Client.DownloadString(URLCall);
                     }
                     catch (Exception Error)
                     {
                         Log.Error("UPDATE POPUP: " + Error.Message);
-                        Log.ErrorInner("UPDATE POPUP: " + Error.InnerException.Message);
+                        Log.Error("UPDATE POPUP [HResult]: " + Error.HResult);
+                        Log.ErrorInner("UPDATE POPUP [Full Report]: " + Error.ToString());
 
                         ChangelogText.Text = "\n" + Error.Message;
                         ChangelogBox.Text = "Changelog Error:";

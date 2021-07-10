@@ -34,7 +34,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
         {
             Log.Error($"PROXY HANDLER [handling {context.Request.Path}]");
             Log.Error($"\nMESSAGE: {exception.Message}");
-            Log.ErrorInner("\nINNER MESSAGE: " + exception.ToString());
+            Log.Error($"\nHRESULT: {exception.HResult}");
+            Log.ErrorInner("\nFULL MESSAGE: " + exception.ToString());
             Log.Error($"\nSTACK TRACE: {exception.StackTrace}");
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY",
                 CommunicationLogEntryType.Error,
@@ -49,8 +50,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         private async Task<Response> ProxyRequest(NancyContext context, CancellationToken cancellationToken)
         {
-            string path = context.Request.Path;
-            string method = context.Request.Method.ToUpperInvariant();
+            string path = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(context.Request.Path));
+            string method = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(context.Request.Method.ToUpperInvariant()));
 
             if (!path.StartsWith("/nfsw/Engine.svc"))
             {
@@ -105,7 +106,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             if (path == "/event/arbitration") 
             {
-                requestBody = requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + Convert.ToInt32(AntiCheat.cheats_detected) + "</Konami>");
+                requestBody = Encoding.UTF8.GetString(
+                    Encoding.UTF8.GetBytes(
+                        requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + Convert.ToInt32(AntiCheat.cheats_detected) + "</Konami>")));
                 foreach (var header in context.Request.Headers) 
                 {
                     if(header.Key.ToLowerInvariant() == "content-length") 
@@ -139,7 +142,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     throw new ProxyException("Cannot handle request method: " + method);
             }
 
-            var responseBody = await responseMessage.GetStringAsync();
+            var responseBody = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(await responseMessage.GetStringAsync()));
 
             if (path == "/User/GetPermanentSession")
             {
@@ -156,7 +159,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             {
                 Log.Error($"DISCORD RPC ERROR [handling {context.Request.Path}]");
                 Log.Error($"\nMESSAGE: {Error.Message}");
-                Log.ErrorInner("\nINNER MESSAGE: " + Error.ToString());
+                Log.Error($"\nHRESULT: {Error.HResult}");
+                Log.ErrorInner("\nFULL MESSAGE: " + Error.ToString());
                 Log.Error($"\nSTACK TRACE: {Error.StackTrace}");
                 await SubmitError(Error);
             }
@@ -195,7 +199,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 }
             }
 
-            return sb.ToString();
+            return Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(sb.ToString()));
         }
 
         private static async Task SubmitError(Exception exception)
@@ -213,7 +217,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             catch (Exception Error)
             {
                 Log.Error("PROXY HANDLER: " + Error.Message);
-                Log.ErrorInner("PROXY HANDLER: " + Error.ToString());
+                Log.Error("PROXY HANDLER [HResult]: " + Error.HResult);
+                Log.ErrorInner("PROXY HANDLER [Full Report]: " + Error.ToString());
             }
         }
     }
