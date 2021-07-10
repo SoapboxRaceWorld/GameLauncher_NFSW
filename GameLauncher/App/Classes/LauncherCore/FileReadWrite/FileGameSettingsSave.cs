@@ -236,7 +236,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "damage", FileGameSettingsData.Damage, FileGameSettingsData.Damage);
                     NodeUpdater("Attributes", "Settings/UI/Gameplay", "GamePlayOptions", "speedUnits", FileGameSettingsData.SpeedUnits, FileGameSettingsData.SpeedUnits);
                     /* Physics */
-                    NodeUpdater("InnerText", "Settings/Physics", "CameraPOV", "Type", "int", FileGameSettingsData.SpeedUnits);
+                    NodeUpdater("InnerText", "Settings/Physics", "CameraPOV", "Type", "int", FileGameSettingsData.CameraPOV);
                     NodeUpdater("InnerText", "Settings/Physics", "TransmissionType", "Type", "int", FileGameSettingsData.Transmission);
                     /* VideoConfig */
                     NodeUpdater("InnerText", "Settings/VideoConfig", "audiomode", "Type", "int", FileGameSettingsData.AudioMode);
