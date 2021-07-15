@@ -23,6 +23,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
         {
             if (!DetectLinux.LinuxDetected())
             {
+                Log.Checking("LAUNCHER UPDATER: Is Update to Date or not");
                 DiscordLauncherPresense.Status("Start Up", "Checking Launcher and Updater Release Information");
 
                 /* Update this text file if a new GameLauncherUpdater.exe has been delployed - DavidCarbon */
@@ -31,8 +32,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     FunctionStatus.TLS();
                     Uri URLCall = new Uri(URLs.GitHub_Updater);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    WebClient Client = new WebClient();
-                    Client.Encoding = Encoding.UTF8;
+                    WebClient Client = new WebClient
+                    {
+                        Encoding = Encoding.UTF8
+                    };
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
 
                     string json_data = Client.DownloadString(URLCall);
@@ -52,8 +55,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     catch (Exception Error)
                     {
                         Log.Error("LAUNCHER UPDATER: " + Error.Message);
-                        Log.Error("LAUNCHER UPDATER [HResult]: " + Error.HResult);
-                        Log.ErrorInner("LAUNCHER UPDATER [Full Report]: " + Error.ToString());
+                        Log.ErrorIC("LAUNCHER UPDATER: " + Error.HResult);
+                        Log.ErrorFR("LAUNCHER UPDATER: " + Error.ToString());
                     }
 
                     if (LatestUpdaterBuildVersion == "1.0.0.4")
@@ -64,7 +67,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 catch (Exception Error)
                 {
                     Log.Error("LAUNCHER UPDATER: Failed to get new version file: " + Error.Message);
-                    Log.ErrorInner("LAUNCHER UPDATER: " + Error.ToString());
+                    Log.ErrorFR("LAUNCHER UPDATER: " + Error.ToString());
                 }
 
                 /* Check if File needs to be Downloaded or Require an Update */
@@ -77,8 +80,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         FunctionStatus.TLS();
                         Uri URLCall = new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                        WebClient Client = new WebClient();
-                        Client.Encoding = Encoding.UTF8;
+                        WebClient Client = new WebClient
+                        {
+                            Encoding = Encoding.UTF8
+                        };
                         Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                         Client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
                         {
@@ -92,8 +97,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     catch (Exception Error)
                     {
                         Log.Error("LAUNCHER UPDATER: Failed to download updater. " + Error.Message);
-                        Log.Error("LAUNCHER UPDATER [HResult]: " + Error.HResult);
-                        Log.ErrorInner("LAUNCHER UPDATER [Full Report]: " + Error.ToString());
+                        Log.ErrorIC("LAUNCHER UPDATER: " + Error.HResult);
+                        Log.ErrorFR("LAUNCHER UPDATER: " + Error.ToString());
                     }
                 }
                 else if (File.Exists("GameLauncherUpdater.exe"))
@@ -124,21 +129,26 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                             FunctionStatus.TLS();
                             Uri URLCall = new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                            WebClient Client = new WebClient();
-                            Client.Encoding = Encoding.UTF8;
+                            WebClient Client = new WebClient
+                            {
+                                Encoding = Encoding.UTF8
+                            };
                             Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                             Client.DownloadFile(URLCall, "GameLauncherUpdater.exe");
                         }
                         catch (Exception Error)
                         {
                             Log.Error("LAUNCHER UPDATER: Failed to download new updater. " + Error.Message);
-                            Log.ErrorInner("LAUNCHER UPDATE [HResult]: " + Error.HResult);
-                            Log.ErrorInner("LAUNCHER UPDATE [Full Report]: " + Error.ToString());
+                            Log.ErrorIC("LAUNCHER UPDATE: " + Error.HResult);
+                            Log.ErrorFR("LAUNCHER UPDATE: " + Error.ToString());
                         }
                     }
                 }
+
+                Log.Completed("LAUNCHER UPDATER: Done");
             }
 
+            Log.Info("LAUNCHER UPDATE: Moved to Function");
             /* (Start Process) Check Latest Launcher Version */
             LauncherUpdateCheck.Latest();
         }

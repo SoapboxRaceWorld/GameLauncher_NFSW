@@ -134,6 +134,8 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
         {
             if (!LoadedServerList || !LoadedCDNList)
             {
+                Log.Checking("API: Checking Status");
+
                 switch (APIChecker.CheckStatus(URLs.Main + "/" + ((!LoadedServerList)? "serverlist.json" : "cdn_list.json")))
                 {
                     case APIStatus.Online:
@@ -190,7 +192,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                             break;
                     }
                 }
-
+                
                 if (!CarbonAPITwo)
                 {
                     switch (APIChecker.CheckStatus(URLs.WOPL + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json")))
@@ -210,12 +212,15 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                             break;
                     }
                 }
+
+                Log.Completed("API: Done");
             }
 
             if (Mode == "Startup")
             {
                 if (!LoadedServerList)
                 {
+                    Log.Checking("API: Test #2");
                     LoadedServerList = true;
 
                     /* Check If Launcher Failed to Connect to any APIs */
@@ -239,6 +244,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                             FunctionStatus.LauncherForceClose = true;
                         }
                     }
+                    Log.Completed("API: Test #2 Done");
 
                     if (FunctionStatus.LauncherForceClose)
                     {
@@ -248,6 +254,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                     {
                         FunctionStatus.IsVisualAPIsChecked = true;
 
+                        Log.Info("LIST CORE: Moved to Function");
                         /* (Start Process) Check ServerList Status */
                         ServerListUpdater.GetList();
                     }
@@ -257,6 +264,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
             {
                 if (!LoadedCDNList)
                 {
+                    Log.Checking("API: Test #3");
                     LoadedCDNList = true;
 
                     /* Check If Launcher Failed to Connect to any APIs */
@@ -266,6 +274,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                         "\n\nCDN Dropdown List will not be Available in on " + From + " Screen",
                         "GameLauncher has Stopped, Failed To Connect To Any CDN List API", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
+                    Log.Checking("API: Test #3 Done");
 
                     /*******************************/
                     /* Load CDN List                /
@@ -273,6 +282,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
                     if (InformationCache.CDNListStatus != "Loaded")
                     {
+                        Log.Checking("LIST CORE: Moved to Function");
                         CDNListUpdater.GetList();
                     }
                 }

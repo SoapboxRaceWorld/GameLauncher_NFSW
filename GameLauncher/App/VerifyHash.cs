@@ -142,8 +142,8 @@ namespace GameLauncher.App
                         {
                             DeletionError++;
                             LogVerify.Error("File: " + file + " Error: " + Error.Message);
-                            LogVerify.Error("File: " + file + " Error [HResult]: " + Error.HResult);
-                            LogVerify.ErrorInner("File: " + file + " Error [Full Report]: " + Error.ToString());
+                            LogVerify.ErrorIC("File: " + file + " Error: " + Error.HResult);
+                            LogVerify.ErrorFR("File: " + file + " Error: " + Error.ToString());
                         }
                     }
 
@@ -158,8 +158,8 @@ namespace GameLauncher.App
                         {
                             DeletionError++;
                             LogVerify.Error("File: " + file + " Error: " + Error.Message);
-                            LogVerify.Error("File: " + file + " Error [HResult]: " + Error.HResult);
-                            LogVerify.ErrorInner("File: " + file + " Error [Full Report]: " + Error.ToString());
+                            LogVerify.ErrorIC("File: " + file + " Error: " + Error.HResult);
+                            LogVerify.ErrorFR("File: " + file + " Error: " + Error.ToString());
                         }
                     }
 
@@ -178,8 +178,8 @@ namespace GameLauncher.App
                                 {
                                     DeletionError++;
                                     LogVerify.Error("Folder: " + file + " Error: " + Error.Message);
-                                    LogVerify.Error("Folder: " + file + " Error [HResult]: " + Error.HResult);
-                                    LogVerify.ErrorInner("Folder: " + file + " Error [Full Report]: " + Error.ToString());
+                                    LogVerify.ErrorIC("Folder: " + file + " Error: " + Error.HResult);
+                                    LogVerify.ErrorFR("Folder: " + file + " Error: " + Error.ToString());
                                 }
                             }
                             else if (File.Exists(foundFolders.FullName))
@@ -193,8 +193,8 @@ namespace GameLauncher.App
                                 {
                                     DeletionError++;
                                     LogVerify.Error("File: " + file + " Error: " + Error.Message);
-                                    LogVerify.Error("File: " + file + " Error [HResult]: " + Error.HResult);
-                                    LogVerify.ErrorInner("File: " + file + " Error [Full Report]: " + Error.ToString());
+                                    LogVerify.ErrorIC("File: " + file + " Error: " + Error.HResult);
+                                    LogVerify.ErrorFR("File: " + file + " Error: " + Error.ToString());
                                 }
                             }
                         }
@@ -215,8 +215,8 @@ namespace GameLauncher.App
                                 {
                                     DeletionError++;
                                     LogVerify.Error("Folder: " + file + " Error: " + Error.Message);
-                                    LogVerify.Error("Folder: " + file + " Error [HResult]: " + Error.HResult);
-                                    LogVerify.ErrorInner("Folder: " + file + " Error [Full Report]: " + Error.ToString());
+                                    LogVerify.ErrorIC("Folder: " + file + " Error: " + Error.HResult);
+                                    LogVerify.ErrorFR("Folder: " + file + " Error: " + Error.ToString());
                                 }
                             }
                             else if (File.Exists(foundFolders.FullName))
@@ -230,8 +230,8 @@ namespace GameLauncher.App
                                 {
                                     DeletionError++;
                                     LogVerify.Error("File: " + file + " Error: " + Error.Message);
-                                    LogVerify.Error("File: " + file + " Error [HResult]: " + Error.HResult);
-                                    LogVerify.ErrorInner("File: " + file + " Error [Full Report]: " + Error.ToString());
+                                    LogVerify.Error("File: " + file + " Error: " + Error.HResult);
+                                    LogVerify.ErrorFR("File: " + file + " Error: " + Error.ToString());
                                 }
                             }
                         }
@@ -241,8 +241,8 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("VERIFY HASH: " + Error.Message);
-                Log.Error("VERIFY HASH [HResult]: " + Error.HResult);
-                Log.ErrorInner("VERIFY HASH [Full Report]: " + Error.ToString());
+                Log.ErrorIC("VERIFY HASH: " + Error.HResult);
+                Log.ErrorFR("VERIFY HASH: " + Error.ToString());
             }
 
             if (DeletionError == 0)
@@ -354,8 +354,8 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("VERIFY HASH: " + Error.Message);
-                Log.Error("VERIFY HASH [HResult]: " + Error.HResult);
-                Log.ErrorInner("VERIFY HASH [Full Report]: " + Error.ToString());
+                Log.ErrorIC("VERIFY HASH: " + Error.HResult);
+                Log.ErrorFR("VERIFY HASH: " + Error.ToString());
             }
         }
 
@@ -398,9 +398,9 @@ namespace GameLauncher.App
                             {
                                 DeletionError++;
                                 LogVerify.Error("File: " + text2 + " Error: " + Error.Message);
-                                LogVerify.Error("File: " + text2 + " Error [HResult]: " + Error.HResult);
-                                LogVerify.ErrorInner("File: " + text2 + " Error [Full Report]: " + Error.ToString());
-                            }                            
+                                LogVerify.ErrorIC("File: " + text2 + " Error: " + Error.HResult);
+                                LogVerify.ErrorFR("File: " + text2 + " Error: " + Error.ToString());
+                            }
                         }
 
                         if (!new FileInfo(text2).Directory.Exists)
@@ -437,8 +437,8 @@ namespace GameLauncher.App
                     catch (Exception Error)
                     {
                         Log.Error("VERIFY HASH: " + Error.Message);
-                        Log.Error("VERIFY HASH [HResult]: " + Error.HResult);
-                        Log.ErrorInner("VERIFY HASH [Full Report]: " + Error.ToString());
+                        Log.ErrorIC("VERIFY HASH: " + Error.HResult);
+                        Log.ErrorFR("VERIFY HASH: " + Error.ToString());
                     }
                 }
             }

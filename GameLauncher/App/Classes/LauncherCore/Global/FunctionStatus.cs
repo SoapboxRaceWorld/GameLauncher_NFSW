@@ -239,7 +239,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                         }
                         chain.ChainPolicy.RevocationFlag = X509RevocationFlag.EntireChain;
                         chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
-                        chain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan(0, 0, 30);
+                        chain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan(0, 0, 15);
                         chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
                         bool chainIsValid = chain.Build((X509Certificate2)certificate);
                         if (!chainIsValid)
@@ -340,7 +340,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             {
                 Log.Core("LAUNCHER: Checking InstallationDirectory: " + FileSettingsSave.GameInstallation);
             }
-            
+
+            Log.Checking("LAUNCHER: Checking Game Installation");
             if (string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
             {
                 DiscordLauncherPresense.Status("Start Up", "Doing First Time Run");
@@ -496,6 +497,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                     }
                 }
             }
+            Log.Completed("LAUNCHER: Game Installation Path Done");
 
             if (LauncherForceClose)
             {
@@ -505,6 +507,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             {
                 if (!DetectLinux.LinuxDetected())
                 {
+                    Log.Checking("LAUNCHER: Checking Game Path Location");
                     DiscordLauncherPresense.Status("Start Up", "Checking Game Files Folder Location");
 
                     switch (CheckFolder(FileSettingsSave.GameInstallation))
@@ -545,7 +548,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                             break;
                     }
                     FileSettingsSave.SaveSettings();
+                    Log.Completed("LAUNCHER: Done Checking Game Path Location");
 
+                    Log.Checking("LAUNCHER: Windows Defender (If Applicable)");
                     /* Windows Defender (Windows 10) */
                     if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && 
                         (FileSettingsSave.WindowsDefenderStatus == "Not Excluded" || FileSettingsSave.WindowsDefenderStatus == "Unknown"))
@@ -559,6 +564,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                     {
                         Log.Core("WINDOWS DEFENDER: Found 'WindowsDefender' key! Its value is " + FileSettingsSave.WindowsDefenderStatus);
                     }
+                    Log.Completed("LAUNCHER: Windows Defender (If Applicable) Done");
                 }
 
                 /* Check If Launcher Failed to Connect to any APIs */
@@ -589,7 +595,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 }
                 else
                 {
-                    Log.Visuals("CORE: Starting MainScreen");
+                    Log.Info("MAINSCREEN: Program Started");
                     Application.Run(new MainScreen());
                 }
             }

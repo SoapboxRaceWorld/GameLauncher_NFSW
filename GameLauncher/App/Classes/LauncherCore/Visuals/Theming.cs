@@ -971,8 +971,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 catch (Exception Error)
                 {
                     Log.Error("THEMING: " + Error.Message);
-                    Log.Error("THEMING [HResult]: " + Error.HResult);
-                    Log.ErrorInner("THEMING [Full Report]: " + Error.ToString());
+                    Log.ErrorIC("THEMING: " + Error.HResult);
+                    Log.ErrorFR("THEMING: " + Error.ToString());
                 }
             }
         }

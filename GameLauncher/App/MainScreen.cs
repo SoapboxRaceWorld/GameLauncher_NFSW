@@ -122,9 +122,9 @@ namespace GameLauncher
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("CDN DOWNLOADER: [STOP] (DownloaderException) -> " + Error.Message);
-                        Log.Error("CDN DOWNLOADER [HResult]: [STOP] (DownloaderException) -> " + Error.HResult);
-                        Log.ErrorInner("CDN DOWNLOADER [Full Report]: [STOP] (DownloaderException) -> " + Error.ToString());
+                        Log.Error("CDN DOWNLOADER: " + Error.Message);
+                        Log.ErrorIC("CDN DOWNLOADER: " + Error.HResult);
+                        Log.ErrorFR("CDN DOWNLOADER: " + Error.ToString());
                     }
                 }
             };
@@ -286,8 +286,8 @@ namespace GameLauncher
                     catch (Exception Error)
                     {
                         Log.Error("SERVERLIST: " + Error.Message);
-                        Log.Error("SERVERLIST [HResult]: " + Error.HResult);
-                        Log.ErrorInner("SERVERLIST [Full Report]: " + Error.ToString());
+                        Log.ErrorIC("SERVERLIST: " + Error.HResult);
+                        Log.ErrorFR("SERVERLIST: " + Error.ToString());
                     }
                 }
 
@@ -708,8 +708,10 @@ namespace GameLauncher
             FunctionStatus.TLS();
             Uri ServerURI = new Uri(InformationCache.SelectedServerData.IpAddress + "/GetServerInformation");
             ServicePointManager.FindServicePoint(ServerURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-            WebClient client = new WebClient();
-            client.Encoding = Encoding.UTF8;
+            WebClient client = new WebClient
+            {
+                Encoding = Encoding.UTF8
+            };
             client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
             client.DownloadStringAsync(ServerURI);
 
@@ -1078,14 +1080,14 @@ namespace GameLauncher
                     catch (PingException Error)
                     {
                         Log.Error("PINGING: " + Error.Message);
-                        Log.Error("PINGING [HResult]: " + Error.HResult);
-                        Log.ErrorInner("PINGING [Full Report]: " + Error.ToString());
+                        Log.ErrorIC("PINGING: " + Error.HResult);
+                        Log.ErrorFR("PINGING: " + Error.ToString());
                     }
                     catch (Exception Error)
                     {
                         Log.Error("PING: " + Error.Message);
-                        Log.Error("PING [HResult]: " + Error.HResult);
-                        Log.ErrorInner("PING [Full Report]: " + Error.ToString());
+                        Log.ErrorIC("PING: " + Error.HResult);
+                        Log.ErrorFR("PING: " + Error.ToString());
                     }
                     finally
                     {
@@ -1103,8 +1105,10 @@ namespace GameLauncher
                         FunctionStatus.TLS();
                         Uri URICall = new Uri(verticalImageUrl);
                         ServicePointManager.FindServicePoint(URICall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                        WebClient client2 = new WebClient();
-                        client2.Encoding = Encoding.UTF8;
+                        WebClient client2 = new WebClient
+                        {
+                            Encoding = Encoding.UTF8
+                        };
                         client2.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                         client2.DownloadDataAsync(URICall);
                         client2.DownloadProgressChanged += (sender4, e4) =>
@@ -1163,8 +1167,8 @@ namespace GameLauncher
                                 catch (Exception Error)
                                 {
                                     Log.Error("SERVER BANNER: " + Error.Message);
-                                    Log.Error("SERVER BANNER [HResult]: " + Error.HResult);
-                                    Log.ErrorInner("SERVER BANNER [Full Report]: " + Error.ToString());
+                                    Log.ErrorIC("SERVER BANNER: " + Error.HResult);
+                                    Log.ErrorFR("SERVER BANNER: " + Error.ToString());
                                     VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                 }
                             }
@@ -1711,8 +1715,10 @@ namespace GameLauncher
                 {
                     FunctionStatus.TLS();
                     ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(30).TotalMilliseconds;
-                    WebClient client2 = new WebClient();
-                    client2.Encoding = Encoding.UTF8;
+                    WebClient client2 = new WebClient
+                    {
+                        Encoding = Encoding.UTF8
+                    };
                     client2.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                     client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged_RELOADED);
                     client2.DownloadFileCompleted += (test, stuff) =>
@@ -1734,8 +1740,8 @@ namespace GameLauncher
                 catch (Exception Error)
                 {
                     Log.Error("MODNET SERVER FILES: " + Error.Message);
-                    Log.Error("MODNET SERVER FILES [HResult]: " + Error.HResult);
-                    Log.ErrorInner("MODNET SERVER FILES [Full Report]: " + Error.ToString());
+                    Log.ErrorIC("MODNET SERVER FILES: " + Error.HResult);
+                    Log.ErrorFR("MODNET SERVER FILES: " + Error.ToString());
                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                 }
 
@@ -1745,15 +1751,6 @@ namespace GameLauncher
 
         private void PlayButton_Click(object sender, EventArgs e)
         {
-            if (FileSettingsSave.GameIntegrity != "Good")
-            {
-                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                MessageBox.Show("Launcher had Detected Game Files Integrity Error\nPlease Verify Game Files in Settings Screen", 
-                    "Game Files Integrity", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", FileAccountSave.UserRawEmail).ToUpper();
-                return;
-            }
-
             if (!DetectLinux.LinuxDetected())
             {
                 DriveInfo driveInfo = new DriveInfo(FileSettingsSave.GameInstallation);
@@ -1771,9 +1768,32 @@ namespace GameLauncher
                 }
             }
 
+            if (FileSettingsSave.GameIntegrity != "Good")
+            {
+                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                MessageBox.Show("Launcher had Detected Game Files Integrity Error\nPlease Verify Game Files in Settings Screen",
+                    "Game Files Integrity", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", FileAccountSave.UserRawEmail).ToUpper();
+                return;
+            }
+
+            if (!Redistributable.ErrorFree)
+            {
+                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                MessageBox.Show("Launcher had Detected 2015-2019 VC++ Redistributable Package is not Installed\n" +
+                    "Please Manually Install the Packages for your Operating System",
+                    "VC++ Redistributable Package Check", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", FileAccountSave.UserRawEmail).ToUpper();
+                return;
+            }
+
             if (File.Exists(FileSettingsSave.GameInstallation + "\\.links"))
             {
-                File.Delete(FileSettingsSave.GameInstallation + "\\.links");
+                try
+                {
+                    File.Delete(FileSettingsSave.GameInstallation + "\\.links");
+                }
+                catch { }
             }
 
             /* Disable Play Button and Logout Buttons */
@@ -1782,264 +1802,351 @@ namespace GameLauncher
             _disableLogout = true;
             DisablePlayButton();
 
-            ModNetHandler.ResetModDat(FileSettingsSave.GameInstallation);
-
-            if (Directory.Exists(FileSettingsSave.GameInstallation + "/modules")) Directory.Delete(FileSettingsSave.GameInstallation + "/modules", true);
-            if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
-
+            ModNetHandler.FileANDFolder(FileSettingsSave.GameInstallation);
             Log.Core("LAUNCHER: Installing ModNet");
             PlayProgressText.Text = ("Detecting ModNet Support for " + ServerListUpdater.ServerName("ModNet")).ToUpper();
-            String jsonModNet = ModNetHandler.ModNetSupported(InformationCache.SelectedServerData.IpAddress);
 
-            if (!String.IsNullOrWhiteSpace(jsonModNet))
+            if (ModNetHandler.Supported())
             {
-                PlayProgressText.Text = "ModNet support detected, setting up...".ToUpper();
-
                 try
                 {
-                    DiscordLauncherPresense.Status("Checking ModNet", null);
-                    /* Get Remote ModNet list to process for checking required ModNet files are present and current */
-                    FunctionStatus.TLS();
-                    Uri ModNetURI = new Uri(URLs.ModNet + "/launcher-modules/modules.json");
-                    ServicePointManager.FindServicePoint(ModNetURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    WebClient ModNetJsonURI = new WebClient();
-                    ModNetJsonURI.Encoding = Encoding.UTF8;
-                    String modules = ModNetJsonURI.DownloadString(ModNetURI);
+                    string ModulesJSON = string.Empty;
 
                     try
                     {
-                        string[] modules_newlines = modules.Split(new string[] { "\n" }, StringSplitOptions.None);
-                        foreach (String modules_newline in modules_newlines)
+                        DiscordLauncherPresense.Status("Checking ModNet", null);
+                        /* Get Remote ModNet list to process for checking required ModNet files are present and current */
+                        FunctionStatus.TLS();
+                        Uri ModNetURI = new Uri(URLs.ModNet + "/launcher-modules/modules.json");
+                        ServicePointManager.FindServicePoint(ModNetURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                        WebClient ModNetJsonURI = new WebClient
                         {
-                            if (modules_newline.Trim() == "{" || modules_newline.Trim() == "}") continue;
-
-                            String trim_modules_newline = modules_newline.Trim();
-                            String[] modules_files = trim_modules_newline.Split(new char[] { ':' });
-
-                            String ModNetList = modules_files[0].Replace("\"", "").Trim();
-                            String ModNetSHA = modules_files[1].Replace("\"", "").Replace(",", "").Trim();
-
-                            if (SHATwoFiveSix.Files
-                                (FileSettingsSave.GameInstallation + "\\" + ModNetList).ToLower() != ModNetSHA || 
-                                !File.Exists(FileSettingsSave.GameInstallation + "\\" + ModNetList))
-                            {
-                                PlayProgressText.Text = ("ModNet: Downloading " + ModNetList).ToUpper();
-
-                                Log.Warning("MODNET CORE: " + ModNetList + " Does not match SHA Hash on File Server -> Online Hash: '" + ModNetSHA + "'");
-
-                                if (File.Exists(FileSettingsSave.GameInstallation + "\\" + ModNetList))
-                                {
-                                    File.Delete(FileSettingsSave.GameInstallation + "\\" + ModNetList);
-                                }
-
-                                DiscordLauncherPresense.Status("Download ModNet", ModNetList);
-
-                                FunctionStatus.TLS();
-                                Uri URLCall = new Uri(URLs.ModNet + "/launcher-modules/" + ModNetList);
-                                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                                WebClient newModNetFilesDownload = new WebClient();
-                                newModNetFilesDownload.Encoding = Encoding.UTF8;
-                                newModNetFilesDownload.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + 
-                                    " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                                newModNetFilesDownload.DownloadFile(URLCall, FileSettingsSave.GameInstallation + "/" + ModNetList);
-                            }
-                            else
-                            {
-                                PlayProgressText.Text = ("ModNet: Up to Date " + ModNetList).ToUpper();
-                                Log.Debug("MODNET CORE: " + ModNetList + " Is Up to Date!");
-                            }
-
-                            Application.DoEvents();
-                            PlayProgressText.Text = ("Fetching Server Mods List!").ToUpper();
-                        }
+                            Encoding = Encoding.UTF8
+                        };
+                        ModNetJsonURI.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + 
+                            " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        ModulesJSON = ModNetJsonURI.DownloadString(ModNetURI);
+                        PlayProgressText.Text = "JSON: Retrived ModNet Files Information".ToUpper();
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("MODNET CORE: " + Error.Message);
-                        Log.Error("MODNET CORE [HResult]: " + Error.HResult);
-                        Log.ErrorInner("MODNET CORE [Full Report]: " + Error.ToString());
+                        Log.Error("LAUNCHER: Umable to Retrive ModNet Files Information -> " + Error.Message);
+                        Log.ErrorIC("LAUNCHER: " + Error.HResult);
+                        Log.ErrorFR("LAUNCHER: " + Error.ToString());
 
-                        DiscordLauncherPresense.Status("Download ModNet Error", null);
+                        PlayProgressText.Text = ("JSON: Unable to Retrive ModNet Files Information").ToUpper();
+                        DiscordLauncherPresense.Status("ModNet Files Information Error", null);
                         CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                        MessageBox.Show(null, $"There was an error with ModNet Files Check:\n{Error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(null, $"There was an error with ModNet JSON Retrieval:\n{Error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
 
+                    if (string.IsNullOrWhiteSpace(ModulesJSON))
+                    {
                         return;
                     }
-
-                    /* get files now */
-                    MainJson json2 = JsonConvert.DeserializeObject<MainJson>(jsonModNet);
-
-                    /* Set and Get for RemoteRPC Files */
-                    String remoteCarsFile = String.Empty;
-                    String remoteEventsFile = String.Empty;
-                    try
-                    {
-                        FunctionStatus.TLS();
-                        Uri URLCall = new Uri(json2.basePath + "/cars.json");
-                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                        WebClient CarsJson = new WebClient();
-                        CarsJson.Encoding = Encoding.UTF8;
-                        CarsJson.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
-                        " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        remoteCarsFile = CarsJson.DownloadString(URLCall);
-                    }
-                    catch { }
-
-                    try
-                    {
-                        FunctionStatus.TLS();
-                        Uri URLCall = new Uri(json2.basePath + "/events.json");
-                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                        WebClient EventsJson = new WebClient();
-                        EventsJson.Encoding = Encoding.UTF8;
-                        EventsJson.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
-                        " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        remoteEventsFile = EventsJson.DownloadString(URLCall);
-                    }
-                    catch { }
-
-                    /* Version 1.3 @metonator - DavidCarbon */
-                    if (IsJSONValid.ValidJson(remoteCarsFile))
-                    {
-                        Log.Info("DISCORD: Found RemoteRPC List for cars.json");
-                        CarsList.remoteCarsList = remoteCarsFile;
-                    }
                     else
                     {
-                        Log.Warning("DISCORD: RemoteRPC List for cars.json does not exist");
-                        CarsList.remoteCarsList = String.Empty;
-                    }
-
-                    if (IsJSONValid.ValidJson(remoteEventsFile))
-                    {
-                        Log.Info("DISCORD: Found RemoteRPC List for events.json");
-                        EventsList.remoteEventsList = remoteEventsFile;
-                    }
-                    else
-                    {
-                        Log.Warning("DISCORD: RemoteRPC List for events.json does not exist");
-                        EventsList.remoteEventsList = String.Empty;
-                    }
-
-                    Log.Core("CORE: Loading Server Mods List");
-                    /* Get Server Mod Index */
-                    FunctionStatus.TLS();
-                    Uri newIndexFile = new Uri(json2.basePath + "/index.json");
-                    ServicePointManager.FindServicePoint(newIndexFile).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    WebClient ServerModsList = new WebClient();
-                    ServerModsList.Encoding = Encoding.UTF8;
-                    ServerModsList.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
-                    " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    
-                    String jsonindex = ServerModsList.DownloadString(newIndexFile);
-
-                    try
-                    {
-                        IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(jsonindex);
-
-                        String ModFolderCache = Path.Combine(FileSettingsSave.GameInstallation, "MODS", MDFive.Hashes(json2.serverID).ToLower());
-                        if (!Directory.Exists(ModFolderCache)) Directory.CreateDirectory(ModFolderCache);
-
-                        /* (FILENAME.mods) 
-                         * Checks for any Files that Don't match the Server Index Json and Removes that File  */
-                        foreach (string file in Directory.GetFiles(ModFolderCache))
+                        try
                         {
-                            string name = Path.GetFileName(file);
-
-                            if (json3.entries.All(en => en.Name != name))
+                            string[] modules_newlines = ModulesJSON.Split(new string[] { "\n" }, StringSplitOptions.None);
+                            foreach (String modules_newline in modules_newlines)
                             {
-                                try
-                                {
-                                    File.Delete(file);
-                                    Log.Core("LAUNCHER: Removed Stale Mod Package: " + file);
-                                }
-                                catch (Exception Error)
-                                {
-                                    Log.Error($"LAUNCHER: Failed To Remove Stale Mod Package [{file}]: {Error.Message}");
-                                    Log.Error("LAUNCHER [HResult]: " + Error.HResult);
-                                    Log.ErrorInner("LAUNCHER [Full Report]: " + Error.ToString());
-                                }
-                            }
-                        }
+                                if (modules_newline.Trim() == "{" || modules_newline.Trim() == "}") continue;
 
-                        /* (OLD-FILENAME.mods != NEW-FILENAME.mods)
-                         * Checks for the file and if the File Hash does not match it will be added to a list to be downloaded 
-                         * If a file exists and doesn't match a the server provided index json it will be deleted 
-                         * 5/22/2021: If a Server Extracted Mods Directory is present and 
-                         * if a Server Mod File no longer matches it will now delete the folder (.data/SERVER-ID-HASH) - DavidCarbon
-                         */
-                        int ExtractedServerFolderRunTime = 0;
+                                String trim_modules_newline = modules_newline.Trim();
+                                String[] modules_files = trim_modules_newline.Split(new char[] { ':' });
 
-                        foreach (IndexJsonEntry modfile in json3.entries)
-                        {
-                            if (SHA.Files(ModFolderCache + "/" + modfile.Name).ToLower() != modfile.Checksum)
-                            {
-                                try
+                                String ModNetList = modules_files[0].Replace("\"", "").Trim();
+                                String ModNetSHA = modules_files[1].Replace("\"", "").Replace(",", "").Trim();
+
+                                if (SHATwoFiveSix.Files
+                                    (FileSettingsSave.GameInstallation + "\\" + ModNetList).ToLower() != ModNetSHA ||
+                                    !File.Exists(FileSettingsSave.GameInstallation + "\\" + ModNetList))
                                 {
-                                    if (ExtractedServerFolderRunTime == 0)
+                                    PlayProgressText.Text = ("ModNet: Downloading " + ModNetList).ToUpper();
+
+                                    Log.Warning("MODNET CORE: " + ModNetList + " Does not match SHA Hash on File Server -> Online Hash: '" + ModNetSHA + "'");
+
+                                    if (File.Exists(FileSettingsSave.GameInstallation + "\\" + ModNetList))
                                     {
-                                        String ExtractedServerFolder = Path.Combine(FileSettingsSave.GameInstallation, ".data", MDFive.Hashes(json2.serverID).ToLower());
-                                        if (Directory.Exists(ExtractedServerFolder))
-                                        {
-                                            Directory.Delete(ExtractedServerFolder, true);
-                                            Log.Core("LAUNCHER: Removed Extracted Server Mods Folder: .data/" + MDFive.Hashes(json2.serverID).ToLower());
-                                        }
-
-                                        ExtractedServerFolderRunTime++;
+                                        File.Delete(FileSettingsSave.GameInstallation + "\\" + ModNetList);
                                     }
 
-                                    if (File.Exists(ModFolderCache + "/" + modfile.Name))
+                                    DiscordLauncherPresense.Status("Download ModNet", ModNetList);
+
+                                    FunctionStatus.TLS();
+                                    Uri URLCall = new Uri(URLs.ModNet + "/launcher-modules/" + ModNetList);
+                                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                    WebClient newModNetFilesDownload = new WebClient
                                     {
-                                        File.Delete(ModFolderCache + "/" + modfile.Name);
-                                        Log.Core("LAUNCHER: Removed Old Mod Package: " + modfile.Name);
-                                    }
+                                        Encoding = Encoding.UTF8
+                                    };
+                                    newModNetFilesDownload.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
+                                        " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                    newModNetFilesDownload.DownloadFile(URLCall, FileSettingsSave.GameInstallation + "/" + ModNetList);
                                 }
-                                catch (Exception Error)
+                                else
                                 {
-                                    Log.Error($"LAUNCHER: Failed To Remove Old Mod Package [{modfile.Name}]: {Error.Message}");
-                                    Log.Error("LAUNCHER [HResult]: " + Error.HResult);
-                                    Log.ErrorInner("LAUNCHER [Full Report]: " + Error.ToString());
+                                    PlayProgressText.Text = ("ModNet: Up to Date " + ModNetList).ToUpper();
+                                    Log.Debug("MODNET CORE: " + ModNetList + " Is Up to Date!");
                                 }
 
-                                modFilesDownloadUrls.Enqueue(new Uri(json2.basePath + "/" + modfile.Name));
-                                TotalModFileCount++;
+                                Application.DoEvents();
                             }
-                            else
-                            {
-                                PlayProgressText.Text = ("Server Mods: Up to Date " + modfile.Name).ToUpper();
-                            }
+                        }
+                        catch (Exception Error)
+                        {
+                            Log.Error("MODNET CORE: " + Error.Message);
+                            Log.ErrorIC("MODNET CORE: " + Error.HResult);
+                            Log.ErrorFR("MODNET CORE: " + Error.ToString());
 
-                            Application.DoEvents();
+                            DiscordLauncherPresense.Status("Download ModNet Error", null);
+                            CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                            MessageBox.Show(null, $"There was an error with ModNet Files Check:\n{Error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                            return;
                         }
 
-                        if (modFilesDownloadUrls.Count != 0)
+                        string ServerModInfo = string.Empty;
+
+                        try
                         {
-                            this.DownloadModNetFilesRightNow(ModFolderCache);
-                            DiscordLauncherPresense.Status("Download Server Mods", null);
+                            FunctionStatus.TLS();
+                            Uri newModNetUri = new Uri(InformationCache.SelectedServerData.IpAddress + "/Modding/GetModInfo");
+                            ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                            WebClient ModInfoJson = new WebClient
+                            {
+                                Encoding = Encoding.UTF8
+                            };
+                            ModInfoJson.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + 
+                                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            ServerModInfo = ModInfoJson.DownloadString(newModNetUri);
+                            PlayProgressText.Text = ("JSON: Retrived Server Mod Information").ToUpper();
+                        }
+                        catch (Exception Error)
+                        {
+                            Log.Error("LAUNCHER: Umable to Retrive Modding Information -> " + Error.Message);
+                            Log.ErrorIC("LAUNCHER: " + Error.HResult);
+                            Log.ErrorFR("LAUNCHER: " + Error.ToString());
+
+                            PlayProgressText.Text = ("JSON: Unable to Retrive Server Mod Information").ToUpper();
+                            DiscordLauncherPresense.Status("Server Mods Get Information Error", null);
+                            CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                            MessageBox.Show(null, $"There was an error with Server Mod Information Retrieval:\n{Error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+
+                        if (string.IsNullOrWhiteSpace(ServerModInfo))
+                        {
+                            return;
                         }
                         else
                         {
-                            LaunchGame();
+                            /* get files now */
+                            MainJson json2 = JsonConvert.DeserializeObject<MainJson>(ServerModInfo);
+
+                            /* Set and Get for RemoteRPC Files */
+                            String remoteCarsFile = String.Empty;
+                            String remoteEventsFile = String.Empty;
+                            try
+                            {
+                                FunctionStatus.TLS();
+                                Uri URLCall = new Uri(json2.basePath + "/cars.json");
+                                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                WebClient CarsJson = new WebClient
+                                {
+                                    Encoding = Encoding.UTF8
+                                };
+                                CarsJson.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
+                                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                remoteCarsFile = CarsJson.DownloadString(URLCall);
+                            }
+                            catch { }
+
+                            try
+                            {
+                                FunctionStatus.TLS();
+                                Uri URLCall = new Uri(json2.basePath + "/events.json");
+                                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                WebClient EventsJson = new WebClient
+                                {
+                                    Encoding = Encoding.UTF8
+                                };
+                                EventsJson.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
+                                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                remoteEventsFile = EventsJson.DownloadString(URLCall);
+                            }
+                            catch { }
+
+                            /* Version 1.3 @metonator - DavidCarbon */
+                            if (IsJSONValid.ValidJson(remoteCarsFile))
+                            {
+                                Log.Info("DISCORD: Found RemoteRPC List for cars.json");
+                                CarsList.remoteCarsList = remoteCarsFile;
+                            }
+                            else
+                            {
+                                Log.Warning("DISCORD: RemoteRPC List for cars.json does not exist");
+                                CarsList.remoteCarsList = String.Empty;
+                            }
+
+                            if (IsJSONValid.ValidJson(remoteEventsFile))
+                            {
+                                Log.Info("DISCORD: Found RemoteRPC List for events.json");
+                                EventsList.remoteEventsList = remoteEventsFile;
+                            }
+                            else
+                            {
+                                Log.Warning("DISCORD: RemoteRPC List for events.json does not exist");
+                                EventsList.remoteEventsList = String.Empty;
+                            }
+
+                            string ServerModListJSON = string.Empty;
+
+                            try
+                            {
+                                Log.Core("CORE: Loading Server Mods List");
+                                /* Get Server Mod Index */
+                                FunctionStatus.TLS();
+                                Uri newIndexFile = new Uri(json2.basePath + "/index.json");
+                                ServicePointManager.FindServicePoint(newIndexFile).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                WebClient ServerModsList = new WebClient
+                                {
+                                    Encoding = Encoding.UTF8
+                                };
+                                ServerModsList.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
+                                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                ServerModListJSON = ServerModsList.DownloadString(newIndexFile);
+
+                                PlayProgressText.Text = ("JSON: Retrived Server Mod List Information").ToUpper();
+                            }
+                            catch (Exception Error)
+                            {
+                                Log.Error("LAUNCHER: Umable to Retrive Server Mod List Information -> " + Error.Message);
+                                Log.ErrorIC("LAUNCHER: " + Error.HResult);
+                                Log.ErrorFR("LAUNCHER: " + Error.ToString());
+
+                                PlayProgressText.Text = ("JSON: Unable to Retrive Server Mod List Information").ToUpper();
+                                DiscordLauncherPresense.Status("Server Mods Get Information Error", null);
+                                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                                MessageBox.Show(null, $"There was an error with Server Mod List Information Retrieval:\n{Error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+
+                            if (string.IsNullOrWhiteSpace(ServerModListJSON))
+                            {
+                                return;
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(ServerModListJSON);
+
+                                    String ModFolderCache = Path.Combine(FileSettingsSave.GameInstallation, "MODS", MDFive.Hashes(json2.serverID).ToLower());
+                                    if (!Directory.Exists(ModFolderCache)) Directory.CreateDirectory(ModFolderCache);
+
+                                    /* (FILENAME.mods) 
+                                     * Checks for any Files that Don't match the Server Index Json and Removes that File  */
+                                    foreach (string file in Directory.GetFiles(ModFolderCache))
+                                    {
+                                        string name = Path.GetFileName(file);
+
+                                        if (json3.entries.All(en => en.Name != name))
+                                        {
+                                            try
+                                            {
+                                                File.Delete(file);
+                                                Log.Core("LAUNCHER: Removed Stale Mod Package: " + file);
+                                            }
+                                            catch (Exception Error)
+                                            {
+                                                Log.Error($"LAUNCHER: Failed To Remove Stale Mod Package [{file}]: {Error.Message}");
+                                                Log.ErrorIC("LAUNCHER: " + Error.HResult);
+                                                Log.ErrorFR("LAUNCHER: " + Error.ToString());
+                                            }
+                                        }
+                                    }
+
+                                    /* (OLD-FILENAME.mods != NEW-FILENAME.mods)
+                                     * Checks for the file and if the File Hash does not match it will be added to a list to be downloaded 
+                                     * If a file exists and doesn't match a the server provided index json it will be deleted 
+                                     * 5/22/2021: If a Server Extracted Mods Directory is present and 
+                                     * if a Server Mod File no longer matches it will now delete the folder (.data/SERVER-ID-HASH) - DavidCarbon
+                                     */
+                                    int ExtractedServerFolderRunTime = 0;
+
+                                    foreach (IndexJsonEntry modfile in json3.entries)
+                                    {
+                                        if (SHA.Files(ModFolderCache + "/" + modfile.Name).ToLower() != modfile.Checksum)
+                                        {
+                                            try
+                                            {
+                                                if (ExtractedServerFolderRunTime == 0)
+                                                {
+                                                    String ExtractedServerFolder = Path.Combine(FileSettingsSave.GameInstallation, ".data", MDFive.Hashes(json2.serverID).ToLower());
+                                                    if (Directory.Exists(ExtractedServerFolder))
+                                                    {
+                                                        Directory.Delete(ExtractedServerFolder, true);
+                                                        Log.Core("LAUNCHER: Removed Extracted Server Mods Folder: .data/" + MDFive.Hashes(json2.serverID).ToLower());
+                                                    }
+
+                                                    ExtractedServerFolderRunTime++;
+                                                }
+
+                                                if (File.Exists(ModFolderCache + "/" + modfile.Name))
+                                                {
+                                                    File.Delete(ModFolderCache + "/" + modfile.Name);
+                                                    Log.Core("LAUNCHER: Removed Old Mod Package: " + modfile.Name);
+                                                }
+                                            }
+                                            catch (Exception Error)
+                                            {
+                                                Log.Error($"LAUNCHER: Failed To Remove Old Mod Package [{modfile.Name}]: {Error.Message}");
+                                                Log.ErrorIC("LAUNCHER: " + Error.HResult);
+                                                Log.ErrorFR("LAUNCHER: " + Error.ToString());
+                                            }
+
+                                            modFilesDownloadUrls.Enqueue(new Uri(json2.basePath + "/" + modfile.Name));
+                                            TotalModFileCount++;
+                                        }
+                                        else
+                                        {
+                                            PlayProgressText.Text = ("Server Mods: Up to Date " + modfile.Name).ToUpper();
+                                        }
+
+                                        Application.DoEvents();
+                                    }
+
+                                    if (modFilesDownloadUrls.Count != 0)
+                                    {
+                                        this.DownloadModNetFilesRightNow(ModFolderCache);
+                                        DiscordLauncherPresense.Status("Download Server Mods", null);
+                                    }
+                                    else
+                                    {
+                                        LaunchGame();
+                                    }
+                                }
+                                catch (Exception Error)
+                                {
+                                    Log.Error("LAUNCHER: " + Error.Message);
+                                    Log.ErrorIC("LAUNCHER: " + Error.HResult);
+                                    Log.ErrorFR("LAUNCHER: " + Error.ToString());
+
+                                    DiscordLauncherPresense.Status("Download Server Mods Error", null);
+                                    CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                                    MessageBox.Show(null, $"There was an error with Server Mods Check:\n{Error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                                    return;
+                                }
+                            }
                         }
-                    }
-                    catch (Exception Error)
-                    {
-                        Log.Error("LAUNCHER: " + Error.Message);
-                        Log.Error("LAUNCHER [HResult]: " + Error.HResult);
-                        Log.ErrorInner("LAUNCHER [Full Report]: " + Error.ToString());
-
-                        DiscordLauncherPresense.Status("Download Server Mods Error", null);
-                        CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                        MessageBox.Show(null, $"There was an error with Server Mods Check:\n{Error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                        return;
                     }
                 }
                 catch (Exception Error)
                 {
                     Log.Error("LAUNCHER: " + Error.Message);
-                    Log.Error("LAUNCHER [HResult]: " + Error.HResult);
-                    Log.ErrorInner("LAUNCHER [Full Report]: " + Error.ToString());
+                    Log.ErrorIC("LAUNCHER: " + Error.HResult);
+                    Log.ErrorFR("LAUNCHER: " + Error.ToString());
                     DiscordLauncherPresense.Status("Download ModNet Error", null);
                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                     MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{Error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2140,8 +2247,8 @@ namespace GameLauncher
             catch (Exception Error)
             {
                 Log.Error("GAME LAUNCH: " + Error.Message);
-                Log.Error("GAME LAUNCH [HResult]: " + Error.HResult);
-                Log.ErrorInner("GAME LAUNCH [Full Report]: " + Error.ToString());
+                Log.ErrorIC("GAME LAUNCH: " + Error.HResult);
+                Log.ErrorFR("GAME LAUNCH: " + Error.ToString());
                 CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                 MessageBox.Show(null, Error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -2309,8 +2416,10 @@ namespace GameLauncher
             {
                 speechFile = FunctionStatus.SpeechFiles(FileSettingsSave.Lang).ToUpper();
 
-                WebClientWithTimeout wc = new WebClientWithTimeout();
-                wc.Encoding = Encoding.UTF8;
+                WebClientWithTimeout wc = new WebClientWithTimeout
+                {
+                    Encoding = Encoding.UTF8
+                };
                 String response = wc.DownloadString(FileSettingsSave.CDN + "/" + speechFile + "/index.xml");
 
                 response = response.Substring(3, response.Length - 3);
@@ -2553,8 +2662,8 @@ namespace GameLauncher
             try
             {
                 Log.Error("CDN DOWNLOADER: " + Error.Message);
-                Log.Error("CDN DOWNLOADER [HResult]: " + Error.HResult);
-                Log.ErrorInner("CDN DOWNLOADER [Full Report]: " + Error.ToString());
+                Log.ErrorIC("CDN DOWNLOADER: " + Error.HResult);
+                Log.ErrorFR("CDN DOWNLOADER: " + Error.ToString());
                 failureMessage = Error.Message;
             }
             catch
@@ -2834,8 +2943,6 @@ namespace GameLauncher
             /* Functions                     /
             /********************************/
 
-            Log.Debug("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + FileSettingsSave.Proxy);
-
             Shown += (x, y) =>
             {
                 new Thread(() =>
@@ -2847,8 +2954,10 @@ namespace GameLauncher
                     allServs.ForEach(delegate (ServerList server) {
                         try
                         {
-                            WebClientWithTimeout pingServer = new WebClientWithTimeout();
-                            pingServer.Encoding = Encoding.UTF8;
+                            WebClientWithTimeout pingServer = new WebClientWithTimeout
+                            {
+                                Encoding = Encoding.UTF8
+                            };
                             pingServer.DownloadString(server.IpAddress + "/GetServerInformation");
 
                             if (!InformationCache.ServerStatusBook.ContainsKey(server.Id))
@@ -2883,7 +2992,8 @@ namespace GameLauncher
                 catch (Exception Error)
                 {
                     Log.Error("LAUNCHER: " + Error.Message);
-                    Log.ErrorInner("LAUNCHER: " + Error.Message);
+                    Log.ErrorIC("LAUNCHER: " + Error.HResult);
+                    Log.ErrorFR("LAUNCHER: " + Error.Message);
                 }
             }
         }

@@ -69,10 +69,12 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
     class Redistributable
     {
+        public static bool ErrorFree = true;
         public static void Check()
         {
             if (!DetectLinux.LinuxDetected())
             {
+                Log.Checking("REDISTRIBUTABLE: Is Installed or Not");
                 DiscordLauncherPresense.Status("Start Up", "Checking Redistributable Package Visual Code 2015 to 2019");
 
                 if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
@@ -85,9 +87,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
                     if (result != DialogResult.OK)
                     {
+                        ErrorFree = false;
                         MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
-                        return;
                     }
 
                     try
@@ -102,8 +104,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     catch (Exception Error)
                     {
                         Log.Error("REDISTRIBUTABLE: " + Error.Message);
-                        Log.Error("REDISTRIBUTABLE [HResult]: " + Error.HResult);
-                        Log.ErrorInner("REDISTRIBUTABLE [Full Report]: " + Error.ToString());
+                        Log.ErrorIC("REDISTRIBUTABLE: " + Error.HResult);
+                        Log.ErrorFR("REDISTRIBUTABLE: " + Error.ToString());
                     }
 
                     if (File.Exists("VC_redist.x86.exe"))
@@ -117,19 +119,20 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
                         if (proc == null)
                         {
+                            ErrorFree = false;
                             MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
-                            return;
                         }
                     }
                     else
                     {
+                        ErrorFree = false;
                         MessageBox.Show("Failed to download package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
                     }
                 }
 
-                if (Environment.Is64BitOperatingSystem == true)
+                if (Environment.Is64BitOperatingSystem)
                 {
                     if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x64))
                     {
@@ -141,9 +144,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
                         if (result != DialogResult.OK)
                         {
+                            ErrorFree = false;
                             MessageBox.Show("The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
-                            return;
                         }
 
                         try
@@ -158,8 +161,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         catch (Exception Error)
                         {
                             Log.Error("REDISTRIBUTABLE x64: " + Error.Message);
-                            Log.Error("REDISTRIBUTABLE x64 [HResult]: " + Error.HResult);
-                            Log.ErrorInner("REDISTRIBUTABLE x64 [Full Report]: " + Error.ToString());
+                            Log.ErrorIC("REDISTRIBUTABLE x64: " + Error.HResult);
+                            Log.ErrorFR("REDISTRIBUTABLE x64: " + Error.ToString());
                         }
 
                         if (File.Exists("VC_redist.x64.exe"))
@@ -173,20 +176,24 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
                             if (proc == null)
                             {
+                                ErrorFree = false;
                                 MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
-                                return;
                             }
                         }
                         else
                         {
+                            ErrorFree = false;
                             MessageBox.Show("Failed to download package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
                         }
                     }
                 }
+
+                Log.Completed("REDISTRIBUTABLE: Done");
             }
 
+            Log.Info("ID: Moved to Function");
             /* (Start Process) */
             HardwareID.FingerPrint.Get();
         }

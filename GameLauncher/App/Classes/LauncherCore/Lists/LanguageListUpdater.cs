@@ -17,6 +17,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
         public static void GetList()
         {
+            Log.Checking("LIST CORE: Creating Lang List");
             DiscordLauncherPresense.Status("Start Up", "Creating Language List");
 
             List<LangObject> langInfos = new List<LangObject>();
@@ -92,6 +93,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 Log.Error("LIST CORE: Error occurred while Sorting LANG List: " + error.Message);
             }
 
+            Log.Checking("LIST CORE: Done");
+
+            Log.Info("API: Moved to Function");
             /* Run the API Checks to Make Sure it Visually Displayed Correctly */
             VisualsAPIChecker.PingAPIStatus("Startup", "Loading");
         }

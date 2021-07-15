@@ -85,8 +85,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 catch (Exception Error)
                 {
                     Log.Error("USX File: " + Error.Message);
-                    Log.ErrorInner("USX Fille [HResult]: " + Error.HResult);
-                    Log.ErrorInner("USX Fille [Full Report]: " + Error.ToString());
+                    Log.ErrorIC("USX Fille: " + Error.HResult);
+                    Log.ErrorFR("USX Fille: " + Error.ToString());
                 }
             }
             else
@@ -301,8 +301,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             catch (Exception Error)
             {
                 Log.Error("USX File: " + Error.Message);
-                Log.Error("USX File [HResult]: " + Error.HResult);
-                Log.Error("USX File [Full Report;: " + Error.ToString());
+                Log.ErrorIC("USX File: " + Error.HResult);
+                Log.ErrorFR("USX File: " + Error.ToString());
             }
         }
 
@@ -358,8 +358,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 {
                     Log.Error("USX File: Unable to Create XML Node [Type: '" + Type + "' NodePath: '" + NodePath + "' SingleNode: '" +
                                 SingleNode + "' AttributeName: '" + AttributeName + "' AttributeValue: '" + AttributeValue + "']" + Error.Message);
-                    Log.Error("USX File [HResult]: " + Error.HResult);
-                    Log.ErrorInner("USX File [Full Report]: " + Error.ToString());
+                    Log.ErrorIC("USX File: " + Error.HResult);
+                    Log.ErrorFR("USX File: " + Error.ToString());
                     return;
                 }
             }
@@ -417,8 +417,8 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             catch (Exception Error)
             {
                 Log.Error("USX File: Unable to Read XML Node [NodePath: '" + FullNodePath + "' AttributeName: '" + AttributeName + "']" + Error.Message);
-                Log.Error("USX File [HResult]: " + Error.HResult);
-                Log.ErrorInner("USX File [Full Report]: " + Error.ToString());
+                Log.ErrorIC("USX File: " + Error.HResult);
+                Log.ErrorFR("USX File: " + Error.ToString());
                 return "ERROR";
             }
         }

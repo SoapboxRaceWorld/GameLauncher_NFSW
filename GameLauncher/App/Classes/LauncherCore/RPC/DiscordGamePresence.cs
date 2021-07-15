@@ -139,8 +139,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 catch (Exception Error)
                 {
                     Log.Error("DISCORD GAME PRESENSE: " + Error.Message);
-                    Log.Error("DISCORD GAME PRESENSE [HResult]: " + Error.HResult);
-                    Log.ErrorInner("DISCORD GAME PRESENSE [Full Report]: " + Error.ToString());
+                    Log.ErrorIC("DISCORD GAME PRESENSE: " + Error.HResult);
+                    Log.ErrorFR("DISCORD GAME PRESENSE: " + Error.ToString());
                 }
             }
 
@@ -435,9 +435,11 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 if (GET.Contains("clientProductType=PRESETCAR"))                _presence.Details = "In Safehouse - Purchasing Car";
                 if (GET.Contains("categoryName=BoosterPacks"))                  _presence.Details = "In Safehouse - Opening Cardpacks";
 
-                _presence.Assets = new Assets();
-                _presence.Assets.SmallImageText = "In-Safehouse";
-                _presence.Assets.SmallImageKey = "gamemode_safehouse";
+                _presence.Assets = new Assets
+                {
+                    SmallImageText = "In-Safehouse",
+                    SmallImageKey = "gamemode_safehouse"
+                };
                 _presence.State = serverName;
                 _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
                 _presence.Assets.LargeImageKey = PersonaAvatarId;

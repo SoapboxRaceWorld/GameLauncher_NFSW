@@ -32,6 +32,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                 License_IC = ValueAlt();
                 License_IC = string.Empty;
 
+                Log.Info("LIST: Moved to Function");
                 /* (Start Process) Sets Up Langauge List */
                 LanguageListUpdater.GetList();
             }
@@ -220,8 +221,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                 catch (Exception Error)
                 {
                     Log.Error("ID: " + Error.Message);
-                    Log.Error("ID [HResult]: " + Error.HResult);
-                    Log.ErrorInner("ID [Full Report]: " + Error.ToString());
+                    Log.ErrorIC("ID: " + Error.HResult);
+                    Log.ErrorFR("ID: " + Error.ToString());
                 }
 
                 return result;

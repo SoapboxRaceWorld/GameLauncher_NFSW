@@ -200,8 +200,8 @@ namespace GameLauncher.App
                 catch (Exception Error)
                 {
                     Log.Error("ADD SERVER: " + Error.Message);
-                    Log.Error("ADD SERVER [HResult]: " + Error.HResult);
-                    Log.ErrorInner("ADD SERVER [Full Report]: " + Error.ToString());
+                    Log.ErrorIC("ADD SERVER: " + Error.HResult);
+                    Log.ErrorFR("ADD SERVER: " + Error.ToString());
 
                     MessageBox.Show(null, "Failed to add new server.\n" + Error.Message, "GameLauncher", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
                 }

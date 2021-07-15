@@ -26,6 +26,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
         public static void GetList()
         {
+            Log.Checking("LIST CORE: Creating Server List");
             DiscordLauncherPresense.Status("Start Up", "Creating Server List");
 
             List<ServerList> serverInfos = new List<ServerList>();
@@ -36,8 +37,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 FunctionStatus.TLS();
                 Uri URLCall = new Uri(URLs.OnlineServerList);
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                WebClient Client = new WebClient();
-                Client.Encoding = Encoding.UTF8;
+                WebClient Client = new WebClient
+                {
+                    Encoding = Encoding.UTF8
+                };
                 Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + 
                 " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                 string response = Client.DownloadString(URLCall);
@@ -51,16 +54,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 catch (Exception Error)
                 {
                     Log.Error("LIST CORE: Error occurred while deserializing Server List from [" + URLs.OnlineServerList + "]: " + Error.Message);
-                    Log.Error("LIST CORE [HResult]: " + Error.HResult);
-                    Log.ErrorInner("LIST CORE [Full Report]: " + Error.ToString());
+                    Log.ErrorIC("LIST CORE: " + Error.HResult);
+                    Log.ErrorFR("LIST CORE: " + Error.ToString());
                     InformationCache.ServerListStatus = "Error";
                 }
             }
             catch (Exception Error)
             {
                 Log.Error("LIST CORE: Error occurred while loading Server List from [" + URLs.OnlineServerList + "]: " + Error.Message);
-                Log.Error("LIST CORE [HResult]: " + Error.HResult);
-                Log.ErrorInner("LIST CORE [Full Report]: " + Error.ToString());
+                Log.ErrorIC("LIST CORE: " + Error.HResult);
+                Log.ErrorFR("LIST CORE: " + Error.ToString());
                 InformationCache.ServerListStatus = "Error";
             }
 
@@ -142,7 +145,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     CleanList.Add(CList);
                 }
             }
+            Log.Completed("LIST CORE: Server List Done");
 
+            Log.Info("CERTIFICATE STORE: Moved to Function");
             /* (Start Process) Check Up to Date Certificate Status */
             CertificateStore.Latest();
         }
@@ -150,15 +155,24 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
         /* Converts 2 Letter Country Code and Returns Full Country Name (In English) */
         public static string CountryName(string twoLetterCountryCode)
         {
-            CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
-
-            foreach (CultureInfo culture in cultures)
+            try
             {
-                RegionInfo region = new RegionInfo(culture.LCID);
-                if (region.TwoLetterISORegionName.ToUpper() == twoLetterCountryCode.ToUpper())
+                CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+
+                foreach (CultureInfo culture in cultures)
                 {
-                    return region.EnglishName;
+                    RegionInfo region = new RegionInfo(culture.LCID);
+                    if (region.TwoLetterISORegionName.ToUpper() == twoLetterCountryCode.ToUpper())
+                    {
+                        return region.EnglishName;
+                    }
                 }
+            }
+            catch (Exception Error)
+            {
+                Log.Error("COUNTRYNAME: " + Error.Message);
+                Log.ErrorIC("COUNTRYNAME: " + Error.HResult);
+                Log.ErrorFR("COUNTRYNAME: " + Error.ToString());
             }
 
             return "Unknown";

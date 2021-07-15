@@ -489,8 +489,8 @@ namespace GameLauncher.App
             {
                 FinalCDNURL = FileSettingsSave.CDN;
                 Log.Error("SETTINGS CDN URL TRIM: " + Error.Message);
-                Log.Error("SETTINGS CDN URL TRIM [HResult]: " + Error.HResult);
-                Log.ErrorInner("SETTINGS CDN URL TRIM [Full Report]: " + Error.ToString());
+                Log.ErrorIC("SETTINGS CDN URL TRIM: " + Error.HResult);
+                Log.ErrorFR("SETTINGS CDN URL TRIM: " + Error.ToString());
             }
 
             try
@@ -515,8 +515,8 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS VERIFYHASH: " + Error.Message);
-                Log.Error("SETTINGS VERIFYHASH [HResult]: " + Error.HResult);
-                Log.ErrorInner("SETTINGS VERIFYHASH [Full Report]: " + Error.ToString());
+                Log.ErrorIC("SETTINGS VERIFYHASH: " + Error.HResult);
+                Log.ErrorFR("SETTINGS VERIFYHASH: " + Error.ToString());
             }
 
             /********************************/
@@ -694,8 +694,8 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS SAVE:" + Error.Message);
-                Log.Error("SETTINGS SAVE [HResult]:" + Error.HResult);
-                Log.ErrorInner("SETTINGS SAVE [Full Report]: " + Error.ToString());
+                Log.ErrorIC("SETTINGS SAVE:" + Error.HResult);
+                Log.ErrorFR("SETTINGS SAVE: " + Error.ToString());
             }
 
             /* Create Custom Settings.ini for LangPicker.asi module */
@@ -777,8 +777,8 @@ namespace GameLauncher.App
                 catch (Exception Error)
                 {
                     Log.Error("SETTINGS CLEAR: " + Error.Message);
-                    Log.Error("SETTINGS CLEAR [HResult]: " + Error.HResult);
-                    Log.ErrorInner("SETTINGS CLEAR [Full Report]: " + Error.ToString());
+                    Log.ErrorIC("SETTINGS CLEAR: " + Error.HResult);
+                    Log.ErrorFR("SETTINGS CLEAR: " + Error.ToString());
                     MessageBox.Show(null, "Unable to Delete Server Mods Cache\n" + Error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -800,8 +800,8 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS CLEAR: " + Error.Message);
-                Log.Error("SETTINGS CLEAR [HResult]: " + Error.HResult);
-                Log.ErrorInner("SETTINGS CLEAR [Full Report]: " + Error.ToString());
+                Log.ErrorIC("SETTINGS CLEAR: " + Error.HResult);
+                Log.ErrorFR("SETTINGS CLEAR: " + Error.ToString());
                 MessageBox.Show(null, "Unable to Delete NFSWO Communication Log\n" + Error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
@@ -838,8 +838,8 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS CLEAR: " + Error.Message);
-                Log.Error("SETTINGS CLEAR [HResult]: " + Error.HResult);
-                Log.ErrorInner("SETTINGS CLEAR [Full Report]: " + Error.ToString());
+                Log.ErrorIC("SETTINGS CLEAR: " + Error.HResult);
+                Log.ErrorFR("SETTINGS CLEAR: " + Error.ToString());
                 MessageBox.Show(null, "Unable to Delete Crash Logs\n" + Error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
@@ -1154,8 +1154,8 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS CDNLIST: " + Error.Message);
-                Log.Error("SETTINGS CDNLIST [HResult]: " + Error.HResult);
-                Log.ErrorInner("SETTINGS CDNLIST [Full Report]: " + Error.ToString());
+                Log.ErrorIC("SETTINGS CDNLIST: " + Error.HResult);
+                Log.ErrorFR("SETTINGS CDNLIST: " + Error.ToString());
             }
         }
 
@@ -1199,8 +1199,8 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS CDNLIST: " + Error.Message);
-                Log.Error("SETTINGS CDNLIST [HResult]: " + Error.HResult);
-                Log.ErrorInner("SETTINGS CDNLIST [Full Report]: " + Error.ToString());
+                Log.ErrorIC("SETTINGS CDNLIST: " + Error.HResult);
+                Log.ErrorFR("SETTINGS CDNLIST: " + Error.ToString());
             }
         }
 
@@ -1253,8 +1253,8 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("SETTINGS LANGLIST: " + Error.Message);
-                Log.Error("SETTINGS LANGLIST [HResult]: " + Error.HResult);
-                Log.ErrorInner("SETTINGS LANGLIST [Full Report]: " + Error.ToString());
+                Log.ErrorIC("SETTINGS LANGLIST: " + Error.HResult);
+                Log.ErrorFR("SETTINGS LANGLIST: " + Error.ToString());
             }
         }
 

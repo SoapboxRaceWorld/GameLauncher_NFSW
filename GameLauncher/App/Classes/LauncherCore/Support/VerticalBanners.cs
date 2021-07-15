@@ -1,5 +1,4 @@
 ﻿using GameLauncher.App.Classes.Logger;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using System;
 using System.Drawing;
 using System.IO;
@@ -29,8 +28,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
             catch (Exception Error)
             {
                 Log.Error("VERTICAL BANNER: " + Error.Message);
-                Log.Error("VERTICAL BANNER [HResult]: " + Error.HResult);
-                Log.ErrorInner("VERTICAL BANNER [Full Report]: " + Error.ToString());
+                Log.ErrorIC("VERTICAL BANNER: " + Error.HResult);
+                Log.ErrorFR("VERTICAL BANNER: " + Error.ToString());
                 return null;
             }
         }

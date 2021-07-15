@@ -1317,8 +1317,8 @@ namespace GameLauncher.App
                 catch (Exception Error)
                 {
                     Log.Error("USXE Resolution: " + Error.Message);
-                    Log.Error("USXE Resolution [HResult]: " + Error.HResult);
-                    Log.ErrorInner("USXE Resolution [Full Report]: " + Error.ToString());
+                    Log.ErrorIC("USXE Resolution: " + Error.HResult);
+                    Log.ErrorFR("USXE Resolution: " + Error.ToString());
                 }
             }
         }

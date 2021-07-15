@@ -93,8 +93,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             catch (WebException Error)
             {
                 Log.Error("CLIENT (LOGIN/REGISTER): " + Error.Message);
-                Log.ErrorInner("CLIENT (LOGIN/REGISTER) [HResult]: " + Error.HResult);
-                Log.ErrorInner("CLIENT (LOGIN/REGISTER) [Full Report]: " + Error.ToString());
+                Log.ErrorIC("CLIENT (LOGIN/REGISTER): " + Error.HResult);
+                Log.ErrorFR("CLIENT (LOGIN/REGISTER): " + Error.ToString());
 
                 if (Connection == "Non Secure" || Connection == "Secure")
                 {
@@ -146,8 +146,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     catch (Exception Error)
                     {
                         Log.Error("XML LOGIN ERROR: " + Error.Message);
-                        Log.Error("XML LOGIN ERROR: [HResult] " + Error.HResult);
-                        Log.ErrorInner("XML LOGIN ERROR: [Full Report] " + Error.ToString());
+                        Log.ErrorIC("XML LOGIN ERROR: " + Error.HResult);
+                        Log.ErrorFR("XML LOGIN ERROR: " + Error.ToString());
 
                         XMLIsErrorFree = false;
                         msgBoxInfo = "An error occured: " + Error.Message;
@@ -427,8 +427,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
                 {
                     Log.Error("XMLSERVERCORE: Unable to Read XML [NodePath: '" + FullNodePath + "' Attribute: '" + AttributeName + "']" + Error.Message);
-                    Log.ErrorInner("XMLSERVERCORE: [HResult] " + Error.HResult);
-                    Log.ErrorInner("XMLSERVERCORE: [Full Report] " + Error.ToString());
+                    Log.ErrorIC("XMLSERVERCORE: " + Error.HResult);
+                    Log.ErrorFR("XMLSERVERCORE: " + Error.ToString());
                 }
                 if (Type == "InnerText")
                 {

@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.Logger;
@@ -11,28 +12,94 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
 {
     class ModNetHandler
     {
-        public static void ResetModDat(string gameDir)
+        public static void FileANDFolder(string Paths)
         {
-            File.Delete(Path.Combine(gameDir, "ModManager.dat"));
+            String[] FoldersToRemove = new string[]
+            {
+                /* Folders */
+                "modules"
+            };
+
+            String[] FoldersToCreate = new string[]
+            {
+                /* Folders */
+                "scripts"
+            };
+
+            String[] FilesToRemove = new string[] 
+            {
+                /* Legacy Files */
+                "modules/udpcrc.soapbox.module",
+                "modules/udpcrypt1.soapbox.module",
+                "modules/udpcrypt2.soapbox.module",
+                "modules/xmppsubject.soapbox.module",
+                "scripts/global.ini",
+                "lightfx.dll",
+                "ModManager.dat",
+                "PocoFoundation.dll",
+                "PocoNet.dll"
+            };
+
+            foreach (string Folder in FoldersToRemove)
+            {
+                if (Directory.Exists(Path.Combine(Paths, Folder)))
+                {
+                    try
+                    {
+                        Directory.Delete(Path.Combine(Paths, Folder), true);
+                    }
+                    catch (Exception Error)
+                    {
+                        Log.Error("LAUNCHER: Deleting Folder " + Folder + " -> " + Error.Message);
+                        Log.ErrorIC("LAUNCHER: " + Error.HResult);
+                        Log.ErrorFR("LAUNCHER: " + Error.ToString());
+                    }
+                }
+            }
+
+            foreach (string Folder in FoldersToCreate)
+            {
+                if (!Directory.Exists(Path.Combine(Paths, Folder)))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(Path.Combine(Paths, Folder));
+                    }
+                    catch (Exception Error)
+                    {
+                        Log.Error("LAUNCHER: Creating Folder " + Folder + " -> " + Error.Message);
+                        Log.ErrorIC("LAUNCHER: " + Error.HResult);
+                        Log.ErrorFR("LAUNCHER: " + Error.ToString());
+                    }
+                }
+            }
+
+            foreach (string Files in FilesToRemove)
+            {
+                if (File.Exists(Path.Combine(Paths, Files)))
+                {
+                    try
+                    {
+                        File.Delete(Path.Combine(Paths, Files));
+                    }
+                    catch (Exception Error)
+                    {
+                        Log.Error("LAUNCHER: Deleting File " + Files + " -> " + Error.Message);
+                        Log.ErrorIC("LAUNCHER: " + Error.HResult);
+                        Log.ErrorFR("LAUNCHER: " + Error.ToString());
+                    }
+                }
+            }
         }
 
-        public static string ModNetSupported(string ServerIP)
+        public static bool Supported()
         {
-            try
+            switch (APIChecker.CheckStatus(InformationCache.SelectedServerData.IpAddress + "/Modding/GetModInfo"))
             {
-                FunctionStatus.TLS();
-                Uri newModNetUri = new Uri(ServerIP + "/Modding/GetModInfo");
-                ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                WebClient x = new WebClient();
-                x.Encoding = Encoding.UTF8;
-                return x.DownloadString(newModNetUri);
-            }
-            catch (Exception Error)
-            {
-                Log.Error("LAUNCHER: Umable to Retrive Modding Information -> " + Error.Message);
-                Log.Error("LAUNCHER [HResult]: " + Error.HResult);
-                Log.ErrorInner("LAUNCHER [Full Report]: " + Error.ToString());
-                return String.Empty;
+                case APIStatus.Online:
+                    return true;
+                default:
+                    return false;
             }
         }
 
@@ -116,8 +183,8 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
 
                                 Log.Error("CLEANLINKS: Error while deleting a file: {realLoc}");
                                 Log.Error("CLEANLINKS: " + Error.Message);
-                                Log.Error("CLEANLINKS [HResult]: " + Error.HResult);
-                                Log.ErrorInner("CLEANLINKS [Full Report]: " + Error.ToString());
+                                Log.ErrorIC("CLEANLINKS: " + Error.HResult);
+                                Log.ErrorFR("CLEANLINKS: " + Error.ToString());
                             }
                         }
                         else
@@ -159,8 +226,8 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
             catch (Exception Error)
             {
                 Log.Error("CLEANLINKS: " + Error.Message);
-                Log.Error("CLEANLINKS [HResult]: " + Error.HResult);
-                Log.ErrorInner("CLEANLINKS [Full Report]: " + Error.ToString());
+                Log.ErrorIC("CLEANLINKS: " + Error.HResult);
+                Log.ErrorFR("CLEANLINKS: " + Error.ToString());
             }
         }
 

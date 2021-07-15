@@ -126,8 +126,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             catch (Exception Error)
             {
                 Log.Error("CDN DOWNLOADER: " + Error.Message);
-                Log.Error("CDN DOWNLOADER [HResult]: " + Error.HResult);
-                Log.ErrorInner("CDN DOWNLOADER [Full Report]: " + Error.ToString());
+                Log.ErrorIC("CDN DOWNLOADER: " + Error.HResult);
+                Log.ErrorFR("CDN DOWNLOADER: " + Error.ToString());
                 Exception exception = Error;
                 lock (this._workers)
                 {

@@ -229,50 +229,57 @@ namespace GameLauncher
             if (!DetectLinux.LinuxDetected())
             {
                 DiscordLauncherPresense.Status("Start Up", "Checking .NET Framework");
-                /* Check if User has a compatible .NET Framework Installed */
-                const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
-
-                using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey))
+                try
                 {
-                    /* For now, allow edge case of Windows 8.0 to run .NET 4.6.1 where upgrading to 8.1 is not possible */
-                    if (WindowsProductVersion.GetWindowsNumber() == 6.2)
+                    /* Check if User has a compatible .NET Framework Installed */
+                    const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
+
+                    using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey))
                     {
-                        if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394254)
+                        /* For now, allow edge case of Windows 8.0 to run .NET 4.6.1 where upgrading to 8.1 is not possible */
+                        if (WindowsProductVersion.GetWindowsNumber() == 6.2)
+                        {
+                            if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394254)
+                            {
+                                //Do Nothing
+                            }
+                            else
+                            {
+                                DialogResult frameworkError = MessageBox.Show(null, "This application requires a minimum version of the .NET Framework:\n" +
+                                    " .NETFramework, Version=v4.6.1 \n\nDo you want to install this .NET Framework version now?",
+                                    "GameLauncher.exe - This application could not be started.", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+
+                                if (frameworkError == DialogResult.Yes)
+                                {
+                                    Process.Start("https://dotnet.microsoft.com/download/dotnet-framework/net461");
+                                }
+
+                                FunctionStatus.LauncherForceClose = true;
+                            }
+                        }
+                        /* Otherwise, all other OS Versions should have 4.6.2 as a Minimum Version */
+                        else if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394802)
                         {
                             //Do Nothing
                         }
                         else
                         {
-                            DialogResult frameworkError = MessageBox.Show(null, "This application requires a minimum version of the .NET Framework:\n" +
-                                " .NETFramework, Version=v4.6.1 \n\nDo you want to install this .NET Framework version now?", 
+                            DialogResult frameworkError = MessageBox.Show(null, "This application requires a version equal to or newer than the .NET Framework:\n" +
+                                " .NETFramework, Version=v4.6.2 \n\nDo you want to install this .NET Framework version now?",
                                 "GameLauncher.exe - This application could not be started.", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
                             if (frameworkError == DialogResult.Yes)
                             {
-                                Process.Start("https://dotnet.microsoft.com/download/dotnet-framework/net461");
+                                Process.Start("https://dotnet.microsoft.com/download/dotnet-framework");
                             }
 
                             FunctionStatus.LauncherForceClose = true;
                         }
                     }
-                    /* Otherwise, all other OS Versions should have 4.6.2 as a Minimum Version */
-                    else if (ndpKey != null && ndpKey.GetValue("Release") != null && (int)ndpKey.GetValue("Release") >= 394802)
-                    {
-                        //Do Nothing
-                    }
-                    else
-                    {
-                        DialogResult frameworkError = MessageBox.Show(null, "This application requires a version equal to or newer than the .NET Framework:\n" +
-                            " .NETFramework, Version=v4.6.2 \n\nDo you want to install this .NET Framework version now?", 
-                            "GameLauncher.exe - This application could not be started.", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-
-                        if (frameworkError == DialogResult.Yes)
-                        {
-                            Process.Start("https://dotnet.microsoft.com/download/dotnet-framework");
-                        }
-
-                        FunctionStatus.LauncherForceClose = true;
-                    }
+                }
+                catch
+                {
+                    FunctionStatus.LauncherForceClose = true;
                 }
             }
 
@@ -305,6 +312,7 @@ namespace GameLauncher
 
                 Log.Info("CURRENT DATE: " + Time.GetTime("Date"));
 
+                Log.Checking("LAUNCHER MIGRATION: Appdata and/or Roaming Folders]");
                 /* Deletes Folders that will Crash the Launcher (Cleanup Migration) */
                 try
                 {
@@ -336,9 +344,12 @@ namespace GameLauncher
                 catch (Exception Error)
                 {
                     Log.Error("LAUNCHER MIGRATION: " + Error.Message);
-                    Log.ErrorInner("LAUNCHER MIGRATION: " + Error.ToString());
+                    Log.ErrorIC("LAUNCHER MIGRATION: " + Error.HResult);
+                    Log.ErrorFR("LAUNCHER MIGRATION: " + Error.ToString());
                 }
+                Log.Completed("LAUNCHER MIGRATION");
 
+                Log.Checking("LAUNCHER XML: If File Exists or Not");
                 DiscordLauncherPresense.Status("Start Up", "Checking if UserSettings XML Exists");
                 /* Create Default Configuration Files (if they don't already exist) */
                 if (!File.Exists(FileGameSettings.UserSettingsLocation))
@@ -354,177 +365,242 @@ namespace GameLauncher
                     catch (Exception Error)
                     {
                         Log.Error("LAUNCHER XML: " + Error.Message);
-                        Log.ErrorInner("LAUNCHER XML: " + Error.ToString());
+                        Log.ErrorIC("LAUNCHER XML: " + Error.HResult);
+                        Log.ErrorFR("LAUNCHER XML: " + Error.ToString());
                     }
                 }
+                Log.Completed("LAUNCHER XML");
 
-                if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
+                string Insider = string.Empty;
+                if (EnableInsiderDeveloper.Allowed())
                 {
-                    string Insider = "BETA INSIDER";
-                    if (EnableInsiderDeveloper.Allowed())
-                    {
-                        Insider = "DEV INSIDER";
-                    }
-                    Log.Build(Insider + ": GameLauncher " + Application.ProductVersion + "_" + InsiderInfo.BuildNumberOnly());
+                    Insider = "DEV TEST ";
                 }
-                else
+                else if (EnableInsiderBetaTester.Allowed())
                 {
-                    Log.Build("BUILD: GameLauncher " + Application.ProductVersion + "_" + InsiderInfo.BuildNumberOnly());
+                    Insider = "BETA TEST ";
                 }
 
+                Log.Build(Insider + "BUILD: GameLauncher " + Application.ProductVersion + "_" + InsiderInfo.BuildNumberOnly());
+
+                Log.Checking("OS: Detecting");
                 DiscordLauncherPresense.Status("Start Up", "Checking Operating System");
-                Log.Info("LAUNCHER: Detecting OS");
-                if (DetectLinux.LinuxDetected())
+                try
                 {
-                    InformationCache.OSName = DetectLinux.Distro();
-                    Log.System("SYSTEM: Detected OS: " + InformationCache.OSName);
-                }
-                else
-                {
-                    InformationCache.OSName = WindowsProductVersion.ConvertWindowsNumberToName();
-                    Log.System("SYSTEM: Detected OS: " + InformationCache.OSName);
-                    Log.System("SYSTEM: Windows Build: " + WindowsProductVersion.GetWindowsBuildNumber());
-                    Log.System("SYSTEM: NT Version: " + Environment.OSVersion);
-                    Log.System("SYSTEM: Video Card: " + HardwareInfo.GPU.CardName());
-                    Log.System("SYSTEM: Driver Version: " + HardwareInfo.GPU.DriverVersion());
-                }
-
-                /* Set Launcher Directory */
-                Log.Info("CORE: Setting up current directory: " + Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Path.GetDirectoryName(
-                    Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Application.ExecutablePath))))));
-                Directory.SetCurrentDirectory(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Path.GetDirectoryName(Encoding.UTF8.GetString(
-                    Encoding.UTF8.GetBytes(Application.ExecutablePath))))));
-
-                if (!DetectLinux.LinuxDetected())
-                {
-                    DiscordLauncherPresense.Status("Start Up", "Checking Launcher Folder Location");
-                    Log.Info("CORE: Checking current directory");
-
-                    switch (FunctionStatus.CheckFolder(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Directory.GetCurrentDirectory()))))
+                    if (DetectLinux.LinuxDetected())
                     {
-                        case FolderType.IsTempFolder:
-                        case FolderType.IsUsersFolders:
-                        case FolderType.IsProgramFilesFolder:
-                        case FolderType.IsWindowsFolder:
-                        case FolderType.IsRootFolder:
-                            String constructMsg = String.Empty;
-
-                            constructMsg += "Using this location for GameLauncher is not allowed.\n\n";
-                            constructMsg += "The following locations are also NOT allowed:\n";
-                            constructMsg += "• X:\\GameLauncher.exe (Root of Drive, such as C:\\ or D:\\, must be in a folder)\n";
-                            constructMsg += "• C:\\Program Files\n";
-                            constructMsg += "• C:\\Program Files (x86)\n";
-                            constructMsg += "• C:\\Users (Includes 'Desktop', 'Documents', 'Downloads')\n";
-                            constructMsg += "• C:\\Windows\n\n";
-                            constructMsg += "Instead, move the Launcher folder to someplace like:\n";
-                            constructMsg += "• 'C:\\Soapbox Race World' or 'C:\\SBRW'\n";
-                            constructMsg += "(Or any other NTFS 'Local Disk' location such as 'D:')\n\n";
-
-                            MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                            /* Close Splash Screen (Just in Case) */
-                            if (IsSplashScreenLive)
-                            {
-                                SplashScreen.Abort();
-                            }
-
-                            FunctionStatus.LauncherForceClose = true;
-                            break;
+                        InformationCache.OSName = DetectLinux.Distro();
+                        Log.System("SYSTEM: Detected OS: " + InformationCache.OSName);
                     }
+                    else
+                    {
+                        InformationCache.OSName = WindowsProductVersion.ConvertWindowsNumberToName();
+                        Log.System("SYSTEM: Detected OS: " + InformationCache.OSName);
+                        Log.System("SYSTEM: Windows Build: " + WindowsProductVersion.GetWindowsBuildNumber());
+                        Log.System("SYSTEM: NT Version: " + Environment.OSVersion);
+                        Log.System("SYSTEM: Video Card: " + HardwareInfo.GPU.CardName());
+                        Log.System("SYSTEM: Driver Version: " + HardwareInfo.GPU.DriverVersion());
+                    }
+                    Log.Completed("OS: Detected");
+                }
+                catch (Exception Error)
+                {
+                    Log.Error("SYSTEM: " + Error.Message);
+                    Log.ErrorIC("SYSTEM: " + Error.HResult);
+                    Log.ErrorFR("SYSTEM: " + Error.ToString());
+                    FunctionStatus.LauncherForceCloseReason = "Operating System Detection Check Encountered an Error.\n" + Error.Message;
+                    FunctionStatus.LauncherForceClose = true;
                 }
 
                 if (FunctionStatus.LauncherForceClose)
                 {
-                    FunctionStatus.ErrorCloseLauncher("Closing From Invalid Launcher Location", false);
+                    FunctionStatus.ErrorCloseLauncher("Closing From Operating System Check", false);
                 }
                 else
                 {
-                    if (!FunctionStatus.HasWriteAccessToFolder(Path.GetDirectoryName(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Application.ExecutablePath)))))
+                    /* Set Launcher Directory */
+                    Log.Checking("SETUP: Setting Launcher Folder Directory");
+                    Directory.SetCurrentDirectory(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Path.GetDirectoryName(Encoding.UTF8.GetString(
+                        Encoding.UTF8.GetBytes(Application.ExecutablePath))))));
+                    Log.Completed("SETUP: Current Directory now Set at -> " + Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Path.GetDirectoryName(
+                        Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Application.ExecutablePath))))));
+
+                    if (!DetectLinux.LinuxDetected())
                     {
-                        MessageBox.Show("Unable to do a Test Write to Launcher Folder\nPermission Issue");
-                    }
+                        Log.Checking("FOLDER LOCATION: Checking Launcher Folder Directory");
+                        DiscordLauncherPresense.Status("Start Up", "Checking Launcher Folder Location");
 
-                    if (!FunctionStatus.HasWriteAccessToFolder(FileSettingsSave.GameInstallation) && !string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
-                    {
-                        MessageBox.Show("Unable to do a Test Write to Game Files Folder\nPermission Issue");
-                    }
-
-                    DiscordLauncherPresense.Status("Start Up", "Doing NullSafe ini Files");
-                    FileSettingsSave.NullSafeSettings();
-                    FileAccountSave.NullSafeAccount();
-
-                    /* Windows Firewall Runner */
-                    if (!string.IsNullOrWhiteSpace(FileSettingsSave.FirewallLauncherStatus))
-                    {
-                        FirewallFunctions.Launcher();
-                    }
-
-                    /* Windows 7 Fix */
-                    if (WindowsProductVersion.CachedWindowsNumber == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Win7UpdatePatches))
-                    {
-                        DiscordLauncherPresense.Status("Start Up", "Checking Windows 7 TLS/SSL Update");
-
-                        if (ManagementSearcher.GetInstalledHotFix("KB3020369") == false || ManagementSearcher.GetInstalledHotFix("KB3125574") == false)
+                        switch (FunctionStatus.CheckFolder(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Directory.GetCurrentDirectory()))))
                         {
-                            String messageBoxPopupKB = String.Empty;
-                            messageBoxPopupKB = "Hey Windows 7 User, we've detected a potential issue of some missing Updates that are required.\n";
-                            messageBoxPopupKB += "We found that these Windows Update packages are showing as not installed:\n\n";
+                            case FolderType.IsTempFolder:
+                            case FolderType.IsUsersFolders:
+                            case FolderType.IsProgramFilesFolder:
+                            case FolderType.IsWindowsFolder:
+                            case FolderType.IsRootFolder:
+                                String constructMsg = String.Empty;
 
-                            if (ManagementSearcher.GetInstalledHotFix("KB3020369") == false) messageBoxPopupKB += "- Update KB3020369\n";
-                            if (ManagementSearcher.GetInstalledHotFix("KB3125574") == false) messageBoxPopupKB += "- Update KB3125574\n";
+                                constructMsg += "Using this location for GameLauncher is not allowed.\n\n";
+                                constructMsg += "The following locations are also NOT allowed:\n";
+                                constructMsg += "• X:\\GameLauncher.exe (Root of Drive, such as C:\\ or D:\\, must be in a folder)\n";
+                                constructMsg += "• C:\\Program Files\n";
+                                constructMsg += "• C:\\Program Files (x86)\n";
+                                constructMsg += "• C:\\Users (Includes 'Desktop', 'Documents', 'Downloads')\n";
+                                constructMsg += "• C:\\Windows\n\n";
+                                constructMsg += "Instead, move the Launcher folder to someplace like:\n";
+                                constructMsg += "• 'C:\\Soapbox Race World' or 'C:\\SBRW'\n";
+                                constructMsg += "(Or any other NTFS 'Local Disk' location such as 'D:')\n\n";
 
-                            messageBoxPopupKB += "\nAditionally, we must add a value to the registry:\n";
+                                MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                            messageBoxPopupKB += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n/SCHANNEL/Protocols/TLS 1.2/Client\n";
-                            messageBoxPopupKB += "- Value: DisabledByDefault -> 0\n\n";
+                                /* Close Splash Screen (Just in Case) */
+                                if (IsSplashScreenLive)
+                                {
+                                    SplashScreen.Abort();
+                                }
 
-                            messageBoxPopupKB += "Would you like to add those values?";
-                            DialogResult replyPatchWin7 = MessageBox.Show(null, messageBoxPopupKB, "SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                                FunctionStatus.LauncherForceClose = true;
+                                break;
+                        }
 
-                            if (replyPatchWin7 == DialogResult.Yes)
+                        Log.Completed("FOLDER LOCATION: Done");
+                    }
+
+                    if (FunctionStatus.LauncherForceClose)
+                    {
+                        FunctionStatus.ErrorCloseLauncher("Closing From Invalid Launcher Location", false);
+                    }
+                    else
+                    {
+                        Log.Checking("WRITE TEST: Launcher Folder Test");
+                        if (!FunctionStatus.HasWriteAccessToFolder(Path.GetDirectoryName(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Application.ExecutablePath)))))
+                        {
+                            MessageBox.Show("Unable to do a Test Write to Launcher Folder\nPermission Issue");
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
+                        {
+                            Log.Checking("WRITE TEST: Game Folder Test");
+                            if (!FunctionStatus.HasWriteAccessToFolder(FileSettingsSave.GameInstallation))
                             {
-                                RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
-                                key.SetValue("DisabledByDefault", 0x0);
-
-                                MessageBox.Show(null, "Registry option set, Remember that the changes may require a system reboot to take effect", 
-                                    "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                FileSettingsSave.Win7UpdatePatches = "1";
+                                MessageBox.Show("Unable to do a Test Write to Game Files Folder\nPermission Issue");
                             }
-                            else
+                        }
+                        Log.Completed("WRITE TEST: Passed");
+
+                        Log.Checking("INI FILES: Doing Nullsafe");
+                        DiscordLauncherPresense.Status("Start Up", "Doing NullSafe ini Files");
+                        FileSettingsSave.NullSafeSettings();
+                        FileAccountSave.NullSafeAccount();
+                        Log.Checking("INI FILES: Done");
+
+                        /* Windows Firewall Runner */
+                        if (!string.IsNullOrWhiteSpace(FileSettingsSave.FirewallLauncherStatus))
+                        {
+                            Log.Checking("FIREWALL: Running");
+                            FirewallFunctions.Launcher();
+                            Log.Checking("FIREWALL: Done");
+                        }
+
+                        /* Windows 7 Fix */
+                        if (WindowsProductVersion.CachedWindowsNumber == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Win7UpdatePatches))
+                        {
+                            Log.Checking("SSL/TLS: Windows 7 Detected");
+                            DiscordLauncherPresense.Status("Start Up", "Checking Windows 7 TLS/SSL Update");
+
+                            try
                             {
-                                MessageBox.Show(null, "Roger that, There may be some issues connecting to the servers.", 
-                                    "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                FileSettingsSave.Win7UpdatePatches = "0";
-                            }
+                                if (!ManagementSearcher.GetInstalledHotFix("KB3020369") || !ManagementSearcher.GetInstalledHotFix("KB3125574"))
+                                {
+                                    String messageBoxPopupKB = String.Empty;
+                                    messageBoxPopupKB = "Hey Windows 7 User, we've detected a potential issue of some missing Updates that are required.\n";
+                                    messageBoxPopupKB += "We found that these Windows Update packages are showing as not installed:\n\n";
 
-                            FileSettingsSave.SaveSettings();
+                                    if (ManagementSearcher.GetInstalledHotFix("KB3020369") == false) messageBoxPopupKB += "- Update KB3020369\n";
+                                    if (ManagementSearcher.GetInstalledHotFix("KB3125574") == false) messageBoxPopupKB += "- Update KB3125574\n";
+
+                                    messageBoxPopupKB += "\nAditionally, we must add a value to the registry:\n";
+
+                                    messageBoxPopupKB += "- HKLM/SYSTEM/CurrentControlSet/Control/SecurityProviders\n/SCHANNEL/Protocols/TLS 1.2/Client\n";
+                                    messageBoxPopupKB += "- Value: DisabledByDefault -> 0\n\n";
+
+                                    messageBoxPopupKB += "Would you like to add those values?";
+                                    DialogResult replyPatchWin7 = MessageBox.Show(null, messageBoxPopupKB, "SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                                    if (replyPatchWin7 == DialogResult.Yes)
+                                    {
+                                        RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
+                                        key.SetValue("DisabledByDefault", 0x0);
+
+                                        MessageBox.Show(null, "Registry option set, Remember that the changes may require a system reboot to take effect",
+                                            "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                        FileSettingsSave.Win7UpdatePatches = "1";
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show(null, "Roger that, There may be some issues connecting to the servers.",
+                                            "SBRW Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                        FileSettingsSave.Win7UpdatePatches = "0";
+                                    }
+
+                                    FileSettingsSave.SaveSettings();
+                                }
+
+                                Log.Completed("SSL/TLS: Done");
+                            }
+                            catch (Exception Error)
+                            {
+                                Log.Error("SSL/TLS: " + Error.Message);
+                                Log.ErrorIC("SSL/TLS: " + Error.HResult);
+                                Log.ErrorFR("SSL/TLS: " + Error.ToString());
+                            }
                         }
                     }
-                }
 
-                if (!File.Exists("servers.json"))
-                {
+                    Log.Checking("JSON: Servers File");
                     try
                     {
-                        File.WriteAllText("servers.json", "[]");
+                        if (!File.Exists("servers.json"))
+                        {
+                            try
+                            {
+                                File.WriteAllText("servers.json", "[]");
+                            }
+                            catch { /* ignored */ }
+                        }
+
+                        Log.Completed("JSON: Servers File Now Exists");
                     }
-                    catch { /* ignored */ }
-                }
+                    catch (Exception Error)
+                    {
+                        Log.Error("SSL/TLS: " + Error.Message);
+                        Log.ErrorIC("SSL/TLS: " + Error.HResult);
+                        Log.ErrorFR("SSL/TLS: " + Error.ToString());
+                    }
 
-                if (!string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
-                {
-                    var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
-                    ModNetHandler.CleanLinks(linksPath);
-                }
+                    if (!string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
+                    {
+                        Log.Checking("CLEANLINKS: Game Path");
+                        var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
+                        ModNetHandler.CleanLinks(linksPath);
+                        Log.Completed("CLEANLINKS: Done");
+                    }
 
-                if (FileSettingsSave.Proxy == "0")
-                {
-                    Log.Info("PROXY: Starting Proxy (From Startup)");
-                    ServerProxy.Instance.Start("Splash Screen [Program.cs]");
-                }
+                    Log.Checking("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + FileSettingsSave.Proxy);
+                    if (FileSettingsSave.Proxy == "0")
+                    {
+                        Log.Core("PROXY: Starting Proxy (From Startup)");
+                        ServerProxy.Instance.Start("Splash Screen [Program.cs]");
+                        Log.Completed("PROXY: Started");
+                    }
+                    else
+                    {
+                        Log.Completed("PROXY: Disabled");
+                    }
 
-                /* (Starts Function Chain) Check if Redistributable Packages are Installed */
-                Redistributable.Check();
+                    Log.Info("REDISTRIBUTABLE: Moved to Function");
+                    /* (Starts Function Chain) Check if Redistributable Packages are Installed */
+                    Redistributable.Check();
+                }
             }
         }            
     }

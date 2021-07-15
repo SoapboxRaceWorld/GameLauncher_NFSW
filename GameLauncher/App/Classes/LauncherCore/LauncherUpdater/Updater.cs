@@ -33,6 +33,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
         public static void Latest()
         {
+            Log.Checking("LAUNCHER UPDATE: Is Update to Date or not");
             DiscordLauncherPresense.Status("Start Up", "Checking Latest Launcher Release Information");
 
             if (VisualsAPIChecker.UnitedAPI)
@@ -42,8 +43,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     FunctionStatus.TLS();
                     Uri URLCall = new Uri(URLs.Main + "/update.php?version=" + Application.ProductVersion);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    WebClient Client = new WebClient();
-                    Client.Encoding = Encoding.UTF8;
+                    WebClient Client = new WebClient
+                    {
+                        Encoding = Encoding.UTF8
+                    };
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                     string json_data = Client.DownloadString(URLCall);
                     UpdateCheckResponse MAPI = JsonConvert.DeserializeObject<UpdateCheckResponse>(json_data);
@@ -57,8 +60,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 catch (Exception Error)
                 {
                     Log.Error("LAUNCHER UPDATE: " + Error.Message);
-                    Log.Error("LAUNCHER UPDATE [HResult]: " + Error.HResult);
-                    Log.ErrorInner("LAUNCHER UPDATE [Full Report]: " + Error.ToString());
+                    Log.ErrorIC("LAUNCHER UPDATE: " + Error.HResult);
+                    Log.ErrorFR("LAUNCHER UPDATE: " + Error.ToString());
                 }
             }
 
@@ -69,8 +72,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     FunctionStatus.TLS();
                     Uri URLCall = new Uri(URLs.GitHub_Launcher);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    WebClient Client = new WebClient();
-                    Client.Encoding = Encoding.UTF8;
+                    WebClient Client = new WebClient
+                    {
+                        Encoding = Encoding.UTF8
+                    };
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                     string json_data = Client.DownloadString(URLCall);
                     GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
@@ -85,8 +90,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 {
                     VisualsAPIChecker.GitHubAPI = false;
                     Log.Error("LAUNCHER UPDATE: [GitHub] " + Error.Message);
-                    Log.Error("LAUNCHER UPDATE [HResult]: [GitHub] " + Error.HResult);
-                    Log.ErrorInner("LAUNCHER UPDATE [Full Report]: " + Error.ToString());
+                    Log.ErrorIC("LAUNCHER UPDATE: [GitHub] " + Error.HResult);
+                    Log.ErrorFR("LAUNCHER UPDATE: " + Error.ToString());
                 }
 
                 if (!VisualsAPIChecker.GitHubAPI)
@@ -94,6 +99,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     Log.Error("LAUNCHER UPDATE: Failed to Retrive Latest Build Information from two APIs ");
                 }
             }
+            Log.Completed("LAUNCHER UPDATE: Done");
 
             /* (End Process) Close Splash Screen */
             if (Program.IsSplashScreenLive)
@@ -101,6 +107,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 Program.SplashScreen.Abort();
             }
 
+            Log.Info("FIRST TIME RUN: Moved to Function");
             /* Do First Time Run Checks */
             FunctionStatus.FirstTimeRun();
         }

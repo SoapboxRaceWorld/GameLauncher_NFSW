@@ -215,8 +215,8 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 Log.Error("WELCOME SCREEN: " + Error.Message);
-                Log.Error("WELCOME SCREEN [HResult]: " + Error.HResult);
-                Log.ErrorInner("WELCOME SCREEN [Full Report]: " + Error.ToString());
+                Log.ErrorIC("WELCOME SCREEN [HResult]: " + Error.HResult);
+                Log.ErrorFR("WELCOME SCREEN [Full Report]: " + Error.ToString());
             }
 
             if (!string.IsNullOrWhiteSpace(((CDNList)CDNSource.SelectedItem).Url))

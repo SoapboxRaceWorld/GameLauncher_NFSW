@@ -34,8 +34,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
         {
             Log.Error($"PROXY HANDLER [handling {context.Request.Path}]");
             Log.Error($"\nMESSAGE: {exception.Message}");
-            Log.Error($"\nHRESULT: {exception.HResult}");
-            Log.ErrorInner("\nFULL MESSAGE: " + exception.ToString());
+            Log.ErrorIC($"\nHRESULT: {exception.HResult}");
+            Log.ErrorFR("\nFULL MESSAGE: " + exception.ToString());
             Log.Error($"\nSTACK TRACE: {exception.StackTrace}");
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY",
                 CommunicationLogEntryType.Error,
@@ -159,8 +159,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             {
                 Log.Error($"DISCORD RPC ERROR [handling {context.Request.Path}]");
                 Log.Error($"\nMESSAGE: {Error.Message}");
-                Log.Error($"\nHRESULT: {Error.HResult}");
-                Log.ErrorInner("\nFULL MESSAGE: " + Error.ToString());
+                Log.ErrorIC($"\nHRESULT: {Error.HResult}");
+                Log.ErrorFR("\nFULL MESSAGE: " + Error.ToString());
                 Log.Error($"\nSTACK TRACE: {Error.StackTrace}");
                 await SubmitError(Error);
             }
@@ -217,8 +217,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             catch (Exception Error)
             {
                 Log.Error("PROXY HANDLER: " + Error.Message);
-                Log.Error("PROXY HANDLER [HResult]: " + Error.HResult);
-                Log.ErrorInner("PROXY HANDLER [Full Report]: " + Error.ToString());
+                Log.ErrorIC("PROXY HANDLER [HResult]: " + Error.HResult);
+                Log.ErrorFR("PROXY HANDLER [Full Report]: " + Error.ToString());
             }
         }
     }

@@ -94,8 +94,10 @@ namespace GameLauncher.App
                     FunctionStatus.TLS();
                     Uri URLCall = new Uri("https://api.pwnedpasswords.com/range/" + range);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    WebClient breachCheck = new WebClient();
-                    breachCheck.Encoding = Encoding.UTF8;
+                    WebClient breachCheck = new WebClient
+                    {
+                        Encoding = Encoding.UTF8
+                    };
 
                     String verify = regex[2];
                     String serverReply = breachCheck.DownloadString(URLCall);

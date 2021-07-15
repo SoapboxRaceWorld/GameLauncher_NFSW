@@ -16,6 +16,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
             LauncherSigned = CheckExeVerified.Signed(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Application.ExecutablePath)));
             Log.Info("SIGNED: " + LauncherSigned);
 
+            Log.Info("LAUNCHER UPDATER: Moved to Function");
             /* (Start Process) Check If Updater Exists or Requires an Update */
             UpdaterExecutable.Check();
         }
@@ -42,16 +43,20 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
             {
                 try
                 {
-                    var File = new WINTRUST_FILE_INFO();
-                    File.cbStruct = Marshal.SizeOf(typeof(WINTRUST_FILE_INFO));
-                    File.pcwszFilePath = filePath;
+                    var File = new WINTRUST_FILE_INFO
+                    {
+                        cbStruct = Marshal.SizeOf(typeof(WINTRUST_FILE_INFO)),
+                        pcwszFilePath = filePath
+                    };
 
-                    var Data = new WINTRUST_DATA();
-                    Data.cbStruct = Marshal.SizeOf(typeof(WINTRUST_DATA));
-                    Data.dwUIChoice = WTD_UI_NONE;
-                    Data.dwUnionChoice = WTD_CHOICE_FILE;
-                    Data.fdwRevocationChecks = WTD_REVOKE_NONE;
-                    Data.pFile = Marshal.AllocHGlobal(File.cbStruct);
+                    var Data = new WINTRUST_DATA
+                    {
+                        cbStruct = Marshal.SizeOf(typeof(WINTRUST_DATA)),
+                        dwUIChoice = WTD_UI_NONE,
+                        dwUnionChoice = WTD_CHOICE_FILE,
+                        fdwRevocationChecks = WTD_REVOKE_NONE,
+                        pFile = Marshal.AllocHGlobal(File.cbStruct)
+                    };
                     Marshal.StructureToPtr(File, Data.pFile, false);
 
                     int hr;
@@ -69,8 +74,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
                 catch (Exception Error)
                 {
                     Log.Error("SIGNED: " + Error.Message);
-                    Log.Error("SIGNED [HResult]: " + Error.HResult);
-                    Log.ErrorInner("SIGNED [Full Report]: " + Error.ToString());
+                    Log.ErrorIC("SIGNED: " + Error.HResult);
+                    Log.ErrorFR("SIGNED: " + Error.ToString());
                     return false;
                 }
             }
