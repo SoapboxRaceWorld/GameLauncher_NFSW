@@ -1,5 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Support;
+using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Threading.Tasks;
@@ -112,7 +113,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Logger
 
                     try
                     {
-                        File.AppendAllText(Locations.LogLauncher, merged + "\n");
+                        File.AppendAllText(Locations.LogLauncher, merged + Environment.NewLine);
                     }
                     catch { }
                 }

@@ -121,7 +121,7 @@ namespace GameLauncher.App
             // 
             this.Error.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
-            this.Error.Location = new System.Drawing.Point(14, 166);
+            this.Error.Location = new System.Drawing.Point(13, 156);
             this.Error.Name = "Error";
             this.Error.Size = new System.Drawing.Size(167, 14);
             this.Error.TabIndex = 0;
@@ -134,7 +134,7 @@ namespace GameLauncher.App
             this.Version.BackColor = System.Drawing.Color.Transparent;
             this.Version.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Version.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.Version.Location = new System.Drawing.Point(14, 191);
+            this.Version.Location = new System.Drawing.Point(14, 177);
             this.Version.Name = "Version";
             this.Version.Size = new System.Drawing.Size(120, 13);
             this.Version.TabIndex = 7;
@@ -155,9 +155,9 @@ namespace GameLauncher.App
             // ServerCategoryLabel
             // 
             this.ServerCategoryLabel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ServerCategoryLabel.Location = new System.Drawing.Point(14, 102);
+            this.ServerCategoryLabel.Location = new System.Drawing.Point(13, 102);
             this.ServerCategoryLabel.Name = "ServerCategoryLabel";
-            this.ServerCategoryLabel.Size = new System.Drawing.Size(165, 23);
+            this.ServerCategoryLabel.Size = new System.Drawing.Size(166, 23);
             this.ServerCategoryLabel.TabIndex = 9;
             this.ServerCategoryLabel.Text = "Server Category:";
             this.ServerCategoryLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -166,7 +166,7 @@ namespace GameLauncher.App
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
-            this.ClientSize = new System.Drawing.Size(399, 213);
+            this.ClientSize = new System.Drawing.Size(399, 197);
             this.Controls.Add(this.ServerCategory);
             this.Controls.Add(this.ServerCategoryLabel);
             this.Controls.Add(this.Version);
