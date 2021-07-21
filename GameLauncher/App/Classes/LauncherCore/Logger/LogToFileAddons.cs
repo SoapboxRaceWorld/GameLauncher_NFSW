@@ -67,6 +67,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Logger
         {
             String[] FilesToRemove = new string[]
             {
+                "Communication.log",
                 "communication.log",
                 /* Legacy Logs */
                 "launcher.log",

@@ -67,9 +67,10 @@ namespace GameLauncher.App
             CancelBTN.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             ServerNameLabel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             ServerName.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            ServerAddress.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            ServerCategory.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ServerAddressLabel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ServerAddress.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            ServerCategoryLabel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ServerCategory.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             Error.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             Version.Font= new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
 
@@ -93,6 +94,7 @@ namespace GameLauncher.App
 
             ServerNameLabel.ForeColor = Theming.WinFormTextForeColor;
             ServerAddressLabel.ForeColor = Theming.WinFormTextForeColor;
+            ServerCategoryLabel.ForeColor = Theming.WinFormTextForeColor;
             Version.ForeColor = Theming.WinFormTextForeColor;
 
             CancelBTN.ForeColor = Theming.BlueForeColorButton;
