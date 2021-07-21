@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
@@ -8,6 +7,9 @@ using GameLauncher.App.Classes.LauncherCore.RPC;
 using System.Net;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
+using System.IO;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 {
@@ -19,7 +21,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
         {
             if (string.IsNullOrWhiteSpace(Hash))
             {
-                Hash = SHA.Files(AppDomain.CurrentDomain.FriendlyName);
+                Hash = SHA.Files(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameLauncher)));
             }
 
             return Hash;

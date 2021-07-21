@@ -1,4 +1,4 @@
-﻿using GameLauncher.App.Classes.Logger;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -74,26 +74,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                         }
                         catch (Exception Error)
                         {
-                            Log.Error("CDN DOWNLOADER: " + Error.Message);
-                            Log.ErrorIC("CDN DOWNLOADER: " + Error.HResult);
-                            Log.ErrorFR("CDN DOWNLOADER: " + Error.ToString());
-
-                            try
-                            {
-                                using (FileStream fileStream = new FileStream(str, FileMode.Open))
-                                {
-                                    using (MD5 mD5 = MD5.Create())
-                                    {
-                                        base64String = Convert.ToBase64String(mD5.ComputeHash(fileStream));
-                                    }
-                                }
-                            }
-                            catch (Exception Error_2)
-                            {
-                                Log.Error("CDN DOWNLOADER: " + Error_2.Message);
-                                Log.ErrorIC("CDN DOWNLOADER: " + Error_2.HResult);
-                                Log.ErrorFR("CDN DOWNLOADER: " + Error_2.ToString());
-                            }
+                            LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
                         }
                     }
                     else
@@ -239,9 +220,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("CDN DOWNLOADER: " + Error.Message);
-                        Log.ErrorIC("CDN DOWNLOADER: " + Error.HResult);
-                        Log.ErrorFR("CDN DOWNLOADER: " + Error.ToString());
+                        LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
                         Exception exception = Error;
                         this._fileList.Clear();
                     }
@@ -310,9 +289,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("CDN DOWNLOADER: " + Error.Message);
-                        Log.ErrorIC("CDN DOWNLOADER: " + Error.HResult);
-                        Log.ErrorFR("CDN DOWNLOADER: " + Error.ToString());
+                        LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
                         Exception exception = Error;
                     }
                 }

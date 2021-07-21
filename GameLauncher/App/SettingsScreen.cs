@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFirewallHelper;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
@@ -21,6 +20,8 @@ using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using System.Reflection;
 using System.Text;
+using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App
 {
@@ -114,6 +115,7 @@ namespace GameLauncher.App
             SettingsLanguage.Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
             SettingsUEditorButton.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsClearCrashLogsButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            SettingsClearLauncherLogsButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             SettingsClearCommunicationLogButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             SettingsClearServerModCacheButton.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             SettingsWordFilterCheck.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
@@ -165,6 +167,11 @@ namespace GameLauncher.App
             SettingsClearCrashLogsButton.BackColor = Theming.BlueBackColorButton;
             SettingsClearCrashLogsButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
             SettingsClearCrashLogsButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            SettingsClearLauncherLogsButton.ForeColor = Theming.BlueForeColorButton;
+            SettingsClearLauncherLogsButton.BackColor = Theming.BlueBackColorButton;
+            SettingsClearLauncherLogsButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            SettingsClearLauncherLogsButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
 
             SettingsClearCommunicationLogButton.ForeColor = Theming.BlueForeColorButton;
             SettingsClearCommunicationLogButton.BackColor = Theming.BlueBackColorButton;
@@ -423,8 +430,8 @@ namespace GameLauncher.App
             /* Folder Locations             /
             /*******************************/
 
-            _newGameFilesPath = Path.GetFullPath(FileSettingsSave.GameInstallation);
-            _newLauncherPath = AppDomain.CurrentDomain.BaseDirectory;
+            _newGameFilesPath = FileSettingsSave.GameInstallation;
+            _newLauncherPath = Locations.LauncherFolder;
 
             SettingsProxyCheckbox.Checked = _disableProxy;
             SettingsDiscordRPCCheckbox.Checked = _disableDiscordRPC;
@@ -433,7 +440,7 @@ namespace GameLauncher.App
             /* Enable/Disable Visuals       /
             /*******************************/
 
-            if (File.Exists(FileSettingsSave.GameInstallation + "/NFSWO_COMMUNICATION_LOG.txt"))
+            if (File.Exists(Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "NFSWO_COMMUNICATION_LOG.txt"))))
             {
                 SettingsClearCommunicationLogButton.Enabled = true;
             }
@@ -488,9 +495,7 @@ namespace GameLauncher.App
             catch (Exception Error)
             {
                 FinalCDNURL = FileSettingsSave.CDN;
-                Log.Error("SETTINGS CDN URL TRIM: " + Error.Message);
-                Log.ErrorIC("SETTINGS CDN URL TRIM: " + Error.HResult);
-                Log.ErrorFR("SETTINGS CDN URL TRIM: " + Error.ToString());
+                LogToFileAddons.OpenLog("SETTINGS CDN URL TRIM", null, Error, null, true);
             }
 
             try
@@ -514,9 +519,7 @@ namespace GameLauncher.App
             }
             catch (Exception Error)
             {
-                Log.Error("SETTINGS VERIFYHASH: " + Error.Message);
-                Log.ErrorIC("SETTINGS VERIFYHASH: " + Error.HResult);
-                Log.ErrorFR("SETTINGS VERIFYHASH: " + Error.ToString());
+                LogToFileAddons.OpenLog("SETTINGS VERIFYHASH", null, Error, null, true);
             }
 
             /********************************/
@@ -554,7 +557,8 @@ namespace GameLauncher.App
             /* TODO: Inform player about custom languagepack used. */
             if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") 
             {
-                MessageBox.Show(null, "Please Note: If a Server does not Provide Language Pack, it will Fallback to English Language Pack instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(null, "Please Note: If a Server does not Provide Language Pack, it will Fallback to English Language Pack instead.", 
+                    "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !DetectLinux.LinuxDetected())
@@ -570,8 +574,8 @@ namespace GameLauncher.App
                     string GameName = "SBRW - Game";
 
                     /* Remove current Firewall for the Game Files and Add new one (If Possible) */
-                    string OldGamePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
-                    string NewGamePath = Path.Combine(_newGameFilesPath + "\\nfsw.exe");
+                    string OldGamePath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
+                    string NewGamePath = Strings.Encode(Path.Combine(_newGameFilesPath, "nfsw.exe"));
 
                     string groupKeyGame = "Need for Speed: World";
                     string descriptionGame = groupKeyGame;
@@ -591,8 +595,12 @@ namespace GameLauncher.App
                 FileSettingsSave.GameInstallation = _newGameFilesPath;
 
                 /* Clean Mods Files from New Dirctory (If it has .links in directory) */
-                var linksPath = Path.Combine(_newGameFilesPath, "\\.links");
-                ModNetHandler.CleanLinks(linksPath);
+                string LinksPath = Strings.Encode(Path.Combine(_newGameFilesPath, ".links"));
+                if (File.Exists(LinksPath))
+                {
+                    ModNetHandler.CleanLinks(LinksPath, _newGameFilesPath);
+                    Log.Completed("CLEANLINKS: Done");
+                }
 
                 _restartRequired = true;
             }
@@ -693,9 +701,7 @@ namespace GameLauncher.App
             }
             catch (Exception Error)
             {
-                Log.Error("SETTINGS SAVE:" + Error.Message);
-                Log.ErrorIC("SETTINGS SAVE:" + Error.HResult);
-                Log.ErrorFR("SETTINGS SAVE: " + Error.ToString());
+                LogToFileAddons.OpenLog("SETTINGS SAVE", null, Error, null, true);
             }
 
             /* Create Custom Settings.ini for LangPicker.asi module */
@@ -734,7 +740,8 @@ namespace GameLauncher.App
 
             if (_restartRequired)
             {
-                MessageBox.Show(null, "In order to see settings changes, you need to restart launcher manually.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(null, "In order to see settings changes, you need to restart launcher manually.", "GameLauncher", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             Close();
@@ -776,10 +783,7 @@ namespace GameLauncher.App
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("SETTINGS CLEAR: " + Error.Message);
-                    Log.ErrorIC("SETTINGS CLEAR: " + Error.HResult);
-                    Log.ErrorFR("SETTINGS CLEAR: " + Error.ToString());
-                    MessageBox.Show(null, "Unable to Delete Server Mods Cache\n" + Error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LogToFileAddons.OpenLog("SETTINGS CLEAR", "Unable to Delete Server Mods Cache", Error, "Exclamation", false);
                 }
             }
         }
@@ -799,10 +803,7 @@ namespace GameLauncher.App
             }
             catch (Exception Error)
             {
-                Log.Error("SETTINGS CLEAR: " + Error.Message);
-                Log.ErrorIC("SETTINGS CLEAR: " + Error.HResult);
-                Log.ErrorFR("SETTINGS CLEAR: " + Error.ToString());
-                MessageBox.Show(null, "Unable to Delete NFSWO Communication Log\n" + Error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                LogToFileAddons.OpenLog("SETTINGS CLEAR", "Unable to Delete NFSWO Communication Log", Error, "Exclamation", false);
             }
         }
 
@@ -837,10 +838,38 @@ namespace GameLauncher.App
             }
             catch (Exception Error)
             {
-                Log.Error("SETTINGS CLEAR: " + Error.Message);
-                Log.ErrorIC("SETTINGS CLEAR: " + Error.HResult);
-                Log.ErrorFR("SETTINGS CLEAR: " + Error.ToString());
-                MessageBox.Show(null, "Unable to Delete Crash Logs\n" + Error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                LogToFileAddons.OpenLog("SETTINGS CLEAR", "Unable to Delete Crash Logs", Error, "Exclamation", false);
+            }
+        }
+
+        /* Settings Clear Old Launcher Logs */
+        private void SettingsClearLauncherLogsButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DirectoryInfo InstallationDirectory = new DirectoryInfo(Locations.LogFolder);
+
+                foreach (var Folder in InstallationDirectory.EnumerateDirectories())
+                {
+                    if (Directory.Exists(Folder.FullName))
+                    {
+                        if (Folder.FullName != Locations.LogCurrentFolder)
+                        {
+                            Directory.Delete(Folder.FullName, true);
+                        }
+                    }
+                }
+
+                SettingsClearLauncherLogsButton.ForeColor = Theming.RedForeColorButton;
+                SettingsClearLauncherLogsButton.BackColor = Theming.RedBackColorButton;
+                SettingsClearLauncherLogsButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                SettingsClearLauncherLogsButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+                SettingsClearLauncherLogsButton.Enabled = false;
+                MessageBox.Show(null, "Deleted Old Launcher Logs", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("SETTINGS CLEAR", "Unable to Delete Old Launcher Logs", Error, "Exclamation", false);
             }
         }
 
@@ -861,7 +890,7 @@ namespace GameLauncher.App
                 
                 if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
                 {
-                    _newGameFilesPath = Path.GetDirectoryName(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(changeGameFilesPath.FileName)));
+                    _newGameFilesPath = Strings.Encode(Path.GetDirectoryName(Strings.Encode(changeGameFilesPath.FileName)));
                     SettingsGameFilesCurrentText.Text = "NEW DIRECTORY";
                     SettingsGameFilesCurrent.Text = _newGameFilesPath;
                 }
@@ -874,7 +903,7 @@ namespace GameLauncher.App
 
                 if (changeGameFilesPath.ShowDialog() == DialogResult.OK)
                 {
-                    _newGameFilesPath = Path.GetFullPath(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(changeGameFilesPath.SelectedPath)));
+                    _newGameFilesPath = Strings.Encode(Path.GetFullPath(Strings.Encode(changeGameFilesPath.SelectedPath)));
                     SettingsGameFilesCurrentText.Text = "NEW DIRECTORY";
                     SettingsGameFilesCurrent.Text = _newGameFilesPath;
                 }
@@ -987,8 +1016,8 @@ namespace GameLauncher.App
                 string GameName = "SBRW - Game";
 
                 /* Remove current Firewall for the Game Files and Add new one (If Possible) */
-                string OldGamePath = Path.Combine(FileSettingsSave.GameInstallation + "\\nfsw.exe");
-                string NewGamePath = Path.Combine(_newGameFilesPath + "\\nfsw.exe");
+                string OldGamePath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
+                string NewGamePath = Strings.Encode(Path.Combine(_newGameFilesPath, "nfsw.exe"));
 
                 string groupKeyGame = "Need for Speed: World";
                 string descriptionGame = groupKeyGame;
@@ -1008,8 +1037,12 @@ namespace GameLauncher.App
             FileSettingsSave.GameInstallation = _newGameFilesPath;
 
             /* Clean Mods Files from New Dirctory (If it has .links in directory) */
-            var linksPath = Path.Combine(_newGameFilesPath, "\\.links");
-            ModNetHandler.CleanLinks(linksPath);
+            string LinksPath = Strings.Encode(Path.Combine(_newGameFilesPath, ".links"));
+            if (File.Exists(LinksPath))
+            {
+                ModNetHandler.CleanLinks(LinksPath, _newGameFilesPath);
+                Log.Completed("CLEANLINKS: Done");
+            }
 
             _restartRequired = true;
         }
@@ -1018,37 +1051,59 @@ namespace GameLauncher.App
         {
             if (!DetectLinux.LinuxDetected())
             {
+                bool FailSafePathCreation = false;
                 switch (FunctionStatus.CheckFolder(_newGameFilesPath))
                 {
                     case FolderType.IsSameAsLauncherFolder:
-                        Directory.CreateDirectory("Game Files");
+                        FailSafePathCreation = true;
+                        FileSettingsSave.GameInstallation = Locations.GameFilesFailSafePath;
                         Log.Error("LAUNCHER: Installing NFSW in same directory where the launcher resides is NOT recommended.");
-                        MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is not allowed.\nInstead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
+                        MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is not allowed." +
+                            "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath), "GameLauncher", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
                     case FolderType.IsTempFolder:
-                        Directory.CreateDirectory("Game Files");
+                        FailSafePathCreation = true;
+                        FileSettingsSave.GameInstallation = Locations.GameFilesFailSafePath;
                         Log.Error("LAUNCHER: (╯°□°）╯︵ ┻━┻ Installing NFSW in the Temp Folder is NOT allowed!");
-                        MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is NOT allowed!\nInstead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files" + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
+                        MessageBox.Show(null, string.Format("(╯°□°）╯︵ ┻━┻\n\nInstalling NFSW in the Temp Folder is NOT allowed!" +
+                            "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath + "\n\n┬─┬ ノ( ゜-゜ノ)"), "GameLauncher", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
                     case FolderType.IsProgramFilesFolder:
                     case FolderType.IsUsersFolders:
                     case FolderType.IsWindowsFolder:
-                        Directory.CreateDirectory("Game Files");
+                        FailSafePathCreation = true;
+                        FileSettingsSave.GameInstallation = Locations.GameFilesFailSafePath;
                         Log.Error("LAUNCHER: Installing NFSW in a Special Directory is disadvised.");
-                        MessageBox.Show(null, string.Format("Installing NFSW in a Special Directory is not recommended or allowed.\nInstead, we will install it at {0}.", AppDomain.CurrentDomain.BaseDirectory + "\\Game Files"), "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        FileSettingsSave.GameInstallation = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
+                        MessageBox.Show(null, string.Format("Installing NFSW in a Special Directory is not recommended or allowed." +
+                            "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath), "GameLauncher", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
                 }
                 FileSettingsSave.SaveSettings();
+
+                if (FailSafePathCreation)
+                {
+                    if (!Directory.Exists(Locations.GameFilesFailSafePath))
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(Locations.GameFilesFailSafePath);
+                        }
+                        catch (Exception Error)
+                        {
+                            LogToFileAddons.OpenLog("Launcher", null, Error, null, true);
+                        }
+                    }
+                }
             }
         }
 
         /* DavidCarbon */
         private void PingAPIStatus()
         {
-            if (VisualsAPIChecker.UnitedAPI != false)
+            if (VisualsAPIChecker.UnitedAPI)
             {
                 SettingsMainSrvText.Text = "[API] United: ONLINE";
                 SettingsMainSrvText.ForeColor = Theming.Sucess;
@@ -1060,7 +1115,7 @@ namespace GameLauncher.App
                 SettingsMainCDNText.Visible = true;
             }
 
-            if (VisualsAPIChecker.CarbonAPI != false)
+            if (VisualsAPIChecker.CarbonAPI)
             {
                 SettingsMainCDNText.Text = "[API] Carbon: ONLINE";
                 SettingsMainCDNText.ForeColor = Theming.Sucess;
@@ -1072,7 +1127,7 @@ namespace GameLauncher.App
                 SettingsBkupSrvText.Visible = true;
             }
 
-            if (VisualsAPIChecker.CarbonAPITwo != false)
+            if (VisualsAPIChecker.CarbonAPITwo)
             {
                 SettingsBkupSrvText.Text = "[API] Carbon (2nd): ONLINE";
                 SettingsBkupSrvText.ForeColor = Theming.Sucess;
@@ -1084,7 +1139,7 @@ namespace GameLauncher.App
                 SettingsBkupCDNText.Visible = true;
             }
 
-            if (VisualsAPIChecker.WOPLAPI != false)
+            if (VisualsAPIChecker.WOPLAPI)
             {
                 SettingsBkupCDNText.Text = "[API] WOPL: ONLINE";
                 SettingsBkupCDNText.ForeColor = Theming.Sucess;
@@ -1153,9 +1208,7 @@ namespace GameLauncher.App
             }
             catch (Exception Error)
             {
-                Log.Error("SETTINGS CDNLIST: " + Error.Message);
-                Log.ErrorIC("SETTINGS CDNLIST: " + Error.HResult);
-                Log.ErrorFR("SETTINGS CDNLIST: " + Error.ToString());
+                LogToFileAddons.OpenLog("SETTINGS CDNLIST", null, Error, null, true);
             }
         }
 
@@ -1198,9 +1251,7 @@ namespace GameLauncher.App
             }
             catch (Exception Error)
             {
-                Log.Error("SETTINGS CDNLIST: " + Error.Message);
-                Log.ErrorIC("SETTINGS CDNLIST: " + Error.HResult);
-                Log.ErrorFR("SETTINGS CDNLIST: " + Error.ToString());
+                LogToFileAddons.OpenLog("SETTINGS CDNLIST", null, Error, null, true);
             }
         }
 
@@ -1252,9 +1303,7 @@ namespace GameLauncher.App
             }
             catch (Exception Error)
             {
-                Log.Error("SETTINGS LANGLIST: " + Error.Message);
-                Log.ErrorIC("SETTINGS LANGLIST: " + Error.HResult);
-                Log.ErrorFR("SETTINGS LANGLIST: " + Error.ToString());
+                LogToFileAddons.OpenLog("SETTINGS LANGLIST", null, Error, null, true);
             }
         }
 
@@ -1329,8 +1378,8 @@ namespace GameLauncher.App
         {
             if (FunctionStatus.IsFirewallResetDisabled)
             {
-                if (!FirewallHelper.RuleExist("Path", "SBRW - Game", FileSettingsSave.GameInstallation + "\\nfsw.exe") ||
-                    !FirewallHelper.RuleExist("Path", "SBRW - Game Launcher", Assembly.GetEntryAssembly().Location))
+                if (!FirewallHelper.RuleExist("Path", "SBRW - Game", Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"))) ||
+                    !FirewallHelper.RuleExist("Path", "SBRW - Game Launcher", Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameLauncher))))
                 {
                     if (DetectLinux.LinuxDetected())
                     {
@@ -1374,7 +1423,7 @@ namespace GameLauncher.App
                     if (!DetectLinux.LinuxDetected())
                     {
                         string GameName = "SBRW - Game";
-                        string GamePath = FileSettingsSave.GameInstallation + "\\nfsw.exe";
+                        string GamePath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
 
                         string groupKeyGame = "Need for Speed: World";
                         string descriptionGame = groupKeyGame;
@@ -1383,10 +1432,10 @@ namespace GameLauncher.App
                         FirewallHelper.DoesRulesExist("Reset", "Path", GameName, GamePath, groupKeyGame, descriptionGame, FirewallProtocol.Any);
 
                         string LauncherName = "SBRW - Game Launcher";
-                        string LauncherPath = Assembly.GetEntryAssembly().Location;
+                        string LauncherPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameLauncher));
 
                         string UpdaterName = "SBRW - Game Launcher Updater";
-                        string UpdaterPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "GameLauncherUpdater.exe");
+                        string UpdaterPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameUpdater));
 
                         string groupKeyLauncher = "Game Launcher for Windows";
                         string descriptionLauncher = "Soapbox Race World";
@@ -1407,7 +1456,8 @@ namespace GameLauncher.App
             {
                 if (DetectLinux.LinuxDetected())
                 {
-                    MessageBox.Show(null, "Windows Security (Defender) is Not Supported on Non-Windows Systems", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(null, "Windows Security (Defender) is Not Supported on Non-Windows Systems", "GameLauncher", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else if (WindowsProductVersion.CachedWindowsNumber < 10.0)
                 {
@@ -1417,12 +1467,14 @@ namespace GameLauncher.App
                 else if (!ManagementSearcher.SecurityCenter("AntivirusEnabled") && !ManagementSearcher.SecurityCenter("AntispywareEnabled"))
                 {
                     MessageBox.Show(null, "Windows Security (Defender) is Disabled or Turned Off." +
-                        "\nThis is not recommended, instead opt to turn it ON, to allow Launcher to create Exclusions", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        "\nThis is not recommended, instead opt to turn it ON, to allow Launcher to create Exclusions", "GameLauncher", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else if ((ManagementSearcher.SecurityCenter("AntivirusEnabled") && ManagementSearcher.SecurityCenter("AntispywareEnabled")) && 
                     FunctionStatus.IsWindowsSecurityResetDisabled)
                 {
-                    MessageBox.Show(null, "You have already Reset Windows Security (Defender) Exclusions", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(null, "You have already Reset Windows Security (Defender) Exclusions", "GameLauncher", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -1447,7 +1499,8 @@ namespace GameLauncher.App
                     {
                         if (WindowsProductVersion.CachedWindowsNumber >= 10.0)
                         {
-                            FunctionStatus.WindowsDefender("Reset-Launcher", "Complete Reset", AppDomain.CurrentDomain.BaseDirectory, FileSettingsSave.GameInstallation, "Removed Game and Launcher");
+                            FunctionStatus.WindowsDefender("Reset-Launcher", "Complete Reset", Locations.LauncherFolder, FileSettingsSave.GameInstallation, 
+                                "Removed Game and Launcher");
                             FunctionStatus.IsWindowsSecurityResetDisabled = true;
                         }
                         else
@@ -1464,14 +1517,23 @@ namespace GameLauncher.App
         {
             if (FunctionStatus.IsVerifyHashDisabled)
             {
-                MessageBox.Show(null, "You have already did a Verify Game Files Scan" +
+                if (!File.Exists(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe")))
+                {
+                    MessageBox.Show(null, "You Need to Download the Game Files First Before you have Access to Verify Hash", 
+                        "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+                else
+                {
+                    MessageBox.Show(null, "You have already did a Verify Game Files Scan" +
                     "\nPlease Restart Launcher to do a new Verify Game Files Scan", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+                
                 SettingsVFilesButton.ForeColor = Theming.RedForeColorButton;
                 SettingsVFilesButton.BackColor = Theming.RedBackColorButton;
                 SettingsVFilesButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
                 SettingsVFilesButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
             }
-            else if (FunctionStatus.DoesCDNSupportVerifyHash == false)
+            else if (!FunctionStatus.DoesCDNSupportVerifyHash)
             {
                 MessageBox.Show(null, "The current saved CDN does not support Verify Game Files Scan" +
                     "\nPlease Choose Another CDN from the list", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);

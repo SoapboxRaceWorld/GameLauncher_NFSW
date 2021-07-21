@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
@@ -17,6 +16,7 @@ using System.ComponentModel;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using System.Diagnostics;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App
 {
@@ -68,7 +68,7 @@ namespace GameLauncher.App
             VersionLabel.Text = "Version: v" + Application.ProductVersion;
             Log.Core("VERIFY HASH: Opened");
 
-            if (FunctionStatus.IsVerifyHashDisabled == false)
+            if (!FunctionStatus.IsVerifyHashDisabled)
             {
                 /* Clean up previous logs and start logging */
                 string[] filestocheck = new string[] { "checksums.dat", "validfiles.dat", "invalidfiles.dat", "Verify.log" };
@@ -240,9 +240,7 @@ namespace GameLauncher.App
             }
             catch (Exception Error)
             {
-                Log.Error("VERIFY HASH: " + Error.Message);
-                Log.ErrorIC("VERIFY HASH: " + Error.HResult);
-                Log.ErrorFR("VERIFY HASH: " + Error.ToString());
+                LogToFileAddons.OpenLog("VERIFY HASH", null, Error, null, true);
             }
 
             if (DeletionError == 0)
@@ -353,9 +351,7 @@ namespace GameLauncher.App
             }
             catch (Exception Error)
             {
-                Log.Error("VERIFY HASH: " + Error.Message);
-                Log.ErrorIC("VERIFY HASH: " + Error.HResult);
-                Log.ErrorFR("VERIFY HASH: " + Error.ToString());
+                LogToFileAddons.OpenLog("VERIFY HASH", null, Error, null, true);
             }
         }
 
@@ -378,6 +374,7 @@ namespace GameLauncher.App
             {
                 DownloadProgressText.Text = "\nPreparing to Download Files";
                 string[] files = File.ReadAllLines("invalidfiles.dat");
+                int ErrorRate = 0;
 
                 foreach (string text in files)
                 {
@@ -436,9 +433,10 @@ namespace GameLauncher.App
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("VERIFY HASH: " + Error.Message);
-                        Log.ErrorIC("VERIFY HASH: " + Error.HResult);
-                        Log.ErrorFR("VERIFY HASH: " + Error.ToString());
+                        ErrorRate++;
+
+                        LogToFileAddons.OpenLog("VERIFY HASH", "Redownloader had Encountered an Error", Error, "Error", 
+                            (ErrorRate != 0 && ErrorRate <= 5));
                     }
                 }
             }

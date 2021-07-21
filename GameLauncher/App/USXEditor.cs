@@ -2,7 +2,6 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
@@ -11,6 +10,8 @@ using System.Diagnostics;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App
 {
@@ -21,18 +22,18 @@ namespace GameLauncher.App
         public static bool ResolutionsListLoaded = false;
         public USXEditor()
         {
-            if (File.Exists(FileGameSettings.UserSettingsLocation))
+            if (File.Exists(Locations.UserSettingsXML))
             {
                 DiscordLauncherPresense.Status("User XML Editor", null);
-                Log.Debug("UXE: Success, a UserSettings.xml file was found!");
-                if (new FileInfo(FileGameSettings.UserSettingsLocation).IsReadOnly == true)
+                Log.Checking("UXE: Success, a UserSettings.xml file was found!");
+                if (new FileInfo(Locations.UserSettingsXML).IsReadOnly == true)
                 {
                     FileReadOnly = true;
                     Log.Warning("UXE: UserSettings.xml is ReadOnly!");
                 }
                 else
                 {
-                    Log.Debug("UXE: UserSettings.xml can be modified!");
+                    Log.Completed("UXE: UserSettings.xml can be modified!");
                 }
 
                 FileGameSettings.Read("Full File");
@@ -267,7 +268,7 @@ namespace GameLauncher.App
             }
             catch (Exception Error)
             {
-                Log.Error("USXE: " + Error.Message);
+                LogToFileAddons.OpenLog("USXE", null, Error, null, true);
             }
         }
 
@@ -713,7 +714,7 @@ namespace GameLauncher.App
             }
             catch (Exception Error)
             {
-                Log.Error("USXE: " + Error.Message);
+                LogToFileAddons.OpenLog("USXE", null, Error, null, true);
             }
         }
 
@@ -1184,7 +1185,7 @@ namespace GameLauncher.App
             }
             catch (Exception Error)
             {
-                Log.Error("Resolution: " + Error.Message);
+                LogToFileAddons.OpenLog("Resolution", null, Error, null, true);
             }
 
             /********************************/
@@ -1316,9 +1317,7 @@ namespace GameLauncher.App
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("USXE Resolution: " + Error.Message);
-                    Log.ErrorIC("USXE Resolution: " + Error.HResult);
-                    Log.ErrorFR("USXE Resolution: " + Error.ToString());
+                    LogToFileAddons.OpenLog("USXE Resolution", null, Error, null, true);
                 }
             }
         }
@@ -1377,7 +1376,7 @@ namespace GameLauncher.App
             }
             else
             {
-                Log.Error("USXE: User Broke the Honk!");
+                Log.Info("USXE: User Broke the Honk!");
             }
         }
     }

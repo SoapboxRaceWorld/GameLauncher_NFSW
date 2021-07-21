@@ -12,6 +12,7 @@ using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App
 {
@@ -56,14 +57,22 @@ namespace GameLauncher.App
 
         public static string SecurityCenter(string caller)
         {
-            ManagementObjectSearcher wmiData = new ManagementObjectSearcher(@"root\SecurityCenter2", "SELECT * FROM " + caller);
-            ManagementObjectCollection data = wmiData.Get();
-
-            string virusCheckerName = "";
-            foreach (ManagementObject virusChecker in data)
+            string virusCheckerName = string.Empty;
+            try
             {
-                virusCheckerName = virusChecker["displayName"].ToString();
-                int status = Convert.ToInt32(virusChecker["productState"]);
+                ManagementObjectSearcher wmiData = new ManagementObjectSearcher(@"root\SecurityCenter2", "SELECT * FROM " + caller);
+                ManagementObjectCollection data = wmiData.Get();
+
+                
+                foreach (ManagementObject virusChecker in data)
+                {
+                    virusCheckerName = virusChecker["displayName"].ToString();
+                    int status = Convert.ToInt32(virusChecker["productState"]);
+                }
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("Debug", null, Error, null, true);
             }
 
             return virusCheckerName;
@@ -125,22 +134,29 @@ namespace GameLauncher.App
             string Win32_Processor = "";
             if (!DetectLinux.LinuxDetected())
             {
-                Kernel32.GetPhysicallyInstalledSystemMemory(out memKb);
-
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT Name FROM Win32_VideoController");
-                string graphicsCard = string.Empty;
-                foreach (ManagementObject mo in searcher.Get())
+                try
                 {
-                    foreach (PropertyData property in mo.Properties)
+                    Kernel32.GetPhysicallyInstalledSystemMemory(out memKb);
+
+                    ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT Name FROM Win32_VideoController");
+                    string graphicsCard = string.Empty;
+                    foreach (ManagementObject mo in searcher.Get())
                     {
-                        GPUs.Add(property.Value.ToString());
+                        foreach (PropertyData property in mo.Properties)
+                        {
+                            GPUs.Add(property.Value.ToString());
+                        }
                     }
+
+                    Win32_Processor = (from x in new ManagementObjectSearcher("SELECT Name FROM Win32_Processor").Get().Cast<ManagementObject>()
+                                       select x.GetPropertyValue("Name")).FirstOrDefault().ToString();
+
+                    Kernel32.GetDiskFreeSpaceEx(FileSettingsSave.GameInstallation, out lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
                 }
-
-                Win32_Processor = (from x in new ManagementObjectSearcher("SELECT Name FROM Win32_Processor").Get().Cast<ManagementObject>()
-                    select x.GetPropertyValue("Name")).FirstOrDefault().ToString();
-
-                Kernel32.GetDiskFreeSpaceEx(FileSettingsSave.GameInstallation, out lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Debug", null, Error, null, true);
+                }
             }
 
             var Win32_VideoController = string.Join(" | ", GPUs);
@@ -158,7 +174,7 @@ namespace GameLauncher.App
                 new ListType{ Name = "Firewall Rule - Game", Value =  FileSettingsSave.FirewallGameStatus},
                 new ListType{ Name = "", Value = "" },
                 new ListType{ Name = "Server Name", Value = ServerListUpdater.ServerName("Debug")},
-                new ListType{ Name = "Server Address", Value = InformationCache.SelectedServerData.IpAddress},
+                new ListType{ Name = "Server Address", Value = InformationCache.SelectedServerData.IPAddress},
                 new ListType{ Name = "CDN Address", Value = FileSettingsSave.CDN},
                 new ListType{ Name = "ProxyPort", Value = ServerProxy.ProxyPort.ToString()},
                 new ListType{ Name = "", Value = "" },

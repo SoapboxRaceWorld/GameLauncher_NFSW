@@ -1,8 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using Nancy;
 using Nancy.Bootstrapper;
+using Nancy.Responses;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
@@ -13,6 +16,22 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
         public void Initialize(IPipelines pipelines)
         {
             pipelines.AfterRequest += CheckForCompression;
+            pipelines.OnError += OnError;
+        }
+
+        private TextResponse OnError(NancyContext context, Exception Error)
+        {
+            Log.Error("PROXY HANDLER: " + context.Request.Path);
+            LogToFileAddons.OpenLog("PROXY HANDLER", null, Error, null, true);
+
+            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY",
+                CommunicationLogEntryType.Error,
+                new CommunicationLogLauncherError(Error.Message, context.Request.Path,
+                    context.Request.Method));
+
+            context.Request.Dispose();
+
+            return new TextResponse(HttpStatusCode.BadRequest, Error.Message);
         }
 
         private static void CheckForCompression(NancyContext context)

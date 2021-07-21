@@ -22,43 +22,41 @@ namespace GameLauncher.App.Classes.SystemPlatform.Linux
             return _linuxDistro;
         }
 
-        public static bool IsValidWineMonoInstalled() {
-            return true;
-        }
-
         private static string LinuxDistroInternal()
         {
             if (!File.Exists("/etc/os-release"))
             {
                 return "UNIX-Like System";
             }
-
-            using (var stream = new StreamReader("/etc/os-release"))
+            else
             {
-                string line;
-                while ((line = stream.ReadLine()) != null)
+                using (var stream = new StreamReader("/etc/os-release"))
                 {
-                    var splits = line.Split(new[] { '=' }, 2);
-                    if (splits[0] == "PRETTY_NAME")
+                    string line;
+                    while ((line = stream.ReadLine()) != null)
                     {
-                        var val = splits[1];
-
-                        if (val[0] == '"')
+                        var splits = line.Split(new[] { '=' }, 2);
+                        if (splits[0] == "PRETTY_NAME")
                         {
-                            val = val.Substring(1);
-                        }
+                            var val = splits[1];
 
-                        if (val[val.Length - 1] == '"')
-                        {
-                            val = val.Substring(0, val.Length - 1);
-                        }
+                            if (val[0] == '"')
+                            {
+                                val = val.Substring(1);
+                            }
 
-                        return val;
+                            if (val[val.Length - 1] == '"')
+                            {
+                                val = val.Substring(0, val.Length - 1);
+                            }
+
+                            return val;
+                        }
                     }
                 }
-            }
 
-            return "Linux";
+                return "Linux";
+            }
         }
     }
 }

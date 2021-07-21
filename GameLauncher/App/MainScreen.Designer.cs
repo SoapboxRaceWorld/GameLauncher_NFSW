@@ -184,7 +184,7 @@
             this.LauncherStatusDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.LauncherStatusDesc.Location = new System.Drawing.Point(53, 486);
             this.LauncherStatusDesc.Name = "LauncherStatusDesc";
-            this.LauncherStatusDesc.Size = new System.Drawing.Size(152, 14);
+            this.LauncherStatusDesc.Size = new System.Drawing.Size(152, 30);
             this.LauncherStatusDesc.TabIndex = 5;
             this.LauncherStatusDesc.Text = "Version: vX.X.X.X";
             this.LauncherStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -235,7 +235,7 @@
             this.APIStatusDesc.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.APIStatusDesc.Location = new System.Drawing.Point(426, 486);
             this.APIStatusDesc.Name = "APIStatusDesc";
-            this.APIStatusDesc.Size = new System.Drawing.Size(130, 14);
+            this.APIStatusDesc.Size = new System.Drawing.Size(130, 30);
             this.APIStatusDesc.TabIndex = 120;
             this.APIStatusDesc.Text = "Checking Status";
             this.APIStatusDesc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

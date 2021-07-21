@@ -2,7 +2,7 @@
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using System;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App.Classes
 {
@@ -42,9 +42,9 @@ namespace GameLauncher.App.Classes
                 {
                     Application.OpenForms["SplashScreen"].Close();
                 }
-                catch (Exception error)
+                catch (Exception Error)
                 {
-                    Log.Error("SPLASH SCREEN: " + error.Message);
+                    LogToFileAddons.OpenLog("SPLASH SCREEN", null, Error, null, true);
                     Close();
                 }
             }

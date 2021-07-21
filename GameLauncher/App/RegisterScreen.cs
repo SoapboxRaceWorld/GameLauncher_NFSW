@@ -3,10 +3,10 @@ using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.LauncherCore.Client.Auth;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using System;
 using System.Collections.Generic;
@@ -139,7 +139,7 @@ namespace GameLauncher.App
                     String Password;
                     String Ticket = (_ticketRequired) ? RegisterTicket.Text : null;
 
-                    Tokens.IPAddress = InformationCache.SelectedServerData.IpAddress;
+                    Tokens.IPAddress = InformationCache.SelectedServerData.IPAddress;
                     Tokens.ServerName = ServerListUpdater.ServerName("Register");
 
                     switch (Authentication.HashType(InformationCache.ModernAuthHashType))

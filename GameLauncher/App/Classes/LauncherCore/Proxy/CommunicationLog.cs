@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using Newtonsoft.Json;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
@@ -76,9 +77,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         static CommunicationLog()
         {
-            LogFileName = "communication.log";
-            if (File.Exists(LogFileName))
-                File.Delete(LogFileName);
+            LogFileName = "Communication.log";
+            try
+            {
+                if (File.Exists(LogFileName))
+                    File.Delete(LogFileName);
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("Communication Log", null, Error, null, true);
+            }
         }
 
         public static void RecordEntry(string serverId, string category, CommunicationLogEntryType type, ICommunicationLogData data)

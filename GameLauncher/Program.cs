@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Globalization;
 using GameLauncher.App.Classes;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
@@ -22,6 +21,7 @@ using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using System.Text;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher
 {
@@ -31,8 +31,6 @@ namespace GameLauncher
         public static Thread SplashScreen;
         public static bool IsSplashScreenLive = false;
         public static bool LauncherMustRestart = false;
-        private static readonly string LocalAppData = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)));
-        private static readonly string RoamingAppData = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)));
 
         [STAThread]
         static void Main()
@@ -90,7 +88,7 @@ namespace GameLauncher
                                 LauncherMustRestart = true;
                             }
                         }
-                        catch (Exception) { }
+                        catch { }
                     }
 
                     if (FunctionStatus.LauncherForceClose)
@@ -152,7 +150,7 @@ namespace GameLauncher
                                                 }
                                                 else
                                                 {
-                                                    if (HardwareInfo.CheckArchitectureFile(splitFileVersion[0]) == false)
+                                                    if (!HardwareInfo.CheckArchitectureFile(splitFileVersion[0]))
                                                     {
                                                         missingfiles.Add(splitFileVersion[0] + " - Wrong Architecture");
                                                     }
@@ -306,67 +304,62 @@ namespace GameLauncher
                     SplashScreen.Start();
                 }
 
-                File.Delete("communication.log");
-                File.Delete("launcher.log");
+                LogToFileAddons.RemoveLogs();
                 Log.StartLogging();
 
                 Log.Info("CURRENT DATE: " + Time.GetTime("Date"));
-
-                Log.Checking("LAUNCHER MIGRATION: Appdata and/or Roaming Folders]");
+                Log.Checking("LAUNCHER MIGRATION: Appdata and/or Roaming Folders");
                 /* Deletes Folders that will Crash the Launcher (Cleanup Migration) */
                 try
                 {
-                    if (Directory.Exists(LocalAppData + "\\Soapbox_Race_World"))
+                    if (Directory.Exists(Strings.Encode(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World"))))
                     {
-                        Directory.Delete(LocalAppData + "\\Soapbox_Race_World", true);
+                        Directory.Delete(Strings.Encode(Path.Combine(Locations.LocalAppDataFolder, "Soapbox_Race_World")), true);
                     }
-                    if (Directory.Exists(RoamingAppData + "\\Soapbox_Race_World"))
+                    if (Directory.Exists(Strings.Encode(Path.Combine(Locations.RoamingAppDataFolder, "Soapbox_Race_World"))))
                     {
-                        Directory.Delete(RoamingAppData + "\\Soapbox_Race_World", true);
+                        Directory.Delete(Strings.Encode(Path.Combine(Locations.RoamingAppDataFolder, "Soapbox_Race_World")), true);
                     }
-                    if (Directory.Exists(LocalAppData + "\\SoapBoxRaceWorld"))
+                    if (Directory.Exists(Strings.Encode(Path.Combine(Locations.LocalAppDataFolder, "SoapBoxRaceWorld"))))
                     {
-                        Directory.Delete(LocalAppData + "\\SoapBoxRaceWorld", true);
+                        Directory.Delete(Strings.Encode(Path.Combine(Locations.LocalAppDataFolder, "SoapBoxRaceWorld")), true);
                     }
-                    if (Directory.Exists(RoamingAppData + "\\SoapBoxRaceWorld"))
+                    if (Directory.Exists(Strings.Encode(Path.Combine(Locations.RoamingAppDataFolder, "SoapBoxRaceWorld"))))
                     {
-                        Directory.Delete(RoamingAppData + "\\SoapBoxRaceWorld", true);
+                        Directory.Delete(Strings.Encode(Path.Combine(Locations.RoamingAppDataFolder, "SoapBoxRaceWorld")), true);
                     }
-                    if (Directory.Exists(LocalAppData + "\\WorldUnited.gg"))
+                    if (Directory.Exists(Strings.Encode(Path.Combine(Locations.LocalAppDataFolder, "WorldUnited.gg"))))
                     {
-                        Directory.Delete(LocalAppData + "\\WorldUnited.gg", true);
+                        Directory.Delete(Strings.Encode(Path.Combine(Locations.LocalAppDataFolder, "WorldUnited.gg")), true);
                     }
-                    if (Directory.Exists(RoamingAppData + "\\WorldUnited.gg"))
+                    if (Directory.Exists(Strings.Encode(Path.Combine(Locations.RoamingAppDataFolder, "WorldUnited.gg"))))
                     {
-                        Directory.Delete(RoamingAppData + "\\WorldUnited.gg", true);
+                        Directory.Delete(Strings.Encode(Path.Combine(Locations.RoamingAppDataFolder, "WorldUnited.gg")), true);
                     }
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("LAUNCHER MIGRATION: " + Error.Message);
-                    Log.ErrorIC("LAUNCHER MIGRATION: " + Error.HResult);
-                    Log.ErrorFR("LAUNCHER MIGRATION: " + Error.ToString());
+                    LogToFileAddons.OpenLog("LAUNCHER MIGRATION", null, Error, null, true);
                 }
                 Log.Completed("LAUNCHER MIGRATION");
 
                 Log.Checking("LAUNCHER XML: If File Exists or Not");
                 DiscordLauncherPresense.Status("Start Up", "Checking if UserSettings XML Exists");
                 /* Create Default Configuration Files (if they don't already exist) */
-                if (!File.Exists(FileGameSettings.UserSettingsLocation))
+                if (!File.Exists(Locations.UserSettingsXML))
                 {
                     try
                     {
-                        if ((!Directory.Exists(RoamingAppData + "\\Need for Speed World")) || (!Directory.Exists(RoamingAppData + "\\Need for Speed World" + "\\Settings")))
+                        if (!Directory.Exists(Locations.UserSettingsFolder))
                         {
-                            Directory.CreateDirectory(RoamingAppData + "\\Need for Speed World" + "\\Settings");
+                            Directory.CreateDirectory(Locations.UserSettingsFolder);
                         }
-                        File.WriteAllBytes(FileGameSettings.UserSettingsLocation, ExtractResource.AsByte("GameLauncher.Resources.UserSettings.UserSettings.xml"));
+
+                        File.WriteAllBytes(Locations.UserSettingsXML, ExtractResource.AsByte("GameLauncher.Resources.UserSettings.UserSettings.xml"));
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("LAUNCHER XML: " + Error.Message);
-                        Log.ErrorIC("LAUNCHER XML: " + Error.HResult);
-                        Log.ErrorFR("LAUNCHER XML: " + Error.ToString());
+                        LogToFileAddons.OpenLog("LAUNCHER XML", null, Error, null, true);
                     }
                 }
                 Log.Completed("LAUNCHER XML");
@@ -405,9 +398,7 @@ namespace GameLauncher
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("SYSTEM: " + Error.Message);
-                    Log.ErrorIC("SYSTEM: " + Error.HResult);
-                    Log.ErrorFR("SYSTEM: " + Error.ToString());
+                    LogToFileAddons.OpenLog("SYSTEM", null, Error, null, true);
                     FunctionStatus.LauncherForceCloseReason = "Operating System Detection Check Encountered an Error.\n" + Error.Message;
                     FunctionStatus.LauncherForceClose = true;
                 }
@@ -420,17 +411,15 @@ namespace GameLauncher
                 {
                     /* Set Launcher Directory */
                     Log.Checking("SETUP: Setting Launcher Folder Directory");
-                    Directory.SetCurrentDirectory(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Path.GetDirectoryName(Encoding.UTF8.GetString(
-                        Encoding.UTF8.GetBytes(Application.ExecutablePath))))));
-                    Log.Completed("SETUP: Current Directory now Set at -> " + Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Path.GetDirectoryName(
-                        Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Application.ExecutablePath))))));
+                    Directory.SetCurrentDirectory(Locations.LauncherFolder);
+                    Log.Completed("SETUP: Current Directory now Set at -> " + Locations.LauncherFolder);
 
                     if (!DetectLinux.LinuxDetected())
                     {
                         Log.Checking("FOLDER LOCATION: Checking Launcher Folder Directory");
-                        DiscordLauncherPresense.Status("Start Up", "Checking Launcher Folder Location");
+                        DiscordLauncherPresense.Status("Start Up", "Checking Launcher Folder Locations");
 
-                        switch (FunctionStatus.CheckFolder(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Directory.GetCurrentDirectory()))))
+                        switch (FunctionStatus.CheckFolder(Locations.LauncherFolder))
                         {
                             case FolderType.IsTempFolder:
                             case FolderType.IsUsersFolders:
@@ -472,18 +461,9 @@ namespace GameLauncher
                     else
                     {
                         Log.Checking("WRITE TEST: Launcher Folder Test");
-                        if (!FunctionStatus.HasWriteAccessToFolder(Path.GetDirectoryName(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Application.ExecutablePath)))))
+                        if (!FunctionStatus.HasWriteAccessToFolder(Locations.LauncherFolder))
                         {
                             MessageBox.Show("Unable to do a Test Write to Launcher Folder\nPermission Issue");
-                        }
-
-                        if (!string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
-                        {
-                            Log.Checking("WRITE TEST: Game Folder Test");
-                            if (!FunctionStatus.HasWriteAccessToFolder(FileSettingsSave.GameInstallation))
-                            {
-                                MessageBox.Show("Unable to do a Test Write to Game Files Folder\nPermission Issue");
-                            }
                         }
                         Log.Completed("WRITE TEST: Passed");
 
@@ -528,7 +508,8 @@ namespace GameLauncher
 
                                     if (replyPatchWin7 == DialogResult.Yes)
                                     {
-                                        RegistryKey key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
+                                        RegistryKey key = Registry.LocalMachine.CreateSubKey(
+                                            @"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client");
                                         key.SetValue("DisabledByDefault", 0x0);
 
                                         MessageBox.Show(null, "Registry option set, Remember that the changes may require a system reboot to take effect",
@@ -549,9 +530,7 @@ namespace GameLauncher
                             }
                             catch (Exception Error)
                             {
-                                Log.Error("SSL/TLS: " + Error.Message);
-                                Log.ErrorIC("SSL/TLS: " + Error.HResult);
-                                Log.ErrorFR("SSL/TLS: " + Error.ToString());
+                                LogToFileAddons.OpenLog("SSL/TLS", null, Error, null, true);
                             }
                         }
                     }
@@ -559,30 +538,46 @@ namespace GameLauncher
                     Log.Checking("JSON: Servers File");
                     try
                     {
-                        if (!File.Exists("servers.json"))
+                        if (File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON))))
+                        {
+                            File.Move(
+                                Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON)),
+                                Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)));
+                            Log.Completed("JSON: Renaming Servers File");
+                        }
+                        else if (!File.Exists(
+                            Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON))))
                         {
                             try
                             {
-                                File.WriteAllText("servers.json", "[]");
+                                File.WriteAllText(
+                                    Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)), "[]");
+                                Log.Completed("JSON: Created Servers File");
                             }
-                            catch { /* ignored */ }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("JSON SERVER FILE", null, Error, null, true);
+                            }
                         }
-
-                        Log.Completed("JSON: Servers File Now Exists");
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("SSL/TLS: " + Error.Message);
-                        Log.ErrorIC("SSL/TLS: " + Error.HResult);
-                        Log.ErrorFR("SSL/TLS: " + Error.ToString());
+                        LogToFileAddons.OpenLog("JSON SERVER FILE", null, Error, null, true);
                     }
+                    Log.Checking("JSON: Done");
 
                     if (!string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
                     {
                         Log.Checking("CLEANLINKS: Game Path");
-                        var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
-                        ModNetHandler.CleanLinks(linksPath);
-                        Log.Completed("CLEANLINKS: Done");
+                        if (File.Exists(Locations.GameLinksFile))
+                        {
+                            ModNetHandler.CleanLinks(Locations.GameLinksFile, FileSettingsSave.GameInstallation);
+                            Log.Completed("CLEANLINKS: Done");
+                        }
+                        else
+                        {
+                            Log.Completed("CLEANLINKS: Not Present");
+                        }                        
                     }
 
                     Log.Checking("PROXY: Checking if Proxy Is Disabled from User Settings! It's value is " + FileSettingsSave.Proxy);

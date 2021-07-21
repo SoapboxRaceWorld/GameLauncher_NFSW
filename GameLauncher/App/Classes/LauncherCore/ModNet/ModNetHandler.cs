@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Net;
-using System.Text;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
 
 namespace GameLauncher.App.Classes.LauncherCore.ModNet
 {
@@ -50,9 +49,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("LAUNCHER: Deleting Folder " + Folder + " -> " + Error.Message);
-                        Log.ErrorIC("LAUNCHER: " + Error.HResult);
-                        Log.ErrorFR("LAUNCHER: " + Error.ToString());
+                        LogToFileAddons.OpenLog("ModNet Folder Removal", null, Error, null, true);
                     }
                 }
             }
@@ -67,9 +64,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("LAUNCHER: Creating Folder " + Folder + " -> " + Error.Message);
-                        Log.ErrorIC("LAUNCHER: " + Error.HResult);
-                        Log.ErrorFR("LAUNCHER: " + Error.ToString());
+                        LogToFileAddons.OpenLog("ModNet Folder Creator", null, Error, null, true);
                     }
                 }
             }
@@ -84,9 +79,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("LAUNCHER: Deleting File " + Files + " -> " + Error.Message);
-                        Log.ErrorIC("LAUNCHER: " + Error.HResult);
-                        Log.ErrorFR("LAUNCHER: " + Error.ToString());
+                        LogToFileAddons.OpenLog("ModNet Legacy Removal", null, Error, null, true);
                     }
                 }
             }
@@ -94,7 +87,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
 
         public static bool Supported()
         {
-            switch (APIChecker.CheckStatus(InformationCache.SelectedServerData.IpAddress + "/Modding/GetModInfo"))
+            switch (APIChecker.CheckStatus(InformationCache.SelectedServerData.IPAddress + "/Modding/GetModInfo"))
             {
                 case APIStatus.Online:
                     return true;
@@ -105,14 +98,15 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
 
         public static int FileErrors = 0;
 
-        public static void CleanLinks(string linksPath)
+        public static void CleanLinks(string LinksFile, string GamePath)
         {
             try
             {
-                if (File.Exists(linksPath))
+                if (File.Exists(LinksFile))
                 {
                     Log.Info("CLEANLINKS: Found Server Mod Files to remove {Process}");
-                    string dir = FileSettingsSave.GameInstallation;
+                    string dir = Strings.Encode(GamePath);
+                    string linksPath = Strings.Encode(Path.Combine(GamePath, ".links"));
                     foreach (var readLine in File.ReadLines(linksPath))
                     {
                         var parts = readLine.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
@@ -182,9 +176,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
                                 FileErrors++;
 
                                 Log.Error("CLEANLINKS: Error while deleting a file: {realLoc}");
-                                Log.Error("CLEANLINKS: " + Error.Message);
-                                Log.ErrorIC("CLEANLINKS: " + Error.HResult);
-                                Log.ErrorFR("CLEANLINKS: " + Error.ToString());
+                                LogToFileAddons.OpenLog("CLEANLINKS", null, Error, null, true);
                             }
                         }
                         else
@@ -225,9 +217,7 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
             }
             catch (Exception Error)
             {
-                Log.Error("CLEANLINKS: " + Error.Message);
-                Log.ErrorIC("CLEANLINKS: " + Error.HResult);
-                Log.ErrorFR("CLEANLINKS: " + Error.ToString());
+                LogToFileAddons.OpenLog("CLEANLINKS", null, Error, null, true);
             }
         }
 

@@ -1,10 +1,10 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Support;
-using System;
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Support;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace GameLauncher.App.Classes.Logger
+namespace GameLauncher.App.Classes.LauncherCore.Logger
 {
     /// <summary>
     /// Used for Logging Launcher entires such as Information, Checks, Error Messages, Etc.
@@ -12,8 +12,6 @@ namespace GameLauncher.App.Classes.Logger
     class Log
     {
         readonly static ConcurrentQueue<string> buffer = new ConcurrentQueue<string>();
-        private static String filename = String.Empty;
-        public Log(String file = "launcher.log") => filename = file;
         /// <summary>
         /// Starts Logging Task
         /// </summary>
@@ -105,14 +103,18 @@ namespace GameLauncher.App.Classes.Logger
                 {
                     try
                     {
-                        File.AppendAllText("launcher.log", merged + Environment.NewLine);
+                        if (!Directory.Exists(Strings.Encode(Locations.LogCurrentFolder)))
+                        {
+                            Directory.CreateDirectory(Strings.Encode(Locations.LogCurrentFolder));
+                        }
                     }
-                    catch(Exception ex)
+                    catch { }
+
+                    try
                     {
-                        new Log(filename);
-                        Log.Error(ex.Message);
+                        File.AppendAllText(Locations.LogLauncher, merged + "\n");
                     }
-                    Console.WriteLine(merged);
+                    catch { }
                 }
                 else
                 {
@@ -143,8 +145,20 @@ namespace GameLauncher.App.Classes.Logger
             {
                 if (buffer.Count > 0 && buffer.TryDequeue(out string merged))
                 {
-                    File.AppendAllText("Verify.log", merged + Environment.NewLine);
-                    Console.WriteLine(merged);
+                    try
+                    {
+                        if (!Directory.Exists(Strings.Encode(Locations.LogCurrentFolder)))
+                        {
+                            Directory.CreateDirectory(Strings.Encode(Locations.LogCurrentFolder));
+                        }
+                    }
+                    catch { }
+
+                    try
+                    {
+                        File.AppendAllText(Locations.LogVerify, merged + "\n");
+                    }
+                    catch { }
                 }
                 else
                 {

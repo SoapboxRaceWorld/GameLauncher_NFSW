@@ -139,19 +139,23 @@ namespace GameLauncher.App
 
         public void OnClickButton(object sender, EventArgs e)
         {
-            Button button = (Button)sender;
-            switch (button.Name)
+            try
             {
-                case nameof(PatchButton1):
-                    Process.Start(patchNoteBlocks[0].Link);
-                    break;
-                case nameof(PatchButton2):
-                    Process.Start(patchNoteBlocks[1].Link);
-                    break;
-                case nameof(PatchButton3):
-                    Process.Start(patchNoteBlocks[2].Link);
-                    break;
+                Button button = (Button)sender;
+                switch (button.Name)
+                {
+                    case nameof(PatchButton1):
+                        Process.Start(patchNoteBlocks[0].Link);
+                        break;
+                    case nameof(PatchButton2):
+                        Process.Start(patchNoteBlocks[1].Link);
+                        break;
+                    case nameof(PatchButton3):
+                        Process.Start(patchNoteBlocks[2].Link);
+                        break;
+                }
             }
+            catch { }
         }
 
         private void PatchNotes_Load(object sender, System.EventArgs e)

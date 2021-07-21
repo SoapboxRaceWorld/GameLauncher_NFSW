@@ -1,5 +1,5 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -125,9 +125,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
             }
             catch (Exception Error)
             {
-                Log.Error("CDN DOWNLOADER: " + Error.Message);
-                Log.ErrorIC("CDN DOWNLOADER: " + Error.HResult);
-                Log.ErrorFR("CDN DOWNLOADER: " + Error.ToString());
+                LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
                 Exception exception = Error;
                 lock (this._workers)
                 {

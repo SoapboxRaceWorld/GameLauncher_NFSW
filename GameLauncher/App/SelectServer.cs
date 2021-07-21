@@ -61,7 +61,7 @@ namespace GameLauncher.App
             {
                 try
                 {
-                    servers.Enqueue(ID + "_|||_" + substring.IpAddress + "_|||_" + substring.Name);
+                    servers.Enqueue(ID + "_|||_" + substring.IPAddress + "_|||_" + substring.Name);
 
                     ServerListRenderer.Items.Add(new ListViewItem(
                         new[]
@@ -95,8 +95,10 @@ namespace GameLauncher.App
 
                         try
                         {
-                            WebClientWithTimeout getdata = new WebClientWithTimeout();
-                            getdata.Encoding = Encoding.UTF8;
+                            WebClientWithTimeout getdata = new WebClientWithTimeout
+                            {
+                                Encoding = Encoding.UTF8
+                            };
                             GetServerInformation content = JsonConvert.DeserializeObject<GetServerInformation>(getdata.DownloadString(serverurl));
 
                             if (content == null)

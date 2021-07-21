@@ -1,13 +1,14 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using NetFwTypeLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using WindowsFirewallHelper;
 using WindowsFirewallHelper.Exceptions;
 using WindowsFirewallHelper.FirewallRules;
@@ -22,7 +23,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             {
                 if (FirewallManager.IsServiceRunning)
                 {
-                    if (FirewallStatus() == true)
+                    if (FirewallStatus())
                     {
                         CheckIfRuleExists(Type, Mode, AppName, AppPath, groupKey, description, protocol);
                     }
@@ -126,9 +127,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             }
             catch (FirewallWASNotSupportedException Error)
             {
-                Log.Error("WINDOWS FIREWALL: " + Error.Message);
-                Log.ErrorIC("WINDOWS FIREWALL: " + Error.HResult);
-                Log.ErrorFR("WINDOWS FIREWALL: " + Error.ToString());
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
                 AddDefaultApplicationRule(Type, AppName, AppPath, direction, protocol, firewallLogNote);
                 ErrorFree = false;
             }
@@ -167,16 +166,12 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             }
             catch (FirewallWASNotSupportedException Error)
             {
-                Log.Error("WINDOWS FIREWALL: " + Error.Message);
-                Log.ErrorIC("WINDOWS FIREWALL: " + Error.HResult);
-                Log.ErrorFR("WINDOWS FIREWALL: " + Error.ToString());
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
                 ErrorFree = false;
             }
             catch (Exception Error)
             {
-                Log.Error("WINDOWS FIREWALL: " + Error.Message);
-                Log.ErrorIC("WINDOWS FIREWALL: " + Error.HResult);
-                Log.ErrorFR("WINDOWS FIREWALL: " + Error.ToString());
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL ", null, Error, null, true);
                 ErrorFree = false;
             }
 
@@ -209,9 +204,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     catch (Exception Error)
                     {
                         ErrorFree = false;
-                        Log.Error("WINDOWS FIREWALL: " + Error.Message);
-                        Log.ErrorIC("WINDOWS FIREWALL: " + Error.HResult);
-                        Log.ErrorFR("WINDOWS FIREWALL: " + Error.ToString());
+                        LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
                     }
                 }
             }
@@ -244,7 +237,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             try
             {
-                if (FirewallWAS.IsSupported == true && FirewallWASRuleWin7.IsSupported == true)
+                if (FirewallWAS.IsSupported && FirewallWASRuleWin7.IsSupported)
                 {
                     if (Mode == "Name")
                     {
@@ -262,9 +255,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             }
             catch (Exception Error)
             {
-                Log.Error("WINDOWS FIREWALL: FindRules -> " + Error.Message);
-                Log.ErrorIC("WINDOWS FIREWALL: " + Error.HResult);
-                Log.ErrorFR("WINDOWS FIREWALL: " + Error.ToString());
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
             }
 
             return Enumerable.Empty<IFirewallRule>();
@@ -310,7 +301,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     if (FirewallManager.IsServiceRunning && FirewallHelper.FirewallStatus())
                     {
                         string GameName = "SBRW - Game";
-                        string GamePath = FileSettingsSave.GameInstallation + "\\nfsw.exe";
+                        string GamePath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
 
                         string groupKeyGame = "Need for Speed: World";
                         string descriptionGame = groupKeyGame;
@@ -318,7 +309,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         /* Inbound & Outbound */
                         FirewallHelper.DoesRulesExist("Add-Game", "Path", GameName, GamePath, groupKeyGame, descriptionGame, FirewallProtocol.Any);
                     }
-                    else if (FirewallManager.IsServiceRunning && FirewallHelper.FirewallStatus() == false)
+                    else if (FirewallManager.IsServiceRunning && !FirewallHelper.FirewallStatus())
                     {
                         FileSettingsSave.FirewallGameStatus = "Turned Off";
                     }
@@ -329,9 +320,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("FIREWALL: " + Error.Message);
-                    Log.ErrorIC("FIREWALL: " + Error.HResult);
-                    Log.ErrorFR("FIREWALL: " + Error.ToString());
+                    LogToFileAddons.OpenLog("FIREWALL", null, Error, null, true);
                     FileSettingsSave.FirewallGameStatus = "Error";
                 }
             }
@@ -354,10 +343,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     if (FirewallManager.IsServiceRunning && FirewallHelper.FirewallStatus())
                     {
                         string LauncherName = "SBRW - Game Launcher";
-                        string LauncherPath = Assembly.GetEntryAssembly().Location;
+                        string LauncherPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameLauncher));
 
                         string UpdaterName = "SBRW - Game Launcher Updater";
-                        string UpdaterPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "GameLauncherUpdater.exe");
+                        string UpdaterPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameUpdater));
 
                         string groupKeyLauncher = "Game Launcher for Windows";
                         string descriptionLauncher = "Soapbox Race World";
@@ -366,7 +355,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         FirewallHelper.DoesRulesExist("Add-Launcher", "Path", LauncherName, LauncherPath, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
                         FirewallHelper.DoesRulesExist("Add-Launcher", "Path", UpdaterName, UpdaterPath, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
                     }
-                    else if (FirewallManager.IsServiceRunning && FirewallHelper.FirewallStatus() == false)
+                    else if (FirewallManager.IsServiceRunning && !FirewallHelper.FirewallStatus())
                     {
                         FileSettingsSave.FirewallLauncherStatus = "Turned Off";
                     }
@@ -377,9 +366,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("FIREWALL: " + Error.Message);
-                    Log.ErrorIC("FIREWALL: " + Error.HResult);
-                    Log.ErrorFR("FIREWALL: " + Error.ToString());
+                    LogToFileAddons.OpenLog("FIREWALL", null, Error, null, true);
                     FileSettingsSave.FirewallLauncherStatus = "Error";
                 }
             }

@@ -2,7 +2,7 @@
 using IniParser;
 using IniParser.Model;
 using System.Text;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 {
@@ -45,7 +45,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         {
             try
             {
-                if (new FileInfo(Path).IsReadOnly == true)
+                if (new FileInfo(Path).IsReadOnly)
                 {
                     Log.Warning("CORE: Settings.ini is ReadOnly");
                 }

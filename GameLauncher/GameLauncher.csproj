@@ -178,9 +178,11 @@
     <Compile Include="App\Classes\LauncherCore\Lists\JSON\JsonServerList.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\LanguageListUpdater.cs" />
     <Compile Include="App\Classes\LauncherCore\Lists\ResolutionsListUpdater.cs" />
+    <Compile Include="App\Classes\LauncherCore\Logger\LogToFileAddons.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\JSON\JsonServerModNet.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\DiscordLauncherPresense.cs" />
     <Compile Include="App\Classes\LauncherCore\Support\BitmapHandler.cs" />
+    <Compile Include="App\Classes\LauncherCore\Support\Strings.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\Email\IsEmailValid.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\JSON\IsJSONValid.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\VerifyTrust\IsExeVerified.cs" />

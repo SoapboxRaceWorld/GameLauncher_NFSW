@@ -1,9 +1,10 @@
-﻿using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
-using GameLauncher.App.Classes.Logger;
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
 {
@@ -13,7 +14,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
 
         public static void Check()
         {
-            LauncherSigned = CheckExeVerified.Signed(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Application.ExecutablePath)));
+            LauncherSigned = CheckExeVerified.Signed(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameLauncher)));
             Log.Info("SIGNED: " + LauncherSigned);
 
             Log.Info("LAUNCHER UPDATER: Moved to Function");
@@ -35,7 +36,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
 
         public static bool Signed(string filePath)
         {
-            if (filePath == null)
+            if (string.IsNullOrWhiteSpace(filePath))
             {
                 Log.Error("SIGNED: File Path can Not be Null");
             }
@@ -73,9 +74,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("SIGNED: " + Error.Message);
-                    Log.ErrorIC("SIGNED: " + Error.HResult);
-                    Log.ErrorFR("SIGNED: " + Error.ToString());
+                    LogToFileAddons.OpenLog("SIGNED", null, Error, null, true);
                     return false;
                 }
             }

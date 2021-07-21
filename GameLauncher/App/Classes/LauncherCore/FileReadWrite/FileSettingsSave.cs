@@ -1,6 +1,6 @@
 ﻿using System;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 

@@ -1,5 +1,7 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.Logger;
+﻿using GameLauncher.App.Classes.LauncherCore.Downloader;
+using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
 using System;
 using System.IO;
 using System.Text;
@@ -69,24 +71,19 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
     class FileGameSettings
     {
-        public static string UserSettingsLocation = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(
-            Environment.GetEnvironmentVariable("AppData") + "/Need for Speed World/Settings/UserSettings.xml"));
-
         public static XmlDocument UserSettingsFile = new XmlDocument();
 
         public static void Read(string FileReadStatus)
         {
-            if (File.Exists(UserSettingsLocation))
+            if (File.Exists(Locations.UserSettingsXML))
             {
                 try
                 {
-                    UserSettingsFile.Load(UserSettingsLocation);
+                    UserSettingsFile.Load(Locations.UserSettingsXML);
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("USX File: " + Error.Message);
-                    Log.ErrorIC("USX Fille: " + Error.HResult);
-                    Log.ErrorFR("USX Fille: " + Error.ToString());
+                    LogToFileAddons.OpenLog("USX File", null, Error, null, true);
                 }
             }
             else
@@ -99,7 +96,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             {
                 /* Language */
                 FileGameSettingsData.Language = (NodeReader("InnerText", "Settings/UI/Language", null) != "ERROR") ?
-                                                 NodeReader("InnerText", "Settings/UI/Language", null) : FunctionStatus.SpeechFiles(null).ToUpper();
+                                                 NodeReader("InnerText", "Settings/UI/Language", null) : DownloaderAddons.SpeechFiles(null).ToUpper();
             }
             else if (FileReadStatus == "Full File")
             {
@@ -281,9 +278,9 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     Log.Warning("USX File: Unknown File Read Type -> " + FileReadStatus);
                 }
 
-                if (new FileInfo(UserSettingsLocation).IsReadOnly != true)
+                if (new FileInfo(Locations.UserSettingsXML).IsReadOnly != true)
                 {
-                    UserSettingsFile.Save(UserSettingsLocation);
+                    UserSettingsFile.Save(Locations.UserSettingsXML);
                     if (MessageBoxAlert == "Display")
                     {
                         MessageBox.Show(null, "XML Settings Saved", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -300,9 +297,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             }
             catch (Exception Error)
             {
-                Log.Error("USX File: " + Error.Message);
-                Log.ErrorIC("USX File: " + Error.HResult);
-                Log.ErrorFR("USX File: " + Error.ToString());
+                LogToFileAddons.OpenLog("USX File", null, Error, null, true);
             }
         }
 
@@ -339,16 +334,16 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public static void NodeUpdater(string Type, string NodePath, string SingleNode, string AttributeName, string AttributeValue, string ValueComparison)
         {
-            string FullNodePath = NodePath + "/" + SingleNode;
+            string FullNodePath = Strings.Encode(NodePath + "/" + SingleNode);
 
             if (NodeChecker(Type, FullNodePath, AttributeName) == false)
             {
                 try
                 {
-                    XmlNode Root = UserSettingsFile.SelectSingleNode(NodePath);
-                    XmlNode CustomNode = UserSettingsFile.CreateElement(SingleNode);
-                    XmlAttribute CustomNodeAttribute = UserSettingsFile.CreateAttribute(AttributeName);
-                    CustomNodeAttribute.Value = AttributeValue;
+                    XmlNode Root = UserSettingsFile.SelectSingleNode(Strings.Encode(NodePath));
+                    XmlNode CustomNode = UserSettingsFile.CreateElement(Strings.Encode(SingleNode));
+                    XmlAttribute CustomNodeAttribute = UserSettingsFile.CreateAttribute(Strings.Encode(AttributeName));
+                    CustomNodeAttribute.Value = Strings.Encode(AttributeValue);
                     CustomNode.Attributes.Append(CustomNodeAttribute);
                     Root.AppendChild(CustomNode);
                     Log.Info("USX File: Created XML Node [Type: '" + Type + "' NodePath: '" + NodePath + "' SingleNode: '" +
@@ -372,9 +367,9 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                               "' COMPARING NEW: '" + ValueComparison + "'");
                 }
 
-                if (UserSettingsFile.SelectSingleNode(FullNodePath).Attributes[AttributeName].Value != ValueComparison)
+                if (UserSettingsFile.SelectSingleNode(FullNodePath).Attributes[Strings.Encode(AttributeName)].Value != Strings.Encode(ValueComparison))
                 {
-                    UserSettingsFile.SelectSingleNode(FullNodePath).Attributes[AttributeName].Value = ValueComparison;
+                    UserSettingsFile.SelectSingleNode(FullNodePath).Attributes[Strings.Encode(AttributeName)].Value = Strings.Encode(ValueComparison);
                 }
             }
             else
@@ -385,9 +380,9 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                               "' COMPARING NEW: '" + ValueComparison + "'");
                 }
 
-                if (UserSettingsFile.SelectSingleNode(FullNodePath).InnerText != ValueComparison)
+                if (UserSettingsFile.SelectSingleNode(FullNodePath).InnerText != Strings.Encode(ValueComparison))
                 {
-                    UserSettingsFile.SelectSingleNode(FullNodePath).InnerText = ValueComparison;
+                    UserSettingsFile.SelectSingleNode(FullNodePath).InnerText = Strings.Encode(ValueComparison);
                 }
             }
         }

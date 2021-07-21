@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Components
@@ -220,9 +220,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("ID: " + Error.Message);
-                    Log.ErrorIC("ID: " + Error.HResult);
-                    Log.ErrorFR("ID: " + Error.ToString());
+                    LogToFileAddons.OpenLog("ID", null, Error, null, true);
                 }
 
                 return result;

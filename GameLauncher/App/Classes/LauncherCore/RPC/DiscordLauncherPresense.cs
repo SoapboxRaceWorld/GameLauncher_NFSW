@@ -1,8 +1,8 @@
 ﻿using DiscordRPC;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using System;
 using System.Collections.Generic;
@@ -54,302 +54,309 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         /// <remarks>RPC Status</remarks>
         public static void Status(string State, string Status)
         {
-            ButtonsList.Clear();
-            ButtonsList.Add(new DiscordButton()
+            try
             {
-                Label = "Project Site",
-                Url = "https://soapboxrace.world"
-            });
-            ButtonsList.Add(new DiscordButton()
-            {
-                Label = "Launcher Patch Notes",
-                Url = "https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/tag/" + Theming.PrivacyRPCBuild
-            });
-            Presence.Buttons = ButtonsList.ToArray();
+                ButtonsList.Clear();
+                ButtonsList.Add(new DiscordButton()
+                {
+                    Label = "Project Site",
+                    Url = "https://soapboxrace.world"
+                });
+                ButtonsList.Add(new DiscordButton()
+                {
+                    Label = "Launcher Patch Notes",
+                    Url = "https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/tag/" + Theming.PrivacyRPCBuild
+                });
+                Presence.Buttons = ButtonsList.ToArray();
 
-            if (State == "Start Up")
-            {
-                Presence.State = Status;
-                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                Presence.Assets = new Assets
+                if (State == "Start Up")
                 {
-                    LargeImageText = "Launcher",
-                    LargeImageKey = "nfsw"
-                };
-            }
-            else if (State == "Unpack Game Files")
-            {
-                Download = true;
-                Presence.State = Status;
-                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                Presence.Assets = new Assets
-                {
-                    LargeImageText = "Launcher",
-                    LargeImageKey = "nfsw",
-                    SmallImageText = string.Empty,
-                    SmallImageKey = "files_success"
-                };
-                Presence.Buttons = ButtonsList.ToArray();
-            }
-            else if (State == "Download Game Files")
-            {
-                Download = true;
-                Presence.State = Status;
-                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                Presence.Assets = new Assets
-                {
-                    LargeImageText = "Launcher",
-                    LargeImageKey = "nfsw",
-                    SmallImageText = string.Empty,
-                    SmallImageKey = "files"
-                };
-                Presence.Buttons = ButtonsList.ToArray();
-            }
-            else if (State == "Download Game Files Error")
-            {
-                Download = true;
-                Presence.State = "Game Download Error";
-                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                Presence.Assets = new Assets
-                {
-                    LargeImageText = "Launcher",
-                    LargeImageKey = "nfsw",
-                    SmallImageText = string.Empty,
-                    SmallImageKey = "files_error"
-                };
-                Presence.Buttons = ButtonsList.ToArray();
-            }
-            else if (State == "Idle Ready")
-            {
-                Presence.State = "Ready To Race";
-                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                Presence.Assets = new Assets
-                {
-                    LargeImageText = "Launcher",
-                    LargeImageKey = "nfsw",
-                    SmallImageText = string.Empty,
-                    SmallImageKey = !string.IsNullOrWhiteSpace(CertificateStore.LauncherSerial) ? "official" : "unofficial"
-                };
-                Presence.Buttons = ButtonsList.ToArray();
-            }
-            else if (State == "Checking ModNet")
-            {
-                Presence.State = "Checking ModNet";
-                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                Presence.Assets = new Assets
-                {
-                    LargeImageText = "Launcher",
-                    LargeImageKey = "nfsw",
-                    SmallImageText = string.Empty,
-                    SmallImageKey = "files_alert"
-                };
-                Presence.Buttons = ButtonsList.ToArray();
-            }
-            else if (State == "ModNet File Check Passed")
-            {
-                Presence.State = "Has ModNet File: " + Status;
-                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                Presence.Assets = new Assets
-                {
-                    LargeImageText = "Launcher",
-                    LargeImageKey = "nfsw",
-                    SmallImageText = string.Empty,
-                    SmallImageKey = "files_success"
-                };
-                Presence.Buttons = ButtonsList.ToArray();
-            }
-            else if (State == "Download ModNet")
-            {
-                Presence.State = "Downloading ModNet Files";
-                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                Presence.Assets = new Assets
-                {
-                    LargeImageText = "Launcher",
-                    LargeImageKey = "nfsw",
-                    SmallImageText = string.Empty,
-                    SmallImageKey = "files"
-                };
-                Presence.Buttons = ButtonsList.ToArray();
-            }
-            else if (State == "Download ModNet Error")
-            {
-                Presence.State = "ModNet Encounterd an Error";
-                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                Presence.Assets = new Assets
-                {
-                    LargeImageText = "Launcher",
-                    LargeImageKey = "nfsw",
-                    SmallImageText = string.Empty,
-                    SmallImageKey = "files_error"
-                };
-                Presence.Buttons = ButtonsList.ToArray();
-            }
-            else if (State == "Download Server Mods")
-            {
-                Presence.State = "Downloading Server Mods";
-                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                Presence.Assets = new Assets
-                {
-                    LargeImageText = "Launcher",
-                    LargeImageKey = "nfsw",
-                    SmallImageText = string.Empty,
-                    SmallImageKey = "files"
-                };
-                Presence.Buttons = ButtonsList.ToArray();
-            }
-            else if (State == "Download Server Mods Error")
-            {
-                Presence.State = "Server Mod Download Error";
-                Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                Presence.Assets = new Assets
-                {
-                    LargeImageText = "Launcher",
-                    LargeImageKey = "nfsw",
-                    SmallImageText = string.Empty,
-                    SmallImageKey = "files_error"
-                };
-                Presence.Buttons = ButtonsList.ToArray();
-            }
-
-            if (Download == false)
-            {
-                if (State == "Register")
-                {
+                    Presence.State = Status;
                     Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                    Presence.State = "On Registration Screen";
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw"
+                    };
+                }
+                else if (State == "Unpack Game Files")
+                {
+                    Download = true;
+                    Presence.State = Status;
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
                     Presence.Assets = new Assets
                     {
                         LargeImageText = "Launcher",
                         LargeImageKey = "nfsw",
                         SmallImageText = string.Empty,
-                        SmallImageKey = "screen_register"
+                        SmallImageKey = "files_success"
                     };
-                }
-                if (State == "Settings")
-                {
-                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                    Presence.State = "On Settings Screen";
-                    Presence.Assets = new Assets
-                    {
-                        LargeImageText = "Launcher",
-                        LargeImageKey = "nfsw",
-                        SmallImageText = string.Empty,
-                        SmallImageKey = "screen_settings"
-                    };
-                }
-                else if (State == "User XML Editor")
-                {
-                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                    Presence.State = "On User XML Editor Screen";
-                    Presence.Assets = new Assets
-                    {
-                        LargeImageText = "Launcher",
-                        LargeImageKey = "nfsw",
-                        SmallImageText = string.Empty,
-                        SmallImageKey = "screen_uxe"
-                    };
-                }
-                else if (State == "Verify")
-                {
-                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                    Presence.State = "On Verify Game Files Screen";
-                    Presence.Assets = new Assets
-                    {
-                        LargeImageText = "Launcher",
-                        LargeImageKey = "nfsw",
-                        SmallImageText = string.Empty,
-                        SmallImageKey = "screen_verify"
-                    };
-                }
-                else if (State == "Verify Scan")
-                {
-                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                    Presence.State = "Verifying Game Files";
-                    Presence.Assets = new Assets
-                    {
-                        LargeImageText = "Launcher",
-                        LargeImageKey = "nfsw",
-                        SmallImageText = string.Empty,
-                        SmallImageKey = "verify_files_scan"
-                    };
-                }
-                else if (State == "Verify Bad")
-                {
-                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                    Presence.State = "Downloaded " + Status + " Missing Game Files";
-                    Presence.Assets = new Assets
-                    {
-                        LargeImageText = "Launcher",
-                        LargeImageKey = "nfsw",
-                        SmallImageText = string.Empty,
-                        SmallImageKey = "verify_files_bad"
-                    };
-                }
-                else if (State == "Verify Good")
-                {
-                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
-                    Presence.State = "Finished Validating Game Files";
-                    Presence.Assets = new Assets
-                    {
-                        LargeImageText = "Launcher",
-                        LargeImageKey = "nfsw",
-                        SmallImageText = string.Empty,
-                        SmallImageKey = "verify_files_good"
-                    };
-                }
-                else if (State == "In-Game")
-                {
-                    Presence.State = InformationCache.SelectedServerData.Name;
-                    Presence.Details = "In-Game";
-                    Presence.Assets = new Assets
-                    {
-                        LargeImageText = "Need for Speed: World",
-                        LargeImageKey = "nfsw",
-                        SmallImageText = string.Empty,
-                        SmallImageKey = "ingame"
-                    };
-
-                    if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.homePageUrl) ||
-                        !String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordUrl) ||
-                        !String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webPanelUrl))
-                    {
-                        ButtonsList.Clear();
-
-                        if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webPanelUrl))
-                        {
-                            /* Let's format it now, if possible */
-                            ButtonsList.Add(new DiscordButton()
-                            {
-                                Label = "View Panel",
-                                Url = InformationCache.SelectedServerJSON.webPanelUrl.Split(new string[] { "{sep}" }, StringSplitOptions.None)[0]
-                            });
-                        }
-                        else if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.homePageUrl) &&
-                            InformationCache.SelectedServerJSON.homePageUrl != InformationCache.SelectedServerJSON.discordUrl)
-                        {
-                            ButtonsList.Add(new DiscordButton()
-                            {
-                                Label = "Website",
-                                Url = InformationCache.SelectedServerJSON.homePageUrl
-                            });
-                        }
-
-                        if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordUrl))
-                        {
-                            ButtonsList.Add(new DiscordButton()
-                            {
-                                Label = "Discord",
-                                Url = InformationCache.SelectedServerJSON.discordUrl
-                            });
-                        }
-                    }
-
                     Presence.Buttons = ButtonsList.ToArray();
                 }
-            }
+                else if (State == "Download Game Files")
+                {
+                    Download = true;
+                    Presence.State = Status;
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "files"
+                    };
+                    Presence.Buttons = ButtonsList.ToArray();
+                }
+                else if (State == "Download Game Files Error")
+                {
+                    Download = true;
+                    Presence.State = "Game Download Error";
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "files_error"
+                    };
+                    Presence.Buttons = ButtonsList.ToArray();
+                }
+                else if (State == "Idle Ready")
+                {
+                    Presence.State = "Ready To Race";
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = !string.IsNullOrWhiteSpace(CertificateStore.LauncherSerial) ? "official" : "unofficial"
+                    };
+                    Presence.Buttons = ButtonsList.ToArray();
+                }
+                else if (State == "Checking ModNet")
+                {
+                    Presence.State = "Checking ModNet";
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "files_alert"
+                    };
+                    Presence.Buttons = ButtonsList.ToArray();
+                }
+                else if (State == "ModNet File Check Passed")
+                {
+                    Presence.State = "Has ModNet File: " + Status;
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "files_success"
+                    };
+                    Presence.Buttons = ButtonsList.ToArray();
+                }
+                else if (State == "Download ModNet")
+                {
+                    Presence.State = "Downloading ModNet Files";
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "files"
+                    };
+                    Presence.Buttons = ButtonsList.ToArray();
+                }
+                else if (State == "Download ModNet Error")
+                {
+                    Presence.State = "ModNet Encounterd an Error";
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "files_error"
+                    };
+                    Presence.Buttons = ButtonsList.ToArray();
+                }
+                else if (State == "Download Server Mods")
+                {
+                    Presence.State = "Downloading Server Mods";
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "files"
+                    };
+                    Presence.Buttons = ButtonsList.ToArray();
+                }
+                else if (State == "Download Server Mods Error")
+                {
+                    Presence.State = "Server Mod Download Error";
+                    Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                    Presence.Assets = new Assets
+                    {
+                        LargeImageText = "Launcher",
+                        LargeImageKey = "nfsw",
+                        SmallImageText = string.Empty,
+                        SmallImageKey = "files_error"
+                    };
+                    Presence.Buttons = ButtonsList.ToArray();
+                }
 
-            if (Running() && InformationCache.SelectedServerCategory != "DEV")
-                Client.SetPresence(Presence);
+                if (Download == false)
+                {
+                    if (State == "Register")
+                    {
+                        Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                        Presence.State = "On Registration Screen";
+                        Presence.Assets = new Assets
+                        {
+                            LargeImageText = "Launcher",
+                            LargeImageKey = "nfsw",
+                            SmallImageText = string.Empty,
+                            SmallImageKey = "screen_register"
+                        };
+                    }
+                    if (State == "Settings")
+                    {
+                        Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                        Presence.State = "On Settings Screen";
+                        Presence.Assets = new Assets
+                        {
+                            LargeImageText = "Launcher",
+                            LargeImageKey = "nfsw",
+                            SmallImageText = string.Empty,
+                            SmallImageKey = "screen_settings"
+                        };
+                    }
+                    else if (State == "User XML Editor")
+                    {
+                        Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                        Presence.State = "On User XML Editor Screen";
+                        Presence.Assets = new Assets
+                        {
+                            LargeImageText = "Launcher",
+                            LargeImageKey = "nfsw",
+                            SmallImageText = string.Empty,
+                            SmallImageKey = "screen_uxe"
+                        };
+                    }
+                    else if (State == "Verify")
+                    {
+                        Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                        Presence.State = "On Verify Game Files Screen";
+                        Presence.Assets = new Assets
+                        {
+                            LargeImageText = "Launcher",
+                            LargeImageKey = "nfsw",
+                            SmallImageText = string.Empty,
+                            SmallImageKey = "screen_verify"
+                        };
+                    }
+                    else if (State == "Verify Scan")
+                    {
+                        Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                        Presence.State = "Verifying Game Files";
+                        Presence.Assets = new Assets
+                        {
+                            LargeImageText = "Launcher",
+                            LargeImageKey = "nfsw",
+                            SmallImageText = string.Empty,
+                            SmallImageKey = "verify_files_scan"
+                        };
+                    }
+                    else if (State == "Verify Bad")
+                    {
+                        Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                        Presence.State = "Downloaded " + Status + " Missing Game Files";
+                        Presence.Assets = new Assets
+                        {
+                            LargeImageText = "Launcher",
+                            LargeImageKey = "nfsw",
+                            SmallImageText = string.Empty,
+                            SmallImageKey = "verify_files_bad"
+                        };
+                    }
+                    else if (State == "Verify Good")
+                    {
+                        Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                        Presence.State = "Finished Validating Game Files";
+                        Presence.Assets = new Assets
+                        {
+                            LargeImageText = "Launcher",
+                            LargeImageKey = "nfsw",
+                            SmallImageText = string.Empty,
+                            SmallImageKey = "verify_files_good"
+                        };
+                    }
+                    else if (State == "In-Game")
+                    {
+                        Presence.State = InformationCache.SelectedServerData.Name;
+                        Presence.Details = "In-Game";
+                        Presence.Assets = new Assets
+                        {
+                            LargeImageText = "Need for Speed: World",
+                            LargeImageKey = "nfsw",
+                            SmallImageText = string.Empty,
+                            SmallImageKey = "ingame"
+                        };
+
+                        if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.homePageUrl) ||
+                            !String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordUrl) ||
+                            !String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webPanelUrl))
+                        {
+                            ButtonsList.Clear();
+
+                            if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webPanelUrl))
+                            {
+                                /* Let's format it now, if possible */
+                                ButtonsList.Add(new DiscordButton()
+                                {
+                                    Label = "View Panel",
+                                    Url = InformationCache.SelectedServerJSON.webPanelUrl.Split(new string[] { "{sep}" }, StringSplitOptions.None)[0]
+                                });
+                            }
+                            else if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.homePageUrl) &&
+                                InformationCache.SelectedServerJSON.homePageUrl != InformationCache.SelectedServerJSON.discordUrl)
+                            {
+                                ButtonsList.Add(new DiscordButton()
+                                {
+                                    Label = "Website",
+                                    Url = InformationCache.SelectedServerJSON.homePageUrl
+                                });
+                            }
+
+                            if (!String.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.discordUrl))
+                            {
+                                ButtonsList.Add(new DiscordButton()
+                                {
+                                    Label = "Discord",
+                                    Url = InformationCache.SelectedServerJSON.discordUrl
+                                });
+                            }
+                        }
+
+                        Presence.Buttons = ButtonsList.ToArray();
+                    }
+                }
+
+                if (Running() && InformationCache.SelectedServerCategory != "DEV")
+                    Client.SetPresence(Presence);
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("DISCORD", null, Error, null, true);
+            }
         }
 
         /// <summary>
@@ -417,9 +424,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             }
             catch (Exception Error)
             {
-                Log.Error("DISCORD: " + Error.Message);
-                Log.ErrorIC("DISCORD: " + Error.HResult);
-                Log.ErrorFR("DISCORD: " + Error.ToString());
+                LogToFileAddons.OpenLog("DISCORD", null, Error, null, true);
             }
         }
 
@@ -461,9 +466,9 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             {
                 return InformationCache.SelectedServerJSON.discordApplicationID;
             }
-            else if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerData.DiscordAppId))
+            else if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerData.DiscordAppID))
             {
-                return InformationCache.SelectedServerData.DiscordAppId;
+                return InformationCache.SelectedServerData.DiscordAppID;
             }
             else
             {

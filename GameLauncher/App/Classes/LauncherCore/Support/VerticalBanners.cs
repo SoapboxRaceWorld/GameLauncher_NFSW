@@ -1,4 +1,4 @@
-﻿using GameLauncher.App.Classes.Logger;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
 using System;
 using System.Drawing;
 using System.IO;
@@ -27,9 +27,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
             }
             catch (Exception Error)
             {
-                Log.Error("VERTICAL BANNER: " + Error.Message);
-                Log.ErrorIC("VERTICAL BANNER: " + Error.HResult);
-                Log.ErrorFR("VERTICAL BANNER: " + Error.ToString());
+                LogToFileAddons.OpenLog("VERTICAL BANNER", null, Error, null, true);
                 return null;
             }
         }

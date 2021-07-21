@@ -8,7 +8,7 @@ using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using System.IO;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App
 {
@@ -214,9 +214,7 @@ namespace GameLauncher.App
             }
             catch (Exception Error)
             {
-                Log.Error("WELCOME SCREEN: " + Error.Message);
-                Log.ErrorIC("WELCOME SCREEN [HResult]: " + Error.HResult);
-                Log.ErrorFR("WELCOME SCREEN [Full Report]: " + Error.ToString());
+                LogToFileAddons.OpenLog("WELCOME SCREEN", null, Error, null, true);
             }
 
             if (!string.IsNullOrWhiteSpace(((CDNList)CDNSource.SelectedItem).Url))

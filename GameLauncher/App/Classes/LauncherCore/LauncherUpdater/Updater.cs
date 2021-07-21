@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using Newtonsoft.Json;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
@@ -12,6 +11,7 @@ using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using System.Text;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -23,6 +23,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
         public static string CurrentLauncherBuild = Application.ProductVersion;
         private static string LatestLauncherBuild;
+        public static bool UpgradeAvailable = false;
 
         public LauncherUpdateCheck(PictureBox statusImage, Label statusText, Label statusDescription)
         {
@@ -59,9 +60,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("LAUNCHER UPDATE: " + Error.Message);
-                    Log.ErrorIC("LAUNCHER UPDATE: " + Error.HResult);
-                    Log.ErrorFR("LAUNCHER UPDATE: " + Error.ToString());
+                    LogToFileAddons.OpenLog("LAUNCHER UPDATE", null, Error, null, true);
                 }
             }
 
@@ -89,9 +88,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 catch (Exception Error)
                 {
                     VisualsAPIChecker.GitHubAPI = false;
-                    Log.Error("LAUNCHER UPDATE: [GitHub] " + Error.Message);
-                    Log.ErrorIC("LAUNCHER UPDATE: [GitHub] " + Error.HResult);
-                    Log.ErrorFR("LAUNCHER UPDATE: " + Error.ToString());
+                    LogToFileAddons.OpenLog("LAUNCHER UPDATE [GITHUB]", null, Error, null, true);
                 }
 
                 if (!VisualsAPIChecker.GitHubAPI)
@@ -137,7 +134,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     text.Text = "Launcher Status:\n - " + WhatBuildAmI + " Build";
                     status.BackgroundImage = Theming.UpdateIconWarning;
                     text.ForeColor = Theming.Alert;
-                    description.Text = "Version: v" + Application.ProductVersion;
+                    description.Text = "Stable: v" + LatestLauncherBuild + "\nCurrent: v" + Application.ProductVersion;
 
                     if (!string.IsNullOrWhiteSpace(FileSettingsSave.IgnoreVersion))
                     {
@@ -151,7 +148,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     text.Text = "Launcher Status:\n - Current Version";
                     status.BackgroundImage = Theming.UpdateIconSuccess;
                     text.ForeColor = Theming.Sucess;
-                    description.Text = "Version: v" + Application.ProductVersion;
+                    description.Text = "Version: " + Application.ProductVersion;
 
                     if (FileSettingsSave.IgnoreVersion == Application.ProductVersion)
                     {
@@ -165,9 +162,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     text.Text = "Launcher Status:\n - Update Available";
                     status.BackgroundImage = Theming.UpdateIconWarning;
                     text.ForeColor = Theming.Alert;
-                    description.Text = "New Version: " + LatestLauncherBuild.ToString();
+                    description.Text = "New: v" + LatestLauncherBuild + "\nCurrent: v" + Application.ProductVersion;
+                    UpgradeAvailable = true;
 
-                    if (FileSettingsSave.IgnoreVersion == LatestLauncherBuild.ToString())
+                    if (FileSettingsSave.IgnoreVersion == LatestLauncherBuild)
                     {
                         /* No Update Popup
                            Blame DavidCarbon if this Breaks (to some degree), not Zacam...*/
@@ -178,9 +176,9 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
                         if (updateConfirm == DialogResult.OK)
                         {
-                            if (File.Exists("GameLauncherUpdater.exe"))
+                            if (File.Exists(Locations.NameUpdater))
                             {
-                                Process.Start(@"GameLauncherUpdater.exe", Process.GetCurrentProcess().Id.ToString());
+                                Process.Start(Locations.NameUpdater, Process.GetCurrentProcess().Id.ToString());
                             }
                             else
                             {
@@ -199,7 +197,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         /* Write to Settings.ini to Skip Update */
                         if (updateConfirm == DialogResult.Ignore)
                         {
-                            FileSettingsSave.IgnoreVersion = LatestLauncherBuild.ToString();
+                            FileSettingsSave.IgnoreVersion = LatestLauncherBuild;
                         };
                     }
                     FileSettingsSave.SaveSettings();

@@ -1,8 +1,8 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.Logger;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -107,7 +107,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                         try
                         {
                             FunctionStatus.TLS();
-                            Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IpAddress + "/RecoveryPassword/forgotPassword");
+                            Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IPAddress + "/RecoveryPassword/forgotPassword");
                             ServicePointManager.FindServicePoint(resetPasswordUrl).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
                             var request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
@@ -128,13 +128,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                         }
                         catch (Exception Error)
                         {
-                            Log.Error("REGISTRATION: " + Error.Message);
-                            Log.ErrorIC("REGISTRATION: " + Error.HResult);
-                            Log.ErrorFR("REGISTRATION: " + Error.ToString());
-                            MessageBox.Show(null, "Failed to send email!" +
-                                "\n" + Error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            LogToFileAddons.OpenLog("REGISTRATION", "Failed to send email!", Error, null, true);
                         }
-                    }                
+                    }
                 }
                 else
                 {
@@ -160,7 +156,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                     if (cb.Items[e.Index] is ServerList si)
                     {
                         serverListText = si.Name;
-                        onlineStatus = InformationCache.ServerStatusBook.ContainsKey(si.Id) ? InformationCache.ServerStatusBook[si.Id] : 2;
+                        onlineStatus = InformationCache.ServerStatusBook.ContainsKey(si.ID) ? InformationCache.ServerStatusBook[si.ID] : 2;
                     }
                 }
 

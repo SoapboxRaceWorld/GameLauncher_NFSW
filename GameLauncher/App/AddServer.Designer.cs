@@ -38,6 +38,8 @@ namespace GameLauncher.App
             this.ServerAddressLabel = new System.Windows.Forms.Label();
             this.Error = new System.Windows.Forms.Label();
             this.Version = new System.Windows.Forms.Label();
+            this.ServerCategory = new System.Windows.Forms.TextBox();
+            this.ServerCategoryLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // OkBTN
@@ -48,7 +50,7 @@ namespace GameLauncher.App
             this.OkBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.OkBTN.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OkBTN.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.OkBTN.Location = new System.Drawing.Point(309, 108);
+            this.OkBTN.Location = new System.Drawing.Point(309, 166);
             this.OkBTN.Name = "OkBTN";
             this.OkBTN.Size = new System.Drawing.Size(75, 23);
             this.OkBTN.TabIndex = 3;
@@ -64,7 +66,7 @@ namespace GameLauncher.App
             this.CancelBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CancelBTN.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CancelBTN.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.CancelBTN.Location = new System.Drawing.Point(224, 108);
+            this.CancelBTN.Location = new System.Drawing.Point(224, 166);
             this.CancelBTN.Name = "CancelBTN";
             this.CancelBTN.Size = new System.Drawing.Size(75, 23);
             this.CancelBTN.TabIndex = 4;
@@ -75,9 +77,9 @@ namespace GameLauncher.App
             // ServerNameLabel
             // 
             this.ServerNameLabel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ServerNameLabel.Location = new System.Drawing.Point(13, 13);
+            this.ServerNameLabel.Location = new System.Drawing.Point(13, 9);
             this.ServerNameLabel.Name = "ServerNameLabel";
-            this.ServerNameLabel.Size = new System.Drawing.Size(102, 14);
+            this.ServerNameLabel.Size = new System.Drawing.Size(121, 18);
             this.ServerNameLabel.TabIndex = 5;
             this.ServerNameLabel.Text = "Server Name:";
             this.ServerNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -108,9 +110,9 @@ namespace GameLauncher.App
             // ServerAddressLabel
             // 
             this.ServerAddressLabel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ServerAddressLabel.Location = new System.Drawing.Point(13, 62);
+            this.ServerAddressLabel.Location = new System.Drawing.Point(13, 53);
             this.ServerAddressLabel.Name = "ServerAddressLabel";
-            this.ServerAddressLabel.Size = new System.Drawing.Size(120, 14);
+            this.ServerAddressLabel.Size = new System.Drawing.Size(166, 23);
             this.ServerAddressLabel.TabIndex = 6;
             this.ServerAddressLabel.Text = "Server Address:";
             this.ServerAddressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -119,7 +121,7 @@ namespace GameLauncher.App
             // 
             this.Error.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
-            this.Error.Location = new System.Drawing.Point(12, 104);
+            this.Error.Location = new System.Drawing.Point(14, 166);
             this.Error.Name = "Error";
             this.Error.Size = new System.Drawing.Size(167, 14);
             this.Error.TabIndex = 0;
@@ -132,17 +134,41 @@ namespace GameLauncher.App
             this.Version.BackColor = System.Drawing.Color.Transparent;
             this.Version.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Version.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.Version.Location = new System.Drawing.Point(14, 124);
+            this.Version.Location = new System.Drawing.Point(14, 191);
             this.Version.Name = "Version";
             this.Version.Size = new System.Drawing.Size(120, 13);
             this.Version.TabIndex = 7;
             this.Version.Text = "Version : vX.X.X.X";
             // 
+            // ServerCategory
+            // 
+            this.ServerCategory.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ServerCategory.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ServerCategory.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerCategory.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
+            this.ServerCategory.Location = new System.Drawing.Point(16, 127);
+            this.ServerCategory.Name = "ServerCategory";
+            this.ServerCategory.Size = new System.Drawing.Size(369, 21);
+            this.ServerCategory.TabIndex = 8;
+            this.ServerCategory.Text = "Custom";
+            // 
+            // ServerCategoryLabel
+            // 
+            this.ServerCategoryLabel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerCategoryLabel.Location = new System.Drawing.Point(14, 102);
+            this.ServerCategoryLabel.Name = "ServerCategoryLabel";
+            this.ServerCategoryLabel.Size = new System.Drawing.Size(165, 23);
+            this.ServerCategoryLabel.TabIndex = 9;
+            this.ServerCategoryLabel.Text = "Server Category:";
+            this.ServerCategoryLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // AddServer
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
-            this.ClientSize = new System.Drawing.Size(399, 141);
+            this.ClientSize = new System.Drawing.Size(399, 213);
+            this.Controls.Add(this.ServerCategory);
+            this.Controls.Add(this.ServerCategoryLabel);
             this.Controls.Add(this.Version);
             this.Controls.Add(this.Error);
             this.Controls.Add(this.ServerAddress);
@@ -162,7 +188,6 @@ namespace GameLauncher.App
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Add Server - SBRW Launcher";
-            this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -178,5 +203,7 @@ namespace GameLauncher.App
         private System.Windows.Forms.Label ServerAddressLabel;
         private System.Windows.Forms.Label Error;
         private System.Windows.Forms.Label Version;
+        private TextBox ServerCategory;
+        private Label ServerCategoryLabel;
     }
 }

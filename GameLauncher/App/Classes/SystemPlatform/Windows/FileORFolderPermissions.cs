@@ -1,5 +1,5 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using System;
 using System.IO;
@@ -31,9 +31,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("FILE PERMISSION: " + Error.Message);
-                    Log.ErrorIC("FILE PERMISSION: " + Error.HResult);
-                    Log.ErrorFR("FILE PERMISSION: " + Error.ToString());
+                    LogToFileAddons.OpenLog("FILE PERMISSION", null, Error, null, true);
                 }
             }
         }
@@ -58,9 +56,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("FOLDER PERMISSION: " + Error.Message);
-                    Log.ErrorIC("FOLDER PERMISSION: " + Error.HResult);
-                    Log.ErrorFR("FOLDER PERMISSION: " + Error.ToString());
+                    LogToFileAddons.OpenLog("FILE PERMISSION", null, Error, null, true);
                 }
             }
         }
@@ -83,7 +79,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     foreach (FileSystemAccessRule rule in acl)
                     {
                         if (rule.IdentityReference.Value == everyone.Value && rule.AccessControlType == AccessControlType.Allow
-                            && (rule.FileSystemRights & FileSystemRights.Read) == FileSystemRights.Read)
+                            && (rule.FileSystemRights & FileSystemRights.Write) == FileSystemRights.Write)
                         {
                             IsPermsGood = true;
                         }
@@ -126,7 +122,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     foreach (FileSystemAccessRule rule in acl)
                     {
                         if (rule.IdentityReference.Value == everyone.Value && rule.AccessControlType == AccessControlType.Allow
-                            && (rule.FileSystemRights & FileSystemRights.Read) == FileSystemRights.Read)
+                            && (rule.FileSystemRights & FileSystemRights.Write) == FileSystemRights.Write)
                         {
                             IsPermsGood = true;
                         }
@@ -160,7 +156,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 {
                     if (Directory.Exists(FileORFolderPath))
                     {
-                        if (CheckIfFolderPermissionIsSet(FileORFolderPath) == false)
+                        if (!CheckIfFolderPermissionIsSet(FileORFolderPath))
                         {
                             GiveEveryoneReadWriteFolderAccess(FileORFolderPath);
                         }
@@ -170,7 +166,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 {
                     if (File.Exists(FileORFolderPath))
                     {
-                        if (CheckIfFilePermissionIsSet(FileORFolderPath) == false)
+                        if (!CheckIfFilePermissionIsSet(FileORFolderPath))
                         {
                             GiveEveryoneReadWriteFileAccess(FileORFolderPath);
                         }
@@ -202,9 +198,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             }
             catch (Exception Error)
             {
-                Log.Error("PERMISSIONS: " + Error.Message);
-                Log.ErrorIC("PERMISSIONS: " + Error.HResult);
-                Log.ErrorFR("PERMISSIONS: " + Error.ToString());
+                LogToFileAddons.OpenLog("PERMISSIONS", null, Error, null, true);
                 FileSettingsSave.FilePermissionStatus = "Error";
             }
 

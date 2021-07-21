@@ -147,19 +147,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                 }
                 else
                 {
-                    try
+                    if (ServerProxy.Running())
                     {
-                        if (ServerProxy.Running())
+                        foreach (string report_url in URLs.AntiCheatFD)
                         {
-                            foreach (string report_url in URLs.AntiCheatFD)
+                            if (Completed == 0)
                             {
-                                if (Completed == 0)
-                                {
-                                    Completed++;
-                                    FunctionStatus.ExternalToolsWasUsed = true;
-                                }
+                                Completed++;
+                                FunctionStatus.ExternalToolsWasUsed = true;
+                            }
 
-                                if (report_url.EndsWith("?"))
+                            if (report_url.EndsWith("?"))
+                            {
+                                try
                                 {
                                     string NTVersion = WindowsProductVersion.GetWindowsBuildNumber() != 0 ? WindowsProductVersion.GetWindowsBuildNumber().ToString() : "Wine";
                                     FunctionStatus.TLS();
@@ -168,12 +168,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
 
                                     WebClient update_data = new WebClient();
                                     update_data.CancelAsync();
-                                    update_data.Headers.Add ("user-agent", "GameLauncher " + Application.ProductVersion + " - (" + InsiderInfo.BuildNumberOnly() + ")");
+                                    update_data.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " - (" + InsiderInfo.BuildNumberOnly() + ")");
                                     update_data.Headers.Add("os-version", NTVersion);
                                     update_data.Encoding = Encoding.UTF8;
                                     update_data.DownloadStringAsync(sendReport);
                                 }
-                                else
+                                catch { }
+                            }
+                            else
+                            {
+                                try
                                 {
                                     FunctionStatus.TLS();
                                     Uri sendReport = new Uri(report_url);
@@ -196,16 +200,20 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                                     var response = (HttpWebResponse)request.GetResponse();
                                     String responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
                                 }
+                                catch { }
                             }
                         }
-                        else
+                    }
+                    else
+                    {
+                        if (Completed != URLs.AntiCheatSD.Length)
                         {
-                            if (Completed != URLs.AntiCheatSD.Length)
+                            foreach (string report_url in URLs.AntiCheatSD)
                             {
-                                foreach (string report_url in URLs.AntiCheatSD)
+                                Completed++;
+                                if (report_url.EndsWith("?"))
                                 {
-                                    Completed++;
-                                    if (report_url.EndsWith("?"))
+                                    try
                                     {
                                         string NTVersion = WindowsProductVersion.GetWindowsBuildNumber() != 0 ? WindowsProductVersion.GetWindowsBuildNumber().ToString() : "Wine";
                                         FunctionStatus.TLS();
@@ -219,11 +227,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                                         update_data.Encoding = Encoding.UTF8;
                                         update_data.DownloadStringAsync(sendReport);
                                     }
+                                    catch { }
                                 }
                             }
                         }
                     }
-                    catch { }
 
                     TimeConversions.MUFRTime();
                 }

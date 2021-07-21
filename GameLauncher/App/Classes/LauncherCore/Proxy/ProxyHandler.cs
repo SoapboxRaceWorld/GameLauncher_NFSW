@@ -12,11 +12,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UrlFlurl = Flurl.Url;
-using GameLauncher.App.Classes.Logger;
-using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Client;
+using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App.Classes.LauncherCore.Proxy
 {
@@ -30,28 +29,25 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             pipelines.OnError += OnError;
         }
 
-        private async Task<TextResponse> OnError(NancyContext context, Exception exception)
+        private TextResponse OnError(NancyContext context, Exception Error)
         {
-            Log.Error($"PROXY HANDLER [handling {context.Request.Path}]");
-            Log.Error($"\nMESSAGE: {exception.Message}");
-            Log.ErrorIC($"\nHRESULT: {exception.HResult}");
-            Log.ErrorFR("\nFULL MESSAGE: " + exception.ToString());
-            Log.Error($"\nSTACK TRACE: {exception.StackTrace}");
+            Log.Error("PROXY HANDLER: " + context.Request.Path);
+            LogToFileAddons.OpenLog("PROXY HANDLER", null, Error, null, true);
+
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY",
                 CommunicationLogEntryType.Error,
-                new CommunicationLogLauncherError(exception.Message, context.Request.Path,
+                new CommunicationLogLauncherError(Error.Message, context.Request.Path,
                     context.Request.Method));
-            
-            context.Request.Dispose();
-            await SubmitError(exception);
 
-            return new TextResponse(HttpStatusCode.BadRequest, exception.Message);
+            context.Request.Dispose();
+
+            return new TextResponse(HttpStatusCode.BadRequest, Error.Message);
         }
 
         private async Task<Response> ProxyRequest(NancyContext context, CancellationToken cancellationToken)
         {
-            string path = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(context.Request.Path));
-            string method = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(context.Request.Method.ToUpperInvariant()));
+            string path = Strings.Encode(context.Request.Path);
+            string method = Strings.Encode(context.Request.Method.ToUpperInvariant());
 
             if (!path.StartsWith("/nfsw/Engine.svc"))
             {
@@ -106,9 +102,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             if (path == "/event/arbitration") 
             {
-                requestBody = Encoding.UTF8.GetString(
-                    Encoding.UTF8.GetBytes(
-                        requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + Convert.ToInt32(AntiCheat.cheats_detected) + "</Konami>")));
+                requestBody = Strings.Encode(
+                    requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + Convert.ToInt32(AntiCheat.cheats_detected) + "</Konami>"));
                 foreach (var header in context.Request.Headers) 
                 {
                     if(header.Key.ToLowerInvariant() == "content-length") 
@@ -151,19 +146,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             int statusCode = responseMessage.StatusCode;
 
-            try
-            {
-                DiscordGamePresence.HandleGameState(path, responseBody, GETContent);
-            }
-            catch (Exception Error)
-            {
-                Log.Error($"DISCORD RPC ERROR [handling {context.Request.Path}]");
-                Log.Error($"\nMESSAGE: {Error.Message}");
-                Log.ErrorIC($"\nHRESULT: {Error.HResult}");
-                Log.ErrorFR("\nFULL MESSAGE: " + Error.ToString());
-                Log.Error($"\nSTACK TRACE: {Error.StackTrace}");
-                await SubmitError(Error);
-            }
+            DiscordGamePresence.HandleGameState(path, responseBody, GETContent);
 
             TextResponse Response = new TextResponse(responseBody,
                 responseMessage.ResponseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
@@ -200,26 +183,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             }
 
             return Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(sb.ToString()));
-        }
-
-        private static async Task SubmitError(Exception exception)
-        {
-            try
-            {
-                var mainsrv = DetectLinux.LinuxDetected() ? URLs.Main.Replace("https", "http") : URLs.Main;
-                UrlFlurl url = new UrlFlurl(mainsrv + "/error-report");
-                await url.PostJsonAsync(new
-                {
-                    message = exception.Message ?? "no message",
-                    stackTrace = exception.StackTrace ?? "no stack trace"
-                });
-            }
-            catch (Exception Error)
-            {
-                Log.Error("PROXY HANDLER: " + Error.Message);
-                Log.ErrorIC("PROXY HANDLER [HResult]: " + Error.HResult);
-                Log.ErrorFR("PROXY HANDLER [Full Report]: " + Error.ToString());
-            }
         }
     }
 }

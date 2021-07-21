@@ -1,8 +1,35 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.LauncherCore.Global;
+using System;
 using System.Runtime.Serialization;
 
 namespace GameLauncher.App.Classes.LauncherCore.Downloader
 {
+    class DownloaderAddons
+    {
+        /* Check System Language and Return Current Lang for Speech Files */
+        public static string SpeechFiles(string Language)
+        {
+            string CurrentLang = string.IsNullOrWhiteSpace(Language) ? InformationCache.Lang.ThreeLetterISOLanguageName : Language.ToLower();
+
+            if (CurrentLang == "eng") return "en";
+            else if (CurrentLang == "ger" || CurrentLang == "deu") return "de";
+            else if (CurrentLang == "rus") return "ru";
+            else if (CurrentLang == "spa") return "es";
+            else return "en";
+        }
+
+        public static int SpeechFilesSize()
+        {
+            string CurrentLang = InformationCache.Lang.ThreeLetterISOLanguageName;
+
+            if (CurrentLang == "eng") return 141805935;
+            else if (CurrentLang == "ger" || CurrentLang == "deu") return 105948386;
+            else if (CurrentLang == "rus") return 121367723;
+            else if (CurrentLang == "spa") return 101540466;
+            else return 141805935;
+        }
+    }
+
     public delegate void DownloadFinished();
 
     public delegate void DownloadFailed(Exception ex);

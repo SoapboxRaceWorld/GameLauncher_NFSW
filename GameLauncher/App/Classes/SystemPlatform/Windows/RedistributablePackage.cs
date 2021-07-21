@@ -4,8 +4,8 @@ using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using Microsoft.Win32;
@@ -60,8 +60,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 }
                 return false;
             }
-            catch (Exception)
+            catch (Exception Error)
             {
+                LogToFileAddons.OpenLog("Redistributable Package", null, Error, null, true);
                 return false;
             }
         }
@@ -103,9 +104,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("REDISTRIBUTABLE: " + Error.Message);
-                        Log.ErrorIC("REDISTRIBUTABLE: " + Error.HResult);
-                        Log.ErrorFR("REDISTRIBUTABLE: " + Error.ToString());
+                        LogToFileAddons.OpenLog("REDISTRIBUTABLE", null, Error, null, true);
                     }
 
                     if (File.Exists("VC_redist.x86.exe"))
@@ -160,9 +159,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         }
                         catch (Exception Error)
                         {
-                            Log.Error("REDISTRIBUTABLE x64: " + Error.Message);
-                            Log.ErrorIC("REDISTRIBUTABLE x64: " + Error.HResult);
-                            Log.ErrorFR("REDISTRIBUTABLE x64: " + Error.ToString());
+                            LogToFileAddons.OpenLog("REDISTRIBUTABLE x64", null, Error, null, true);
                         }
 
                         if (File.Exists("VC_redist.x64.exe"))

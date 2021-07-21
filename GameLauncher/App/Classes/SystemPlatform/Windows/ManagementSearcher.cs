@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
+using System;
 using System.Management;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Windows
@@ -21,8 +22,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     ServiceStatus = (bool)queryObj[Query];
                 }
             }
-            catch
+            catch (Exception Error)
             {
+                LogToFileAddons.OpenLog("Security Center", null, Error, null, true);
                 ServiceStatus = false;
             }
 
@@ -46,8 +48,9 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     }
                 }
             }
-            catch
+            catch (Exception Error)
             {
+                LogToFileAddons.OpenLog("Installed KB", null, Error, null, true);
                 return false;
             }
 

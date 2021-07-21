@@ -1,7 +1,7 @@
 ﻿using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -54,9 +54,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("SCREENRESOLUTIONS: Error occurred while deserializing LANG List: " + Error.Message);
-                    Log.ErrorIC("SCREENRESOLUTIONS: " + Error.HResult);
-                    Log.ErrorFR("SCREENRESOLUTIONS: " + Error.ToString());
+                    LogToFileAddons.OpenLog("SCREENRESOLUTIONS", null, Error, null, true);
                 }
 
                 try
@@ -71,16 +69,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("SCREENRESOLUTIONS: Error occurred while Sorting LANG List: " + Error.Message);
-                    Log.ErrorIC("SCREENRESOLUTIONS: " + Error.HResult);
-                    Log.ErrorFR("SCREENRESOLUTIONS " + Error.ToString());
+                    LogToFileAddons.OpenLog("SCREENRESOLUTIONS", null, Error, null, true);
                 }
             }
             catch (Exception Error)
             {
-                Log.Error("SCREENRESOLUTIONS: " + Error.Message);
-                Log.ErrorIC("SCREENRESOLUTIONS: " + Error.HResult);
-                Log.ErrorFR("SCREENRESOLUTIONS: " + Error.ToString());
+                LogToFileAddons.OpenLog("SCREENRESOLUTIONS", null, Error, null, true);
             }
         }
     }

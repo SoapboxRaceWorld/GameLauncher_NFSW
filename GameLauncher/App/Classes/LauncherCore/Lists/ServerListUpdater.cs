@@ -1,5 +1,4 @@
-﻿using GameLauncher.App.Classes.Logger;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Collections.Generic;
@@ -15,6 +14,8 @@ using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using System.Text;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
@@ -53,32 +54,28 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("LIST CORE: Error occurred while deserializing Server List from [" + URLs.OnlineServerList + "]: " + Error.Message);
-                    Log.ErrorIC("LIST CORE: " + Error.HResult);
-                    Log.ErrorFR("LIST CORE: " + Error.ToString());
+                    LogToFileAddons.OpenLog("LIST CORE", null, Error, null, true);
                     InformationCache.ServerListStatus = "Error";
                 }
             }
             catch (Exception Error)
             {
-                Log.Error("LIST CORE: Error occurred while loading Server List from [" + URLs.OnlineServerList + "]: " + Error.Message);
-                Log.ErrorIC("LIST CORE: " + Error.HResult);
-                Log.ErrorFR("LIST CORE: " + Error.ToString());
+                LogToFileAddons.OpenLog("LIST CORE", null, Error, null, true);
                 InformationCache.ServerListStatus = "Error";
             }
 
-            if (File.Exists("servers.json"))
+            if (File.Exists(Locations.LauncherCustomServers))
             {
-                var fileItems = JsonConvert.DeserializeObject<List<ServerList>>(File.ReadAllText("servers.json")) ?? new List<ServerList>();
+                var fileItems = JsonConvert.DeserializeObject<List<ServerList>>
+                    (Strings.Encode(File.ReadAllText(Locations.LauncherCustomServers))) ?? new List<ServerList>();
 
                 if (fileItems.Count > 0)
                 {
                     fileItems.Select(si =>
                     {
-                        si.DistributionUrl = "";
-                        si.Id = SHA.Hashes($"{si.Name}:{si.Id}:{si.IpAddress}");
+                        si.ID = string.IsNullOrWhiteSpace(si.ID) ? SHA.Hashes($"{si.Name}:{si.ID}:{si.IPAddress}") : si.ID;
                         si.IsSpecial = false;
-                        si.Category = "CUSTOM";
+                        si.Category = string.IsNullOrWhiteSpace(si.Category) ? "CUSTOM" : si.Category;
 
                         return si;
                     }).ToList().ForEach(si => serverInfos.Add(si));
@@ -92,9 +89,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     Name = "Offline Built-In Server",
                     Category = "OFFLINE",
                     IsSpecial = false,
-                    DistributionUrl = "",
-                    IpAddress = "http://localhost:4416/sbrw/Engine.svc",
-                    Id = "OFFLINE"
+                    IPAddress = "http://localhost:4416/sbrw/Engine.svc",
+                    ID = "OFFLINE"
                 });
             }
 
@@ -105,47 +101,53 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                     Name = "Local Debug Server",
                     Category = "DEBUG",
                     IsSpecial = false,
-                    DistributionUrl = "",
-                    IpAddress = "http://localhost:8680",
-                    Id = "DEV"
+                    IPAddress = "http://localhost:8680",
+                    ID = "DEV"
                 });
             }
 
-            /* Create Final Server List without Categories */
-            foreach (ServerList NoCatList in serverInfos)
+            try
             {
-                if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
+                /* Create Final Server List without Categories */
+                foreach (ServerList NoCatList in serverInfos)
                 {
-                    NoCategoryList.Add(NoCatList);
-                }
-            }
-
-            /* Create Rough Draft Server List with Categories */
-            List<ServerList> RawList = new List<ServerList>();
-
-            foreach (var serverItemGroup in serverInfos.GroupBy(s => s.Category))
-            {
-                if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
-                {
-                    RawList.Add(new ServerList
+                    if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
                     {
-                        Id = $"__category-{serverItemGroup.Key}__",
-                        Name = $"<GROUP>{serverItemGroup.Key} Servers",
-                        IsSpecial = true
-                    });
+                        NoCategoryList.Add(NoCatList);
+                    }
                 }
-                RawList.AddRange(serverItemGroup.ToList());
-            }
 
-            /* Create Final Server List with Categories */
-            foreach (ServerList CList in RawList)
-            {
-                if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
+                /* Create Rough Draft Server List with Categories */
+                List<ServerList> RawList = new List<ServerList>();
+
+                foreach (var serverItemGroup in serverInfos.GroupBy(s => s.Category))
                 {
-                    CleanList.Add(CList);
+                    if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
+                    {
+                        RawList.Add(new ServerList
+                        {
+                            ID = $"__category-{serverItemGroup.Key}__",
+                            Name = $"<GROUP>{serverItemGroup.Key} Servers",
+                            IsSpecial = true
+                        });
+                    }
+                    RawList.AddRange(serverItemGroup.ToList());
                 }
+
+                /* Create Final Server List with Categories */
+                foreach (ServerList CList in RawList)
+                {
+                    if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
+                    {
+                        CleanList.Add(CList);
+                    }
+                }
+                Log.Completed("LIST CORE: Server List Done");
             }
-            Log.Completed("LIST CORE: Server List Done");
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("LIST CORE", null, Error, null, true);
+            }
 
             Log.Info("CERTIFICATE STORE: Moved to Function");
             /* (Start Process) Check Up to Date Certificate Status */
@@ -170,9 +172,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
             }
             catch (Exception Error)
             {
-                Log.Error("COUNTRYNAME: " + Error.Message);
-                Log.ErrorIC("COUNTRYNAME: " + Error.HResult);
-                Log.ErrorFR("COUNTRYNAME: " + Error.ToString());
+                LogToFileAddons.OpenLog("COUNTRYNAME", null, Error, null, true);
             }
 
             return "Unknown";

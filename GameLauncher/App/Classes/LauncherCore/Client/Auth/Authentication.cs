@@ -2,12 +2,13 @@
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using Nancy.Json;
 using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Xml;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
@@ -33,7 +34,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             {
                 if (Connection == "Non Secure")
                 {
-                    WebClientWithTimeout wc = new WebClientWithTimeout();
+                    WebClientWithTimeout wc = new WebClientWithTimeout
+                    {
+                        Encoding = Encoding.UTF8
+                    };
 
                     if (Method == "Login")
                     {
@@ -92,9 +96,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             }
             catch (WebException Error)
             {
-                Log.Error("CLIENT (LOGIN/REGISTER): " + Error.Message);
-                Log.ErrorIC("CLIENT (LOGIN/REGISTER): " + Error.HResult);
-                Log.ErrorFR("CLIENT (LOGIN/REGISTER): " + Error.ToString());
+                LogToFileAddons.OpenLog("CLIENT [LOGIN/REGISTER]", null, Error, null, true);
 
                 if (Connection == "Non Secure" || Connection == "Secure")
                 {
@@ -145,9 +147,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("XML LOGIN ERROR: " + Error.Message);
-                        Log.ErrorIC("XML LOGIN ERROR: " + Error.HResult);
-                        Log.ErrorFR("XML LOGIN ERROR: " + Error.ToString());
+                        LogToFileAddons.OpenLog("XML LOGIN", null, Error, null, true);
 
                         XMLIsErrorFree = false;
                         msgBoxInfo = "An error occured: " + Error.Message;

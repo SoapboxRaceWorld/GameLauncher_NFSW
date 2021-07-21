@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
+using System;
 using System.IO;
 using System.Reflection;
 
@@ -20,11 +21,26 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
         public static String AsString(String filename)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            using (Stream stream = assembly.GetManifestResourceStream(filename))
-            using (StreamReader reader = new StreamReader(stream))
+            if (string.IsNullOrWhiteSpace(filename))
             {
-                return reader.ReadToEnd();
+                return String.Empty;
+            }
+            else
+            {
+                try
+                {
+                    var assembly = Assembly.GetExecutingAssembly();
+                    using (Stream stream = assembly.GetManifestResourceStream(filename))
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        return reader.ReadToEnd();
+                    }
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Extract Resource AsString", null, Error, null, true);
+                    return String.Empty;
+                }
             }
         }
     }

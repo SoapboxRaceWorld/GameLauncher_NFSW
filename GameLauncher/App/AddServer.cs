@@ -9,9 +9,11 @@ using static System.String;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
-using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Logger;
+using System.Text;
+using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
+using GameLauncher.App.Classes.LauncherCore.Support;
 
 namespace GameLauncher.App
 {
@@ -66,6 +68,7 @@ namespace GameLauncher.App
             ServerNameLabel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             ServerName.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ServerAddress.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            ServerCategory.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ServerAddressLabel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             Error.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             Version.Font= new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
@@ -83,6 +86,9 @@ namespace GameLauncher.App
             ServerAddress.BackColor = Theming.WinFormTBGDarkerForeColor;
             ServerAddress.ForeColor = Theming.WinFormSecondaryTextForeColor;
 
+            ServerCategory.BackColor = Theming.WinFormTBGDarkerForeColor;
+            ServerCategory.ForeColor = Theming.WinFormSecondaryTextForeColor;
+
             Error.ForeColor = Theming.WinFormWarningTextForeColor;
 
             ServerNameLabel.ForeColor = Theming.WinFormTextForeColor;
@@ -98,125 +104,224 @@ namespace GameLauncher.App
             OkBTN.BackColor = Theming.BlueBackColorButton;
             OkBTN.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
             OkBTN.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            /********************************/
+            /* Events                        /
+            /********************************/
+
+            ServerCategory.GotFocus += new EventHandler(ServerCategory_RemovePlaceHolderText);
+            ServerCategory.LostFocus += new EventHandler(ServerCategory_ShowPlaceHolderText);
         }
 
         private void OkButton_Click(object sender, EventArgs e)
         {
-            if (!File.Exists("servers.json"))
+            try
             {
-                File.Create("servers.json");
+                if (File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON))))
+                {
+                    File.Move(
+                        Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON)),
+                        Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)));
+                }
+                else if (!File.Exists(
+                    Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON))))
+                {
+                    try
+                    {
+                        File.WriteAllText(
+                            Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)), "[]");
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("JSON SERVER FILE", null, Error, null, true);
+                    }
+                }
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("JSON SERVER FILE", null, Error, null, true);
             }
 
-            bool success = true;
             Error.Visible = false;
             this.Refresh();
-
-            String wellFormattedURL = "";
-
-            if (IsNullOrWhiteSpace(ServerAddress.Text))
+            if (IsNullOrWhiteSpace(ServerAddress.Text) || IsNullOrWhiteSpace(Strings.Encode(ServerName.Text)))
             {
-                DrawErrorAroundTextBox(ServerAddress);
-                success = false;
+                if (IsNullOrWhiteSpace(ServerAddress.Text))
+                {
+                    Error.Text = "Fix Empty IP";
+                    DrawErrorAroundTextBox(ServerAddress);
+                }
+                else
+                {
+                    Error.Text = "Fix Empty Name";
+                    DrawErrorAroundTextBox(ServerName);
+                }
+
+                Error.Visible = true;
+                return;
             }
 
-            if (IsNullOrWhiteSpace(ServerName.Text))
+            if (Error.Visible)
             {
-                DrawErrorAroundTextBox(ServerName);
-                success = false;
+                Error.Visible = false;
             }
 
-            bool result = Uri.TryCreate(ServerAddress.Text, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            bool CorrectFormat = Uri.TryCreate(ServerAddress.Text, UriKind.Absolute, out Uri Result) && (Result.Scheme == Uri.UriSchemeHttp || Result.Scheme == Uri.UriSchemeHttps);
 
-            if (!result)
+            string FormattedURL;
+            if (!CorrectFormat)
             {
                 DrawErrorAroundTextBox(ServerAddress);
-                success = false;
+                return;
             }
             else
             {
-                wellFormattedURL = uriResult.ToString();
+                FormattedURL = Result.ToString();
             }
 
-            CancelBTN.Enabled = false;
-            OkBTN.Enabled = false;
-            ServerAddress.Enabled = false;
-            ServerName.Enabled = false;
+            ButtonControls(false);
 
             try
             {
-                FunctionStatus.TLS();
-                Uri StringToUri = new Uri(wellFormattedURL + "/GetServerInformation");
-                ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                WebClient client = new WebClient();
-                
-                var serverLoginResponse = client.DownloadString(StringToUri);
-
-                GetServerInformation json = JsonConvert.DeserializeObject<GetServerInformation>(serverLoginResponse);
-
-                if (IsNullOrWhiteSpace(json.serverName))
+                string ServerInfomationJSON = Empty;
+                try
                 {
-                    DrawErrorAroundTextBox(ServerAddress);
-                    success = false;
+                    FunctionStatus.TLS();
+                    Uri StringToUri = new Uri(FormattedURL + "/GetServerInformation");
+                    ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    WebClient client = new WebClient
+                    {
+                        Encoding = Encoding.UTF8
+                    };
+                    ServerInfomationJSON = client.DownloadString(StringToUri);
+                }
+                catch (Exception Error)
+                {
+                    string LogMessage = "Add Server Check Encountered an Error:";
+                    LogToFileAddons.OpenLog("Add Server", LogMessage, Error, null, false);
+                }
+
+                if (IsNullOrWhiteSpace(ServerInfomationJSON))
+                {
+                    ButtonControls(true);
+                    return;
+                }
+                else
+                {
+                    GetServerInformation ServerInformationData = null;
+
+                    try
+                    {
+                        ServerInformationData = JsonConvert.DeserializeObject<GetServerInformation>(ServerInfomationJSON);
+                    }
+                    catch (Exception Error)
+                    {
+                        string LogMessage = "Add Server Get Information Encountered an Error:";
+                        LogToFileAddons.OpenLog("Add Server", LogMessage, Error, null, false);
+                    }
+
+                    if (ServerInformationData == null)
+                    {
+                        ButtonControls(true);
+                        return;
+                    }
+                    else
+                    {
+                        string ServerID = Empty;
+                        try
+                        {
+                            FunctionStatus.TLS();
+                            Uri newModNetUri = new Uri(InformationCache.SelectedServerData.IPAddress + "/Modding/GetModInfo");
+                            ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                            WebClient ModInfoJson = new WebClient
+                            {
+                                Encoding = Encoding.UTF8
+                            };
+                            ModInfoJson.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
+                                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            string ServerModInfo = ModInfoJson.DownloadString(newModNetUri);
+
+                            GetModInfo ServerGetInfo = JsonConvert.DeserializeObject<GetModInfo>(ServerModInfo);
+                            ServerID = IsNullOrWhiteSpace(ServerGetInfo.serverID) ? Result.Host : ServerGetInfo.serverID;
+                        }
+                        catch (Exception Error)
+                        {
+                            LogToFileAddons.OpenLog("Add Server", null, Error, null, true);
+                            ServerID = Result.Host;
+                        }
+
+                        try
+                        {
+                            StreamReader sr = new StreamReader(Locations.LauncherCustomServers);
+                            String oldcontent = sr.ReadToEnd();
+                            sr.Close();
+
+                            if (IsNullOrWhiteSpace(oldcontent))
+                            {
+                                oldcontent = "[]";
+                            }
+
+                            var Servers = JsonConvert.DeserializeObject<List<ServerList>>(oldcontent);
+
+                            Servers.Add(new ServerList
+                            {
+                                Name = Strings.Encode(ServerName.Text),
+                                IPAddress = FormattedURL,
+                                IsSpecial = false,
+                                ID = ServerID,
+                                Category = IsNullOrWhiteSpace(Strings.Encode(ServerCategory.Text)) ? "CUSTOM" : Strings.Encode(ServerCategory.Text.ToUpper())
+                            });
+
+                            File.WriteAllText(Locations.LauncherCustomServers, JsonConvert.SerializeObject(Servers));
+
+                            MessageBox.Show(null, "New server will be added on next start of launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        catch (Exception Error)
+                        {
+                            string LogMessage = "Failed to Add New Server:";
+                            LogToFileAddons.OpenLog("Add Server", LogMessage, Error, null, false);
+                            ButtonControls(true);
+                            return;
+                        }
+
+                        CancelButton_Click(sender, e);
+                    }
                 }
             }
             catch
             {
                 DrawErrorAroundTextBox(ServerAddress);
-                success = false;
+                ButtonControls(true);
             }
+        }
 
-            CancelBTN.Enabled = true;
-            OkBTN.Enabled = true;
-            ServerAddress.Enabled = true;
-            ServerName.Enabled = true;
-
-            if (success == true)
-            {
-                try
-                {
-                    StreamReader sr = new StreamReader("servers.json");
-                    String oldcontent = sr.ReadToEnd();
-                    sr.Close();
-
-                    if (IsNullOrWhiteSpace(oldcontent))
-                    {
-                        oldcontent = "[]";
-                    }
-
-                    var servers = JsonConvert.DeserializeObject<List<ServerList>>(oldcontent);
-
-                    servers.Add(new ServerList
-                    {
-                        Name = ServerName.Text,
-                        IpAddress = wellFormattedURL,
-                        IsSpecial = false,
-                        Id = SHA.Hashes(uriResult.Host)
-                    });
-
-                    File.WriteAllText("servers.json", JsonConvert.SerializeObject(servers));
-
-                    MessageBox.Show(null, "New server will be added on next start of launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch (Exception Error)
-                {
-                    Log.Error("ADD SERVER: " + Error.Message);
-                    Log.ErrorIC("ADD SERVER: " + Error.HResult);
-                    Log.ErrorFR("ADD SERVER: " + Error.ToString());
-
-                    MessageBox.Show(null, "Failed to add new server.\n" + Error.Message, "GameLauncher", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
-                }
-
-                CancelButton_Click(sender, e);
-            }
-            else
-            {
-                Error.Visible = true;
-            }
+        private void ButtonControls(bool Enable)
+        {
+            CancelBTN.Enabled = Enable;
+            OkBTN.Enabled = Enable;
+            ServerAddress.Enabled = Enable;
+            ServerName.Enabled = Enable;
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        public void ServerCategory_ShowPlaceHolderText(object sender, EventArgs e)
+        {
+            if (IsNullOrWhiteSpace(Strings.Encode(ServerCategory.Text)))
+            {
+                ServerCategory.Text = "Custom";
+            }
+        }
+
+        public void ServerCategory_RemovePlaceHolderText(object sender, EventArgs e)
+        {
+            if (ServerCategory.Text == "Custom")
+            {
+                ServerCategory.Text = Empty;
+            }
         }
     }
 }

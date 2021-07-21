@@ -1,8 +1,9 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using Newtonsoft.Json;
 using System;
@@ -101,9 +102,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("LAUNCHER UPDATER: " + Error.Message);
-                    Log.ErrorIC("LAUNCHER UPDATER: " + Error.HResult);
-                    Log.ErrorFR("LAUNCHER UPDATER: " + Error.ToString());
+                    LogToFileAddons.OpenLog("CERTIFICATE STORE", null, Error, null, true);
                 }
 
                 /* Install Custom Root Certificate (If Default Values aren't used) */
@@ -135,16 +134,14 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("CERTIFICATE STORE: Failed to Run. " + Error.Message);
-                        Log.ErrorIC("CERTIFICATE STORE: " + Error.HResult);
-                        Log.ErrorFR("CERTIFICATE STORE: " + Error.ToString());
+                        LogToFileAddons.OpenLog("CERTIFICATE STORE", null, Error, null, true);
                     }
 
-                    string CertSaveLocation = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory)) + RootCAFileName + ".cer";
+                    string CertSaveLocation = Strings.Encode(Path.Combine(Locations.LauncherFolder, RootCAFileName + ".cer"));
 
                     try
                     {
-                        if (IsROOTCAInstalled == false)
+                        if (!IsROOTCAInstalled)
                         {
                             FunctionStatus.TLS();
                             Uri URLCall = new Uri(RootCAFileURL);
@@ -156,31 +153,35 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                             Client.DownloadFile(URLCall, CertSaveLocation);
 
-                            X509Store store = new X509Store(StoreName.Root,
+                            X509Store Store = new X509Store(StoreName.Root,
                             StoreLocation.LocalMachine);
-                            store.Open(OpenFlags.ReadWrite);
+                            Store.Open(OpenFlags.ReadWrite);
                             X509Certificate2Collection collection = new X509Certificate2Collection();
                             X509Certificate2 cert = new X509Certificate2(CertSaveLocation);
                             byte[] encodedCert = cert.GetRawCertData();
                             Log.Info("CERTIFICATE STORE: We are now installing [" + RootCACommonName + "] certificate into the Trusted Root Certificate store ...");
-                            store.Add(cert);
+                            Store.Add(cert);
                             Log.Info("CERTIFICATE STORE: Done! [" + RootCACommonName + "] certificate was installed successfully.");
-                            store.Close();
-                        }
-                        else
-                        {
-                            if (File.Exists(CertSaveLocation))
-                            {
-                                Log.Info("CERTIFICATE STORE: Removed [" + RootCACommonName + "] certificate from launcher folder.");
-                                File.Delete(CertSaveLocation);
-                            }
+                            Store.Close();
+                            Store.Dispose();
                         }
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("CERTIFICATE STORE: Failed to Install. " + Error.Message);
-                        Log.ErrorIC("CERTIFICATE STORE: " + Error.HResult);
-                        Log.ErrorFR("CERTIFICATE STORE: " + Error.ToString());
+                        LogToFileAddons.OpenLog("CERTIFICATE STORE", null, Error, null, true);
+                    }
+
+                    try
+                    {
+                        if (File.Exists(CertSaveLocation))
+                        {
+                            Log.Info("CERTIFICATE STORE: Removed [" + RootCACommonName + "] certificate from launcher folder.");
+                            File.Delete(CertSaveLocation);
+                        }
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("CERTIFICATE STORE", null, Error, null, true);
                     }
                 }
                 else
@@ -194,19 +195,34 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             Log.Checking("CERTIFICATE CHECK: Is Signed or Not");
             try
             {
-                Assembly assembly = Assembly.LoadFrom(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Application.ExecutablePath)));
-                Module module = assembly.GetModules().First();
-                X509Certificate certificate = module.GetSignerCertificate();
-                if (certificate != null)
+                X509Certificate certificate = null;
+
+                try
                 {
-                    LauncherSerial = certificate.GetSerialNumberString();
+                    Assembly assembly = Assembly.LoadFrom(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameLauncher)));
+                    Module module = assembly.GetModules().First();
+                    certificate = module.GetSignerCertificate();
+
+                    if (certificate != null)
+                    {
+                        LauncherSerial = certificate.GetSerialNumberString();
+                    }
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("CERTIFICATE CHECK", null, Error, null, true);
+                }
+                finally
+                {
+                    if (certificate != null)
+                    {
+                        certificate.Dispose();
+                    }
                 }
             }
             catch (Exception Error)
             {
-                Log.Error("CERTIFICATE CHECK: " + Error.Message);
-                Log.ErrorIC("CERTIFICATE CHECK: " + Error.HResult);
-                Log.ErrorFR("CERTIFICATE CHECK: " + Error.ToString());
+                LogToFileAddons.OpenLog("CERTIFICATE CHECK", null, Error, null, true);
             }
             Log.Completed("CERTIFICATE CHECK: Done");
 

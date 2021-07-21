@@ -18,7 +18,6 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 using GameLauncher.App;
 using GameLauncher.App.Classes.Auth;
-using GameLauncher.App.Classes.Logger;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
@@ -42,6 +41,7 @@ using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
 using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Client.Auth;
 using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher
 {
@@ -79,8 +79,7 @@ namespace GameLauncher
         int CurrentModFileCount = 0;
         int TotalModFileCount = 0;
 
-        readonly String filename_pack = Path.Combine(Encoding.UTF8.GetString(
-            Encoding.UTF8.GetBytes(AppDomain.CurrentDomain.BaseDirectory)), "GameFiles.sbrwpack");
+        readonly String filename_pack = Strings.Encode(Path.Combine(Locations.LauncherFolder, "GameFiles.sbrwpack"));
 
         private void MoveWindow_MouseDown(object sender, MouseEventArgs e)
         {
@@ -122,9 +121,7 @@ namespace GameLauncher
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("CDN DOWNLOADER: " + Error.Message);
-                        Log.ErrorIC("CDN DOWNLOADER: " + Error.HResult);
-                        Log.ErrorFR("CDN DOWNLOADER: " + Error.ToString());
+                        LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
                     }
                 }
             };
@@ -154,22 +151,7 @@ namespace GameLauncher
 
             Log.Core("LAUNCHER: NFSW Download Source is now: " + FileSettingsSave.CDN);
 
-            Log.Visuals("CORE: Applyinng ContextMenu");
             translatedBy.Text = string.Empty;
-            ContextMenu = new ContextMenu();
-            ContextMenu.MenuItems.Add(new MenuItem("About", FunctionEvents.AboutButton_Click));
-            ContextMenu.MenuItems.Add(new MenuItem("Donate", (b, n) => { Process.Start("https://paypal.me/metonator95"); }));
-            ContextMenu.MenuItems.Add("-");
-            ContextMenu.MenuItems.Add(new MenuItem("Add Server", FunctionEvents.AddServer_Click));
-            ContextMenu.MenuItems.Add("-");
-            ContextMenu.MenuItems.Add(new MenuItem("Close launcher", CloseBTN_Click));
-
-            Notification.ContextMenu = ContextMenu;
-            Notification.Icon = new Icon(Icon, Icon.Width, Icon.Height);
-            Notification.Text = "GameLauncher";
-            Notification.Visible = true;
-
-            ContextMenu = null;
 
             MainEmail.Text = FileAccountSave.UserRawEmail;
             MainPassword.Text = FileAccountSave.UserRawPassword;
@@ -210,7 +192,7 @@ namespace GameLauncher
 
                 if (SelectedServer.Data != null)
                 {
-                    FileAccountSave.ChoosenGameServer = SelectedServer.Data.IpAddress;
+                    FileAccountSave.ChoosenGameServer = SelectedServer.Data.IPAddress;
                     FileAccountSave.SaveAccount();
                 }
                 else
@@ -232,8 +214,8 @@ namespace GameLauncher
                 {
                     if (string.IsNullOrWhiteSpace(FileAccountSave.ChoosenGameServer))
                     {
-                        Log.Warning("SERVERLIST: Failed to find anything... assuming " + ((ServerList)ServerPick.SelectedItem).IpAddress);
-                        FileAccountSave.ChoosenGameServer = ((ServerList)ServerPick.SelectedItem).IpAddress;
+                        Log.Warning("SERVERLIST: Failed to find anything... assuming " + ((ServerList)ServerPick.SelectedItem).IPAddress);
+                        FileAccountSave.ChoosenGameServer = ((ServerList)ServerPick.SelectedItem).IPAddress;
                         FileAccountSave.SaveAccount();
                     }
                 }
@@ -254,10 +236,10 @@ namespace GameLauncher
 
                     try
                     {
-                        if (ServerListUpdater.CleanList.FindIndex(i => string.Equals(i.IpAddress, FileAccountSave.ChoosenGameServer)) != 0)
+                        if (ServerListUpdater.CleanList.FindIndex(i => string.Equals(i.IPAddress, FileAccountSave.ChoosenGameServer)) != 0)
                         {
                             Log.Core("SERVERLIST: Server found! Checking ID");
-                            var index = ServerListUpdater.CleanList.FindIndex(i => string.Equals(i.IpAddress, FileAccountSave.ChoosenGameServer));
+                            var index = ServerListUpdater.CleanList.FindIndex(i => string.Equals(i.IPAddress, FileAccountSave.ChoosenGameServer));
 
                             Log.Core("SERVERLIST: ID is " + index);
                             if (index >= 0)
@@ -285,23 +267,21 @@ namespace GameLauncher
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("SERVERLIST: " + Error.Message);
-                        Log.ErrorIC("SERVERLIST: " + Error.HResult);
-                        Log.ErrorFR("SERVERLIST: " + Error.ToString());
+                        LogToFileAddons.OpenLog("Serverlist", null, Error, null, true);
                     }
                 }
 
                 Log.Core("LAUNCHER: Re-checking InstallationDirectory: " + FileSettingsSave.GameInstallation);
 
-                var drive = Path.GetPathRoot(FileSettingsSave.GameInstallation);
-                if (!Directory.Exists(drive))
+                string Drive = Strings.Encode(Path.GetPathRoot(FileSettingsSave.GameInstallation));
+                if (!Directory.Exists(Drive))
                 {
-                    if (!string.IsNullOrWhiteSpace(drive))
+                    if (!string.IsNullOrWhiteSpace(Drive))
                     {
-                        var newdir = AppDomain.CurrentDomain.BaseDirectory + "\\Game Files";
-                        FileSettingsSave.GameInstallation = newdir;
+                        FileSettingsSave.GameInstallation = Locations.GameFilesFailSafePath;
                         FileSettingsSave.SaveSettings();
-                        Log.Error(string.Format("LAUNCHER: Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir));
+                        Log.Error(string.Format("LAUNCHER: Drive {0} was not found. Your actual installation directory is set to {1} now.", 
+                            Drive, Locations.GameFilesFailSafePath));
 
                         string TempEmailCache = string.Empty;
                         if (!string.IsNullOrWhiteSpace(MainEmail.Text))
@@ -309,7 +289,8 @@ namespace GameLauncher
                             TempEmailCache = MainEmail.Text;
                             MainEmail.Text = "EMAIL IS HIDDEN";
                         }
-                        MessageBox.Show(null, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", drive, newdir), 
+                        MessageBox.Show(null, string.Format("Drive {0} was not found. Your actual installation directory is set to {1} now.", 
+                            Drive, Locations.GameFilesFailSafePath), 
                             "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         if (!string.IsNullOrWhiteSpace(TempEmailCache))
                         {
@@ -343,6 +324,25 @@ namespace GameLauncher
 
                 PingServerListAPIStatus();
 
+                Log.Visuals("CORE: Applyinng ContextMenu");
+                ContextMenu = new ContextMenu();
+                ContextMenu.MenuItems.Add(new MenuItem("About", FunctionEvents.AboutButton_Click));
+                if (LauncherUpdateCheck.UpgradeAvailable)
+                {
+                    ContextMenu.MenuItems.Add(new MenuItem("Obsolete", (b, n) => { Process.Start("https://www.youtube.com/watch?v=LutDfASARmE"); }));
+                }
+                ContextMenu.MenuItems.Add("-");
+                ContextMenu.MenuItems.Add(new MenuItem("Add Server", FunctionEvents.AddServer_Click));
+                ContextMenu.MenuItems.Add("-");
+                ContextMenu.MenuItems.Add(new MenuItem("Close launcher", CloseBTN_Click));
+
+                Notification.ContextMenu = ContextMenu;
+                Notification.Icon = new Icon(Icon, Icon.Width, Icon.Height);
+                Notification.Text = "SBRW Launcher";
+                Notification.Visible = true;
+
+                ContextMenu = null;
+
                 /* Remove TracksHigh Folder and Files */
                 RemoveTracksHighFiles();
             }
@@ -373,8 +373,10 @@ namespace GameLauncher
             
             Notification.Dispose();
 
-            var linksPath = Path.Combine(FileSettingsSave.GameInstallation + "\\.links");
-            ModNetHandler.CleanLinks(linksPath);
+            if (File.Exists(Locations.GameLinksFile))
+            {
+                ModNetHandler.CleanLinks(Locations.GameLinksFile, FileSettingsSave.GameInstallation);
+            }
 
             /* Leave this here. Its to properly close the launcher from Visual Studio (And Close the Launcher a well) 
              * If the Boolen is true it will restart the Application
@@ -477,7 +479,7 @@ namespace GameLauncher
             String Email;
             String Password;
 
-            Tokens.IPAddress = InformationCache.SelectedServerData.IpAddress;
+            Tokens.IPAddress = InformationCache.SelectedServerData.IPAddress;
             Tokens.ServerName = ServerListUpdater.ServerName("Login");
 
             switch (Authentication.HashType(InformationCache.ModernAuthHashType))
@@ -531,13 +533,13 @@ namespace GameLauncher
                 try
                 {
                     if (!(ServerPick.SelectedItem is ServerList server)) return;
-                    FileAccountSave.ChoosenGameServer = server.IpAddress;
+                    FileAccountSave.ChoosenGameServer = server.IPAddress;
                 }
                 catch { }
 
                 _userId = Tokens.UserId;
                 _loginToken = Tokens.LoginToken;
-                InformationCache.SelectedServerData.IpAddress = Tokens.IPAddress;
+                InformationCache.SelectedServerData.IPAddress = Tokens.IPAddress;
 
                 /* Tells the FileAccountSave to Actually Save the Information or Not */
                 FileAccountSave.SaveLoginInformation = RememberMe.Checked;
@@ -681,7 +683,9 @@ namespace GameLauncher
             ServerStatusIcon.BackgroundImage = Theming.ServerIconChecking;
 
             LoginButton.ForeColor = Theming.SixTextForeColor;
-            VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.Hashes(InformationCache.SelectedServerData.IpAddress) + ".bin");
+            string BannerCache = Strings.Encode(
+                                            Path.Combine(".BannerCache", SHA.Hashes(InformationCache.SelectedServerData.IPAddress) + ".bin"));
+            VerticalBanner.Image = VerticalBanners.Grayscale(BannerCache);
             VerticalBanner.BackColor = Color.Transparent;
 
             string verticalImageUrl = string.Empty;
@@ -706,7 +710,7 @@ namespace GameLauncher
             }
 
             FunctionStatus.TLS();
-            Uri ServerURI = new Uri(InformationCache.SelectedServerData.IpAddress + "/GetServerInformation");
+            Uri ServerURI = new Uri(InformationCache.SelectedServerData.IPAddress + "/GetServerInformation");
             ServicePointManager.FindServicePoint(ServerURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
             WebClient client = new WebClient
             {
@@ -737,13 +741,13 @@ namespace GameLauncher
                     /* Disable Social Panel */
                     DisableSocialPanelandClearIt();
 
-                    if (!InformationCache.ServerStatusBook.ContainsKey(InformationCache.SelectedServerData.Id))
+                    if (!InformationCache.ServerStatusBook.ContainsKey(InformationCache.SelectedServerData.ID))
                     {
-                        InformationCache.ServerStatusBook.Add(InformationCache.SelectedServerData.Id, 2);
+                        InformationCache.ServerStatusBook.Add(InformationCache.SelectedServerData.ID, 2);
                     }
                     else
                     {
-                        InformationCache.ServerStatusBook[InformationCache.SelectedServerData.Id] = 2;
+                        InformationCache.ServerStatusBook[InformationCache.SelectedServerData.ID] = 2;
                     }
                 }
                 else if (e2.Error != null)
@@ -760,13 +764,13 @@ namespace GameLauncher
                     /* Disable Social Panel */
                     DisableSocialPanelandClearIt();
 
-                    if (!InformationCache.ServerStatusBook.ContainsKey(InformationCache.SelectedServerData.Id))
+                    if (!InformationCache.ServerStatusBook.ContainsKey(InformationCache.SelectedServerData.ID))
                     {
-                        InformationCache.ServerStatusBook.Add(InformationCache.SelectedServerData.Id, 0);
+                        InformationCache.ServerStatusBook.Add(InformationCache.SelectedServerData.ID, 0);
                     }
                     else
                     {
-                        InformationCache.ServerStatusBook[InformationCache.SelectedServerData.Id] = 0;
+                        InformationCache.ServerStatusBook[InformationCache.SelectedServerData.ID] = 0;
                     }
                 }
                 else
@@ -779,13 +783,13 @@ namespace GameLauncher
                     }
                     else
                     {
-                        if (!InformationCache.ServerStatusBook.ContainsKey(InformationCache.SelectedServerData.Id))
+                        if (!InformationCache.ServerStatusBook.ContainsKey(InformationCache.SelectedServerData.ID))
                         {
-                            InformationCache.ServerStatusBook.Add(InformationCache.SelectedServerData.Id, 1);
+                            InformationCache.ServerStatusBook.Add(InformationCache.SelectedServerData.ID, 1);
                         }
                         else
                         {
-                            InformationCache.ServerStatusBook[InformationCache.SelectedServerData.Id] = 1;
+                            InformationCache.ServerStatusBook[InformationCache.SelectedServerData.ID] = 1;
                         }
 
                         try
@@ -938,7 +942,7 @@ namespace GameLauncher
                             {
                                 if (InformationCache.SelectedServerJSON.modernAuthSecureChannelOverRide.ToLower() == "true")
                                 {
-                                    string CheckHttps = (InformationCache.SelectedServerData.IpAddress + "/GetServerInformation").Replace("http", "https");
+                                    string CheckHttps = (InformationCache.SelectedServerData.IPAddress + "/GetServerInformation").Replace("http", "https");
                                     switch (APIChecker.CheckStatus(CheckHttps))
                                     {
                                         case APIStatus.Online:
@@ -1079,15 +1083,11 @@ namespace GameLauncher
                     }
                     catch (PingException Error)
                     {
-                        Log.Error("PINGING: " + Error.Message);
-                        Log.ErrorIC("PINGING: " + Error.HResult);
-                        Log.ErrorFR("PINGING: " + Error.ToString());
+                        LogToFileAddons.OpenLog("Pinging", null, Error, null, true);
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("PING: " + Error.Message);
-                        Log.ErrorIC("PING: " + Error.HResult);
-                        Log.ErrorFR("PING: " + Error.ToString());
+                        LogToFileAddons.OpenLog("Ping", null, Error, null, true);
                     }
                     finally
                     {
@@ -1099,89 +1099,96 @@ namespace GameLauncher
 
                     _serverEnabled = true;
 
-                    if (!Directory.Exists(".BannerCache")) { Directory.CreateDirectory(".BannerCache"); }
-                    if (!string.IsNullOrWhiteSpace(verticalImageUrl))
+                    try
                     {
-                        FunctionStatus.TLS();
-                        Uri URICall = new Uri(verticalImageUrl);
-                        ServicePointManager.FindServicePoint(URICall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                        WebClient client2 = new WebClient
+                        if (!Directory.Exists(".BannerCache")) { Directory.CreateDirectory(".BannerCache"); }
+                        
+                        if (!string.IsNullOrWhiteSpace(verticalImageUrl))
                         {
-                            Encoding = Encoding.UTF8
-                        };
-                        client2.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        client2.DownloadDataAsync(URICall);
-                        client2.DownloadProgressChanged += (sender4, e4) =>
-                        {
-                            if (e4.TotalBytesToReceive > 2000000)
+                            FunctionStatus.TLS();
+                            Uri URICall = new Uri(verticalImageUrl);
+                            ServicePointManager.FindServicePoint(URICall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                            WebClient client2 = new WebClient
                             {
-                                client2.CancelAsync();
-                                Log.Warning("Unable to Cache " + ServerListUpdater.ServerName("Ping") + " Server Banner! {Over 2MB?}");
-                            }
-                        };
+                                Encoding = Encoding.UTF8
+                            };
+                            client2.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            client2.DownloadDataAsync(URICall);
+                            client2.DownloadProgressChanged += (sender4, e4) =>
+                            {
+                                if (e4.TotalBytesToReceive > 2000000)
+                                {
+                                    client2.CancelAsync();
+                                    Log.Warning("Unable to Cache " + ServerListUpdater.ServerName("Ping") + " Server Banner! {Over 2MB?}");
+                                }
+                            };
 
-                        client2.DownloadDataCompleted += (sender4, e4) =>
-                        {
-                            if (e4.Cancelled)
+                            client2.DownloadDataCompleted += (sender4, e4) =>
                             {
-                                /* Load cached banner! */
-                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.Hashes(InformationCache.SelectedServerData.IpAddress) + ".bin");
-                                return;
-                            }
-                            else if (e4.Error != null)
-                            {
-                                /* Load cached banner! */
-                                VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.Hashes(InformationCache.SelectedServerData.IpAddress) + ".bin");
-                                return;
-                            }
-                            else
-                            {
-                                try
+                                if (e4.Cancelled)
+                                {
+                                    /* Load cached banner! */
+                                    VerticalBanner.Image = VerticalBanners.Grayscale(BannerCache);
+                                    return;
+                                }
+                                else if (e4.Error != null)
+                                {
+                                    /* Load cached banner! */
+                                    VerticalBanner.Image = VerticalBanners.Grayscale(BannerCache);
+                                    return;
+                                }
+                                else
                                 {
                                     try
                                     {
-                                        if (_serverRawBanner != null)
+                                        try
                                         {
-                                            _serverRawBanner.Dispose();
-                                            _serverRawBanner.Close();
+                                            if (_serverRawBanner != null)
+                                            {
+                                                _serverRawBanner.Dispose();
+                                                _serverRawBanner.Close();
+                                            }
+                                        }
+                                        catch { }
+
+                                        _serverRawBanner = new MemoryStream(e4.Result)
+                                        {
+                                            Position = 0
+                                        };
+
+                                        VerticalBanner.Image = Image.FromStream(_serverRawBanner);
+
+
+                                        if (VerticalBanners.GetFileExtension(verticalImageUrl) == "gif")
+                                        {
+                                            Image.FromStream(_serverRawBanner).Save(BannerCache);
+                                        }
+                                        else
+                                        {
+                                            File.WriteAllBytes(BannerCache, _serverRawBanner.ToArray());
                                         }
                                     }
-                                    catch { }
-
-                                    _serverRawBanner = new MemoryStream(e4.Result)
+                                    catch (Exception Error)
                                     {
-                                        Position = 0
-                                    };
-
-                                    VerticalBanner.Image = Image.FromStream(_serverRawBanner);
-
-                                    if (VerticalBanners.GetFileExtension(verticalImageUrl) == "gif")
-                                    {
-                                        Image.FromStream(_serverRawBanner).Save(".BannerCache/" + SHA.Hashes(InformationCache.SelectedServerData.IpAddress) + ".bin");
-                                    }
-                                    else
-                                    {
-                                        File.WriteAllBytes(".BannerCache/" + SHA.Hashes(InformationCache.SelectedServerData.IpAddress) + ".bin", _serverRawBanner.ToArray());
+                                        LogToFileAddons.OpenLog("Server Banner", null, Error, null, true);
+                                        VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
                                     }
                                 }
-                                catch (Exception Error)
-                                {
-                                    Log.Error("SERVER BANNER: " + Error.Message);
-                                    Log.ErrorIC("SERVER BANNER: " + Error.HResult);
-                                    Log.ErrorFR("SERVER BANNER: " + Error.ToString());
-                                    VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
-                                }
-                            }
-                        };
+                            };
+                        }
+                        else if (File.Exists(BannerCache))
+                        {
+                            /* Load cached banner! */
+                            VerticalBanner.Image = VerticalBanners.Grayscale(BannerCache);
+                        }
+                        else
+                        {
+                            VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
+                        }
                     }
-                    else if (File.Exists(".BannerCache/" + SHA.Hashes(InformationCache.SelectedServerData.IpAddress) + ".bin"))
+                    catch (Exception Error)
                     {
-                        /* Load cached banner! */
-                        VerticalBanner.Image = VerticalBanners.Grayscale(".BannerCache/" + SHA.Hashes(InformationCache.SelectedServerData.IpAddress) + ".bin");
-                    }
-                    else
-                    {
-                        VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
+                        LogToFileAddons.OpenLog("BANNER Cache", null, Error, null, true);
                     }
                 }
             };
@@ -1217,23 +1224,31 @@ namespace GameLauncher
         {
             if (hideElements == true)
             {
-                DateTime currentTime = DateTime.Now;
+                try
+                {
+                    DateTime currentTime = DateTime.Now;
 
-                if ((currentTime.Hour > 5) && (currentTime.Hour < 12))
-                {
-                    _loginWelcomeTime = "Good Morning";
+                    if ((currentTime.Hour > 5) && (currentTime.Hour < 12))
+                    {
+                        _loginWelcomeTime = "Good Morning";
+                    }
+                    else if ((currentTime.Hour > 12) && (currentTime.Hour < 18))
+                    {
+                        _loginWelcomeTime = "Good Afternoon";
+                    }
+                    else if ((currentTime.Hour > 18) && (currentTime.Hour < 22))
+                    {
+                        _loginWelcomeTime = "Good Evening";
+                    }
+                    else
+                    {
+                        _loginWelcomeTime = "Hello Night Owl";
+                    }
                 }
-                else if ((currentTime.Hour > 12) && (currentTime.Hour < 18))
+                catch (Exception Error)
                 {
-                    _loginWelcomeTime = "Good Afternoon";
-                }
-                else if ((currentTime.Hour > 18) && (currentTime.Hour < 22))
-                {
-                    _loginWelcomeTime = "Good Evening";
-                }
-                else
-                {
-                    _loginWelcomeTime = "Hello Darkness";
+                    LogToFileAddons.OpenLog("LOGIN TIME", null, Error, null, true);
+                    _loginWelcomeTime = "Pshhh Pshhh";
                 }
 
                 CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", MainEmail.Text).ToUpper();
@@ -1382,19 +1397,19 @@ namespace GameLauncher
                 }
                 else
                 {
-                    Uri convert = new Uri(InformationCache.SelectedServerData.IpAddress);
+                    Uri convert = new Uri(InformationCache.SelectedServerData.IPAddress);
 
                     if (convert.Scheme == "http")
                     {
                         Match match = Regex.Match(convert.Host, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
                         if (!match.Success)
                         {
-                            InformationCache.SelectedServerData.IpAddress = 
-                            InformationCache.SelectedServerData.IpAddress.Replace(convert.Host, FunctionStatus.HostName2IP(convert.Host));
+                            InformationCache.SelectedServerData.IPAddress = 
+                            InformationCache.SelectedServerData.IPAddress.Replace(convert.Host, FunctionStatus.HostName2IP(convert.Host));
                         }
                     }
 
-                    LaunchGame(UserID, LoginToken, InformationCache.SelectedServerData.IpAddress, this);
+                    LaunchGame(UserID, LoginToken, InformationCache.SelectedServerData.IPAddress, this);
                 }
             })
             { IsBackground = true };
@@ -1461,8 +1476,8 @@ namespace GameLauncher
             }
 
             psi.WorkingDirectory = FileSettingsSave.GameInstallation;
-            psi.FileName = FileSettingsSave.GameInstallation + "\\nfsw.exe";
-            psi.Arguments = InformationCache.SelectedServerData.Id.ToUpper() + " " + ServerIP + " " + LoginToken + " " + UserID;
+            psi.FileName = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
+            psi.Arguments = InformationCache.SelectedServerData.ID.ToUpper() + " " + ServerIP + " " + LoginToken + " " + UserID;
 
             var nfswProcess = Process.Start(psi);
             nfswProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
@@ -1725,7 +1740,7 @@ namespace GameLauncher
                     {
                         Log.Core("LAUNCHER: Downloaded: " + FileName);
                         isDownloadingModNetFiles = false;
-                        if (modFilesDownloadUrls.Any() == false)
+                        if (!modFilesDownloadUrls.Any())
                         {
                             LaunchGame();
                         }
@@ -1739,10 +1754,8 @@ namespace GameLauncher
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("MODNET SERVER FILES: " + Error.Message);
-                    Log.ErrorIC("MODNET SERVER FILES: " + Error.HResult);
-                    Log.ErrorFR("MODNET SERVER FILES: " + Error.ToString());
                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                    LogToFileAddons.OpenLog("Modnet Server Files", null, Error, null, true);
                 }
 
                 isDownloadingModNetFiles = true;
@@ -1787,11 +1800,11 @@ namespace GameLauncher
                 return;
             }
 
-            if (File.Exists(FileSettingsSave.GameInstallation + "\\.links"))
+            if (File.Exists(Locations.GameLinksFile))
             {
                 try
                 {
-                    File.Delete(FileSettingsSave.GameInstallation + "\\.links");
+                    File.Delete(Locations.GameLinksFile);
                 }
                 catch { }
             }
@@ -1830,14 +1843,11 @@ namespace GameLauncher
                     }
                     catch (Exception Error)
                     {
-                        Log.Error("LAUNCHER: Umable to Retrive ModNet Files Information -> " + Error.Message);
-                        Log.ErrorIC("LAUNCHER: " + Error.HResult);
-                        Log.ErrorFR("LAUNCHER: " + Error.ToString());
-
                         PlayProgressText.Text = ("JSON: Unable to Retrive ModNet Files Information").ToUpper();
                         DiscordLauncherPresense.Status("ModNet Files Information Error", null);
                         CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                        MessageBox.Show(null, $"There was an error with ModNet JSON Retrieval:\n{Error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        string LogMessage = "There was an error with ModNet JSON Retrieval:";
+                        LogToFileAddons.OpenLog("MODNET FILES", LogMessage, Error, "Error", false);
                     }
 
                     if (string.IsNullOrWhiteSpace(ModulesJSON))
@@ -1859,17 +1869,17 @@ namespace GameLauncher
                                 String ModNetList = modules_files[0].Replace("\"", "").Trim();
                                 String ModNetSHA = modules_files[1].Replace("\"", "").Replace(",", "").Trim();
 
-                                if (SHATwoFiveSix.Files
-                                    (FileSettingsSave.GameInstallation + "\\" + ModNetList).ToLower() != ModNetSHA ||
-                                    !File.Exists(FileSettingsSave.GameInstallation + "\\" + ModNetList))
+                                String ModNetFilePath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, ModNetList));
+
+                                if (SHATwoFiveSix.Files(ModNetFilePath).ToLower() != ModNetSHA || !File.Exists(ModNetFilePath))
                                 {
                                     PlayProgressText.Text = ("ModNet: Downloading " + ModNetList).ToUpper();
 
                                     Log.Warning("MODNET CORE: " + ModNetList + " Does not match SHA Hash on File Server -> Online Hash: '" + ModNetSHA + "'");
 
-                                    if (File.Exists(FileSettingsSave.GameInstallation + "\\" + ModNetList))
+                                    if (File.Exists(ModNetFilePath))
                                     {
-                                        File.Delete(FileSettingsSave.GameInstallation + "\\" + ModNetList);
+                                        File.Delete(ModNetFilePath);
                                     }
 
                                     DiscordLauncherPresense.Status("Download ModNet", ModNetList);
@@ -1883,7 +1893,7 @@ namespace GameLauncher
                                     };
                                     newModNetFilesDownload.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
                                         " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                                    newModNetFilesDownload.DownloadFile(URLCall, FileSettingsSave.GameInstallation + "/" + ModNetList);
+                                    newModNetFilesDownload.DownloadFile(URLCall, ModNetFilePath);
                                 }
                                 else
                                 {
@@ -1896,13 +1906,10 @@ namespace GameLauncher
                         }
                         catch (Exception Error)
                         {
-                            Log.Error("MODNET CORE: " + Error.Message);
-                            Log.ErrorIC("MODNET CORE: " + Error.HResult);
-                            Log.ErrorFR("MODNET CORE: " + Error.ToString());
-
                             DiscordLauncherPresense.Status("Download ModNet Error", null);
                             CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                            MessageBox.Show(null, $"There was an error with ModNet Files Check:\n{Error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            string LogMessage = "There was an error with ModNet Files Check:";
+                            LogToFileAddons.OpenLog("MODNET CORE", LogMessage, Error, "Error", false);
 
                             return;
                         }
@@ -1912,7 +1919,7 @@ namespace GameLauncher
                         try
                         {
                             FunctionStatus.TLS();
-                            Uri newModNetUri = new Uri(InformationCache.SelectedServerData.IpAddress + "/Modding/GetModInfo");
+                            Uri newModNetUri = new Uri(InformationCache.SelectedServerData.IPAddress + "/Modding/GetModInfo");
                             ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                             WebClient ModInfoJson = new WebClient
                             {
@@ -1925,14 +1932,11 @@ namespace GameLauncher
                         }
                         catch (Exception Error)
                         {
-                            Log.Error("LAUNCHER: Umable to Retrive Modding Information -> " + Error.Message);
-                            Log.ErrorIC("LAUNCHER: " + Error.HResult);
-                            Log.ErrorFR("LAUNCHER: " + Error.ToString());
-
                             PlayProgressText.Text = ("JSON: Unable to Retrive Server Mod Information").ToUpper();
                             DiscordLauncherPresense.Status("Server Mods Get Information Error", null);
                             CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                            MessageBox.Show(null, $"There was an error with Server Mod Information Retrieval:\n{Error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            string LogMessage = "There was an error with Server Mod Information Retrieval:";
+                            LogToFileAddons.OpenLog("SERVER MOD INFO", LogMessage, Error, "Error", false);
                         }
 
                         if (string.IsNullOrWhiteSpace(ServerModInfo))
@@ -1942,7 +1946,7 @@ namespace GameLauncher
                         else
                         {
                             /* get files now */
-                            MainJson json2 = JsonConvert.DeserializeObject<MainJson>(ServerModInfo);
+                            GetModInfo json2 = JsonConvert.DeserializeObject<GetModInfo>(ServerModInfo);
 
                             /* Set and Get for RemoteRPC Files */
                             String remoteCarsFile = String.Empty;
@@ -2021,14 +2025,11 @@ namespace GameLauncher
                             }
                             catch (Exception Error)
                             {
-                                Log.Error("LAUNCHER: Umable to Retrive Server Mod List Information -> " + Error.Message);
-                                Log.ErrorIC("LAUNCHER: " + Error.HResult);
-                                Log.ErrorFR("LAUNCHER: " + Error.ToString());
-
                                 PlayProgressText.Text = ("JSON: Unable to Retrive Server Mod List Information").ToUpper();
                                 DiscordLauncherPresense.Status("Server Mods Get Information Error", null);
                                 CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                                MessageBox.Show(null, $"There was an error with Server Mod List Information Retrieval:\n{Error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                string LogMessage = "There was an error with Server Mod List Information Retrieval:";
+                                LogToFileAddons.OpenLog("SERVER MOD JSON", LogMessage, Error, "Error", false);
                             }
 
                             if (string.IsNullOrWhiteSpace(ServerModListJSON))
@@ -2039,16 +2040,16 @@ namespace GameLauncher
                             {
                                 try
                                 {
-                                    IndexJson json3 = JsonConvert.DeserializeObject<IndexJson>(ServerModListJSON);
+                                    ServerModList json3 = JsonConvert.DeserializeObject<ServerModList>(ServerModListJSON);
 
-                                    String ModFolderCache = Path.Combine(FileSettingsSave.GameInstallation, "MODS", MDFive.Hashes(json2.serverID).ToLower());
+                                    String ModFolderCache = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "MODS", MDFive.Hashes(json2.serverID).ToLower()));
                                     if (!Directory.Exists(ModFolderCache)) Directory.CreateDirectory(ModFolderCache);
 
                                     /* (FILENAME.mods) 
                                      * Checks for any Files that Don't match the Server Index Json and Removes that File  */
                                     foreach (string file in Directory.GetFiles(ModFolderCache))
                                     {
-                                        string name = Path.GetFileName(file);
+                                        string name = Strings.Encode(Path.GetFileName(file));
 
                                         if (json3.entries.All(en => en.Name != name))
                                         {
@@ -2059,9 +2060,7 @@ namespace GameLauncher
                                             }
                                             catch (Exception Error)
                                             {
-                                                Log.Error($"LAUNCHER: Failed To Remove Stale Mod Package [{file}]: {Error.Message}");
-                                                Log.ErrorIC("LAUNCHER: " + Error.HResult);
-                                                Log.ErrorFR("LAUNCHER: " + Error.ToString());
+                                                LogToFileAddons.OpenLog("SERVER MOD CACHE", null, Error, null, true);
                                             }
                                         }
                                     }
@@ -2074,15 +2073,17 @@ namespace GameLauncher
                                      */
                                     int ExtractedServerFolderRunTime = 0;
 
-                                    foreach (IndexJsonEntry modfile in json3.entries)
+                                    foreach (ServerModFileEntry modfile in json3.entries)
                                     {
-                                        if (SHA.Files(ModFolderCache + "/" + modfile.Name).ToLower() != modfile.Checksum)
+                                        string ModCachedFile = Strings.Encode(Path.Combine(ModFolderCache, modfile.Name));
+                                        if (SHA.Files(ModCachedFile).ToLower() != modfile.Checksum)
                                         {
                                             try
                                             {
                                                 if (ExtractedServerFolderRunTime == 0)
                                                 {
-                                                    String ExtractedServerFolder = Path.Combine(FileSettingsSave.GameInstallation, ".data", MDFive.Hashes(json2.serverID).ToLower());
+                                                    String ExtractedServerFolder = Strings.Encode(
+                                                        Path.Combine(FileSettingsSave.GameInstallation, ".data", MDFive.Hashes(json2.serverID).ToLower()));
                                                     if (Directory.Exists(ExtractedServerFolder))
                                                     {
                                                         Directory.Delete(ExtractedServerFolder, true);
@@ -2092,17 +2093,15 @@ namespace GameLauncher
                                                     ExtractedServerFolderRunTime++;
                                                 }
 
-                                                if (File.Exists(ModFolderCache + "/" + modfile.Name))
+                                                if (File.Exists(ModCachedFile))
                                                 {
-                                                    File.Delete(ModFolderCache + "/" + modfile.Name);
+                                                    File.Delete(ModCachedFile);
                                                     Log.Core("LAUNCHER: Removed Old Mod Package: " + modfile.Name);
                                                 }
                                             }
                                             catch (Exception Error)
                                             {
-                                                Log.Error($"LAUNCHER: Failed To Remove Old Mod Package [{modfile.Name}]: {Error.Message}");
-                                                Log.ErrorIC("LAUNCHER: " + Error.HResult);
-                                                Log.ErrorFR("LAUNCHER: " + Error.ToString());
+                                                LogToFileAddons.OpenLog("SERVER MOD CACHE FILE", null, Error, null, true);
                                             }
 
                                             modFilesDownloadUrls.Enqueue(new Uri(json2.basePath + "/" + modfile.Name));
@@ -2128,14 +2127,10 @@ namespace GameLauncher
                                 }
                                 catch (Exception Error)
                                 {
-                                    Log.Error("LAUNCHER: " + Error.Message);
-                                    Log.ErrorIC("LAUNCHER: " + Error.HResult);
-                                    Log.ErrorFR("LAUNCHER: " + Error.ToString());
-
                                     DiscordLauncherPresense.Status("Download Server Mods Error", null);
                                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                                    MessageBox.Show(null, $"There was an error with Server Mods Check:\n{Error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+                                    string LogMessage = "There was an error with Server Mods Check:";
+                                    LogToFileAddons.OpenLog("SERVER MOD DOWNLOAD", LogMessage, Error, "Error", false);
                                     return;
                                 }
                             }
@@ -2144,13 +2139,10 @@ namespace GameLauncher
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("LAUNCHER: " + Error.Message);
-                    Log.ErrorIC("LAUNCHER: " + Error.HResult);
-                    Log.ErrorFR("LAUNCHER: " + Error.ToString());
                     DiscordLauncherPresense.Status("Download ModNet Error", null);
                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                    MessageBox.Show(null, $"There was an error downloading ModNet Files:\n{Error.Message}", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+                    string LogMessage = "There was an error downloading ModNet Files:";
+                    LogToFileAddons.OpenLog("MODNET FILES", LogMessage, Error, "Error", false);
                     return;
                 }
             }
@@ -2184,18 +2176,19 @@ namespace GameLauncher
 
             try
             {
+                string GameExePath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
                 if
                   (
-                    SHA.Files(FileSettingsSave.GameInstallation + "/nfsw.exe") == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
-                    SHA.Files(FileSettingsSave.GameInstallation + "/nfsw.exe") == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
-                    SHA.Files(FileSettingsSave.GameInstallation + "/nfsw.exe") == "E69890D31919DE1649D319956560269DB88B8F22"
+                    SHA.Files(GameExePath) == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
+                    SHA.Files(GameExePath) == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
+                    SHA.Files(GameExePath) == "E69890D31919DE1649D319956560269DB88B8F22"
                   )
                 {
-                    ServerProxy.Instance.SetServerUrl(InformationCache.SelectedServerData.IpAddress);
+                    ServerProxy.Instance.SetServerUrl(InformationCache.SelectedServerData.IPAddress);
                     ServerProxy.Instance.SetServerName(ServerListUpdater.ServerName("Proxy"));
 
                     AntiCheat.user_id = _userId;
-                    AntiCheat.serverip = new Uri(InformationCache.SelectedServerData.IpAddress).Host;
+                    AntiCheat.serverip = new Uri(InformationCache.SelectedServerData.IPAddress).Host;
 
                     StartGame(_userId, _loginToken);
 
@@ -2205,6 +2198,8 @@ namespace GameLauncher
                     }
                     else
                     {
+                        Application.DoEvents();
+
                         ExtractingProgress.Value = 100;
                         ExtractingProgress.Width = 519;
 
@@ -2224,7 +2219,7 @@ namespace GameLauncher
                         CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
 
                         ContextMenu = new ContextMenu();
-                        ContextMenu.MenuItems.Add(new MenuItem("Donate", (b, n) => { Process.Start("https://paypal.me/metonator95"); }));
+                        ContextMenu.MenuItems.Add(new MenuItem("Running Out of Time", (b, n) => { Process.Start("https://youtu.be/vq9-bmoI-RI"); }));
                         ContextMenu.MenuItems.Add("-");
                         ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", (sender2, e2) =>
                         {
@@ -2235,22 +2230,27 @@ namespace GameLauncher
                         Update();
                         Refresh();
 
-                        Notification.ContextMenu = ContextMenu;
+                        Notification.Text = "SBRW Launcher";
+                        Notification.ContextMenu = ContextMenu;                        
                     }
+                }
+                else if (!File.Exists(GameExePath))
+                {
+                    CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                    MessageBox.Show(null, "You Do Not have the Game Downloaded. Please Verify Game Files.", "GameLauncher", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                    MessageBox.Show(null, "Your NFSW.exe is modified. Please re-download the game.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(null, "Your NFSW.exe is Modified. Please Verify Game Files.", "GameLauncher", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception Error)
             {
-                Log.Error("GAME LAUNCH: " + Error.Message);
-                Log.ErrorIC("GAME LAUNCH: " + Error.HResult);
-                Log.ErrorFR("GAME LAUNCH: " + Error.ToString());
                 CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                MessageBox.Show(null, Error.Message, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                LogToFileAddons.OpenLog("GAME LAUNCH", Error.Message, Error, "Error", false);
             }
         }
 
@@ -2303,7 +2303,9 @@ namespace GameLauncher
             PlayProgress.Width = 0;
             ExtractingProgress.Width = 0;
 
-            if (!File.Exists(FileSettingsSave.GameInstallation + "/Sound/Speech/copspeechhdr_" + FileSettingsSave.Lang.ToLower() + ".big"))
+            string CopSoundSpeechFilePath = Strings.Encode(
+                Path.Combine(FileSettingsSave.GameInstallation,"Sound","Speech","copspeechhdr_" + FileSettingsSave.Lang.ToLower() + ".big"));
+            if (!File.Exists(CopSoundSpeechFilePath))
             {
                 PlayProgressText.Text = "Loading list of files to download...".ToUpper();
 
@@ -2319,7 +2321,8 @@ namespace GameLauncher
                             ExtractingProgress.Image = Theming.ProgressBarWarning;
                             ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
 
-                            PlayProgressText.Text = "Please make sure you have at least 8GB free space on hard drive.".ToUpper();
+                            PlayProgressText.Text = "Make sure you have at least 8GB of free space on hard drive.".ToUpper();
+                            FunctionStatus.IsVerifyHashDisabled = true;
 
                             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
                             TaskbarProgress.SetValue(Handle, 100, 100);
@@ -2341,9 +2344,10 @@ namespace GameLauncher
         {
             try
             {
-                if (File.Exists(FileSettingsSave.GameInstallation + "/TracksHigh/STREAML5RA_98.BUN"))
+                string SpecificTracksHighPath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "TracksHigh"));
+                if (File.Exists(Path.Combine(SpecificTracksHighPath, "STREAML5RA_98.BUN")))
                 {
-                    Directory.Delete(FileSettingsSave.GameInstallation + "/TracksHigh", true);
+                    Directory.Delete(SpecificTracksHighPath, true);
                 }
             }
             catch { }
@@ -2357,8 +2361,9 @@ namespace GameLauncher
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
+            string GameExePath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
             /* Use Local Packed Archive for Install Source - DavidCarbon */
-            if (File.Exists(filename_pack) && !File.Exists(FileSettingsSave.GameInstallation + "/nfsw.exe"))
+            if (File.Exists(filename_pack) && !File.Exists(GameExePath))
             {
                 PlayProgressTextTimer.Visible = true;
                 PlayProgressText.Text = "Local GameFiles sbrwpack Found In Launcher Folder".ToUpper();
@@ -2367,7 +2372,7 @@ namespace GameLauncher
                 /* GameFiles.sbrwpack */
                 LocalGameFiles();
             }
-            else if (!File.Exists(FileSettingsSave.GameInstallation + "/nfsw.exe"))
+            else if (!File.Exists(GameExePath))
             {
                 _downloadStartTime = DateTime.Now;
                 PlayProgressTextTimer.Text = "Downloading: Core GameFiles".ToUpper();
@@ -2388,7 +2393,8 @@ namespace GameLauncher
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
-            if (!File.Exists(FileSettingsSave.GameInstallation + "/Tracks/STREAML5RA_98.BUN"))
+            string SpecificTracksFilePath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "Tracks", "STREAML5RA_98.BUN"));
+            if (!File.Exists(SpecificTracksFilePath))
             {
                 _downloadStartTime = DateTime.Now;
                 PlayProgressTextTimer.Text = "Downloading: Tracks Data".ToUpper();
@@ -2414,7 +2420,7 @@ namespace GameLauncher
 
             try
             {
-                speechFile = FunctionStatus.SpeechFiles(FileSettingsSave.Lang).ToUpper();
+                speechFile = DownloaderAddons.SpeechFiles(FileSettingsSave.Lang).ToUpper();
 
                 WebClientWithTimeout wc = new WebClientWithTimeout
                 {
@@ -2432,13 +2438,14 @@ namespace GameLauncher
             }
             catch (Exception)
             {
-                speechFile = FunctionStatus.SpeechFiles(null);
-                speechSize = FunctionStatus.SpeechFilesSize();
+                speechFile = DownloaderAddons.SpeechFiles(null);
+                speechSize = DownloaderAddons.SpeechFilesSize();
             }
 
             PlayProgressText.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper();
 
-            if (!File.Exists(FileSettingsSave.GameInstallation + "\\Sound\\Speech\\copspeechsth_" + speechFile + ".big"))
+            string SoundSpeechPath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation,"Sound","Speech","copspeechsth_" + speechFile + ".big"));
+            if (!File.Exists(SoundSpeechPath))
             {
                 _downloadStartTime = DateTime.Now;
                 PlayProgressTextTimer.Text = "Downloading: Language Audio".ToUpper();
@@ -2495,13 +2502,14 @@ namespace GameLauncher
                                 if (fullName.Substring(fullName.Length - 1) == "/")
                                 {
                                     /* Is a directory, create it! */
-                                    string folderName = fullName.Remove(fullName.Length - 1);
-                                    if (Directory.Exists(Path.Combine(FileSettingsSave.GameInstallation, folderName)))
+                                    string FolderName = fullName.Remove(fullName.Length - 1);
+                                    string GameWithFolderName = Path.Combine(FileSettingsSave.GameInstallation, FolderName);
+                                    if (Directory.Exists(GameWithFolderName))
                                     {
-                                        Directory.Delete(Path.Combine(FileSettingsSave.GameInstallation, folderName), true);
+                                        Directory.Delete(GameWithFolderName, true);
                                     }
 
-                                    Directory.CreateDirectory(Path.Combine(FileSettingsSave.GameInstallation, folderName));
+                                    Directory.CreateDirectory(GameWithFolderName);
                                 }
                                 else
                                 {
@@ -2609,7 +2617,8 @@ namespace GameLauncher
         {
             try
             {
-                File.WriteAllBytes(FileSettingsSave.GameInstallation + "/GFX/BootFlow.gfx", ExtractResource.AsByte("GameLauncher.Resources.Bootscreen.BootFlow.gfx"));
+                File.WriteAllBytes(Path.Combine(FileSettingsSave.GameInstallation, "GFX", "BootFlow.gfx"), 
+                    ExtractResource.AsByte("GameLauncher.Resources.Bootscreen.BootFlow.gfx"));
             }
             catch { }
 
@@ -2658,19 +2667,6 @@ namespace GameLauncher
 
         private void OnDownloadFailed(Exception Error)
         {
-            string failureMessage;
-            try
-            {
-                Log.Error("CDN DOWNLOADER: " + Error.Message);
-                Log.ErrorIC("CDN DOWNLOADER: " + Error.HResult);
-                Log.ErrorFR("CDN DOWNLOADER: " + Error.ToString());
-                failureMessage = Error.Message;
-            }
-            catch
-            {
-                failureMessage = "Download failed.";
-            }
-
             DiscordLauncherPresense.Status("Download Game Files Error", null);
 
             ExtractingProgress.Value = 100;
@@ -2678,7 +2674,8 @@ namespace GameLauncher
             ExtractingProgress.Image = Theming.ProgressBarError;
             ExtractingProgress.ProgressColor = Theming.Error;
 
-            PlayProgressText.Text = failureMessage.ToUpper();
+            PlayProgressText.Text = (string.IsNullOrWhiteSpace(Error.Message) ? "Download Failed" : Error.Message).ToUpper();
+            FunctionStatus.IsVerifyHashDisabled = true;
 
             TaskbarProgress.SetValue(Handle, 100, 100);
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Error);
@@ -2689,8 +2686,8 @@ namespace GameLauncher
                 TempEmailCache = MainEmail.Text;
                 MainEmail.Text = "EMAIL IS HIDDEN";
             }
-            MessageBox.Show(null, "CDN Downloader Encountered an Error" +
-                "\n" + failureMessage, "GameLauncher - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            string LogMessage = "CDN Downloader Encountered an Error:";
+            LogToFileAddons.OpenLog("MODNET FILES", LogMessage, Error, "Error", false);
             if (!string.IsNullOrWhiteSpace(TempEmailCache))
             {
                 MainEmail.Text = TempEmailCache;
@@ -2958,18 +2955,18 @@ namespace GameLauncher
                             {
                                 Encoding = Encoding.UTF8
                             };
-                            pingServer.DownloadString(server.IpAddress + "/GetServerInformation");
+                            pingServer.DownloadString(server.IPAddress + "/GetServerInformation");
 
-                            if (!InformationCache.ServerStatusBook.ContainsKey(server.Id))
+                            if (!InformationCache.ServerStatusBook.ContainsKey(server.ID))
                             {
-                                InformationCache.ServerStatusBook.Add(server.Id, 1);
+                                InformationCache.ServerStatusBook.Add(server.ID, 1);
                             }
                         }
                         catch
                         {
-                            if (!InformationCache.ServerStatusBook.ContainsKey(server.Id))
+                            if (!InformationCache.ServerStatusBook.ContainsKey(server.ID))
                             {
-                                InformationCache.ServerStatusBook.Add(server.Id, 0);
+                                InformationCache.ServerStatusBook.Add(server.ID, 0);
                             }
                         }
                     });
@@ -2991,9 +2988,7 @@ namespace GameLauncher
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("LAUNCHER: " + Error.Message);
-                    Log.ErrorIC("LAUNCHER: " + Error.HResult);
-                    Log.ErrorFR("LAUNCHER: " + Error.Message);
+                    LogToFileAddons.OpenLog("CURSOR", null, Error, null, true);
                 }
             }
         }

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
-using GameLauncher.App.Classes.Logger;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App.Classes.LauncherCore.Visuals
 {
@@ -970,9 +970,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("THEMING: " + Error.Message);
-                    Log.ErrorIC("THEMING: " + Error.HResult);
-                    Log.ErrorFR("THEMING: " + Error.ToString());
+                    LogToFileAddons.OpenLog("THEMEING", null, Error, null, true);
                 }
             }
         }
@@ -981,19 +979,27 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         public static Color ToColor(string color)
         {
-            var arrColorFragments = color?.Split(',').Select(sFragment => { int.TryParse(sFragment, out int fragment); return fragment; }).ToArray();
-
-            switch (arrColorFragments?.Length)
+            try
             {
-                case 3:
-                    /* Regular RGB Conversion */
-                    return Color.FromArgb(arrColorFragments[0], arrColorFragments[1], arrColorFragments[2]);
-                case 4:
-                    /* Regular ARGB Conversion */
-                    return Color.FromArgb(arrColorFragments[0], arrColorFragments[1], arrColorFragments[2], arrColorFragments[3]);
-                default:
-                    /* Fail Safe Color */
-                    return Color.Silver;
+                var arrColorFragments = color?.Split(',').Select(sFragment => { int.TryParse(sFragment, out int fragment); return fragment; }).ToArray();
+
+                switch (arrColorFragments?.Length)
+                {
+                    case 3:
+                        /* Regular RGB Conversion */
+                        return Color.FromArgb(arrColorFragments[0], arrColorFragments[1], arrColorFragments[2]);
+                    case 4:
+                        /* Regular ARGB Conversion */
+                        return Color.FromArgb(arrColorFragments[0], arrColorFragments[1], arrColorFragments[2], arrColorFragments[3]);
+                    default:
+                        /* Fail Safe Color */
+                        return Color.Silver;
+                }
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("THEMEING", null, Error, null, true);
+                return Color.Silver;
             }
         }
 
