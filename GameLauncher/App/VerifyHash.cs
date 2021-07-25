@@ -243,7 +243,7 @@ namespace GameLauncher.App
                 LogToFileAddons.OpenLog("VERIFY HASH", null, Error, null, true);
             }
 
-            if (DeletionError == 0)
+            if (DeletionError != 0)
             {
                 Log.Info("VERIFY HASH: Completed check for '.orig' Files and Symbolic Folders, BUT Encounterd a File or Folder Deletion Error. " +
                 "Check Verify.log for More Details");
@@ -251,9 +251,10 @@ namespace GameLauncher.App
                 if (MessageBox.Show("Verify Hash had encountered File or Folder Deletion Errors." +
                 "\nWould you like to Open Verify.Log and Stop the Scanner?", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    if (File.Exists("Verify.log"))
+                    string LogFile = Strings.Encode(Path.Combine(Locations.LogFolder, Locations.LogVerify));
+                    if (File.Exists(LogFile))
                     {
-                        Process.Start("Verify.log");
+                        Process.Start(LogFile);
                     }
 
                     StopScanner_Click(null, null);
