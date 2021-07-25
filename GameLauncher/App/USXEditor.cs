@@ -791,6 +791,7 @@ namespace GameLauncher.App
             labelWorldDetails.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
             labelCarDetail.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
             labelBaseTextures.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
+            LabelGraphicPreset.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold | FontStyle.Underline);
             /* Sub-Titles */
             labelPerfLevel.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             labelResolution.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
@@ -925,6 +926,7 @@ namespace GameLauncher.App
             labelWorldDetails.ForeColor = Theming.SecondaryTextForeColor;
             labelCarDetail.ForeColor = Theming.SecondaryTextForeColor;
             labelBaseTextures.ForeColor = Theming.SecondaryTextForeColor;
+            LabelGraphicPreset.ForeColor = Theming.SecondaryTextForeColor;
             /* Sub-Titles */
             labelPerfLevel.ForeColor = Theming.Link;
             labelResolution.ForeColor = Theming.MainTextForeColor;
@@ -1238,9 +1240,6 @@ namespace GameLauncher.App
             SettingsCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
             SettingsCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
 
-            //PresetButtonCustom.MouseEnter += new EventHandler(PresetButtonCustom_MouseEnter);
-            //PresetButtonCustom.MouseLeave += new EventHandler(PresetButtonCustom_MouseLeave);
-
             comboBoxPerformanceLevel.SelectedIndexChanged += new EventHandler(comboBoxPerformanceLevel_SelectedIndexChanged);
 
             PresetButtonMin.CheckedChanged += new EventHandler(PresetButtonMin_CheckedChanged);
@@ -1425,46 +1424,6 @@ namespace GameLauncher.App
             {
                 SetValues(5);
             }
-        }
-
-        private void ShowToolTip(IWin32Window HoverControl, bool Status, string Type)
-        {
-            if (Status)
-            {
-                if (Hover.Active)
-                {
-                    Hover.RemoveAll();
-                }
-
-                string HoverText;
-                switch (Type)
-                {
-                    case "PresetButtonCustom":
-                        HoverText = "Saved Preset Settings";
-                        break;
-                    default:
-                        HoverText = "Hello World!";
-                        break;
-                }
-
-                Hover.UseAnimation = true;
-                Hover.UseFading = true;
-                Hover.Show(HoverText, HoverControl);
-            }
-            else
-            {
-                Hover.Hide(HoverControl);
-            }
-        }
-
-        private void PresetButtonCustom_MouseEnter(object sender, EventArgs e)
-        {
-            ShowToolTip(PresetButtonCustom, true, "PresetButtonCustom");
-        }
-
-        private void PresetButtonCustom_MouseLeave(object sender, EventArgs e)
-        {
-            ShowToolTip(PresetButtonCustom, false, null);
         }
 
         private void Greenbutton_hover_MouseEnter(object sender, EventArgs e)

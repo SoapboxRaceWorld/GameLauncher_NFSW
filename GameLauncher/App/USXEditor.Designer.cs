@@ -167,7 +167,7 @@ namespace GameLauncher.App
             this.PresetButtonLow = new System.Windows.Forms.RadioButton();
             this.PresetButtonMed = new System.Windows.Forms.RadioButton();
             this.Hover = new System.Windows.Forms.ToolTip(this.components);
-            this.label1 = new System.Windows.Forms.Label();
+            this.LabelGraphicPreset = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericBrightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMVol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSFxVol)).BeginInit();
@@ -1971,18 +1971,18 @@ namespace GameLauncher.App
             this.PresetButtonMed.Text = "2";
             this.PresetButtonMed.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // LabelGraphicPreset
             // 
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.label1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label1.Location = new System.Drawing.Point(282, 15);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(244, 18);
-            this.label1.TabIndex = 142;
-            this.label1.Text = "Graphic Presets";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LabelGraphicPreset.BackColor = System.Drawing.Color.Transparent;
+            this.LabelGraphicPreset.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelGraphicPreset.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.LabelGraphicPreset.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LabelGraphicPreset.Location = new System.Drawing.Point(282, 15);
+            this.LabelGraphicPreset.Name = "LabelGraphicPreset";
+            this.LabelGraphicPreset.Size = new System.Drawing.Size(244, 18);
+            this.LabelGraphicPreset.TabIndex = 142;
+            this.LabelGraphicPreset.Text = "Graphic Presets";
+            this.LabelGraphicPreset.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // USXEditor
             // 
@@ -1990,7 +1990,7 @@ namespace GameLauncher.App
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(548, 673);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.LabelGraphicPreset);
             this.Controls.Add(this.PresetPanel);
             this.Controls.Add(this.comboResolutions);
             this.Controls.Add(this.comboBoxPerformanceLevel);
@@ -2271,7 +2271,7 @@ namespace GameLauncher.App
         private System.Windows.Forms.ToolTip Hover;
         private System.Windows.Forms.RadioButton PresetButtonHigh;
         private System.Windows.Forms.RadioButton PresetButtonMax;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label LabelGraphicPreset;
         private System.Windows.Forms.RadioButton PresetButtonCustom;
     }
 }
