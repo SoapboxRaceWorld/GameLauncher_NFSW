@@ -42,7 +42,6 @@ using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Client.Auth;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.Support.Language;
 
 namespace GameLauncher
 {
@@ -1620,8 +1619,6 @@ namespace GameLauncher
 
             shutdowntimer.Interval = UpdateInterval;
             shutdowntimer.Enabled = true;
-
-            MessageBox.Show("Test: " + Texts.GetLang("EN", "MainScreen", "PlayProgressText"));
 
             if (nfswProcess != null)
             {
