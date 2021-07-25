@@ -72,6 +72,7 @@ namespace GameLauncher
         private string _loginToken = string.Empty;
         private string _userId = string.Empty;
         private static int UpdateInterval = 60000;
+        private static int serverSecondsToShutDown;
 
         public static String ModNetFileNameInUse = String.Empty;
         readonly Queue<Uri> modFilesDownloadUrls = new Queue<Uri>();
@@ -893,11 +894,10 @@ namespace GameLauncher
                         /* Server Set Speedbug Timer Display */
                         try
                         {
-                            int serverSecondsToShutDown = 
+                            serverSecondsToShutDown = 
                             (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 7200;
-                            string serverSecondsToShutDownNamed = string.Format("Gameplay Timer: " + TimeConversions.RelativeTime(serverSecondsToShutDown));
 
-                            this.ServerShutDown.Text = serverSecondsToShutDownNamed;
+                            this.ServerShutDown.Text = string.Format("Gameplay Timer: " + TimeConversions.RelativeTime(serverSecondsToShutDown));
                         }
                         catch { }
 
@@ -1665,26 +1665,27 @@ namespace GameLauncher
                             x.ShowInTaskbar = true;
 
                             String errorMsg = "Launcher Was Unable to Determine Error Code";
-                            if (exitCode == -1073741819) errorMsg = "Game Crash: Access Violation (0x" + exitCode.ToString("X") + ")";
-                            else if (exitCode == -1073740940) errorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")";
-                            else if(exitCode == -1073740791) errorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")";
-                            else if(exitCode == -805306369) errorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")";
-                            else if(exitCode == -1073741515) errorMsg = "Game Crash: Missing dependency files (0x" + exitCode.ToString("X") + ")";
-                            else if(exitCode == -1073740972) errorMsg = "Game Crash: Debugger crash (0x" + exitCode.ToString("X") + ")";
-                            else if(exitCode == -1073741676) errorMsg = "Game Crash: Division by Zero (0x" + exitCode.ToString("X") + ")";
-                            else if(exitCode == 1) errorMsg = "The process nfsw.exe was killed via Task Manager";
-                            else if(exitCode == 69) errorMsg = "AllocationAssistant encountered an 'Out of Memory' condition";
-                            else if(exitCode == 2137) errorMsg = "Launcher killed your game to prevent SpeedBugging.";
-                            else if(exitCode == 2017) errorMsg = "Server replied with Code: " + Tokens.UserId + " (0x" + exitCode.ToString("X") + ")";
-                            else if(exitCode == -3) errorMsg = "The Server was unable to resolve the request";
-                            else if(exitCode == -4) errorMsg = "Another instance is already executed";
-                            else if(exitCode == -5) errorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
-                            else if(exitCode == -6) errorMsg = "Server was unable to resolve your request";
+                            if (exitCode == -1073741819) { errorMsg = "Game Crash: Access Violation (0x" + exitCode.ToString("X") + ")"; }
+                            else if (exitCode == -1073740940) { errorMsg = "Game Crash: Heap Corruption (0x" + exitCode.ToString("X") + ")"; }
+                            else if (exitCode == -1073740791) { errorMsg = "Game Crash: Stack buffer overflow (0x" + exitCode.ToString("X") + ")"; }
+                            else if (exitCode == -805306369) { errorMsg = "Game Crash: Application Hang (0x" + exitCode.ToString("X") + ")"; }
+                            else if (exitCode == -1073741515) { errorMsg = "Game Crash: Missing dependency files (0x" + exitCode.ToString("X") + ")"; }
+                            else if (exitCode == -1073740972) { errorMsg = "Game Crash: Debugger crash (0x" + exitCode.ToString("X") + ")"; }
+                            else if (exitCode == -1073741676) { errorMsg = "Game Crash: Division by Zero (0x" + exitCode.ToString("X") + ")"; }
+                            else if (exitCode == 1) { errorMsg = "The process nfsw.exe was killed via Task Manager"; }
+                            else if (exitCode == 69) { errorMsg = "AllocationAssistant encountered an 'Out of Memory' condition"; }
+                            else if (exitCode == 2137) { errorMsg = "Launcher Forced Closed your Game." +
+                                "\nYou are Required to Restart the Game After " + TimeConversions.RelativeTime(serverSecondsToShutDown); }
+                            else if (exitCode == 2017) errorMsg = "Server replied with Code: " + Tokens.UserId + " (0x" + exitCode.ToString("X") + ")";
+                            else if (exitCode == -3) errorMsg = "The Server was unable to resolve the request";
+                            else if (exitCode == -4) errorMsg = "Another instance is already executed";
+                            else if (exitCode == -5) errorMsg = "DirectX Device was not found. Please install GPU Drivers before playing";
+                            else if (exitCode == -6) errorMsg = "Server was unable to resolve your request";
                             /* ModLoader */
-                            else if(exitCode == 1450) errorMsg = "ModNet: Unable to load ModLoader. Please Exclude Game Files with your Antivirus Software";
-                            else if(exitCode == 2) errorMsg = "ModNet: Game was launched with invalid command line parameters.";
-                            else if(exitCode == 3) errorMsg = "ModNet: .links file should not exist upon startup!";
-                            else if(exitCode == 4) errorMsg = "ModNet: An Unhandled Error Appeared";
+                            else if (exitCode == 1450) errorMsg = "ModNet: Unable to load ModLoader. Please Exclude Game Files with your Antivirus Software";
+                            else if (exitCode == 2) errorMsg = "ModNet: Game was launched with invalid command line parameters.";
+                            else if (exitCode == 3) errorMsg = "ModNet: .links file should not exist upon startup!";
+                            else if (exitCode == 4) errorMsg = "ModNet: An Unhandled Error Appeared";
                             /* Generic Error */
                             else errorMsg = "Game Crash with exitcode: " + exitCode.ToString() + " (0x" + exitCode.ToString("X") + ")";
 

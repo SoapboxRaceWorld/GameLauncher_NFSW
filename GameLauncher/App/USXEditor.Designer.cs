@@ -29,6 +29,7 @@ namespace GameLauncher.App
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(USXEditor));
             this.labelAudioMode = new System.Windows.Forms.Label();
             this.labelBrightness = new System.Windows.Forms.Label();
@@ -158,6 +159,15 @@ namespace GameLauncher.App
             this.labelOverRideAspect = new System.Windows.Forms.Label();
             this.comboBoxPerformanceLevel = new System.Windows.Forms.ComboBox();
             this.comboResolutions = new System.Windows.Forms.ComboBox();
+            this.PresetPanel = new System.Windows.Forms.Panel();
+            this.PresetButtonCustom = new System.Windows.Forms.RadioButton();
+            this.PresetButtonHigh = new System.Windows.Forms.RadioButton();
+            this.PresetButtonMax = new System.Windows.Forms.RadioButton();
+            this.PresetButtonMin = new System.Windows.Forms.RadioButton();
+            this.PresetButtonLow = new System.Windows.Forms.RadioButton();
+            this.PresetButtonMed = new System.Windows.Forms.RadioButton();
+            this.Hover = new System.Windows.Forms.ToolTip(this.components);
+            this.LabelGraphicPreset = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericBrightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMVol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSFxVol)).BeginInit();
@@ -187,6 +197,7 @@ namespace GameLauncher.App
             this.panelVisTreat.SuspendLayout();
             this.panelWindowedControl.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.PresetPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelAudioMode
@@ -341,7 +352,7 @@ namespace GameLauncher.App
             this.labelBaseTextures.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelBaseTextures.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.labelBaseTextures.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelBaseTextures.Location = new System.Drawing.Point(282, 519);
+            this.labelBaseTextures.Location = new System.Drawing.Point(281, 567);
             this.labelBaseTextures.Name = "labelBaseTextures";
             this.labelBaseTextures.Size = new System.Drawing.Size(244, 18);
             this.labelBaseTextures.TabIndex = 20;
@@ -353,7 +364,7 @@ namespace GameLauncher.App
             this.labelFilterLvl.BackColor = System.Drawing.Color.Transparent;
             this.labelFilterLvl.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelFilterLvl.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelFilterLvl.Location = new System.Drawing.Point(290, 539);
+            this.labelFilterLvl.Location = new System.Drawing.Point(289, 587);
             this.labelFilterLvl.Name = "labelFilterLvl";
             this.labelFilterLvl.Size = new System.Drawing.Size(120, 18);
             this.labelFilterLvl.TabIndex = 21;
@@ -377,7 +388,7 @@ namespace GameLauncher.App
             this.labelAntialiasing.BackColor = System.Drawing.Color.Transparent;
             this.labelAntialiasing.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelAntialiasing.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelAntialiasing.Location = new System.Drawing.Point(290, 591);
+            this.labelAntialiasing.Location = new System.Drawing.Point(289, 639);
             this.labelAntialiasing.Name = "labelAntialiasing";
             this.labelAntialiasing.Size = new System.Drawing.Size(120, 18);
             this.labelAntialiasing.TabIndex = 23;
@@ -390,7 +401,7 @@ namespace GameLauncher.App
             this.labelCarDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCarDetail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.labelCarDetail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelCarDetail.Location = new System.Drawing.Point(282, 447);
+            this.labelCarDetail.Location = new System.Drawing.Point(281, 495);
             this.labelCarDetail.Name = "labelCarDetail";
             this.labelCarDetail.Size = new System.Drawing.Size(244, 18);
             this.labelCarDetail.TabIndex = 24;
@@ -402,7 +413,7 @@ namespace GameLauncher.App
             this.labelCarEnvMap.BackColor = System.Drawing.Color.Transparent;
             this.labelCarEnvMap.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCarEnvMap.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelCarEnvMap.Location = new System.Drawing.Point(290, 467);
+            this.labelCarEnvMap.Location = new System.Drawing.Point(289, 515);
             this.labelCarEnvMap.Name = "labelCarEnvMap";
             this.labelCarEnvMap.Size = new System.Drawing.Size(120, 18);
             this.labelCarEnvMap.TabIndex = 25;
@@ -426,7 +437,7 @@ namespace GameLauncher.App
             this.labelGlobalDetail.BackColor = System.Drawing.Color.Transparent;
             this.labelGlobalDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelGlobalDetail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelGlobalDetail.Location = new System.Drawing.Point(290, 291);
+            this.labelGlobalDetail.Location = new System.Drawing.Point(289, 339);
             this.labelGlobalDetail.Name = "labelGlobalDetail";
             this.labelGlobalDetail.Size = new System.Drawing.Size(120, 18);
             this.labelGlobalDetail.TabIndex = 27;
@@ -439,7 +450,7 @@ namespace GameLauncher.App
             this.labelWorldDetails.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelWorldDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.labelWorldDetails.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelWorldDetails.Location = new System.Drawing.Point(282, 271);
+            this.labelWorldDetails.Location = new System.Drawing.Point(281, 319);
             this.labelWorldDetails.Name = "labelWorldDetails";
             this.labelWorldDetails.Size = new System.Drawing.Size(244, 18);
             this.labelWorldDetails.TabIndex = 28;
@@ -463,7 +474,7 @@ namespace GameLauncher.App
             this.labelRoadReflection.BackColor = System.Drawing.Color.Transparent;
             this.labelRoadReflection.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelRoadReflection.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelRoadReflection.Location = new System.Drawing.Point(290, 343);
+            this.labelRoadReflection.Location = new System.Drawing.Point(289, 391);
             this.labelRoadReflection.Name = "labelRoadReflection";
             this.labelRoadReflection.Size = new System.Drawing.Size(120, 18);
             this.labelRoadReflection.TabIndex = 30;
@@ -475,7 +486,7 @@ namespace GameLauncher.App
             this.labelRoadTexture.BackColor = System.Drawing.Color.Transparent;
             this.labelRoadTexture.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelRoadTexture.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelRoadTexture.Location = new System.Drawing.Point(290, 369);
+            this.labelRoadTexture.Location = new System.Drawing.Point(289, 417);
             this.labelRoadTexture.Name = "labelRoadTexture";
             this.labelRoadTexture.Size = new System.Drawing.Size(120, 18);
             this.labelRoadTexture.TabIndex = 31;
@@ -499,7 +510,7 @@ namespace GameLauncher.App
             this.labelRoadAniso.BackColor = System.Drawing.Color.Transparent;
             this.labelRoadAniso.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelRoadAniso.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelRoadAniso.Location = new System.Drawing.Point(290, 421);
+            this.labelRoadAniso.Location = new System.Drawing.Point(289, 469);
             this.labelRoadAniso.Name = "labelRoadAniso";
             this.labelRoadAniso.Size = new System.Drawing.Size(120, 18);
             this.labelRoadAniso.TabIndex = 33;
@@ -512,7 +523,7 @@ namespace GameLauncher.App
             this.labelShaderDetails.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelShaderDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
             this.labelShaderDetails.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelShaderDetails.Location = new System.Drawing.Point(282, 17);
+            this.labelShaderDetails.Location = new System.Drawing.Point(281, 65);
             this.labelShaderDetails.Name = "labelShaderDetails";
             this.labelShaderDetails.Size = new System.Drawing.Size(244, 18);
             this.labelShaderDetails.TabIndex = 34;
@@ -524,7 +535,7 @@ namespace GameLauncher.App
             this.labelFSAA.BackColor = System.Drawing.Color.Transparent;
             this.labelFSAA.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelFSAA.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelFSAA.Location = new System.Drawing.Point(290, 37);
+            this.labelFSAA.Location = new System.Drawing.Point(289, 85);
             this.labelFSAA.Name = "labelFSAA";
             this.labelFSAA.Size = new System.Drawing.Size(120, 18);
             this.labelFSAA.TabIndex = 35;
@@ -536,7 +547,7 @@ namespace GameLauncher.App
             this.labelShaderDetail.BackColor = System.Drawing.Color.Transparent;
             this.labelShaderDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelShaderDetail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelShaderDetail.Location = new System.Drawing.Point(290, 193);
+            this.labelShaderDetail.Location = new System.Drawing.Point(289, 241);
             this.labelShaderDetail.Name = "labelShaderDetail";
             this.labelShaderDetail.Size = new System.Drawing.Size(120, 18);
             this.labelShaderDetail.TabIndex = 36;
@@ -548,7 +559,7 @@ namespace GameLauncher.App
             this.labelShadowDetail.BackColor = System.Drawing.Color.Transparent;
             this.labelShadowDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelShadowDetail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelShadowDetail.Location = new System.Drawing.Point(290, 167);
+            this.labelShadowDetail.Location = new System.Drawing.Point(289, 215);
             this.labelShadowDetail.Name = "labelShadowDetail";
             this.labelShadowDetail.Size = new System.Drawing.Size(120, 18);
             this.labelShadowDetail.TabIndex = 37;
@@ -853,7 +864,7 @@ namespace GameLauncher.App
             this.radioOverBrightOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioOverBrightOn.Location = new System.Drawing.Point(125, 2);
             this.radioOverBrightOn.Name = "radioOverBrightOn";
-            this.radioOverBrightOn.Size = new System.Drawing.Size(41, 18);
+            this.radioOverBrightOn.Size = new System.Drawing.Size(42, 18);
             this.radioOverBrightOn.TabIndex = 73;
             this.radioOverBrightOn.TabStop = true;
             this.radioOverBrightOn.Tag = "OverbrightOn";
@@ -866,7 +877,7 @@ namespace GameLauncher.App
             this.radioPostProcOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioPostProcOn.Location = new System.Drawing.Point(125, 2);
             this.radioPostProcOn.Name = "radioPostProcOn";
-            this.radioPostProcOn.Size = new System.Drawing.Size(41, 18);
+            this.radioPostProcOn.Size = new System.Drawing.Size(42, 18);
             this.radioPostProcOn.TabIndex = 74;
             this.radioPostProcOn.TabStop = true;
             this.radioPostProcOn.Tag = "PostProcessingOn";
@@ -879,7 +890,7 @@ namespace GameLauncher.App
             this.radioParticleSysOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioParticleSysOn.Location = new System.Drawing.Point(125, 2);
             this.radioParticleSysOn.Name = "radioParticleSysOn";
-            this.radioParticleSysOn.Size = new System.Drawing.Size(41, 18);
+            this.radioParticleSysOn.Size = new System.Drawing.Size(42, 18);
             this.radioParticleSysOn.TabIndex = 75;
             this.radioParticleSysOn.TabStop = true;
             this.radioParticleSysOn.Tag = "ParticleSystemOn";
@@ -892,7 +903,7 @@ namespace GameLauncher.App
             this.radioMotionBlurOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioMotionBlurOn.Location = new System.Drawing.Point(125, 2);
             this.radioMotionBlurOn.Name = "radioMotionBlurOn";
-            this.radioMotionBlurOn.Size = new System.Drawing.Size(41, 18);
+            this.radioMotionBlurOn.Size = new System.Drawing.Size(42, 18);
             this.radioMotionBlurOn.TabIndex = 77;
             this.radioMotionBlurOn.TabStop = true;
             this.radioMotionBlurOn.Tag = "MotionBlurOn";
@@ -905,7 +916,7 @@ namespace GameLauncher.App
             this.radioMotionBlurOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioMotionBlurOff.Location = new System.Drawing.Point(182, 2);
             this.radioMotionBlurOff.Name = "radioMotionBlurOff";
-            this.radioMotionBlurOff.Size = new System.Drawing.Size(41, 18);
+            this.radioMotionBlurOff.Size = new System.Drawing.Size(42, 18);
             this.radioMotionBlurOff.TabIndex = 78;
             this.radioMotionBlurOff.TabStop = true;
             this.radioMotionBlurOff.Tag = "MotionBlurOff";
@@ -918,7 +929,7 @@ namespace GameLauncher.App
             this.radioOverBrightOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioOverBrightOff.Location = new System.Drawing.Point(182, 2);
             this.radioOverBrightOff.Name = "radioOverBrightOff";
-            this.radioOverBrightOff.Size = new System.Drawing.Size(41, 18);
+            this.radioOverBrightOff.Size = new System.Drawing.Size(42, 18);
             this.radioOverBrightOff.TabIndex = 79;
             this.radioOverBrightOff.TabStop = true;
             this.radioOverBrightOff.Tag = "OverbrightOff";
@@ -931,7 +942,7 @@ namespace GameLauncher.App
             this.radioPostProcOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioPostProcOff.Location = new System.Drawing.Point(182, 2);
             this.radioPostProcOff.Name = "radioPostProcOff";
-            this.radioPostProcOff.Size = new System.Drawing.Size(41, 18);
+            this.radioPostProcOff.Size = new System.Drawing.Size(42, 18);
             this.radioPostProcOff.TabIndex = 80;
             this.radioPostProcOff.TabStop = true;
             this.radioPostProcOff.Tag = "PostProcessingOff";
@@ -944,7 +955,7 @@ namespace GameLauncher.App
             this.radioParticleSysOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioParticleSysOff.Location = new System.Drawing.Point(182, 2);
             this.radioParticleSysOff.Name = "radioParticleSysOff";
-            this.radioParticleSysOff.Size = new System.Drawing.Size(41, 18);
+            this.radioParticleSysOff.Size = new System.Drawing.Size(42, 18);
             this.radioParticleSysOff.TabIndex = 81;
             this.radioParticleSysOff.TabStop = true;
             this.radioParticleSysOff.Tag = "ParticleSystemOff";
@@ -959,7 +970,7 @@ namespace GameLauncher.App
             this.comboBoxBaseTextureFilter.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBoxBaseTextureFilter.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxBaseTextureFilter.FormattingEnabled = true;
-            this.comboBoxBaseTextureFilter.Location = new System.Drawing.Point(409, 537);
+            this.comboBoxBaseTextureFilter.Location = new System.Drawing.Point(408, 585);
             this.comboBoxBaseTextureFilter.MaxDropDownItems = 3;
             this.comboBoxBaseTextureFilter.Name = "comboBoxBaseTextureFilter";
             this.comboBoxBaseTextureFilter.Size = new System.Drawing.Size(120, 22);
@@ -973,7 +984,7 @@ namespace GameLauncher.App
             this.comboBoxAnisotropicLevel.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBoxAnisotropicLevel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxAnisotropicLevel.FormattingEnabled = true;
-            this.comboBoxAnisotropicLevel.Location = new System.Drawing.Point(409, 589);
+            this.comboBoxAnisotropicLevel.Location = new System.Drawing.Point(408, 637);
             this.comboBoxAnisotropicLevel.Name = "comboBoxAnisotropicLevel";
             this.comboBoxAnisotropicLevel.Size = new System.Drawing.Size(120, 22);
             this.comboBoxAnisotropicLevel.TabIndex = 86;
@@ -986,7 +997,7 @@ namespace GameLauncher.App
             this.comboBoxCarEnvironmentDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBoxCarEnvironmentDetail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxCarEnvironmentDetail.FormattingEnabled = true;
-            this.comboBoxCarEnvironmentDetail.Location = new System.Drawing.Point(409, 465);
+            this.comboBoxCarEnvironmentDetail.Location = new System.Drawing.Point(408, 513);
             this.comboBoxCarEnvironmentDetail.Name = "comboBoxCarEnvironmentDetail";
             this.comboBoxCarEnvironmentDetail.Size = new System.Drawing.Size(120, 22);
             this.comboBoxCarEnvironmentDetail.TabIndex = 87;
@@ -999,7 +1010,7 @@ namespace GameLauncher.App
             this.comboBoxWorldRoadAniso.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBoxWorldRoadAniso.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxWorldRoadAniso.FormattingEnabled = true;
-            this.comboBoxWorldRoadAniso.Location = new System.Drawing.Point(409, 419);
+            this.comboBoxWorldRoadAniso.Location = new System.Drawing.Point(408, 467);
             this.comboBoxWorldRoadAniso.Name = "comboBoxWorldRoadAniso";
             this.comboBoxWorldRoadAniso.Size = new System.Drawing.Size(120, 22);
             this.comboBoxWorldRoadAniso.TabIndex = 88;
@@ -1012,7 +1023,7 @@ namespace GameLauncher.App
             this.comboBoxShaderFSAA.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBoxShaderFSAA.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxShaderFSAA.FormattingEnabled = true;
-            this.comboBoxShaderFSAA.Location = new System.Drawing.Point(409, 35);
+            this.comboBoxShaderFSAA.Location = new System.Drawing.Point(408, 83);
             this.comboBoxShaderFSAA.Name = "comboBoxShaderFSAA";
             this.comboBoxShaderFSAA.Size = new System.Drawing.Size(120, 22);
             this.comboBoxShaderFSAA.TabIndex = 89;
@@ -1025,7 +1036,7 @@ namespace GameLauncher.App
             this.comboBoxShadowDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBoxShadowDetail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxShadowDetail.FormattingEnabled = true;
-            this.comboBoxShadowDetail.Location = new System.Drawing.Point(409, 165);
+            this.comboBoxShadowDetail.Location = new System.Drawing.Point(408, 213);
             this.comboBoxShadowDetail.Name = "comboBoxShadowDetail";
             this.comboBoxShadowDetail.Size = new System.Drawing.Size(120, 22);
             this.comboBoxShadowDetail.TabIndex = 90;
@@ -1038,7 +1049,7 @@ namespace GameLauncher.App
             this.comboBoxShaderDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBoxShaderDetail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxShaderDetail.FormattingEnabled = true;
-            this.comboBoxShaderDetail.Location = new System.Drawing.Point(409, 191);
+            this.comboBoxShaderDetail.Location = new System.Drawing.Point(408, 239);
             this.comboBoxShaderDetail.Name = "comboBoxShaderDetail";
             this.comboBoxShaderDetail.Size = new System.Drawing.Size(120, 22);
             this.comboBoxShaderDetail.TabIndex = 91;
@@ -1051,7 +1062,7 @@ namespace GameLauncher.App
             this.comboBoxWorldRoadTexture.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBoxWorldRoadTexture.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxWorldRoadTexture.FormattingEnabled = true;
-            this.comboBoxWorldRoadTexture.Location = new System.Drawing.Point(409, 367);
+            this.comboBoxWorldRoadTexture.Location = new System.Drawing.Point(408, 415);
             this.comboBoxWorldRoadTexture.Name = "comboBoxWorldRoadTexture";
             this.comboBoxWorldRoadTexture.Size = new System.Drawing.Size(120, 22);
             this.comboBoxWorldRoadTexture.TabIndex = 92;
@@ -1064,7 +1075,7 @@ namespace GameLauncher.App
             this.comboBoxWorldRoadReflection.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBoxWorldRoadReflection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxWorldRoadReflection.FormattingEnabled = true;
-            this.comboBoxWorldRoadReflection.Location = new System.Drawing.Point(409, 341);
+            this.comboBoxWorldRoadReflection.Location = new System.Drawing.Point(408, 389);
             this.comboBoxWorldRoadReflection.Name = "comboBoxWorldRoadReflection";
             this.comboBoxWorldRoadReflection.Size = new System.Drawing.Size(120, 22);
             this.comboBoxWorldRoadReflection.TabIndex = 93;
@@ -1077,7 +1088,7 @@ namespace GameLauncher.App
             this.comboBoxWorldGlobalDetail.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.comboBoxWorldGlobalDetail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.comboBoxWorldGlobalDetail.FormattingEnabled = true;
-            this.comboBoxWorldGlobalDetail.Location = new System.Drawing.Point(409, 289);
+            this.comboBoxWorldGlobalDetail.Location = new System.Drawing.Point(408, 337);
             this.comboBoxWorldGlobalDetail.Name = "comboBoxWorldGlobalDetail";
             this.comboBoxWorldGlobalDetail.Size = new System.Drawing.Size(120, 22);
             this.comboBoxWorldGlobalDetail.TabIndex = 94;
@@ -1088,7 +1099,7 @@ namespace GameLauncher.App
             this.radioMaxSkidMarksZero.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioMaxSkidMarksZero.Location = new System.Drawing.Point(125, 2);
             this.radioMaxSkidMarksZero.Name = "radioMaxSkidMarksZero";
-            this.radioMaxSkidMarksZero.Size = new System.Drawing.Size(32, 18);
+            this.radioMaxSkidMarksZero.Size = new System.Drawing.Size(33, 18);
             this.radioMaxSkidMarksZero.TabIndex = 95;
             this.radioMaxSkidMarksZero.TabStop = true;
             this.radioMaxSkidMarksZero.Tag = "MaxSkidMarks0";
@@ -1101,7 +1112,7 @@ namespace GameLauncher.App
             this.radioMaxSkidMarksOne.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioMaxSkidMarksOne.Location = new System.Drawing.Point(167, 2);
             this.radioMaxSkidMarksOne.Name = "radioMaxSkidMarksOne";
-            this.radioMaxSkidMarksOne.Size = new System.Drawing.Size(32, 18);
+            this.radioMaxSkidMarksOne.Size = new System.Drawing.Size(33, 18);
             this.radioMaxSkidMarksOne.TabIndex = 96;
             this.radioMaxSkidMarksOne.TabStop = true;
             this.radioMaxSkidMarksOne.Tag = "MaxSkidMarks1";
@@ -1114,7 +1125,7 @@ namespace GameLauncher.App
             this.radioMaxSkidMarksTwo.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioMaxSkidMarksTwo.Location = new System.Drawing.Point(206, 2);
             this.radioMaxSkidMarksTwo.Name = "radioMaxSkidMarksTwo";
-            this.radioMaxSkidMarksTwo.Size = new System.Drawing.Size(32, 18);
+            this.radioMaxSkidMarksTwo.Size = new System.Drawing.Size(33, 18);
             this.radioMaxSkidMarksTwo.TabIndex = 97;
             this.radioMaxSkidMarksTwo.TabStop = true;
             this.radioMaxSkidMarksTwo.Tag = "MaxSkidMarks2";
@@ -1127,7 +1138,7 @@ namespace GameLauncher.App
             this.radioBaseTextureLODOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioBaseTextureLODOn.Location = new System.Drawing.Point(125, 2);
             this.radioBaseTextureLODOn.Name = "radioBaseTextureLODOn";
-            this.radioBaseTextureLODOn.Size = new System.Drawing.Size(41, 18);
+            this.radioBaseTextureLODOn.Size = new System.Drawing.Size(42, 18);
             this.radioBaseTextureLODOn.TabIndex = 98;
             this.radioBaseTextureLODOn.TabStop = true;
             this.radioBaseTextureLODOn.Tag = "BaseTextureLOD0";
@@ -1140,7 +1151,7 @@ namespace GameLauncher.App
             this.radioCarDetailLODOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioCarDetailLODOn.Location = new System.Drawing.Point(125, 2);
             this.radioCarDetailLODOn.Name = "radioCarDetailLODOn";
-            this.radioCarDetailLODOn.Size = new System.Drawing.Size(41, 18);
+            this.radioCarDetailLODOn.Size = new System.Drawing.Size(42, 18);
             this.radioCarDetailLODOn.TabIndex = 99;
             this.radioCarDetailLODOn.TabStop = true;
             this.radioCarDetailLODOn.Tag = "CarDetailLOD0";
@@ -1153,7 +1164,7 @@ namespace GameLauncher.App
             this.radioRoadLODBiasOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioRoadLODBiasOn.Location = new System.Drawing.Point(125, 2);
             this.radioRoadLODBiasOn.Name = "radioRoadLODBiasOn";
-            this.radioRoadLODBiasOn.Size = new System.Drawing.Size(41, 18);
+            this.radioRoadLODBiasOn.Size = new System.Drawing.Size(42, 18);
             this.radioRoadLODBiasOn.TabIndex = 100;
             this.radioRoadLODBiasOn.TabStop = true;
             this.radioRoadLODBiasOn.Tag = "RoadLODBias0";
@@ -1166,7 +1177,7 @@ namespace GameLauncher.App
             this.radioBaseTextureLODOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioBaseTextureLODOff.Location = new System.Drawing.Point(182, 2);
             this.radioBaseTextureLODOff.Name = "radioBaseTextureLODOff";
-            this.radioBaseTextureLODOff.Size = new System.Drawing.Size(41, 18);
+            this.radioBaseTextureLODOff.Size = new System.Drawing.Size(42, 18);
             this.radioBaseTextureLODOff.TabIndex = 101;
             this.radioBaseTextureLODOff.TabStop = true;
             this.radioBaseTextureLODOff.Tag = "BaseTextureLOD1";
@@ -1179,7 +1190,7 @@ namespace GameLauncher.App
             this.radioCarDetailLODOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioCarDetailLODOff.Location = new System.Drawing.Point(182, 2);
             this.radioCarDetailLODOff.Name = "radioCarDetailLODOff";
-            this.radioCarDetailLODOff.Size = new System.Drawing.Size(41, 18);
+            this.radioCarDetailLODOff.Size = new System.Drawing.Size(42, 18);
             this.radioCarDetailLODOff.TabIndex = 102;
             this.radioCarDetailLODOff.TabStop = true;
             this.radioCarDetailLODOff.Tag = "CarDetailLOD1";
@@ -1192,7 +1203,7 @@ namespace GameLauncher.App
             this.radioRoadLODBiasOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioRoadLODBiasOff.Location = new System.Drawing.Point(182, 2);
             this.radioRoadLODBiasOff.Name = "radioRoadLODBiasOff";
-            this.radioRoadLODBiasOff.Size = new System.Drawing.Size(41, 18);
+            this.radioRoadLODBiasOff.Size = new System.Drawing.Size(42, 18);
             this.radioRoadLODBiasOff.TabIndex = 103;
             this.radioRoadLODBiasOff.TabStop = true;
             this.radioRoadLODBiasOff.Tag = "RoadLODBIas1";
@@ -1205,7 +1216,7 @@ namespace GameLauncher.App
             this.panelCDLODBias.Controls.Add(this.labelCDLODBias);
             this.panelCDLODBias.Controls.Add(this.radioCarDetailLODOn);
             this.panelCDLODBias.Controls.Add(this.radioCarDetailLODOff);
-            this.panelCDLODBias.Location = new System.Drawing.Point(286, 491);
+            this.panelCDLODBias.Location = new System.Drawing.Point(285, 539);
             this.panelCDLODBias.Name = "panelCDLODBias";
             this.panelCDLODBias.Size = new System.Drawing.Size(242, 24);
             this.panelCDLODBias.TabIndex = 125;
@@ -1217,7 +1228,7 @@ namespace GameLauncher.App
             this.panelBTLODBias.Controls.Add(this.labelBTLODBias);
             this.panelBTLODBias.Controls.Add(this.radioBaseTextureLODOn);
             this.panelBTLODBias.Controls.Add(this.radioBaseTextureLODOff);
-            this.panelBTLODBias.Location = new System.Drawing.Point(286, 563);
+            this.panelBTLODBias.Location = new System.Drawing.Point(285, 611);
             this.panelBTLODBias.Name = "panelBTLODBias";
             this.panelBTLODBias.Size = new System.Drawing.Size(242, 24);
             this.panelBTLODBias.TabIndex = 126;
@@ -1229,7 +1240,7 @@ namespace GameLauncher.App
             this.panelRoadLODBias.Controls.Add(this.labelRoadLODBias);
             this.panelRoadLODBias.Controls.Add(this.radioRoadLODBiasOn);
             this.panelRoadLODBias.Controls.Add(this.radioRoadLODBiasOff);
-            this.panelRoadLODBias.Location = new System.Drawing.Point(286, 393);
+            this.panelRoadLODBias.Location = new System.Drawing.Point(285, 441);
             this.panelRoadLODBias.Name = "panelRoadLODBias";
             this.panelRoadLODBias.Size = new System.Drawing.Size(242, 24);
             this.panelRoadLODBias.TabIndex = 127;
@@ -1241,7 +1252,7 @@ namespace GameLauncher.App
             this.panelMotionBlur.Controls.Add(this.labelMotionBlur);
             this.panelMotionBlur.Controls.Add(this.radioMotionBlurOn);
             this.panelMotionBlur.Controls.Add(this.radioMotionBlurOff);
-            this.panelMotionBlur.Location = new System.Drawing.Point(286, 61);
+            this.panelMotionBlur.Location = new System.Drawing.Point(285, 109);
             this.panelMotionBlur.Name = "panelMotionBlur";
             this.panelMotionBlur.Size = new System.Drawing.Size(242, 24);
             this.panelMotionBlur.TabIndex = 128;
@@ -1253,7 +1264,7 @@ namespace GameLauncher.App
             this.panelOverbright.Controls.Add(this.labelOverbright);
             this.panelOverbright.Controls.Add(this.radioOverBrightOn);
             this.panelOverbright.Controls.Add(this.radioOverBrightOff);
-            this.panelOverbright.Location = new System.Drawing.Point(286, 87);
+            this.panelOverbright.Location = new System.Drawing.Point(285, 135);
             this.panelOverbright.Name = "panelOverbright";
             this.panelOverbright.Size = new System.Drawing.Size(242, 24);
             this.panelOverbright.TabIndex = 129;
@@ -1265,7 +1276,7 @@ namespace GameLauncher.App
             this.panelPostProc.Controls.Add(this.labelPostProc);
             this.panelPostProc.Controls.Add(this.radioPostProcOn);
             this.panelPostProc.Controls.Add(this.radioPostProcOff);
-            this.panelPostProc.Location = new System.Drawing.Point(286, 113);
+            this.panelPostProc.Location = new System.Drawing.Point(285, 161);
             this.panelPostProc.Name = "panelPostProc";
             this.panelPostProc.Size = new System.Drawing.Size(242, 24);
             this.panelPostProc.TabIndex = 130;
@@ -1278,7 +1289,7 @@ namespace GameLauncher.App
             this.panelSkidMarks.Controls.Add(this.radioMaxSkidMarksZero);
             this.panelSkidMarks.Controls.Add(this.radioMaxSkidMarksOne);
             this.panelSkidMarks.Controls.Add(this.radioMaxSkidMarksTwo);
-            this.panelSkidMarks.Location = new System.Drawing.Point(286, 315);
+            this.panelSkidMarks.Location = new System.Drawing.Point(285, 363);
             this.panelSkidMarks.Name = "panelSkidMarks";
             this.panelSkidMarks.Size = new System.Drawing.Size(242, 24);
             this.panelSkidMarks.TabIndex = 131;
@@ -1290,7 +1301,7 @@ namespace GameLauncher.App
             this.panelParticleSys.Controls.Add(this.labelPartSys);
             this.panelParticleSys.Controls.Add(this.radioParticleSysOn);
             this.panelParticleSys.Controls.Add(this.radioParticleSysOff);
-            this.panelParticleSys.Location = new System.Drawing.Point(286, 139);
+            this.panelParticleSys.Location = new System.Drawing.Point(285, 187);
             this.panelParticleSys.Name = "panelParticleSys";
             this.panelParticleSys.Size = new System.Drawing.Size(242, 24);
             this.panelParticleSys.TabIndex = 132;
@@ -1365,9 +1376,9 @@ namespace GameLauncher.App
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.ErrorImage = null;
             this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(280, 11);
+            this.pictureBox1.Location = new System.Drawing.Point(278, 11);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(258, 605);
+            this.pictureBox1.Size = new System.Drawing.Size(258, 658);
             this.pictureBox1.TabIndex = 47;
             this.pictureBox1.TabStop = false;
             // 
@@ -1459,7 +1470,7 @@ namespace GameLauncher.App
             this.radioKmH.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioKmH.Location = new System.Drawing.Point(125, 2);
             this.radioKmH.Name = "radioKmH";
-            this.radioKmH.Size = new System.Drawing.Size(55, 18);
+            this.radioKmH.Size = new System.Drawing.Size(56, 18);
             this.radioKmH.TabIndex = 30;
             this.radioKmH.TabStop = true;
             this.radioKmH.Tag = "UnitsKMH";
@@ -1473,7 +1484,7 @@ namespace GameLauncher.App
             this.radioMpH.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioMpH.Location = new System.Drawing.Point(182, 2);
             this.radioMpH.Name = "radioMpH";
-            this.radioMpH.Size = new System.Drawing.Size(55, 18);
+            this.radioMpH.Size = new System.Drawing.Size(56, 18);
             this.radioMpH.TabIndex = 31;
             this.radioMpH.TabStop = true;
             this.radioMpH.Tag = "UnitsMpH";
@@ -1509,7 +1520,7 @@ namespace GameLauncher.App
             this.radioDamageOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioDamageOn.Location = new System.Drawing.Point(125, 2);
             this.radioDamageOn.Name = "radioDamageOn";
-            this.radioDamageOn.Size = new System.Drawing.Size(41, 18);
+            this.radioDamageOn.Size = new System.Drawing.Size(42, 18);
             this.radioDamageOn.TabIndex = 27;
             this.radioDamageOn.TabStop = true;
             this.radioDamageOn.Tag = "VisualDamageOn";
@@ -1522,7 +1533,7 @@ namespace GameLauncher.App
             this.radioDamageOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioDamageOff.Location = new System.Drawing.Point(182, 2);
             this.radioDamageOff.Name = "radioDamageOff";
-            this.radioDamageOff.Size = new System.Drawing.Size(41, 18);
+            this.radioDamageOff.Size = new System.Drawing.Size(42, 18);
             this.radioDamageOff.TabIndex = 28;
             this.radioDamageOff.TabStop = true;
             this.radioDamageOff.Tag = "VisualDamageOff";
@@ -1558,7 +1569,7 @@ namespace GameLauncher.App
             this.radioAQLow.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioAQLow.Location = new System.Drawing.Point(125, 2);
             this.radioAQLow.Name = "radioAQLow";
-            this.radioAQLow.Size = new System.Drawing.Size(47, 18);
+            this.radioAQLow.Size = new System.Drawing.Size(48, 18);
             this.radioAQLow.TabIndex = 16;
             this.radioAQLow.TabStop = true;
             this.radioAQLow.Tag = "AudioQualityLow";
@@ -1571,7 +1582,7 @@ namespace GameLauncher.App
             this.radioAQHigh.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioAQHigh.Location = new System.Drawing.Point(182, 2);
             this.radioAQHigh.Name = "radioAQHigh";
-            this.radioAQHigh.Size = new System.Drawing.Size(52, 18);
+            this.radioAQHigh.Size = new System.Drawing.Size(53, 18);
             this.radioAQHigh.TabIndex = 17;
             this.radioAQHigh.TabStop = true;
             this.radioAQHigh.Tag = "AudioQualityHigh";
@@ -1607,7 +1618,7 @@ namespace GameLauncher.App
             this.radioVSyncOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioVSyncOn.Location = new System.Drawing.Point(125, 2);
             this.radioVSyncOn.Name = "radioVSyncOn";
-            this.radioVSyncOn.Size = new System.Drawing.Size(41, 18);
+            this.radioVSyncOn.Size = new System.Drawing.Size(42, 18);
             this.radioVSyncOn.TabIndex = 11;
             this.radioVSyncOn.TabStop = true;
             this.radioVSyncOn.Tag = "VSyncOn";
@@ -1620,7 +1631,7 @@ namespace GameLauncher.App
             this.radioVSyncOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioVSyncOff.Location = new System.Drawing.Point(182, 2);
             this.radioVSyncOff.Name = "radioVSyncOff";
-            this.radioVSyncOff.Size = new System.Drawing.Size(41, 18);
+            this.radioVSyncOff.Size = new System.Drawing.Size(42, 18);
             this.radioVSyncOff.TabIndex = 12;
             this.radioVSyncOff.TabStop = true;
             this.radioVSyncOff.Tag = "VSyncOff";
@@ -1645,7 +1656,7 @@ namespace GameLauncher.App
             this.radioAeroOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioAeroOff.Location = new System.Drawing.Point(182, 2);
             this.radioAeroOff.Name = "radioAeroOff";
-            this.radioAeroOff.Size = new System.Drawing.Size(41, 18);
+            this.radioAeroOff.Size = new System.Drawing.Size(42, 18);
             this.radioAeroOff.TabIndex = 9;
             this.radioAeroOff.TabStop = true;
             this.radioAeroOff.Tag = "AeroOff";
@@ -1658,7 +1669,7 @@ namespace GameLauncher.App
             this.radioAeroOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioAeroOn.Location = new System.Drawing.Point(125, 2);
             this.radioAeroOn.Name = "radioAeroOn";
-            this.radioAeroOn.Size = new System.Drawing.Size(41, 18);
+            this.radioAeroOn.Size = new System.Drawing.Size(42, 18);
             this.radioAeroOn.TabIndex = 8;
             this.radioAeroOn.TabStop = true;
             this.radioAeroOn.Tag = "AeroOn";
@@ -1682,7 +1693,7 @@ namespace GameLauncher.App
             this.panelVisTreat.Controls.Add(this.labelVisTreat);
             this.panelVisTreat.Controls.Add(this.radioVisualTreatOn);
             this.panelVisTreat.Controls.Add(this.radioVisualTreatOff);
-            this.panelVisTreat.Location = new System.Drawing.Point(286, 217);
+            this.panelVisTreat.Location = new System.Drawing.Point(285, 265);
             this.panelVisTreat.Name = "panelVisTreat";
             this.panelVisTreat.Size = new System.Drawing.Size(242, 24);
             this.panelVisTreat.TabIndex = 133;
@@ -1706,7 +1717,7 @@ namespace GameLauncher.App
             this.radioVisualTreatOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioVisualTreatOn.Location = new System.Drawing.Point(125, 2);
             this.radioVisualTreatOn.Name = "radioVisualTreatOn";
-            this.radioVisualTreatOn.Size = new System.Drawing.Size(41, 18);
+            this.radioVisualTreatOn.Size = new System.Drawing.Size(42, 18);
             this.radioVisualTreatOn.TabIndex = 76;
             this.radioVisualTreatOn.TabStop = true;
             this.radioVisualTreatOn.Tag = "VisualTreatmentOn";
@@ -1719,7 +1730,7 @@ namespace GameLauncher.App
             this.radioVisualTreatOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioVisualTreatOff.Location = new System.Drawing.Point(182, 2);
             this.radioVisualTreatOff.Name = "radioVisualTreatOff";
-            this.radioVisualTreatOff.Size = new System.Drawing.Size(41, 18);
+            this.radioVisualTreatOff.Size = new System.Drawing.Size(42, 18);
             this.radioVisualTreatOff.TabIndex = 82;
             this.radioVisualTreatOff.TabStop = true;
             this.radioVisualTreatOff.Tag = "VisualTreatmentOff";
@@ -1755,7 +1766,7 @@ namespace GameLauncher.App
             this.radioWindowedOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioWindowedOn.Location = new System.Drawing.Point(125, 2);
             this.radioWindowedOn.Name = "radioWindowedOn";
-            this.radioWindowedOn.Size = new System.Drawing.Size(41, 18);
+            this.radioWindowedOn.Size = new System.Drawing.Size(42, 18);
             this.radioWindowedOn.TabIndex = 5;
             this.radioWindowedOn.TabStop = true;
             this.radioWindowedOn.Tag = "WindowedOn";
@@ -1768,7 +1779,7 @@ namespace GameLauncher.App
             this.radioWindowedOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioWindowedOff.Location = new System.Drawing.Point(182, 2);
             this.radioWindowedOff.Name = "radioWindowedOff";
-            this.radioWindowedOff.Size = new System.Drawing.Size(41, 18);
+            this.radioWindowedOff.Size = new System.Drawing.Size(42, 18);
             this.radioWindowedOff.TabIndex = 6;
             this.radioWindowedOff.TabStop = true;
             this.radioWindowedOff.Tag = "WindowedOff";
@@ -1781,7 +1792,7 @@ namespace GameLauncher.App
             this.panel1.Controls.Add(this.labelWaterSimulation);
             this.panel1.Controls.Add(this.radioWaterSimulationOn);
             this.panel1.Controls.Add(this.radioWaterSimulationOff);
-            this.panel1.Location = new System.Drawing.Point(286, 243);
+            this.panel1.Location = new System.Drawing.Point(285, 291);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(242, 24);
             this.panel1.TabIndex = 134;
@@ -1805,7 +1816,7 @@ namespace GameLauncher.App
             this.radioWaterSimulationOn.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioWaterSimulationOn.Location = new System.Drawing.Point(125, 2);
             this.radioWaterSimulationOn.Name = "radioWaterSimulationOn";
-            this.radioWaterSimulationOn.Size = new System.Drawing.Size(41, 18);
+            this.radioWaterSimulationOn.Size = new System.Drawing.Size(42, 18);
             this.radioWaterSimulationOn.TabIndex = 76;
             this.radioWaterSimulationOn.TabStop = true;
             this.radioWaterSimulationOn.Tag = "VisualTreatmentOn";
@@ -1818,7 +1829,7 @@ namespace GameLauncher.App
             this.radioWaterSimulationOff.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioWaterSimulationOff.Location = new System.Drawing.Point(182, 2);
             this.radioWaterSimulationOff.Name = "radioWaterSimulationOff";
-            this.radioWaterSimulationOff.Size = new System.Drawing.Size(41, 18);
+            this.radioWaterSimulationOff.Size = new System.Drawing.Size(42, 18);
             this.radioWaterSimulationOff.TabIndex = 82;
             this.radioWaterSimulationOff.TabStop = true;
             this.radioWaterSimulationOff.Tag = "VisualTreatmentOff";
@@ -1867,12 +1878,120 @@ namespace GameLauncher.App
             this.comboResolutions.TabIndex = 140;
             this.comboResolutions.ValueMember = "0";
             // 
+            // PresetPanel
+            // 
+            this.PresetPanel.BackColor = System.Drawing.Color.Transparent;
+            this.PresetPanel.Controls.Add(this.PresetButtonCustom);
+            this.PresetPanel.Controls.Add(this.PresetButtonHigh);
+            this.PresetPanel.Controls.Add(this.PresetButtonMax);
+            this.PresetPanel.Controls.Add(this.PresetButtonMin);
+            this.PresetPanel.Controls.Add(this.PresetButtonLow);
+            this.PresetPanel.Controls.Add(this.PresetButtonMed);
+            this.PresetPanel.Location = new System.Drawing.Point(284, 36);
+            this.PresetPanel.Name = "PresetPanel";
+            this.PresetPanel.Size = new System.Drawing.Size(246, 24);
+            this.PresetPanel.TabIndex = 141;
+            this.PresetPanel.Tag = "SkidMarks";
+            // 
+            // PresetButtonCustom
+            // 
+            this.PresetButtonCustom.AutoSize = true;
+            this.PresetButtonCustom.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PresetButtonCustom.Location = new System.Drawing.Point(201, 3);
+            this.PresetButtonCustom.Name = "PresetButtonCustom";
+            this.PresetButtonCustom.Size = new System.Drawing.Size(33, 18);
+            this.PresetButtonCustom.TabIndex = 144;
+            this.PresetButtonCustom.TabStop = true;
+            this.PresetButtonCustom.Tag = "MaxSkidMarks2";
+            this.PresetButtonCustom.Text = "5";
+            this.PresetButtonCustom.UseVisualStyleBackColor = true;
+            // 
+            // PresetButtonHigh
+            // 
+            this.PresetButtonHigh.AutoSize = true;
+            this.PresetButtonHigh.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PresetButtonHigh.Location = new System.Drawing.Point(123, 2);
+            this.PresetButtonHigh.Name = "PresetButtonHigh";
+            this.PresetButtonHigh.Size = new System.Drawing.Size(33, 18);
+            this.PresetButtonHigh.TabIndex = 142;
+            this.PresetButtonHigh.TabStop = true;
+            this.PresetButtonHigh.Tag = "MaxSkidMarks1";
+            this.PresetButtonHigh.Text = "3";
+            this.PresetButtonHigh.UseVisualStyleBackColor = true;
+            // 
+            // PresetButtonMax
+            // 
+            this.PresetButtonMax.AutoSize = true;
+            this.PresetButtonMax.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PresetButtonMax.Location = new System.Drawing.Point(162, 3);
+            this.PresetButtonMax.Name = "PresetButtonMax";
+            this.PresetButtonMax.Size = new System.Drawing.Size(33, 18);
+            this.PresetButtonMax.TabIndex = 143;
+            this.PresetButtonMax.TabStop = true;
+            this.PresetButtonMax.Tag = "MaxSkidMarks2";
+            this.PresetButtonMax.Text = "4";
+            this.PresetButtonMax.UseVisualStyleBackColor = true;
+            // 
+            // PresetButtonMin
+            // 
+            this.PresetButtonMin.AutoSize = true;
+            this.PresetButtonMin.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PresetButtonMin.Location = new System.Drawing.Point(6, 2);
+            this.PresetButtonMin.Name = "PresetButtonMin";
+            this.PresetButtonMin.Size = new System.Drawing.Size(33, 18);
+            this.PresetButtonMin.TabIndex = 95;
+            this.PresetButtonMin.TabStop = true;
+            this.PresetButtonMin.Tag = "MaxSkidMarks0";
+            this.PresetButtonMin.Text = "0";
+            this.PresetButtonMin.UseVisualStyleBackColor = true;
+            // 
+            // PresetButtonLow
+            // 
+            this.PresetButtonLow.AutoSize = true;
+            this.PresetButtonLow.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PresetButtonLow.Location = new System.Drawing.Point(45, 2);
+            this.PresetButtonLow.Name = "PresetButtonLow";
+            this.PresetButtonLow.Size = new System.Drawing.Size(33, 18);
+            this.PresetButtonLow.TabIndex = 96;
+            this.PresetButtonLow.TabStop = true;
+            this.PresetButtonLow.Tag = "MaxSkidMarks1";
+            this.PresetButtonLow.Text = "1";
+            this.PresetButtonLow.UseVisualStyleBackColor = true;
+            // 
+            // PresetButtonMed
+            // 
+            this.PresetButtonMed.AutoSize = true;
+            this.PresetButtonMed.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PresetButtonMed.Location = new System.Drawing.Point(84, 2);
+            this.PresetButtonMed.Name = "PresetButtonMed";
+            this.PresetButtonMed.Size = new System.Drawing.Size(33, 18);
+            this.PresetButtonMed.TabIndex = 97;
+            this.PresetButtonMed.TabStop = true;
+            this.PresetButtonMed.Tag = "MaxSkidMarks2";
+            this.PresetButtonMed.Text = "2";
+            this.PresetButtonMed.UseVisualStyleBackColor = true;
+            // 
+            // LabelGraphicPreset
+            // 
+            this.LabelGraphicPreset.BackColor = System.Drawing.Color.Transparent;
+            this.LabelGraphicPreset.Font = new System.Drawing.Font("DejaVu Sans", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelGraphicPreset.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
+            this.LabelGraphicPreset.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LabelGraphicPreset.Location = new System.Drawing.Point(282, 15);
+            this.LabelGraphicPreset.Name = "LabelGraphicPreset";
+            this.LabelGraphicPreset.Size = new System.Drawing.Size(244, 18);
+            this.LabelGraphicPreset.TabIndex = 142;
+            this.LabelGraphicPreset.Text = "Graphic Presets";
+            this.LabelGraphicPreset.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // USXEditor
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(548, 687);
+            this.ClientSize = new System.Drawing.Size(548, 673);
+            this.Controls.Add(this.LabelGraphicPreset);
+            this.Controls.Add(this.PresetPanel);
             this.Controls.Add(this.comboResolutions);
             this.Controls.Add(this.comboBoxPerformanceLevel);
             this.Controls.Add(this.labelOverRideAspect);
@@ -2010,6 +2129,8 @@ namespace GameLauncher.App
             this.panelWindowedControl.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.PresetPanel.ResumeLayout(false);
+            this.PresetPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2143,5 +2264,14 @@ namespace GameLauncher.App
         private System.Windows.Forms.Label labelOverRideAspect;
         private System.Windows.Forms.ComboBox comboBoxPerformanceLevel;
         private System.Windows.Forms.ComboBox comboResolutions;
+        private System.Windows.Forms.Panel PresetPanel;
+        private System.Windows.Forms.RadioButton PresetButtonMin;
+        private System.Windows.Forms.RadioButton PresetButtonLow;
+        private System.Windows.Forms.RadioButton PresetButtonMed;
+        private System.Windows.Forms.ToolTip Hover;
+        private System.Windows.Forms.RadioButton PresetButtonHigh;
+        private System.Windows.Forms.RadioButton PresetButtonMax;
+        private System.Windows.Forms.Label LabelGraphicPreset;
+        private System.Windows.Forms.RadioButton PresetButtonCustom;
     }
 }
