@@ -42,6 +42,7 @@ using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Client.Auth;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support.Language;
 
 namespace GameLauncher
 {
@@ -1491,7 +1492,10 @@ namespace GameLauncher
             nfswProcess.ProcessorAffinity = (IntPtr)processorAffinity;
 
             AntiCheat.process_id = nfswProcess.Id;
-            CloseBTN.Visible = false;
+            this.BeginInvoke((MethodInvoker)delegate
+            {
+                CloseBTN.Visible = false;
+            });
             FunctionStatus.LauncherBattlePass = true;
 
             /* TIMER HERE */
@@ -1616,6 +1620,8 @@ namespace GameLauncher
 
             shutdowntimer.Interval = UpdateInterval;
             shutdowntimer.Enabled = true;
+
+            MessageBox.Show("Test: " + Texts.GetLang("EN", "MainScreen", "PlayProgressText"));
 
             if (nfswProcess != null)
             {
