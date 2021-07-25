@@ -157,7 +157,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Logger
 
                     try
                     {
-                        File.AppendAllText(Locations.LogVerify, merged + "\n");
+                        File.AppendAllText(Locations.LogVerify, merged + Environment.NewLine);
                     }
                     catch { }
                 }
