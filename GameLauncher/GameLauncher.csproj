@@ -416,6 +416,8 @@
     <None Include="Resources\Icons\social_twitter.png" />
     <None Include="Resources\Icons\social_twitter_disabled.png" />
     <None Include="Resources\Backgrounds\Background_Social.png" />
+    <None Include="Resources\Icons\icon_api_warning.png" />
+    <None Include="Resources\Icons\icon_game_server_warning.png" />
     <Content Include="SBRW.ico" />
     <None Include="Resources\ProgressBars\progress_warning.png" />
     <None Include="Resources\ProgressBars\progress_success.png" />

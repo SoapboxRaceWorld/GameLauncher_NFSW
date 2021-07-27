@@ -140,7 +140,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             }
         }
 
-        public static void ComboBox1_DrawItem(object sender, DrawItemEventArgs e)
+        public static void ServerList_Menu_DrawItem(object sender, DrawItemEventArgs e)
         {
             try
             {
@@ -148,8 +148,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 Brush backgroundColor;
                 Brush textColor;
 
-                var serverListText = "";
-                int onlineStatus = 2; /* 0 = offline | 1 = online | 2 = checking */
+                string serverListText = "";
+                /* 0 = Offline | 1 = Online | 2 = Checking | 3 = GSI Error */
+                int onlineStatus = 2; 
 
                 if (sender is ComboBox cb)
                 {
@@ -176,20 +177,24 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                     }
                     else
                     {
-                        if (onlineStatus == 2)
+                        switch (onlineStatus)
                         {
-                            /* CHECKING */
-                            backgroundColor = Brushes.Khaki;
-                        }
-                        else if (onlineStatus == 1)
-                        {
-                            /* ONLINE */
-                            backgroundColor = Brushes.PaleGreen;
-                        }
-                        else
-                        {
-                            /* OFFLINE */
-                            backgroundColor = Brushes.LightCoral;
+                            case 1:
+                                /* ONLINE */
+                                backgroundColor = Brushes.PaleGreen;
+                                break;
+                            case 2:
+                                /* CHECKING */
+                                backgroundColor = Brushes.Khaki;
+                                break;
+                            case 3:
+                                /* GSI ERROR */
+                                backgroundColor = new SolidBrush(Color.FromArgb(230, 159, 0));
+                                break;
+                            default:
+                                /* OFFLINE */
+                                backgroundColor = Brushes.LightCoral;
+                                break;
                         }
 
                         textColor = Brushes.Black;

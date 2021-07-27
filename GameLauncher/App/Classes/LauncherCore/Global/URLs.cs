@@ -18,10 +18,6 @@
 
         public static string GitHub_Updater = "https://api.github.com/repos/SoapboxRaceWorld/GameLauncherUpdater/releases/latest";
 
-        public static string OnlineServerList = "http://localhost/serverlist.json";
-
-        public static string OnlineCDNList = "http://localhost/cdn_list.json";
-
         public static string[] AntiCheatFD = new string[]
         {
             Main + "/report",

@@ -233,6 +233,16 @@ namespace GameLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap icon_api_warning {
+            get {
+                object obj = ResourceManager.GetObject("icon_api_warning", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap icon_close {
             get {
                 object obj = ResourceManager.GetObject("icon_close", resourceCulture);
@@ -296,6 +306,16 @@ namespace GameLauncher.Properties {
         public static System.Drawing.Bitmap icon_game_server_unknown {
             get {
                 object obj = ResourceManager.GetObject("icon_game_server_unknown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap icon_game_server_warning {
+            get {
+                object obj = ResourceManager.GetObject("icon_game_server_warning", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

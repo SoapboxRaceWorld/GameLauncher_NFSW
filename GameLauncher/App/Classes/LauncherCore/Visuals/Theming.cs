@@ -71,6 +71,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         public static Bitmap APIIconSuccess = Properties.Resources.icon_api_online;
 
+        public static Bitmap APIIconWarning = Properties.Resources.icon_api_warning;
+
         public static Bitmap APIIconUnkown = Properties.Resources.icon_api_unknown;
 
 
@@ -79,6 +81,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Bitmap ServerIconOffline = Properties.Resources.icon_game_server_offline;
 
         public static Bitmap ServerIconSuccess = Properties.Resources.icon_game_server_online;
+
+        public static Bitmap ServerIconWarning = Properties.Resources.icon_game_server_warning;
 
         public static Bitmap ServerIconUnkown = Properties.Resources.icon_game_server_unknown;
 
@@ -218,6 +222,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Color SixTextForeColor = Color.FromArgb(128, 128, 128);
         /* Successful Green */
         public static Color SeventhTextForeColor = Color.FromArgb(159, 193, 32);
+        /* Orange [Color Bind] */
+        public static Color EighthTextForeColor = Color.FromArgb(230, 159, 0);
 
 
         /* WinForm (Screens) Text and Background Colors */
@@ -263,9 +269,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Color Sucess = Color.FromArgb(159, 193, 32);
         /* Red */
         public static Color Error = Color.FromArgb(254, 0, 0);
-        /* Yellow */
-        public static Color Alert = Color.FromArgb(255, 255, 0);
-        
+        /* Orange [Color Bind] */
+        public static Color Warning = Color.FromArgb(230, 159, 0);
+
 
         /* Vertical Banner */
 
@@ -427,6 +433,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("APIWarningIcon")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("APIWarningIcon")))
+                        {
+                            APIIconWarning = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("APIWarningIcon"));
+                        }
+                    }
+
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ServerCheckingIcon")))
                     {
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerCheckingIcon")))
@@ -448,6 +462,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerSuccessIcon")))
                         {
                             ServerIconSuccess = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerSuccessIcon"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ServerWarningIcon")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerWarningIcon")))
+                        {
+                            ServerIconWarning = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ServerWarningIcon"));
                         }
                     }
 
@@ -838,9 +860,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         Error = ToColor(ThemeFile.Read("ErrorForeColor"));
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("AlertForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("WarningForeColor")))
                     {
-                        Alert = ToColor(ThemeFile.Read("AlertForeColor"));
+                        Warning = ToColor(ThemeFile.Read("WarningForeColor"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("VerticalBannerBackColor")))
@@ -911,6 +933,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SeventhTextForeColorForeColor")))
                     {
                         SeventhTextForeColor = ToColor(ThemeFile.Read("SeventhTextForeColorForeColor"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("EighthTextForeColorForeColor")))
+                    {
+                        EighthTextForeColor = ToColor(ThemeFile.Read("EighthTextForeColorForeColor"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("WinFormTextForeColor")))

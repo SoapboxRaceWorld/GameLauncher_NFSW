@@ -2,8 +2,10 @@
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using System;
 using System.Net;
+using System.Text;
 using System.Windows.Forms;
 
 namespace GameLauncher.App.Classes.LauncherCore.APICheckers
@@ -193,14 +195,8 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 switch (APIChecker.CheckStatus(URLs.Main + "/" + ((!LoadedServerList)? "serverlist.json" : "cdn_list.json")))
                 {
                     case APIStatus.Online:
-                        if (!LoadedServerList)
-                        {
-                            URLs.OnlineServerList = URLs.Main + "/serverlist.json";
-                        }
-                        else if (!LoadedCDNList)
-                        {
-                            URLs.OnlineCDNList = URLs.Main + "/cdn_list.json";
-                        }
+                        UnitedAPI = RetriveJSON(URLs.Main + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json"),
+                                                 (!LoadedServerList) ? "SL" : "CDNL");
                         break;
                     default:
                         UnitedAPI = false;
@@ -212,14 +208,8 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                     switch (APIChecker.CheckStatus(URLs.Static + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json")))
                     {
                         case APIStatus.Online:
-                            if (!LoadedServerList)
-                            {
-                                URLs.OnlineServerList = URLs.Static + "/serverlist.json";
-                            }
-                            else if (!LoadedCDNList)
-                            {
-                                URLs.OnlineCDNList = URLs.Static + "/cdn_list.json";
-                            }
+                            CarbonAPI = RetriveJSON(URLs.Static + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json"),
+                                                 (!LoadedServerList) ? "SL" : "CDNL");
                             break;
                         default:
                             CarbonAPI = false;
@@ -232,14 +222,8 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                     switch (APIChecker.CheckStatus(URLs.Static_Alt + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json")))
                     {
                         case APIStatus.Online:
-                            if (!LoadedServerList)
-                            {
-                                URLs.OnlineServerList = URLs.Static_Alt + "/serverlist.json";
-                            }
-                            else if (!LoadedCDNList)
-                            {
-                                URLs.OnlineCDNList = URLs.Static_Alt + "/cdn_list.json";
-                            }
+                            CarbonAPITwo = RetriveJSON(URLs.Static_Alt + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json"),
+                                                 (!LoadedServerList) ? "SL" : "CDNL");
                             break;
                         default:
                             CarbonAPITwo = false;
@@ -252,14 +236,8 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                     switch (APIChecker.CheckStatus(URLs.WOPL + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json")))
                     {
                         case APIStatus.Online:
-                            if (!LoadedServerList)
-                            {
-                                URLs.OnlineServerList = URLs.WOPL + "/serverlist.json";
-                            }
-                            else if (!LoadedCDNList)
-                            {
-                                URLs.OnlineCDNList = URLs.WOPL + "/cdn_list.json";
-                            }
+                            WOPLAPI = RetriveJSON(URLs.WOPL + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json"),
+                                                 (!LoadedServerList) ? "SL" : "CDNL");
                             break;
                         default:
                             WOPLAPI = false;
@@ -339,6 +317,61 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                         Log.Checking("LIST CORE: Moved to Function");
                         CDNListUpdater.GetList();
                     }
+                }
+            }
+        }
+
+        private static string OnlineListJson;
+
+        private static bool RetriveJSON(string JSONUrl, string Function)
+        {
+            Log.Checking("JSON LIST: Retriving " + JSONUrl);
+            try
+            {
+                FunctionStatus.TLS();
+                Uri URLCall = new Uri(JSONUrl);
+                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                WebClient wc = new WebClient
+                {
+                    Encoding = Encoding.UTF8
+                };
+                wc.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
+                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                OnlineListJson = wc.DownloadString(URLCall);
+                Log.UrlCall("JSON LIST: Retrived " + JSONUrl);
+
+                if (IsJSONValid.ValidJson(OnlineListJson))
+                {
+                    switch (Function)
+                    {
+                        case "SL":
+                            ServerListUpdater.CachedJSONList = OnlineListJson;
+                            break;
+                        case "CDNL":
+                            CDNListUpdater.CachedJSONList = OnlineListJson;
+                            break;
+                        default:
+                            break;
+                    }
+                    Log.Completed("JSON LIST: Valid " + JSONUrl);
+
+                    return true;
+                }
+                else
+                {
+                    Log.Completed("JSON LIST: Invalid " + JSONUrl);
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                if (OnlineListJson != null)
+                {
+                    OnlineListJson = null;
                 }
             }
         }

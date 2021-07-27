@@ -1,6 +1,7 @@
 ﻿using DiscordRPC;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
@@ -301,7 +302,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     }
                     else if (State == "In-Game")
                     {
-                        Presence.State = InformationCache.SelectedServerData.Name;
+                        Presence.State = ServerListUpdater.ServerName("RPC");
                         Presence.Details = "In-Game";
                         Presence.Assets = new Assets
                         {

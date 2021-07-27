@@ -1,12 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Net;
 using System.Collections.Generic;
 using System.Linq;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using System.Text;
-using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App.Classes.LauncherCore.Lists
@@ -23,40 +20,28 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
         public static List<CDNList> CleanList = new List<CDNList>();
 
+        public static string CachedJSONList;
+
         public static void GetList()
         {
             List<CDNList> cdnInfos = new List<CDNList>();
 
             try
             {
-                Log.UrlCall("LIST CORE: Loading CDN List from: " + URLs.OnlineCDNList);
-                FunctionStatus.TLS();
-                Uri URLCall = new Uri(URLs.OnlineCDNList);
-                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                WebClient wc = new WebClient
-                {
-                    Encoding = Encoding.UTF8
-                };
-                wc.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
-                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                string responseList = wc.DownloadString(URLCall);
-                Log.UrlCall("LIST CORE: Loaded CDN List from: " + URLs.OnlineCDNList);
-
-                try
-                {
-                    cdnInfos.AddRange(JsonConvert.DeserializeObject<List<CDNList>>(responseList));
-                    InformationCache.CDNListStatus = "Loaded";
-                }
-                catch (Exception Error)
-                {
-                    LogToFileAddons.OpenLog("LIST CORE", null, Error, null, true);
-                    InformationCache.CDNListStatus = "Error";
-                }
+                cdnInfos.AddRange(JsonConvert.DeserializeObject<List<CDNList>>(CachedJSONList));
+                InformationCache.CDNListStatus = "Loaded";
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("LIST CORE", null, Error, null, true);
+                LogToFileAddons.OpenLog("CDN LIST CORE", null, Error, null, true);
                 InformationCache.CDNListStatus = "Error";
+            }
+            finally
+            {
+                if (CachedJSONList != null)
+                {
+                    CachedJSONList = null;
+                }
             }
 
             /* Create Final CDN List without Categories */

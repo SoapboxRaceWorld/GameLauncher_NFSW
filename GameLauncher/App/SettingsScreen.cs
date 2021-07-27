@@ -643,7 +643,9 @@ namespace GameLauncher.App
                         ServerProxy.Instance.Stop("Settings Screen");
                     }
 
-                    if (FileAccountSave.ChoosenGameServer.StartsWith("https") || InformationCache.ModernAuthSecureChannel)
+                    if (InformationCache.SelectedServerData.IPAddress.StartsWith("https") ||
+                        FileAccountSave.ChoosenGameServer.StartsWith("https") || 
+                        InformationCache.ModernAuthSecureChannel)
                     {
                         MessageBox.Show(null, ServerListUpdater.ServerName("Settings") + " requires Proxy to be Enabled." +
                             "\nThe launcher will turn on Proxy even if you have chosen to Disable it", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);

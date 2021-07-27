@@ -2,6 +2,7 @@
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using Newtonsoft.Json;
 using System;
@@ -18,6 +19,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
     {
         /* Hardcoded Default Version for Updater Version  */
         private static string LatestUpdaterBuildVersion = "1.0.0.4";
+        private static string VersionJSON;
 
         /* Check If Updater Exists or Requires an Update */
         public static void Check()
@@ -39,23 +41,42 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     };
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
 
-                    string json_data = Client.DownloadString(URLCall);
+                    VersionJSON = Client.DownloadString(URLCall);
 
                     try
                     {
-                        GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
-
-                        if (GHAPI.TagName != null)
+                        if (IsJSONValid.ValidJson(VersionJSON))
                         {
-                            Log.Info("LAUNCHER UPDATER: Setting Latest Version -> " + GHAPI.TagName);
-                            LatestUpdaterBuildVersion = GHAPI.TagName;
-                        }
+                            GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON);
 
-                        Log.Info("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
+                            if (GHAPI.TagName != null)
+                            {
+                                Log.Info("LAUNCHER UPDATER: Setting Latest Version -> " + GHAPI.TagName);
+                                LatestUpdaterBuildVersion = GHAPI.TagName;
+                            }
+
+                            Log.Info("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
+
+                            if (GHAPI != null)
+                            {
+                                GHAPI = null;
+                            }
+                        }
+                        else
+                        {
+                            Log.Warning("LAUNCHER UPDATER: Retrived Invalid JSON Data");
+                        }
                     }
                     catch (Exception Error)
                     {
                         LogToFileAddons.OpenLog("LAUNCHER UPDATER", null, Error, null, true);
+                    }
+                    finally
+                    {
+                        if (VersionJSON != null)
+                        {
+                            VersionJSON = null;
+                        }
                     }
 
                     if (LatestUpdaterBuildVersion == "1.0.0.4")

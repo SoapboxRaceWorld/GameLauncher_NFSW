@@ -11,6 +11,7 @@ using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using System.Text;
+using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 
 namespace GameLauncher.App
 {
@@ -23,6 +24,9 @@ namespace GameLauncher.App
 
         /* Used to ping the Server in ms */
         public Queue<string> servers = new Queue<string>();
+
+        public static string ServerName;
+        public static GetServerInformation ServerJsonData;
 
         public SelectServer()
         {
@@ -73,10 +77,7 @@ namespace GameLauncher.App
                     data.Add(ID, substring);
                     ID++;
                 }
-                catch
-                {
-
-                }
+                catch { }
             }
 
             Thread newList = new Thread(() =>
@@ -91,30 +92,47 @@ namespace GameLauncher.App
 
                         int serverid = Convert.ToInt32(QueueContent2[0]) - 1;
                         string serverurl = QueueContent2[1] + "/GetServerInformation";
-                        string servername = QueueContent2[2];
+                        ServerName = QueueContent2[2];
+                        string ServerJson = null;
 
                         try
                         {
-                            WebClientWithTimeout getdata = new WebClientWithTimeout
+                            try
                             {
-                                Encoding = Encoding.UTF8
-                            };
-                            GetServerInformation content = JsonConvert.DeserializeObject<GetServerInformation>(getdata.DownloadString(serverurl));
+                                WebClientWithTimeout getdata = new WebClientWithTimeout
+                                {
+                                    Encoding = Encoding.UTF8
+                                };
+                                getdata.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
+                                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                ServerJson = getdata.DownloadString(serverurl);
+                            }
+                            catch { }
 
-                            if (content == null)
+                            if (string.IsNullOrWhiteSpace(ServerJson))
                             {
-                                ServerListRenderer.Items[serverid].SubItems[1].Text = servername;
+                                ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
                                 ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
                                 ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
                                 ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
                                 ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
                             }
+                            else if (!IsJSONValid.ValidJson(ServerJson))
+                            {
+                                ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
+                                ServerListRenderer.Items[serverid].SubItems[2].Text = "-?-";
+                                ServerListRenderer.Items[serverid].SubItems[3].Text = "-?-";
+                                ServerListRenderer.Items[serverid].SubItems[4].Text = "-?-";
+                                ServerListRenderer.Items[serverid].SubItems[5].Text = "-?-";
+                            }
                             else
                             {
-                                ServerListRenderer.Items[serverid].SubItems[1].Text = servername;
-                                ServerListRenderer.Items[serverid].SubItems[2].Text = ServerListUpdater.CountryName(content.country.ToString());
-                                ServerListRenderer.Items[serverid].SubItems[3].Text = content.onlineNumber.ToString();
-                                ServerListRenderer.Items[serverid].SubItems[4].Text = content.numberOfRegistered.ToString();
+                                ServerJsonData = JsonConvert.DeserializeObject<GetServerInformation>(ServerJson);
+
+                                ServerListRenderer.Items[serverid].SubItems[1].Text = (!string.IsNullOrWhiteSpace(ServerJsonData.serverName)) ? ServerJsonData.serverName : ServerName;
+                                ServerListRenderer.Items[serverid].SubItems[2].Text = ServerListUpdater.CountryName(ServerJsonData.country.ToString());
+                                ServerListRenderer.Items[serverid].SubItems[3].Text = ServerJsonData.onlineNumber.ToString();
+                                ServerListRenderer.Items[serverid].SubItems[4].Text = ServerJsonData.numberOfRegistered.ToString();
 
                                 Ping CheckMate = null;
 
@@ -125,7 +143,7 @@ namespace GameLauncher.App
                                     CheckMate.PingCompleted += (sender3, e3) => {
                                         if (e3.Reply != null)
                                         {
-                                            if (e3.Reply.Status == IPStatus.Success && servername != "Offline Built-In Server")
+                                            if (e3.Reply.Status == IPStatus.Success && ServerName != "Offline Built-In Server")
                                             {
                                                 ServerListRenderer.Items[serverid].SubItems[5].Text = e3.Reply.RoundtripTime + "ms";
                                             }
@@ -158,11 +176,26 @@ namespace GameLauncher.App
                         }
                         catch
                         {
-                            ServerListRenderer.Items[serverid].SubItems[1].Text = servername;
+                            ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
                             ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
                             ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
                             ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
                             ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                        }
+                        finally
+                        {
+                            if (ServerJson != null)
+                            {
+                                ServerJson = null;
+                            }
+                            if (ServerJsonData != null)
+                            {
+                                ServerJsonData = null;
+                            }
+                            if (ServerName != null)
+                            {
+                                ServerName = null;
+                            }
                         }
 
                         if (servers.Count == 0)

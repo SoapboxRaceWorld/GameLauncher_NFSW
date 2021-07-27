@@ -3,6 +3,7 @@ using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 using Newtonsoft.Json;
@@ -31,6 +32,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         public static string RootCASerial = "7449A8EB07C997A6";
         /* Serial Number of Exe */
         public static string LauncherSerial;
+        /* ROOT CA JSON Cache */
+        private static string RootCAJson;
 
         /* Retrive CA Information */
         /// <summary>
@@ -55,54 +58,74 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     };
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                     /* Download Up to Date Certificate Status */
-                    string json_data = Client.DownloadString(URLCall);
-                    JsonRootCA API = JsonConvert.DeserializeObject<JsonRootCA>(json_data);
+                    RootCAJson = Client.DownloadString(URLCall);
 
-                    if (API.CN != null)
+                    if (IsJSONValid.ValidJson(RootCAJson))
                     {
-                        Log.Info("CERTIFICATE STORE: Setting Common Name -> " + API.CN);
-                        RootCACommonName = API.CN;
-                    }
+                        JsonRootCA API = JsonConvert.DeserializeObject<JsonRootCA>(RootCAJson);
 
-                    if (API.Subject != null)
-                    {
-                        Log.Info("CERTIFICATE STORE: Setting Subject Name -> " + API.Subject);
-                        RootCASubjectName = API.Subject;
-                    }
-
-                    if (API.Ids != null)
-                    {
-                        foreach (IdsModel entries in API.Ids)
+                        if (API.CN != null)
                         {
-                            if (entries.Serial != null)
+                            Log.Info("CERTIFICATE STORE: Setting Common Name -> " + API.CN);
+                            RootCACommonName = API.CN;
+                        }
+
+                        if (API.Subject != null)
+                        {
+                            Log.Info("CERTIFICATE STORE: Setting Subject Name -> " + API.Subject);
+                            RootCASubjectName = API.Subject;
+                        }
+
+                        if (API.Ids != null)
+                        {
+                            foreach (IdsModel entries in API.Ids)
                             {
-                                Log.Info("CERTIFICATE STORE: Setting Serial Number -> " + entries.Serial);
-                                RootCASerial = entries.Serial;
+                                if (entries.Serial != null)
+                                {
+                                    Log.Info("CERTIFICATE STORE: Setting Serial Number -> " + entries.Serial);
+                                    RootCASerial = entries.Serial;
+                                }
                             }
                         }
-                    }
 
-                    if (API.File != null)
-                    {
-                        foreach (FileModel entries in API.File)
+                        if (API.File != null)
                         {
-                            if (entries.Name != null)
+                            foreach (FileModel entries in API.File)
                             {
-                                Log.Info("CERTIFICATE STORE: Setting Root CA File Name -> " + entries.Name);
-                                RootCAFileName = entries.Name;
-                            }
+                                if (entries.Name != null)
+                                {
+                                    Log.Info("CERTIFICATE STORE: Setting Root CA File Name -> " + entries.Name);
+                                    RootCAFileName = entries.Name;
+                                }
 
-                            if (entries.Cer != null)
-                            {
-                                Log.Info("CERTIFICATE STORE: Setting Root CA File URL -> " + entries.Cer);
-                                RootCAFileURL = entries.Cer;
+                                if (entries.Cer != null)
+                                {
+                                    Log.Info("CERTIFICATE STORE: Setting Root CA File URL -> " + entries.Cer);
+                                    RootCAFileURL = entries.Cer;
+                                }
                             }
                         }
+
+                        if (API != null)
+                        {
+                            API = null;
+                        }
+                    }
+                    else
+                    {
+                        Log.Warning("CERTIFICATE STORE: Retrived Invalid JSON Data");
                     }
                 }
                 catch (Exception Error)
                 {
                     LogToFileAddons.OpenLog("CERTIFICATE STORE", null, Error, null, true);
+                }
+                finally
+                {
+                    if (RootCAJson != null)
+                    {
+                        RootCAJson = null;
+                    }
                 }
 
                 /* Install Custom Root Certificate (If Default Values aren't used) */

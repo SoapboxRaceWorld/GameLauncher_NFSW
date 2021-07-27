@@ -14,6 +14,7 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using System.Text;
 using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
 using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 
 namespace GameLauncher.App
 {
@@ -195,6 +196,8 @@ namespace GameLauncher.App
                     {
                         Encoding = Encoding.UTF8
                     };
+                    client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
+                            " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                     ServerInfomationJSON = client.DownloadString(StringToUri);
                 }
                 catch (Exception Error)
@@ -205,6 +208,14 @@ namespace GameLauncher.App
 
                 if (IsNullOrWhiteSpace(ServerInfomationJSON))
                 {
+                    ButtonControls(true);
+                    return;
+                }
+                else if (!IsJSONValid.ValidJson(ServerInfomationJSON))
+                {
+                    Error.Text = "Unstable Connection";
+                    DrawErrorAroundTextBox(ServerAddress);
+                    Error.Visible = true;
                     ButtonControls(true);
                     return;
                 }
@@ -271,7 +282,7 @@ namespace GameLauncher.App
                                 IPAddress = FormattedURL,
                                 IsSpecial = false,
                                 ID = ServerID,
-                                Category = IsNullOrWhiteSpace(Strings.Encode(ServerCategory.Text)) ? "CUSTOM" : Strings.Encode(ServerCategory.Text.ToUpper())
+                                Category = IsNullOrWhiteSpace(Strings.Encode(ServerCategory.Text)) ? "Custom" : Strings.Encode(ServerCategory.Text)
                             });
 
                             File.WriteAllText(Locations.LauncherCustomServers, JsonConvert.SerializeObject(Servers));

@@ -12,6 +12,7 @@ using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using System.Text;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -24,6 +25,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
         public static string CurrentLauncherBuild = Application.ProductVersion;
         private static string LatestLauncherBuild;
         public static bool UpgradeAvailable = false;
+        private static string VersionJSON;
+        private static bool InvalidJSON = false;
 
         public LauncherUpdateCheck(PictureBox statusImage, Label statusText, Label statusDescription)
         {
@@ -49,22 +52,39 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         Encoding = Encoding.UTF8
                     };
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    string json_data = Client.DownloadString(URLCall);
-                    UpdateCheckResponse MAPI = JsonConvert.DeserializeObject<UpdateCheckResponse>(json_data);
+                    VersionJSON = Client.DownloadString(URLCall);
 
-                    if (MAPI.Payload.LatestVersion != null)
+                    if (IsJSONValid.ValidJson(VersionJSON))
                     {
-                        LatestLauncherBuild = MAPI.Payload.LatestVersion;
-                        Log.Info("LAUNCHER UPDATE: Latest Version -> " + MAPI.Payload.LatestVersion);
+                        UpdateCheckResponse MAPI = JsonConvert.DeserializeObject<UpdateCheckResponse>(VersionJSON);
+
+                        if (MAPI.Payload.LatestVersion != null)
+                        {
+                            LatestLauncherBuild = MAPI.Payload.LatestVersion;
+                            Log.Info("LAUNCHER UPDATE: Latest Version -> " + MAPI.Payload.LatestVersion);
+                        }
+                    }
+                    else
+                    {
+                        InvalidJSON = true;
+                        Log.Warning("LAUNCHER UPDATE: Retrived Invalid JSON Data");
                     }
                 }
                 catch (Exception Error)
                 {
+                    InvalidJSON = true;
                     LogToFileAddons.OpenLog("LAUNCHER UPDATE", null, Error, null, true);
+                }
+                finally
+                {
+                    if (VersionJSON != null)
+                    {
+                        VersionJSON = null;
+                    }
                 }
             }
 
-            if (!VisualsAPIChecker.UnitedAPI)
+            if (!VisualsAPIChecker.UnitedAPI || InvalidJSON)
             {
                 try
                 {
@@ -76,19 +96,40 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         Encoding = Encoding.UTF8
                     };
                     Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    string json_data = Client.DownloadString(URLCall);
-                    GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(json_data);
+                    VersionJSON = Client.DownloadString(URLCall);
 
-                    if (GHAPI.TagName != null)
+                    if (IsJSONValid.ValidJson(VersionJSON))
                     {
-                        LatestLauncherBuild = GHAPI.TagName;
-                        Log.Info("LAUNCHER UPDATE: GitHub Latest Version -> " + GHAPI.TagName);
+                        InvalidJSON = false;
+                        GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON);
+
+                        if (GHAPI.TagName != null)
+                        {
+                            LatestLauncherBuild = GHAPI.TagName;
+                            Log.Info("LAUNCHER UPDATE: GitHub Latest Version -> " + GHAPI.TagName);
+                        }
+
+                        if (GHAPI != null)
+                        {
+                            GHAPI = null;
+                        }
+                    }
+                    else
+                    {
+                        InvalidJSON = true;
                     }
                 }
                 catch (Exception Error)
                 {
                     VisualsAPIChecker.GitHubAPI = false;
                     LogToFileAddons.OpenLog("LAUNCHER UPDATE [GITHUB]", null, Error, null, true);
+                }
+                finally
+                {
+                    if (VersionJSON != null)
+                    {
+                        VersionJSON = null;
+                    }
                 }
 
                 if (!VisualsAPIChecker.GitHubAPI)
@@ -133,7 +174,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
                     text.Text = "Launcher Status:\n - " + WhatBuildAmI + " Build";
                     status.BackgroundImage = Theming.UpdateIconWarning;
-                    text.ForeColor = Theming.Alert;
+                    text.ForeColor = Theming.Warning;
                     description.Text = "Stable: v" + LatestLauncherBuild + "\nCurrent: v" + Application.ProductVersion;
 
                     if (!string.IsNullOrWhiteSpace(FileSettingsSave.IgnoreVersion))
@@ -161,7 +202,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 {
                     text.Text = "Launcher Status:\n - Update Available";
                     status.BackgroundImage = Theming.UpdateIconWarning;
-                    text.ForeColor = Theming.Alert;
+                    text.ForeColor = Theming.Warning;
                     description.Text = "New: v" + LatestLauncherBuild + "\nCurrent: v" + Application.ProductVersion;
                     UpgradeAvailable = true;
 
@@ -212,7 +253,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             }
             else
             {
-                text.Text = "Launcher Status:\n - Backend Error";
+                text.Text = "Launcher Status:\n - Invalid JSON";
                 status.BackgroundImage = Theming.UpdateIconError;
                 text.ForeColor = Theming.Error;
                 description.Text = "Version: v" + Application.ProductVersion;
