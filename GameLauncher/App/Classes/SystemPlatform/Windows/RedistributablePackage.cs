@@ -28,6 +28,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
     /// <see cref="//https://stackoverflow.com/questions/12206314/detect-if-visual-c-redistributable-for-visual-studio-2012-is-installed"/>
     public static class RedistributablePackage
     {
+        private static RegistryKey sk = null;
+        private static string InstalledVersion;
         /// <summary>
         /// Check if a Microsoft Redistributable Package is installed.
         /// </summary>
@@ -35,35 +37,55 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /// <returns><c>true</c> if the package is installed, otherwise <c>false</c></returns>
         public static bool IsInstalled(RedistributablePackageVersion redistributableVersion)
         {
-            try
             {
                 switch (redistributableVersion)
                 {
                     case RedistributablePackageVersion.VC2015to2019x86:
-                        var parametersVc2015to2019x86 = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86", false);
-                        if (parametersVc2015to2019x86 == null) return false;
-                        var vc2015to2019x86Version = parametersVc2015to2019x86.GetValue("Version");
-                        if (((string)vc2015to2019x86Version).StartsWith("v14.2"))
-                        {
-                            return true;
-                        }
-                        break;
                     case RedistributablePackageVersion.VC2015to2019x64:
-                        var parametersVc2015to2019x64 = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64", false);
-                        if (parametersVc2015to2019x64 == null) return false;
-                        var vc2015to2019x64Version = parametersVc2015to2019x64.GetValue("Version");
-                        if (((string)vc2015to2019x64Version).StartsWith("v14.2"))
+                        try
                         {
-                            return true;
+                            string subKey = Path.Combine("SOFTWARE", "Microsoft", "VisualStudio", "14.0", "VC", "Runtimes",
+                                (redistributableVersion == RedistributablePackageVersion.VC2015to2019x86) ? "x86" : "x64");
+
+                            sk = Registry.LocalMachine.OpenSubKey(subKey, false);
+
+                            if (sk != null)
+                            {
+                                InstalledVersion = sk.GetValue("Version").ToString();
+
+                                if (!string.IsNullOrWhiteSpace(InstalledVersion) && InstalledVersion.StartsWith("v14.2"))
+                                {
+                                    InstalledVersion = null;
+                                    return true;
+                                }
+                                else
+                                {
+                                    InstalledVersion = null;
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                return false;
+                            }
                         }
-                        break;
+                        catch (Exception Error)
+                        {
+                            LogToFileAddons.OpenLog("Redistributable Package", null, Error, null, true);
+                            return false;
+                        }
+                        finally
+                        {
+                            if (sk != null)
+                            {
+                                sk.Close();
+                                sk.Dispose();
+                            }
+                        }
+                    default:
+                        return false;
                 }
-                return false;
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("Redistributable Package", null, Error, null, true);
-                return false;
+
             }
         }
     }
@@ -130,6 +152,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                                 MessageBoxIcon.Error);
                     }
                 }
+                else
+                {
+                    Log.Info("REDISTRIBUTABLE: 32-bit 2015-2019 VC++ Redistributable Package is Installed");
+                }
 
                 if (Environment.Is64BitOperatingSystem)
                 {
@@ -184,6 +210,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             MessageBox.Show("Failed to download package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
                         }
+                    }
+                    else
+                    {
+                        Log.Info("REDISTRIBUTABLE: 64-bit 2015-2019 VC++ Redistributable Package is Installed");
                     }
                 }
 

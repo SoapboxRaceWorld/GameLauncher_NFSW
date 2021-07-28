@@ -241,21 +241,29 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /// <param name="keyName">Registry Key Entry</param>
         public static string RegistryRead(string keyName)
         {
-            string subKey = "SOFTWARE\\Soapbox Race World\\Launcher";
+            string subKey = Path.Combine("SOFTWARE", "Soapbox Race World", "Launcher");
 
+            RegistryKey sk = null;
             try
             {
-                RegistryKey sk = Registry.LocalMachine.OpenSubKey(subKey, false);
+                sk = Registry.LocalMachine.OpenSubKey(subKey, false);
                 if (sk == null)
                     return null;
                 else
                     return sk.GetValue(keyName).ToString();
             }
-            catch (Exception error)
+            catch (Exception Error)
             {
-                Log.Error("REGISTRYKEY: READ " + error.Message);
-                Log.Error("REGISTRYKEY: READ " + error.InnerException);
+                LogToFileAddons.OpenLog("READ REGISTRYKEY", null, Error, null, true);
                 return null;
+            }
+            finally
+            {
+                if (sk != null)
+                {
+                    sk.Close();
+                    sk.Dispose();
+                }
             }
         }
 
@@ -266,16 +274,25 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /// <param name="value">Inner Value to write to for Key Entry</param>
         public static void RegistryWrite(string keyName, string value)
         {
-            string subKey = "SOFTWARE\\Soapbox Race World\\Launcher";
+            string subKey = Path.Combine("SOFTWARE", "Soapbox Race World", "Launcher");
+            RegistryKey sk = null;
 
             try
             {
-                RegistryKey sk = Registry.LocalMachine.CreateSubKey(subKey, true);
+                sk = Registry.LocalMachine.CreateSubKey(subKey, true);
                 sk.SetValue(keyName, value);
             }
-            catch (Exception error)
+            catch (Exception Error)
             {
-                Log.Error("REGISTRYKEY: WRITE " + error.Message);
+                LogToFileAddons.OpenLog("WRITE REGISTRYKEY", null, Error, null, true);
+            }
+            finally
+            {
+                if (sk != null)
+                {
+                    sk.Close();
+                    sk.Dispose();
+                }
             }
         }
 
