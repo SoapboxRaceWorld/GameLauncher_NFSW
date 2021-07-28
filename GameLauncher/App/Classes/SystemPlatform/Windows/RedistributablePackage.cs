@@ -53,14 +53,25 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             {
                                 InstalledVersion = sk.GetValue("Version").ToString();
 
-                                if (!string.IsNullOrWhiteSpace(InstalledVersion) && InstalledVersion.StartsWith("v14.2"))
+                                if (!string.IsNullOrWhiteSpace(InstalledVersion))
                                 {
-                                    InstalledVersion = null;
-                                    return true;
+                                    if (InstalledVersion.StartsWith("v"))
+                                    {
+                                        char[] charsToTrim = { 'v' };
+                                        InstalledVersion = InstalledVersion.Trim(charsToTrim);
+                                    }
+
+                                    if (InstalledVersion.CompareTo("14.20") >= 0)
+                                    {
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        return false;
+                                    }
                                 }
                                 else
                                 {
-                                    InstalledVersion = null;
                                     return false;
                                 }
                             }
@@ -76,6 +87,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         }
                         finally
                         {
+                            if (InstalledVersion != null)
+                            {
+                                InstalledVersion = null;
+                            }
                             if (sk != null)
                             {
                                 sk.Close();
