@@ -122,7 +122,7 @@ namespace GameLauncher.App
             this.SettingsGameFiles.ForeColor = System.Drawing.Color.Silver;
             this.SettingsGameFiles.Location = new System.Drawing.Point(38, 80);
             this.SettingsGameFiles.Name = "SettingsGameFiles";
-            this.SettingsGameFiles.Size = new System.Drawing.Size(190, 23);
+            this.SettingsGameFiles.Size = new System.Drawing.Size(190, 25);
             this.SettingsGameFiles.TabIndex = 104;
             this.SettingsGameFiles.Text = "Change GameFiles Path";
             this.SettingsGameFiles.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -173,7 +173,7 @@ namespace GameLauncher.App
             this.SettingsVFilesButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
             this.SettingsVFilesButton.Location = new System.Drawing.Point(234, 80);
             this.SettingsVFilesButton.Name = "SettingsVFilesButton";
-            this.SettingsVFilesButton.Size = new System.Drawing.Size(124, 23);
+            this.SettingsVFilesButton.Size = new System.Drawing.Size(124, 25);
             this.SettingsVFilesButton.TabIndex = 100;
             this.SettingsVFilesButton.Text = "Verify GameFiles";
             this.SettingsVFilesButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -202,7 +202,7 @@ namespace GameLauncher.App
             this.SettingsCDNText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SettingsCDNText.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.SettingsCDNText.Location = new System.Drawing.Point(36, 112);
+            this.SettingsCDNText.Location = new System.Drawing.Point(36, 113);
             this.SettingsCDNText.Name = "SettingsCDNText";
             this.SettingsCDNText.Size = new System.Drawing.Size(124, 14);
             this.SettingsCDNText.TabIndex = 172;
@@ -218,7 +218,7 @@ namespace GameLauncher.App
             this.SettingsCDNPick.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsCDNPick.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.SettingsCDNPick.FormattingEnabled = true;
-            this.SettingsCDNPick.Location = new System.Drawing.Point(38, 131);
+            this.SettingsCDNPick.Location = new System.Drawing.Point(38, 132);
             this.SettingsCDNPick.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.SettingsCDNPick.Name = "SettingsCDNPick";
             this.SettingsCDNPick.Size = new System.Drawing.Size(287, 21);
@@ -246,9 +246,9 @@ namespace GameLauncher.App
             this.SettingsUEditorButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SettingsUEditorButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsUEditorButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
-            this.SettingsUEditorButton.Location = new System.Drawing.Point(213, 179);
+            this.SettingsUEditorButton.Location = new System.Drawing.Point(213, 180);
             this.SettingsUEditorButton.Name = "SettingsUEditorButton";
-            this.SettingsUEditorButton.Size = new System.Drawing.Size(145, 23);
+            this.SettingsUEditorButton.Size = new System.Drawing.Size(145, 25);
             this.SettingsUEditorButton.TabIndex = 103;
             this.SettingsUEditorButton.Text = "Edit UserSettings";
             this.SettingsUEditorButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -302,7 +302,7 @@ namespace GameLauncher.App
             this.SettingsGameFilesCurrentText.BackColor = System.Drawing.Color.Transparent;
             this.SettingsGameFilesCurrentText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsGameFilesCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsGameFilesCurrentText.Location = new System.Drawing.Point(418, 70);
+            this.SettingsGameFilesCurrentText.Location = new System.Drawing.Point(418, 62);
             this.SettingsGameFilesCurrentText.Name = "SettingsGameFilesCurrentText";
             this.SettingsGameFilesCurrentText.Size = new System.Drawing.Size(164, 14);
             this.SettingsGameFilesCurrentText.TabIndex = 183;
@@ -316,7 +316,7 @@ namespace GameLauncher.App
             this.SettingsGameFilesCurrent.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsGameFilesCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.SettingsGameFilesCurrent.LinkColor = System.Drawing.Color.LawnGreen;
-            this.SettingsGameFilesCurrent.Location = new System.Drawing.Point(419, 85);
+            this.SettingsGameFilesCurrent.Location = new System.Drawing.Point(419, 77);
             this.SettingsGameFilesCurrent.Name = "SettingsGameFilesCurrent";
             this.SettingsGameFilesCurrent.Size = new System.Drawing.Size(360, 30);
             this.SettingsGameFilesCurrent.TabIndex = 111;
@@ -330,7 +330,7 @@ namespace GameLauncher.App
             this.SettingsCDNCurrentText.BackColor = System.Drawing.Color.Transparent;
             this.SettingsCDNCurrentText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsCDNCurrentText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsCDNCurrentText.Location = new System.Drawing.Point(418, 120);
+            this.SettingsCDNCurrentText.Location = new System.Drawing.Point(418, 118);
             this.SettingsCDNCurrentText.Name = "SettingsCDNCurrentText";
             this.SettingsCDNCurrentText.Size = new System.Drawing.Size(112, 14);
             this.SettingsCDNCurrentText.TabIndex = 184;
@@ -344,7 +344,7 @@ namespace GameLauncher.App
             this.SettingsCDNCurrent.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsCDNCurrent.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.SettingsCDNCurrent.LinkColor = System.Drawing.Color.LawnGreen;
-            this.SettingsCDNCurrent.Location = new System.Drawing.Point(419, 136);
+            this.SettingsCDNCurrent.Location = new System.Drawing.Point(419, 134);
             this.SettingsCDNCurrent.Name = "SettingsCDNCurrent";
             this.SettingsCDNCurrent.Size = new System.Drawing.Size(360, 14);
             this.SettingsCDNCurrent.TabIndex = 112;
@@ -387,7 +387,7 @@ namespace GameLauncher.App
             this.SettingsNetworkText.BackColor = System.Drawing.Color.Transparent;
             this.SettingsNetworkText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsNetworkText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.SettingsNetworkText.Location = new System.Drawing.Point(418, 211);
+            this.SettingsNetworkText.Location = new System.Drawing.Point(418, 222);
             this.SettingsNetworkText.Name = "SettingsNetworkText";
             this.SettingsNetworkText.Size = new System.Drawing.Size(164, 14);
             this.SettingsNetworkText.TabIndex = 178;
@@ -399,7 +399,7 @@ namespace GameLauncher.App
             this.SettingsMainSrvText.BackColor = System.Drawing.Color.Transparent;
             this.SettingsMainSrvText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsMainSrvText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.SettingsMainSrvText.Location = new System.Drawing.Point(418, 227);
+            this.SettingsMainSrvText.Location = new System.Drawing.Point(418, 238);
             this.SettingsMainSrvText.Name = "SettingsMainSrvText";
             this.SettingsMainSrvText.Size = new System.Drawing.Size(210, 14);
             this.SettingsMainSrvText.TabIndex = 179;
@@ -410,7 +410,7 @@ namespace GameLauncher.App
             this.SettingsMainCDNText.BackColor = System.Drawing.Color.Transparent;
             this.SettingsMainCDNText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsMainCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.SettingsMainCDNText.Location = new System.Drawing.Point(418, 247);
+            this.SettingsMainCDNText.Location = new System.Drawing.Point(418, 258);
             this.SettingsMainCDNText.Name = "SettingsMainCDNText";
             this.SettingsMainCDNText.Size = new System.Drawing.Size(210, 14);
             this.SettingsMainCDNText.TabIndex = 182;
@@ -422,7 +422,7 @@ namespace GameLauncher.App
             this.SettingsBkupSrvText.BackColor = System.Drawing.Color.Transparent;
             this.SettingsBkupSrvText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsBkupSrvText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.SettingsBkupSrvText.Location = new System.Drawing.Point(418, 267);
+            this.SettingsBkupSrvText.Location = new System.Drawing.Point(418, 278);
             this.SettingsBkupSrvText.Name = "SettingsBkupSrvText";
             this.SettingsBkupSrvText.Size = new System.Drawing.Size(210, 14);
             this.SettingsBkupSrvText.TabIndex = 180;
@@ -434,7 +434,7 @@ namespace GameLauncher.App
             this.SettingsBkupCDNText.BackColor = System.Drawing.Color.Transparent;
             this.SettingsBkupCDNText.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsBkupCDNText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(179)))), ((int)(((byte)(189)))));
-            this.SettingsBkupCDNText.Location = new System.Drawing.Point(418, 287);
+            this.SettingsBkupCDNText.Location = new System.Drawing.Point(418, 298);
             this.SettingsBkupCDNText.Name = "SettingsBkupCDNText";
             this.SettingsBkupCDNText.Size = new System.Drawing.Size(210, 14);
             this.SettingsBkupCDNText.TabIndex = 181;
@@ -445,7 +445,7 @@ namespace GameLauncher.App
             // 
             this.ThemeAuthor.BackColor = System.Drawing.Color.Transparent;
             this.ThemeAuthor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.ThemeAuthor.Location = new System.Drawing.Point(35, 454);
+            this.ThemeAuthor.Location = new System.Drawing.Point(35, 460);
             this.ThemeAuthor.Name = "ThemeAuthor";
             this.ThemeAuthor.Size = new System.Drawing.Size(232, 14);
             this.ThemeAuthor.TabIndex = 190;
@@ -456,7 +456,7 @@ namespace GameLauncher.App
             // 
             this.ThemeName.BackColor = System.Drawing.Color.Transparent;
             this.ThemeName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.ThemeName.Location = new System.Drawing.Point(35, 428);
+            this.ThemeName.Location = new System.Drawing.Point(35, 440);
             this.ThemeName.Name = "ThemeName";
             this.ThemeName.Size = new System.Drawing.Size(148, 14);
             this.ThemeName.TabIndex = 191;
@@ -472,7 +472,7 @@ namespace GameLauncher.App
             this.SettingsLanguage.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsLanguage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(210)))), ((int)(((byte)(255)))));
             this.SettingsLanguage.FormattingEnabled = true;
-            this.SettingsLanguage.Location = new System.Drawing.Point(38, 179);
+            this.SettingsLanguage.Location = new System.Drawing.Point(38, 180);
             this.SettingsLanguage.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.SettingsLanguage.Name = "SettingsLanguage";
             this.SettingsLanguage.Size = new System.Drawing.Size(164, 21);
@@ -523,7 +523,7 @@ namespace GameLauncher.App
             this.ResetWindowsDefenderButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ResetWindowsDefenderButton.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ResetWindowsDefenderButton.ForeColor = System.Drawing.Color.Silver;
-            this.ResetWindowsDefenderButton.Location = new System.Drawing.Point(204, 295);
+            this.ResetWindowsDefenderButton.Location = new System.Drawing.Point(204, 294);
             this.ResetWindowsDefenderButton.Name = "ResetWindowsDefenderButton";
             this.ResetWindowsDefenderButton.Size = new System.Drawing.Size(154, 25);
             this.ResetWindowsDefenderButton.TabIndex = 192;
@@ -539,7 +539,7 @@ namespace GameLauncher.App
             this.ResetFirewallRulesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ResetFirewallRulesButton.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ResetFirewallRulesButton.ForeColor = System.Drawing.Color.Silver;
-            this.ResetFirewallRulesButton.Location = new System.Drawing.Point(38, 295);
+            this.ResetFirewallRulesButton.Location = new System.Drawing.Point(38, 294);
             this.ResetFirewallRulesButton.Name = "ResetFirewallRulesButton";
             this.ResetFirewallRulesButton.Size = new System.Drawing.Size(154, 25);
             this.ResetFirewallRulesButton.TabIndex = 193;

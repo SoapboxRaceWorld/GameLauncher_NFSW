@@ -102,7 +102,7 @@ namespace GameLauncher.App
             this.RegisterAgree.Name = "RegisterAgree";
             this.RegisterAgree.Size = new System.Drawing.Size(232, 35);
             this.RegisterAgree.TabIndex = 16;
-            this.RegisterAgree.Text = "BY REGISTERING YOU AGREE TO THE TERMS OF SERVICE";
+            this.RegisterAgree.Text = "BY REGISTERING YOU AGREE TO FOLLOW SERVER RULES";
             this.RegisterAgree.UseVisualStyleBackColor = false;
             // 
             // RegisterButton
