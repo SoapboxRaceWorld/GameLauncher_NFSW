@@ -2,7 +2,9 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Windows.Forms;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
@@ -135,9 +137,33 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         FunctionStatus.TLS();
                         Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x86.exe");
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                        WebClient Client = new WebClient();
-                        Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        Client.DownloadFile(URLCall, "VC_redist.x86.exe");
+                        var Client = new WebClient
+                        {
+                            Encoding = Encoding.UTF8
+                        };
+
+                        if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        else
+                        {
+                            Client.Headers.Add("user-agent", "SBRW Launcher " +
+                            Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        }
+
+                        try
+                        {
+                            Client.DownloadFile(URLCall, "VC_redist.x86.exe");
+                        }
+                        catch (Exception Error)
+                        {
+                            LogToFileAddons.OpenLog("REDISTRIBUTABLE", null, Error, null, true);
+                        }
+                        finally
+                        {
+                            if (Client != null)
+                            {
+                                Client.Dispose();
+                            }
+                        }
                     }
                     catch (Exception Error)
                     {
@@ -194,9 +220,33 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             FunctionStatus.TLS();
                             Uri URLCall = new Uri("https://aka.ms/vs/16/release/VC_redist.x64.exe");
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                            WebClient Client = new WebClient();
-                            Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                            Client.DownloadFile(URLCall, "VC_redist.x64.exe");
+                            var Client = new WebClient
+                            {
+                                Encoding = Encoding.UTF8
+                            };
+
+                            if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            else
+                            {
+                                Client.Headers.Add("user-agent", "SBRW Launcher " +
+                                Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            }
+
+                            try
+                            {
+                                Client.DownloadFile(URLCall, "VC_redist.x64.exe");
+                            }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("REDISTRIBUTABLE", null, Error, null, true);
+                            }
+                            finally
+                            {
+                                if (Client != null)
+                                {
+                                    Client.Dispose();
+                                }
+                            }
                         }
                         catch (Exception Error)
                         {

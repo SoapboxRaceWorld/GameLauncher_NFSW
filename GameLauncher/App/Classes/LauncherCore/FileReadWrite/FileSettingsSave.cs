@@ -35,6 +35,9 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
         public static string FilePermissionStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FilePermission")) ? settingFile.Read("FilePermission") : "Not Set";
 
         public static string GameIntegrity = !string.IsNullOrWhiteSpace(settingFile.Read("GameIntegrity")) ? settingFile.Read("GameIntegrity") : "Unknown";
+        
+        public static string WebCallMethod = (!string.IsNullOrWhiteSpace(settingFile.Read("WebCallMethod")) && (settingFile.Read("WebCallMethod") == "WebClient" || 
+            settingFile.Read("WebCallMethod") == "WebClientWithTimeout")) ? settingFile.Read("WebCallMethod") : "WebClient";
 
         public static void NullSafeSettings()
         {
@@ -137,6 +140,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 settingFile.Write("ProxyPort", string.Empty);
             }
 
+            if (!settingFile.KeyExists("WebCallMethod"))
+            {
+                settingFile.Write("WebCallMethod", WebCallMethod);
+            }
+
             if (!DetectLinux.LinuxDetected())
             {
                 if (!settingFile.KeyExists("FirewallLauncher"))
@@ -212,6 +220,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 }
 
                 Log.Info("SETTINGS FILE: Random Generated Default Port -> " + ServerProxy.ProxyPort);
+            }
+
+            if (!string.IsNullOrWhiteSpace(WebCallMethod))
+            {
+                Log.Info("SETTINGS FILE: Choosen WebCall Method ->" + WebCallMethod);
             }
 
             /* Key Entries to Remove (No Longer Needed) */
@@ -294,6 +307,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             if (settingFile.Read("GameIntegrity") != GameIntegrity)
             {
                 settingFile.Write("GameIntegrity", GameIntegrity);
+            }
+
+            if (settingFile.Read("WebCallMethod") != WebCallMethod)
+            {
+                settingFile.Write("WebCallMethod", WebCallMethod);
             }
 
             if (!DetectLinux.LinuxDetected())

@@ -59,13 +59,14 @@ namespace GameLauncher
 
         public static String getTempNa = Path.GetTempFileName();
 
-        private int _lastSelectedServerId;
-        private int _nfswPid;
-        private Thread _nfswstarted;
+        private static int _lastSelectedServerId;
+        private static int _nfswPid;
+        private static Thread _nfswstarted;
+        private static bool StillCheckingLastServer = false;
         private static int ProcessID = 0;
 
-        private DateTime _downloadStartTime;
-        private Downloader _downloader;
+        private static DateTime _downloadStartTime;
+        private static Downloader _downloader;
 
         private static string JsonGSI;
         private static MemoryStream _serverRawBanner = null;
@@ -76,12 +77,12 @@ namespace GameLauncher
         private static int serverSecondsToShutDown;
 
         public static String ModNetFileNameInUse = String.Empty;
-        readonly Queue<Uri> modFilesDownloadUrls = new Queue<Uri>();
-        bool isDownloadingModNetFiles = false;
-        int CurrentModFileCount = 0;
-        int TotalModFileCount = 0;
+        public static readonly Queue<Uri> modFilesDownloadUrls = new Queue<Uri>();
+        public static bool isDownloadingModNetFiles = false;
+        public static int CurrentModFileCount = 0;
+        public static int TotalModFileCount = 0;
 
-        readonly String filename_pack = Strings.Encode(Path.Combine(Locations.LauncherFolder, "GameFiles.sbrwpack"));
+        public static readonly String filename_pack = Strings.Encode(Path.Combine(Locations.LauncherFolder, "GameFiles.sbrwpack"));
 
         private void MoveWindow_MouseDown(object sender, MouseEventArgs e)
         {
@@ -716,18 +717,25 @@ namespace GameLauncher
             FunctionStatus.TLS();
             Uri ServerURI = new Uri(InformationCache.SelectedServerData.IPAddress + "/GetServerInformation");
             ServicePointManager.FindServicePoint(ServerURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-            WebClient client = new WebClient
+            var Client = new WebClient
             {
                 Encoding = Encoding.UTF8
             };
-            client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-            client.DownloadStringAsync(ServerURI);
+
+            if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+            else
+            {
+                Client.Headers.Add("user-agent", "SBRW Launcher " +
+                Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+            }
+
+            Client.DownloadStringAsync(ServerURI);
 
             System.Timers.Timer aTimer = new System.Timers.Timer(10000);
-            aTimer.Elapsed += (x, y) => { client.CancelAsync(); };
+            aTimer.Elapsed += (x, y) => { Client.CancelAsync(); };
             aTimer.Enabled = true;            
 
-            client.DownloadStringCompleted += (sender2, e2) =>
+            Client.DownloadStringCompleted += (sender2, e2) =>
             {
                 aTimer.Enabled = false;
                 bool GSIErrorFree = true;
@@ -756,6 +764,11 @@ namespace GameLauncher
                     if (e2.Error != null)
                     {
                         LogToFileAddons.OpenLog("JSON GSI", null, e2.Error, null, true);
+                    }
+
+                    if (Client != null)
+                    {
+                        Client.Dispose();
                     }
                 }
                 else
@@ -1038,6 +1051,14 @@ namespace GameLauncher
                             }
                         }
                         catch { /* ¯\_(ツ)_/¯ */ }
+                        finally
+                        {
+                            if (Client != null)
+                            {
+                                Client.Dispose();
+                            }
+                        }
+
 
                         /* For Thread Safety */
                         if (this.ServerStatusDesc.InvokeRequired)
@@ -1123,35 +1144,40 @@ namespace GameLauncher
                             if (!string.IsNullOrWhiteSpace(verticalImageUrl))
                             {
                                 FunctionStatus.TLS();
-                                Uri URICall = new Uri(verticalImageUrl);
-                                ServicePointManager.FindServicePoint(URICall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                                WebClient client2 = new WebClient
+                                Uri URICall_A = new Uri(verticalImageUrl);
+                                ServicePointManager.FindServicePoint(URICall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                var Client_A = new WebClient
                                 {
                                     Encoding = Encoding.UTF8
                                 };
-                                client2.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                                client2.DownloadDataAsync(URICall);
-                                client2.DownloadProgressChanged += (sender4, e4) =>
+
+                                if (!WebCalls.Alternative) { Client_A = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                else
                                 {
-                                    if (e4.TotalBytesToReceive > 2000000)
+                                    Client_A.Headers.Add("user-agent", "SBRW Launcher " +
+                                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                }
+
+                                Client_A.DownloadDataAsync(URICall_A);
+                                Client_A.DownloadProgressChanged += (Object_A, Events_A) =>
+                                {
+                                    if (Events_A.TotalBytesToReceive > 2000000)
                                     {
-                                        client2.CancelAsync();
+                                        Client_A.CancelAsync();
                                         Log.Warning("Unable to Cache " + ServerListUpdater.ServerName("Ping") + " Server Banner! {Over 2MB?}");
                                     }
                                 };
 
-                                client2.DownloadDataCompleted += (sender4, e4) =>
+                                Client_A.DownloadDataCompleted += (Object_A, Events_A) =>
                                 {
-                                    if (e4.Cancelled)
+                                    if (Events_A.Cancelled || Events_A.Error != null)
                                     {
                                         /* Load cached banner! */
                                         VerticalBanner.Image = VerticalBanners.Grayscale(BannerCache);
-                                        return;
-                                    }
-                                    else if (e4.Error != null)
-                                    {
-                                        /* Load cached banner! */
-                                        VerticalBanner.Image = VerticalBanners.Grayscale(BannerCache);
+                                        if (Client_A != null)
+                                        {
+                                            Client_A.Dispose();
+                                        }
                                         return;
                                     }
                                     else
@@ -1168,7 +1194,7 @@ namespace GameLauncher
                                             }
                                             catch { }
 
-                                            _serverRawBanner = new MemoryStream(e4.Result)
+                                            _serverRawBanner = new MemoryStream(Events_A.Result)
                                             {
                                                 Position = 0
                                             };
@@ -1189,6 +1215,13 @@ namespace GameLauncher
                                         {
                                             LogToFileAddons.OpenLog("Server Banner", null, Error, null, true);
                                             VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
+                                        }
+                                        finally
+                                        {
+                                            if (Client_A != null)
+                                            {
+                                                Client_A.Dispose();
+                                            }
                                         }
                                     }
                                 };
@@ -1792,17 +1825,24 @@ namespace GameLauncher
 
                 ModNetFileNameInUse = FileName;
 
+                FunctionStatus.TLS();
+                ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                var Client = new WebClient
+                {
+                    Encoding = Encoding.UTF8
+                };
+
+                if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                else
+                {
+                    Client.Headers.Add("user-agent", "SBRW Launcher " +
+                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                }
+
                 try
                 {
-                    FunctionStatus.TLS();
-                    ServicePointManager.FindServicePoint(url).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(30).TotalMilliseconds;
-                    WebClient client2 = new WebClient
-                    {
-                        Encoding = Encoding.UTF8
-                    };
-                    client2.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    client2.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged_RELOADED);
-                    client2.DownloadFileCompleted += (test, stuff) =>
+                    Client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged_RELOADED);
+                    Client.DownloadFileCompleted += (test, stuff) =>
                     {
                         Log.Core("LAUNCHER: Downloaded: " + FileName);
                         isDownloadingModNetFiles = false;
@@ -1816,12 +1856,19 @@ namespace GameLauncher
                             DownloadModNetFilesRightNow(path);
                         }
                     };
-                    client2.DownloadFileAsync(url, path + "/" + FileName);
+                    Client.DownloadFileAsync(url, path + "/" + FileName);
                 }
                 catch (Exception Error)
                 {
                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                     LogToFileAddons.OpenLog("Modnet Server Files", null, Error, null, true);
+                }
+                finally
+                {
+                    if (Client != null)
+                    {
+                        Client.Dispose();
+                    }
                 }
 
                 isDownloadingModNetFiles = true;
@@ -1898,19 +1945,25 @@ namespace GameLauncher
 
                 try
                 {
+                    DiscordLauncherPresense.Status("Checking ModNet", null);
+                    /* Get Remote ModNet list to process for checking required ModNet files are present and current */
+                    FunctionStatus.TLS();
+                    Uri ModNetURI = new Uri(URLs.ModNet + "/launcher-modules/modules.json");
+                    ServicePointManager.FindServicePoint(ModNetURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    var ModNetJsonURI = new WebClient
+                    {
+                        Encoding = Encoding.UTF8
+                    };
+
+                    if (!WebCalls.Alternative) { ModNetJsonURI = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    else
+                    {
+                        ModNetJsonURI.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+
                     try
                     {
-                        DiscordLauncherPresense.Status("Checking ModNet", null);
-                        /* Get Remote ModNet list to process for checking required ModNet files are present and current */
-                        FunctionStatus.TLS();
-                        Uri ModNetURI = new Uri(URLs.ModNet + "/launcher-modules/modules.json");
-                        ServicePointManager.FindServicePoint(ModNetURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                        WebClient ModNetJsonURI = new WebClient
-                        {
-                            Encoding = Encoding.UTF8
-                        };
-                        ModNetJsonURI.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + 
-                            " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                         ModulesJSON = ModNetJsonURI.DownloadString(ModNetURI);
                         PlayProgressText.Text = "JSON: Retrived ModNet Files Information".ToUpper();
                     }
@@ -1921,6 +1974,13 @@ namespace GameLauncher
                         CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                         string LogMessage = "There was an error with ModNet JSON Retrieval:";
                         LogToFileAddons.OpenLog("MODNET FILES", LogMessage, Error, "Error", false);
+                    }
+                    finally
+                    {
+                        if (ModNetJsonURI != null)
+                        {
+                            ModNetJsonURI.Dispose();
+                        }
                     }
 
                     if (string.IsNullOrWhiteSpace(ModulesJSON))
@@ -1968,12 +2028,17 @@ namespace GameLauncher
                                     FunctionStatus.TLS();
                                     Uri URLCall = new Uri(URLs.ModNet + "/launcher-modules/" + ModNetList);
                                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                                    WebClient newModNetFilesDownload = new WebClient
+                                    var newModNetFilesDownload = new WebClient
                                     {
                                         Encoding = Encoding.UTF8
                                     };
-                                    newModNetFilesDownload.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
-                                        " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+
+                                    if (!WebCalls.Alternative) { newModNetFilesDownload = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                    else
+                                    {
+                                        newModNetFilesDownload.Headers.Add("user-agent", "SBRW Launcher " +
+                                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                    }
                                     newModNetFilesDownload.DownloadFile(URLCall, ModNetFilePath);
                                 }
                                 else
@@ -2001,18 +2066,24 @@ namespace GameLauncher
                                 ModulesJSON = null;
                             }
                         }
-                        
+
+                        FunctionStatus.TLS();
+                        Uri newModNetUri = new Uri(InformationCache.SelectedServerData.IPAddress + "/Modding/GetModInfo");
+                        ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                        var ModInfoJson = new WebClient
+                        {
+                            Encoding = Encoding.UTF8
+                        };
+
+                        if (!WebCalls.Alternative) { ModInfoJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        else
+                        {
+                            ModInfoJson.Headers.Add("user-agent", "SBRW Launcher " +
+                            Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        }
+
                         try
                         {
-                            FunctionStatus.TLS();
-                            Uri newModNetUri = new Uri(InformationCache.SelectedServerData.IPAddress + "/Modding/GetModInfo");
-                            ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                            WebClient ModInfoJson = new WebClient
-                            {
-                                Encoding = Encoding.UTF8
-                            };
-                            ModInfoJson.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + 
-                                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                             ServerModInfo = ModInfoJson.DownloadString(newModNetUri);
                             PlayProgressText.Text = ("JSON: Retrived Server Mod Information").ToUpper();
                         }
@@ -2023,6 +2094,13 @@ namespace GameLauncher
                             CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                             string LogMessage = "There was an error with Server Mod Information Retrieval:";
                             LogToFileAddons.OpenLog("SERVER MOD INFO", LogMessage, Error, "Error", false);
+                        }
+                        finally
+                        {
+                            if (ModInfoJson != null)
+                            {
+                                ModInfoJson.Dispose();
+                            }
                         }
 
                         if (string.IsNullOrWhiteSpace(ServerModInfo))
@@ -2044,35 +2122,61 @@ namespace GameLauncher
                             ServerModInfo = null;
 
                             /* Set and Get for RemoteRPC Files */
-                            try
+                            FunctionStatus.TLS();
+                            Uri URLCall_A = new Uri(json2.basePath + "/cars.json");
+                            ServicePointManager.FindServicePoint(URLCall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                            var CarsJson = new WebClient
                             {
-                                FunctionStatus.TLS();
-                                Uri URLCall = new Uri(json2.basePath + "/cars.json");
-                                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                                WebClient CarsJson = new WebClient
-                                {
-                                    Encoding = Encoding.UTF8
-                                };
-                                CarsJson.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
-                                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                                remoteCarsFile = CarsJson.DownloadString(URLCall);
+                                Encoding = Encoding.UTF8
+                            };
+
+                            if (!WebCalls.Alternative) { CarsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            else
+                            {
+                                CarsJson.Headers.Add("user-agent", "SBRW Launcher " +
+                                Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
                             }
-                            catch { }
 
                             try
                             {
-                                FunctionStatus.TLS();
-                                Uri URLCall = new Uri(json2.basePath + "/events.json");
-                                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                                WebClient EventsJson = new WebClient
-                                {
-                                    Encoding = Encoding.UTF8
-                                };
-                                EventsJson.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
-                                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                                remoteEventsFile = EventsJson.DownloadString(URLCall);
+                                remoteCarsFile = CarsJson.DownloadString(URLCall_A);
                             }
                             catch { }
+                            finally 
+                            {
+                                if (CarsJson != null)
+                                {
+                                    CarsJson.Dispose();
+                                }
+                            }
+
+                            FunctionStatus.TLS();
+                            Uri URLCall_B = new Uri(json2.basePath + "/events.json");
+                            ServicePointManager.FindServicePoint(URLCall_B).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                            var EventsJson = new WebClient
+                            {
+                                Encoding = Encoding.UTF8
+                            };
+
+                            if (!WebCalls.Alternative) { EventsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            else
+                            {
+                                EventsJson.Headers.Add("user-agent", "SBRW Launcher " +
+                                Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            }
+
+                            try
+                            {
+                                remoteEventsFile = EventsJson.DownloadString(URLCall_B);
+                            }
+                            catch { }
+                            finally
+                            {
+                                if (EventsJson != null)
+                                {
+                                    EventsJson.Dispose();
+                                }
+                            }
 
                             /* Version 1.3 @metonator - DavidCarbon */
                             if (IsJSONValid.ValidJson(remoteCarsFile))
@@ -2099,21 +2203,27 @@ namespace GameLauncher
                                 EventsList.remoteEventsList = string.Empty;
                             }
 
+                            Log.Core("CORE: Loading Server Mods List");
+                            /* Get Server Mod Index */
+                            FunctionStatus.TLS();
+                            Uri newIndexFile = new Uri(json2.basePath + "/index.json");
+                            ServicePointManager.FindServicePoint(newIndexFile).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                            var ServerModsList = new WebClient
+                            {
+                                Encoding = Encoding.UTF8
+                            };
+
+                            if (!WebCalls.Alternative) { ServerModsList = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            else
+                            {
+                                ServerModsList.Headers.Add("user-agent", "SBRW Launcher " +
+                                Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            }
+
                             try
                             {
-                                Log.Core("CORE: Loading Server Mods List");
-                                /* Get Server Mod Index */
-                                FunctionStatus.TLS();
-                                Uri newIndexFile = new Uri(json2.basePath + "/index.json");
-                                ServicePointManager.FindServicePoint(newIndexFile).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                                WebClient ServerModsList = new WebClient
-                                {
-                                    Encoding = Encoding.UTF8
-                                };
-                                ServerModsList.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
-                                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                Log.Core("CORE: Retrived Server Mods List");
                                 ServerModListJSON = ServerModsList.DownloadString(newIndexFile);
-
                                 PlayProgressText.Text = ("JSON: Retrived Server Mod List Information").ToUpper();
                             }
                             catch (Exception Error)
@@ -2123,6 +2233,13 @@ namespace GameLauncher
                                 CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                                 string LogMessage = "There was an error with Server Mod List Information Retrieval:";
                                 LogToFileAddons.OpenLog("SERVER MOD JSON", LogMessage, Error, "Error", false);
+                            }
+                            finally
+                            {
+                                if (ServerModsList != null)
+                                {
+                                    ServerModsList.Dispose();
+                                }
                             }
 
                             if (string.IsNullOrWhiteSpace(ServerModListJSON))
@@ -2583,24 +2700,50 @@ namespace GameLauncher
 
             try
             {
-                speechFile = DownloaderAddons.SpeechFiles(FileSettingsSave.Lang).ToUpper();
+                speechFile = DownloaderAddons.SpeechFiles(FileSettingsSave.Lang);
 
-                WebClientWithTimeout wc = new WebClientWithTimeout
+                FunctionStatus.TLS();
+                Uri URLCall = new Uri(FileSettingsSave.CDN + "/" + speechFile + "/index.xml");
+                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                var Client = new WebClient
                 {
                     Encoding = Encoding.UTF8
                 };
-                String response = wc.DownloadString(FileSettingsSave.CDN + "/" + speechFile + "/index.xml");
 
-                response = response.Substring(3, response.Length - 3);
+                if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                else
+                {
+                    Client.Headers.Add("user-agent", "SBRW Launcher " +
+                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                }
 
-                XmlDocument speechFileXml = new XmlDocument();
-                speechFileXml.LoadXml(response);
-                XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
+                try
+                {
+                    String response = Client.DownloadString(URLCall);
 
-                speechSize = Convert.ToInt32(speechSizeNode.InnerText);
+                    response = response.Substring(3, response.Length - 3);
+
+                    XmlDocument speechFileXml = new XmlDocument();
+                    speechFileXml.LoadXml(response);
+                    XmlNode speechSizeNode = speechFileXml.SelectSingleNode("index/header/compressed");
+
+                    speechSize = Convert.ToInt32(speechSizeNode.InnerText);
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    if (Client != null)
+                    {
+                        Client.Dispose();
+                    }
+                }
             }
-            catch (Exception)
+            catch (Exception Error)
             {
+                LogToFileAddons.OpenLog("Download Speech Files", null, Error, null, true);
                 speechFile = DownloaderAddons.SpeechFiles(null);
                 speechSize = DownloaderAddons.SpeechFilesSize();
             }
@@ -2778,6 +2921,8 @@ namespace GameLauncher
 
         private void OnDownloadFinished()
         {
+            _downloader.Stop();
+
             try
             {
                 File.WriteAllBytes(Path.Combine(FileSettingsSave.GameInstallation, "GFX", "BootFlow.gfx"), 
@@ -2830,6 +2975,8 @@ namespace GameLauncher
 
         private void OnDownloadFailed(Exception Error)
         {
+            _downloader.Stop();
+
             DiscordLauncherPresense.Status("Download Game Files Error", null);
 
             ExtractingProgress.Value = 100;
@@ -3109,52 +3256,80 @@ namespace GameLauncher
                 {
                     DiscordLauncherPresense.Update();
 
-                    /* Let's fetch all servers */
-                    List<ServerList> allServs = ServerListUpdater.CleanList.FindAll(i => string.Equals(i.IsSpecial, false));
-                    allServs.ForEach(delegate (ServerList Servers) 
+                    if (ServerListUpdater.NoCategoryList.Any())
                     {
-                        try
+                        foreach (ServerList Servers in ServerListUpdater.NoCategoryList)
                         {
-                            WebClientWithTimeout pingServer = new WebClientWithTimeout
+                            try
                             {
-                                Encoding = Encoding.UTF8
-                            };
-                            pingServer.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
-                            " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                            JsonGSI = pingServer.DownloadString(Servers.IPAddress + "/GetServerInformation");
-                            bool GSIErrorFree = true;
-
-                            if (!IsJSONValid.ValidJson(JsonGSI))
-                            {
-                                GSIErrorFree = false;
-                                if (EnableInsiderBetaTester.Allowed() || EnableInsiderBetaTester.Allowed())
+                                while (StillCheckingLastServer) { }
+                                FunctionStatus.TLS();
+                                Uri URLCall = new Uri(Servers.IPAddress + "/GetServerInformation");
+                                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                var Client = new WebClient
                                 {
-                                    Log.Error("Pinging GSI (Received): " + JsonGSI);
+                                    Encoding = Encoding.UTF8
+                                };
+
+                                if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                else
+                                {
+                                    Client.Headers.Add("user-agent", "SBRW Launcher " +
+                                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                }
+
+                                try
+                                {
+                                    JsonGSI = Client.DownloadString(URLCall);
+                                    StillCheckingLastServer = true;
+                                    bool GSIErrorFree = true;
+
+                                    if (!IsJSONValid.ValidJson(JsonGSI))
+                                    {
+                                        GSIErrorFree = false;
+                                        if (EnableInsiderBetaTester.Allowed() || EnableInsiderBetaTester.Allowed())
+                                        {
+                                            Log.Error("Pinging GSI (Received): " + JsonGSI);
+                                        }
+                                    }
+
+                                    if (!InformationCache.ServerStatusBook.ContainsKey(Servers.ID))
+                                    {
+                                        InformationCache.ServerStatusBook.Add(Servers.ID, (!GSIErrorFree) ? 3 : 1);
+                                    }
+                                }
+                                catch (Exception Error)
+                                {
+                                    LogToFileAddons.OpenLog("Pinging GSI", null, Error, null, true);
+
+                                    if (!InformationCache.ServerStatusBook.ContainsKey(Servers.ID))
+                                    {
+                                        InformationCache.ServerStatusBook.Add(Servers.ID, 0);
+                                    }                                    
+                                }
+                                finally
+                                {
+                                    StillCheckingLastServer = false;
+
+                                    if (Client != null)
+                                    {
+                                        Client.Dispose();
+                                    }
                                 }
                             }
-
-                            if (!InformationCache.ServerStatusBook.ContainsKey(Servers.ID))
+                            catch (Exception Error)
                             {
-                                InformationCache.ServerStatusBook.Add(Servers.ID, (!GSIErrorFree) ? 3 : 1);
+                                LogToFileAddons.OpenLog("Pinging GSI", null, Error, null, true);
+                            }
+                            finally
+                            {
+                                if (JsonGSI != null)
+                                {
+                                    JsonGSI = null;
+                                }
                             }
                         }
-                        catch (Exception Error)
-                        {
-                            LogToFileAddons.OpenLog("Pinging GSI", null, Error, null, true);
-
-                            if (!InformationCache.ServerStatusBook.ContainsKey(Servers.ID))
-                            {
-                                InformationCache.ServerStatusBook.Add(Servers.ID, 0);
-                            }
-                        }
-                        finally
-                        {
-                            if (JsonGSI != null)
-                            {
-                                JsonGSI = null;
-                            }
-                        }
-                    });
+                    }
                 }).Start();
             };
 

@@ -20,6 +20,7 @@ using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 
 namespace GameLauncher.App
 {
@@ -33,6 +34,7 @@ namespace GameLauncher.App
         private int _lastSelectedLanguage;
         private bool _disableProxy;
         private bool _disableDiscordRPC;
+        private bool _enableAltWebCalls;
         private bool _restartRequired;
         private string _newLauncherPath;
         private string _newGameFilesPath;
@@ -119,6 +121,7 @@ namespace GameLauncher.App
             SettingsWordFilterCheck.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsProxyCheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsDiscordRPCCheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            SettingsAltWebCallsheckbox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsGameFilesCurrentText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsGameFilesCurrent.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SettingsCDNCurrentText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
@@ -212,6 +215,7 @@ namespace GameLauncher.App
             SettingsWordFilterCheck.ForeColor = Theming.SettingsCheckBoxes;
             SettingsProxyCheckbox.ForeColor = Theming.SettingsCheckBoxes;
             SettingsDiscordRPCCheckbox.ForeColor = Theming.SettingsCheckBoxes;
+            SettingsAltWebCallsheckbox.ForeColor = Theming.SettingsCheckBoxes;
 
             /* Bottom Left */
             SettingsLauncherVersion.ForeColor = Theming.FivithTextForeColor;
@@ -394,9 +398,6 @@ namespace GameLauncher.App
             /* Read Settings.ini            /
             /*******************************/
 
-            _disableProxy = (FileSettingsSave.Proxy == "1");
-            _disableDiscordRPC = (FileSettingsSave.RPC == "1");
-
             if (File.Exists(FileSettingsSave.GameInstallation + "/profwords") || File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis"))
             {
                 try
@@ -431,8 +432,13 @@ namespace GameLauncher.App
             _newGameFilesPath = FileSettingsSave.GameInstallation;
             _newLauncherPath = Locations.LauncherFolder;
 
+            _disableProxy = (FileSettingsSave.Proxy == "1");
+            _disableDiscordRPC = (FileSettingsSave.RPC == "1");
+            _enableAltWebCalls = (FileSettingsSave.WebCallMethod == "WebClientWithTimeout");
+
             SettingsProxyCheckbox.Checked = _disableProxy;
             SettingsDiscordRPCCheckbox.Checked = _disableDiscordRPC;
+            SettingsAltWebCallsheckbox.Checked = _enableAltWebCalls;
 
             /*******************************/
             /* Enable/Disable Visuals       /
@@ -679,6 +685,12 @@ namespace GameLauncher.App
                         DiscordLauncherPresense.Start("Start Up", null);
                     }
                 }
+            }
+
+            String enableAltWebCalls = (SettingsAltWebCallsheckbox.Checked == true) ? "WebClientWithTimeout" : "WebClient";
+            if (FileSettingsSave.WebCallMethod != enableAltWebCalls)
+            {
+                FileSettingsSave.WebCallMethod = (SettingsAltWebCallsheckbox.Checked == true) ? "WebClientWithTimeout" : "WebClient";
             }
 
             /* Actually lets check those 2 files */

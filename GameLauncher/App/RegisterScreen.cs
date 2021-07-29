@@ -1,6 +1,7 @@
 ﻿using GameLauncher.App.Classes.Auth;
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.LauncherCore.Client.Auth;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
@@ -94,36 +95,65 @@ namespace GameLauncher.App
                     FunctionStatus.TLS();
                     Uri URLCall = new Uri("https://api.pwnedpasswords.com/range/" + range);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    WebClient breachCheck = new WebClient
+                    var Client = new WebClient
                     {
                         Encoding = Encoding.UTF8
                     };
-
-                    String verify = regex[2];
-                    String serverReply = breachCheck.DownloadString(URLCall);
-
-                    string[] hashes = serverReply.Split('\n');
-                    foreach (string hash in hashes)
+                    if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    else
                     {
-                        var splitChecks = hash.Split(':');
-                        if (splitChecks[0] == verify)
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+
+                    String serverReply = null;
+                    try
+                    {
+                        serverReply = Client.DownloadString(URLCall);
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("Register", null, Error, null, true);
+                    }
+                    finally
+                    {
+                        if (Client != null)
                         {
-                            var passwordCheckReply = MessageBox.Show(null, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1]) + 
-                                " times, you should consider using different one.\n\nAlternatively you can use the unsafe password anyway." +
-                                "\nWould you like to Use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                            if (passwordCheckReply == DialogResult.Yes)
+                            Client.Dispose();
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(serverReply))
+                    {
+                        String verify = regex[2];
+
+                        string[] hashes = serverReply.Split('\n');
+                        foreach (string hash in hashes)
+                        {
+                            var splitChecks = hash.Split(':');
+                            if (splitChecks[0] == verify)
                             {
-                                allowReg = true;
+                                var passwordCheckReply = MessageBox.Show(null, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1]) +
+                                    " times, you should consider using different one.\n\nAlternatively you can use the unsafe password anyway." +
+                                    "\nWould you like to Use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                                if (passwordCheckReply == DialogResult.Yes)
+                                {
+                                    allowReg = true;
+                                }
+                                else
+                                {
+                                    allowReg = false;
+                                }
                             }
                             else
                             {
-                                allowReg = false;
+                                allowReg = true;
                             }
                         }
-                        else
-                        {
-                            allowReg = true;
-                        }
+                    }
+                    else
+                    {
+                        allowReg = true;
                     }
                 }
                 catch
@@ -371,7 +401,7 @@ namespace GameLauncher.App
 
             try
             {
-                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.requireTicket))
+                if (InformationCache.SelectedServerJSON.requireTicket != null && !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.requireTicket))
                 {
                     _ticketRequired = InformationCache.SelectedServerJSON.requireTicket.ToLower() == "true";
                 }

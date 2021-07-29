@@ -1,4 +1,5 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Global;
+﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
@@ -32,13 +33,32 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 FunctionStatus.TLS();
                 Uri URLCall = new Uri(URLs.GitHub_Updater);
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                WebClient Client = new WebClient
+                var Client = new WebClient
                 {
                     Encoding = Encoding.UTF8
                 };
-                Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                else
+                {
+                    Client.Headers.Add("user-agent", "SBRW Launcher " +
+                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                }
 
-                VersionJSON = Client.DownloadString(URLCall);
+                try
+                {
+                    VersionJSON = Client.DownloadString(URLCall);
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("LAUNCHER UPDATER", null, Error, null, true);
+                }
+                finally
+                {
+                    if (Client != null)
+                    {
+                        Client.Dispose();
+                    }
+                }
 
                 try
                 {
@@ -87,8 +107,9 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             }
 
             /* Check if File needs to be Downloaded or Require an Update */
+            string UpdaterPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameUpdater));
 
-            if (!File.Exists(Locations.NameUpdater))
+            if (!File.Exists(UpdaterPath))
             {
                 Log.Info("LAUNCHER UPDATER: Starting GameLauncherUpdater downloader");
                 try
@@ -96,32 +117,54 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     FunctionStatus.TLS();
                     Uri URLCall = new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    WebClient Client = new WebClient
+                    var Client = new WebClient
                     {
                         Encoding = Encoding.UTF8
                     };
-                    Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion
-                        + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    else
+                    {
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
                     Client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
                     {
-                        if (new FileInfo(Locations.NameUpdater).Length == 0)
+                        
+                        if (File.Exists(UpdaterPath))
                         {
-                            File.Delete(Locations.NameUpdater);
+                            if (new FileInfo(UpdaterPath).Length == 0)
+                            {
+                                File.Delete(UpdaterPath);
+                            }
                         }
                     };
-                    Client.DownloadFile(URLCall, Locations.NameUpdater);
+
+                    try
+                    {
+                        Client.DownloadFile(URLCall, UpdaterPath);
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("LAUNCHER UPDATER", null, Error, null, true);
+                    }
+                    finally
+                    {
+                        if (Client != null)
+                        {
+                            Client.Dispose();
+                        }
+                    }
                 }
                 catch (Exception Error)
                 {
                     LogToFileAddons.OpenLog("LAUNCHER UPDATER", null, Error, null, true);
                 }
             }
-            else if (File.Exists(Locations.NameUpdater))
+            else if (File.Exists(UpdaterPath))
             {
                 try
                 {
-                    var LauncherUpdaterBuild = FileVersionInfo.GetVersionInfo(
-                        Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameUpdater)));
+                    var LauncherUpdaterBuild = FileVersionInfo.GetVersionInfo(UpdaterPath);
                     var LauncherUpdaterBuildNumber = LauncherUpdaterBuild.FileVersion;
                     var UpdaterBuildNumberResult = LauncherUpdaterBuildNumber.CompareTo(LatestUpdaterBuildVersion);
 
@@ -140,29 +183,44 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         Log.Info("LAUNCHER UPDATER: Downloading New " + Locations.NameUpdater);
                         File.Delete(Locations.NameUpdater);
 
+                        FunctionStatus.TLS();
+                        Uri URLCall = new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
+                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                        var Client = new WebClient
+                        {
+                            Encoding = Encoding.UTF8
+                        };
+                        if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        else
+                        {
+                            Client.Headers.Add("user-agent", "SBRW Launcher " +
+                            Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        }
+                        Client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
+                        {
+                            if (File.Exists(UpdaterPath))
+                            {
+                                if (new FileInfo(UpdaterPath).Length == 0)
+                                {
+                                    File.Delete(UpdaterPath);
+                                }
+                            }
+                        };
+
                         try
                         {
-                            FunctionStatus.TLS();
-                            Uri URLCall = new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
-                            ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                            WebClient Client = new WebClient
-                            {
-                                Encoding = Encoding.UTF8
-                            };
-                            Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion
-                                + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                            Client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
-                            {
-                                if (new FileInfo(Locations.NameUpdater).Length == 0)
-                                {
-                                    File.Delete(Locations.NameUpdater);
-                                }
-                            };
                             Client.DownloadFile(URLCall, Locations.NameUpdater);
                         }
                         catch (Exception Error)
                         {
                             LogToFileAddons.OpenLog("LAUNCHER UPDATER", null, Error, null, true);
+                        }
+                        finally
+                        {
+                            if (Client != null)
+                            {
+                                Client.Dispose();
+                            }
                         }
                     }
                 }

@@ -12,6 +12,8 @@ using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using System.Text;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
+using System.Net;
+using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App
 {
@@ -99,13 +101,33 @@ namespace GameLauncher.App
                         {
                             try
                             {
-                                WebClientWithTimeout getdata = new WebClientWithTimeout
+                                FunctionStatus.TLS();
+                                Uri URLCall = new Uri(URLs.GitHub_Launcher);
+                                ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                var Client = new WebClient
                                 {
                                     Encoding = Encoding.UTF8
                                 };
-                                getdata.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
-                                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                                ServerJson = getdata.DownloadString(serverurl);
+
+                                if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                else
+                                {
+                                    Client.Headers.Add("user-agent", "SBRW Launcher " +
+                                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                }
+
+                                try
+                                {
+                                    ServerJson = Client.DownloadString(serverurl);
+                                }
+                                catch { }
+                                finally
+                                {
+                                    if (Client != null)
+                                    {
+                                        Client.Dispose();
+                                    }
+                                }
                             }
                             catch { }
 
@@ -139,6 +161,7 @@ namespace GameLauncher.App
                                 try
                                 {
                                     Uri StringToUri = new Uri(serverurl);
+                                    ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                     CheckMate = new Ping();
                                     CheckMate.PingCompleted += (sender3, e3) => {
                                         if (e3.Reply != null)

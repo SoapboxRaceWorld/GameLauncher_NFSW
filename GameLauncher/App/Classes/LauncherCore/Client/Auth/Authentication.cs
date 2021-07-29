@@ -3,12 +3,16 @@ using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.RPC;
+using GameLauncher.App.Classes.SystemPlatform.Components;
+using GameLauncher.App.Classes.SystemPlatform.Windows;
 using Nancy.Json;
 using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
@@ -34,19 +38,52 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
             {
                 if (Connection == "Non Secure")
                 {
-                    WebClientWithTimeout wc = new WebClientWithTimeout
+                    FunctionStatus.TLS();
+                    Uri URLCall = 
+                        new Uri((Method == "Login")? Tokens.IPAddress + "/User/authenticateUser?email=" + Email + "&password=" + Password : 
+                        Tokens.IPAddress + "/User/createUser?email=" + Email + "&password=" + Password + 
+                        (!String.IsNullOrWhiteSpace(Token) ? "&inviteTicket=" + Token : ""));
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    var Client = new WebClient
                     {
                         Encoding = Encoding.UTF8
                     };
 
-                    if (Method == "Login")
-                    {
-                        LoginResponse = wc.DownloadString(Tokens.IPAddress + "/User/authenticateUser?email=" + Email + "&password=" + Password);
-                    }
+                    if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                     else
                     {
-                        LoginResponse = wc.DownloadString(Tokens.IPAddress + "/User/createUser?email=" + Email + 
-                            "&password=" + Password + (!String.IsNullOrWhiteSpace(Token) ? "&inviteTicket=" + Token : ""));
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        Client.Headers["X-HWID"] = HardwareID.FingerPrint.Value();
+                        Client.Headers["X-HiddenHWID"] = HardwareID.FingerPrint.ValueAlt();
+                        Client.Headers["X-UserAgent"] = "GameLauncherReborn " + 
+                            Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+                        Client.Headers["X-GameLauncherHash"] = WebHelpers.Value();
+                        Client.Headers["X-GameLauncherCertificate"] = CertificateStore.LauncherSerial;
+                        Client.Headers["X-DiscordID"] = DiscordLauncherPresense.UserID;
+                    }
+
+                    try
+                    {
+                        if (Method == "Login")
+                        {
+                            LoginResponse = Client.DownloadString(URLCall);
+                        }
+                        else
+                        {
+                            LoginResponse = Client.DownloadString(URLCall);
+                        }
+                    }
+                    catch
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                        if (Client != null)
+                        {
+                            Client.Dispose();
+                        }
                     }
                 }
                 else if (Connection == "Secure")

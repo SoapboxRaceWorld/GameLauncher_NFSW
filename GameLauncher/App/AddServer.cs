@@ -15,6 +15,7 @@ using System.Text;
 using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 
 namespace GameLauncher.App
 {
@@ -192,13 +193,34 @@ namespace GameLauncher.App
                     FunctionStatus.TLS();
                     Uri StringToUri = new Uri(FormattedURL + "/GetServerInformation");
                     ServicePointManager.FindServicePoint(StringToUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    WebClient client = new WebClient
+                    var Client = new WebClient
                     {
                         Encoding = Encoding.UTF8
                     };
-                    client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
-                            " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    ServerInfomationJSON = client.DownloadString(StringToUri);
+
+                    if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    else
+                    {
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+
+                    try
+                    {
+                        ServerInfomationJSON = Client.DownloadString(StringToUri);
+                    }
+                    catch (Exception Error)
+                    {
+                        string LogMessage = "Add Server Check Encountered an Error:";
+                        LogToFileAddons.OpenLog("Add Server", LogMessage, Error, null, false);
+                    }
+                    finally
+                    {
+                        if (Client != null)
+                        {
+                            Client.Dispose();
+                        }
+                    }
                 }
                 catch (Exception Error)
                 {
@@ -217,6 +239,7 @@ namespace GameLauncher.App
                     DrawErrorAroundTextBox(ServerAddress);
                     Error.Visible = true;
                     ButtonControls(true);
+                    ServerInfomationJSON = null;
                     return;
                 }
                 else
@@ -236,31 +259,43 @@ namespace GameLauncher.App
                     if (ServerInformationData == null)
                     {
                         ButtonControls(true);
+                        ServerInfomationJSON = null;
                         return;
                     }
                     else
                     {
                         string ServerID = Empty;
+                        FunctionStatus.TLS();
+                        Uri newModNetUri = new Uri(FormattedURL + "/Modding/GetModInfo");
+                        ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                        var Client = new WebClient
+                        {
+                            Encoding = Encoding.UTF8
+                        };
+
+                        if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        else
+                        {
+                            Client.Headers.Add("user-agent", "SBRW Launcher " +
+                            Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        }
+
                         try
                         {
-                            FunctionStatus.TLS();
-                            Uri newModNetUri = new Uri(InformationCache.SelectedServerData.IPAddress + "/Modding/GetModInfo");
-                            ServicePointManager.FindServicePoint(newModNetUri).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                            WebClient ModInfoJson = new WebClient
-                            {
-                                Encoding = Encoding.UTF8
-                            };
-                            ModInfoJson.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
-                                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                            string ServerModInfo = ModInfoJson.DownloadString(newModNetUri);
-
-                            GetModInfo ServerGetInfo = JsonConvert.DeserializeObject<GetModInfo>(ServerModInfo);
+                            GetModInfo ServerGetInfo = JsonConvert.DeserializeObject<GetModInfo>(Client.DownloadString(newModNetUri));
                             ServerID = IsNullOrWhiteSpace(ServerGetInfo.serverID) ? Result.Host : ServerGetInfo.serverID;
                         }
                         catch (Exception Error)
                         {
                             LogToFileAddons.OpenLog("Add Server", null, Error, null, true);
                             ServerID = Result.Host;
+                        }
+                        finally
+                        {
+                            if (Client != null)
+                            {
+                                Client.Dispose();
+                            }
                         }
 
                         try
@@ -295,6 +330,18 @@ namespace GameLauncher.App
                             LogToFileAddons.OpenLog("Add Server", LogMessage, Error, null, false);
                             ButtonControls(true);
                             return;
+                        }
+                        finally
+                        {
+                            if (ServerID != null)
+                            {
+                                ServerID = null;
+                            }
+
+                            if (ServerInfomationJSON != null)
+                            {
+                                ServerInfomationJSON = null;
+                            }
                         }
 
                         CancelButton_Click(sender, e);

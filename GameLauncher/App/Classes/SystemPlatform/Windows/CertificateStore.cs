@@ -1,4 +1,5 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Global;
+﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
@@ -52,13 +53,33 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     FunctionStatus.TLS();
                     Uri URLCall = new Uri("http://crl.carboncrew.org/RCA-Info.json");
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    WebClient Client = new WebClient
+                    var Client = new WebClient
                     {
                         Encoding = Encoding.UTF8
                     };
-                    Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    /* Download Up to Date Certificate Status */
-                    RootCAJson = Client.DownloadString(URLCall);
+                    if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    else
+                    {
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+
+                    try
+                    {
+                        /* Download Up to Date Certificate Status */
+                        RootCAJson = Client.DownloadString(URLCall);
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("CERTIFICATE STORE", null, Error, null, true);
+                    }
+                    finally
+                    {
+                        if (Client != null)
+                        {
+                            Client.Dispose();
+                        }
+                    }
 
                     if (IsJSONValid.ValidJson(RootCAJson))
                     {
@@ -154,6 +175,8 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                                 store.Remove(store.Certificates[i]);
                             }
                         }
+                        store.Close();
+                        store.Dispose();
                     }
                     catch (Exception Error)
                     {
@@ -169,24 +192,47 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             FunctionStatus.TLS();
                             Uri URLCall = new Uri(RootCAFileURL);
                             ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                            WebClient Client = new WebClient
+                            var Client = new WebClient
                             {
                                 Encoding = Encoding.UTF8
                             };
-                            Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                            Client.DownloadFile(URLCall, CertSaveLocation);
+                            if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            else
+                            {
+                                Client.Headers.Add("user-agent", "SBRW Launcher " +
+                                Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                            }
 
-                            X509Store Store = new X509Store(StoreName.Root,
-                            StoreLocation.LocalMachine);
-                            Store.Open(OpenFlags.ReadWrite);
-                            X509Certificate2Collection collection = new X509Certificate2Collection();
-                            X509Certificate2 cert = new X509Certificate2(CertSaveLocation);
-                            byte[] encodedCert = cert.GetRawCertData();
-                            Log.Info("CERTIFICATE STORE: We are now installing [" + RootCACommonName + "] certificate into the Trusted Root Certificate store ...");
-                            Store.Add(cert);
-                            Log.Info("CERTIFICATE STORE: Done! [" + RootCACommonName + "] certificate was installed successfully.");
-                            Store.Close();
-                            Store.Dispose();
+                            try
+                            {
+                                /* Download Up to Date Certificate Status */
+                                Client.DownloadFile(URLCall, CertSaveLocation);
+                            }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("CERTIFICATE STORE", null, Error, null, true);
+                            }
+                            finally
+                            {
+                                if (Client != null)
+                                {
+                                    Client.Dispose();
+                                }
+                            }
+
+                            if (File.Exists(CertSaveLocation))
+                            {
+                                X509Store Store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
+                                Store.Open(OpenFlags.ReadWrite);
+                                X509Certificate2Collection collection = new X509Certificate2Collection();
+                                X509Certificate2 cert = new X509Certificate2(CertSaveLocation);
+                                byte[] encodedCert = cert.GetRawCertData();
+                                Log.Info("CERTIFICATE STORE: We are now installing [" + RootCACommonName + "] certificate into the Trusted Root Certificate store ...");
+                                Store.Add(cert);
+                                Log.Info("CERTIFICATE STORE: Done! [" + RootCACommonName + "] certificate was installed successfully.");
+                                Store.Close();
+                                Store.Dispose();
+                            }
                         }
                     }
                     catch (Exception Error)

@@ -9,6 +9,7 @@ using System;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using System.Text;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 
 namespace GameLauncher.App
 {
@@ -32,12 +33,35 @@ namespace GameLauncher.App
                         FunctionStatus.TLS();
                         Uri URLCall = new Uri(URLs.Main + "/launcher/changelog");
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                        WebClient Client = new WebClient
+                        var Client = new WebClient
                         {
                             Encoding = Encoding.UTF8
                         };
-                        Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        ChangelogText.Text = Client.DownloadString(URLCall);
+                        if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        else
+                        {
+                            Client.Headers.Add("user-agent", "SBRW Launcher " +
+                            Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        }
+
+                        try
+                        {
+                            /* Download Up to Date Certificate Status */
+                            ChangelogText.Text = Client.DownloadString(URLCall);
+                        }
+                        catch (Exception Error)
+                        {
+                            LogToFileAddons.OpenLog("Update Popup", null, Error, null, true);
+                            ChangelogText.Text = "\n" + Error.Message;
+                            ChangelogBox.Text = "Changelog Error:";
+                        }
+                        finally
+                        {
+                            if (Client != null)
+                            {
+                                Client.Dispose();
+                            }
+                        }
                     }
                     catch (Exception Error)
                     {

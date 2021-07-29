@@ -156,9 +156,7 @@
     <Compile Include="App\Classes\LauncherCore\API\APIChecker.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\Authentication.cs" />
     <Compile Include="App\Classes\LauncherCore\Client\Auth\Tokens.cs" />
-    <Compile Include="App\Classes\LauncherCore\Client\Web\WebRequest.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="App\Classes\LauncherCore\Client\Web\WebRequest.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderAddons.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\Downloader.cs" />
     <Compile Include="App\Classes\LauncherCore\FileReadWrite\FileAccountSave.cs" />

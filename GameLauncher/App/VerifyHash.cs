@@ -17,6 +17,8 @@ using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using System.Diagnostics;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using System.Text;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 
 namespace GameLauncher.App
 {
@@ -29,6 +31,7 @@ namespace GameLauncher.App
         public int totalFilesScanned;
         public int currentCount;
         public int redownloadedCount;
+        public int redownloadErrorCount;
         public List<string> InvalidFileList = new List<string>();
         public List<string> ValidFileList = new List<string>();
         public string FinalCDNURL;
@@ -37,19 +40,20 @@ namespace GameLauncher.App
         public static string CurrentDownloadingFile = String.Empty;
         public static int DeletionError = 0;
         public static bool DeletionErrorBypass = false;
+        public static bool StillDownloading = false;
 
         public VerifyHash()
         {
             DiscordLauncherPresense.Status("Verify", null);
             InitializeComponent();
 
-            this.Closing += (x, y) =>
+            this.Closing += (x, CloseForm) =>
             {
                 if (isScanning)
                 {
                     if (MessageBox.Show("Do you really want to exit the VerifyHash process?", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.No)
                     {
-                        y.Cancel = true;
+                        CloseForm.Cancel = true;
                     }
                     else
                     {
@@ -70,19 +74,37 @@ namespace GameLauncher.App
 
             if (!FunctionStatus.IsVerifyHashDisabled)
             {
+                LogVerify.StartVerifyLogging();
+
                 /* Clean up previous logs and start logging */
                 string[] filestocheck = new string[] { "checksums.dat", "validfiles.dat", "invalidfiles.dat", "Verify.log" };
                 foreach (String file in filestocheck)
                 {
-                    if (File.Exists(file)) File.Delete(file);
+                    if (File.Exists(file)) 
+                    {
+                        try { File.Delete(file); }
+                        catch (Exception Error)
+                        {
+                            DeletionError++;
+                            LogVerify.Error("File: " + file + " Error: " + Error.Message);
+                            LogVerify.ErrorIC("File: " + file + " Error: " + Error.HResult);
+                            LogVerify.ErrorFR("File: " + file + " Error: " + Error.ToString());
+                        }
+                    }
                 }
-                LogVerify.StartVerifyLogging();
 
                 LogVerify.Info("VERIFYHASH: Checking Characters in URL");
-                string SavedCDN = FileSettingsSave.CDN;
-                char[] charsToTrim = { '/' };
-                FinalCDNURL = SavedCDN.TrimEnd(charsToTrim);
-                LogVerify.Info("VERIFYHASH: Trimed end of URL -> " + FinalCDNURL);
+                if (FileSettingsSave.CDN.EndsWith("/"))
+                {
+                    char[] charsToTrim = { '/' };
+                    FinalCDNURL = FileSettingsSave.CDN.TrimEnd(charsToTrim);
+                    LogVerify.Info("VERIFYHASH: Trimed end of CDN URL -> " + FinalCDNURL);
+                }
+                else
+                {
+                    FinalCDNURL = FileSettingsSave.CDN;
+                    LogVerify.Info("VERIFYHASH: Choosen CDN URL -> " + FinalCDNURL);
+                }
             }
             else
             {
@@ -230,7 +252,7 @@ namespace GameLauncher.App
                                 {
                                     DeletionError++;
                                     LogVerify.Error("File: " + file + " Error: " + Error.Message);
-                                    LogVerify.Error("File: " + file + " Error: " + Error.HResult);
+                                    LogVerify.ErrorIC("File: " + file + " Error: " + Error.HResult);
                                     LogVerify.ErrorFR("File: " + file + " Error: " + Error.ToString());
                                 }
                             }
@@ -269,7 +291,7 @@ namespace GameLauncher.App
             {
                 FunctionStatus.IsVerifyHashDisabled = true;
 
-                String[] getFilesToCheck;
+                String[] getFilesToCheck = { };
 
                 if (File.Exists("checksums.dat"))
                 {
@@ -281,8 +303,46 @@ namespace GameLauncher.App
                     /* Fetch and Read Remote checksums.dat */
                     ScanProgressText.Text = "Downloading Checksums File";
                     FunctionStatus.TLS();
-                    getFilesToCheck = new WebClient().DownloadString(FinalCDNURL + "/unpacked/checksums.dat").Split('\n');
-                    File.WriteAllLines("checksums.dat", getFilesToCheck);
+                    Uri URLCall = new Uri(FinalCDNURL + "/unpacked/checksums.dat");
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    var Client = new WebClient
+                    {
+                        Encoding = Encoding.UTF8
+                    };
+                    if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    else
+                    {
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+
+                    bool ErrorFree = true;
+
+                    try
+                    {
+                        getFilesToCheck = Client.DownloadString(URLCall).Split('\n');
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("VERIFY HASH CHECKSums", "Downloading Checksums File had Encountered an Error", Error, "Error", false);
+                        ErrorFree = false;
+                    }
+                    finally
+                    {
+                        if (Client != null)
+                        {
+                            Client.Dispose();
+                        }
+                    }
+
+                    if (ErrorFree)
+                    {
+                        File.WriteAllLines("checksums.dat", getFilesToCheck);
+                    }
+                    else
+                    {
+                        StopScanner_Click(null, null);
+                    }
                 }
 
                 scannedHashes = new string[getFilesToCheck.Length][];
@@ -375,14 +435,15 @@ namespace GameLauncher.App
             {
                 DownloadProgressText.Text = "\nPreparing to Download Files";
                 string[] files = File.ReadAllLines("invalidfiles.dat");
-                int ErrorRate = 0;
 
                 foreach (string text in files)
                 {
-                    currentCount = files.Count();
-
                     try 
                     {
+                        while (StillDownloading) { }
+
+                        currentCount = files.Count();
+
                         string text2 = FileSettingsSave.GameInstallation + text;
                         string address = FinalCDNURL + "/unpacked" + text.Replace("\\", "/");
                         if (File.Exists(text2))
@@ -394,19 +455,20 @@ namespace GameLauncher.App
                             }
                             catch (Exception Error)
                             {
-                                DeletionError++;
                                 LogVerify.Error("File: " + text2 + " Error: " + Error.Message);
                                 LogVerify.ErrorIC("File: " + text2 + " Error: " + Error.HResult);
                                 LogVerify.ErrorFR("File: " + text2 + " Error: " + Error.ToString());
                             }
                         }
 
-                        if (!new FileInfo(text2).Directory.Exists)
+                        try
                         {
-                            new FileInfo(text2).Directory.Create();
+                            if (!new FileInfo(text2).Directory.Exists)
+                            {
+                                new FileInfo(text2).Directory.Create();
+                            }
                         }
-
-                        CurrentDownloadingFile = text;
+                        catch (Exception Error) { LogToFileAddons.OpenLog("VERIFY HASH File Info", null, Error, null, true); }
 
                         FunctionStatus.TLS();
                         Uri URLCall = new Uri(address);
@@ -422,22 +484,44 @@ namespace GameLauncher.App
                         }
 
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = Timeout;
-                        using (WebClient client = new WebClient())
+
+                        var Client = new WebClient
                         {
-                            client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + 
-                                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                            client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged);
-                            client.DownloadFileCompleted += new AsyncCompletedEventHandler(Client_DownloadFileCompleted);
-                            client.DownloadFileAsync(URLCall, text2);
-                            while (client.IsBusy) { }
+                            Encoding = Encoding.UTF8
+                        };
+                        if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        else
+                        {
+                            Client.Headers.Add("user-agent", "SBRW Launcher " +
+                            Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        }
+
+                        Client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged);
+                        Client.DownloadFileCompleted += new AsyncCompletedEventHandler(Client_DownloadFileCompleted);
+
+                        try
+                        {
+                            Client.DownloadFileAsync(URLCall, text2);
+                            CurrentDownloadingFile = text;
+                            StillDownloading = true;
+                        }
+                        catch (Exception Error)
+                        {
+                            LogToFileAddons.OpenLog("VERIFY HASH", null, Error, null, true);
+                            redownloadErrorCount++;
+                        }
+                        finally
+                        {
+                            if (Client != null)
+                            {
+                                Client.Dispose();
+                            }
                         }
                     }
                     catch (Exception Error)
                     {
-                        ErrorRate++;
-
-                        LogToFileAddons.OpenLog("VERIFY HASH", "Redownloader had Encountered an Error", Error, "Error", 
-                            (ErrorRate != 0 && ErrorRate <= 5));
+                        redownloadErrorCount++;
+                        LogToFileAddons.OpenLog("VERIFY HASH", null, Error, null, true);
                     }
                 }
             }
@@ -445,13 +529,45 @@ namespace GameLauncher.App
 
         void Client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            if (e.Cancelled)
+            StillDownloading = false;
+
+            if (e.Cancelled || e.Error != null)
             {
-                LogVerify.Error("Download Cancelled for [" + CurrentDownloadingFile + "] - " + e.ToString());
-            }
-            else if (e.Error != null)
-            {
-                LogVerify.Error("Download Error for [" + CurrentDownloadingFile + "] - " + e.ToString());
+                redownloadErrorCount++;
+
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    DiscordLauncherPresense.Status("Verify Bad", redownloadedCount + redownloadErrorCount + " out of " + currentCount);
+                    LogVerify.Downloaded("File: " + CurrentDownloadingFile);
+                    DownloadProgressText.Text = "Failed To Download File [ " + redownloadedCount + redownloadErrorCount + " / " + currentCount + " ]:" +
+                    "\n" + CurrentDownloadingFile;
+                    DownloadProgressBar.Value = redownloadedCount + redownloadErrorCount * 100 / currentCount;
+                });
+
+                Application.DoEvents();
+
+                LogVerify.Error("Download for [" + CurrentDownloadingFile + "] - " +
+                (e.Cancelled ? "has been Cancelled" : (string.IsNullOrWhiteSpace(e.Error.Message) ? e.Error.ToString() : e.Error.Message)));
+
+                if (redownloadedCount + redownloadErrorCount == currentCount)
+                {
+                    DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
+                    VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
+                    VerifyHashText.Text = redownloadErrorCount + " Files Failed to Download. Check Log for Details";
+                    StartScanner.Visible = false;
+                    StopScanner.Visible = false;
+                    GameScanner(false);
+
+                    if (MessageBox.Show("Verify Hash had encountered Redownload Errors." +
+                    "\nWould you like to Open Verify.Log", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        string LogFile = Strings.Encode(Path.Combine(Locations.LogFolder, Locations.LogVerify));
+                        if (File.Exists(LogFile))
+                        {
+                            Process.Start(LogFile);
+                        }
+                    }
+                }
             }
             else
             {
@@ -478,6 +594,25 @@ namespace GameLauncher.App
                     StartScanner.Visible = false;
                     StopScanner.Visible = false;
                     GameScanner(false);
+                }
+                else if (redownloadedCount + redownloadErrorCount == currentCount)
+                {
+                    DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
+                    VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
+                    VerifyHashText.Text = redownloadErrorCount + " Files Failed to Download. Check Log for Details";
+                    StartScanner.Visible = false;
+                    StopScanner.Visible = false;
+                    GameScanner(false);
+
+                    if (MessageBox.Show("Verify Hash had encountered Redownload Errors." +
+                    "\nWould you like to Open Verify.Log", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        string LogFile = Strings.Encode(Path.Combine(Locations.LogFolder, Locations.LogVerify));
+                        if (File.Exists(LogFile))
+                        {
+                            Process.Start(LogFile);
+                        }
+                    }
                 }
             }
         }

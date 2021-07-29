@@ -64,6 +64,7 @@ namespace GameLauncher.App
             this.ResetWindowsDefenderButton = new System.Windows.Forms.Button();
             this.ResetFirewallRulesButton = new System.Windows.Forms.Button();
             this.SettingsClearLauncherLogsButton = new System.Windows.Forms.Button();
+            this.SettingsAltWebCallsheckbox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // SettingsClearServerModCacheButton
@@ -277,7 +278,7 @@ namespace GameLauncher.App
             this.SettingsProxyCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsProxyCheckbox.Location = new System.Drawing.Point(39, 365);
             this.SettingsProxyCheckbox.Name = "SettingsProxyCheckbox";
-            this.SettingsProxyCheckbox.Size = new System.Drawing.Size(112, 18);
+            this.SettingsProxyCheckbox.Size = new System.Drawing.Size(264, 18);
             this.SettingsProxyCheckbox.TabIndex = 109;
             this.SettingsProxyCheckbox.Text = "Disable Proxy";
             this.SettingsProxyCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -291,7 +292,7 @@ namespace GameLauncher.App
             this.SettingsDiscordRPCCheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsDiscordRPCCheckbox.Location = new System.Drawing.Point(39, 387);
             this.SettingsDiscordRPCCheckbox.Name = "SettingsDiscordRPCCheckbox";
-            this.SettingsDiscordRPCCheckbox.Size = new System.Drawing.Size(155, 18);
+            this.SettingsDiscordRPCCheckbox.Size = new System.Drawing.Size(264, 18);
             this.SettingsDiscordRPCCheckbox.TabIndex = 110;
             this.SettingsDiscordRPCCheckbox.Text = "Disable Discord RPC";
             this.SettingsDiscordRPCCheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -563,12 +564,27 @@ namespace GameLauncher.App
             this.SettingsClearLauncherLogsButton.UseVisualStyleBackColor = false;
             this.SettingsClearLauncherLogsButton.Click += new System.EventHandler(this.SettingsClearLauncherLogsButton_Click);
             // 
+            // SettingsAltWebCallsheckbox
+            // 
+            this.SettingsAltWebCallsheckbox.BackColor = System.Drawing.Color.Transparent;
+            this.SettingsAltWebCallsheckbox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsAltWebCallsheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.SettingsAltWebCallsheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SettingsAltWebCallsheckbox.Location = new System.Drawing.Point(39, 411);
+            this.SettingsAltWebCallsheckbox.Name = "SettingsAltWebCallsheckbox";
+            this.SettingsAltWebCallsheckbox.Size = new System.Drawing.Size(264, 18);
+            this.SettingsAltWebCallsheckbox.TabIndex = 195;
+            this.SettingsAltWebCallsheckbox.Text = "Enable Alternative WebCalls";
+            this.SettingsAltWebCallsheckbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.SettingsAltWebCallsheckbox.UseVisualStyleBackColor = false;
+            // 
             // SettingsScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.SettingsAltWebCallsheckbox);
             this.Controls.Add(this.SettingsClearLauncherLogsButton);
             this.Controls.Add(this.ResetFirewallRulesButton);
             this.Controls.Add(this.ResetWindowsDefenderButton);
@@ -654,5 +670,6 @@ namespace GameLauncher.App
         private System.Windows.Forms.Button ResetWindowsDefenderButton;
         private System.Windows.Forms.Button ResetFirewallRulesButton;
         private System.Windows.Forms.Button SettingsClearLauncherLogsButton;
+        private System.Windows.Forms.CheckBox SettingsAltWebCallsheckbox;
     }
 }

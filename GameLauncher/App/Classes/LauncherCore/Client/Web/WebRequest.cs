@@ -10,10 +10,16 @@ using GameLauncher.App.Classes.SystemPlatform.Windows;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using System.IO;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 {
-    public class WebClientWithTimeout : WebClient
+    class WebCalls
+    {
+        public static bool Alternative = FileSettingsSave.WebCallMethod == "WebClient";
+    }
+
+    class WebHelpers
     {
         private static string Hash = string.Empty;
 
@@ -26,7 +32,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 
             return Hash;
         }
+    }
 
+    public class WebClientWithTimeout : WebClient
+    {
         protected override WebRequest GetWebRequest(Uri address)
         {
             if (DetectLinux.LinuxDetected())
@@ -38,21 +47,21 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
                 }.Uri;
             }
 
+            if (!address.AbsolutePath.Contains("auth") ||
+                !(address.OriginalString.Contains("section") && address.OriginalString.Contains(".dat")))
+            { Log.UrlCall("WEBCLIENTWITHTIMEOUT: Calling URL -> " + address); }
+
             FunctionStatus.TLS();
-
-            if (!address.AbsolutePath.Contains("auth")) Log.UrlCall("WEBCLIENTWITHTIMEOUT: Calling URL -> " + address);
-
             ServicePointManager.FindServicePoint(address).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(10).TotalMilliseconds;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
-            request.UserAgent = "GameLauncher (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+            request.UserAgent = "SBRW Launcher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-HWID"] = HardwareID.FingerPrint.Value();
             request.Headers["X-HiddenHWID"] = HardwareID.FingerPrint.ValueAlt();
             request.Headers["X-UserAgent"] = "GameLauncherReborn " + Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-            request.Headers["X-GameLauncherHash"] = Value();
+            request.Headers["X-GameLauncherHash"] = WebHelpers.Value();
             request.Headers["X-GameLauncherCertificate"] = CertificateStore.LauncherSerial;
             request.Headers["X-DiscordID"] = DiscordLauncherPresense.UserID;
-            request.Proxy = null;
             request.Timeout = 5000;
             request.KeepAlive = false;
 

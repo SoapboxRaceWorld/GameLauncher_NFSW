@@ -1,4 +1,5 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Global;
+﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
@@ -28,17 +29,26 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                     URLConnection = (HttpWebRequest)WebRequest.Create(ConvertedAPIURI);
                     URLConnection.AllowAutoRedirect = false; /* Find out if this site is up and don't follow a redirector */
                     URLConnection.Method = "GET";
-                    URLConnection.UserAgent = "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+                    URLConnection.UserAgent = "SBRW Launcher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
                     URLConnection.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
                     URLConnection.KeepAlive = false;
-                    ServerResponse = (HttpWebResponse)URLConnection.GetResponse();
-                    Log.Info("CORE: " + URI + " is Online!");
-                    return APIStatus.Online;
-                    /* Do something with response.Headers to find out information about the request */
+
+                    try
+                    {
+                        ServerResponse = (HttpWebResponse)URLConnection.GetResponse();
+                        Log.Info("CORE: " + URI + " is Online!");
+                        return APIStatus.Online;
+                        /* Do something with response.Headers to find out information about the request */
+                    }
+                    catch (WebException Error)
+                    {
+                        return StatusCodes(URI, Error, (HttpWebResponse)Error.Response);
+                    }
                 }
-                catch (WebException Error)
+                catch (Exception Error)
                 {
-                    return StatusCodes(URI, Error, (HttpWebResponse)Error.Response);
+                    LogToFileAddons.OpenLog("API Checker", null, Error, null, true);
+                    return APIStatus.UnknownError;
                 }
                 finally
                 {
@@ -331,14 +341,34 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 FunctionStatus.TLS();
                 Uri URLCall = new Uri(JSONUrl);
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                WebClient wc = new WebClient
+                var Client = new WebClient
                 {
                     Encoding = Encoding.UTF8
                 };
-                wc.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion +
-                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                OnlineListJson = wc.DownloadString(URLCall);
-                Log.UrlCall("JSON LIST: Retrived " + JSONUrl);
+
+                if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                else
+                {
+                    Client.Headers.Add("user-agent", "SBRW Launcher " +
+                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                }
+                
+                try
+                {
+                    OnlineListJson = Client.DownloadString(URLCall);
+                    Log.UrlCall("JSON LIST: Retrived " + JSONUrl);
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("JSON LIST", null, Error, null, true);
+                }
+                finally
+                {
+                    if (Client != null)
+                    {
+                        Client.Dispose();
+                    }
+                }
 
                 if (IsJSONValid.ValidJson(OnlineListJson))
                 {

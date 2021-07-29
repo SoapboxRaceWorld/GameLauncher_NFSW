@@ -13,6 +13,8 @@ using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using System.Text;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.LauncherCore.Support;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -47,12 +49,33 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     FunctionStatus.TLS();
                     Uri URLCall = new Uri(URLs.Main + "/update.php?version=" + Application.ProductVersion);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    WebClient Client = new WebClient
+                    var Client = new WebClient
                     {
                         Encoding = Encoding.UTF8
                     };
-                    Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    VersionJSON = Client.DownloadString(URLCall);
+
+                    if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    else
+                    {
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+
+                    try
+                    {
+                        VersionJSON = Client.DownloadString(URLCall);
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("LAUNCHER UPDATE", null, Error, null, true);
+                    }
+                    finally
+                    {
+                        if (Client != null)
+                        {
+                            Client.Dispose();
+                        }
+                    }
 
                     if (IsJSONValid.ValidJson(VersionJSON))
                     {
@@ -91,12 +114,33 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     FunctionStatus.TLS();
                     Uri URLCall = new Uri(URLs.GitHub_Launcher);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                    WebClient Client = new WebClient
+                    var Client = new WebClient
                     {
                         Encoding = Encoding.UTF8
                     };
-                    Client.Headers.Add("user-agent", "GameLauncher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                    VersionJSON = Client.DownloadString(URLCall);
+
+                    if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    else
+                    {
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+
+                    try
+                    {
+                        VersionJSON = Client.DownloadString(URLCall);
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("LAUNCHER UPDATE [GITHUB]", null, Error, null, true);
+                    }
+                    finally
+                    {
+                        if (Client != null)
+                        {
+                            Client.Dispose();
+                        }
+                    }
 
                     if (IsJSONValid.ValidJson(VersionJSON))
                     {
@@ -217,9 +261,10 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
                         if (updateConfirm == DialogResult.OK)
                         {
-                            if (File.Exists(Locations.NameUpdater))
+                            string UpdaterPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameUpdater));
+                            if (File.Exists(UpdaterPath))
                             {
-                                Process.Start(Locations.NameUpdater, Process.GetCurrentProcess().Id.ToString());
+                                Process.Start(UpdaterPath, Process.GetCurrentProcess().Id.ToString());
                             }
                             else
                             {
