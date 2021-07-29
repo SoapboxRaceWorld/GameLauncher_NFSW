@@ -570,7 +570,7 @@ namespace GameLauncher.App
             this.SettingsAltWebCallsheckbox.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsAltWebCallsheckbox.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.SettingsAltWebCallsheckbox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsAltWebCallsheckbox.Location = new System.Drawing.Point(39, 411);
+            this.SettingsAltWebCallsheckbox.Location = new System.Drawing.Point(39, 409);
             this.SettingsAltWebCallsheckbox.Name = "SettingsAltWebCallsheckbox";
             this.SettingsAltWebCallsheckbox.Size = new System.Drawing.Size(264, 18);
             this.SettingsAltWebCallsheckbox.TabIndex = 195;
