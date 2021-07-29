@@ -55,6 +55,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     Host.Start();
                 }
             }
+            catch (AutomaticUrlReservationCreationFailureException Error)
+            {
+                LogToFileAddons.OpenLog("PROXY [U.R.]", null, Error, null, true);
+            }
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("PROXY", null, Error, null, true);

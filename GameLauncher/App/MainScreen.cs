@@ -722,7 +722,7 @@ namespace GameLauncher
                 Encoding = Encoding.UTF8
             };
 
-            if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+            if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
             else
             {
                 Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -1151,7 +1151,7 @@ namespace GameLauncher
                                     Encoding = Encoding.UTF8
                                 };
 
-                                if (!WebCalls.Alternative) { Client_A = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                if (!WebCalls.Alternative()) { Client_A = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                                 else
                                 {
                                     Client_A.Headers.Add("user-agent", "SBRW Launcher " +
@@ -1832,7 +1832,7 @@ namespace GameLauncher
                     Encoding = Encoding.UTF8
                 };
 
-                if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                 else
                 {
                     Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -1955,7 +1955,7 @@ namespace GameLauncher
                         Encoding = Encoding.UTF8
                     };
 
-                    if (!WebCalls.Alternative) { ModNetJsonURI = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!WebCalls.Alternative()) { ModNetJsonURI = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                     else
                     {
                         ModNetJsonURI.Headers.Add("user-agent", "SBRW Launcher " +
@@ -2033,7 +2033,7 @@ namespace GameLauncher
                                         Encoding = Encoding.UTF8
                                     };
 
-                                    if (!WebCalls.Alternative) { newModNetFilesDownload = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                    if (!WebCalls.Alternative()) { newModNetFilesDownload = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                                     else
                                     {
                                         newModNetFilesDownload.Headers.Add("user-agent", "SBRW Launcher " +
@@ -2075,7 +2075,7 @@ namespace GameLauncher
                             Encoding = Encoding.UTF8
                         };
 
-                        if (!WebCalls.Alternative) { ModInfoJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                        if (!WebCalls.Alternative()) { ModInfoJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                         else
                         {
                             ModInfoJson.Headers.Add("user-agent", "SBRW Launcher " +
@@ -2130,7 +2130,7 @@ namespace GameLauncher
                                 Encoding = Encoding.UTF8
                             };
 
-                            if (!WebCalls.Alternative) { CarsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            if (!WebCalls.Alternative()) { CarsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                             else
                             {
                                 CarsJson.Headers.Add("user-agent", "SBRW Launcher " +
@@ -2158,7 +2158,7 @@ namespace GameLauncher
                                 Encoding = Encoding.UTF8
                             };
 
-                            if (!WebCalls.Alternative) { EventsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            if (!WebCalls.Alternative()) { EventsJson = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                             else
                             {
                                 EventsJson.Headers.Add("user-agent", "SBRW Launcher " +
@@ -2213,7 +2213,7 @@ namespace GameLauncher
                                 Encoding = Encoding.UTF8
                             };
 
-                            if (!WebCalls.Alternative) { ServerModsList = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            if (!WebCalls.Alternative()) { ServerModsList = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                             else
                             {
                                 ServerModsList.Headers.Add("user-agent", "SBRW Launcher " +
@@ -2710,7 +2710,7 @@ namespace GameLauncher
                     Encoding = Encoding.UTF8
                 };
 
-                if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                 else
                 {
                     Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -3271,7 +3271,7 @@ namespace GameLauncher
                                     Encoding = Encoding.UTF8
                                 };
 
-                                if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                                if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                                 else
                                 {
                                     Client.Headers.Add("user-agent", "SBRW Launcher " +

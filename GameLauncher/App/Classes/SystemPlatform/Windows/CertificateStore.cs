@@ -57,7 +57,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     {
                         Encoding = Encoding.UTF8
                     };
-                    if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                     else
                     {
                         Client.Headers.Add("user-agent", "SBRW Launcher " +
@@ -196,7 +196,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             {
                                 Encoding = Encoding.UTF8
                             };
-                            if (!WebCalls.Alternative) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                            if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                             else
                             {
                                 Client.Headers.Add("user-agent", "SBRW Launcher " +

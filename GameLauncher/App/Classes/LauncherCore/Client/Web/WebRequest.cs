@@ -11,12 +11,13 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using System.IO;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.InsiderKit;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 {
     class WebCalls
     {
-        public static bool Alternative = FileSettingsSave.WebCallMethod == "WebClient";
+        public static bool Alternative() => FileSettingsSave.WebCallMethod == "WebClient";
     }
 
     class WebHelpers
@@ -47,22 +48,33 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
                 }.Uri;
             }
 
-            if (!address.AbsolutePath.Contains("auth") ||
-                !(address.OriginalString.Contains("section") && address.OriginalString.Contains(".dat")))
-            { Log.UrlCall("WEBCLIENTWITHTIMEOUT: Calling URL -> " + address); }
+            if (!address.AbsolutePath.Contains("auth"))
+            {
+                if(!(address.OriginalString.Contains("section") && address.OriginalString.Contains(".dat")))
+                {
+                    if (!FunctionStatus.ExternalToolsWasUsed)
+                    {
+                        Log.UrlCall("WEBCLIENTWITHTIMEOUT: Calling URL -> " + address);
+                    }
+                }
+            }
 
             FunctionStatus.TLS();
-            ServicePointManager.FindServicePoint(address).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(10).TotalMilliseconds;
-
+            ServicePointManager.FindServicePoint(address).ConnectionLeaseTimeout = 
+                (int)((FunctionStatus.ExternalToolsWasUsed) ? TimeSpan.FromSeconds(30).TotalMilliseconds : TimeSpan.FromSeconds(5).TotalMilliseconds);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
-            request.UserAgent = "SBRW Launcher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+            request.UserAgent = "SBRW Launcher " + Application.ProductVersion + 
+                (FunctionStatus.ExternalToolsWasUsed ? " - (" + InsiderInfo.BuildNumberOnly() + ")" : 
+                " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
             request.Headers["X-HWID"] = HardwareID.FingerPrint.Value();
             request.Headers["X-HiddenHWID"] = HardwareID.FingerPrint.ValueAlt();
-            request.Headers["X-UserAgent"] = "GameLauncherReborn " + Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
+            request.Headers["X-UserAgent"] = "GameLauncherReborn " + 
+                Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = WebHelpers.Value();
             request.Headers["X-GameLauncherCertificate"] = CertificateStore.LauncherSerial;
             request.Headers["X-DiscordID"] = DiscordLauncherPresense.UserID;
-            request.Timeout = 5000;
+            request.Timeout = (int)(FunctionStatus.ExternalToolsWasUsed ? 
+                TimeSpan.FromSeconds(30).TotalMilliseconds : TimeSpan.FromSeconds(5).TotalMilliseconds);
             request.KeepAlive = false;
 
             return request;
