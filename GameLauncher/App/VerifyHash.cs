@@ -527,106 +527,118 @@ namespace GameLauncher.App
             }
         }
 
-        void Client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        private void Client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            StillDownloading = false;
-
-            if (e.Cancelled || e.Error != null)
+            if (Application.OpenForms["VerifyHash"] != null)
             {
-                redownloadErrorCount++;
-
-                this.BeginInvoke((MethodInvoker)delegate
+                if (!Application.OpenForms["VerifyHash"].Disposing)
                 {
-                    DiscordLauncherPresense.Status("Verify Bad", redownloadedCount + redownloadErrorCount + " out of " + currentCount);
-                    LogVerify.Downloaded("File: " + CurrentDownloadingFile);
-                    DownloadProgressText.Text = "Failed To Download File [ " + redownloadedCount + redownloadErrorCount + " / " + currentCount + " ]:" +
-                    "\n" + CurrentDownloadingFile;
-                    DownloadProgressBar.Value = redownloadedCount + redownloadErrorCount * 100 / currentCount;
-                });
+                    StillDownloading = false;
 
-                Application.DoEvents();
-
-                LogVerify.Error("Download for [" + CurrentDownloadingFile + "] - " +
-                (e.Cancelled ? "has been Cancelled" : (string.IsNullOrWhiteSpace(e.Error.Message) ? e.Error.ToString() : e.Error.Message)));
-
-                if (redownloadedCount + redownloadErrorCount == currentCount)
-                {
-                    DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
-                    VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
-                    VerifyHashText.Text = redownloadErrorCount + " Files Failed to Download. Check Log for Details";
-                    StartScanner.Visible = false;
-                    StopScanner.Visible = false;
-                    GameScanner(false);
-
-                    if (MessageBox.Show("Verify Hash had encountered Redownload Errors." +
-                    "\nWould you like to Open Verify.Log", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (e.Cancelled || e.Error != null)
                     {
-                        string LogFile = Strings.Encode(Path.Combine(Locations.LogFolder, Locations.LogVerify));
-                        if (File.Exists(LogFile))
+                        redownloadErrorCount++;
+
+                        this.BeginInvoke((MethodInvoker)delegate
                         {
-                            Process.Start(LogFile);
+                            DiscordLauncherPresense.Status("Verify Bad", redownloadedCount + redownloadErrorCount + " out of " + currentCount);
+                            LogVerify.Downloaded("File: " + CurrentDownloadingFile);
+                            DownloadProgressText.Text = "Failed To Download File [ " + redownloadedCount + redownloadErrorCount + " / " + currentCount + " ]:" +
+                            "\n" + CurrentDownloadingFile;
+                            DownloadProgressBar.Value = redownloadedCount + redownloadErrorCount * 100 / currentCount;
+                        });
+
+                        Application.DoEvents();
+
+                        LogVerify.Error("Download for [" + CurrentDownloadingFile + "] - " +
+                        (e.Cancelled ? "has been Cancelled" : (string.IsNullOrWhiteSpace(e.Error.Message) ? e.Error.ToString() : e.Error.Message)));
+
+                        if (redownloadedCount + redownloadErrorCount == currentCount)
+                        {
+                            DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
+                            VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
+                            VerifyHashText.Text = redownloadErrorCount + " Files Failed to Download. Check Log for Details";
+                            StartScanner.Visible = false;
+                            StopScanner.Visible = false;
+                            GameScanner(false);
+
+                            if (MessageBox.Show("Verify Hash had encountered Redownload Errors." +
+                            "\nWould you like to Open Verify.Log", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            {
+                                string LogFile = Strings.Encode(Path.Combine(Locations.LogFolder, Locations.LogVerify));
+                                if (File.Exists(LogFile))
+                                {
+                                    Process.Start(LogFile);
+                                }
+                            }
                         }
                     }
-                }
-            }
-            else
-            {
-                redownloadedCount++;
-
-                this.BeginInvoke((MethodInvoker)delegate
-                {
-                    DiscordLauncherPresense.Status("Verify Bad", redownloadedCount + " out of " + currentCount);
-                    LogVerify.Downloaded("File: " + CurrentDownloadingFile);
-                    DownloadProgressText.Text = "Downloaded File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + CurrentDownloadingFile;
-                    DownloadProgressBar.Value = redownloadedCount * 100 / currentCount;
-                });
-
-                Application.DoEvents();
-
-                if (redownloadedCount == currentCount)
-                {
-                    Integrity();
-                    Log.Info("VERIFY HASH: Re-downloaded Count: " + redownloadedCount + " Current File Count: " + currentCount);
-
-                    DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
-                    VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
-                    VerifyHashText.Text = "Yay! Scanning and Downloading \nis now completed on Gamefiles";
-                    StartScanner.Visible = false;
-                    StopScanner.Visible = false;
-                    GameScanner(false);
-                }
-                else if (redownloadedCount + redownloadErrorCount == currentCount)
-                {
-                    DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
-                    VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
-                    VerifyHashText.Text = redownloadErrorCount + " Files Failed to Download. Check Log for Details";
-                    StartScanner.Visible = false;
-                    StopScanner.Visible = false;
-                    GameScanner(false);
-
-                    if (MessageBox.Show("Verify Hash had encountered Redownload Errors." +
-                    "\nWould you like to Open Verify.Log", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    else
                     {
-                        string LogFile = Strings.Encode(Path.Combine(Locations.LogFolder, Locations.LogVerify));
-                        if (File.Exists(LogFile))
+                        redownloadedCount++;
+
+                        this.BeginInvoke((MethodInvoker)delegate
                         {
-                            Process.Start(LogFile);
+                            DiscordLauncherPresense.Status("Verify Bad", redownloadedCount + " out of " + currentCount);
+                            LogVerify.Downloaded("File: " + CurrentDownloadingFile);
+                            DownloadProgressText.Text = "Downloaded File [ " + redownloadedCount + " / " + currentCount + " ]:\n" + CurrentDownloadingFile;
+                            DownloadProgressBar.Value = redownloadedCount * 100 / currentCount;
+                        });
+
+                        Application.DoEvents();
+
+                        if (redownloadedCount == currentCount)
+                        {
+                            Integrity();
+                            Log.Info("VERIFY HASH: Re-downloaded Count: " + redownloadedCount + " Current File Count: " + currentCount);
+
+                            DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
+                            VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
+                            VerifyHashText.Text = "Yay! Scanning and Downloading \nis now completed on Gamefiles";
+                            StartScanner.Visible = false;
+                            StopScanner.Visible = false;
+                            GameScanner(false);
+                        }
+                        else if (redownloadedCount + redownloadErrorCount == currentCount)
+                        {
+                            DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
+                            VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
+                            VerifyHashText.Text = redownloadErrorCount + " Files Failed to Download. Check Log for Details";
+                            StartScanner.Visible = false;
+                            StopScanner.Visible = false;
+                            GameScanner(false);
+
+                            if (MessageBox.Show("Verify Hash had encountered Redownload Errors." +
+                            "\nWould you like to Open Verify.Log", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            {
+                                string LogFile = Strings.Encode(Path.Combine(Locations.LogFolder, Locations.LogVerify));
+                                if (File.Exists(LogFile))
+                                {
+                                    Process.Start(LogFile);
+                                }
+                            }
                         }
                     }
                 }
             }
         }
 
-        void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            this.BeginInvoke((MethodInvoker)delegate
+            if (Application.OpenForms["VerifyHash"] != null)
             {
-                DownloadProgressText.Text = "Downloading File [ " + redownloadedCount + " / " 
-                + currentCount + " ]:\n" + CurrentDownloadingFile + "\n" + TimeConversions.FormatFileSize(e.BytesReceived) + " of " 
-                + TimeConversions.FormatFileSize(e.TotalBytesToReceive);
-            });
+                if (!Application.OpenForms["VerifyHash"].Disposing)
+                {
+                    this.BeginInvoke((MethodInvoker)delegate
+                    {
+                        DownloadProgressText.Text = "Downloading File [ " + redownloadedCount + " / "
+                        + currentCount + " ]:\n" + CurrentDownloadingFile + "\n" + TimeConversions.FormatFileSize(e.BytesReceived) + " of "
+                        + TimeConversions.FormatFileSize(e.TotalBytesToReceive);
+                    });
 
-            Application.DoEvents();
+                    Application.DoEvents();
+                }
+            }
         }
 
         private void StartScanner_Click(object sender, EventArgs e)

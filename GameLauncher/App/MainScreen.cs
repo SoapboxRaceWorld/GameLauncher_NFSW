@@ -2432,21 +2432,27 @@ namespace GameLauncher
             }
         }
 
-        void Client_DownloadProgressChanged_RELOADED(object sender, DownloadProgressChangedEventArgs e)
+        private void Client_DownloadProgressChanged_RELOADED(object sender, DownloadProgressChangedEventArgs e)
         {
-            this.BeginInvoke((MethodInvoker)delegate
+            if (Application.OpenForms["MainScreen"] != null)
             {
-                double bytesIn = double.Parse(e.BytesReceived.ToString());
-                double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-                double percentage = bytesIn / totalBytes * 100;
-                PlayProgressTextTimer.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
-                PlayProgressText.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + TimeConversions.FormatFileSize(e.BytesReceived) + 
-                " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive)).ToUpper();
+                if (!Application.OpenForms["MainScreen"].Disposing)
+                {
+                    this.BeginInvoke((MethodInvoker)delegate
+                    {
+                        double bytesIn = double.Parse(e.BytesReceived.ToString());
+                        double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+                        double percentage = bytesIn / totalBytes * 100;
+                        PlayProgressTextTimer.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
+                        PlayProgressText.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + TimeConversions.FormatFileSize(e.BytesReceived) +
+                        " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive)).ToUpper();
 
-                ExtractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
-                ExtractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
-            });
-            PlayProgressTextTimer.Text = string.Empty;
+                        ExtractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
+                        ExtractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
+                    });
+                    PlayProgressTextTimer.Text = string.Empty;
+                }
+            }
         }
 
         /* Launch game */
@@ -2783,109 +2789,117 @@ namespace GameLauncher
         /* That's right the Protype Extractor from 2.1.5.x, now back from the dead - DavidCarbon */
         public void GoForUnpack(string filename_pack)
         {
-            Thread unpacker = new Thread(() => {
-                this.BeginInvoke((MethodInvoker)delegate {
-                    using (ZipArchive archive = ZipFile.OpenRead(filename_pack))
+            Thread unpacker = new Thread(() => 
+            {
+                if (Application.OpenForms["MainScreen"] != null)
+                {
+                    if (!Application.OpenForms["MainScreen"].Disposing)
                     {
-                        int numFiles = archive.Entries.Count;
-                        int current = 1;
-
-                        foreach (ZipArchiveEntry entry in archive.Entries)
+                        this.BeginInvoke((MethodInvoker)delegate
                         {
-                            string fullName = entry.FullName;
-
-                            ExtractingProgress.Value = (int)((long)100 * current / numFiles);
-                            ExtractingProgress.Width = (int)((long)519 * current / numFiles);
-
-                            TaskbarProgress.SetValue(Handle, (int)(100 * current / numFiles), 100);
-
-                            if (!File.Exists(Path.Combine(FileSettingsSave.GameInstallation, fullName.Replace(".sbrw", String.Empty))))
+                            using (ZipArchive archive = ZipFile.OpenRead(filename_pack))
                             {
-                                PlayProgressText.Text = ("Unpacking " + fullName.Replace(".sbrw", String.Empty)).ToUpper();
-                                PlayProgressTextTimer.Text = "[" + current + " / " + archive.Entries.Count + "]";
+                                int numFiles = archive.Entries.Count;
+                                int current = 1;
 
-
-                                if (fullName.Substring(fullName.Length - 1) == "/")
+                                foreach (ZipArchiveEntry entry in archive.Entries)
                                 {
-                                    /* Is a directory, create it! */
-                                    string FolderName = fullName.Remove(fullName.Length - 1);
-                                    string GameWithFolderName = Path.Combine(FileSettingsSave.GameInstallation, FolderName);
-                                    if (Directory.Exists(GameWithFolderName))
+                                    string fullName = entry.FullName;
+
+                                    ExtractingProgress.Value = (int)((long)100 * current / numFiles);
+                                    ExtractingProgress.Width = (int)((long)519 * current / numFiles);
+
+                                    TaskbarProgress.SetValue(Handle, (int)(100 * current / numFiles), 100);
+
+                                    if (!File.Exists(Path.Combine(FileSettingsSave.GameInstallation, fullName.Replace(".sbrw", String.Empty))))
                                     {
-                                        Directory.Delete(GameWithFolderName, true);
-                                    }
+                                        PlayProgressText.Text = ("Unpacking " + fullName.Replace(".sbrw", String.Empty)).ToUpper();
+                                        PlayProgressTextTimer.Text = "[" + current + " / " + archive.Entries.Count + "]";
 
-                                    Directory.CreateDirectory(GameWithFolderName);
-                                }
-                                else
-                                {
-                                    String oldFileName = fullName.Replace(".sbrw", String.Empty);
-                                    String[] split = oldFileName.Split('/');
 
-                                    String newFileName = String.Empty;
+                                        if (fullName.Substring(fullName.Length - 1) == "/")
+                                        {
+                                            /* Is a directory, create it! */
+                                            string FolderName = fullName.Remove(fullName.Length - 1);
+                                            string GameWithFolderName = Path.Combine(FileSettingsSave.GameInstallation, FolderName);
+                                            if (Directory.Exists(GameWithFolderName))
+                                            {
+                                                Directory.Delete(GameWithFolderName, true);
+                                            }
 
-                                    if (split.Length >= 2)
-                                    {
-                                        newFileName = Path.Combine(split[split.Length - 2], split[split.Length - 1]);
+                                            Directory.CreateDirectory(GameWithFolderName);
+                                        }
+                                        else
+                                        {
+                                            String oldFileName = fullName.Replace(".sbrw", String.Empty);
+                                            String[] split = oldFileName.Split('/');
+
+                                            String newFileName = String.Empty;
+
+                                            if (split.Length >= 2)
+                                            {
+                                                newFileName = Path.Combine(split[split.Length - 2], split[split.Length - 1]);
+                                            }
+                                            else
+                                            {
+                                                newFileName = split.Last();
+                                            }
+
+                                            String KEY = Regex.Replace(SHA.Hashes(newFileName), "[^0-9.]", "").Substring(0, 8);
+                                            String IV = Regex.Replace(MDFive.Hashes(newFileName), "[^0-9.]", "").Substring(0, 8);
+
+                                            entry.ExtractToFile(getTempNa, true);
+
+                                            DESCryptoServiceProvider dESCryptoServiceProvider = new DESCryptoServiceProvider()
+                                            {
+                                                Key = Encoding.ASCII.GetBytes(KEY),
+                                                IV = Encoding.ASCII.GetBytes(IV)
+                                            };
+
+                                            FileStream fileStream = new FileStream(Path.Combine(FileSettingsSave.GameInstallation, oldFileName), FileMode.Create);
+                                            CryptoStream cryptoStream = new CryptoStream(fileStream, dESCryptoServiceProvider.CreateDecryptor(), CryptoStreamMode.Write);
+                                            BinaryWriter binaryFile = new BinaryWriter(cryptoStream);
+
+                                            using (BinaryReader reader = new BinaryReader(File.Open(getTempNa, FileMode.Open)))
+                                            {
+                                                long numBytes = new FileInfo(getTempNa).Length;
+                                                binaryFile.Write(reader.ReadBytes((int)numBytes));
+                                                binaryFile.Close();
+                                            }
+                                        }
                                     }
                                     else
                                     {
-                                        newFileName = split.Last();
+                                        PlayProgressText.Text = ("Skipping " + fullName).ToUpper();
                                     }
 
-                                    String KEY = Regex.Replace(SHA.Hashes(newFileName), "[^0-9.]", "").Substring(0, 8);
-                                    String IV = Regex.Replace(MDFive.Hashes(newFileName), "[^0-9.]", "").Substring(0, 8);
+                                    string Status = string.Format("Unpacking game: " + (100 * current / numFiles) + "%");
+                                    DiscordLauncherPresense.Status("Unpack Game Files", Status);
 
-                                    entry.ExtractToFile(getTempNa, true);
+                                    Application.DoEvents();
 
-                                    DESCryptoServiceProvider dESCryptoServiceProvider = new DESCryptoServiceProvider()
+                                    if (numFiles == current)
                                     {
-                                        Key = Encoding.ASCII.GetBytes(KEY),
-                                        IV = Encoding.ASCII.GetBytes(IV)
-                                    };
+                                        PlayProgressTextTimer.Visible = false;
+                                        PlayProgressTextTimer.Text = string.Empty;
 
-                                    FileStream fileStream = new FileStream(Path.Combine(FileSettingsSave.GameInstallation, oldFileName), FileMode.Create);
-                                    CryptoStream cryptoStream = new CryptoStream(fileStream, dESCryptoServiceProvider.CreateDecryptor(), CryptoStreamMode.Write);
-                                    BinaryWriter binaryFile = new BinaryWriter(cryptoStream);
+                                        _isDownloading = false;
+                                        OnDownloadFinished();
 
-                                    using (BinaryReader reader = new BinaryReader(File.Open(getTempNa, FileMode.Open)))
-                                    {
-                                        long numBytes = new FileInfo(getTempNa).Length;
-                                        binaryFile.Write(reader.ReadBytes((int)numBytes));
-                                        binaryFile.Close();
+                                        Notification.Visible = true;
+                                        Notification.BalloonTipIcon = ToolTipIcon.Info;
+                                        Notification.BalloonTipTitle = "SBRW Launcher";
+                                        Notification.BalloonTipText = "Your game is now ready to launch!";
+                                        Notification.ShowBalloonTip(5000);
+                                        Notification.Dispose();
                                     }
+
+                                    current++;
                                 }
                             }
-                            else
-                            {
-                                PlayProgressText.Text = ("Skipping " + fullName).ToUpper();
-                            }
-
-                            string Status = string.Format("Unpacking game: " + (100 * current / numFiles) + "%");
-                            DiscordLauncherPresense.Status("Unpack Game Files", Status);
-
-                            Application.DoEvents();
-
-                            if (numFiles == current)
-                            {
-                                PlayProgressTextTimer.Visible = false;
-                                PlayProgressTextTimer.Text = string.Empty;
-
-                                _isDownloading = false;
-                                OnDownloadFinished();
-
-                                Notification.Visible = true;
-                                Notification.BalloonTipIcon = ToolTipIcon.Info;
-                                Notification.BalloonTipTitle = "SBRW Launcher";
-                                Notification.BalloonTipText = "Your game is now ready to launch!";
-                                Notification.ShowBalloonTip(5000);
-                                Notification.Dispose();
-                            }
-
-                            current++;
-                        }
+                        });
                     }
-                });
+                }
             });
 
             unpacker.Start();
