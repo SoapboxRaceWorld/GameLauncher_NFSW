@@ -39,9 +39,30 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         public static int TotalTreasure = 15;
         public static int THDay = 0;
         public static List<string> PersonaIds = new List<string>();
+        public static Dictionary<string, object> QueryParams = new Dictionary<string, object>();
+        public static string GETContent = string.Empty;
 
-        public static void HandleGameState(string uri, string serverreply, string GET)
+        public static void HandleGameState(string uri, string serverreply, dynamic GET)
         {
+            try
+            {
+                foreach (var param in GET)
+                {
+                    var value = GET[param];
+                    QueryParams[param] = value;
+                }
+
+                GETContent = string.Join(";", QueryParams.Select(x => x.Key + "=" + x.Value).ToArray());
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("DISCORD GAME PRESENSE [GET]", null, Error, null, true);
+            }
+            finally
+            {
+                QueryParams.Clear();
+            }
+
             try
             {
                 var SBRW_XML = new XmlDocument();
@@ -99,7 +120,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
                 if (uri == "/User/SecureLoginPersona")
                 {
-                    LoggedPersonaId = GET.Split(';').Last().Split('=').Last();
+                    LoggedPersonaId = GETContent.Split(';').Last().Split('=').Last();
                     canUpdateProfileField = true;
                 }
 
@@ -147,7 +168,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 /* DRIVING CARNAME */
                 if (uri == "/DriverPersona/GetPersonaInfo" && canUpdateProfileField == true)
                 {
-                    if (LoggedPersonaId == GET.Split(';').Last().Split('=').Last())
+                    if (LoggedPersonaId == GETContent.Split(';').Last().Split('=').Last())
                     {
                         SBRW_XML.LoadXml(serverreply);
                         PersonaName = SBRW_XML.SelectSingleNode("ProfileData/Name").InnerText.Replace("¤", "[S]");
@@ -208,7 +229,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 /* IN SAFEHOUSE/FREEROAM */
                 if (uri == "/DriverPersona/UpdatePersonaPresence")
                 {
-                    string UpdatePersonaPresenceParam = GET.Split(';').Last().Split('=').Last();
+                    string UpdatePersonaPresenceParam = GETContent.Split(';').Last().Split('=').Last();
                     _presence.Assets = new Assets();
                     if (UpdatePersonaPresenceParam == "1")
                     {
@@ -420,13 +441,13 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 /* Extending Safehouse */
                 if (uri.Contains("catalog") && inSafeHouse)
                 {
-                    if (GET.Contains("categoryName=NFSW_NA_EP_VINYLS_Category")) _presence.Details = "In Safehouse - Applying Vinyls";
-                    if (GET.Contains("clientProductType=PAINTS_BODY")) _presence.Details = "In Safehouse - Applying Colors";
-                    if (GET.Contains("clientProductType=PERFORMANCEPART")) _presence.Details = "In Safehouse - Applying Performance Parts";
-                    if (GET.Contains("clientProductType=VISUALPART")) _presence.Details = "In Safehouse - Applying Visual Parts";
-                    if (GET.Contains("clientProductType=SKILLMODPART")) _presence.Details = "In Safehouse - Applying Skillmods";
-                    if (GET.Contains("clientProductType=PRESETCAR")) _presence.Details = "In Safehouse - Purchasing Car";
-                    if (GET.Contains("categoryName=BoosterPacks")) _presence.Details = "In Safehouse - Opening Cardpacks";
+                    if (GETContent.Contains("categoryName=NFSW_NA_EP_VINYLS_Category")) _presence.Details = "In Safehouse - Applying Vinyls";
+                    if (GETContent.Contains("clientProductType=PAINTS_BODY")) _presence.Details = "In Safehouse - Applying Colors";
+                    if (GETContent.Contains("clientProductType=PERFORMANCEPART")) _presence.Details = "In Safehouse - Applying Performance Parts";
+                    if (GETContent.Contains("clientProductType=VISUALPART")) _presence.Details = "In Safehouse - Applying Visual Parts";
+                    if (GETContent.Contains("clientProductType=SKILLMODPART")) _presence.Details = "In Safehouse - Applying Skillmods";
+                    if (GETContent.Contains("clientProductType=PRESETCAR")) _presence.Details = "In Safehouse - Purchasing Car";
+                    if (GETContent.Contains("categoryName=BoosterPacks")) _presence.Details = "In Safehouse - Opening Cardpacks";
 
                     _presence.Assets = new Assets
                     {
@@ -444,6 +465,10 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("DISCORD GAME PRESENSE", null, Error, null, true);
+            }
+            finally
+            {
+                GETContent = string.Empty;
             }
         }
     }

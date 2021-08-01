@@ -6,7 +6,6 @@ using Nancy.Bootstrapper;
 using Nancy.Extensions;
 using Nancy.Responses;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -57,8 +56,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             path = path.Substring("/nfsw/Engine.svc".Length);
 
-            UrlFlurl resolvedUrl = new UrlFlurl(ServerProxy.Instance.GetServerUrl()).AppendPathSegment(path);
-            FlurlClient Test = new FlurlClient();
+            UrlFlurl resolvedUrl = new UrlFlurl(ServerProxy.Instance.GetServerUrl()).AppendPathSegment(path, false);
+            
             foreach (var queryParamName in context.Request.Query)
             {
                 resolvedUrl = resolvedUrl.SetQueryParam(queryParamName, context.Request.Query[queryParamName],
@@ -67,20 +66,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             IFlurlRequest request = resolvedUrl.AllowAnyHttpStatus();
 
-
             foreach (var header in context.Request.Headers)
             {
-                /* Don't send Content-Length for GET requests */
+                /* Don't send Content-Length for GET requests - HeyItsLeo */
                 if (method == "GET" && header.Key.ToLowerInvariant() == "content-length")
                 {
                     continue;
                 }
 
-                request = request.WithHeader(header.Key,
-                    header.Key == "Host" ? resolvedUrl.ToUri().Host : header.Value.First());
+                request = request.WithHeader
+                    (header.Key, (header.Key == "Host") ? resolvedUrl.ToUri().Host : ((header.Value != null) ? header.Value.First() : string.Empty));
             }
 
-            var requestBody = method != "GET" ? context.Request.Body.AsString(UTF8) : string.Empty;
+            var requestBody = (method != "GET") ? context.Request.Body.AsString(UTF8) : string.Empty;
 
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
                 CommunicationLogEntryType.Request,
@@ -88,27 +86,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             IFlurlResponse responseMessage;
 
-            var POSTContent = string.Empty;
-
-            var queryParams = new Dictionary<string, object>();
-
-            foreach (var param in context.Request.Query)
-            {
-                var value = context.Request.Query[param];
-                queryParams[param] = value;
-            }
-
-            var GETContent = string.Join(";", queryParams.Select(x => x.Key + "=" + x.Value).ToArray());
-
-            if (path == "/event/arbitration") 
+            if (path == "/event/arbitration" && !string.IsNullOrWhiteSpace(requestBody))
             {
                 requestBody = Strings.Encode(
-                    requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + Convert.ToInt32(AntiCheat.cheats_detected) + "</Konami>"));
-                foreach (var header in context.Request.Headers) 
+                requestBody.Replace("</TopSpeed>", "</TopSpeed><Konami>" + Convert.ToInt32(AntiCheat.cheats_detected) + "</Konami>"));
+                foreach (var header in context.Request.Headers)
                 {
-                    if(header.Key.ToLowerInvariant() == "content-length") 
+                    if (header.Key.ToLowerInvariant() == "content-length")
                     {
-                        int KonamiCode = Convert.ToInt32(header.Value.First()) + 
+                        int KonamiCode = Convert.ToInt32(header.Value.First()) +
                             ("<Konami>" + Convert.ToInt32(AntiCheat.cheats_detected) + "</Konami>").Length;
                         request = request.WithHeader(header.Key, KonamiCode);
                     }
@@ -123,7 +109,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 case "POST":
                     responseMessage = await request.PostAsync(new CapturedStringContent(requestBody),
                         cancellationToken);
-                    POSTContent = context.Request.Body.AsString(UTF8);
                     break;
                 case "PUT":
                     responseMessage = await request.PutAsync(new CapturedStringContent(requestBody),
@@ -137,7 +122,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     throw new ProxyException("Cannot handle request method: " + method);
             }
 
-            var responseBody = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(await responseMessage.GetStringAsync()));
+            var responseBody = Strings.Encode(await responseMessage.GetStringAsync());
 
             if (path == "/User/GetPermanentSession")
             {
@@ -146,15 +131,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             int statusCode = responseMessage.StatusCode;
 
-            DiscordGamePresence.HandleGameState(path, responseBody, GETContent);
+            DiscordGamePresence.HandleGameState(path, responseBody, context.Request.Query);
 
             TextResponse Response = new TextResponse(responseBody,
                 responseMessage.ResponseMessage.Content.Headers.ContentType?.MediaType ?? "application/xml;charset=UTF-8")
             {
                 StatusCode = (HttpStatusCode)statusCode
             };;
-
-            queryParams.Clear();
 
             CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
                 CommunicationLogEntryType.Response, new CommunicationLogResponse(
@@ -165,6 +148,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         private static string CleanFromUnknownChars(string s)
         {
+            if (string.IsNullOrWhiteSpace(s)) { return null;  }
+
             StringBuilder sb = new StringBuilder(s.Length);
             foreach (char c in s)
             {
@@ -182,7 +167,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 }
             }
 
-            return Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(sb.ToString()));
+            return Strings.Encode(sb.ToString(0, sb.Length));
         }
     }
 }

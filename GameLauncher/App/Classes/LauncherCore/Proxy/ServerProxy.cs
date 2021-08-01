@@ -46,7 +46,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     {
                         UrlReservations = new UrlReservations()
                         {
-                            CreateAutomatically = true,
+                            CreateAutomatically = true
                         },
                         AllowChunkedEncoding = false
                     };

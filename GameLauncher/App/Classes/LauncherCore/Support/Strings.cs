@@ -6,7 +6,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
     {
         public static string Encode(string Value)
         {
-            return Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Value));
+            if (string.IsNullOrWhiteSpace(Value))
+            {
+                return null;
+            }
+            else
+            {
+                return Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(Value));
+            }
         }
     }
 }
