@@ -11,7 +11,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
         Request,
         Response,
         Info,
-        Error
+        Error,
+        Rejected,
+        Warning,
+        Unknown
     }
 
     public interface ICommunicationLogData
@@ -25,7 +28,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
         public DateTimeOffset RecordedAt { get; set; }
         public string ServerId { get; set; }
         public string Category { get; set; }
-        public CommunicationLogEntryType Type { get; set; }
+        public string Type { get; set; }
         public ICommunicationLogData Data { get; set; }
     }
 
@@ -96,7 +99,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 ServerId = serverId,
                 Category = category,
                 Data = data,
-                Type = type,
+                Type = CallMethod(type),
                 RecordedAt = DateTimeOffset.Now
             };
 
@@ -104,6 +107,27 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             {
                 JsonConvert.SerializeObject(entry, Formatting.Indented)
             });
+        }
+
+        private static string CallMethod(CommunicationLogEntryType type)
+        {
+            switch (type) 
+            {
+                case CommunicationLogEntryType.Error:
+                    return "ERROR";
+                case CommunicationLogEntryType.Info:
+                    return "INFO";
+                case CommunicationLogEntryType.Request:
+                    return "REQUEST";
+                case CommunicationLogEntryType.Response:
+                    return "RESPONSE";
+                case CommunicationLogEntryType.Rejected:
+                    return "REJECTED";
+                case CommunicationLogEntryType.Warning:
+                    return "WARNING";
+                default:
+                    return "UNKNOWN";
+            }
         }
     }
 }

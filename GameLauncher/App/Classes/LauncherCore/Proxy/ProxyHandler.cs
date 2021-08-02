@@ -33,10 +33,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             Log.Error("PROXY HANDLER: " + context.Request.Path);
             LogToFileAddons.OpenLog("PROXY HANDLER", null, Error, null, true);
 
-            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY",
-                CommunicationLogEntryType.Error,
-                new CommunicationLogLauncherError(Error.Message, context.Request.Path,
-                    context.Request.Method));
+            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY", CommunicationLogEntryType.Error,
+                new CommunicationLogLauncherError(Error.Message, context.Request.Path, context.Request.Method));
 
             context.Request.Dispose();
 
@@ -80,8 +78,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
             var requestBody = (method != "GET") ? context.Request.Body.AsString(UTF8) : string.Empty;
 
-            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
-                CommunicationLogEntryType.Request,
+            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER", CommunicationLogEntryType.Request,
                 new CommunicationLogRequest(requestBody, resolvedUrl.ToString(), method));
 
             IFlurlResponse responseMessage;
@@ -139,9 +136,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 StatusCode = (HttpStatusCode)statusCode
             };;
 
-            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER",
-                CommunicationLogEntryType.Response, new CommunicationLogResponse(
-                    responseBody, resolvedUrl.ToString(), method));
+            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "SERVER", CommunicationLogEntryType.Response, 
+                new CommunicationLogResponse(responseBody, resolvedUrl.ToString(), method));
 
             return Response;
         }
