@@ -42,16 +42,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                 {
                     Log.Info("PROXY: Local Proxy Server has Fully Initialized (" + From + ")");
 
-                    var hostConfigs = new HostConfiguration()
+                    HostConfiguration Configs = new HostConfiguration()
                     {
+                        AllowChunkedEncoding = false,
+                        RewriteLocalhost = false,
                         UrlReservations = new UrlReservations()
                         {
                             CreateAutomatically = true
-                        },
-                        AllowChunkedEncoding = false
+                        }
                     };
 
-                    Host = new NancyHost(new Uri("http://127.0.0.1:" + ProxyPort), new NancyBootstrapper(), hostConfigs);
+                    Host = new NancyHost(new Uri("http://127.0.0.1:" + ProxyPort), new NancyBootstrapper(), Configs);
                     Host.Start();
                 }
             }

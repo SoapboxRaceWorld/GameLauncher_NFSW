@@ -23,11 +23,23 @@
         /// <summary>The Remote Web server is down</summary>
         /// <remarks>Occurs when the origin web server refuses connections</remarks>
         Offline,
+        /// <summary>The Remote Web server is up</summary>
+        /// <remarks>Server Is Up and Running</remarks>
         Online,
+        /// <summary>Client Error Side</summary>
+        /// <remarks>Server cannot or will not Process the Request</remarks>
         BadRequest,
+        /// <summary>No Permission</summary>
+        /// <remarks>Server aknowleged the request but refused authorization</remarks>
         Forbidden,
+        /// <summary>Not Found</summary>
+        /// <remarks>Server can find the requested resource</remarks>
         NotFound,
+        /// <summary>Not Supported</summary>
+        /// <remarks>Server does not support the functionality required to fulfill the request</remarks>
         NotImplmented,
+        /// <summary>Not Supported</summary>
+        /// <remarks>Server does not support the functionality required to fulfill the request</remarks>
         ServerError,
         ServerOverloaded,
         ServerUnavailable,
