@@ -48,7 +48,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             {
                 foreach (var param in GET)
                 {
-                    var value = GET[param];
+                    dynamic value = GET[param];
                     QueryParams[param] = value;
                 }
 
