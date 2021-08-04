@@ -606,8 +606,16 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 }
                 else
                 {
-                    Log.Info("MAINSCREEN: Program Started");
-                    Application.Run(new MainScreen());
+                    try
+                    {
+                        Log.Info("MAINSCREEN: Program Started");
+                        Application.Run(new MainScreen());
+                    }
+                    catch (Exception Error)
+                    {
+                        LogToFileAddons.OpenLog("Main Screen [Application Run]", "Launcher Encounterd an Error.", Error, "Error", false);
+                        ErrorCloseLauncher("Main Screen [Application Run]", false);
+                    }
                 }
             }
         }
