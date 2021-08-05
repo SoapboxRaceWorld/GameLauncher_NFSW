@@ -1536,7 +1536,7 @@ namespace GameLauncher.App
                 }
                 else
                 {
-                    MessageBox.Show(null, "You have already did a Verify GameFiles Scan" +
+                    MessageBox.Show(null, "You have already done a 'Verify GameFiles' Scan" +
                     "\nPlease Restart Launcher to do a new Verify GameFiles Scan", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 
@@ -1547,7 +1547,7 @@ namespace GameLauncher.App
             }
             else if (!FunctionStatus.DoesCDNSupportVerifyHash)
             {
-                MessageBox.Show(null, "The current saved CDN does not support Verify GameFiles Scan" +
+                MessageBox.Show(null, "The current saved CDN does not support 'Verify GameFiles' Scan" +
                     "\nPlease Choose Another CDN from the list", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
