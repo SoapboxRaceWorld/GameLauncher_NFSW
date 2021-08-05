@@ -124,7 +124,7 @@ namespace GameLauncher.App
             catch
             {
                 PatchContainerPanel.Visible = false;
-                MessageBox.Show("The launcher was unable to retrieve about info from the server!");
+                MessageBox.Show("The launcher was unable to retrieve 'About' info from the server!");
             }
 
             Label[] PatchTitleObjects = { PatchTitle1, PatchTitle2, PatchTitle3 };

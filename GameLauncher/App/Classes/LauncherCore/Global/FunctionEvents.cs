@@ -55,7 +55,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             }
             else
             {
-                MessageBox.Show(null, "Server seems to be offline.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(null, "Server seems to be Offline.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -134,7 +134,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 }
                 else
                 {
-                    MessageBox.Show(null, "Email Address can not be Empty. Please Check and Try Again", "GameLauncher", 
+                    MessageBox.Show(null, "Email Address can not be empty. Please Check and Try Again", "GameLauncher", 
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }

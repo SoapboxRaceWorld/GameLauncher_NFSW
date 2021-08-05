@@ -112,7 +112,7 @@ namespace GameLauncher
             {
                 if (FunctionStatus.LauncherBattlePass)
                 {
-                    MessageBox.Show(null, "Please close the game before closing launcher.",
+                    MessageBox.Show(null, "Please close the game before closing the GameLauncher.",
                             "Please close the game before closing launcher.", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     y.Cancel = true;
                 }
@@ -468,7 +468,7 @@ namespace GameLauncher
                     TempEmailCache = MainEmail.Text;
                     MainEmail.Text = "EMAIL IS HIDDEN";
                 }
-                MessageBox.Show(null, "Please wait while launcher is still downloading gamefiles.", "GameLauncher", MessageBoxButtons.OK);
+                MessageBox.Show(null, "Please wait while the GameLauncher is still downloading the game files.", "GameLauncher", MessageBoxButtons.OK);
                 if (!string.IsNullOrWhiteSpace(TempEmailCache))
                 {
                     MainEmail.Text = TempEmailCache;
@@ -1410,7 +1410,7 @@ namespace GameLauncher
         {
             if (!VisualsAPIChecker.WOPLAPI)
             {
-                MessageBox.Show(null, "Launcher has Encountered a Complete API Connection Failure\nSettings is Locked out as a Safety Precaution" +
+                MessageBox.Show(null, "GameLauncher has Encountered a Complete API Connection Failure\nSettings is Locked out as a Safety Precaution" +
                     "\nUntil the issue is Resolved on your end", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
@@ -1802,7 +1802,7 @@ namespace GameLauncher
                             }
 
                             _nfswstarted.Abort();
-                            DialogResult restartApp = MessageBox.Show(null, ErrorMsg + "\nWould you like to restart the launcher?", 
+                            DialogResult restartApp = MessageBox.Show(null, ErrorMsg + "\nWould you like to restart the GameLauncher?", 
                                 "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                             if (restartApp == DialogResult.Yes)
                             {
@@ -1897,7 +1897,7 @@ namespace GameLauncher
             if (FileSettingsSave.GameIntegrity != "Good")
             {
                 CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                MessageBox.Show("Launcher had Detected Game Files Integrity Error\nPlease Verify Game Files in Settings Screen",
+                MessageBox.Show("GameLauncher has detected a GameFiles Integrity Error\nPlease 'Verify GameFiles' in the Settings Screen",
                     "Game Files Integrity", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", FileAccountSave.UserRawEmail).ToUpper();
                 return;
@@ -1906,8 +1906,8 @@ namespace GameLauncher
             if (!Redistributable.ErrorFree)
             {
                 CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                MessageBox.Show("Launcher had Detected 2015-2019 VC++ Redistributable Package is not Installed\n" +
-                    "Please Manually Install the Packages for your Operating System",
+                MessageBox.Show("GameLauncher has detected that the 2015-2019 VC++ Redistributable Package is not installed\n" +
+                    "Please manually Install the Packages for your Operating System",
                     "VC++ Redistributable Package Check", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", FileAccountSave.UserRawEmail).ToUpper();
                 return;
@@ -2509,7 +2509,7 @@ namespace GameLauncher
                         ContextMenu.MenuItems.Add("-");
                         ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", (sender2, e2) =>
                         {
-                            MessageBox.Show(null, "Please close the game before closing launcher.", 
+                            MessageBox.Show(null, "Please close the game before closing the GameLauncher.", 
                                 "Please close the game before closing launcher.", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }));
 
@@ -2523,7 +2523,7 @@ namespace GameLauncher
                 else if (!File.Exists(GameExePath))
                 {
                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                    MessageBox.Show(null, "You Do Not have the Game Downloaded. Please Verify Game Files.", "GameLauncher", 
+                    MessageBox.Show(null, "You do not have the Game Downloaded. Please Verify Game Files installation path.", "GameLauncher", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else

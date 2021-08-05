@@ -129,8 +129,8 @@ namespace GameLauncher.App
                 }
                 else
                 {
-                    MessageBox.Show("Verify Hash had Started a Full Scan Before." +
-                        "\nTo do another Scan, Please Restart Launcher to do a New Scan.", "VerifyHash", MessageBoxButtons.OK);
+                    MessageBox.Show("Verify Hash has already done a Full Scan this run.\n" +
+                        "Please restart the GameLauncher to do a New Scan.", "VerifyHash", MessageBoxButtons.OK);
                 }
             }
             else if (!startScan)
@@ -270,8 +270,8 @@ namespace GameLauncher.App
                 Log.Info("VERIFY HASH: Completed check for '.orig' Files and Symbolic Folders, BUT Encounterd a File or Folder Deletion Error. " +
                 "Check Verify.log for More Details");
 
-                if (MessageBox.Show("Verify Hash had encountered File or Folder Deletion Errors." +
-                "\nWould you like to Open Verify.Log and Stop the Scanner?", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("Verify Hash has encountered File or Folder Deletion Errors.\n" +
+                "Would you like to Open Verify.Log and Stop the Scanner?", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     string LogFile = Strings.Encode(Path.Combine(Locations.LogFolder, Locations.LogVerify));
                     if (File.Exists(LogFile))
@@ -562,8 +562,8 @@ namespace GameLauncher.App
                             StopScanner.Visible = false;
                             GameScanner(false);
 
-                            if (MessageBox.Show("Verify Hash had encountered Redownload Errors." +
-                            "\nWould you like to Open Verify.Log", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            if (MessageBox.Show("Verify Hash has encountered Download Errors.\n" +
+                            "Would you like to Open Verify.Log", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
                             {
                                 string LogFile = Strings.Encode(Path.Combine(Locations.LogFolder, Locations.LogVerify));
                                 if (File.Exists(LogFile))
@@ -592,24 +592,24 @@ namespace GameLauncher.App
                             Integrity();
                             Log.Info("VERIFY HASH: Re-downloaded Count: " + redownloadedCount + " Current File Count: " + currentCount);
 
-                            DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
+                            DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were downloaded";
                             VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
-                            VerifyHashText.Text = "Yay! Scanning and Downloading \nis now completed on Gamefiles";
+                            VerifyHashText.Text = "Yay! Scanning and Downloading\n is now completed on Gamefiles";
                             StartScanner.Visible = false;
                             StopScanner.Visible = false;
                             GameScanner(false);
                         }
                         else if (redownloadedCount + redownloadErrorCount == currentCount)
                         {
-                            DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were Redownloaded";
+                            DownloadProgressText.Text = "\n" + redownloadedCount + " Invalid/Missing File(s) were downloaded";
                             VerifyHashText.ForeColor = Theming.WinFormWarningTextForeColor;
                             VerifyHashText.Text = redownloadErrorCount + " Files Failed to Download. Check Log for Details";
                             StartScanner.Visible = false;
                             StopScanner.Visible = false;
                             GameScanner(false);
 
-                            if (MessageBox.Show("Verify Hash had encountered Redownload Errors." +
-                            "\nWould you like to Open Verify.Log", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            if (MessageBox.Show("Verify Hash has encountered Download Errors.\n" +
+                            "Would you like to open the Verify.Log?", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
                             {
                                 string LogFile = Strings.Encode(Path.Combine(Locations.LogFolder, Locations.LogVerify));
                                 if (File.Exists(LogFile))

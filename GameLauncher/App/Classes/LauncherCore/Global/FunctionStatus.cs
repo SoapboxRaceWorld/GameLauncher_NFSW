@@ -316,8 +316,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             Log.Warning("LAUNCHER: Exiting (" + Notes + ")");
             if (!string.IsNullOrWhiteSpace(LauncherForceCloseReason))
             {
-                DialogResult OpenLogFile = MessageBox.Show(null, "Launcher Ecountered an Error and It Must Close. " +
-                    "Below is a Summary of the Error" + "\n" + LauncherForceCloseReason + "\n\n" + 
+                DialogResult OpenLogFile = MessageBox.Show(null, "The GameLauncher has ecountered an Error and it must Close. " +
+                    "Below is a Summary of the Error:" + "\n" + LauncherForceCloseReason + "\n\n" + 
                     LogToFileAddons.OpenLogMessage, "GameLauncher",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
@@ -418,7 +418,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                     if (!HasWriteAccessToFolder(GameFolderPath))
                                     {
                                         Log.Error("FOLDER SELECT DIALOG: Not enough permissions. Exiting.");
-                                        string ErrorMessage = "You don't have enough permission to select this path as installation folder. " +
+                                        string ErrorMessage = "You don't have enough permission to select this path as the Installation folder. " +
                                             "Please select another directory.";
                                         MessageBox.Show(null, ErrorMessage, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                         LauncherForceClose = true;
@@ -440,8 +440,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                                         else if (GameFolderPath == Locations.LauncherFolder)
                                         {
                                             Directory.CreateDirectory("Game Files");
-                                            Log.Warning("FOLDER SELECT DIALOG: Installing NFSW in same directory where the launcher resides is disadvised.");
-                                            MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is disadvised. " +
+                                            Log.Warning("FOLDER SELECT DIALOG: Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
+                                            MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed.\n " +
                                                 "Instead, we will install it on {0}.", Locations.GameFilesFailSafePath), 
                                                 "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                             FileSettingsSave.GameInstallation = Locations.GameFilesFailSafePath;
@@ -583,8 +583,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 {
                     DiscordLauncherPresense.Status("Start Up", "Launcher Encountered API Errors");
 
-                    DialogResult restartAppNoApis = MessageBox.Show(null, "There's no internet connection, Launcher might crash." +
-                        "\n\nClick Yes to Close Launcher" +
+                    DialogResult restartAppNoApis = MessageBox.Show(null, "There is no internet connection, Launcher might crash." +
+                        "\n\nClick Yes to Close GameLauncher" +
                         "\nor" +
                         "\nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 

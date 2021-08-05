@@ -322,7 +322,7 @@ namespace GameLauncher.App
 
                             File.WriteAllText(Locations.LauncherCustomServers, JsonConvert.SerializeObject(Servers));
 
-                            MessageBox.Show(null, "New server will be added on next start of launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(null, "The New server will be added on the next start of the Launcher.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         catch (Exception Error)
                         {

@@ -134,8 +134,8 @@ namespace GameLauncher.App
                             if (splitChecks[0] == verify)
                             {
                                 var passwordCheckReply = MessageBox.Show(null, "Password used for registration has been breached " + Convert.ToInt32(splitChecks[1]) +
-                                    " times, you should consider using different one.\n\nAlternatively you can use the unsafe password anyway." +
-                                    "\nWould you like to Use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                                    " times, you should consider using a different one.\n\nAlternatively you can use the unsafe password anyway." +
+                                    "\nWould you like to continue to use it?", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                                 if (passwordCheckReply == DialogResult.Yes)
                                 {
                                     allowReg = true;

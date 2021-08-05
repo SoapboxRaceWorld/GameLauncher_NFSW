@@ -39,7 +39,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
         public static void Latest()
         {
-            Log.Checking("LAUNCHER UPDATE: Is Update to Date or not");
+            Log.Checking("LAUNCHER UPDATE: Is Version Up to Date or not");
             DiscordLauncherPresense.Status("Start Up", "Checking Latest Launcher Release Information");
 
             if (VisualsAPIChecker.UnitedAPI)
@@ -269,7 +269,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                             else
                             {
                                 Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
-                                MessageBox.Show(null, "Opened your Web Browser to the Game Launcher's GitHub Latest Release Page " +
+                                MessageBox.Show(null, "A Web Browser has been opened to the Game Launcher's GitHub Latest Release Page " +
                                     "to Download the New Version", "GameLauncher", MessageBoxButtons.OK);
                             }
                         };

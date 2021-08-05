@@ -202,7 +202,7 @@ namespace GameLauncher.App
 
                     IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
                     LanguagePickerFile.Write("Language", ((LangObject)GameLangSource.SelectedItem).INI_Value);
-                    MessageBox.Show(null, "Please Note: If a Server does not Provide Language Pack, it will Fallback to English instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(null, "Please Note: If a Server does not provide a Language Pack, it will fallback to English instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {

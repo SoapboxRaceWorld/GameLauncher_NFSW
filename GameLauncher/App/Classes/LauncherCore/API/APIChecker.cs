@@ -270,15 +270,15 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                     {
                         DiscordLauncherPresense.Status("Start Up", "Launcher Encountered API Errors");
 
-                        DialogResult restartAppNoApis = MessageBox.Show(null, "Unable to Connect to Any Server List API. Please check your connection." +
-                        "\n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect To Any Server List API",
+                        DialogResult restartAppNoApis = MessageBox.Show(null, "Unable to Connect to any Server List API. Please check your connection." +
+                        "\n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect to any Server List API",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                         if (restartAppNoApis == DialogResult.No)
                         {
-                            MessageBox.Show("Please keep in Mind Launcher Might Crash Past This Point. Make sure to Resolve the Issue Next Time",
-                                "GameLauncher Will Continue, When It Failed To Connect To API");
-                            Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and Will Continue");
+                            MessageBox.Show("Please keep in Mind Launcher might crash past this point. Make sure to resolve the issue next time",
+                                "GameLauncher will continue, despite failing To Connect To API");
+                            Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and will Continue");
                         }
 
                         if (restartAppNoApis == DialogResult.Yes)
@@ -312,9 +312,9 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                     /* Check If Launcher Failed to Connect to any APIs */
                     if (!WOPLAPI)
                     {
-                        MessageBox.Show(null, "Unable to Connect to Any CDN List API. Please check your connection." +
-                        "\n\nCDN Dropdown List will not be Available in on " + From + " Screen",
-                        "GameLauncher has Stopped, Failed To Connect To Any CDN List API", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show(null, "Unable to Connect to any CDN List API. Please check your connection." +
+                        "\n\nCDN Dropdown List will not be available on " + From + " Screen",
+                        "GameLauncher has stopped, Failed To Connect to any CDN List API", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     Log.Checking("API: Test #3 Done");
 

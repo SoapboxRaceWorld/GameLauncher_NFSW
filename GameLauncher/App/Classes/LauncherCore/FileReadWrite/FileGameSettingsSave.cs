@@ -288,7 +288,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 }
                 else
                 {
-                    Log.Error("USX File: User Game Settings File is ReadOnly. Settings Not Saved! Sorry Chief");
+                    Log.Error("USX File: User Game Settings File is Read-Only. Settings Not Saved!");
                     if (MessageBoxAlert == "Display")
                     {
                         MessageBox.Show(null, "XML Settings Not Saved \nRead-Only File ", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);

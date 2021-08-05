@@ -561,7 +561,7 @@ namespace GameLauncher.App
             /* TODO: Inform player about custom languagepack used. */
             if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") 
             {
-                MessageBox.Show(null, "Please Note: If a Server does not Provide Language Pack, it will Fallback to English Language Pack instead.", 
+                MessageBox.Show(null, "Please Note: If a Server does not provide a Language Pack, it will fallback to English Language Pack instead.", 
                     "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
@@ -654,7 +654,7 @@ namespace GameLauncher.App
                         InformationCache.ModernAuthSecureChannel)
                     {
                         MessageBox.Show(null, ServerListUpdater.ServerName("Settings") + " requires Proxy to be Enabled." +
-                            "\nThe launcher will turn on Proxy even if you have chosen to Disable it", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            "\nThe launcher will turn on Proxy, even if you have chosen to Disable it", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
                 else
@@ -752,7 +752,7 @@ namespace GameLauncher.App
 
             if (_restartRequired)
             {
-                MessageBox.Show(null, "In order to see settings changes, you need to restart launcher manually.", "GameLauncher", 
+                MessageBox.Show(null, "In order to see settings changes, you need to restart the Launcher manually.", "GameLauncher", 
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
@@ -774,8 +774,8 @@ namespace GameLauncher.App
         /* Settings Clear ModNet Cache */
         private void SettingsClearServerModCacheButton_Click(object sender, EventArgs e)
         {
-            DialogResult SettingsClearServerModCacheConfirmation = MessageBox.Show(null, "Warning you are about the Delete Server Mods Cache" +
-            "\nBy Deleting the Cache, you will have to Redownload the Server Mods Again." +
+            DialogResult SettingsClearServerModCacheConfirmation = MessageBox.Show(null, "Warning: you are about the Delete Server Mods Cache" +
+            "\nBy Deleting the Cache, you will have to re-download the Server Mods Again." +
             "\n\nClick Yes to Delete Mods Cache \nor \nClick No to Keep Mods Cache", "GameLauncher",
             MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
@@ -1069,8 +1069,8 @@ namespace GameLauncher.App
                     case FolderType.IsSameAsLauncherFolder:
                         FailSafePathCreation = true;
                         FileSettingsSave.GameInstallation = Locations.GameFilesFailSafePath;
-                        Log.Error("LAUNCHER: Installing NFSW in same directory where the launcher resides is NOT recommended.");
-                        MessageBox.Show(null, string.Format("Installing NFSW in same directory where the launcher resides is not allowed." +
+                        Log.Error("LAUNCHER: Installing NFSW in same location where the GameLauncher resides is NOT allowed.");
+                        MessageBox.Show(null, string.Format("Installing NFSW in same location where the GameLauncher resides is NOT allowed." +
                             "\nInstead, we will install it at {0}.", Locations.GameFilesFailSafePath), "GameLauncher", 
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
@@ -1531,13 +1531,13 @@ namespace GameLauncher.App
             {
                 if (!File.Exists(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe")))
                 {
-                    MessageBox.Show(null, "You Need to Download the Game Files First Before you have Access to Verify Hash", 
+                    MessageBox.Show(null, "You need to Download the Game Files first before you can have access to run Verify Hash", 
                         "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else
                 {
-                    MessageBox.Show(null, "You have already did a Verify Game Files Scan" +
-                    "\nPlease Restart Launcher to do a new Verify Game Files Scan", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(null, "You have already did a Verify GameFiles Scan" +
+                    "\nPlease Restart Launcher to do a new Verify GameFiles Scan", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 
                 SettingsVFilesButton.ForeColor = Theming.RedForeColorButton;
@@ -1547,7 +1547,7 @@ namespace GameLauncher.App
             }
             else if (!FunctionStatus.DoesCDNSupportVerifyHash)
             {
-                MessageBox.Show(null, "The current saved CDN does not support Verify Game Files Scan" +
+                MessageBox.Show(null, "The current saved CDN does not support Verify GameFiles Scan" +
                     "\nPlease Choose Another CDN from the list", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
