@@ -70,6 +70,10 @@ namespace GameLauncher.App
                     int status = Convert.ToInt32(virusChecker["productState"]);
                 }
             }
+            catch (ManagementException Error)
+            {
+                LogToFileAddons.OpenLog("Debug", null, Error, null, true);
+            }
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("Debug", null, Error, null, true);

@@ -482,7 +482,7 @@ namespace GameLauncher
                         }
 
                         /* Windows 7 Fix */
-                        if (WindowsProductVersion.CachedWindowsNumber == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Win7UpdatePatches))
+                        if (WindowsProductVersion.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Win7UpdatePatches))
                         {
                             Log.Checking("SSL/TLS: Windows 7 Detected");
                             DiscordLauncherPresense.Status("Start Up", "Checking Windows 7 TLS/SSL Update");

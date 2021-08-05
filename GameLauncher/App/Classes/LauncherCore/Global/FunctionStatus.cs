@@ -1,4 +1,5 @@
-﻿using GameLauncher.App.Classes.LauncherCore.APICheckers;
+﻿using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
@@ -565,17 +566,25 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
                     Log.Checking("LAUNCHER: Windows Defender (If Applicable)");
                     /* Windows Defender (Windows 10) */
-                    if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && 
-                        (FileSettingsSave.WindowsDefenderStatus == "Not Excluded" || FileSettingsSave.WindowsDefenderStatus == "Unknown"))
+                    if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
                     {
-                        Log.Core("WINDOWS DEFENDER: Windows 10 Detected! Running Exclusions for Core Folders");
-                        WindowsDefender("Add-Launcher", "Complete Exclude", Locations.LauncherFolder, FileSettingsSave.GameInstallation, "Launcher");
+                        DiscordLauncherPresense.Status("Start Up", "Checking Windows Security (Defender) Exclusions");
+
+                        if (!string.IsNullOrWhiteSpace(FileSettingsSave.WindowsDefenderStatus))
+                        {
+                            if (FileSettingsSave.WindowsDefenderStatus == "Not Excluded" || FileSettingsSave.WindowsDefenderStatus == "Unknown")
+                            {
+                                Log.Core("WINDOWS DEFENDER: Windows 10 Detected! Running Exclusions for Core Folders");
+                                WindowsDefender("Add-Launcher", "Complete Exclude", Locations.LauncherFolder, FileSettingsSave.GameInstallation, "Launcher");
+                                Log.Completed("WINDOWS DEFENDER: Windows Defender - Completed Exclusions for Core Folders");
+                            }
+                            else
+                            {
+                                Log.Core("WINDOWS DEFENDER: Found 'WindowsDefender' key! Its value is " + FileSettingsSave.WindowsDefenderStatus);
+                                Log.Completed("LAUNCHER: Windows Defender (If Applicable) Done");
+                            }
+                        }
                     }
-                    else if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && !string.IsNullOrWhiteSpace(FileSettingsSave.WindowsDefenderStatus))
-                    {
-                        Log.Core("WINDOWS DEFENDER: Found 'WindowsDefender' key! Its value is " + FileSettingsSave.WindowsDefenderStatus);
-                    }
-                    Log.Completed("LAUNCHER: Windows Defender (If Applicable) Done");
                 }
 
                 /* Check If Launcher Failed to Connect to any APIs */
@@ -622,11 +631,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         public static void WindowsDefender(string Type, string Mode, string Path, string SecondPath, string Notes)
         {
-            DiscordLauncherPresense.Status("Start Up", "Checking Windows Security (Defender) Exclusions");
-
             try
             {
-                if (ManagementSearcher.SecurityCenter("AntivirusEnabled") && ManagementSearcher.SecurityCenter("AntispywareEnabled"))
+                if (SecurityCenter.Antivirus() && SecurityCenter.Antispyware() && SecurityCenter.RealTimeProtection())
                 {
                     /* Create Windows Defender Exclusion */
                     try
@@ -695,7 +702,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                         {
                             Log.Warning("WINDOWS DEFENDER: Unknown Function Call in 'WindowsDefender'. Please Check Code in Visual Studio");
                         }
-                        
+
                         FileSettingsSave.SaveSettings();
                     }
                     catch (Exception Error)

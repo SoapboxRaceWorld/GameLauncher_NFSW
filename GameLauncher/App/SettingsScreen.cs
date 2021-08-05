@@ -275,8 +275,8 @@ namespace GameLauncher.App
             }
 
             if ((FileSettingsSave.WindowsDefenderStatus != "Excluded") || DetectLinux.LinuxDetected() || 
-                FunctionStatus.IsWindowsSecurityResetDisabled || (WindowsProductVersion.CachedWindowsNumber < 10.0) ||
-                (!ManagementSearcher.SecurityCenter("AntivirusEnabled") && !ManagementSearcher.SecurityCenter("AntispywareEnabled")))
+                FunctionStatus.IsWindowsSecurityResetDisabled || (WindowsProductVersion.GetWindowsNumber() < 10.0) ||
+                (!SecurityCenter.Antivirus() && !SecurityCenter.Antispyware() && !SecurityCenter.RealTimeProtection()))
             {
                 FunctionStatus.IsWindowsSecurityResetDisabled = true;
                 ResetWindowsDefenderButton.ForeColor = Theming.RedForeColorButton;
@@ -565,7 +565,7 @@ namespace GameLauncher.App
                     "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            if (WindowsProductVersion.CachedWindowsNumber >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !DetectLinux.LinuxDetected())
+            if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !DetectLinux.LinuxDetected())
             {
                 WindowsDefenderGameFilesDirctoryChange();
             }
@@ -1471,18 +1471,18 @@ namespace GameLauncher.App
                     MessageBox.Show(null, "Windows Security (Defender) is Not Supported on Non-Windows Systems", "GameLauncher", 
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                else if (WindowsProductVersion.CachedWindowsNumber < 10.0)
+                else if (WindowsProductVersion.GetWindowsNumber() < 10.0)
                 {
                     MessageBox.Show(null, "Windows Security (Defender) does not Exist Before Windows 10." +
                         "\nUnsupported Feature on Current Platform, Sorry.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                else if (!ManagementSearcher.SecurityCenter("AntivirusEnabled") && !ManagementSearcher.SecurityCenter("AntispywareEnabled"))
+                else if (!SecurityCenter.Antivirus() && !SecurityCenter.Antispyware() && !SecurityCenter.RealTimeProtection())
                 {
                     MessageBox.Show(null, "Windows Security (Defender) is Disabled or Turned Off." +
                         "\nThis is not recommended, instead opt to turn it ON, to allow Launcher to create Exclusions", "GameLauncher", 
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                else if ((ManagementSearcher.SecurityCenter("AntivirusEnabled") && ManagementSearcher.SecurityCenter("AntispywareEnabled")) && 
+                else if ((!SecurityCenter.Antivirus() && !SecurityCenter.Antispyware() && !SecurityCenter.RealTimeProtection()) && 
                     FunctionStatus.IsWindowsSecurityResetDisabled)
                 {
                     MessageBox.Show(null, "You have already Reset Windows Security (Defender) Exclusions", "GameLauncher", 
@@ -1509,7 +1509,7 @@ namespace GameLauncher.App
                 {
                     if (!DetectLinux.LinuxDetected())
                     {
-                        if (WindowsProductVersion.CachedWindowsNumber >= 10.0)
+                        if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
                         {
                             FunctionStatus.WindowsDefender("Reset-Launcher", "Complete Reset", Locations.LauncherFolder, FileSettingsSave.GameInstallation, 
                                 "Removed Game and Launcher");

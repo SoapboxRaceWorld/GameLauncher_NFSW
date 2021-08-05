@@ -1,34 +1,46 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Logger;
 using System;
+using System.IO;
 using System.Management;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Windows
 {
+    class SecurityCenter
+    {
+        public static bool Antivirus() => ManagementSearcher.GetSecurityCenterStatus("AntivirusEnabled");
+        public static bool Antispyware() => ManagementSearcher.GetSecurityCenterStatus("AntispywareEnabled");
+        public static bool RealTimeProtection() => ManagementSearcher.GetSecurityCenterStatus("RealTimeProtectionEnabled");
+    }
+
     class ManagementSearcher
     {
         /* Checks AntiVirus is running (Windows 10 Only) */
-        public static bool SecurityCenter(string Query)
+        public static bool GetSecurityCenterStatus(string Query)
         {
-            bool ServiceStatus = false;
-
             try
             {
                 ManagementObjectSearcher Search =
-                    new ManagementObjectSearcher("root\\Microsoft\\Windows\\Defender",
+                    new ManagementObjectSearcher(Path.Combine("root", "Microsoft", "Windows", "Defender"),
                     "SELECT * FROM MSFT_MpComputerStatus");
 
                 foreach (ManagementObject queryObj in Search.Get())
                 {
-                    ServiceStatus = (bool)queryObj[Query];
+                    Log.Debug(Search.Get().ToString());
+                    return (bool)queryObj[Query];
                 }
+            }
+            catch (ManagementException Error)
+            {
+                LogToFileAddons.OpenLog("Security Center", null, Error, null, true);
+                return false;
             }
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("Security Center", null, Error, null, true);
-                ServiceStatus = false;
+                return false;
             }
 
-            return ServiceStatus;
+            return false;
         }
 
         /* Searches for Installed Windows Updates */
@@ -47,6 +59,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         return true;
                     }
                 }
+            }
+            catch (ManagementException Error)
+            {
+                LogToFileAddons.OpenLog("Installed KB", null, Error, null, true);
+                return false;
             }
             catch (Exception Error)
             {
