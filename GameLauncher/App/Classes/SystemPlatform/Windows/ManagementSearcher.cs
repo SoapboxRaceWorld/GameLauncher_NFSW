@@ -19,14 +19,19 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             try
             {
-                ManagementObjectSearcher Search =
-                    new ManagementObjectSearcher(Path.Combine("root", "Microsoft", "Windows", "Defender"),
+                ManagementObjectSearcher ObjectSearch = new ManagementObjectSearcher(Path.Combine("root", "Microsoft", "Windows", "Defender"),
                     "SELECT * FROM MSFT_MpComputerStatus");
+                ManagementObjectCollection ObjectCollection = ObjectSearch.Get();
 
-                foreach (ManagementObject queryObj in Search.Get())
+                foreach (var Search in ObjectCollection)
                 {
-                    Log.Debug(Search.Get().ToString());
-                    return (bool)queryObj[Query];
+                    if (ObjectCollection != null)
+                    {
+                        if (bool.TryParse(Search.Properties[Query].Value.ToString(), out bool TrueOrFalse))
+                        {
+                            return (bool)Search.Properties[Query].Value;
+                        }
+                    }
                 }
             }
             catch (ManagementException Error)
@@ -48,13 +53,12 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             try
             {
-                var search = new ManagementObjectSearcher("SELECT HotFixID FROM Win32_QuickFixEngineering");
-                var collection = search.Get();
+                ManagementObjectSearcher ObjectSearch = new ManagementObjectSearcher("SELECT HotFixID FROM Win32_QuickFixEngineering");
+                ManagementObjectCollection ObjectCollection = ObjectSearch.Get();
 
-                foreach (ManagementObject quickFix in collection)
+                foreach (var Search in ObjectCollection)
                 {
-                    Console.WriteLine("Updates installed: " + quickFix["HotFixID"].ToString());
-                    if (quickFix["HotFixID"].ToString() == identification)
+                    if (Search.Properties["HotFixID"].Value.ToString() == identification)
                     {
                         return true;
                     }
