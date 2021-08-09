@@ -2467,7 +2467,8 @@ namespace GameLauncher
                   (
                     SHA.Files(GameExePath) == "7C0D6EE08EB1EDA67D5E5087DDA3762182CDE4AC" ||
                     SHA.Files(GameExePath) == "DB9287FB7B0CDA237A5C3885DD47A9FFDAEE1C19" ||
-                    SHA.Files(GameExePath) == "E69890D31919DE1649D319956560269DB88B8F22"
+                    SHA.Files(GameExePath) == "E69890D31919DE1649D319956560269DB88B8F22" ||
+                    SHA.Files(GameExePath) == "3CBE3FAAFF00FAD84F78A2AFEA4FFFC78294EEA2"
                   )
                 {
                     ServerProxy.Instance.SetServerUrl(InformationCache.SelectedServerData.IPAddress);
