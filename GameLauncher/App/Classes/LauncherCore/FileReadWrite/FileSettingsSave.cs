@@ -224,7 +224,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
             if (!string.IsNullOrWhiteSpace(WebCallMethod))
             {
-                Log.Info("SETTINGS FILE: Choosen WebCall Method ->" + WebCallMethod);
+                Log.Info("SETTINGS FILE: Choosen WebCall Method -> " + WebCallMethod);
             }
 
             /* Key Entries to Remove (No Longer Needed) */

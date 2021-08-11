@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Management;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.SystemPlatform.Linux;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Components
@@ -127,7 +129,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                 return License_B;
             }
 
-            public static string Level_Two_Value()
+            private static string Level_Two_Value()
             {
                 if (string.IsNullOrWhiteSpace(License_A))
                 {
@@ -137,7 +139,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                 return License_A;
             }
 
-            public static string Level_Three_Value()
+            private static string Level_Three_Value()
             {
                 if (string.IsNullOrWhiteSpace(License_C))
                 {
@@ -151,12 +153,19 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
                 return License_C;
             }
 
-            public static string GetHash(string s)
+            private static string GetHash(string s)
             {
-                SHA1 sec = new SHA1CryptoServiceProvider();
-                ASCIIEncoding enc = new ASCIIEncoding();
-                byte[] bt = enc.GetBytes(s);
-                return GetHexString(sec.ComputeHash(bt));
+                if (string.IsNullOrWhiteSpace(s))
+                {
+                    return string.Empty;
+                }
+                else
+                {
+                    SHA1 sec = new SHA1CryptoServiceProvider();
+                    ASCIIEncoding enc = new ASCIIEncoding();
+                    byte[] bt = enc.GetBytes(s);
+                    return GetHexString(sec.ComputeHash(bt));
+                }
             }
 
             private static string GetHexString(byte[] bt)
@@ -195,35 +204,43 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
 
             private static string Identifier(string wmiClass, string wmiProperty)
             {
-                string result = string.Empty;
-
                 try
                 {
                     ManagementClass mc = new ManagementClass(wmiClass);
                     ManagementObjectCollection moc = mc.GetInstances();
                     foreach (ManagementObject mo in moc)
                     {
-                        if (string.IsNullOrWhiteSpace(result))
+                        try
                         {
-                            try
+                            string PropertyValue = mo[wmiProperty]?.ToString();
+                            if (!string.IsNullOrEmpty(PropertyValue))
                             {
-                                var tmp = mo[wmiProperty];
-                                if (tmp != null)
-                                {
-                                    result = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(tmp.ToString()));
-                                }
-                                break;
+                                return Strings.Encode(PropertyValue);
                             }
-                            catch { }
+                        }
+                        catch (Exception Error)
+                        {
+                            LogToFileAddons.OpenLog("ID", null, Error, null, true);
                         }
                     }
+
+                    return string.Empty;
+                }
+                catch (ManagementException Error)
+                {
+                    LogToFileAddons.OpenLog("ID", null, Error, null, true);
+                    return string.Empty;
+                }
+                catch (COMException Error)
+                {
+                    LogToFileAddons.OpenLog("ID", null, Error, null, true);
+                    return string.Empty;
                 }
                 catch (Exception Error)
                 {
                     LogToFileAddons.OpenLog("ID", null, Error, null, true);
+                    return string.Empty;
                 }
-
-                return result;
             }
 
             private static string CpuId()
@@ -249,28 +266,33 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
 
             private static string BiosId()
             {
-                string retVal = Identifier("Win32_BIOS", "SerialNumber");
-                if (string.IsNullOrWhiteSpace(retVal))
-                {
-                    retVal = Identifier("Win32_BIOS", "Name");
-                }
-
-                return retVal + " " + Identifier("Win32_BIOS", "Manufacturer");
+                return Identifier("Win32_BIOS", "IdentificationCode") + " " +
+                   Identifier("Win32_BIOS", "Manufacturer") + " " +
+                   Identifier("Win32_BIOS", "Name") + " " +
+                   Identifier("Win32_BIOS", "ReleaseDate") + " " +
+                   Identifier("Win32_BIOS", "SMBIOSBIOSVersion") + " " +
+                   Identifier("Win32_BIOS", "SerialNumber") + " " + 
+                   Identifier("Win32_BIOS", "Version");
             }
 
             private static string DiskId()
             {
-                return Identifier("Win32_DiskDrive", "PNPDeviceId");
+                return Identifier("Win32_DiskDrive", "Manufacturer") + " " + Identifier("Win32_DiskDrive", "Model") + " " +
+                    Identifier("Win32_DiskDrive", "Name") + " " + Identifier("Win32_DiskDrive", "PNPDeviceId") + " " +
+                    Identifier("Win32_DiskDrive", "SerialNumber") + " " + Identifier("Win32_DiskDrive", "Signature") + " " +
+                    Identifier("Win32_DiskDrive", "TotalHeads");
             }
 
             private static string BaseId()
             {
-                return Identifier("Win32_BaseBoard", "Product") + " " + Identifier("Win32_BaseBoard", "SerialNumber");
+                return Identifier("Win32_BaseBoard", "Manufacturer") + " " + Identifier("Win32_BaseBoard", "Model") + " " +
+                    Identifier("Win32_BaseBoard", "Name") + " " + Identifier("Win32_BaseBoard", "Product") + " " + 
+                    Identifier("Win32_BaseBoard", "SerialNumber");
             }
 
             private static string VideoId()
             {
-                return Identifier("Win32_VideoController", "PNPDeviceId");
+                return Identifier("Win32_VideoController", "PNPDeviceId") + " " + Identifier("Win32_VideoController", "Name");
             }
 
             /* Moved 1 Private function Code to Gist */

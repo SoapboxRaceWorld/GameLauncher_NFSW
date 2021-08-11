@@ -2596,29 +2596,36 @@ namespace GameLauncher
             {
                 PlayProgressText.Text = "Loading list of files to download...".ToUpper();
 
-                DriveInfo[] allDrives = DriveInfo.GetDrives();
-                foreach (DriveInfo d in allDrives)
+                try
                 {
-                    if (d.Name == Path.GetPathRoot(FileSettingsSave.GameInstallation))
+                    DriveInfo[] allDrives = DriveInfo.GetDrives();
+                    foreach (DriveInfo d in allDrives)
                     {
-                        if (d.TotalFreeSpace < 8589934592)
+                        if (d.Name == Path.GetPathRoot(FileSettingsSave.GameInstallation))
                         {
-                            ExtractingProgress.Value = 100;
-                            ExtractingProgress.Width = 519;
-                            ExtractingProgress.Image = Theming.ProgressBarWarning;
-                            ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
+                            if (d.TotalFreeSpace < 8589934592)
+                            {
+                                ExtractingProgress.Value = 100;
+                                ExtractingProgress.Width = 519;
+                                ExtractingProgress.Image = Theming.ProgressBarWarning;
+                                ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
 
-                            PlayProgressText.Text = "Make sure you have at least 8GB of free space on hard drive.".ToUpper();
-                            FunctionStatus.IsVerifyHashDisabled = true;
+                                PlayProgressText.Text = "Make sure you have at least 8GB of free space on hard drive.".ToUpper();
+                                FunctionStatus.IsVerifyHashDisabled = true;
 
-                            TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
-                            TaskbarProgress.SetValue(Handle, 100, 100);
-                        }
-                        else
-                        {
-                            DownloadCoreFiles();
+                                TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
+                                TaskbarProgress.SetValue(Handle, 100, 100);
+                            }
+                            else
+                            {
+                                DownloadCoreFiles();
+                            }
                         }
                     }
+                }
+                catch
+                {
+                    DownloadCoreFiles();
                 }
             }
             else
@@ -3352,7 +3359,7 @@ namespace GameLauncher
             {
                 try
                 {
-                    string CursorFile = Path.GetTempFileName();
+                    string CursorFile = (!DetectLinux.LinuxDetected()) ? Strings.Encode(Path.GetTempFileName()) : Path.Combine(Locations.LauncherFolder, "Cursor.ani");
                     File.WriteAllBytes(CursorFile, ExtractResource.AsByte("GameLauncher.Resources.Cursors.Cursor.ani"));
                     Cursor mycursor = new Cursor(Cursor.Current.Handle);
                     IntPtr colorcursorhandle = User32.LoadCursorFromFile(CursorFile);

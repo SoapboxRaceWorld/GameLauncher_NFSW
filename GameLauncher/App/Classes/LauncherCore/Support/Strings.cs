@@ -8,7 +8,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
         {
             if (string.IsNullOrWhiteSpace(Value))
             {
-                return null;
+                return string.Empty;
             }
             else
             {

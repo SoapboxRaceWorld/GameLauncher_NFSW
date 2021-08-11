@@ -21,6 +21,7 @@ using System.IO;
 using System.Management.Automation;
 using System.Net;
 using System.Net.Security;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Windows.Forms;
@@ -620,6 +621,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                         Log.Info("MAINSCREEN: Program Started");
                         Application.Run(new MainScreen());
                     }
+                    catch (COMException Error)
+                    {
+                        LogToFileAddons.OpenLog("Main Screen [Application Run]", "Launcher Encounterd an Error.", Error, "Error", false);
+                        ErrorCloseLauncher("Main Screen [Application Run]", false);
+                    }
                     catch (Exception Error)
                     {
                         LogToFileAddons.OpenLog("Main Screen [Application Run]", "Launcher Encounterd an Error.", Error, "Error", false);
@@ -717,6 +723,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                     FileSettingsSave.WindowsDefenderStatus = "Not Supported";
                     FileSettingsSave.SaveSettings();
                 }
+            }
+            catch (COMException Error)
+            {
+                LogToFileAddons.OpenLog("WINDOWS DEFENDER", null, Error, null, true);
+                FileSettingsSave.WindowsDefenderStatus = "Not Supported";
+                FileSettingsSave.SaveSettings();
             }
             catch (Exception Error)
             {

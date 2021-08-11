@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using WindowsFirewallHelper;
 using WindowsFirewallHelper.Exceptions;
 using WindowsFirewallHelper.FirewallRules;
@@ -131,6 +132,18 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 AddDefaultApplicationRule(Type, AppName, AppPath, direction, protocol, firewallLogNote);
                 ErrorFree = false;
             }
+            catch (COMException Error)
+            {
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
+                AddDefaultApplicationRule(Type, AppName, AppPath, direction, protocol, firewallLogNote);
+                ErrorFree = false;
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
+                AddDefaultApplicationRule(Type, AppName, AppPath, direction, protocol, firewallLogNote);
+                ErrorFree = false;
+            }
 
             if (ErrorFree)
             {
@@ -165,6 +178,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 Log.Warning("WINDOWS FIREWALL: Finished Adding " + AppName + " to Firewall! {" + firewallLogNote + "}");
             }
             catch (FirewallWASNotSupportedException Error)
+            {
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
+                ErrorFree = false;
+            }
+            catch (COMException Error)
             {
                 LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
                 ErrorFree = false;
@@ -247,28 +265,34 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     {
                         return FirewallManager.Instance.Rules.Where(r => string.Equals(r.ApplicationName, AppPath, StringComparison.OrdinalIgnoreCase)).ToArray();
                     }
+                    else
+                    {
+                        return Enumerable.Empty<IFirewallRule>();
+                    }
                 }
                 else
                 {
                     return Enumerable.Empty<IFirewallRule>();
                 }
             }
+            catch (COMException Error)
+            {
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
+                return Enumerable.Empty<IFirewallRule>();
+            }
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
+                return Enumerable.Empty<IFirewallRule>();
             }
-
-            return Enumerable.Empty<IFirewallRule>();
         }
 
         /* Checks if Windows Firewall is Enabled or not from a System Level */
         public static bool FirewallStatus()
         {
-            bool FirewallEnabled;
-
             if (DetectLinux.LinuxDetected())
             {
-                FirewallEnabled = false;
+                return false;
             }
             else
             {
@@ -277,15 +301,19 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     Type NetFwMgrType = Type.GetTypeFromProgID("HNetCfg.FwMgr", false);
                     INetFwMgr mgr = (INetFwMgr)Activator.CreateInstance(NetFwMgrType);
 
-                    FirewallEnabled = mgr.LocalPolicy.CurrentProfile.FirewallEnabled;
+                    return mgr.LocalPolicy.CurrentProfile.FirewallEnabled;
                 }
-                catch
+                catch (COMException Error)
                 {
-                    FirewallEnabled = false;
+                    LogToFileAddons.OpenLog("WINDOWS FIREWALL Check", null, Error, null, true);
+                    return false;
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("WINDOWS FIREWALL Check", null, Error, null, true);
+                    return false;
                 }
             }
-
-            return FirewallEnabled;
         }
     }
 
@@ -317,6 +345,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     {
                         FileSettingsSave.FirewallGameStatus = "Service Stopped";
                     }
+                }
+                catch (COMException Error)
+                {
+                    LogToFileAddons.OpenLog("FIREWALL", null, Error, null, true);
+                    FileSettingsSave.FirewallGameStatus = "Error";
                 }
                 catch (Exception Error)
                 {
@@ -363,6 +396,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     {
                         FileSettingsSave.FirewallLauncherStatus = "Service Stopped";
                     }
+                }
+                catch (COMException Error)
+                {
+                    LogToFileAddons.OpenLog("FIREWALL", null, Error, null, true);
+                    FileSettingsSave.FirewallLauncherStatus = "Error";
                 }
                 catch (Exception Error)
                 {

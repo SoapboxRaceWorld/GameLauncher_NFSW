@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Management;
+using System.Runtime.InteropServices;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Windows
 {
@@ -33,8 +34,15 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         }
                     }
                 }
+
+                return false;
             }
             catch (ManagementException Error)
+            {
+                LogToFileAddons.OpenLog("Security Center", null, Error, null, true);
+                return false;
+            }
+            catch (COMException Error)
             {
                 LogToFileAddons.OpenLog("Security Center", null, Error, null, true);
                 return false;
@@ -44,8 +52,6 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 LogToFileAddons.OpenLog("Security Center", null, Error, null, true);
                 return false;
             }
-
-            return false;
         }
 
         /* Searches for Installed Windows Updates */
@@ -63,10 +69,17 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         return true;
                     }
                 }
+
+                return false;
             }
             catch (ManagementException Error)
             {
                 LogToFileAddons.OpenLog("Installed KB", null, Error, null, true);
+                return false;
+            }
+            catch (COMException Error)
+            {
+                LogToFileAddons.OpenLog("Security Center", null, Error, null, true);
                 return false;
             }
             catch (Exception Error)
@@ -74,8 +87,6 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 LogToFileAddons.OpenLog("Installed KB", null, Error, null, true);
                 return false;
             }
-
-            return false;
         }
     }
 }

@@ -172,17 +172,26 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
                     if (File.Exists("VC_redist.x86.exe"))
                     {
-                        var proc = Process.Start(new ProcessStartInfo
+                        try
                         {
-                            Verb = "runas",
-                            Arguments = "/quiet",
-                            FileName = "VC_redist.x86.exe"
-                        });
+                            var proc = Process.Start(new ProcessStartInfo
+                            {
+                                Verb = "runas",
+                                Arguments = "/quiet",
+                                FileName = "VC_redist.x86.exe"
+                            });
 
-                        if (proc == null)
+                            if (proc == null)
+                            {
+                                ErrorFree = false;
+                                MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                            }
+                        }
+                        catch
                         {
                             ErrorFree = false;
-                            MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                            MessageBox.Show("Failed to start package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
                         }
                     }
@@ -255,17 +264,26 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
                         if (File.Exists("VC_redist.x64.exe"))
                         {
-                            var proc = Process.Start(new ProcessStartInfo
+                            try
                             {
-                                Verb = "runas",
-                                Arguments = "/quiet",
-                                FileName = "VC_redist.x64.exe"
-                            });
+                                var proc = Process.Start(new ProcessStartInfo
+                                {
+                                    Verb = "runas",
+                                    Arguments = "/quiet",
+                                    FileName = "VC_redist.x64.exe"
+                                });
 
-                            if (proc == null)
+                                if (proc == null)
+                                {
+                                    ErrorFree = false;
+                                    MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                        MessageBoxIcon.Error);
+                                }
+                            }
+                            catch
                             {
                                 ErrorFree = false;
-                                MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                MessageBox.Show("Failed to start package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
                             }
                         }
