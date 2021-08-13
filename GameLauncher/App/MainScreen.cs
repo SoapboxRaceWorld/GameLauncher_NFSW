@@ -1815,6 +1815,31 @@ namespace GameLauncher
             }
         }
 
+        private void Client_DownloadProgressChanged_RELOADED(object sender, DownloadProgressChangedEventArgs e)
+        {
+            if (Application.OpenForms["MainScreen"] != null)
+            {
+                if (!Application.OpenForms["MainScreen"].Disposing)
+                {
+                    this.BeginInvoke((MethodInvoker)delegate
+                    {
+                        double bytesIn = double.Parse(e.BytesReceived.ToString());
+                        double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+                        double percentage = bytesIn / totalBytes * 100;
+                        PlayProgressTextTimer.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
+                        PlayProgressText.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + TimeConversions.FormatFileSize(e.BytesReceived) +
+                        " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive)).ToUpper();
+
+                        ExtractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
+                        ExtractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
+                    });
+                    PlayProgressTextTimer.Text = string.Empty;
+
+                    Application.DoEvents();
+                }
+            }
+        }
+
         public void DownloadModNetFilesRightNow(string path)
         {
             while (isDownloadingModNetFiles == false)
@@ -1855,6 +1880,8 @@ namespace GameLauncher
                             /* Redownload other file */
                             DownloadModNetFilesRightNow(path);
                         }
+
+                        Application.DoEvents();
                     };
                     Client.DownloadFileAsync(url, path + "/" + FileName);
                 }
@@ -1869,6 +1896,8 @@ namespace GameLauncher
                     {
                         Client.Dispose();
                     }
+
+                    Application.DoEvents();
                 }
 
                 isDownloadingModNetFiles = true;
@@ -1877,6 +1906,8 @@ namespace GameLauncher
 
         private void PlayButton_Click(object sender, EventArgs e)
         {
+            Application.DoEvents();
+
             if (!DetectLinux.LinuxDetected())
             {
                 DriveInfo driveInfo = new DriveInfo(FileSettingsSave.GameInstallation);
@@ -1981,6 +2012,8 @@ namespace GameLauncher
                         {
                             ModNetJsonURI.Dispose();
                         }
+
+                        Application.DoEvents();
                     }
 
                     if (string.IsNullOrWhiteSpace(ModulesJSON))
@@ -2056,6 +2089,7 @@ namespace GameLauncher
                             CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                             string LogMessage = "There was an error with ModNet Files Check:";
                             LogToFileAddons.OpenLog("MODNET CORE", LogMessage, Error, "Error", false);
+                            Application.DoEvents();
 
                             return;
                         }
@@ -2101,6 +2135,8 @@ namespace GameLauncher
                             {
                                 ModInfoJson.Dispose();
                             }
+
+                            Application.DoEvents();
                         }
 
                         if (string.IsNullOrWhiteSpace(ServerModInfo))
@@ -2240,6 +2276,8 @@ namespace GameLauncher
                                 {
                                     ServerModsList.Dispose();
                                 }
+
+                                Application.DoEvents();
                             }
 
                             if (string.IsNullOrWhiteSpace(ServerModListJSON))
@@ -2424,34 +2462,13 @@ namespace GameLauncher
                     {
                         json3 = null;
                     }
+
+                    Application.DoEvents();
                 }
             }
             else
             {
                 LaunchGame();
-            }
-        }
-
-        private void Client_DownloadProgressChanged_RELOADED(object sender, DownloadProgressChangedEventArgs e)
-        {
-            if (Application.OpenForms["MainScreen"] != null)
-            {
-                if (!Application.OpenForms["MainScreen"].Disposing)
-                {
-                    this.BeginInvoke((MethodInvoker)delegate
-                    {
-                        double bytesIn = double.Parse(e.BytesReceived.ToString());
-                        double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-                        double percentage = bytesIn / totalBytes * 100;
-                        PlayProgressTextTimer.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
-                        PlayProgressText.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + TimeConversions.FormatFileSize(e.BytesReceived) +
-                        " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive)).ToUpper();
-
-                        ExtractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
-                        ExtractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
-                    });
-                    PlayProgressTextTimer.Text = string.Empty;
-                }
             }
         }
 
@@ -2583,6 +2600,8 @@ namespace GameLauncher
 
         private void LaunchNfsw()
         {
+            Application.DoEvents();
+
             PlayButton.BackgroundImage = Theming.PlayButton;
             PlayButton.ForeColor = Theming.ThirdTextForeColor;
 
@@ -2649,6 +2668,8 @@ namespace GameLauncher
 
         public void DownloadCoreFiles()
         {
+            Application.DoEvents();
+
             PlayProgressText.Text = "Checking Core Files...".ToUpper();
             PlayProgress.Width = 0;
             ExtractingProgress.Width = 0;
@@ -2681,6 +2702,8 @@ namespace GameLauncher
 
         public void DownloadTracksFiles()
         {
+            Application.DoEvents();
+
             PlayProgressText.Text = "Checking Tracks Files...".ToUpper();
             PlayProgress.Width = 0;
             ExtractingProgress.Width = 0;
@@ -2703,6 +2726,8 @@ namespace GameLauncher
 
         public void DownloadSpeechFiles()
         {
+            Application.DoEvents();
+
             PlayProgressText.Text = "Looking for correct Speech Files...".ToUpper();
             PlayProgress.Width = 0;
             ExtractingProgress.Width = 0;
@@ -2803,6 +2828,8 @@ namespace GameLauncher
                 {
                     if (!Application.OpenForms["MainScreen"].Disposing)
                     {
+                        Application.DoEvents();
+
                         this.BeginInvoke((MethodInvoker)delegate
                         {
                             using (ZipArchive archive = ZipFile.OpenRead(filename_pack))
@@ -2915,6 +2942,8 @@ namespace GameLauncher
 
         private void OnDownloadProgress(long downloadLength, long downloadCurrent, long compressedLength, string filename, int skiptime = 0)
         {
+            Application.DoEvents();
+
             if (downloadCurrent < compressedLength)
             {
                 PlayProgressText.Text = String.Format("{0} of {1} ({3}%) — {2}", TimeConversions.FormatFileSize(downloadCurrent), TimeConversions.FormatFileSize(compressedLength), 
@@ -2943,6 +2972,7 @@ namespace GameLauncher
 
         private void OnDownloadFinished()
         {
+            Application.DoEvents();
             _downloader.Stop();
 
             try
@@ -2997,6 +3027,7 @@ namespace GameLauncher
 
         private void OnDownloadFailed(Exception Error)
         {
+            Application.DoEvents();
             _downloader.Stop();
 
             DiscordLauncherPresense.Status("Download Game Files Error", null);
@@ -3028,6 +3059,8 @@ namespace GameLauncher
 
         private void OnShowExtract(string filename, long currentCount, long allFilesCount)
         {
+            Application.DoEvents();
+
             if (PlayProgress.Value == 100)
             {
                 PlayProgressText.Text = String.Format("{0} of {1} : ({3}%) — {2}", TimeConversions.FormatFileSize(currentCount), TimeConversions.FormatFileSize(allFilesCount), 

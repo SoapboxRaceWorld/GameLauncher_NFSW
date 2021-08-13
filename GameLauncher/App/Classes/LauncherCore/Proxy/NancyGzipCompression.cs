@@ -30,19 +30,63 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             return new TextResponse(HttpStatusCode.BadRequest, Error.Message);
         }
 
-        private static void CheckForCompression(NancyContext Context)
+        private static void WebCallRejected(string Reason, NancyContext Context)
         {
-            if (!RequestIsGzipCompatible(Context) || !ResponseIsCompatibleMimeType(Context)|| 
-                ResponseIsCompressed(Context) || ContentLengthIsTooSmall(Context))
+            string ErrorReason = "Web Call Rejected. ";
+            switch (Reason)
             {
-                string ErrorReason = "Web Call Rejected. Failed to Pass Compression Check";
-                CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY", CommunicationLogEntryType.Rejected,
-                new CommunicationLogLauncherError(ErrorReason, Context.Request.Path, Context.Request.Method));
-
-                return;
+                case "RequestIsGzipCompatible":
+                    ErrorReason += "Request Is Not Gzip Compatible";
+                    break;
+                case "ResponseIsCompatibleMimeType":
+                    ErrorReason += "Response Is Not a Compatible Mime-Type";
+                    break;
+                case "ResponseIsCompressed":
+                    ErrorReason += "Response Is Already Compressed";
+                    break;
+                case "ContentLengthIsTooSmall":
+                    ErrorReason += "Content-Length Is Too Small";
+                    break;
+                default:
+                    ErrorReason += "Unknown Reason";
+                    break;
             }
 
-            CompressResponse(Context);
+            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY", CommunicationLogEntryType.Rejected,
+            new CommunicationLogLauncherError(ErrorReason, Context.Request.Path, Context.Request.Method));
+        }
+
+        private static void CheckForCompression(NancyContext Context)
+        {
+            if (!RequestIsGzipCompatible(Context))
+            {
+                WebCallRejected("RequestIsGzipCompatible", Context);
+            }
+            else
+            {
+                if (!ResponseIsCompatibleMimeType(Context))
+                {
+                    WebCallRejected("ResponseIsCompatibleMimeType", Context);
+                }
+                else
+                {
+                    if (ResponseIsCompressed(Context))
+                    {
+                        WebCallRejected("RequestIsGzipCompatible", Context);
+                    }
+                    else
+                    {
+                        if (ContentLengthIsTooSmall(Context))
+                        {
+                            WebCallRejected("RequestIsGzipCompatible", Context);
+                        }
+                        else
+                        {
+                            CompressResponse(Context);
+                        }
+                    }
+                }
+            }
         }
 
         private static void CompressResponse(NancyContext Context)
@@ -93,18 +137,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             }
             else
             {
-                if (!Context.Response.Headers.TryGetValue("Content-Length", out string contentLength))
+                if (!Context.Response.Headers.TryGetValue("Content-Length", out string ContentLength))
                 {
                     using (MemoryStream mm = new MemoryStream())
                     {
                         Context.Response.Contents.Invoke(mm);
                         mm.Flush();
-                        contentLength = mm.Length.ToString();
+                        ContentLength = mm.Length.ToString();
                     }
                 }
-                if (EnableInsiderDeveloper.Allowed()) { Log.Debug($"GZip Content-Length of response is {contentLength} for {Context.Request.Path}"); }
+                if (EnableInsiderDeveloper.Allowed()) { Log.Debug($"GZip Content-Length of response is {ContentLength} for {Context.Request.Path}"); }
 
-                long length = long.Parse(contentLength);
+                long length = long.Parse(ContentLength);
                 if (length > 0)
                 {
                     return false;
@@ -120,9 +164,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
         private static bool ResponseIsCompressed(NancyContext Context)
         {
             bool Status = false;
-            if (Context.Response.Headers.Keys == null)
+            if (Context.Response.Headers.Keys != null)
             {
-                
                 Status = Context.Response.Headers.Keys.Any(x => x.Contains("Content-Encoding"));
             }
 
@@ -148,7 +191,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             bool Status = false;
             if (Context.Response.ContentType != null)
             {
-                Status =  MimeTypes.Any(x => x == Context.Response.ContentType || Context.Response.ContentType.StartsWith($"{x};"));
+                if (MimeTypes.Any(x => x == Context.Response.ContentType))
+                {
+                    Status = true;
+                }
+                else if (MimeTypes.Any(x => Context.Response.ContentType.StartsWith($"{x};")))
+                {
+                    Status = true;
+                }
             }
 
             if (EnableInsiderDeveloper.Allowed() && !Status) { Log.Debug("Content Type? For " + Context.Request.Path + " " + Status); }
@@ -160,7 +210,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             bool Status = false;
             if (Context.Request.Headers.AcceptEncoding != null)
             {
-                Status = Context.Request.Headers.AcceptEncoding.Any(x => x.Contains("gzip") || x.Contains("deflate"));
+                if (Context.Request.Headers.AcceptEncoding.Any(x => x.Contains("gzip")))
+                {
+                    Status = true;
+                }
+                else if (Context.Request.Headers.AcceptEncoding.Any(x => x.Contains("deflate")))
+                {
+                    Status = true;
+                }
             }
 
             if (EnableInsiderDeveloper.Allowed() && !Status) { Log.Debug("Gzip Compatible? For " + Context.Request.Path + " " + Status); }
