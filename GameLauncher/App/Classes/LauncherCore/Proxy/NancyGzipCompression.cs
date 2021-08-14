@@ -32,7 +32,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
         private static void WebCallRejected(string Reason, NancyContext Context)
         {
-            string ErrorReason = "Web Call Rejected. ";
+            string ErrorReason = "(After Request) Web Call Rejected. ";
             switch (Reason)
             {
                 case "RequestIsGzipCompatible":

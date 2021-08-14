@@ -763,6 +763,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         public static readonly string LogCurrentFolder = Strings.Encode(Path.Combine(LogFolder, LogToFileAddons.DateAndTime()));
         public static readonly string LogLauncher = Strings.Encode(Path.Combine(LogCurrentFolder, "Launcher.log"));
         public static readonly string LogVerify = Strings.Encode(Path.Combine(LogCurrentFolder, "Verify.log"));
+        public static readonly string LogCommunication = Strings.Encode(Path.Combine(LogCurrentFolder, "Communication.log"));
 
         public static readonly string GameLinksFile = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, ".links"));
         public static readonly string GameFilesFailSafePath = Strings.Encode(Path.Combine(LauncherFolder, "Game Files"));

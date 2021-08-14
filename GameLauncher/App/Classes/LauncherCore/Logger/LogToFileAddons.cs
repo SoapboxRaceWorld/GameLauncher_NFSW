@@ -19,6 +19,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Logger
 
             return CacheDateAndTime;
         }
+
         public static string OpenLogMessage = "Would you Like to Open the Launcher Error Log and Send it to a Support Channel?" +
                     "\nThis would be Useful for Fixing Issues and Potential Solutions";
 

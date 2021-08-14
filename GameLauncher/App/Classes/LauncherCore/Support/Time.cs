@@ -21,6 +21,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
                 {
                     return DateTime.Now.ToString("MM dd yyyy - HH mm.ss");
                 }
+                else if (Mode == "Now - Local Time")
+                {
+                    return DateTime.Now.ToString();
+                }
+                else if (Mode == "Now - UTC Time (Offset)")
+                {
+                    return DateTimeOffset.Now.ToString();
+                }
                 else
                 {
                     return string.Empty;
