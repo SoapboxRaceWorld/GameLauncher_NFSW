@@ -120,7 +120,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
                 {
                     var result = MessageBox.Show(
-                        "You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nThis may restart your computer. \n \nClick OK to install it.",
+                        "You do not have the 32-bit 2015-2019 VC++ Redistributable Package installed." +
+                        "\n\nThis will install in the Background" +
+                        "\n\nThis may restart your computer." +
+                        "\n\nClick OK to install it.",
                         "Compatibility",
                         MessageBoxButtons.OKCancel,
                         MessageBoxIcon.Warning);
@@ -180,6 +183,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                                 Arguments = "/quiet",
                                 FileName = "VC_redist.x86.exe"
                             });
+                            proc.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
 
                             if (proc == null)
                             {
@@ -187,9 +191,31 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                                 MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
                             }
+                            else if (proc != null)
+                            {
+                                if (!proc.HasExited)
+                                {
+                                    if (proc.Responding) { proc.CloseMainWindow(); }
+                                    else { proc.Kill(); ErrorFree = false; }
+                                }
+                                
+                                if(proc.ExitCode != 0)
+                                {
+                                    ErrorFree = false;
+                                    Log.Error("REDISTRIBUTABLE INSTALLER [EXIT CODE]: " + proc.ExitCode.ToString() + 
+                                        " HEX: (0x" + proc.ExitCode.ToString("X") + ")");
+                                    MessageBox.Show("Failed to run package installer. Installer Exit Code " + proc.ExitCode.ToString() + 
+                                        " (0x" + proc.ExitCode.ToString("X") + ")" +
+                                        "\nThe game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                        MessageBoxIcon.Error);
+                                }
+
+                                proc.Close();
+                            }
                         }
-                        catch
+                        catch (Exception Error)
                         {
+                            LogToFileAddons.OpenLog("REDISTRIBUTABLE x86 Process", null, Error, null, true);
                             ErrorFree = false;
                             MessageBox.Show("Failed to start package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
@@ -212,7 +238,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x64))
                     {
                         var result = MessageBox.Show(
-                            "You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed.\n \nThis will install in the Background\n \nThis may restart your computer. \n \nClick OK to install it.",
+                            "You do not have the 64-bit 2015-2019 VC++ Redistributable Package installed." +
+                            "\n\nThis will install in the Background" +
+                            "\n\nThis may restart your computer. " +
+                            "\n\nClick OK to install it.",
                             "Compatibility",
                             MessageBoxButtons.OKCancel,
                             MessageBoxIcon.Warning);
@@ -273,15 +302,39 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                                     FileName = "VC_redist.x64.exe"
                                 });
 
+                                proc.WaitForExit((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
+
                                 if (proc == null)
                                 {
                                     ErrorFree = false;
                                     MessageBox.Show("Failed to run package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                         MessageBoxIcon.Error);
                                 }
+                                else if (proc != null)
+                                {
+                                    if (!proc.HasExited)
+                                    {
+                                        if (proc.Responding) { proc.CloseMainWindow(); }
+                                        else { proc.Kill(); ErrorFree = false; }
+                                    }
+
+                                    if (proc.ExitCode != 0)
+                                    {
+                                        ErrorFree = false;
+                                        Log.Error("REDISTRIBUTABLE INSTALLER [EXIT CODE]: " + proc.ExitCode.ToString() +
+                                            " HEX: (0x" + proc.ExitCode.ToString("X") + ")");
+                                        MessageBox.Show("Failed to run package installer. Installer Exit Code " + proc.ExitCode.ToString() +
+                                            " (0x" + proc.ExitCode.ToString("X") + ")" +
+                                            "\nThe game will not be started.", "Compatibility", MessageBoxButtons.OK,
+                                            MessageBoxIcon.Error);
+                                    }
+
+                                    proc.Close();
+                                }
                             }
-                            catch
+                            catch (Exception Error)
                             {
+                                LogToFileAddons.OpenLog("REDISTRIBUTABLE x64 Process", null, Error, null, true);
                                 ErrorFree = false;
                                 MessageBox.Show("Failed to start package installer. The game will not be started.", "Compatibility", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);

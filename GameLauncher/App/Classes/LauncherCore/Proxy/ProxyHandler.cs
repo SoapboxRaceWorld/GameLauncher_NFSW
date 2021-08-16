@@ -35,7 +35,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             Log.Error("PROXY HANDLER: " + context.Request.Path);
             LogToFileAddons.OpenLog("PROXY HANDLER", null, Error, null, true);
 
-            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "PROXY", CommunicationLogEntryType.Error,
+            CommunicationLog.RecordEntry(ServerProxy.Instance.GetServerName(), "LAUNCHER", CommunicationLogEntryType.Error,
                 new CommunicationLogLauncherError(Error.Message, context.Request.Path, context.Request.Method));
 
             context.Request.Dispose();

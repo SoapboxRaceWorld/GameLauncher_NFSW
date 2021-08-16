@@ -352,7 +352,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
                     eventTerminatedManually = false;
                 }
-                else if (uri == "/event/launched" && eventTerminatedManually == false)
+                else if (uri == "/event/launched" && !eventTerminatedManually)
                 {
                     /* Once the Race Starts */
                     _presence.Details = "In Event: " + EventsList.GetEventName(EventID);

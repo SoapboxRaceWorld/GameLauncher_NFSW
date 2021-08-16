@@ -1,5 +1,7 @@
-﻿using System;
+﻿using GameLauncher.App.Classes.LauncherCore.Logger;
+using System;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Linux
 {
@@ -30,15 +32,15 @@ namespace GameLauncher.App.Classes.SystemPlatform.Linux
             }
             else
             {
-                using (var stream = new StreamReader("/etc/os-release"))
+                using (StreamReader stream = new StreamReader("/etc/os-release"))
                 {
                     string line;
                     while ((line = stream.ReadLine()) != null)
                     {
-                        var splits = line.Split(new[] { '=' }, 2);
+                        string[] splits = line.Split(new[] { '=' }, 2);
                         if (splits[0] == "PRETTY_NAME")
                         {
-                            var val = splits[1];
+                            string val = splits[1];
 
                             if (val[0] == '"')
                             {
