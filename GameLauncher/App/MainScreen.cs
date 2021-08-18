@@ -32,7 +32,6 @@ using GameLauncher.App.Classes.LauncherCore.Downloader;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.Hash;
 using GameLauncher.App.Classes.LauncherCore.RPC;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.SystemPlatform;
 using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
@@ -42,6 +41,7 @@ using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Client.Auth;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher
 {
@@ -316,7 +316,7 @@ namespace GameLauncher
                 }
                 catch
                 {
-                    if (DetectLinux.LinuxDetected())
+                    if (UnixOS.Detected())
                     {
                         LauncherIconStatus.BackgroundImage = Theming.UpdateIconSuccess;
                         LauncherStatusText.ForeColor = Theming.Sucess;
@@ -1521,7 +1521,7 @@ namespace GameLauncher
 
             var psi = new ProcessStartInfo();
 
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 psi.UseShellExecute = false;
             }
@@ -1828,21 +1828,57 @@ namespace GameLauncher
             {
                 if (!Application.OpenForms["MainScreen"].Disposing)
                 {
-                    this.BeginInvoke((MethodInvoker)delegate
+                    try
                     {
-                        double bytesIn = double.Parse(e.BytesReceived.ToString());
-                        double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-                        double percentage = bytesIn / totalBytes * 100;
-                        PlayProgressTextTimer.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
-                        PlayProgressText.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + TimeConversions.FormatFileSize(e.BytesReceived) +
+                        if (this.PlayProgressTextTimer.InvokeRequired)
+                        {
+                            PlayProgressTextTimer.Invoke(new Action(delegate ()
+                            {
+                                PlayProgressTextTimer.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
+                            }));
+                        }
+                        else
+                        {
+                            PlayProgressTextTimer.Text = ("Downloading - [" + CurrentModFileCount + " / " + TotalModFileCount + "] :").ToUpper();
+                        }
+                    }
+                    catch { }
+
+                    try
+                    {
+                        if (this.PlayProgressText.InvokeRequired)
+                        {
+                            PlayProgressText.Invoke(new Action(delegate ()
+                            {
+                                PlayProgressText.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + TimeConversions.FormatFileSize(e.BytesReceived) +
                         " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive)).ToUpper();
+                            }));
+                        }
+                        else
+                        {
+                            PlayProgressText.Text = (" Server Mods: " + ModNetFileNameInUse + " - " + TimeConversions.FormatFileSize(e.BytesReceived) +
+                        " of " + TimeConversions.FormatFileSize(e.TotalBytesToReceive)).ToUpper();
+                        }
+                    }
+                    catch { }
 
-                        ExtractingProgress.Value = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
-                        ExtractingProgress.Width = Convert.ToInt32(Decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
-                    });
-                    PlayProgressTextTimer.Text = string.Empty;
-
-                    Application.DoEvents();
+                    try
+                    {
+                        if (this.ExtractingProgress.InvokeRequired)
+                        {
+                            ExtractingProgress.Invoke(new Action(delegate ()
+                            {
+                                ExtractingProgress.Value = Convert.ToInt32(decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
+                                ExtractingProgress.Width = Convert.ToInt32(decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
+                            }));
+                        }
+                        else
+                        {
+                            ExtractingProgress.Value = Convert.ToInt32(decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 100);
+                            ExtractingProgress.Width = Convert.ToInt32(decimal.Divide(e.BytesReceived, e.TotalBytesToReceive) * 519);
+                        }
+                    }
+                    catch { }
                 }
             }
         }
@@ -1887,8 +1923,6 @@ namespace GameLauncher
                             /* Redownload other file */
                             DownloadModNetFilesRightNow(path);
                         }
-
-                        Application.DoEvents();
                     };
                     Client.DownloadFileAsync(url, path + "/" + FileName);
                 }
@@ -1913,9 +1947,7 @@ namespace GameLauncher
 
         private void PlayButton_Click(object sender, EventArgs e)
         {
-            Application.DoEvents();
-
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 DriveInfo driveInfo = new DriveInfo(FileSettingsSave.GameInstallation);
 
@@ -2505,16 +2537,48 @@ namespace GameLauncher
 
                     if (_builtinserver)
                     {
-                        PlayProgressText.Text = "Soapbox server launched. Waiting for queries.".ToUpper();
+                        if (this.PlayProgressText.InvokeRequired)
+                        {
+                            PlayProgressText.Invoke(new Action(delegate ()
+                            {
+                                PlayProgressText.Text = "Soapbox server launched. Waiting for queries.".ToUpper();
+                            }));
+                        }
+                        else
+                        {
+                            PlayProgressText.Text = "Soapbox server launched. Waiting for queries.".ToUpper();
+                        }
                     }
                     else
                     {
                         Application.DoEvents();
 
-                        ExtractingProgress.Value = 100;
-                        ExtractingProgress.Width = 519;
+                        if (this.ExtractingProgress.InvokeRequired)
+                        {
+                            ExtractingProgress.Invoke(new Action(delegate ()
+                            {
+                                ExtractingProgress.Value = 100;
+                                ExtractingProgress.Width = 519;
+                            }));
+                        }
+                        else
+                        {
+                            ExtractingProgress.Value = 100;
+                            ExtractingProgress.Width = 519;
+                        }
 
-                        PlayProgressTextTimer.Text = string.Empty;
+                        if (this.PlayProgressTextTimer.InvokeRequired)
+                        {
+                            PlayProgressTextTimer.Invoke(new Action(delegate ()
+                            {
+                                PlayProgressTextTimer.Text = string.Empty;
+                            }));
+                        }
+                        else
+                        {
+                            PlayProgressTextTimer.Text = string.Empty;
+                        }
+
                         if (this.PlayProgressText.InvokeRequired)
                         {
                             PlayProgressText.Invoke(new Action(delegate ()
@@ -2527,7 +2591,17 @@ namespace GameLauncher
                             PlayProgressText.Text = "Loading game. Launcher will minimize once Game has Loaded".ToUpper();
                         }
 
-                        CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                        if (this.CurrentWindowInfo.InvokeRequired)
+                        {
+                            CurrentWindowInfo.Invoke(new Action(delegate ()
+                            {
+                                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                            }));
+                        }
+                        else
+                        {
+                            CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                        }                        
 
                         ContextMenu = new ContextMenu();
                         ContextMenu.MenuItems.Add(new MenuItem("Running Out of Time", (b, n) => { Process.Start("https://youtu.be/vq9-bmoI-RI"); }));
@@ -2547,20 +2621,53 @@ namespace GameLauncher
                 }
                 else if (!File.Exists(GameExePath))
                 {
-                    CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                    if (this.CurrentWindowInfo.InvokeRequired)
+                    {
+                        CurrentWindowInfo.Invoke(new Action(delegate ()
+                        {
+                            CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                        }));
+                    }
+                    else
+                    {
+                        CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                    }
+                    
                     MessageBox.Show(null, "You do not have the Game Downloaded. Please Verify Game Files installation path.", "GameLauncher", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                    if (this.CurrentWindowInfo.InvokeRequired)
+                    {
+                        CurrentWindowInfo.Invoke(new Action(delegate ()
+                        {
+                            CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                        }));
+                    }
+                    else
+                    {
+                        CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                    }
+
                     MessageBox.Show(null, "Your NFSW.exe is Modified. Please Verify Game Files.", "GameLauncher", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception Error)
             {
-                CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                if (this.CurrentWindowInfo.InvokeRequired)
+                {
+                    CurrentWindowInfo.Invoke(new Action(delegate ()
+                    {
+                        CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                    }));
+                }
+                else
+                {
+                    CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
+                }
+
                 LogToFileAddons.OpenLog("GAME LAUNCH", Error.Message, Error, "Error", false);
             }
         }
@@ -2607,20 +2714,71 @@ namespace GameLauncher
 
         private void LaunchNfsw()
         {
-            Application.DoEvents();
+            if (this.PlayButton.InvokeRequired)
+            {
+                PlayButton.Invoke(new Action(delegate ()
+                {
+                    PlayButton.BackgroundImage = Theming.PlayButton;
+                    PlayButton.ForeColor = Theming.ThirdTextForeColor;
+                }));
+            }
+            else
+            {
+                PlayButton.BackgroundImage = Theming.PlayButton;
+                PlayButton.ForeColor = Theming.ThirdTextForeColor;
+            }
 
-            PlayButton.BackgroundImage = Theming.PlayButton;
-            PlayButton.ForeColor = Theming.ThirdTextForeColor;
+            if (this.PlayProgressText.InvokeRequired)
+            {
+                PlayProgressText.Invoke(new Action(delegate ()
+                {
+                    PlayProgressText.Text = "Checking up all files".ToUpper();
+                }));
+            }
+            else
+            {
+                PlayProgressText.Text = "Checking up all files".ToUpper();
+            }
 
-            PlayProgressText.Text = "Checking up all files".ToUpper();
-            PlayProgress.Width = 0;
-            ExtractingProgress.Width = 0;
+            if (this.PlayProgress.InvokeRequired)
+            {
+                PlayProgress.Invoke(new Action(delegate ()
+                {
+                    PlayProgress.Width = 0;
+                }));
+            }
+            else
+            {
+                PlayProgress.Width = 0;
+            }
 
+            if (this.ExtractingProgress.InvokeRequired)
+            {
+                ExtractingProgress.Invoke(new Action(delegate ()
+                {
+                    ExtractingProgress.Width = 0;
+                }));
+            }
+            else
+            {
+                ExtractingProgress.Width = 0;
+            }
+            
             string CopSoundSpeechFilePath = Strings.Encode(
                 Path.Combine(FileSettingsSave.GameInstallation,"Sound","Speech","copspeechhdr_" + FileSettingsSave.Lang.ToLower() + ".big"));
             if (!File.Exists(CopSoundSpeechFilePath))
             {
-                PlayProgressText.Text = "Loading list of files to download...".ToUpper();
+                if (this.PlayProgressText.InvokeRequired)
+                {
+                    PlayProgressText.Invoke(new Action(delegate ()
+                    {
+                        PlayProgressText.Text = "Loading list of files to download...".ToUpper();
+                    }));
+                }
+                else
+                {
+                    PlayProgressText.Text = "Loading list of files to download...".ToUpper();
+                }
 
                 try
                 {
@@ -2631,12 +2789,36 @@ namespace GameLauncher
                         {
                             if (d.TotalFreeSpace < 8589934592)
                             {
-                                ExtractingProgress.Value = 100;
-                                ExtractingProgress.Width = 519;
-                                ExtractingProgress.Image = Theming.ProgressBarWarning;
-                                ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
+                                if (this.ExtractingProgress.InvokeRequired)
+                                {
+                                    ExtractingProgress.Invoke(new Action(delegate ()
+                                    {
+                                        ExtractingProgress.Value = 100;
+                                        ExtractingProgress.Width = 519;
+                                        ExtractingProgress.Image = Theming.ProgressBarWarning;
+                                        ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
+                                    }));
+                                }
+                                else
+                                {
+                                    ExtractingProgress.Value = 100;
+                                    ExtractingProgress.Width = 519;
+                                    ExtractingProgress.Image = Theming.ProgressBarWarning;
+                                    ExtractingProgress.ProgressColor = Theming.ExtractingProgressColor;
+                                }
 
-                                PlayProgressText.Text = "Make sure you have at least 8GB of free space on hard drive.".ToUpper();
+                                if (this.PlayProgressText.InvokeRequired)
+                                {
+                                    PlayProgressText.Invoke(new Action(delegate ()
+                                    {
+                                        PlayProgressText.Text = "Make sure you have at least 8GB of free space on hard drive.".ToUpper();
+                                    }));
+                                }
+                                else
+                                {
+                                    PlayProgressText.Text = "Make sure you have at least 8GB of free space on hard drive.".ToUpper();
+                                }
+                                
                                 FunctionStatus.IsVerifyHashDisabled = true;
 
                                 TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Paused);
@@ -2675,11 +2857,41 @@ namespace GameLauncher
 
         public void DownloadCoreFiles()
         {
-            Application.DoEvents();
+            if (this.PlayProgressText.InvokeRequired)
+            {
+                PlayProgressText.Invoke(new Action(delegate ()
+                {
+                    PlayProgressText.Text = "Checking Core Files...".ToUpper();
+                }));
+            }
+            else
+            {
+                PlayProgressText.Text = "Checking Core Files...".ToUpper();
+            }
 
-            PlayProgressText.Text = "Checking Core Files...".ToUpper();
-            PlayProgress.Width = 0;
-            ExtractingProgress.Width = 0;
+            if (this.PlayProgress.InvokeRequired)
+            {
+                PlayProgress.Invoke(new Action(delegate ()
+                {
+                    PlayProgress.Width = 0;
+                }));
+            }
+            else
+            {
+                PlayProgress.Width = 0;
+            }
+
+            if (this.ExtractingProgress.InvokeRequired)
+            {
+                ExtractingProgress.Invoke(new Action(delegate ()
+                {
+                    ExtractingProgress.Width = 0;
+                }));
+            }
+            else
+            {
+                ExtractingProgress.Width = 0;
+            }
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
@@ -2687,9 +2899,29 @@ namespace GameLauncher
             /* Use Local Packed Archive for Install Source - DavidCarbon */
             if (File.Exists(filename_pack) && !File.Exists(GameExePath))
             {
-                PlayProgressTextTimer.Visible = true;
-                PlayProgressText.Text = "Local GameFiles sbrwpack Found In Launcher Folder".ToUpper();
-                PlayProgressTextTimer.Text = "Loading".ToUpper();
+                if (this.PlayProgressText.InvokeRequired)
+                {
+                    PlayProgressText.Invoke(new Action(delegate ()
+                    {
+                        PlayProgressText.Text = "Local GameFiles sbrwpack Found In Launcher Folder".ToUpper();
+                    }));
+                }
+                else
+                {
+                    PlayProgressText.Text = "Local GameFiles sbrwpack Found In Launcher Folder".ToUpper();
+                }
+
+                if (this.PlayProgressTextTimer.InvokeRequired)
+                {
+                    PlayProgressTextTimer.Invoke(new Action(delegate ()
+                    {
+                        PlayProgressTextTimer.Text = "Loading".ToUpper();
+                    }));
+                }
+                else
+                {
+                    PlayProgressTextTimer.Text = "Loading".ToUpper();
+                }
 
                 /* GameFiles.sbrwpack */
                 LocalGameFiles();
@@ -2697,7 +2929,17 @@ namespace GameLauncher
             else if (!File.Exists(GameExePath))
             {
                 _downloadStartTime = DateTime.Now;
-                PlayProgressTextTimer.Text = "Downloading: Core GameFiles".ToUpper();
+                if (this.PlayProgressTextTimer.InvokeRequired)
+                {
+                    PlayProgressTextTimer.Invoke(new Action(delegate ()
+                    {
+                        PlayProgressTextTimer.Text = "Downloading: Core GameFiles".ToUpper();
+                    }));
+                }
+                else
+                {
+                    PlayProgressTextTimer.Text = "Downloading: Core GameFiles".ToUpper();
+                }
                 Log.Info("DOWNLOAD: Getting Core Game Files");
                 _downloader.StartDownload(FileSettingsSave.CDN, string.Empty, FileSettingsSave.GameInstallation, false, false, 1130632198);
             }
@@ -2709,11 +2951,41 @@ namespace GameLauncher
 
         public void DownloadTracksFiles()
         {
-            Application.DoEvents();
+            if (this.PlayProgressText.InvokeRequired)
+            {
+                PlayProgressText.Invoke(new Action(delegate ()
+                {
+                    PlayProgressText.Text = "Checking Tracks Files...".ToUpper();
+                }));
+            }
+            else
+            {
+                PlayProgressText.Text = "Checking Tracks Files...".ToUpper();
+            }
 
-            PlayProgressText.Text = "Checking Tracks Files...".ToUpper();
-            PlayProgress.Width = 0;
-            ExtractingProgress.Width = 0;
+            if (this.PlayProgress.InvokeRequired)
+            {
+                PlayProgress.Invoke(new Action(delegate ()
+                {
+                    PlayProgress.Width = 0;
+                }));
+            }
+            else
+            {
+                PlayProgress.Width = 0;
+            }
+
+            if (this.ExtractingProgress.InvokeRequired)
+            {
+                ExtractingProgress.Invoke(new Action(delegate ()
+                {
+                    ExtractingProgress.Width = 0;
+                }));
+            }
+            else
+            {
+                ExtractingProgress.Width = 0;
+            }
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
@@ -2721,7 +2993,18 @@ namespace GameLauncher
             if (!File.Exists(SpecificTracksFilePath))
             {
                 _downloadStartTime = DateTime.Now;
-                PlayProgressTextTimer.Text = "Downloading: Tracks Data".ToUpper();
+                if (this.PlayProgressTextTimer.InvokeRequired)
+                {
+                    PlayProgressTextTimer.Invoke(new Action(delegate ()
+                    {
+                        PlayProgressTextTimer.Text = "Downloading: Tracks Data".ToUpper();
+                    }));
+                }
+                else
+                {
+                    PlayProgressTextTimer.Text = "Downloading: Tracks Data".ToUpper();
+                }
+
                 Log.Info("DOWNLOAD: Getting Tracks Folder");
                 _downloader.StartDownload(FileSettingsSave.CDN, "Tracks", FileSettingsSave.GameInstallation, false, false, 615494528);
             }
@@ -2733,11 +3016,41 @@ namespace GameLauncher
 
         public void DownloadSpeechFiles()
         {
-            Application.DoEvents();
+            if (this.PlayProgressText.InvokeRequired)
+            {
+                PlayProgressText.Invoke(new Action(delegate ()
+                {
+                    PlayProgressText.Text = "Looking for correct Speech Files...".ToUpper();
+                }));
+            }
+            else
+            {
+                PlayProgressText.Text = "Looking for correct Speech Files...".ToUpper();
+            }
+            
+            if (this.PlayProgress.InvokeRequired)
+            {
+                PlayProgress.Invoke(new Action(delegate ()
+                {
+                    PlayProgress.Width = 0;
+                }));
+            }
+            else
+            {
+                PlayProgress.Width = 0;
+            }
 
-            PlayProgressText.Text = "Looking for correct Speech Files...".ToUpper();
-            PlayProgress.Width = 0;
-            ExtractingProgress.Width = 0;
+            if (this.ExtractingProgress.InvokeRequired)
+            {
+                ExtractingProgress.Invoke(new Action(delegate ()
+                {
+                    ExtractingProgress.Width = 0;
+                }));
+            }
+            else
+            {
+                ExtractingProgress.Width = 0;
+            }
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Indeterminate);
 
@@ -2794,20 +3107,50 @@ namespace GameLauncher
                 speechSize = DownloaderAddons.SpeechFilesSize();
             }
 
-            PlayProgressText.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper();
+            if (this.PlayProgressText.InvokeRequired)
+            {
+                PlayProgressText.Invoke(new Action(delegate ()
+                {
+                    PlayProgressText.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper();
+                }));
+            }
+            else
+            {
+                PlayProgressText.Text = string.Format("Checking for {0} Speech Files.", speechFile).ToUpper();
+            }
 
             string SoundSpeechPath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation,"Sound","Speech","copspeechsth_" + speechFile + ".big"));
             if (!File.Exists(SoundSpeechPath))
             {
                 _downloadStartTime = DateTime.Now;
-                PlayProgressTextTimer.Text = "Downloading: Language Audio".ToUpper();
+                if (this.PlayProgressTextTimer.InvokeRequired)
+                {
+                    PlayProgressTextTimer.Invoke(new Action(delegate ()
+                    {
+                        PlayProgressTextTimer.Text = "Downloading: Language Audio".ToUpper();
+                    }));
+                }
+                else
+                {
+                    PlayProgressTextTimer.Text = "Downloading: Language Audio".ToUpper();
+                }
                 Log.Info("DOWNLOAD: Getting Speech/Audio Files");
                 _downloader.StartDownload(FileSettingsSave.CDN, speechFile, FileSettingsSave.GameInstallation, false, false, speechSize);
             }
             else
             {
                 OnDownloadFinished();
-                PlayProgressTextTimer.Text = string.Empty;
+                if (this.PlayProgressTextTimer.InvokeRequired)
+                {
+                    PlayProgressTextTimer.Invoke(new Action(delegate ()
+                    {
+                        PlayProgressTextTimer.Text = string.Empty;
+                    }));
+                }
+                else
+                {
+                    PlayProgressTextTimer.Text = string.Empty;
+                }
                 Log.Info("DOWNLOAD: Game Files Download is Complete!");
             }
         }
@@ -2819,8 +3162,20 @@ namespace GameLauncher
             if (SHA.Files("GameFiles.sbrwpack") == "88C886B6D131C052365C3D6D14E14F67A4E2C253")
             {
                 TaskbarProgress.SetValue(Handle, 100, 100);
-                PlayProgress.Value = 100;
-                PlayProgress.Width = 519;
+
+                if (this.PlayProgress.InvokeRequired)
+                {
+                    PlayProgress.Invoke(new Action(delegate ()
+                    {
+                        PlayProgress.Value = 100;
+                        PlayProgress.Width = 519;
+                    }));
+                }
+                else
+                {
+                    PlayProgress.Value = 100;
+                    PlayProgress.Width = 519;
+                }
 
                 GoForUnpack(filename_pack);
             }
@@ -2835,8 +3190,6 @@ namespace GameLauncher
                 {
                     if (!Application.OpenForms["MainScreen"].Disposing)
                     {
-                        Application.DoEvents();
-
                         this.BeginInvoke((MethodInvoker)delegate
                         {
                             using (ZipArchive archive = ZipFile.OpenRead(filename_pack))
@@ -2848,28 +3201,70 @@ namespace GameLauncher
                                 {
                                     string fullName = entry.FullName;
 
-                                    ExtractingProgress.Value = (int)((long)100 * current / numFiles);
-                                    ExtractingProgress.Width = (int)((long)519 * current / numFiles);
+                                    if (this.ExtractingProgress.InvokeRequired)
+                                    {
+                                        ExtractingProgress.Invoke(new Action(delegate ()
+                                        {
+                                            ExtractingProgress.Value = (int)((long)100 * current / numFiles);
+                                            ExtractingProgress.Width = (int)((long)519 * current / numFiles);
+                                        }));
+                                    }
+                                    else
+                                    {
+                                        ExtractingProgress.Value = (int)((long)100 * current / numFiles);
+                                        ExtractingProgress.Width = (int)((long)519 * current / numFiles);
+                                    }
 
                                     TaskbarProgress.SetValue(Handle, (int)(100 * current / numFiles), 100);
 
                                     if (!File.Exists(Path.Combine(FileSettingsSave.GameInstallation, fullName.Replace(".sbrw", String.Empty))))
                                     {
-                                        PlayProgressText.Text = ("Unpacking " + fullName.Replace(".sbrw", String.Empty)).ToUpper();
-                                        PlayProgressTextTimer.Text = "[" + current + " / " + archive.Entries.Count + "]";
+                                        if (this.PlayProgressText.InvokeRequired)
+                                        {
+                                            PlayProgressText.Invoke(new Action(delegate ()
+                                            {
+                                                PlayProgressText.Text = ("Unpacking " + fullName.Replace(".sbrw", String.Empty)).ToUpper();
+                                            }));
+                                        }
+                                        else
+                                        {
+                                            PlayProgressText.Text = ("Unpacking " + fullName.Replace(".sbrw", String.Empty)).ToUpper();
+                                        }
 
+                                        if (this.PlayProgressTextTimer.InvokeRequired)
+                                        {
+                                            PlayProgressTextTimer.Invoke(new Action(delegate ()
+                                            {
+                                                PlayProgressTextTimer.Text = "[" + current + " / " + archive.Entries.Count + "]";
+                                            }));
+                                        }
+                                        else
+                                        {
+                                            PlayProgressTextTimer.Text = "[" + current + " / " + archive.Entries.Count + "]";
+                                        }
 
                                         if (fullName.Substring(fullName.Length - 1) == "/")
                                         {
                                             /* Is a directory, create it! */
                                             string FolderName = fullName.Remove(fullName.Length - 1);
                                             string GameWithFolderName = Path.Combine(FileSettingsSave.GameInstallation, FolderName);
-                                            if (Directory.Exists(GameWithFolderName))
+                                            try
                                             {
-                                                Directory.Delete(GameWithFolderName, true);
+                                                if (Directory.Exists(GameWithFolderName))
+                                                {
+                                                    Directory.Delete(GameWithFolderName, true);
+                                                }
                                             }
+                                            catch { }
 
-                                            Directory.CreateDirectory(GameWithFolderName);
+                                            try
+                                            {
+                                                if (!Directory.Exists(GameWithFolderName))
+                                                {
+                                                    Directory.CreateDirectory(GameWithFolderName);
+                                                }
+                                            }
+                                            catch { }
                                         }
                                         else
                                         {
@@ -2912,7 +3307,17 @@ namespace GameLauncher
                                     }
                                     else
                                     {
-                                        PlayProgressText.Text = ("Skipping " + fullName).ToUpper();
+                                        if (this.PlayProgressText.InvokeRequired)
+                                        {
+                                            PlayProgressText.Invoke(new Action(delegate ()
+                                            {
+                                                PlayProgressText.Text = ("Skipping " + fullName).ToUpper();
+                                            }));
+                                        }
+                                        else
+                                        {
+                                            PlayProgressText.Text = ("Skipping " + fullName).ToUpper();
+                                        }
                                     }
 
                                     string Status = string.Format("Unpacking game: " + (100 * current / numFiles) + "%");
@@ -2922,8 +3327,19 @@ namespace GameLauncher
 
                                     if (numFiles == current)
                                     {
-                                        PlayProgressTextTimer.Visible = false;
-                                        PlayProgressTextTimer.Text = string.Empty;
+                                        if (this.PlayProgressTextTimer.InvokeRequired)
+                                        {
+                                            PlayProgressTextTimer.Invoke(new Action(delegate ()
+                                            {
+                                                PlayProgressTextTimer.Visible = false;
+                                                PlayProgressTextTimer.Text = string.Empty;
+                                            }));
+                                        }
+                                        else
+                                        {
+                                            PlayProgressTextTimer.Visible = false;
+                                            PlayProgressTextTimer.Text = string.Empty;
+                                        }
 
                                         _isDownloading = false;
                                         OnDownloadFinished();
@@ -2949,18 +3365,42 @@ namespace GameLauncher
 
         private void OnDownloadProgress(long downloadLength, long downloadCurrent, long compressedLength, string filename, int skiptime = 0)
         {
-            Application.DoEvents();
-
-            if (downloadCurrent < compressedLength)
+            try
             {
-                PlayProgressText.Text = String.Format("{0} of {1} ({3}%) — {2}", TimeConversions.FormatFileSize(downloadCurrent), TimeConversions.FormatFileSize(compressedLength), 
-                    TimeConversions.EstimateFinishTime(downloadCurrent, compressedLength, _downloadStartTime), (int)(100 * downloadCurrent / compressedLength)).ToUpper();
+                if (downloadCurrent < compressedLength)
+                {
+                    if (this.PlayProgressText.InvokeRequired)
+                    {
+                        PlayProgressText.Invoke(new Action(delegate ()
+                        {
+                            PlayProgressText.Text = String.Format("{0} of {1} ({3}%) — {2}", TimeConversions.FormatFileSize(downloadCurrent), TimeConversions.FormatFileSize(compressedLength),
+                            TimeConversions.EstimateFinishTime(downloadCurrent, compressedLength, _downloadStartTime), (int)(100 * downloadCurrent / compressedLength)).ToUpper();
+                        }));
+                    }
+                    else
+                    {
+                        PlayProgressText.Text = String.Format("{0} of {1} ({3}%) — {2}", TimeConversions.FormatFileSize(downloadCurrent), TimeConversions.FormatFileSize(compressedLength),
+                        TimeConversions.EstimateFinishTime(downloadCurrent, compressedLength, _downloadStartTime), (int)(100 * downloadCurrent / compressedLength)).ToUpper();
+                    }
+                }
             }
+            catch { }
 
             try
             {
-                PlayProgress.Value = (int)(100 * downloadCurrent / compressedLength);
-                PlayProgress.Width = (int)(519 * downloadCurrent / compressedLength);
+                if (this.PlayProgress.InvokeRequired)
+                {
+                    PlayProgress.Invoke(new Action(delegate ()
+                    {
+                        PlayProgress.Value = (int)(100 * downloadCurrent / compressedLength);
+                        PlayProgress.Width = (int)(519 * downloadCurrent / compressedLength);
+                    }));
+                }
+                else
+                {
+                    PlayProgress.Value = (int)(100 * downloadCurrent / compressedLength);
+                    PlayProgress.Width = (int)(519 * downloadCurrent / compressedLength);
+                }
 
                 string Status = string.Format("Downloaded {0}% of the Game!", (int)(100 * downloadCurrent / compressedLength));
                 DiscordLauncherPresense.Status("Download Game Files", Status);
@@ -2970,8 +3410,20 @@ namespace GameLauncher
             catch
             {
                 TaskbarProgress.SetValue(Handle, 0, 100);
-                PlayProgress.Value = 0;
-                PlayProgress.Width = 0;
+
+                if (this.PlayProgress.InvokeRequired)
+                {
+                    PlayProgress.Invoke(new Action(delegate ()
+                    {
+                        PlayProgress.Value = 0;
+                        PlayProgress.Width = 0;
+                    }));
+                }
+                else
+                {
+                    PlayProgress.Value = 0;
+                    PlayProgress.Width = 0;
+                }
             }
 
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
@@ -2979,7 +3431,6 @@ namespace GameLauncher
 
         private void OnDownloadFinished()
         {
-            Application.DoEvents();
             _downloader.Stop();
 
             try
@@ -3002,13 +3453,34 @@ namespace GameLauncher
                 FileORFolderPermissionsFunctions.Folders();
             }
 
-            PlayProgressText.Text = "Ready!".ToUpper();
+            if (this.PlayProgressText.InvokeRequired)
+            {
+                PlayProgressText.Invoke(new Action(delegate ()
+                {
+                    PlayProgressText.Text = "Ready!".ToUpper();
+                }));
+            }
+            else
+            {
+                PlayProgressText.Text = "Ready!".ToUpper();
+            }
+            
             DiscordLauncherPresense.Download = false;
             DiscordLauncherPresense.Status("Idle Ready", null);
 
             EnablePlayButton();
 
-            ExtractingProgress.Width = 519;
+            if (this.ExtractingProgress.InvokeRequired)
+            {
+                ExtractingProgress.Invoke(new Action(delegate ()
+                {
+                    ExtractingProgress.Width = 519;
+                }));
+            }
+            else
+            {
+                ExtractingProgress.Width = 519;
+            }
 
             TaskbarProgress.SetValue(Handle, 100, 100);
             TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
@@ -3019,8 +3491,19 @@ namespace GameLauncher
             _isDownloading = false;
             _playenabled = true;
 
-            ExtractingProgress.Value = 100;
-            ExtractingProgress.Width = 519;
+            if (this.ExtractingProgress.InvokeRequired)
+            {
+                ExtractingProgress.Invoke(new Action(delegate ()
+                {
+                    ExtractingProgress.Value = 100;
+                    ExtractingProgress.Width = 519;
+                }));
+            }
+            else
+            {
+                ExtractingProgress.Value = 100;
+                ExtractingProgress.Width = 519;
+            }
         }
 
         private void DisablePlayButton()
@@ -3028,23 +3511,57 @@ namespace GameLauncher
             _isDownloading = false;
             _playenabled = false;
 
-            ExtractingProgress.Value = 100;
-            ExtractingProgress.Width = 519;
+            if (this.ExtractingProgress.InvokeRequired)
+            {
+                ExtractingProgress.Invoke(new Action(delegate ()
+                {
+                    ExtractingProgress.Value = 100;
+                    ExtractingProgress.Width = 519;
+                }));
+            }
+            else
+            {
+                ExtractingProgress.Value = 100;
+                ExtractingProgress.Width = 519;
+            }
         }
 
         private void OnDownloadFailed(Exception Error)
         {
-            Application.DoEvents();
             _downloader.Stop();
 
             DiscordLauncherPresense.Status("Download Game Files Error", null);
 
-            ExtractingProgress.Value = 100;
-            ExtractingProgress.Width = 519;
-            ExtractingProgress.Image = Theming.ProgressBarError;
-            ExtractingProgress.ProgressColor = Theming.Error;
+            if (this.ExtractingProgress.InvokeRequired)
+            {
+                ExtractingProgress.Invoke(new Action(delegate ()
+                {
+                    ExtractingProgress.Value = 100;
+                    ExtractingProgress.Width = 519;
+                    ExtractingProgress.Image = Theming.ProgressBarError;
+                    ExtractingProgress.ProgressColor = Theming.Error;
+                }));
+            }
+            else
+            {
+                ExtractingProgress.Value = 100;
+                ExtractingProgress.Width = 519;
+                ExtractingProgress.Image = Theming.ProgressBarError;
+                ExtractingProgress.ProgressColor = Theming.Error;
+            }
 
-            PlayProgressText.Text = (string.IsNullOrWhiteSpace(Error.Message) ? "Download Failed" : Error.Message).ToUpper();
+            if (this.PlayProgressText.InvokeRequired)
+            {
+                PlayProgressText.Invoke(new Action(delegate ()
+                {
+                    PlayProgressText.Text = (string.IsNullOrWhiteSpace(Error.Message) ? "Download Failed" : Error.Message).ToUpper();
+                }));
+            }
+            else
+            {
+                PlayProgressText.Text = (string.IsNullOrWhiteSpace(Error.Message) ? "Download Failed" : Error.Message).ToUpper();
+            }
+            
             FunctionStatus.IsVerifyHashDisabled = true;
 
             TaskbarProgress.SetValue(Handle, 100, 100);
@@ -3054,28 +3571,76 @@ namespace GameLauncher
             if (!string.IsNullOrWhiteSpace(MainEmail.Text))
             {
                 TempEmailCache = MainEmail.Text;
-                MainEmail.Text = "EMAIL IS HIDDEN";
+                if (this.MainEmail.InvokeRequired)
+                {
+                    MainEmail.Invoke(new Action(delegate ()
+                    {
+                        MainEmail.Text = "EMAIL IS HIDDEN";
+                    }));
+                }
+                else
+                {
+                    MainEmail.Text = "EMAIL IS HIDDEN";
+                }
             }
             string LogMessage = "CDN Downloader Encountered an Error:";
             LogToFileAddons.OpenLog("MODNET FILES", LogMessage, Error, "Error", false);
             if (!string.IsNullOrWhiteSpace(TempEmailCache))
             {
-                MainEmail.Text = TempEmailCache;
+                if (this.MainEmail.InvokeRequired)
+                {
+                    MainEmail.Invoke(new Action(delegate ()
+                    {
+                        MainEmail.Text = TempEmailCache;
+                    }));
+                }
+                else
+                {
+                    MainEmail.Text = TempEmailCache;
+                }
             }
         }
 
         private void OnShowExtract(string filename, long currentCount, long allFilesCount)
         {
-            Application.DoEvents();
-
-            if (PlayProgress.Value == 100)
+            try
             {
-                PlayProgressText.Text = String.Format("{0} of {1} : ({3}%) — {2}", TimeConversions.FormatFileSize(currentCount), TimeConversions.FormatFileSize(allFilesCount), 
-                    TimeConversions.EstimateFinishTime(currentCount, allFilesCount, _downloadStartTime), (int)(100 * currentCount / allFilesCount)).ToUpper();
+                if (PlayProgress.Value == 100)
+                {
+                    if (this.PlayProgressText.InvokeRequired)
+                    {
+                        PlayProgressText.Invoke(new Action(delegate ()
+                        {
+                            PlayProgressText.Text = String.Format("{0} of {1} : ({3}%) — {2}", TimeConversions.FormatFileSize(currentCount), TimeConversions.FormatFileSize(allFilesCount),
+                        TimeConversions.EstimateFinishTime(currentCount, allFilesCount, _downloadStartTime), (int)(100 * currentCount / allFilesCount)).ToUpper();
+                        }));
+                    }
+                    else
+                    {
+                        PlayProgressText.Text = String.Format("{0} of {1} : ({3}%) — {2}", TimeConversions.FormatFileSize(currentCount), TimeConversions.FormatFileSize(allFilesCount),
+                        TimeConversions.EstimateFinishTime(currentCount, allFilesCount, _downloadStartTime), (int)(100 * currentCount / allFilesCount)).ToUpper();
+                    }
+                }
             }
+            catch { }
 
-            ExtractingProgress.Value = (int)(100 * currentCount / allFilesCount);
-            ExtractingProgress.Width = (int)(519 * currentCount / allFilesCount);
+            try
+            {
+                if (this.ExtractingProgress.InvokeRequired)
+                {
+                    ExtractingProgress.Invoke(new Action(delegate ()
+                    {
+                        ExtractingProgress.Value = (int)(100 * currentCount / allFilesCount);
+                        ExtractingProgress.Width = (int)(519 * currentCount / allFilesCount);
+                    }));
+                }
+                else
+                {
+                    ExtractingProgress.Value = (int)(100 * currentCount / allFilesCount);
+                    ExtractingProgress.Width = (int)(519 * currentCount / allFilesCount);
+                }
+            }
+            catch { }
         }
 
         private void OnShowMessage(string message, string header)
@@ -3084,12 +3649,32 @@ namespace GameLauncher
             if (!string.IsNullOrWhiteSpace(MainEmail.Text))
             {
                 TempEmailCache = MainEmail.Text;
-                MainEmail.Text = "EMAIL IS HIDDEN";
+                if (this.MainEmail.InvokeRequired)
+                {
+                    MainEmail.Invoke(new Action(delegate ()
+                    {
+                        MainEmail.Text = "EMAIL IS HIDDEN";
+                    }));
+                }
+                else
+                {
+                    MainEmail.Text = "EMAIL IS HIDDEN";
+                }
             }
             MessageBox.Show(message, header);
             if (!string.IsNullOrWhiteSpace(TempEmailCache))
             {
-                MainEmail.Text = TempEmailCache;
+                if (this.MainEmail.InvokeRequired)
+                {
+                    MainEmail.Invoke(new Action(delegate ()
+                    {
+                        MainEmail.Text = TempEmailCache;
+                    }));
+                }
+                else
+                {
+                    MainEmail.Text = TempEmailCache;
+                }
             }
         }
 
@@ -3113,7 +3698,7 @@ namespace GameLauncher
             var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
             var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
 
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 MainFontSize = 9f;
                 SecondaryFontSize = 8f;
@@ -3395,11 +3980,11 @@ namespace GameLauncher
                 }).Start();
             };
 
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 try
                 {
-                    string CursorFile = (!DetectLinux.LinuxDetected()) ? Strings.Encode(Path.GetTempFileName()) : Path.Combine(Locations.LauncherFolder, "Cursor.ani");
+                    string CursorFile = (!UnixOS.Detected()) ? Strings.Encode(Path.GetTempFileName()) : Path.Combine(Locations.LauncherFolder, "Cursor.ani");
                     File.WriteAllBytes(CursorFile, ExtractResource.AsByte("GameLauncher.Resources.Cursors.Cursor.ani"));
                     Cursor mycursor = new Cursor(Cursor.Current.Handle);
                     IntPtr colorcursorhandle = User32.LoadCursorFromFile(CursorFile);

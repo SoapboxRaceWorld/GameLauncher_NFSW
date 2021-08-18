@@ -193,7 +193,6 @@
     <Compile Include="App\Classes\LauncherCore\Support\VerticalBanners.cs" />
     <Compile Include="App\Classes\SystemPlatform\Components\HardwareID.cs" />
     <Compile Include="App\Classes\SystemPlatform\Components\HardwareInfo.cs" />
-    <Compile Include="App\Classes\SystemPlatform\Linux\DetectLinux.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderHandler.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderHashReader.cs" />
     <Compile Include="App\Classes\LauncherCore\LauncherUpdater\UpdaterSchema.cs" />
@@ -214,6 +213,7 @@
     <Compile Include="App\Classes\LauncherCore\Proxy\NancyGzipCompression.cs" />
     <Compile Include="App\Classes\LauncherCore\Proxy\ProxyException.cs" />
     <Compile Include="App\Classes\LauncherCore\Proxy\ProxyHandler.cs" />
+    <Compile Include="App\Classes\SystemPlatform\Unix\UnixOS.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\FileORFolderPermissions.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\ManagementSearcher.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\RedistributablePackage.cs" />
@@ -470,9 +470,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App\Classes\SystemPlatform\Unix\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if exist "$(SolutionDir)Keys\Launcher.p12" "C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x86\signtool.exe" sign /f "$(SolutionDir)Keys\Launcher.p12" /p "Launcher Development CRT" /d "Soapbox Race World" /du "https://soapboxrace.world" /tr http://timestamp.digicert.com /td SHA256 "$(TargetPath)"

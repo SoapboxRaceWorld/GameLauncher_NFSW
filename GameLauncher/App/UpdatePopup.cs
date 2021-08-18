@@ -4,12 +4,12 @@ using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using System;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using System.Text;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App
 {
@@ -102,7 +102,7 @@ namespace GameLauncher.App
 
             var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
 
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 MainFontSize = 9f;
             }

@@ -14,13 +14,12 @@ using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App
 {
@@ -39,7 +38,7 @@ namespace GameLauncher.App
         private string _newLauncherPath;
         private string _newGameFilesPath;
         private string FinalCDNURL;
-        private readonly bool FirewallEnabled = DetectLinux.LinuxDetected() ? false : FirewallManager.IsServiceRunning;
+        private readonly bool FirewallEnabled = UnixOS.Detected() ? false : FirewallManager.IsServiceRunning;
 
         public SettingsScreen()
         {
@@ -97,7 +96,7 @@ namespace GameLauncher.App
             var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
             var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
 
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 MainFontSize = 9f;
                 SecondaryFontSize = 8f;
@@ -265,7 +264,7 @@ namespace GameLauncher.App
 
             if ((!FirewallHelper.FirewallStatus() && !FirewallEnabled) || 
                 (FileSettingsSave.FirewallLauncherStatus != "Excluded" && FileSettingsSave.FirewallGameStatus != "Excluded") || 
-                FunctionStatus.IsFirewallResetDisabled || DetectLinux.LinuxDetected())
+                FunctionStatus.IsFirewallResetDisabled || UnixOS.Detected())
             {
                 FunctionStatus.IsFirewallResetDisabled = true;
                 ResetFirewallRulesButton.ForeColor = Theming.RedForeColorButton;
@@ -274,7 +273,7 @@ namespace GameLauncher.App
                 ResetFirewallRulesButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
             }
 
-            if ((FileSettingsSave.WindowsDefenderStatus != "Excluded") || DetectLinux.LinuxDetected() || 
+            if ((FileSettingsSave.WindowsDefenderStatus != "Excluded") || UnixOS.Detected() || 
                 FunctionStatus.IsWindowsSecurityResetDisabled || (WindowsProductVersion.GetWindowsNumber() < 10.0) ||
                 (!SecurityCenter.Antivirus() && !SecurityCenter.Antispyware() && !SecurityCenter.RealTimeProtection()))
             {
@@ -565,13 +564,13 @@ namespace GameLauncher.App
                     "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !DetectLinux.LinuxDetected())
+            if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !UnixOS.Detected())
             {
                 WindowsDefenderGameFilesDirctoryChange();
             }
             else if (FileSettingsSave.GameInstallation != _newGameFilesPath)
             {
-                if (!DetectLinux.LinuxDetected())
+                if (!UnixOS.Detected())
                 {
                     CheckGameFilesDirectoryPrevention();
 
@@ -888,7 +887,7 @@ namespace GameLauncher.App
         /* Settings Change Game Files Location */
         private void SettingsGameFiles_Click(object sender, EventArgs e)
         {
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 System.Windows.Forms.OpenFileDialog changeGameFilesPath = new System.Windows.Forms.OpenFileDialog
                 {
@@ -1017,7 +1016,7 @@ namespace GameLauncher.App
 
         private void WindowsDefenderGameFilesDirctoryChange()
         {
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 /* Check if New Game! Files is not in Banned Folder Locations */
                 CheckGameFilesDirectoryPrevention();
@@ -1061,7 +1060,7 @@ namespace GameLauncher.App
 
         private void CheckGameFilesDirectoryPrevention()
         {
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 bool FailSafePathCreation = false;
                 switch (FunctionStatus.CheckFolder(_newGameFilesPath))
@@ -1393,7 +1392,7 @@ namespace GameLauncher.App
                 if (!FirewallHelper.RuleExist("Path", "SBRW - Game", Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"))) ||
                     !FirewallHelper.RuleExist("Path", "SBRW - Game Launcher", Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameLauncher))))
                 {
-                    if (DetectLinux.LinuxDetected())
+                    if (UnixOS.Detected())
                     {
                         MessageBox.Show(null, "Firewall is Not Supported on Non-Windows Systems", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -1406,7 +1405,7 @@ namespace GameLauncher.App
                         MessageBox.Show(null, "You have already Reset Firewall Rules", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
-                else if (DetectLinux.LinuxDetected())
+                else if (UnixOS.Detected())
                 {
                     MessageBox.Show(null, "Firewall is Not Supported on Non-Windows Systems", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -1432,7 +1431,7 @@ namespace GameLauncher.App
 
                 if (frameworkError == DialogResult.Yes)
                 {
-                    if (!DetectLinux.LinuxDetected())
+                    if (!UnixOS.Detected())
                     {
                         string GameName = "SBRW - Game";
                         string GamePath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
@@ -1466,7 +1465,7 @@ namespace GameLauncher.App
         {
             if (FunctionStatus.IsWindowsSecurityResetDisabled)
             {
-                if (DetectLinux.LinuxDetected())
+                if (UnixOS.Detected())
                 {
                     MessageBox.Show(null, "Windows Security (Defender) is Not Supported on Non-Windows Systems", "GameLauncher", 
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1507,7 +1506,7 @@ namespace GameLauncher.App
 
                 if (frameworkError == DialogResult.Yes)
                 {
-                    if (!DetectLinux.LinuxDetected())
+                    if (!UnixOS.Detected())
                     {
                         if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
                         {

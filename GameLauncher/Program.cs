@@ -15,13 +15,13 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.LauncherCore.Client;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using System.Text;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher
 {
@@ -125,7 +125,7 @@ namespace GameLauncher
 
                                 var missingfiles = new List<string>();
 
-                                if (!DetectLinux.LinuxDetected())
+                                if (!UnixOS.Detected())
                                 {   /* MONO Hates this... */
                                     foreach (var file in files)
                                     {
@@ -224,7 +224,7 @@ namespace GameLauncher
         {
             DiscordLauncherPresense.Start("Start Up", null);
 
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 DiscordLauncherPresense.Status("Start Up", "Checking .NET Framework");
                 try
@@ -380,9 +380,9 @@ namespace GameLauncher
                 DiscordLauncherPresense.Status("Start Up", "Checking Operating System");
                 try
                 {
-                    if (DetectLinux.LinuxDetected())
+                    if (UnixOS.Detected())
                     {
-                        InformationCache.OSName = DetectLinux.Distro();
+                        InformationCache.OSName = UnixOS.FullName();
                         Log.System("SYSTEM: Detected OS: " + InformationCache.OSName);
                     }
                     else
@@ -414,7 +414,7 @@ namespace GameLauncher
                     Directory.SetCurrentDirectory(Locations.LauncherFolder);
                     Log.Completed("SETUP: Current Directory now Set at -> " + Locations.LauncherFolder);
 
-                    if (!DetectLinux.LinuxDetected())
+                    if (!UnixOS.Detected())
                     {
                         Log.Checking("FOLDER LOCATION: Checking Launcher Folder Directory");
                         DiscordLauncherPresense.Status("Start Up", "Checking Launcher Folder Locations");

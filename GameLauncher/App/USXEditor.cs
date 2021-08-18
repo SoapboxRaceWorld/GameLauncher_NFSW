@@ -4,7 +4,6 @@ using System.IO;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using System.Diagnostics;
 using GameLauncher.App.Classes.LauncherCore.Lists;
@@ -12,6 +11,7 @@ using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App
 {
@@ -773,7 +773,7 @@ namespace GameLauncher.App
             var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
             var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
 
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 MainFontSize = 9f;
                 SecondaryFontSize = 8f;
@@ -1376,6 +1376,12 @@ namespace GameLauncher.App
             Hover.SetToolTip(PresetButtonHigh, "Preset: High Graphics");
             Hover.SetToolTip(PresetButtonMax, "Preset: Max Graphics");
             Hover.SetToolTip(PresetButtonCustom, "Preset: Saved Graphics");
+
+            Shown += (x, y) =>
+            {
+                Application.OpenForms["USXEditor"].Activate();
+                this.BringToFront();
+            };
         }
 
         private void PresetButtonMin_CheckedChanged(object sender, EventArgs e)

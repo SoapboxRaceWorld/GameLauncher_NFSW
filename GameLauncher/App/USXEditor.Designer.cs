@@ -2082,7 +2082,6 @@ namespace GameLauncher.App
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SBRW UserSettings XML Editor";
-            this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             ((System.ComponentModel.ISupportInitialize)(this.numericBrightness)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMVol)).EndInit();

@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using static System.String;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using System.Text;
@@ -16,6 +15,7 @@ using GameLauncher.App.Classes.LauncherCore.ModNet.JSON;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App
 {
@@ -59,7 +59,7 @@ namespace GameLauncher.App
 
             var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
 
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 MainFontSize = 9f;
             }
@@ -115,6 +115,12 @@ namespace GameLauncher.App
 
             ServerCategory.GotFocus += new EventHandler(ServerCategory_RemovePlaceHolderText);
             ServerCategory.LostFocus += new EventHandler(ServerCategory_ShowPlaceHolderText);
+
+            Shown += (x, y) => 
+            {
+                Application.OpenForms["AddServer"].Activate();
+                this.BringToFront(); 
+            };
         }
 
         private void OkButton_Click(object sender, EventArgs e)

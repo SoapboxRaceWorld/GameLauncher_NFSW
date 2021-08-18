@@ -4,11 +4,11 @@ using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using System.IO;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App
 {
@@ -36,7 +36,7 @@ namespace GameLauncher.App
 
             VersionLabel.Text = "Version: v" + Application.ProductVersion;
 
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 ButtonSave.Text = "Save Settings and Game Language";
             }
@@ -53,7 +53,7 @@ namespace GameLauncher.App
             var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
             var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
 
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 MainFontSize = 9f;
                 SecondaryFontSize = 8f;
@@ -105,6 +105,12 @@ namespace GameLauncher.App
 
             GameLangSource.DrawItem += new DrawItemEventHandler(GameLangSource_DrawItem);
             GameLangSource.SelectedIndexChanged += new EventHandler(GameLangSource_SelectedIndexChanged);
+
+            Shown += (x, y) =>
+            {
+                Application.OpenForms["WelcomeScreen"].Activate();
+                this.BringToFront();
+            };
         }
 
         private void CDNSource_SelectedIndexChanged(object sender, EventArgs e)
@@ -180,6 +186,12 @@ namespace GameLauncher.App
             SettingsFormElements(false);
             APIErrorFormElements(false);
             CheckListStatus();
+
+            /********************************/
+            /* Load XML (Only one Section)   /
+            /********************************/
+
+            FileGameSettings.Read("Language Only");
         }
 
         private void Save_Click(object sender, EventArgs e)

@@ -1,5 +1,4 @@
-﻿using GameLauncher.App.Classes.InsiderKit;
-using GameLauncher.App.Classes.LauncherCore.APICheckers;
+﻿using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
@@ -8,7 +7,7 @@ using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -390,7 +389,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
                         try
                         {
-                            if (!DetectLinux.LinuxDetected())
+                            if (!UnixOS.Detected())
                             {
                                 string GameFolderPath = string.Empty;
 
@@ -519,7 +518,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             }
             else
             {
-                if (!DetectLinux.LinuxDetected())
+                if (!UnixOS.Detected())
                 {
                     Log.Checking("LAUNCHER: Checking Game Path Location");
                     DiscordLauncherPresense.Status("Start Up", "Checking Game Files Folder Location");

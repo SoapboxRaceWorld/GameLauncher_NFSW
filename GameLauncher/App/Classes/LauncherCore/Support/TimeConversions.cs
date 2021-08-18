@@ -9,11 +9,18 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
     {
         public static string FormatFileSize(long byteCount, bool si = true)
         {
-            int unit = si ? 1000 : 1024;
-            if (byteCount < unit) return byteCount + " B";
-            int exp = (int)(Math.Log(byteCount) / Math.Log(unit));
-            String pre = (si ? "kMGTPE" : "KMGTPE")[exp - 1] + (si ? "" : "i");
-            return String.Format("{0}{1}B", Convert.ToDecimal(byteCount / Math.Pow(unit, exp)).ToString("0.00"), pre);
+            try
+            {
+                int unit = si ? 1000 : 1024;
+                if (byteCount < unit) return byteCount + " B";
+                int exp = (int)(Math.Log(byteCount) / Math.Log(unit));
+                String pre = (si ? "kMGTPE" : "KMGTPE")[exp - 1] + (si ? "" : "i");
+                return String.Format("{0}{1}B", Convert.ToDecimal(byteCount / Math.Pow(unit, exp)).ToString("0.00"), pre);
+            }
+            catch
+            {
+                return String.Empty;
+            }
         }
 
         public static string EstimateFinishTime(long current, long total, DateTime keyValue)

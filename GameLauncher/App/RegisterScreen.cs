@@ -8,7 +8,7 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Validator.Email;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -338,7 +338,7 @@ namespace GameLauncher.App
             var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
             var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
 
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 MainFontSize = 9f;
                 SecondaryFontSize = 8f;

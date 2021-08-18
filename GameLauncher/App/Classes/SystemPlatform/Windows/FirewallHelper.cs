@@ -3,7 +3,7 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 using NetFwTypeLib;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
     {
         public static void DoesRulesExist(string Type, string Mode, string AppName, string AppPath, string groupKey, string description, FirewallProtocol protocol)
         {
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 if (FirewallManager.IsServiceRunning)
                 {
@@ -38,7 +38,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     Log.Warning("WINDOWS FIREWALL: Service is Stopped [Not by Launcher]");
                 }
             }
-            else if (DetectLinux.LinuxDetected())
+            else if (UnixOS.Detected())
             {
                 Log.Warning("WINDOWS FIREWALL: Not Supported On Linux");
             }
@@ -241,7 +241,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
         public static bool RuleExist(string Mode, string Name, string Path)
         {
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 return true;
             }
@@ -290,7 +290,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /* Checks if Windows Firewall is Enabled or not from a System Level */
         public static bool FirewallStatus()
         {
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 return false;
             }
@@ -321,7 +321,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
     {
         public static void GameFiles()
         {
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 try
                 {
@@ -367,7 +367,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
         public static void Launcher()
         {
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 try
                 {

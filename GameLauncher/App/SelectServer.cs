@@ -7,25 +7,23 @@ using System.Threading;
 using System.Windows.Forms;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using System.Text;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using System.Net;
 using GameLauncher.App.Classes.LauncherCore.Global;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App
 {
     public partial class SelectServer : Form
     {
-        private readonly int ID = 1;
-        readonly Dictionary<int, GetServerInformation> rememberServerInformationID = new Dictionary<int, GetServerInformation>();
-        public GetServerInformation ServerList;
-        readonly Dictionary<int, ServerList> data = new Dictionary<int, ServerList>();
+        private static int ID = 1;
+        private static readonly Dictionary<int, ServerList> ServerListBook = new Dictionary<int, ServerList>();
 
         /* Used to ping the Server in ms */
-        public Queue<string> servers = new Queue<string>();
+        public static Queue<string> ServersToPing = new Queue<string>();
 
         public static string ServerName;
         public static GetServerInformation ServerJsonData;
@@ -34,6 +32,70 @@ namespace GameLauncher.App
         {
             InitializeComponent();
             SetVisuals();
+            this.Closing += (x, y) =>
+            {
+                ID = 1;
+                ServerListBook.Clear();
+                ServersToPing.Clear();
+                ServerName = null;
+                ServerJsonData = null;
+            };
+        }
+
+        private void SetVisuals()
+        {
+            /*******************************/
+            /* Set Font                     /
+            /*******************************/
+
+            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
+            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+
+            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
+
+            if (UnixOS.Detected())
+            {
+                MainFontSize = 9f;
+            }
+
+            Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            ServerListRenderer.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            Loading.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            BtnAddServer.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            BtnSelectServer.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            BtnClose.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            Version.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+
+            /********************************/
+            /* Set Theme Colors & Images     /
+            /********************************/
+
+            ForeColor = Theming.WinFormTextForeColor;
+            BackColor = Theming.WinFormTBGForeColor;
+
+            Loading.ForeColor = Theming.WinFormWarningTextForeColor;
+            Version.ForeColor = Theming.WinFormTextForeColor;
+
+            ServerListRenderer.ForeColor = Theming.WinFormSecondaryTextForeColor;
+
+            BtnAddServer.ForeColor = Theming.BlueForeColorButton;
+            BtnAddServer.BackColor = Theming.BlueBackColorButton;
+            BtnAddServer.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            BtnAddServer.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            BtnSelectServer.ForeColor = Theming.BlueForeColorButton;
+            BtnSelectServer.BackColor = Theming.BlueBackColorButton;
+            BtnSelectServer.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            BtnSelectServer.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            BtnClose.ForeColor = Theming.BlueForeColorButton;
+            BtnClose.BackColor = Theming.BlueBackColorButton;
+            BtnClose.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+            BtnClose.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+
+            /********************************/
+            /* Functions                     /
+            /********************************/
 
             Version.Text = "Version: v" + Application.ProductVersion;
 
@@ -67,7 +129,7 @@ namespace GameLauncher.App
             {
                 try
                 {
-                    servers.Enqueue(ID + "_|||_" + substring.IPAddress + "_|||_" + substring.Name);
+                    ServersToPing.Enqueue(ID + "_|||_" + substring.IPAddress + "_|||_" + substring.Name);
 
                     ServerListRenderer.Items.Add(new ListViewItem(
                         new[]
@@ -76,20 +138,34 @@ namespace GameLauncher.App
                         }
                     ));
 
-                    data.Add(ID, substring);
+                    ServerListBook.Add(ID, substring);
                     ID++;
                 }
                 catch { }
             }
 
-            Thread newList = new Thread(() =>
+            ServerListRenderer.AllowColumnReorder = false;
+            ServerListRenderer.ColumnWidthChanging += (handler, args) =>
             {
-                //Thread.Sleep(200);
-                this.BeginInvoke((MethodInvoker)delegate
+                args.Cancel = true;
+                args.NewWidth = ServerListRenderer.Columns[args.ColumnIndex].Width;
+            };
+
+            ServerListRenderer.DoubleClick += new EventHandler((handler, args) =>
+            {
+                SelectedGameServerToRemember();
+            });
+
+            Shown += (x, y) =>
+            {
+                Application.OpenForms["SelectServer"].Activate();
+                this.BringToFront();
+
+                new Thread(() =>
                 {
-                    while (servers.Count != 0)
+                    while (ServersToPing.Count != 0)
                     {
-                        string QueueContent = servers.Dequeue();
+                        string QueueContent = ServersToPing.Dequeue();
                         string[] QueueContent2 = QueueContent.Split(new string[] { "_|||_" }, StringSplitOptions.None);
 
                         int serverid = Convert.ToInt32(QueueContent2[0]) - 1;
@@ -133,28 +209,71 @@ namespace GameLauncher.App
 
                             if (string.IsNullOrWhiteSpace(ServerJson))
                             {
-                                ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
-                                ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
-                                ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
-                                ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
-                                ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                                if (this.ServerListRenderer.InvokeRequired)
+                                {
+                                    ServerListRenderer.Invoke(new Action(delegate ()
+                                    {
+                                        ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
+                                        ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
+                                        ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
+                                        ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
+                                        ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                                    }));
+                                }
+                                else
+                                {
+                                    ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
+                                    ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
+                                    ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
+                                    ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
+                                    ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                                }
                             }
                             else if (!IsJSONValid.ValidJson(ServerJson))
                             {
-                                ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
-                                ServerListRenderer.Items[serverid].SubItems[2].Text = "-?-";
-                                ServerListRenderer.Items[serverid].SubItems[3].Text = "-?-";
-                                ServerListRenderer.Items[serverid].SubItems[4].Text = "-?-";
-                                ServerListRenderer.Items[serverid].SubItems[5].Text = "-?-";
+                                if (this.ServerListRenderer.InvokeRequired)
+                                {
+                                    ServerListRenderer.Invoke(new Action(delegate ()
+                                    {
+                                        ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
+                                        ServerListRenderer.Items[serverid].SubItems[2].Text = "-?-";
+                                        ServerListRenderer.Items[serverid].SubItems[3].Text = "-?-";
+                                        ServerListRenderer.Items[serverid].SubItems[4].Text = "-?-";
+                                        ServerListRenderer.Items[serverid].SubItems[5].Text = "-?-";
+                                    }));
+                                }
+                                else
+                                {
+                                    ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
+                                    ServerListRenderer.Items[serverid].SubItems[2].Text = "-?-";
+                                    ServerListRenderer.Items[serverid].SubItems[3].Text = "-?-";
+                                    ServerListRenderer.Items[serverid].SubItems[4].Text = "-?-";
+                                    ServerListRenderer.Items[serverid].SubItems[5].Text = "-?-";
+                                }
                             }
                             else
                             {
                                 ServerJsonData = JsonConvert.DeserializeObject<GetServerInformation>(ServerJson);
 
-                                ServerListRenderer.Items[serverid].SubItems[1].Text = (!string.IsNullOrWhiteSpace(ServerJsonData.serverName)) ? ServerJsonData.serverName : ServerName;
-                                ServerListRenderer.Items[serverid].SubItems[2].Text = ServerListUpdater.CountryName(ServerJsonData.country.ToString());
-                                ServerListRenderer.Items[serverid].SubItems[3].Text = ServerJsonData.onlineNumber.ToString();
-                                ServerListRenderer.Items[serverid].SubItems[4].Text = ServerJsonData.numberOfRegistered.ToString();
+                                if (this.ServerListRenderer.InvokeRequired)
+                                {
+                                    ServerListRenderer.Invoke(new Action(delegate ()
+                                    {
+                                        ServerListRenderer.Items[serverid].SubItems[1].Text = (!string.IsNullOrWhiteSpace(ServerJsonData.serverName)) ? 
+                                        ServerJsonData.serverName : ServerName;
+                                        ServerListRenderer.Items[serverid].SubItems[2].Text = ServerListUpdater.CountryName(ServerJsonData.country.ToString());
+                                        ServerListRenderer.Items[serverid].SubItems[3].Text = ServerJsonData.onlineNumber.ToString();
+                                        ServerListRenderer.Items[serverid].SubItems[4].Text = ServerJsonData.numberOfRegistered.ToString();
+                                    }));
+                                }
+                                else
+                                {
+                                    ServerListRenderer.Items[serverid].SubItems[1].Text = (!string.IsNullOrWhiteSpace(ServerJsonData.serverName)) ? 
+                                    ServerJsonData.serverName : ServerName;
+                                    ServerListRenderer.Items[serverid].SubItems[2].Text = ServerListUpdater.CountryName(ServerJsonData.country.ToString());
+                                    ServerListRenderer.Items[serverid].SubItems[3].Text = ServerJsonData.onlineNumber.ToString();
+                                    ServerListRenderer.Items[serverid].SubItems[4].Text = ServerJsonData.numberOfRegistered.ToString();
+                                }
 
                                 Ping CheckMate = null;
 
@@ -168,16 +287,37 @@ namespace GameLauncher.App
                                         {
                                             if (e3.Reply.Status == IPStatus.Success && ServerName != "Offline Built-In Server")
                                             {
-                                                ServerListRenderer.Items[serverid].SubItems[5].Text = e3.Reply.RoundtripTime + "ms";
+                                                if (this.ServerListRenderer.InvokeRequired)
+                                                {
+                                                    ServerListRenderer.Invoke(new Action(delegate ()
+                                                    {
+                                                        ServerListRenderer.Items[serverid].SubItems[5].Text = e3.Reply.RoundtripTime + "ms";
+                                                    }));
+                                                }
+                                                else { ServerListRenderer.Items[serverid].SubItems[5].Text = e3.Reply.RoundtripTime + "ms"; }
                                             }
                                             else
                                             {
-                                                ServerListRenderer.Items[serverid].SubItems[5].Text = "!?";
+                                                if (this.ServerListRenderer.InvokeRequired)
+                                                {
+                                                    ServerListRenderer.Invoke(new Action(delegate ()
+                                                    {
+                                                        ServerListRenderer.Items[serverid].SubItems[5].Text = "!?";
+                                                    }));
+                                                }
+                                                else { ServerListRenderer.Items[serverid].SubItems[5].Text = "!?"; }
                                             }
                                         }
                                         else
                                         {
-                                            ServerListRenderer.Items[serverid].SubItems[5].Text = "N/A";
+                                            if (this.ServerListRenderer.InvokeRequired)
+                                            {
+                                                ServerListRenderer.Invoke(new Action(delegate ()
+                                                {
+                                                    ServerListRenderer.Items[serverid].SubItems[5].Text = "N/A";
+                                                }));
+                                            }
+                                            else { ServerListRenderer.Items[serverid].SubItems[5].Text = "N/A"; }
                                         }
 
                                         ((AutoResetEvent)e3.UserState).Set();
@@ -186,7 +326,14 @@ namespace GameLauncher.App
                                 }
                                 catch
                                 {
-                                    ServerListRenderer.Items[serverid].SubItems[5].Text = "?";
+                                    if (this.ServerListRenderer.InvokeRequired)
+                                    {
+                                        ServerListRenderer.Invoke(new Action(delegate ()
+                                        {
+                                            ServerListRenderer.Items[serverid].SubItems[5].Text = "?";
+                                        }));
+                                    }
+                                    else { ServerListRenderer.Items[serverid].SubItems[5].Text = "?"; }
                                 }
                                 finally
                                 {
@@ -199,11 +346,25 @@ namespace GameLauncher.App
                         }
                         catch
                         {
-                            ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
-                            ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
-                            ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
-                            ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
-                            ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                            if (this.ServerListRenderer.InvokeRequired)
+                            {
+                                ServerListRenderer.Invoke(new Action(delegate ()
+                                {
+                                    ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
+                                    ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
+                                    ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
+                                    ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
+                                    ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                                }));
+                            }
+                            else
+                            {
+                                ServerListRenderer.Items[serverid].SubItems[1].Text = ServerName;
+                                ServerListRenderer.Items[serverid].SubItems[2].Text = "---";
+                                ServerListRenderer.Items[serverid].SubItems[3].Text = "---";
+                                ServerListRenderer.Items[serverid].SubItems[4].Text = "---";
+                                ServerListRenderer.Items[serverid].SubItems[5].Text = "---";
+                            }
                         }
                         finally
                         {
@@ -221,80 +382,22 @@ namespace GameLauncher.App
                             }
                         }
 
-                        if (servers.Count == 0)
+                        if (ServersToPing.Count == 0)
                         {
-                            Loading.Text = "";
+                            if (this.Loading.InvokeRequired)
+                            {
+                                Loading.Invoke(new Action(delegate ()
+                                {
+                                    Loading.Text = string.Empty;
+                                }));
+                            }
+                            else { Loading.Text = string.Empty; }
                         }
 
                         Application.DoEvents();
                     }
-                });
-            }) { IsBackground = true };
-            newList.Start();
-
-            ServerListRenderer.AllowColumnReorder = false;
-            ServerListRenderer.ColumnWidthChanging += (handler, args) =>
-            {
-                args.Cancel = true;
-                args.NewWidth = ServerListRenderer.Columns[args.ColumnIndex].Width;
+                }).Start();
             };
-
-            ServerListRenderer.DoubleClick += new EventHandler((handler, args) =>
-            {
-                SelectedGameServerToRemember();
-            });
-        }
-
-        private void SetVisuals()
-        {
-            /*******************************/
-            /* Set Font                     /
-            /*******************************/
-
-            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
-
-            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-
-            if (DetectLinux.LinuxDetected())
-            {
-                MainFontSize = 9f;
-            }
-
-            Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            ServerListRenderer.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            Loading.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-            BtnAddServer.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
-            BtnSelectServer.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
-            BtnClose.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
-            Version.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
-
-            /********************************/
-            /* Set Theme Colors & Images     /
-            /********************************/
-
-            ForeColor = Theming.WinFormTextForeColor;
-            BackColor = Theming.WinFormTBGForeColor;
-
-            Loading.ForeColor = Theming.WinFormWarningTextForeColor;
-            Version.ForeColor = Theming.WinFormTextForeColor;
-
-            ServerListRenderer.ForeColor = Theming.WinFormSecondaryTextForeColor;
-
-            BtnAddServer.ForeColor = Theming.BlueForeColorButton;
-            BtnAddServer.BackColor = Theming.BlueBackColorButton;
-            BtnAddServer.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            BtnAddServer.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
-
-            BtnSelectServer.ForeColor = Theming.BlueForeColorButton;
-            BtnSelectServer.BackColor = Theming.BlueBackColorButton;
-            BtnSelectServer.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            BtnSelectServer.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
-
-            BtnClose.ForeColor = Theming.BlueForeColorButton;
-            BtnClose.BackColor = Theming.BlueBackColorButton;
-            BtnClose.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            BtnClose.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
         }
 
         private void BtnAddServer_Click(object sender, EventArgs e)
@@ -316,10 +419,7 @@ namespace GameLauncher.App
         {
             if (ServerListRenderer.SelectedItems.Count == 1)
             {
-                rememberServerInformationID.TryGetValue(ServerListRenderer.SelectedIndices[0], out ServerList);
-
-                SelectedServer.Data = data[ServerListRenderer.SelectedIndices[0] + 1];
-
+                SelectedServer.Data = ServerListBook[ServerListRenderer.SelectedIndices[0] + 1];
                 this.Close();
             }
         }

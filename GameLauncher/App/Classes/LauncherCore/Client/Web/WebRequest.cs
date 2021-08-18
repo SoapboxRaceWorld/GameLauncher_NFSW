@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.Hash;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using System.Net;
 using GameLauncher.App.Classes.LauncherCore.Global;
@@ -12,6 +11,7 @@ using GameLauncher.App.Classes.LauncherCore.Support;
 using System.IO;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App.Classes.LauncherCore.Client.Web
 {
@@ -39,7 +39,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
     {
         protected override WebRequest GetWebRequest(Uri address)
         {
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 address = new UriBuilder(address)
                 {

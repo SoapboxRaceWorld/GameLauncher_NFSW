@@ -5,7 +5,7 @@ using System.IO.Compression;
 using System.Linq;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Responses;
@@ -145,7 +145,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                     if (EnableInsiderDeveloper.Allowed()) { Log.Debug($"GZip Content-Length of response is {ContentLength} for {Context.Request.Path}"); }
 
                     /* Wine Mono is Unable to Allow the Game to Continue compared to its Windows CounterPart */
-                    if (long.Parse(ContentLength) > 0 || DetectLinux.LinuxDetected())
+                    if (long.Parse(ContentLength) > 0 || UnixOS.Detected())
                     {
                         return false;
                     }

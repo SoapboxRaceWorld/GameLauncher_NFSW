@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using System.Xml;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App
 {
@@ -35,7 +35,7 @@ namespace GameLauncher.App
             var SecondaryFontSize = 15f * 100f / CreateGraphics().DpiY;
             var ThirdFontSize = 26f * 100f / CreateGraphics().DpiY;
 
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 MainFontSize = 10f;
                 SecondaryFontSize = 15f;

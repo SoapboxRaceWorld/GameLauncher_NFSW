@@ -52,83 +52,154 @@ namespace GameLauncher.App.Classes.LauncherCore.Downloader
         {
             try
             {
-                var Client = new WebClient
+                if (WebCalls.Alternative())
                 {
-                    Encoding = Encoding.UTF8
-                };
-
-                if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
-                else
-                {
-                    Client.Headers.Add("user-agent", "SBRW Launcher " +
-                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                }
-
-                Client.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.DownloadManager_DownloadDataCompleted);
-                Client.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-                while (true)
-                {
-                    if (this._freeChunks <= 0)
+                    using (WebClient webClient = new WebClient { Encoding = Encoding.UTF8 })
                     {
-                        Thread.Sleep(100);
-                    }
-                    else
-                    {
-                        lock (this._downloadQueue)
+                        webClient.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                        webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.DownloadManager_DownloadDataCompleted);
+                        webClient.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+                        while (true)
                         {
-                            if (this._downloadQueue.Count == 0)
+                            if (this._freeChunks <= 0)
                             {
+                                Thread.Sleep(100);
+                            }
+                            else
+                            {
+                                lock (this._downloadQueue)
+                                {
+                                    if (this._downloadQueue.Count == 0)
+                                    {
+                                        lock (this._workers)
+                                        {
+                                            this._workers.Remove((BackgroundWorker)sender);
+                                        }
+                                        DownloaderHandler._workerCount--;
+                                        break;
+                                    }
+                                }
+                                string value = null;
+                                lock (this._downloadQueue)
+                                {
+                                    value = this._downloadQueue.Last.Value;
+                                    this._downloadQueue.RemoveLast();
+                                    lock (this._freeChunksLock)
+                                    {
+                                        this._freeChunks--;
+                                    }
+                                }
+                                lock (this._downloadList[value])
+                                {
+                                    if (this._downloadList[value].Status != DownloaderHandler.DownloadStatus.Canceled)
+                                    {
+                                        this._downloadList[value].Status = DownloaderHandler.DownloadStatus.Downloading;
+                                    }
+                                }
+                                while (webClient.IsBusy)
+                                {
+                                    Thread.Sleep(100);
+                                }
+                                webClient.DownloadDataAsync(new Uri(value), value);
+                                DownloaderHandler.DownloadStatus status = DownloaderHandler.DownloadStatus.Downloading;
+                                while (status == DownloaderHandler.DownloadStatus.Downloading)
+                                {
+                                    status = this._downloadList[value].Status;
+                                    if (status == DownloaderHandler.DownloadStatus.Canceled)
+                                    {
+                                        break;
+                                    }
+                                    Thread.Sleep(100);
+                                }
+                                if (status == DownloaderHandler.DownloadStatus.Canceled)
+                                {
+                                    webClient.CancelAsync();
+                                }
                                 lock (this._workers)
                                 {
-                                    this._workers.Remove((BackgroundWorker)sender);
+                                    if (DownloaderHandler._workerCount > this._maxWorkers || !this._managerRunning)
+                                    {
+                                        this._workers.Remove((BackgroundWorker)sender);
+                                        DownloaderHandler._workerCount--;
+                                        break;
+                                    }
                                 }
-                                DownloaderHandler._workerCount--;
-                                break;
                             }
                         }
-                        string value = null;
-                        lock (this._downloadQueue)
+                    }
+                }
+                else
+                {
+                    using (WebClientWithTimeout webClient = new WebClientWithTimeout { Encoding = Encoding.UTF8 })
+                    {
+                        webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.DownloadManager_DownloadDataCompleted);
+                        webClient.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+                        while (true)
                         {
-                            value = this._downloadQueue.Last.Value;
-                            this._downloadQueue.RemoveLast();
-                            lock (this._freeChunksLock)
+                            if (this._freeChunks <= 0)
                             {
-                                this._freeChunks--;
+                                Thread.Sleep(100);
                             }
-                        }
-                        lock (this._downloadList[value])
-                        {
-                            if (this._downloadList[value].Status != DownloaderHandler.DownloadStatus.Canceled)
+                            else
                             {
-                                this._downloadList[value].Status = DownloaderHandler.DownloadStatus.Downloading;
-                            }
-                        }
-                        while (Client.IsBusy)
-                        {
-                            Thread.Sleep(100);
-                        }
-                        Client.DownloadDataAsync(new Uri(value), value);
-                        DownloaderHandler.DownloadStatus status = DownloaderHandler.DownloadStatus.Downloading;
-                        while (status == DownloaderHandler.DownloadStatus.Downloading)
-                        {
-                            status = this._downloadList[value].Status;
-                            if (status == DownloaderHandler.DownloadStatus.Canceled)
-                            {
-                                break;
-                            }
-                            Thread.Sleep(100);
-                        }
-                        if (status == DownloaderHandler.DownloadStatus.Canceled)
-                        {
-                            Client.CancelAsync();
-                        }
-                        lock (this._workers)
-                        {
-                            if (DownloaderHandler._workerCount > this._maxWorkers || !this._managerRunning)
-                            {
-                                this._workers.Remove((BackgroundWorker)sender);
-                                DownloaderHandler._workerCount--;
-                                break;
+                                lock (this._downloadQueue)
+                                {
+                                    if (this._downloadQueue.Count == 0)
+                                    {
+                                        lock (this._workers)
+                                        {
+                                            this._workers.Remove((BackgroundWorker)sender);
+                                        }
+                                        DownloaderHandler._workerCount--;
+                                        break;
+                                    }
+                                }
+                                string value = null;
+                                lock (this._downloadQueue)
+                                {
+                                    value = this._downloadQueue.Last.Value;
+                                    this._downloadQueue.RemoveLast();
+                                    lock (this._freeChunksLock)
+                                    {
+                                        this._freeChunks--;
+                                    }
+                                }
+                                lock (this._downloadList[value])
+                                {
+                                    if (this._downloadList[value].Status != DownloaderHandler.DownloadStatus.Canceled)
+                                    {
+                                        this._downloadList[value].Status = DownloaderHandler.DownloadStatus.Downloading;
+                                    }
+                                }
+                                while (webClient.IsBusy)
+                                {
+                                    Thread.Sleep(100);
+                                }
+                                webClient.DownloadDataAsync(new Uri(value), value);
+                                DownloaderHandler.DownloadStatus status = DownloaderHandler.DownloadStatus.Downloading;
+                                while (status == DownloaderHandler.DownloadStatus.Downloading)
+                                {
+                                    status = this._downloadList[value].Status;
+                                    if (status == DownloaderHandler.DownloadStatus.Canceled)
+                                    {
+                                        break;
+                                    }
+                                    Thread.Sleep(100);
+                                }
+                                if (status == DownloaderHandler.DownloadStatus.Canceled)
+                                {
+                                    webClient.CancelAsync();
+                                }
+                                lock (this._workers)
+                                {
+                                    if (DownloaderHandler._workerCount > this._maxWorkers || !this._managerRunning)
+                                    {
+                                        this._workers.Remove((BackgroundWorker)sender);
+                                        DownloaderHandler._workerCount--;
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }

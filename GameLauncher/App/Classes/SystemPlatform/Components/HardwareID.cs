@@ -4,11 +4,12 @@ using System.Management;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Support;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Components
 {
@@ -32,6 +33,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
             {
                 License_IC = Value();
                 License_IC = ValueAlt();
+                License_IC = WebHelpers.Value();
                 License_IC = string.Empty;
 
                 Log.Info("LIST: Moved to Function");
@@ -43,11 +45,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
             {
                 if (string.IsNullOrWhiteSpace(License_IB))
                 {
-                    if (DetectLinux.LinuxDetected())
+                    if (UnixOS.Detected())
                     {
                         License_IB = Level_Three_Value();
                     }
-                    else if (!DetectLinux.LinuxDetected())
+                    else if (!UnixOS.Detected())
                     {
                         if (string.IsNullOrWhiteSpace(FunctionStatus.RegistryRead("License_IB")))
                         {
@@ -83,11 +85,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Components
             {
                 if (string.IsNullOrWhiteSpace(License_IA))
                 {
-                    if (DetectLinux.LinuxDetected())
+                    if (UnixOS.Detected())
                     {
                         License_IA = Level_Three_Value();
                     }
-                    else if (!DetectLinux.LinuxDetected())
+                    else if (!UnixOS.Detected())
                     {
                         if (string.IsNullOrWhiteSpace(FunctionStatus.RegistryRead("License_IA")))
                         {

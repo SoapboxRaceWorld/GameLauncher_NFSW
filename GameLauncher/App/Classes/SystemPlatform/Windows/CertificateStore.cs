@@ -6,7 +6,7 @@ using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -43,7 +43,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /// <remarks>Sets the Certificate Details For Launcher Comparison</remarks>
         public static void Latest()
         {
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 Log.Checking("CERTIFICATE STORE: Is Installed or Not");
                 DiscordLauncherPresense.Status("Start Up", "Checking Root Certificate Authority");

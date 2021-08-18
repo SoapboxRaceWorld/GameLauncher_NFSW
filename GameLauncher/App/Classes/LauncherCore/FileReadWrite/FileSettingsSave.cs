@@ -1,7 +1,7 @@
 ﻿using System;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 
 namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
@@ -77,7 +77,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
             /* Check if any Entries are missing */
 
-            if (DetectLinux.LinuxDetected() && !settingFile.KeyExists("InstallationDirectory"))
+            if (UnixOS.Detected() && !settingFile.KeyExists("InstallationDirectory"))
             {
                 settingFile.Write("InstallationDirectory", "GameFiles");
             }
@@ -121,11 +121,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 settingFile.Write("IgnoreUpdateVersion", IgnoreVersion);
             }
 
-            if (!settingFile.KeyExists("FilePermission") && !DetectLinux.LinuxDetected())
+            if (!settingFile.KeyExists("FilePermission") && !UnixOS.Detected())
             {
                 settingFile.Write("FilePermission", FilePermissionStatus);
             }
-            else if (settingFile.KeyExists("FilePermission") && DetectLinux.LinuxDetected())
+            else if (settingFile.KeyExists("FilePermission") && UnixOS.Detected())
             {
                 settingFile.DeleteKey("FilePermission");
             }
@@ -145,7 +145,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 settingFile.Write("WebCallMethod", WebCallMethod);
             }
 
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 if (!settingFile.KeyExists("FirewallLauncher"))
                 {
@@ -314,7 +314,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 settingFile.Write("WebCallMethod", WebCallMethod);
             }
 
-            if (!DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 if (settingFile.Read("FilePermission") != FilePermissionStatus)
                 {

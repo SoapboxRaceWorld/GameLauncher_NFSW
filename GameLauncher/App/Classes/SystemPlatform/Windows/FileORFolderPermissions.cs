@@ -1,6 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Logger;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 using System;
 using System.IO;
 using System.Security.AccessControl;
@@ -13,7 +13,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /* Sets File Permissions */
         public static void GiveEveryoneReadWriteFileAccess(string path)
         {
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 try
                 {
@@ -39,7 +39,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /* Sets Folder Permissions */
         public static void GiveEveryoneReadWriteFolderAccess(string path)
         {
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 try
                 {
@@ -66,7 +66,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /* Checks File Permissions */
         public static bool CheckIfFilePermissionIsSet(string path)
         {
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 try
                 {
@@ -106,7 +106,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         /* Checks Folder Permissions */
         public static bool CheckIfFolderPermissionIsSet(string path)
         {
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 try
                 {
@@ -150,7 +150,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
         public static void CheckLauncherPerms(string WhichFunction, string FileORFolderPath)
         {
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 if (WhichFunction == "Folder")
                 {
@@ -183,7 +183,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             try
             {
                 /* Set Folder Permissions Here - DavidCarbon */
-                if (FileSettingsSave.FilePermissionStatus != "Set" && !DetectLinux.LinuxDetected())
+                if (FileSettingsSave.FilePermissionStatus != "Set" && !UnixOS.Detected())
                 {
                     /* Launcher Folder */
                     FileORFolderPermissions.CheckLauncherPerms("Folder", Path.Combine(AppDomain.CurrentDomain.BaseDirectory));

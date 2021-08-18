@@ -8,11 +8,11 @@ using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Components;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
 using GameLauncher.App.Classes.SystemPlatform;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App
 {
@@ -38,7 +38,7 @@ namespace GameLauncher.App
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             var MainFontSize = 8f * 100f / CreateGraphics().DpiY;
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
                 MainFontSize = 8f;
             }
@@ -53,6 +53,12 @@ namespace GameLauncher.App
 
             data.ForeColor = Theming.WinFormSecondaryTextForeColor;
             data.GridColor = Theming.WinFormGridForeColor;
+
+            Shown += (x, y) =>
+            {
+                Application.OpenForms["DebugScreen"].Activate();
+                this.BringToFront();
+            };
         }
 
         public static string SecurityCenter(string caller)
@@ -94,7 +100,7 @@ namespace GameLauncher.App
             string Firewall = String.Empty;
             string AntiSpyware = String.Empty;
 
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 try
                 {
@@ -112,9 +118,9 @@ namespace GameLauncher.App
 
             string OS = "";
 
-            if (DetectLinux.LinuxDetected())
+            if (UnixOS.Detected())
             {
-                OS = DetectLinux.Distro();
+                OS = UnixOS.FullName();
             }
             else
             {
@@ -136,7 +142,7 @@ namespace GameLauncher.App
             ulong lpFreeBytesAvailable = 0;
             List<string> GPUs = new List<string>();
             string Win32_Processor = "";
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 try
                 {
@@ -184,7 +190,7 @@ namespace GameLauncher.App
                 new ListType{ Name = "", Value = "" },
             };
 
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 settings.AddRange(new[]
                 {

@@ -9,7 +9,7 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.SystemPlatform.Components;
-using GameLauncher.App.Classes.SystemPlatform.Linux;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 using Microsoft.Win32;
 
 // based on https://github.com/bitbeans/RedistributableChecker/blob/master/RedistributableChecker/RedistributablePackage.cs
@@ -112,7 +112,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         public static bool ErrorFree = true;
         public static void Check()
         {
-            if (!DetectLinux.LinuxDetected())
+            if (!UnixOS.Detected())
             {
                 Log.Checking("REDISTRIBUTABLE: Is Installed or Not");
                 DiscordLauncherPresense.Status("Start Up", "Checking Redistributable Package Visual Code 2015 to 2019");
