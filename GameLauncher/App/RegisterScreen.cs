@@ -26,10 +26,10 @@ namespace GameLauncher.App
         public RegisterScreen()
         {
             InitializeComponent();
-            DiscordLauncherPresense.Status("Register", ServerListUpdater.ServerName("Register"));
+            DiscordLauncherPresence.Status("Register", ServerListUpdater.ServerName("Register"));
             this.Closing += (x, y) =>
             {
-                DiscordLauncherPresense.Status("Idle Ready", null);
+                DiscordLauncherPresence.Status("Idle Ready", null);
             };
             SetVisuals();
         }
@@ -203,7 +203,7 @@ namespace GameLauncher.App
                             Password = SHATwoFiveSix.Hashes(RegisterPassword.Text.ToString()).ToLower();
                             break;
                         default:
-                            Log.Error("HASH TYPE: Unknown Hash Standard that was Provided");
+                            Log.Error("HASH TYPE: Unknown Hash Standard was Provided");
                             return;
                     }
 

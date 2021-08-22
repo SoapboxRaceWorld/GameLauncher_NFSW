@@ -17,8 +17,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
         public static void GetList()
         {
-            Log.Checking("LIST CORE: Creating Lang List");
-            DiscordLauncherPresense.Status("Start Up", "Creating Language List");
+            Log.Checking("LIST CORE: Creating Language List");
+            DiscordLauncherPresence.Status("Start Up", "Creating Language List");
 
             List<LangObject> langInfos = new List<LangObject>();
 

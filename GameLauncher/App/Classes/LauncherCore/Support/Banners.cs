@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace GameLauncher.App.Classes.LauncherCore.Support
 {
-    class VerticalBanners
+    class Banners
     {
         public static string GetFileExtension(String filename)
         {
@@ -27,7 +27,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("VERTICAL BANNER", null, Error, null, true);
+                LogToFileAddons.OpenLog("BANNER", null, Error, null, true);
                 return null;
             }
         }

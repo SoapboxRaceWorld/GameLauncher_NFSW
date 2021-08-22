@@ -118,7 +118,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
                         responseMessage = await request.DeleteAsync(cancellationToken);
                         break;
                     default:
-                        Log.Error("PROXY HANDLER: Cannot handle request method " + method);
+                        Log.Error("PROXY HANDLER: Cannot handle Request Method " + method);
                         responseMessage = null;
                         break;
                 }

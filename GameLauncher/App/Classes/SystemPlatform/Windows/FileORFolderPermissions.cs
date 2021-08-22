@@ -85,13 +85,13 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         }
                     }
 
-                    Log.Info("FILE PERMISSION: [" + path + "] Is permission set? -> " + IsPermsGood);
+                    Log.Info("FILE PERMISSION: [" + path + "], Is permission set? -> " + IsPermsGood);
 
                     return IsPermsGood;
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("FILE PERMISSION: [" + path + "] Encounterd an Error" + Error.Message);
+                    Log.Error("FILE PERMISSION: [" + path + "], Encounterd an Error" + Error.Message);
                     Log.ErrorIC("FILE PERMISSION: " + Error.HResult);
                     Log.ErrorFR("FILE PERMISSION: " + Error.ToString());
                     return false;
@@ -128,13 +128,13 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         }
                     }
 
-                    Log.Info("FOLDER PERMISSION: [" + path + "] Is permission set? -> " + IsPermsGood);
+                    Log.Info("FOLDER PERMISSION: [" + path + "], Is permission set? -> " + IsPermsGood);
 
                     return IsPermsGood;
                 }
                 catch (Exception Error)
                 {
-                    Log.Error("FOLDER PERMISSION: [" + path + "] Encounterd an Error" + Error.Message);
+                    Log.Error("FOLDER PERMISSION: [" + path + "], Encounterd an Error" + Error.Message);
                     Log.ErrorIC("FOLDER PERMISSION: " + Error.HResult);
                     Log.ErrorFR("FOLDER PERMISSION: " + Error.ToString());
                     return false;

@@ -273,9 +273,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Color Warning = Color.FromArgb(230, 159, 0);
 
 
-        /* Vertical Banner */
+        /* Server Banner */
 
-        public static Color VerticalBannerBackColor = Color.FromArgb(0, 0, 0);
+        public static Color BannerBackColor = Color.FromArgb(0, 0, 0);
 
 
         /* Settings Label Links */
@@ -865,9 +865,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         Warning = ToColor(ThemeFile.Read("WarningForeColor"));
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("VerticalBannerBackColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("BannerBackColor")))
                     {
-                        VerticalBannerBackColor = ToColor(ThemeFile.Read("VerticalBannerBackColor"));
+                        BannerBackColor = ToColor(ThemeFile.Read("BannerBackColor"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ExtractingProgressColor")))
@@ -997,7 +997,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("THEMEING", null, Error, null, true);
+                    LogToFileAddons.OpenLog("THEMING", null, Error, null, true);
                 }
             }
         }
@@ -1025,7 +1025,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("THEMEING", null, Error, null, true);
+                LogToFileAddons.OpenLog("THEMING", null, Error, null, true);
                 return Color.Silver;
             }
         }

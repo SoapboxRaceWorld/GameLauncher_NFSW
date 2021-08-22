@@ -69,7 +69,6 @@ namespace GameLauncher.App
                 ManagementObjectSearcher wmiData = new ManagementObjectSearcher(@"root\SecurityCenter2", "SELECT * FROM " + caller);
                 ManagementObjectCollection data = wmiData.Get();
 
-                
                 foreach (ManagementObject virusChecker in data)
                 {
                     virusCheckerName = virusChecker["displayName"].ToString();

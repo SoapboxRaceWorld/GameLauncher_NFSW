@@ -81,28 +81,28 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 switch (Error.Status)
                 {
                     case WebExceptionStatus.CacheEntryNotFound:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Cache Entry Not Found");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Cache Entry Not Found");
                         return APIStatus.CacheEntryNotFound;
                     case WebExceptionStatus.ConnectFailure:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Connect Failure");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Connect Failure");
                         return APIStatus.ConnectFailure;
                     case WebExceptionStatus.ConnectionClosed:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Connection Closed");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Connection Closed");
                         return APIStatus.ConnectionClosed;
                     case WebExceptionStatus.KeepAliveFailure:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Keep Alive Failure");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Keep Alive Failure");
                         return APIStatus.KeepAliveFailure;
                     case WebExceptionStatus.MessageLengthLimitExceeded:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Message Length Limit Exceeded");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Message Length Limit Exceeded");
                         return APIStatus.MessageLengthLimitExceeded;
                     case WebExceptionStatus.NameResolutionFailure:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Name Resolution Failure");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Name Resolution Failure");
                         return APIStatus.NameResolutionFailure;
                     case WebExceptionStatus.Pending:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Pending");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Pending");
                         return APIStatus.Pending;
                     case WebExceptionStatus.PipelineFailure:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Pipeline Failure");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Pipeline Failure");
                         return APIStatus.PipelineFailure;
                     case WebExceptionStatus.ProtocolError:
                         Log.Error("CORE: " + URI + " has an Error! Status Code: " + (int)Response.StatusCode);
@@ -138,37 +138,37 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                                 return APIStatus.UnknownStatusCode;
                         }
                     case WebExceptionStatus.ProxyNameResolutionFailure:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Proxy Name Resolution Failure");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Proxy Name Resolution Failure");
                         return APIStatus.ProxyNameResolutionFailure;
                     case WebExceptionStatus.ReceiveFailure:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Receive Failure");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Receive Failure");
                         return APIStatus.ReceiveFailure;
                     case WebExceptionStatus.RequestCanceled:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Request Canceled");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Request Canceled");
                         return APIStatus.RequestCanceled;
                     case WebExceptionStatus.RequestProhibitedByCachePolicy:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Request Prohibited By Cache Policy");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Request Prohibited By Cache Policy");
                         return APIStatus.RequestProhibitedByCachePolicy;
                     case WebExceptionStatus.SecureChannelFailure:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Secure Channel Failure");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Secure Channel Failure");
                         return APIStatus.SecureChannelFailure;
                     case WebExceptionStatus.SendFailure:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Send Failure");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Send Failure");
                         return APIStatus.SendFailure;
                     case WebExceptionStatus.ServerProtocolViolation:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Server Protocol Violation");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Server Protocol Violation");
                         return APIStatus.ServerProtocolViolation;
                     case WebExceptionStatus.Success:
-                        Log.Warning("CORE: " + URI + " had Encounterd Error -> Success");
+                        Log.Warning("CORE: " + URI + " has Encounterd an Error -> Success");
                         return APIStatus.Success;
                     case WebExceptionStatus.Timeout:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Timeout");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Timeout");
                         return APIStatus.Timeout;
                     case WebExceptionStatus.TrustFailure:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Trust Failure");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Trust Failure");
                         return APIStatus.TrustFailure;
                     case WebExceptionStatus.UnknownError:
-                        Log.Error("CORE: " + URI + " had Encounterd Error -> Unknown Error");
+                        Log.Error("CORE: " + URI + " has Encounterd an Error -> Unknown Error");
                         return APIStatus.UnknownError;
                     default:
                         Log.Error("CORE: " + URI + " is Offline!");
@@ -288,14 +288,12 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 WOPLCDNL = true;
             }
 
-            Log.Completed("API: Checking Status Done");
-
             Log.Checking("API: Test #2");
 
             /* Check If Launcher Failed to Connect to any APIs */
             if (!WOPLAPI())
             {
-                DiscordLauncherPresense.Status("Start Up", "Launcher Encountered API Errors");
+                DiscordLauncherPresence.Status("Start Up", "Launcher Encountered API Errors");
 
                 DialogResult restartAppNoApis = MessageBox.Show(null, "Unable to Connect to any Server List API. Please check your connection." +
                 "\n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect to any Server List API",

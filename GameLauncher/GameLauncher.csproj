@@ -178,7 +178,7 @@
     <Compile Include="App\Classes\LauncherCore\Lists\ResolutionsListUpdater.cs" />
     <Compile Include="App\Classes\LauncherCore\Logger\LogToFileAddons.cs" />
     <Compile Include="App\Classes\LauncherCore\ModNet\JSON\JsonServerModNet.cs" />
-    <Compile Include="App\Classes\LauncherCore\RPC\DiscordLauncherPresense.cs" />
+    <Compile Include="App\Classes\LauncherCore\RPC\DiscordLauncherPresence.cs" />
     <Compile Include="App\Classes\LauncherCore\Support\BitmapHandler.cs" />
     <Compile Include="App\Classes\LauncherCore\Support\Strings.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\Email\IsEmailValid.cs" />
@@ -190,7 +190,7 @@
     <Compile Include="App\Classes\LauncherCore\Visuals\Theming.cs" />
     <Compile Include="App\Classes\LauncherCore\Support\Time.cs" />
     <Compile Include="App\Classes\LauncherCore\Support\TimeConversions.cs" />
-    <Compile Include="App\Classes\LauncherCore\Support\VerticalBanners.cs" />
+    <Compile Include="App\Classes\LauncherCore\Support\Banners.cs" />
     <Compile Include="App\Classes\SystemPlatform\Components\HardwareID.cs" />
     <Compile Include="App\Classes\SystemPlatform\Components\HardwareInfo.cs" />
     <Compile Include="App\Classes\LauncherCore\Downloader\DownloaderHandler.cs" />

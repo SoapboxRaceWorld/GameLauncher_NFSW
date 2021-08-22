@@ -26,12 +26,12 @@ namespace GameLauncher.App
         {
             if (File.Exists(Locations.UserSettingsXML))
             {
-                DiscordLauncherPresense.Status("User XML Editor", null);
+                DiscordLauncherPresence.Status("User XML Editor", null);
                 Log.Checking("UXE: Success, a UserSettings.xml file was found!");
                 if (new FileInfo(Locations.UserSettingsXML).IsReadOnly == true)
                 {
                     FileReadOnly = true;
-                    Log.Warning("UXE: UserSettings.xml is ReadOnly!");
+                    Log.Warning("UXE: UserSettings.xml is Read-Only!");
                 }
                 else
                 {
@@ -44,7 +44,7 @@ namespace GameLauncher.App
                 SetVisuals();
                 this.Closing += (x, y) =>
                 {
-                    DiscordLauncherPresense.Status("Settings", null);
+                    DiscordLauncherPresence.Status("Settings", null);
 
                     if (Hover.Active)
                     {

@@ -28,7 +28,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
         public static void GetList()
         {
             Log.Checking("SERVER LIST CORE: Creating Server List");
-            DiscordLauncherPresense.Status("Start Up", "Creating Server List");
+            DiscordLauncherPresence.Status("Start Up", "Creating Server List");
 
             List<ServerList> serverInfos = new List<ServerList>();
 

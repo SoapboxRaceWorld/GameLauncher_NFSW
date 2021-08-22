@@ -40,7 +40,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
         public static void Latest()
         {
             Log.Checking("LAUNCHER UPDATE: Is Version Up to Date or not");
-            DiscordLauncherPresense.Status("Start Up", "Checking Latest Launcher Release Information");
+            DiscordLauncherPresence.Status("Start Up", "Checking Latest Launcher Release Information");
 
             if (VisualsAPIChecker.UnitedAPI())
             {
@@ -90,7 +90,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     else
                     {
                         InvalidJSON = true;
-                        Log.Warning("LAUNCHER UPDATE: Retrived Invalid JSON Data");
+                        Log.Warning("LAUNCHER UPDATE: Received Invalid JSON Data");
                     }
                 }
                 catch (Exception Error)
@@ -178,7 +178,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 
                 if (!VisualsAPIChecker.GitHubAPI)
                 {
-                    Log.Error("LAUNCHER UPDATE: Failed to Retrive Latest Build Information from two APIs ");
+                    Log.Error("LAUNCHER UPDATE: Failed to retrive Latest Build information from two APIs ");
                 }
             }
             Log.Completed("LAUNCHER UPDATE: Done");

@@ -46,7 +46,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             if (!UnixOS.Detected())
             {
                 Log.Checking("CERTIFICATE STORE: Is Installed or Not");
-                DiscordLauncherPresense.Status("Start Up", "Checking Root Certificate Authority");
+                DiscordLauncherPresence.Status("Start Up", "Checking Root Certificate Authority");
 
                 try
                 {
@@ -134,7 +134,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     }
                     else
                     {
-                        Log.Warning("CERTIFICATE STORE: Retrived Invalid JSON Data");
+                        Log.Warning("CERTIFICATE STORE: Received Invalid JSON Data");
                     }
                 }
                 catch (Exception Error)

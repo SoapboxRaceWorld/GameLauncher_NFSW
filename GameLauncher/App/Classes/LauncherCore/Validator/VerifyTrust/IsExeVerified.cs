@@ -38,7 +38,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Validator.VerifyTrust
         {
             if (string.IsNullOrWhiteSpace(filePath))
             {
-                Log.Error("SIGNED: File Path can Not be Null");
+                Log.Error("SIGNED: File Path cannot be Null");
             }
             else
             {

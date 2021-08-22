@@ -364,9 +364,9 @@ namespace GameLauncher
                 Process.GetProcessById(oneProcess.Id).Kill();
             }
 
-            if (DiscordLauncherPresense.Running())
+            if (DiscordLauncherPresence.Running())
             {
-                DiscordLauncherPresense.Stop("Close");
+                DiscordLauncherPresence.Stop("Close");
             }
 
             if (ServerProxy.Running())
@@ -516,7 +516,7 @@ namespace GameLauncher
                     Password = SHATwoFiveSix.Hashes(MainPassword.Text.ToString()).ToLower();
                     break;
                 default:
-                    Log.Error("HASH TYPE: Unknown Hash Standard that was Provided");
+                    Log.Error("HASH TYPE: Unknown Hash Standard was Provided");
                     return;
             }
 
@@ -590,7 +590,7 @@ namespace GameLauncher
                         FileAccountSave.SavedGameServerHash = "Unknown";
                         FileAccountSave.UserHashedEmail = string.Empty;
                         FileAccountSave.UserHashedPassword = string.Empty;
-                        Log.Error("HASH TYPE: Unknown Hash Standard that was Provided");
+                        Log.Error("HASH TYPE: Unknown Hash Standard was Provided");
                         return;
                 }
 
@@ -690,10 +690,10 @@ namespace GameLauncher
             LoginButton.ForeColor = Theming.SixTextForeColor;
             string BannerCache = Strings.Encode(
                                             Path.Combine(".BannerCache", SHA.Hashes(InformationCache.SelectedServerData.IPAddress) + ".bin"));
-            VerticalBanner.Image = VerticalBanners.Grayscale(BannerCache);
-            VerticalBanner.BackColor = Color.Transparent;
+            Banner.Image = Banners.Grayscale(BannerCache);
+            Banner.BackColor = Color.Transparent;
 
-            string verticalImageUrl = string.Empty;
+            string ImageUrl = string.Empty;
             string numPlayers = string.Empty;
             string numRegistered = string.Empty;
 
@@ -827,11 +827,11 @@ namespace GameLauncher
                                     }
                                     catch { ServerBannerResult = false; }
 
-                                    verticalImageUrl = ServerBannerResult ? InformationCache.SelectedServerJSON.bannerUrl : string.Empty;
+                                    ImageUrl = ServerBannerResult ? InformationCache.SelectedServerJSON.bannerUrl : string.Empty;
                                 }
                                 else
                                 {
-                                    verticalImageUrl = string.Empty;
+                                    ImageUrl = string.Empty;
                                 }
                             }
                             catch { }
@@ -1141,10 +1141,10 @@ namespace GameLauncher
                         {
                             if (!Directory.Exists(".BannerCache")) { Directory.CreateDirectory(".BannerCache"); }
 
-                            if (!string.IsNullOrWhiteSpace(verticalImageUrl))
+                            if (!string.IsNullOrWhiteSpace(ImageUrl))
                             {
                                 FunctionStatus.TLS();
-                                Uri URICall_A = new Uri(verticalImageUrl);
+                                Uri URICall_A = new Uri(ImageUrl);
                                 ServicePointManager.FindServicePoint(URICall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                                 var Client_A = new WebClient
                                 {
@@ -1173,7 +1173,7 @@ namespace GameLauncher
                                     if (Events_A.Cancelled || Events_A.Error != null)
                                     {
                                         /* Load cached banner! */
-                                        VerticalBanner.Image = VerticalBanners.Grayscale(BannerCache);
+                                        Banner.Image = Banners.Grayscale(BannerCache);
                                         if (Client_A != null)
                                         {
                                             Client_A.Dispose();
@@ -1199,10 +1199,10 @@ namespace GameLauncher
                                                 Position = 0
                                             };
 
-                                            VerticalBanner.Image = Image.FromStream(_serverRawBanner);
+                                            Banner.Image = Image.FromStream(_serverRawBanner);
 
 
-                                            if (VerticalBanners.GetFileExtension(verticalImageUrl) == "gif")
+                                            if (Banners.GetFileExtension(ImageUrl) == "gif")
                                             {
                                                 Image.FromStream(_serverRawBanner).Save(BannerCache);
                                             }
@@ -1214,7 +1214,7 @@ namespace GameLauncher
                                         catch (Exception Error)
                                         {
                                             LogToFileAddons.OpenLog("Server Banner", null, Error, null, true);
-                                            VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
+                                            Banner.BackColor = Theming.BannerBackColor;
                                         }
                                         finally
                                         {
@@ -1229,11 +1229,11 @@ namespace GameLauncher
                             else if (File.Exists(BannerCache))
                             {
                                 /* Load cached banner! */
-                                VerticalBanner.Image = VerticalBanners.Grayscale(BannerCache);
+                                Banner.Image = Banners.Grayscale(BannerCache);
                             }
                             else
                             {
-                                VerticalBanner.BackColor = Theming.VerticalBannerBackColor;
+                                Banner.BackColor = Theming.BannerBackColor;
                             }
                         }
                         catch (Exception Error)
@@ -1468,7 +1468,7 @@ namespace GameLauncher
 
             _nfswstarted.Start();
 
-            DiscordLauncherPresense.Status("In-Game", null);
+            DiscordLauncherPresence.Status("In-Game", null);
         }
 
         /* Check Serverlist API Status Upon Main Screen load - DavidCarbon */
@@ -2016,7 +2016,7 @@ namespace GameLauncher
 
                 try
                 {
-                    DiscordLauncherPresense.Status("Checking ModNet", null);
+                    DiscordLauncherPresence.Status("Checking ModNet", null);
                     /* Get Remote ModNet list to process for checking required ModNet files are present and current */
                     FunctionStatus.TLS();
                     Uri ModNetURI = new Uri(URLs.ModNet + "/launcher-modules/modules.json");
@@ -2041,7 +2041,7 @@ namespace GameLauncher
                     catch (Exception Error)
                     {
                         PlayProgressText.Text = ("JSON: Unable to Retrive ModNet Files Information").ToUpper();
-                        DiscordLauncherPresense.Status("ModNet Files Information Error", null);
+                        DiscordLauncherPresence.Status("ModNet Files Information Error", null);
                         CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                         string LogMessage = "There was an error with ModNet JSON Retrieval:";
                         LogToFileAddons.OpenLog("MODNET FILES", LogMessage, Error, "Error", false);
@@ -2063,7 +2063,7 @@ namespace GameLauncher
                     else if (!IsJSONValid.ValidJson(ModulesJSON))
                     {
                         PlayProgressText.Text = ("JSON: Invalid ModNet Files Information").ToUpper();
-                        DiscordLauncherPresense.Status("ModNet Files Information Error", null);
+                        DiscordLauncherPresence.Status("ModNet Files Information Error", null);
                         CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                         ModulesJSON = null;
                         return;
@@ -2096,7 +2096,7 @@ namespace GameLauncher
                                         File.Delete(ModNetFilePath);
                                     }
 
-                                    DiscordLauncherPresense.Status("Download ModNet", ModNetList);
+                                    DiscordLauncherPresence.Status("Download ModNet", ModNetList);
 
                                     FunctionStatus.TLS();
                                     Uri URLCall = new Uri(URLs.ModNet + "/launcher-modules/" + ModNetList);
@@ -2125,7 +2125,7 @@ namespace GameLauncher
                         }
                         catch (Exception Error)
                         {
-                            DiscordLauncherPresense.Status("Download ModNet Error", null);
+                            DiscordLauncherPresence.Status("Download ModNet Error", null);
                             CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                             string LogMessage = "There was an error with ModNet Files Check:";
                             LogToFileAddons.OpenLog("MODNET CORE", LogMessage, Error, "Error", false);
@@ -2164,7 +2164,7 @@ namespace GameLauncher
                         catch (Exception Error)
                         {
                             PlayProgressText.Text = ("JSON: Unable to Retrive Server Mod Information").ToUpper();
-                            DiscordLauncherPresense.Status("Server Mods Get Information Error", null);
+                            DiscordLauncherPresence.Status("Server Mods Get Information Error", null);
                             CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                             string LogMessage = "There was an error with Server Mod Information Retrieval:";
                             LogToFileAddons.OpenLog("SERVER MOD INFO", LogMessage, Error, "Error", false);
@@ -2186,7 +2186,7 @@ namespace GameLauncher
                         else if (!IsJSONValid.ValidJson(ServerModInfo))
                         {
                             PlayProgressText.Text = ("JSON: Invalid Server Mod Information").ToUpper();
-                            DiscordLauncherPresense.Status("Server Mods Get Information Error", null);
+                            DiscordLauncherPresence.Status("Server Mods Get Information Error", null);
                             CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                             ServerModInfo = null;
                             return;
@@ -2263,7 +2263,7 @@ namespace GameLauncher
                             }
                             else
                             {
-                                Log.Warning("DISCORD: RemoteRPC List for cars.json does not exist");
+                                Log.Warning("DISCORD: RemoteRPC list for cars.json does not exist");
                                 CarsList.remoteCarsList = string.Empty;
                             }
 
@@ -2275,7 +2275,7 @@ namespace GameLauncher
                             }
                             else
                             {
-                                Log.Warning("DISCORD: RemoteRPC List for events.json does not exist");
+                                Log.Warning("DISCORD: RemoteRPC list for events.json does not exist");
                                 EventsList.remoteEventsList = string.Empty;
                             }
 
@@ -2305,7 +2305,7 @@ namespace GameLauncher
                             catch (Exception Error)
                             {
                                 PlayProgressText.Text = ("JSON: Unable to Retrive Server Mod List Information").ToUpper();
-                                DiscordLauncherPresense.Status("Server Mods Get Information Error", null);
+                                DiscordLauncherPresence.Status("Server Mods Get Information Error", null);
                                 CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                                 string LogMessage = "There was an error with Server Mod List Information Retrieval:";
                                 LogToFileAddons.OpenLog("SERVER MOD JSON", LogMessage, Error, "Error", false);
@@ -2327,7 +2327,7 @@ namespace GameLauncher
                             else if (!IsJSONValid.ValidJson(ServerModListJSON))
                             {
                                 PlayProgressText.Text = ("JSON: Invalid Server Mod List Information").ToUpper();
-                                DiscordLauncherPresense.Status("Server Mods Get Information Error", null);
+                                DiscordLauncherPresence.Status("Server Mods Get Information Error", null);
                                 CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                                 ServerModListJSON = null;
                                 return;
@@ -2414,7 +2414,7 @@ namespace GameLauncher
                                     if (modFilesDownloadUrls.Count != 0)
                                     {
                                         this.DownloadModNetFilesRightNow(ModFolderCache);
-                                        DiscordLauncherPresense.Status("Download Server Mods", null);
+                                        DiscordLauncherPresence.Status("Download Server Mods", null);
                                     }
                                     else
                                     {
@@ -2423,7 +2423,7 @@ namespace GameLauncher
                                 }
                                 catch (Exception Error)
                                 {
-                                    DiscordLauncherPresense.Status("Download Server Mods Error", null);
+                                    DiscordLauncherPresence.Status("Download Server Mods Error", null);
                                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                                     string LogMessage = "There was an error with Server Mods Check:";
                                     LogToFileAddons.OpenLog("SERVER MOD DOWNLOAD", LogMessage, Error, "Error", false);
@@ -2466,7 +2466,7 @@ namespace GameLauncher
                 }
                 catch (Exception Error)
                 {
-                    DiscordLauncherPresense.Status("Download ModNet Error", null);
+                    DiscordLauncherPresence.Status("Download ModNet Error", null);
                     CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
                     string LogMessage = "There was an error downloading ModNet Files:";
                     LogToFileAddons.OpenLog("MODNET FILES", LogMessage, Error, "Error", false);
@@ -2515,7 +2515,7 @@ namespace GameLauncher
         /* Launch game */
         private void LaunchGame()
         {
-            DiscordLauncherPresense.Start("New RPC", DiscordLauncherPresense.ApplicationID());
+            DiscordLauncherPresence.Start("New RPC", DiscordLauncherPresence.ApplicationID());
 
             try
             {
@@ -3322,7 +3322,7 @@ namespace GameLauncher
                                     }
 
                                     string Status = string.Format("Unpacking game: " + (100 * current / numFiles) + "%");
-                                    DiscordLauncherPresense.Status("Unpack Game Files", Status);
+                                    DiscordLauncherPresence.Status("Unpack Game Files", Status);
 
                                     Application.DoEvents();
 
@@ -3404,7 +3404,7 @@ namespace GameLauncher
                 }
 
                 string Status = string.Format("Downloaded {0}% of the Game!", (int)(100 * downloadCurrent / compressedLength));
-                DiscordLauncherPresense.Status("Download Game Files", Status);
+                DiscordLauncherPresence.Status("Download Game Files", Status);
 
                 TaskbarProgress.SetValue(Handle, (int)(100 * downloadCurrent / compressedLength), 100);
             }
@@ -3466,8 +3466,8 @@ namespace GameLauncher
                 PlayProgressText.Text = "Ready!".ToUpper();
             }
             
-            DiscordLauncherPresense.Download = false;
-            DiscordLauncherPresense.Status("Idle Ready", null);
+            DiscordLauncherPresence.Download = false;
+            DiscordLauncherPresence.Status("Idle Ready", null);
 
             EnablePlayButton();
 
@@ -3531,7 +3531,7 @@ namespace GameLauncher
         {
             _downloader.Stop();
 
-            DiscordLauncherPresense.Status("Download Game Files Error", null);
+            DiscordLauncherPresence.Status("Download Game Files Error", null);
 
             if (this.ExtractingProgress.InvokeRequired)
             {
@@ -3902,7 +3902,7 @@ namespace GameLauncher
             {
                 new Thread(() =>
                 {
-                    DiscordLauncherPresense.Update();
+                    DiscordLauncherPresence.Update();
 
                     if (ServerListUpdater.NoCategoryList.Any())
                     {

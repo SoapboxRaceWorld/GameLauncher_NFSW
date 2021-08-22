@@ -36,7 +36,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
             {
                 if (Running())
                 {
-                    Log.Warning("PROXY: Local Proxy Server Already Running! (" + From + ")");
+                    Log.Warning("PROXY: Local Proxy Server already Running! (" + From + ")");
                 }
                 else
                 {
@@ -44,6 +44,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
                     HostConfiguration Configs = new HostConfiguration()
                     {
+                        UrlReservations = new UrlReservations()
+                        {
+                            CreateAutomatically = true,
+                        },
                         AllowChunkedEncoding = false,
                         RewriteLocalhost = false
                     };

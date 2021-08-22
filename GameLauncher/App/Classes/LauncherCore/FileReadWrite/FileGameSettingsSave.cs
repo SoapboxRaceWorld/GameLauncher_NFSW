@@ -88,7 +88,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             }
             else
             {
-                Log.Error("USX File: How Could This Happen!? - Heavy");
+                Log.Error("USX File: How Could This Happen!? - No UserSettings.xml found!");
                 return;
             }
 
@@ -288,10 +288,10 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 }
                 else
                 {
-                    Log.Error("USX File: User Game Settings File is Read-Only. Settings Not Saved!");
+                    Log.Error("USX File: UserSettings File is Read-Only. Settings Not Saved!");
                     if (MessageBoxAlert == "Display")
                     {
-                        MessageBox.Show(null, "XML Settings Not Saved \nRead-Only File ", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(null, "XML Settings Not Saved: \n Connot write to a Read-Only File ", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }

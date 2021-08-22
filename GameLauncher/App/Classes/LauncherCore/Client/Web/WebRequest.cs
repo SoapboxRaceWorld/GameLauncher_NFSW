@@ -72,7 +72,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Web
                 Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
             request.Headers["X-GameLauncherHash"] = WebHelpers.Value();
             request.Headers["X-GameLauncherCertificate"] = CertificateStore.LauncherSerial;
-            request.Headers["X-DiscordID"] = DiscordLauncherPresense.UserID;
+            request.Headers["X-DiscordID"] = DiscordLauncherPresence.UserID;
             request.Timeout = (int)(FunctionStatus.ExternalToolsWasUsed ? 
                 TimeSpan.FromSeconds(30).TotalMilliseconds : TimeSpan.FromSeconds(5).TotalMilliseconds);
             request.KeepAlive = false;

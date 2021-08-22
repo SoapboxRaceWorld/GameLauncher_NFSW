@@ -47,7 +47,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             {
                 if (new FileInfo(Path).IsReadOnly)
                 {
-                    Log.Warning("CORE: Settings.ini is ReadOnly");
+                    Log.Warning("CORE: Settings.ini is Read-Only");
                 }
                 else
                 {

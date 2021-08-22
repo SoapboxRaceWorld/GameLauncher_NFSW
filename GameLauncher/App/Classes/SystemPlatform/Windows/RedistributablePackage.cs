@@ -115,7 +115,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             if (!UnixOS.Detected())
             {
                 Log.Checking("REDISTRIBUTABLE: Is Installed or Not");
-                DiscordLauncherPresense.Status("Start Up", "Checking Redistributable Package Visual Code 2015 to 2019");
+                DiscordLauncherPresence.Status("Start Up", "Checking Redistributable Package Visual Code 2015 to 2019");
 
                 if (!RedistributablePackage.IsInstalled(RedistributablePackageVersion.VC2015to2019x86))
                 {

@@ -222,11 +222,11 @@ namespace GameLauncher
 
         private static void Start()
         {
-            DiscordLauncherPresense.Start("Start Up", null);
+            DiscordLauncherPresence.Start("Start Up", null);
 
             if (!UnixOS.Detected())
             {
-                DiscordLauncherPresense.Status("Start Up", "Checking .NET Framework");
+                DiscordLauncherPresence.Status("Start Up", "Checking .NET Framework");
                 try
                 {
                     /* Check if User has a compatible .NET Framework Installed */
@@ -344,7 +344,7 @@ namespace GameLauncher
                 Log.Completed("LAUNCHER MIGRATION");
 
                 Log.Checking("LAUNCHER XML: If File Exists or Not");
-                DiscordLauncherPresense.Status("Start Up", "Checking if UserSettings XML Exists");
+                DiscordLauncherPresence.Status("Start Up", "Checking if UserSettings XML Exists");
                 /* Create Default Configuration Files (if they don't already exist) */
                 if (!File.Exists(Locations.UserSettingsXML))
                 {
@@ -377,7 +377,7 @@ namespace GameLauncher
                 Log.Build(Insider + "BUILD: GameLauncher " + Application.ProductVersion + "_" + InsiderInfo.BuildNumberOnly());
 
                 Log.Checking("OS: Detecting");
-                DiscordLauncherPresense.Status("Start Up", "Checking Operating System");
+                DiscordLauncherPresence.Status("Start Up", "Checking Operating System");
                 try
                 {
                     if (UnixOS.Detected())
@@ -417,7 +417,7 @@ namespace GameLauncher
                     if (!UnixOS.Detected())
                     {
                         Log.Checking("FOLDER LOCATION: Checking Launcher Folder Directory");
-                        DiscordLauncherPresense.Status("Start Up", "Checking Launcher Folder Locations");
+                        DiscordLauncherPresence.Status("Start Up", "Checking Launcher Folder Locations");
 
                         switch (FunctionStatus.CheckFolder(Locations.LauncherFolder))
                         {
@@ -468,7 +468,7 @@ namespace GameLauncher
                         Log.Completed("WRITE TEST: Passed");
 
                         Log.Checking("INI FILES: Doing Nullsafe");
-                        DiscordLauncherPresense.Status("Start Up", "Doing NullSafe ini Files");
+                        DiscordLauncherPresence.Status("Start Up", "Doing NullSafe ini Files");
                         FileSettingsSave.NullSafeSettings();
                         FileAccountSave.NullSafeAccount();
                         Log.Checking("INI FILES: Done");
@@ -485,7 +485,7 @@ namespace GameLauncher
                         if (WindowsProductVersion.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Win7UpdatePatches))
                         {
                             Log.Checking("SSL/TLS: Windows 7 Detected");
-                            DiscordLauncherPresense.Status("Start Up", "Checking Windows 7 TLS/SSL Update");
+                            DiscordLauncherPresence.Status("Start Up", "Checking Windows 7 TLS/SSL Update");
 
                             try
                             {

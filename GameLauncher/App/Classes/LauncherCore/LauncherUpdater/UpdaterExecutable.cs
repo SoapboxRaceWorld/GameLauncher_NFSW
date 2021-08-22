@@ -24,8 +24,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
         /* Check If Updater Exists or Requires an Update */
         public static void Check()
         {
-            Log.Checking("LAUNCHER UPDATER: Is Update to Date or not");
-            DiscordLauncherPresense.Status("Start Up", "Checking Launcher and Updater Release Information");
+            Log.Checking("LAUNCHER UPDATER: Is Version Up to Date or not");
+            DiscordLauncherPresence.Status("Start Up", "Checking Launcher and Updater Release Information");
 
             /* Update this text file if a new GameLauncherUpdater.exe has been delployed - DavidCarbon */
             try
@@ -81,7 +81,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     }
                     else
                     {
-                        Log.Warning("LAUNCHER UPDATER: Retrived Invalid JSON Data");
+                        Log.Warning("LAUNCHER UPDATER: Received Invalid JSON Data");
                     }
                 }
                 catch (Exception Error)

@@ -49,7 +49,7 @@ namespace GameLauncher.App
             SetVisuals();
             this.Closing += (x, y) =>
             {
-                DiscordLauncherPresense.Status("Idle Ready", null);
+                DiscordLauncherPresence.Status("Idle Ready", null);
 
                 if (ThreadChangedCDN != null)
                 {
@@ -68,7 +68,7 @@ namespace GameLauncher.App
                 }
             };
 
-            DiscordLauncherPresense.Status("Settings", null);
+            DiscordLauncherPresence.Status("Settings", null);
         }
 
         /// <summary>
@@ -691,7 +691,7 @@ namespace GameLauncher.App
             }
             else
             {
-                Log.Error("SETTINGS: Selected CDN does not contain a URL, Unable to Save Contents");
+                Log.Error("SETTINGS: Selected CDN does not contain a URL, unable to Save Contents");
             }
 
             String disableProxy = (SettingsProxyCheckbox.Checked == true) ? "1" : "0";
@@ -730,16 +730,16 @@ namespace GameLauncher.App
 
                 if (FileSettingsSave.RPC == "1")
                 {
-                    if (DiscordLauncherPresense.Running())
+                    if (DiscordLauncherPresence.Running())
                     {
-                        DiscordLauncherPresense.Stop("Close");
+                        DiscordLauncherPresence.Stop("Close");
                     }
                 }
                 else
                 {
-                    if (!DiscordLauncherPresense.Running())
+                    if (!DiscordLauncherPresence.Running())
                     {
-                        DiscordLauncherPresense.Start("Start Up", null);
+                        DiscordLauncherPresence.Start("Start Up", null);
                     }
                 }
             }

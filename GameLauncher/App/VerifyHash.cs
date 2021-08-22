@@ -44,7 +44,7 @@ namespace GameLauncher.App
 
         public VerifyHash()
         {
-            DiscordLauncherPresense.Status("Verify", null);
+            DiscordLauncherPresence.Status("Verify", null);
             InitializeComponent();
             SetVisuals();
             this.Closing += (x, CloseForm) =>
@@ -61,7 +61,7 @@ namespace GameLauncher.App
                     }
                 }
 
-                DiscordLauncherPresense.Status("Settings", null);
+                DiscordLauncherPresence.Status("Settings", null);
             };
         }
 
@@ -141,7 +141,7 @@ namespace GameLauncher.App
 
         private void StartGameScanner()
         {
-            DiscordLauncherPresense.Status("Verify Scan", null);
+            DiscordLauncherPresence.Status("Verify Scan", null);
 
             Log.Info("VERIFY HASH: Checking and Deleting '.orig' Files and Symbolic Folders");
 
@@ -330,7 +330,7 @@ namespace GameLauncher.App
                     }
                     catch (Exception Error)
                     {
-                        LogToFileAddons.OpenLog("VERIFY HASH CHECKSums", "Downloading Checksums File had Encountered an Error", Error, "Error", false);
+                        LogToFileAddons.OpenLog("VERIFY HASH CHECKSUMS", "Downloading of the Checksums File has Encountered an Error", Error, "Error", false);
                         ErrorFree = false;
                     }
                     finally
@@ -519,14 +519,14 @@ namespace GameLauncher.App
 
         private void Integrity()
         {
-            DiscordLauncherPresense.Status("Verify Good", null);
+            DiscordLauncherPresence.Status("Verify Good", null);
             FileSettingsSave.GameIntegrity = "Good";
             FileSettingsSave.SaveSettings();
         }
 
         private void CorruptedFilesFound()
         {
-            DiscordLauncherPresense.Status("Verify Bad", null);
+            DiscordLauncherPresence.Status("Verify Bad", null);
             /* START Show Redownloader Progress*/
             if (this.StartScanner.InvokeRequired)
             {
@@ -680,7 +680,7 @@ namespace GameLauncher.App
                     if (e.Cancelled || e.Error != null)
                     {
                         redownloadErrorCount++;
-                        DiscordLauncherPresense.Status("Verify Bad", redownloadedCount + redownloadErrorCount + " out of " + currentCount);
+                        DiscordLauncherPresence.Status("Verify Bad", redownloadedCount + redownloadErrorCount + " out of " + currentCount);
                         LogVerify.Downloaded("File: " + CurrentDownloadingFile);
 
                         if (this.DownloadProgressText.InvokeRequired)
@@ -775,7 +775,7 @@ namespace GameLauncher.App
                     {
                         redownloadedCount++;
 
-                        DiscordLauncherPresense.Status("Verify Bad", redownloadedCount + " out of " + currentCount);
+                        DiscordLauncherPresence.Status("Verify Bad", redownloadedCount + " out of " + currentCount);
                         LogVerify.Downloaded("File: " + CurrentDownloadingFile);
 
                         if (this.DownloadProgressText.InvokeRequired)

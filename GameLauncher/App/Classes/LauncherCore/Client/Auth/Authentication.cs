@@ -60,7 +60,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                             Application.ProductVersion + " WinForms (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
                         Client.Headers["X-GameLauncherHash"] = WebHelpers.Value();
                         Client.Headers["X-GameLauncherCertificate"] = CertificateStore.LauncherSerial;
-                        Client.Headers["X-DiscordID"] = DiscordLauncherPresense.UserID;
+                        Client.Headers["X-DiscordID"] = DiscordLauncherPresence.UserID;
                     }
 
                     try
@@ -297,8 +297,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                         }
                         else
                         {
-                            Log.Error("Authentication: Unable to Read XML File Due to the Node 'LoginStatusVO' had an Error");
-                            Tokens.Error = "Unable to Read XML File Due to the Node 'LoginStatusVO' had an Error\nERROR NODE - LAUNCHER";
+                            Log.Error("Authentication: Unable to Read XML File Due to the Node 'LoginStatusVO' having an Error");
+                            Tokens.Error = "Unable to Read XML File Due to the Node 'LoginStatusVO' having an Error\nERROR NODE - LAUNCHER";
                         }
                     }
                     else

@@ -298,9 +298,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /// <param name="Boolen">True: Restarts Launcher | False: Closes Launcher</param>
         public static void ErrorCloseLauncher(string Notes, bool Boolen)
         {
-            if (DiscordLauncherPresense.Running())
+            if (DiscordLauncherPresence.Running())
             {
-                DiscordLauncherPresense.Stop("Close");
+                DiscordLauncherPresence.Stop("Close");
             }
 
             if (ServerProxy.Running())
@@ -344,7 +344,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             Log.Checking("LAUNCHER: Checking Game Installation");
             if (string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
             {
-                DiscordLauncherPresense.Status("Start Up", "Doing First Time Run");
+                DiscordLauncherPresence.Status("Start Up", "Doing First Time Run");
                 Log.Core("LAUNCHER: First run!");
 
                 try
@@ -379,7 +379,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 {
                     if (string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
                     {
-                        DiscordLauncherPresense.Status("Start Up", "User Selecting/Inputting Game Files Folder");
+                        DiscordLauncherPresence.Status("Start Up", "User Selecting/Inputting Game Files Folder");
 
                         try
                         {
@@ -408,7 +408,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
                                 if (!string.IsNullOrWhiteSpace(GameFolderPath))
                                 {
-                                    DiscordLauncherPresense.Status("Start Up", "Verifying Game Files Folder Location");
+                                    DiscordLauncherPresence.Status("Start Up", "Verifying Game Files Folder Location");
 
                                     if (!HasWriteAccessToFolder(GameFolderPath))
                                     {
@@ -515,7 +515,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 if (!UnixOS.Detected())
                 {
                     Log.Checking("LAUNCHER: Checking Game Path Location");
-                    DiscordLauncherPresense.Status("Start Up", "Checking Game Files Folder Location");
+                    DiscordLauncherPresence.Status("Start Up", "Checking Game Files Folder Location");
 
                     switch (CheckFolder(FileSettingsSave.GameInstallation))
                     {
@@ -562,7 +562,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                     /* Windows Defender (Windows 10) */
                     if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
                     {
-                        DiscordLauncherPresense.Status("Start Up", "Checking Windows Security (Defender) Exclusions");
+                        DiscordLauncherPresence.Status("Start Up", "Checking Windows Security (Defender) Exclusions");
 
                         if (!string.IsNullOrWhiteSpace(FileSettingsSave.WindowsDefenderStatus))
                         {
@@ -584,7 +584,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 /* Check If Launcher Failed to Connect to any APIs */
                 if (!VisualsAPIChecker.WOPLAPI())
                 {
-                    DiscordLauncherPresense.Status("Start Up", "Launcher Encountered API Errors");
+                    DiscordLauncherPresence.Status("Start Up", "Launcher Encountered API Errors");
 
                     DialogResult restartAppNoApis = MessageBox.Show(null, "There is no internet connection, Launcher might crash." +
                         "\n\nClick Yes to Close GameLauncher" +

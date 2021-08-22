@@ -44,7 +44,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             }
             else
             {
-                Log.Error("WINDOWS FIREWALL: Unknown Error Had Occured -> Check System Software");
+                Log.Error("WINDOWS FIREWALL: An Unknown Error has occured -> Check System Software");
             }
         }
 
@@ -371,7 +371,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             {
                 try
                 {
-                    DiscordLauncherPresense.Status("Start Up", "Checking Firewall Exclusions");
+                    DiscordLauncherPresence.Status("Start Up", "Checking Firewall Exclusions");
 
                     if (FirewallManager.IsServiceRunning && FirewallHelper.FirewallStatus())
                     {

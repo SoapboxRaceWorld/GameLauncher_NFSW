@@ -56,7 +56,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("DISCORD GAME PRESENSE [GET]", null, Error, null, true);
+                LogToFileAddons.OpenLog("DISCORD GAME PRESENCE [GET]", null, Error, null, true);
             }
             finally
             {
@@ -73,14 +73,14 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                 String _serverDiscordLink = InformationCache.SelectedServerJSON.discordUrl;
                 if (!String.IsNullOrWhiteSpace(_serverWebsiteLink) || !String.IsNullOrWhiteSpace(_serverDiscordLink) || !String.IsNullOrWhiteSpace(_serverPanelLink))
                 {
-                    DiscordLauncherPresense.ButtonsList.Clear();
+                    DiscordLauncherPresence.ButtonsList.Clear();
 
                     if (!String.IsNullOrWhiteSpace(_serverPanelLink))
                     {
                         /* Let's format it now, if possible */
                         if (AntiCheat.persona_id == String.Empty || AntiCheat.persona_name == String.Empty)
                         {
-                            DiscordLauncherPresense.ButtonsList.Add(new DiscordButton()
+                            DiscordLauncherPresence.ButtonsList.Add(new DiscordButton()
                             {
                                 Label = "View Panel",
                                 Url = _serverPanelLink.Split(new string[] { "{sep}" }, StringSplitOptions.None)[0]
@@ -92,7 +92,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                             _serverPanelLink = _serverPanelLink.Replace("{personaname}", AntiCheat.persona_name);
                             _serverPanelLink = _serverPanelLink.Replace("{sep}", String.Empty);
 
-                            DiscordLauncherPresense.ButtonsList.Add(new DiscordButton()
+                            DiscordLauncherPresence.ButtonsList.Add(new DiscordButton()
                             {
                                 Label = "Check " + AntiCheat.persona_name + " on Panel",
                                 Url = _serverPanelLink
@@ -101,7 +101,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     }
                     else if (!String.IsNullOrWhiteSpace(_serverWebsiteLink) && _serverWebsiteLink != _serverDiscordLink)
                     {
-                        DiscordLauncherPresense.ButtonsList.Add(new DiscordButton()
+                        DiscordLauncherPresence.ButtonsList.Add(new DiscordButton()
                         {
                             Label = "Website",
                             Url = _serverWebsiteLink
@@ -110,7 +110,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
                     if (!String.IsNullOrWhiteSpace(_serverDiscordLink))
                     {
-                        DiscordLauncherPresense.ButtonsList.Add(new DiscordButton()
+                        DiscordLauncherPresence.ButtonsList.Add(new DiscordButton()
                         {
                             Label = "Discord",
                             Url = _serverDiscordLink
@@ -221,9 +221,9 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         SmallImageText = "Treasure Hunt - Day: " + THDay,
                         SmallImageKey = "gamemode_treasure"
                     };
-                    _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
+                    _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                    if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
+                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }
 
                 /* IN SAFEHOUSE/FREEROAM */
@@ -252,9 +252,9 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
                     _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
                     _presence.Assets.LargeImageKey = PersonaAvatarId;
-                    _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
+                    _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                    if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
+                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }
 
                 if (uri == "/matchmaking/leavelobby" || uri == "/matchmaking/declineinvite")
@@ -269,9 +269,9 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         SmallImageText = "In-Freeroam",
                         SmallImageKey = "gamemode_freeroam"
                     };
-                    _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
+                    _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                    if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
+                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
 
                     if (uri == "/matchmaking/leavelobby")
                     {
@@ -303,9 +303,9 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                             SmallImageText = LauncherRPC,
                             SmallImageKey = EventsList.GetEventType(Convert.ToInt32(EventID))
                         };
-                        _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
+                        _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                        if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
+                        if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
 
                         eventTerminatedManually = false;
                     }
@@ -322,9 +322,9 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         SmallImageText = "In-Freeroam",
                         SmallImageKey = "gamemode_freeroam"
                     };
-                    _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
+                    _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                    if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
+                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
 
                     eventTerminatedManually = true;
                 }
@@ -346,9 +346,9 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         SmallImageText = LauncherRPC,
                         SmallImageKey = EventsList.GetEventType(EventID)
                     };
-                    _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
+                    _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                    if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
+                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
 
                     eventTerminatedManually = false;
                 }
@@ -364,12 +364,12 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         SmallImageText = LauncherRPC,
                         SmallImageKey = EventsList.GetEventType(EventID)
                     };
-                    _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
+                    _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
                     AntiCheat.event_id = EventID;
                     AntiCheat.EnableChecks();
 
-                    if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
+                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }
                 else if (uri == "/event/arbitration")
                 {
@@ -383,10 +383,10 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         SmallImageText = LauncherRPC,
                         SmallImageKey = EventsList.GetEventType(EventID)
                     };
-                    _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
+                    _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
                     AntiCheat.DisableChecks(true);
-                    if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
+                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
 
                     eventTerminatedManually = false;
                 }
@@ -457,14 +457,14 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                     _presence.State = serverName;
                     _presence.Assets.LargeImageText = PersonaName + " - Level: " + PersonaLevel;
                     _presence.Assets.LargeImageKey = PersonaAvatarId;
-                    _presence.Buttons = DiscordLauncherPresense.ButtonsList.ToArray();
+                    _presence.Buttons = DiscordLauncherPresence.ButtonsList.ToArray();
 
-                    if (DiscordLauncherPresense.Running()) DiscordLauncherPresense.Client.SetPresence(_presence);
+                    if (DiscordLauncherPresence.Running()) DiscordLauncherPresence.Client.SetPresence(_presence);
                 }
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("DISCORD GAME PRESENSE", null, Error, null, true);
+                LogToFileAddons.OpenLog("DISCORD GAME PRESENCE", null, Error, null, true);
             }
             finally
             {
