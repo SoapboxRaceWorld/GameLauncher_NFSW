@@ -229,6 +229,12 @@
     <Compile Include="App\RegisterScreen.Designer.cs">
       <DependentUpon>RegisterScreen.cs</DependentUpon>
     </Compile>
+    <Compile Include="App\SecurityCenterScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App\SecurityCenterScreen.Designer.cs">
+      <DependentUpon>SecurityCenterScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="App\SettingsScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -326,6 +332,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="App\RegisterScreen.resx">
       <DependentUpon>RegisterScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App\SecurityCenterScreen.resx">
+      <DependentUpon>SecurityCenterScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App\SettingsScreen.resx">
       <DependentUpon>SettingsScreen.cs</DependentUpon>

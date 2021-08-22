@@ -26,7 +26,7 @@ namespace GameLauncher.App
                 InitializeComponent();
                 SetVisuals();
 
-                if (VisualsAPIChecker.UnitedAPI)
+                if (VisualsAPIChecker.UnitedAPI())
                 {
                     try
                     {

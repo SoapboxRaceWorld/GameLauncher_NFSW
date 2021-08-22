@@ -17,6 +17,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 {
     public class ServerListUpdater
     {
+        public static bool LoadedList = false;
+
         public static List<ServerList> NoCategoryList = new List<ServerList>();
 
         public static List<ServerList> CleanList = new List<ServerList>();
@@ -33,12 +35,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
             try
             {
                 serverInfos.AddRange(JsonConvert.DeserializeObject<List<ServerList>>(CachedJSONList));
-                InformationCache.ServerListStatus = "Loaded";
+                LoadedList = true;
             }
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("SERVER LIST CORE", null, Error, null, true);
-                InformationCache.ServerListStatus = "Error";
+                LoadedList = false;
             }
             finally
             {
@@ -65,7 +67,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
                             return si;
                         }).ToList().ForEach(si => serverInfos.Add(si));
-                        InformationCache.ServerListStatus = "Loaded";
+                        LoadedList = true;
                     }
                 }
                 catch (Exception Error)
@@ -100,41 +102,55 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
             try
             {
-                /* Create Final Server List without Categories */
-                foreach (ServerList NoCatList in serverInfos)
+                if (serverInfos != null)
                 {
-                    if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
+                    if (serverInfos.Any())
                     {
-                        NoCategoryList.Add(NoCatList);
-                    }
-                }
-
-                /* Create Rough Draft Server List with Categories */
-                List<ServerList> RawList = new List<ServerList>();
-
-                foreach (var serverItemGroup in serverInfos.GroupBy(s => s.Category))
-                {
-                    if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
-                    {
-                        RawList.Add(new ServerList
+                        /* Create Final Server List without Categories */
+                        foreach (ServerList NoCatList in serverInfos)
                         {
-                            ID = $"__category-{serverItemGroup.Key}__",
-                            Name = $"<GROUP>{serverItemGroup.Key} Servers",
-                            IsSpecial = true
-                        });
-                    }
-                    RawList.AddRange(serverItemGroup.ToList());
-                }
+                            if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
+                            {
+                                NoCategoryList.Add(NoCatList);
+                            }
+                        }
 
-                /* Create Final Server List with Categories */
-                foreach (ServerList CList in RawList)
-                {
-                    if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
+                        /* Create Rough Draft Server List with Categories */
+                        List<ServerList> RawList = new List<ServerList>();
+
+                        foreach (var serverItemGroup in serverInfos.GroupBy(s => s.Category))
+                        {
+                            if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{serverItemGroup.Key} Servers")) == -1)
+                            {
+                                RawList.Add(new ServerList
+                                {
+                                    ID = $"__category-{serverItemGroup.Key}__",
+                                    Name = $"<GROUP>{serverItemGroup.Key} Servers",
+                                    IsSpecial = true
+                                });
+                            }
+                            RawList.AddRange(serverItemGroup.ToList());
+                        }
+
+                        /* Create Final Server List with Categories */
+                        foreach (ServerList CList in RawList)
+                        {
+                            if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
+                            {
+                                CleanList.Add(CList);
+                            }
+                        }
+                        Log.Completed("SERVER LIST CORE: Server List Done");
+                    }
+                    else
                     {
-                        CleanList.Add(CList);
+                        Log.Completed("SERVER LIST CORE: Server List has no Elements");
                     }
                 }
-                Log.Completed("SERVER LIST CORE: Server List Done");
+                else
+                {
+                    Log.Completed("SERVER LIST CORE: Server List is NULL");
+                }
             }
             catch (Exception Error)
             {

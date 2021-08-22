@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFirewallHelper;
 using GameLauncher.App.Classes.InsiderKit;
@@ -20,6 +19,7 @@ using GameLauncher.App.Classes.LauncherCore.Proxy;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using System.Threading;
 
 namespace GameLauncher.App
 {
@@ -39,6 +39,9 @@ namespace GameLauncher.App
         private string _newGameFilesPath;
         private string FinalCDNURL;
         private readonly bool FirewallEnabled = UnixOS.Detected() ? false : FirewallManager.IsServiceRunning;
+        private static Thread ThreadChangedCDN;
+        private static Thread ThreadSavedCDN;
+        private static Thread ThreadChecksums;
 
         public SettingsScreen()
         {
@@ -47,6 +50,22 @@ namespace GameLauncher.App
             this.Closing += (x, y) =>
             {
                 DiscordLauncherPresense.Status("Idle Ready", null);
+
+                if (ThreadChangedCDN != null)
+                {
+                    ThreadChangedCDN.Abort();
+                    ThreadChangedCDN = null;
+                }
+                if (ThreadSavedCDN != null)
+                {
+                    ThreadSavedCDN.Abort();
+                    ThreadSavedCDN = null;
+                }
+                if (ThreadChecksums != null)
+                {
+                    ThreadChecksums.Abort();
+                    ThreadChecksums = null;
+                }
             };
 
             DiscordLauncherPresense.Status("Settings", null);
@@ -283,6 +302,29 @@ namespace GameLauncher.App
                 ResetWindowsDefenderButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
                 ResetWindowsDefenderButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
             }
+
+            /*******************************/
+            /* Load CDN List                /
+            /*******************************/
+
+            if (!CDNListUpdater.LoadedList)
+            {
+                CDNListUpdater.GetList();
+            }
+
+            SettingsCDNPick.DisplayMember = "Name";
+            SettingsCDNPick.DataSource = CDNListUpdater.CleanList;
+
+            SettingsLanguage.DisplayMember = "Name";
+            SettingsLanguage.DataSource = LanguageListUpdater.CleanList;
+
+            Shown += (x, y) =>
+            {
+                RememberLastCDN();
+                RememberLastLanguage();
+                PingSavedCDN();
+                PingAPIStatus();
+            };
         }
 
         /********************************/
@@ -348,47 +390,51 @@ namespace GameLauncher.App
         /// <remarks>Dropdown Menu Visual</remarks>
         private void SettingsLanguage_DrawItem(object sender, DrawItemEventArgs e)
         {
-            var font = (sender as ComboBox).Font;
-            Brush backgroundColor;
-            Brush textColor;
-            Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
-            Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
-            Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
-            Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
-
-            var langListText = "";
-
-            if (sender is ComboBox cb)
+            try
             {
-                if (cb.Items[e.Index] is LangObject si)
+                var font = (sender as ComboBox).Font;
+                Brush backgroundColor;
+                Brush textColor;
+                Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
+                Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
+                Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
+                Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
+
+                var langListText = "";
+
+                if (sender is ComboBox cb)
                 {
-                    langListText = si.Name;
+                    if (cb.Items[e.Index] is LangObject si)
+                    {
+                        langListText = si.Name;
+                    }
                 }
-            }
 
-            if (langListText.StartsWith("<GROUP>"))
-            {
-                font = new Font(font, FontStyle.Bold);
-                e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
-                e.Graphics.DrawString(langListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
-            }
-            else
-            {
-                font = new Font(font, FontStyle.Bold);
-                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                if (langListText.StartsWith("<GROUP>"))
                 {
-                    backgroundColor = SystemBrushes.Highlight;
-                    textColor = SystemBrushes.HighlightText;
+                    font = new Font(font, FontStyle.Bold);
+                    e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
+                    e.Graphics.DrawString(langListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
                 }
                 else
                 {
-                    backgroundColor = customBGColor;
-                    textColor = customTextColor;
-                }
+                    font = new Font(font, FontStyle.Bold);
+                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                    {
+                        backgroundColor = SystemBrushes.Highlight;
+                        textColor = SystemBrushes.HighlightText;
+                    }
+                    else
+                    {
+                        backgroundColor = customBGColor;
+                        textColor = customTextColor;
+                    }
 
-                e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                e.Graphics.DrawString("    " + langListText, font, textColor, e.Bounds);
+                    e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                    e.Graphics.DrawString("    " + langListText, font, textColor, e.Bounds);
+                }
             }
+            catch { }
         }
 
         private void SettingsScreen_Load(object sender, EventArgs e)
@@ -509,15 +555,32 @@ namespace GameLauncher.App
                 }
                 else
                 {
-                    switch (APIChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat"))
+                    if (ThreadChecksums != null)
                     {
-                        case APIStatus.Online:
-                            FunctionStatus.DoesCDNSupportVerifyHash = true;
-                            break;
-                        default:
-                            FunctionStatus.DoesCDNSupportVerifyHash = false;
-                            break;
+                        ThreadChecksums.Abort();
+                        ThreadChecksums = null;
                     }
+
+                    ThreadChecksums = new Thread(() =>
+                    {
+                        if (Application.OpenForms["SettingsScreen"] != null)
+                        {
+                            if (!Application.OpenForms["SettingsScreen"].Disposing)
+                            {
+                                switch (APIChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat", 10))
+                                {
+                                    case APIStatus.Online:
+                                        FunctionStatus.DoesCDNSupportVerifyHash = true;
+                                        break;
+                                    default:
+                                        FunctionStatus.DoesCDNSupportVerifyHash = false;
+                                        break;
+                                }
+                            }
+                        }
+                    });
+
+                    ThreadChecksums.Start();
                 }
             }
             catch (Exception Error)
@@ -529,18 +592,13 @@ namespace GameLauncher.App
             /* CDN, APIs, & Restore Last CDN /
             /********************************/
 
-            VisualsAPIChecker.PingAPIStatus("CDN List", "Settings");
-
-            SettingsCDNPick.DisplayMember = "Name";
-            SettingsCDNPick.DataSource = CDNListUpdater.CleanList;
-
-            SettingsLanguage.DisplayMember = "Name";
-            SettingsLanguage.DataSource = LanguageListUpdater.CleanList;
-
-            RememberLastCDN();
-            RememberLastLanguage();
-            IsCDNDownGame();
-            PingAPIStatus();
+            /* Check If Launcher Failed to Connect to any APIs */
+            if (!VisualsAPIChecker.WOPLAPI())
+            {
+                MessageBox.Show(null, "Unable to Connect to any CDN List API. Please check your connection." +
+                "\nCDN Dropdown List will not be available on Settings Screen",
+                "GameLauncher has Paused, Failed To Connect to any CDN List API", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         /*******************************/
@@ -555,13 +613,13 @@ namespace GameLauncher.App
             {
                 FileSettingsSave.Lang = ((LangObject)SettingsLanguage.SelectedItem).INI_Value;
                 FileGameSettingsData.Language = ((LangObject)SettingsLanguage.SelectedItem).XML_Value;
-            }
 
-            /* TODO: Inform player about custom languagepack used. */
-            if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") 
-            {
-                MessageBox.Show(null, "Please Note: If a Server does not provide a Language Pack, it will fallback to English Language Pack instead.", 
-                    "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                /* TODO: Inform player about custom languagepack used. */
+                if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom")
+                {
+                    MessageBox.Show(null, "Please Note: If a Server does not provide a Language Pack, it will fallback to English Language Pack instead.",
+                        "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
 
             if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !UnixOS.Detected())
@@ -947,7 +1005,7 @@ namespace GameLauncher.App
 
         private void SettingsLauncherVersion_Click(object sender, EventArgs e)
         {
-            new DebugWindow().ShowDialog();
+            new DebugScreen().ShowDialog();
         }
 
         /* Settings CDN Dropdown Menu Index */
@@ -988,25 +1046,64 @@ namespace GameLauncher.App
 
         private void IsChangedCDNDown()
         {
+            if (ThreadChangedCDN != null)
+            {
+                ThreadChangedCDN.Abort();
+                ThreadChangedCDN = null;
+            }
+
             if (!string.IsNullOrWhiteSpace(((CDNList)SettingsCDNPick.SelectedItem).Url))
             {
                 SettingsCDNText.Text = "CDN: PINGING";
                 SettingsCDNText.ForeColor = Theming.SecondaryTextForeColor;
                 Log.Info("SETTINGS PINGING CHANGED CDN: Checking Changed CDN from Drop Down List");
 
-                switch (APIChecker.CheckStatus(((CDNList)SettingsCDNPick.SelectedItem).Url + "/index.xml"))
+                ThreadChangedCDN = new Thread(() =>
                 {
-                    case APIStatus.Online:
-                        SettingsCDNText.Text = "CDN: ONLINE";
-                        SettingsCDNText.ForeColor = Theming.Sucess;
-                        Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNList)SettingsCDNPick.SelectedItem).Url + " Is Online!");
-                        break;
-                    default:
-                        SettingsCDNText.Text = "CDN: OFFLINE";
-                        SettingsCDNText.ForeColor = Theming.Error;
-                        Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNList)SettingsCDNPick.SelectedItem).Url + " Is Offline!");
-                        break;
-                }
+                    if (Application.OpenForms["SettingsScreen"] != null)
+                    {
+                        if (!Application.OpenForms["SettingsScreen"].Disposing)
+                        {
+                            switch (APIChecker.CheckStatus(((CDNList)SettingsCDNPick.SelectedItem).Url + "/index.xml", 10))
+                            {
+                                case APIStatus.Online:
+                                    if (SettingsCDNText.InvokeRequired)
+                                    {
+                                        SettingsCDNText.Invoke(new Action(delegate ()
+                                        {
+                                            SettingsCDNText.Text = "CDN: ONLINE";
+                                            SettingsCDNText.ForeColor = Theming.Sucess;
+                                        }));
+                                    }
+                                    else
+                                    {
+                                        SettingsCDNText.Text = "CDN: ONLINE";
+                                        SettingsCDNText.ForeColor = Theming.Sucess;
+                                    }
+                                    Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNList)SettingsCDNPick.SelectedItem).Url + " Is Online!");
+                                    break;
+                                default:
+                                    if (SettingsCDNText.InvokeRequired)
+                                    {
+                                        SettingsCDNText.Invoke(new Action(delegate ()
+                                        {
+                                            SettingsCDNText.Text = "CDN: OFFLINE";
+                                            SettingsCDNText.ForeColor = Theming.Error;
+                                        }));
+                                    }
+                                    else
+                                    {
+                                        SettingsCDNText.Text = "CDN: OFFLINE";
+                                        SettingsCDNText.ForeColor = Theming.Error;
+                                    }
+                                    Log.UrlCall("SETTINGS PINGING CHANGED CDN: " + ((CDNList)SettingsCDNPick.SelectedItem).Url + " Is Offline!");
+                                    break;
+                            }
+                        }
+                    }
+                });
+
+                ThreadChangedCDN.Start();
             }
             else
             {
@@ -1114,112 +1211,126 @@ namespace GameLauncher.App
         /* DavidCarbon */
         private void PingAPIStatus()
         {
-            if (VisualsAPIChecker.UnitedAPI)
+            if (VisualsAPIChecker.UnitedAPI())
             {
                 SettingsMainSrvText.Text = "[API] United: ONLINE";
                 SettingsMainSrvText.ForeColor = Theming.Sucess;
             }
             else
             {
-                SettingsMainSrvText.Text = "[API] United: ERROR";
-                SettingsMainSrvText.ForeColor = Theming.Error;
+                SettingsMainSrvText.ForeColor = Theming.Warning;
+                if (VisualsAPIChecker.UnitedSL && !VisualsAPIChecker.UnitedCDNL) { SettingsMainSrvText.Text = "[API] United: SERVER LIST ONLY"; }
+                else if (!VisualsAPIChecker.UnitedSL && VisualsAPIChecker.UnitedCDNL) { SettingsMainSrvText.Text = "[API] United: CDN LIST ONLY"; }
+                else { SettingsMainSrvText.Text = "[API] United: OFFLINE"; SettingsMainSrvText.ForeColor = Theming.Error; }                
                 SettingsMainCDNText.Visible = true;
             }
 
-            if (VisualsAPIChecker.CarbonAPI)
+            if (VisualsAPIChecker.CarbonAPI())
             {
                 SettingsMainCDNText.Text = "[API] Carbon: ONLINE";
                 SettingsMainCDNText.ForeColor = Theming.Sucess;
             }
             else
             {
-                SettingsMainCDNText.Text = "[API] Carbon: ERROR";
-                SettingsMainCDNText.ForeColor = Theming.Error;
+                SettingsMainCDNText.ForeColor = Theming.Warning;
+                if (VisualsAPIChecker.CarbonSL && !VisualsAPIChecker.CarbonCDNL) { SettingsMainCDNText.Text = "[API] Carbon: SERVER LIST ONLY"; }
+                else if (!VisualsAPIChecker.CarbonSL && VisualsAPIChecker.CarbonCDNL) { SettingsMainCDNText.Text = "[API] Carbon: CDN LIST ONLY"; }
+                else { SettingsMainCDNText.Text = "[API] Carbon: OFFLINE"; SettingsMainCDNText.ForeColor = Theming.Error; }
                 SettingsBkupSrvText.Visible = true;
             }
 
-            if (VisualsAPIChecker.CarbonAPITwo)
+            if (VisualsAPIChecker.CarbonAPITwo())
             {
                 SettingsBkupSrvText.Text = "[API] Carbon (2nd): ONLINE";
                 SettingsBkupSrvText.ForeColor = Theming.Sucess;
             }
             else
             {
-                SettingsBkupSrvText.Text = "[API] Carbon (2nd): ERROR";
-                SettingsBkupSrvText.ForeColor = Theming.Error;
+                SettingsBkupSrvText.ForeColor = Theming.Warning;
+                if (VisualsAPIChecker.CarbonTwoSL && !VisualsAPIChecker.CarbonTwoCDNL) { SettingsBkupSrvText.Text = "[API] Carbon (2nd): SERVER LIST ONLY"; }
+                else if (!VisualsAPIChecker.CarbonTwoSL && VisualsAPIChecker.CarbonTwoCDNL) { SettingsBkupSrvText.Text = "[API] Carbon (2nd): CDN LIST ONLY"; }
+                else { SettingsBkupSrvText.Text = "[API] Carbon (2nd): OFFLINE"; SettingsBkupSrvText.ForeColor = Theming.Error; }                
                 SettingsBkupCDNText.Visible = true;
             }
 
-            if (VisualsAPIChecker.WOPLAPI)
+            if (VisualsAPIChecker.WOPLAPI())
             {
                 SettingsBkupCDNText.Text = "[API] WOPL: ONLINE";
                 SettingsBkupCDNText.ForeColor = Theming.Sucess;
             }
             else
             {
-                SettingsBkupCDNText.Text = "[API] WOPL: ERROR";
-                SettingsBkupCDNText.ForeColor = Theming.Error;
+                SettingsBkupCDNText.ForeColor = Theming.Warning;
+                if (VisualsAPIChecker.WOPLSL && !VisualsAPIChecker.WOPLCDNL) { SettingsBkupCDNText.Text = "[API] WOPL: SERVER LIST ONLY"; }
+                else if (!VisualsAPIChecker.WOPLSL && VisualsAPIChecker.WOPLCDNL) { SettingsBkupCDNText.Text = "[API] WOPL: CDN LIST ONLY"; }
+                else { SettingsBkupCDNText.Text = "[API] WOPL: OFFLINE"; SettingsBkupCDNText.ForeColor = Theming.Error; }
             }
         }
 
         private void RememberLastCDN()
         {
-            /* Last Selected CDN */
-            Log.Core("SETTINGS CDNLIST: Checking...");
-            Log.Core("SETTINGS CDNLIST: Setting first server in list");
-            Log.Core("SETTINGS CDNLIST: Checking if server is set on INI File");
-
-            try
+            if (CDNListUpdater.CleanList != null)
             {
-                if (!string.IsNullOrWhiteSpace(FileSettingsSave.CDN))
+                if (CDNListUpdater.CleanList.Any())
                 {
-                    string FinalCDNURL;
+                    /* Last Selected CDN */
+                    Log.Core("SETTINGS CDNLIST: Checking...");
+                    Log.Core("SETTINGS CDNLIST: Setting first server in list");
+                    Log.Core("SETTINGS CDNLIST: Checking if server is set on INI File");
 
-                    if (FileSettingsSave.CDN.EndsWith("/"))
+                    try
                     {
-                        char[] charsToTrim = { '/' };
-                        FinalCDNURL = FileSettingsSave.CDN.TrimEnd(charsToTrim);
-                    }
-                    else
-                    {
-                        FinalCDNURL = FileSettingsSave.CDN;
-                    }
-
-                    Log.Core("SETTINGS CDNLIST: Found something!");
-                    Log.Core("SETTINGS CDNLIST: Checking if CDN exists on our database");
-
-                    if (CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
-                    {
-                        Log.Core("SETTINGS CDNLIST: CDN found! Checking ID");
-                        var index = CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
-
-                        Log.Core("SETTINGS CDNLIST: ID is " + index);
-                        if (index >= 0)
+                        if (!string.IsNullOrWhiteSpace(FileSettingsSave.CDN))
                         {
-                            Log.Core("SETTINGS CDNLIST: ID set correctly");
-                            SettingsCDNPick.SelectedIndex = index;
+                            string FinalCDNURL;
+
+                            if (FileSettingsSave.CDN.EndsWith("/"))
+                            {
+                                char[] charsToTrim = { '/' };
+                                FinalCDNURL = FileSettingsSave.CDN.TrimEnd(charsToTrim);
+                            }
+                            else
+                            {
+                                FinalCDNURL = FileSettingsSave.CDN;
+                            }
+
+                            Log.Core("SETTINGS CDNLIST: Found something!");
+                            Log.Core("SETTINGS CDNLIST: Checking if CDN exists on our database");
+
+                            if (CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL)) != 0)
+                            {
+                                Log.Core("SETTINGS CDNLIST: CDN found! Checking ID");
+                                var index = CDNListUpdater.CleanList.FindIndex(i => string.Equals(i.Url, FinalCDNURL));
+
+                                Log.Core("SETTINGS CDNLIST: ID is " + index);
+                                if (index >= 0)
+                                {
+                                    Log.Core("SETTINGS CDNLIST: ID set correctly");
+                                    SettingsCDNPick.SelectedIndex = index;
+                                }
+                                else if (index < 0)
+                                {
+                                    Log.Warning("SETTINGS CDNLIST: Checking ID Against OLD Standard");
+                                    RememberLastCDNOldStandard();
+                                }
+                            }
+                            else
+                            {
+                                Log.Warning("SETTINGS CDNLIST: Unable to find anything, assuming default");
+                                SettingsCDNPick.SelectedIndex = 1;
+                                Log.Warning("SETTINGS CDNLIST: Unknown entry value is " + FinalCDNURL);
+                            }
                         }
-                        else if (index < 0)
+                        else
                         {
-                            Log.Warning("SETTINGS CDNLIST: Checking ID Against OLD Standard");
-                            RememberLastCDNOldStandard();
+                            SettingsCDNPick.SelectedIndex = 1;
                         }
                     }
-                    else
+                    catch (Exception Error)
                     {
-                        Log.Warning("SETTINGS CDNLIST: Unable to find anything, assuming default");
-                        SettingsCDNPick.SelectedIndex = 1;
-                        Log.Warning("SETTINGS CDNLIST: Unknown entry value is " + FinalCDNURL);
+                        LogToFileAddons.OpenLog("SETTINGS CDNLIST", null, Error, null, true);
                     }
                 }
-                else
-                {
-                    SettingsCDNPick.SelectedIndex = 1;
-                }
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("SETTINGS CDNLIST", null, Error, null, true);
             }
         }
 
@@ -1227,7 +1338,6 @@ namespace GameLauncher.App
         private void RememberLastCDNOldStandard()
         {
             /* Last Selected CDN */
-
             try
             {
                 if (!string.IsNullOrWhiteSpace(FileSettingsSave.CDN))
@@ -1319,25 +1429,55 @@ namespace GameLauncher.App
         }
 
         /* CDN Display Playing Game! - DavidCarbon */
-        private async void IsCDNDownGame()
+        private void PingSavedCDN()
         {
+            if (ThreadSavedCDN != null)
+            {
+                ThreadSavedCDN.Abort();
+                ThreadSavedCDN = null;
+            }
+
             if (!string.IsNullOrWhiteSpace(FileSettingsSave.CDN))
             {
                 SettingsCDNCurrent.LinkColor = Theming.SecondaryTextForeColor;
                 Log.Info("SETTINGS PINGING CDN: Checking Current CDN from Settings.ini");
-                await Task.Delay(500);
 
-                switch (APIChecker.CheckStatus(FileSettingsSave.CDN + "/index.xml"))
+                ThreadSavedCDN = new Thread(() =>
                 {
-                    case APIStatus.Online:
-                        SettingsCDNCurrent.LinkColor = Theming.Sucess;
-                        Log.UrlCall("SETTINGS PINGING CDN: " + FileSettingsSave.CDN + " Is Online!");
-                        break;
-                    default:
-                        SettingsCDNCurrent.LinkColor = Theming.Error;
-                        Log.UrlCall("SETTINGS PINGING CDN: " + FileSettingsSave.CDN + " Is Offline!");
-                        break;
-                }
+                    if (Application.OpenForms["SettingsScreen"] != null)
+                    {
+                        if (!Application.OpenForms["SettingsScreen"].Disposing)
+                        {
+                            switch (APIChecker.CheckStatus(FileSettingsSave.CDN + "/index.xml", 10))
+                            {
+                                case APIStatus.Online:
+                                    if (SettingsCDNCurrent.InvokeRequired)
+                                    {
+                                        SettingsCDNCurrent.Invoke(new Action(delegate ()
+                                        {
+                                            SettingsCDNCurrent.LinkColor = Theming.Sucess;
+                                        }));
+                                    }
+                                    else { SettingsCDNCurrent.LinkColor = Theming.Sucess; }
+                                    Log.UrlCall("SETTINGS PINGING CDN: " + FileSettingsSave.CDN + " Is Online!");
+                                    break;
+                                default:
+                                    if (SettingsCDNCurrent.InvokeRequired)
+                                    {
+                                        SettingsCDNCurrent.Invoke(new Action(delegate ()
+                                        {
+                                            SettingsCDNCurrent.LinkColor = Theming.Error;
+                                        }));
+                                    }
+                                    else { SettingsCDNCurrent.LinkColor = Theming.Error; }
+                                    Log.UrlCall("SETTINGS PINGING CDN: " + FileSettingsSave.CDN + " Is Offline!");
+                                    break;
+                            }
+                        }
+                    }
+                });
+
+                ThreadSavedCDN.Start();
             }
             else
             {

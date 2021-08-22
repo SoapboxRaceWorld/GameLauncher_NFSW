@@ -97,7 +97,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
             Log.Info("API: Moved to Function");
             /* Run the API Checks to Make Sure it Visually Displayed Correctly */
-            VisualsAPIChecker.PingAPIStatus("Startup", "Loading");
+            VisualsAPIChecker.PingAPIStatus();
         }
     }
 }

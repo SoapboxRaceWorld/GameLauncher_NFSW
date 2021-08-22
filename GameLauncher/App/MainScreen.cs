@@ -661,7 +661,7 @@ namespace GameLauncher
             /* Disable Social Panel when switching */
             DisableSocialPanelandClearIt();
 
-            if (InformationCache.ServerListStatus == "Error" && InformationCache.SelectedServerData == null)
+            if (!ServerListUpdater.LoadedList && InformationCache.SelectedServerData == null)
             {
                 ServerStatusText.Text = "Launcher Offline:\n - Unknown";
                 ServerStatusText.ForeColor = Theming.ThirdTextForeColor;
@@ -955,7 +955,7 @@ namespace GameLauncher
                                     if (InformationCache.SelectedServerJSON.modernAuthSecureChannelOverRide.ToLower() == "true")
                                     {
                                         string CheckHttps = (InformationCache.SelectedServerData.IPAddress + "/GetServerInformation").Replace("http", "https");
-                                        switch (APIChecker.CheckStatus(CheckHttps))
+                                        switch (APIChecker.CheckStatus(CheckHttps, 10))
                                         {
                                             case APIStatus.Online:
                                                 InformationCache.ModernAuthSecureChannel = true;
@@ -1408,15 +1408,16 @@ namespace GameLauncher
         /* SETTINGS PAGE LAYOUT */
         private void SettingsButton_Click(object sender, EventArgs e)
         {
-            if (!VisualsAPIChecker.WOPLAPI)
+            SettingsButton.BackgroundImage = Theming.GearButtonClick;
+
+            try
             {
-                MessageBox.Show(null, "GameLauncher has Encountered a Complete API Connection Failure\nSettings is Locked out as a Safety Precaution" +
-                    "\nUntil the issue is Resolved on your end", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                SettingsButton.BackgroundImage = Theming.GearButtonClick;
                 new SettingsScreen().ShowDialog();
+            }
+            catch (Exception Error)
+            {
+                string ErrorMessage = "Settings Screen Encountered an Error";
+                LogToFileAddons.OpenLog("SETTINGS SCREEN", ErrorMessage, Error, "Exclamation", false);
             }
         }
 
@@ -1478,28 +1479,28 @@ namespace GameLauncher
             APIStatusDesc.Text = "Connected to API";
             APIStatusIcon.BackgroundImage = Theming.APIIconSuccess;
 
-            if (!VisualsAPIChecker.UnitedAPI)
+            if (!VisualsAPIChecker.UnitedAPI())
             {
                 APIStatusText.Text = "Carbon API:\n - Online";
                 APIStatusText.ForeColor = Theming.Sucess;
                 APIStatusDesc.Text = "Connected to API";
                 APIStatusIcon.BackgroundImage = Theming.APIIconSuccess;
 
-                if (!VisualsAPIChecker.CarbonAPI)
+                if (!VisualsAPIChecker.CarbonAPI())
                 {
                     APIStatusText.Text = "Carbon 2nd API:\n - Online";
                     APIStatusText.ForeColor = Theming.Sucess;
                     APIStatusDesc.Text = "Connected to API";
                     APIStatusIcon.BackgroundImage = Theming.APIIconSuccess;
 
-                    if (!VisualsAPIChecker.CarbonAPITwo)
+                    if (!VisualsAPIChecker.CarbonAPITwo())
                     {
                         APIStatusText.Text = "WOPL API:\n - Online";
                         APIStatusText.ForeColor = Theming.Sucess;
                         APIStatusDesc.Text = "Connected to API";
                         APIStatusIcon.BackgroundImage = Theming.APIIconSuccess;
 
-                        if (!VisualsAPIChecker.WOPLAPI)
+                        if (!VisualsAPIChecker.WOPLAPI())
                         {
                             APIStatusText.Text = "Connection API:\n - Error";
                             APIStatusText.ForeColor = Theming.Error;

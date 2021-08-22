@@ -16,9 +16,9 @@ using GameLauncher.App.Classes.SystemPlatform.Unix;
 
 namespace GameLauncher.App
 {
-    public partial class DebugWindow : Form
+    public partial class DebugScreen : Form
     {
-        public DebugWindow()
+        public DebugScreen()
         {
             InitializeComponent();
             ApplyEmbeddedFonts();
@@ -88,7 +88,7 @@ namespace GameLauncher.App
             return virusCheckerName;
         }
 
-        private void DebugWindow_Load(object sender, EventArgs e)
+        private void DebugScreen_Load(object sender, EventArgs e)
         {
             data.AutoGenerateColumns = true;
 

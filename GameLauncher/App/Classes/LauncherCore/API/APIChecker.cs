@@ -13,7 +13,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 {
     class APIChecker
     {
-        public static APIStatus CheckStatus(string URI)
+        public static APIStatus CheckStatus(string URI, int Timer)
         {
             if (!string.IsNullOrWhiteSpace(URI))
             {
@@ -22,31 +22,34 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
                 try
                 {
+                    Log.Checking("Checking Status: ".ToUpper() + URI);
                     FunctionStatus.TLS();
                     Uri ConvertedAPIURI = new Uri(URI);
                     /* Releases Connection Socket after 30 seconds */
-                    ServicePointManager.FindServicePoint(ConvertedAPIURI).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+                    ServicePointManager.FindServicePoint(ConvertedAPIURI).ConnectionLeaseTimeout = (int)TimeSpan.FromSeconds(Timer + 1).TotalMilliseconds;
                     URLConnection = (HttpWebRequest)WebRequest.Create(ConvertedAPIURI);
                     URLConnection.AllowAutoRedirect = false; /* Find out if this site is up and don't follow a redirector */
                     URLConnection.Method = "GET";
                     URLConnection.UserAgent = "SBRW Launcher " + Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)";
-                    URLConnection.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+                    URLConnection.Timeout = (int)TimeSpan.FromSeconds(Timer).TotalMilliseconds;
                     URLConnection.KeepAlive = false;
 
                     try
                     {
                         ServerResponse = (HttpWebResponse)URLConnection.GetResponse();
-                        Log.Info("CORE: " + URI + " is Online!");
+                        Log.Completed("Checking Status: ".ToUpper() + URI + " [Is Online]");
                         return APIStatus.Online;
                         /* Do something with response.Headers to find out information about the request */
                     }
                     catch (WebException Error)
                     {
+                        Log.Completed("Checking Status: ".ToUpper() + URI + " [WebException]");
                         return StatusCodes(URI, Error, (HttpWebResponse)Error.Response);
                     }
                 }
                 catch (Exception Error)
                 {
+                    Log.Completed("Checking Status: ".ToUpper() + URI + " [Exception]");
                     LogToFileAddons.OpenLog("API Checker", null, Error, null, true);
                     return APIStatus.UnknownError;
                 }
@@ -182,153 +185,149 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
     class VisualsAPIChecker
     {
-        public static bool UnitedAPI = true;
+        public static bool UnitedSL = false;
+        public static bool UnitedCDNL = false;
+        public static bool UnitedAPI() => (UnitedSL && UnitedCDNL);
 
-        public static bool CarbonAPI = true;
+        public static bool CarbonSL = false;
+        public static bool CarbonCDNL = false;
+        public static bool CarbonAPI() => (CarbonSL && CarbonCDNL);
 
-        public static bool CarbonAPITwo = true;
+        public static bool CarbonTwoSL = false;
+        public static bool CarbonTwoCDNL = false;
+        public static bool CarbonAPITwo() => (CarbonTwoSL && CarbonTwoCDNL);
 
-        public static bool WOPLAPI = true;
+        public static bool WOPLSL = false;
+        public static bool WOPLCDNL = false;
+        public static bool WOPLAPI() => (WOPLSL && WOPLCDNL);
 
         public static bool GitHubAPI = true;
 
-        public static bool LoadedServerList = false;
-
-        public static bool LoadedCDNList = false;
-
-        public static void PingAPIStatus(string Mode, string From)
+        public static void PingAPIStatus()
         {
-            if (!LoadedServerList || !LoadedCDNList)
+            Log.Checking("API: Checking Status");
+            Log.Checking("API Status: WorldUnited");
+            switch (APIChecker.CheckStatus(URLs.Main + "/serverlist.json", 15))
             {
-                Log.Checking("API: Checking Status");
+                case APIStatus.Online:
+                    UnitedSL = RetriveJSON(URLs.Main + "/serverlist.json", "SL");
+                    if (UnitedSL) { UnitedCDNL = RetriveJSON(URLs.Main + "/cdn_list.json", "CDNL"); }
+                    Log.Completed("API Status: WorldUnited");
+                    break;
+                default:
+                    Log.Completed("API Status: WorldUnited");
+                    break;
+            }
 
-                switch (APIChecker.CheckStatus(URLs.Main + "/" + ((!LoadedServerList)? "serverlist.json" : "cdn_list.json")))
+            if (!UnitedAPI())
+            {
+                Log.Checking("API Status: DavidCarbon");
+                switch (APIChecker.CheckStatus(URLs.Static + "/serverlist.json", 15))
                 {
                     case APIStatus.Online:
-                        UnitedAPI = RetriveJSON(URLs.Main + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json"),
-                                                 (!LoadedServerList) ? "SL" : "CDNL");
+                        if (!UnitedSL) { CarbonSL = RetriveJSON(URLs.Static + "/serverlist.json", "SL"); }
+                        else { CarbonSL = true; }
+                        if (!UnitedCDNL) { CarbonCDNL = RetriveJSON(URLs.Static + "/cdn_list.json", "CDNL"); }
+                        else { CarbonCDNL = true; }
+                        Log.Completed("API Status: DavidCarbon");
                         break;
                     default:
-                        UnitedAPI = false;
+                        Log.Completed("API Status: DavidCarbon");
                         break;
                 }
-
-                if (!UnitedAPI)
-                {
-                    switch (APIChecker.CheckStatus(URLs.Static + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json")))
-                    {
-                        case APIStatus.Online:
-                            CarbonAPI = RetriveJSON(URLs.Static + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json"),
-                                                 (!LoadedServerList) ? "SL" : "CDNL");
-                            break;
-                        default:
-                            CarbonAPI = false;
-                            break;
-                    }
-                }
-
-                if (!CarbonAPI)
-                {
-                    switch (APIChecker.CheckStatus(URLs.Static_Alt + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json")))
-                    {
-                        case APIStatus.Online:
-                            CarbonAPITwo = RetriveJSON(URLs.Static_Alt + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json"),
-                                                 (!LoadedServerList) ? "SL" : "CDNL");
-                            break;
-                        default:
-                            CarbonAPITwo = false;
-                            break;
-                    }
-                }
-                
-                if (!CarbonAPITwo)
-                {
-                    switch (APIChecker.CheckStatus(URLs.WOPL + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json")))
-                    {
-                        case APIStatus.Online:
-                            WOPLAPI = RetriveJSON(URLs.WOPL + "/" + ((!LoadedServerList) ? "serverlist.json" : "cdn_list.json"),
-                                                 (!LoadedServerList) ? "SL" : "CDNL");
-                            break;
-                        default:
-                            WOPLAPI = false;
-                            break;
-                    }
-                }
-
-                Log.Completed("API: Done");
             }
-
-            if (Mode == "Startup")
+            else
             {
-                if (!LoadedServerList)
-                {
-                    Log.Checking("API: Test #2");
-                    LoadedServerList = true;
-
-                    /* Check If Launcher Failed to Connect to any APIs */
-                    if (!WOPLAPI)
-                    {
-                        DiscordLauncherPresense.Status("Start Up", "Launcher Encountered API Errors");
-
-                        DialogResult restartAppNoApis = MessageBox.Show(null, "Unable to Connect to any Server List API. Please check your connection." +
-                        "\n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect to any Server List API",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                        if (restartAppNoApis == DialogResult.No)
-                        {
-                            MessageBox.Show("Please keep in Mind Launcher might crash past this point. Make sure to resolve the issue next time",
-                                "GameLauncher will continue, despite failing To Connect To API");
-                            Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and will Continue");
-                        }
-
-                        if (restartAppNoApis == DialogResult.Yes)
-                        {
-                            FunctionStatus.LauncherForceClose = true;
-                        }
-                    }
-                    Log.Completed("API: Test #2 Done");
-
-                    if (FunctionStatus.LauncherForceClose)
-                    {
-                        FunctionStatus.ErrorCloseLauncher("Closing From API Check Error", false);
-                    }
-                    else
-                    {
-                        FunctionStatus.IsVisualAPIsChecked = true;
-
-                        Log.Info("LIST CORE: Moved to Function");
-                        /* (Start Process) Check ServerList Status */
-                        ServerListUpdater.GetList();
-                    }
-                }
+                CarbonSL = true;
+                CarbonCDNL = true;
             }
-            else if (Mode == "CDN List")
+
+            if (!CarbonAPI())
             {
-                if (!LoadedCDNList)
+                Log.Checking("API Status: DavidCarbon [Second]");
+                switch (APIChecker.CheckStatus(URLs.Static_Alt + "/serverlist.json", 15))
                 {
-                    Log.Checking("API: Test #3");
-                    LoadedCDNList = true;
-
-                    /* Check If Launcher Failed to Connect to any APIs */
-                    if (!WOPLAPI)
-                    {
-                        MessageBox.Show(null, "Unable to Connect to any CDN List API. Please check your connection." +
-                        "\n\nCDN Dropdown List will not be available on " + From + " Screen",
-                        "GameLauncher has stopped, Failed To Connect to any CDN List API", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                    Log.Checking("API: Test #3 Done");
-
-                    /*******************************/
-                    /* Load CDN List                /
-                    /*******************************/
-
-                    if (InformationCache.CDNListStatus != "Loaded")
-                    {
-                        Log.Checking("LIST CORE: Moved to Function");
-                        CDNListUpdater.GetList();
-                    }
+                    case APIStatus.Online:
+                        if (!CarbonSL) { CarbonTwoSL = RetriveJSON(URLs.Static_Alt + "/serverlist.json", "SL"); }
+                        else { CarbonTwoSL = true; }
+                        if (!CarbonCDNL) { CarbonTwoCDNL = RetriveJSON(URLs.Static_Alt + "/cdn_list.json", "CDNL"); }
+                        else { CarbonTwoCDNL = true; }
+                        Log.Completed("API Status: DavidCarbon [Second]");
+                        break;
+                    default:
+                        Log.Completed("API Status: DavidCarbon [Second]");
+                        break;
                 }
             }
+            else
+            {
+                CarbonTwoSL = true;
+                CarbonTwoCDNL = true;
+            }
+
+            if (!CarbonAPITwo())
+            {
+                Log.Checking("API Status: WorldOnline");
+                switch (APIChecker.CheckStatus(URLs.WOPL + "/serverlist.json", 15))
+                {
+                    case APIStatus.Online:
+                        if (!CarbonTwoSL) { WOPLSL = RetriveJSON(URLs.WOPL + "/serverlist.json", "SL"); }
+                        else { WOPLSL = true; }
+                        if (!CarbonTwoCDNL) { WOPLCDNL = RetriveJSON(URLs.WOPL + "/cdn_list.json", "CDNL"); }
+                        else { WOPLCDNL = true; }
+                        Log.Completed("API Status: WorldOnline");
+                        break;
+                    default:
+                        Log.Completed("API Status: WorldOnline");
+                        break;
+                }
+            }
+            else
+            {
+                WOPLSL = true;
+                WOPLCDNL = true;
+            }
+
+            Log.Completed("API: Checking Status Done");
+
+            Log.Checking("API: Test #2");
+
+            /* Check If Launcher Failed to Connect to any APIs */
+            if (!WOPLAPI())
+            {
+                DiscordLauncherPresense.Status("Start Up", "Launcher Encountered API Errors");
+
+                DialogResult restartAppNoApis = MessageBox.Show(null, "Unable to Connect to any Server List API. Please check your connection." +
+                "\n \nClick Yes to Close Launcher \nor \nClick No Continue", "GameLauncher has Stopped, Failed To Connect to any Server List API",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (restartAppNoApis == DialogResult.No)
+                {
+                    MessageBox.Show("Please keep in Mind Launcher might crash past this point. Make sure to resolve the issue next time",
+                        "GameLauncher will continue, despite failing To Connect To API");
+                    Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and will Continue");
+                }
+
+                if (restartAppNoApis == DialogResult.Yes)
+                {
+                    FunctionStatus.LauncherForceClose = true;
+                }
+            }
+            Log.Completed("API: Test #2 Done");
+
+            if (FunctionStatus.LauncherForceClose)
+            {
+                FunctionStatus.ErrorCloseLauncher("Closing From API Check Error", false);
+            }
+            else
+            {
+                FunctionStatus.IsVisualAPIsChecked = true;
+
+                Log.Info("LIST CORE: Moved to Function");
+                /* (Start Process) Check ServerList Status */
+                ServerListUpdater.GetList();
+            }
+
         }
 
         private static string OnlineListJson;
@@ -361,6 +360,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 catch (Exception Error)
                 {
                     LogToFileAddons.OpenLog("JSON LIST", null, Error, null, true);
+                    return false;
                 }
                 finally
                 {

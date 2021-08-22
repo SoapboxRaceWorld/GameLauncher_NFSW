@@ -36,12 +36,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* Parent Screen Cords */
         public static Point ParentScreenLocation;
 
-        /* ServerList Load Checks */
-        public static string ServerListStatus = "Unknown";
-
-        /* CDNList Load Checks */
-        public static string CDNListStatus = "Unknown";
-
         /* System Language */
         public static string CurrentLanguage = "EN";
 
@@ -588,7 +582,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 }
 
                 /* Check If Launcher Failed to Connect to any APIs */
-                if (!VisualsAPIChecker.WOPLAPI)
+                if (!VisualsAPIChecker.WOPLAPI())
                 {
                     DiscordLauncherPresense.Status("Start Up", "Launcher Encountered API Errors");
 

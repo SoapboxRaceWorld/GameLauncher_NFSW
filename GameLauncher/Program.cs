@@ -540,13 +540,17 @@ namespace GameLauncher
                     {
                         if (File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON))))
                         {
+                            if (File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON))))
+                            {
+                                File.Delete(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)));
+                            }
+
                             File.Move(
                                 Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameOldServersJSON)),
                                 Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON)));
                             Log.Completed("JSON: Renaming Servers File");
                         }
-                        else if (!File.Exists(
-                            Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON))))
+                        else if (!File.Exists(Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameNewServersJSON))))
                         {
                             try
                             {

@@ -42,7 +42,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             Log.Checking("LAUNCHER UPDATE: Is Version Up to Date or not");
             DiscordLauncherPresense.Status("Start Up", "Checking Latest Launcher Release Information");
 
-            if (VisualsAPIChecker.UnitedAPI)
+            if (VisualsAPIChecker.UnitedAPI())
             {
                 try
                 {
@@ -107,7 +107,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 }
             }
 
-            if (!VisualsAPIChecker.UnitedAPI || InvalidJSON)
+            if (!VisualsAPIChecker.UnitedAPI() || InvalidJSON)
             {
                 try
                 {

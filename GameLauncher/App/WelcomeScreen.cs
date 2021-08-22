@@ -9,6 +9,7 @@ using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using System.IO;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.Classes.LauncherCore.Global;
 
 namespace GameLauncher.App
 {
@@ -28,7 +29,24 @@ namespace GameLauncher.App
             /* Load CDN List                /
             /*******************************/
 
-            VisualsAPIChecker.PingAPIStatus("CDN List", "Welcome");
+            Log.Checking("API: Test #3");
+            /* Check If Launcher Failed to Connect to any APIs */
+            if (!VisualsAPIChecker.WOPLAPI())
+            {
+                MessageBox.Show(null, "Unable to Connect to any CDN List API. Please check your connection." +
+                "\n\nCDN Dropdown List will not be available on Welcome Screen",
+                "GameLauncher has Paused, Failed To Connect to any CDN List API", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            Log.Checking("API: Test #3 Done");
+
+            /*******************************/
+            /* Load CDN List                /
+            /*******************************/
+
+            if (!CDNListUpdater.LoadedList)
+            {
+                CDNListUpdater.GetList();
+            }
 
             /*******************************/
             /* Set Hardcoded Text           /
@@ -143,19 +161,19 @@ namespace GameLauncher.App
         {
             ListStatusText.Text = "United List - Online";
 
-            if (!VisualsAPIChecker.UnitedAPI)
+            if (!VisualsAPIChecker.UnitedAPI())
             {
                 ListStatusText.Text = "Carbon List - Online";
 
-                if (!VisualsAPIChecker.CarbonAPI)
+                if (!VisualsAPIChecker.CarbonAPI())
                 {
                     ListStatusText.Text = "Carbon 2nd List - Online";
 
-                    if (!VisualsAPIChecker.CarbonAPITwo)
+                    if (!VisualsAPIChecker.CarbonAPITwo())
                     {
                         ListStatusText.Text = "WOPL List - Online";
 
-                        if (!VisualsAPIChecker.WOPLAPI)
+                        if (!VisualsAPIChecker.WOPLAPI())
                         {
                             StatusCheck = true;
 

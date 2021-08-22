@@ -87,12 +87,13 @@ namespace GameLauncher.App.Classes.LauncherCore.ModNet
 
         public static bool Supported()
         {
-            switch (APIChecker.CheckStatus(InformationCache.SelectedServerData.IPAddress + "/Modding/GetModInfo"))
+            if (APIChecker.CheckStatus(InformationCache.SelectedServerData.IPAddress + "/Modding/GetModInfo", 10) == APIStatus.NotFound)
             {
-                case APIStatus.Online:
-                    return true;
-                default:
-                    return false;
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
 

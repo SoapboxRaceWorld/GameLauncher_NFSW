@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 
@@ -16,6 +15,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
 
     public class CDNListUpdater
     {
+        public static bool LoadedList = false;
+
         public static List<CDNList> NoCategoryList = new List<CDNList>();
 
         public static List<CDNList> CleanList = new List<CDNList>();
@@ -29,12 +30,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
             try
             {
                 cdnInfos.AddRange(JsonConvert.DeserializeObject<List<CDNList>>(CachedJSONList));
-                InformationCache.CDNListStatus = "Loaded";
+                LoadedList = true;
             }
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("CDN LIST CORE", null, Error, null, true);
-                InformationCache.CDNListStatus = "Error";
+                LoadedList = false;
             }
             finally
             {
@@ -44,37 +45,43 @@ namespace GameLauncher.App.Classes.LauncherCore.Lists
                 }
             }
 
-            /* Create Final CDN List without Categories */
-            foreach (CDNList NoCatList in cdnInfos)
+            if (cdnInfos != null)
             {
-                if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
+                if (cdnInfos.Any())
                 {
-                    NoCategoryList.Add(NoCatList);
-                }
-            }
-
-            /* Create Rough Draft CDN List with Categories */
-            List<CDNList> RawList = new List<CDNList>();
-
-            foreach (var cdnItemGroup in cdnInfos.GroupBy(s => s.Category))
-            {
-                if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{cdnItemGroup.Key} Mirrors")) == -1)
-                {
-                    RawList.Add(new CDNList
+                    /* Create Final CDN List without Categories */
+                    foreach (CDNList NoCatList in cdnInfos)
                     {
-                        Name = $"<GROUP>{cdnItemGroup.Key} Mirrors",
-                        IsSpecial = true
-                    });
-                }
-                RawList.AddRange(cdnItemGroup.ToList());
-            }
+                        if (NoCategoryList.FindIndex(i => string.Equals(i.Name, NoCatList.Name)) == -1)
+                        {
+                            NoCategoryList.Add(NoCatList);
+                        }
+                    }
 
-            /* Create Final CDN List with Categories */
-            foreach (CDNList CList in RawList)
-            {
-                if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
-                {
-                    CleanList.Add(CList);
+                    /* Create Rough Draft CDN List with Categories */
+                    List<CDNList> RawList = new List<CDNList>();
+
+                    foreach (var cdnItemGroup in cdnInfos.GroupBy(s => s.Category))
+                    {
+                        if (RawList.FindIndex(i => string.Equals(i.Name, $"<GROUP>{cdnItemGroup.Key} Mirrors")) == -1)
+                        {
+                            RawList.Add(new CDNList
+                            {
+                                Name = $"<GROUP>{cdnItemGroup.Key} Mirrors",
+                                IsSpecial = true
+                            });
+                        }
+                        RawList.AddRange(cdnItemGroup.ToList());
+                    }
+
+                    /* Create Final CDN List with Categories */
+                    foreach (CDNList CList in RawList)
+                    {
+                        if (CleanList.FindIndex(i => string.Equals(i.Name, CList.Name)) == -1)
+                        {
+                            CleanList.Add(CList);
+                        }
+                    }
                 }
             }
         }
