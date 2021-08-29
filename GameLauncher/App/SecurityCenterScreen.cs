@@ -56,6 +56,62 @@ namespace GameLauncher.App
                 if (DisableButtonFRAPI) { DisableButtonFRAPI = false; }
             };
         }
+        /// <summary>
+        /// Sets the Color for Buttons
+        /// </summary>
+        /// <param name="Elements">Button Control Name</param>
+        /// <param name="Color">Range 0-3 Sets Colored Button.
+        /// <code>"0" Checking Blue</code><code>"1" Success Green</code><code>"2" Warning Orange</code><code>"3" Error Red</code></param>
+        /// <param name="EnabledORDisabled">Enables or Disables the Button</param>
+        /// <remarks>Range 0-3 Sets Colored Button.
+        /// <code>"0" Checking Blue</code><code>"1" Success Green</code><code>"2" Warning Orange</code><code>"3" Error Red</code></remarks>
+        private void ButtonsColorSet(Button Elements, int Color, bool EnabledORDisabled)
+        {
+            Log.Debug("BUTTON COLOR SET: " + Elements.Name + " Setting Color Value: " + Color + " Is Enabled: " + EnabledORDisabled);
+
+            switch (Color)
+            {
+                /* Checking Blue */
+                case 0:
+                    Elements.ForeColor = Theming.BlueForeColorButton;
+                    Elements.BackColor = Theming.BlueBackColorButton;
+                    Elements.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+                    Elements.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+                    Elements.Enabled = EnabledORDisabled;
+                    break;
+                /* Success Green */
+                case 1:
+                    Elements.ForeColor = Theming.GreenForeColorButton;
+                    Elements.BackColor = Theming.GreenBackColorButton;
+                    Elements.FlatAppearance.BorderColor = Theming.GreenBorderColorButton;
+                    Elements.FlatAppearance.MouseOverBackColor = Theming.GreenMouseOverBackColorButton;
+                    Elements.Enabled = EnabledORDisabled;
+                    break;
+                /* Warning Orange */
+                case 2:
+                    Elements.ForeColor = Theming.YellowForeColorButton;
+                    Elements.BackColor = Theming.YellowBackColorButton;
+                    Elements.FlatAppearance.BorderColor = Theming.YellowBorderColorButton;
+                    Elements.FlatAppearance.MouseOverBackColor = Theming.YellowMouseOverBackColorButton;
+                    Elements.Enabled = EnabledORDisabled;
+                    break;
+                /* Error Red */
+                case 3:
+                    Elements.ForeColor = Theming.RedForeColorButton;
+                    Elements.BackColor = Theming.RedBackColorButton;
+                    Elements.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                    Elements.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+                    Elements.Enabled = EnabledORDisabled;
+                    break;
+                default:
+                    Elements.ForeColor = Theming.BlueForeColorButton;
+                    Elements.BackColor = Theming.BlueBackColorButton;
+                    Elements.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+                    Elements.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+                    Elements.Enabled = EnabledORDisabled;
+                    break;
+            }
+        }
 
         public static bool GetSecurityCenterStatus(string Query)
         {
@@ -594,63 +650,7 @@ namespace GameLauncher.App
                     return false;
             }
         }
-        /// <summary>
-        /// Sets the Color for Buttons
-        /// </summary>
-        /// <param name="Elements">Button Control Name</param>
-        /// <param name="Color">Range 0-3 Sets Colored Button.
-        /// <code>"0" Checking Blue</code><code>"1" Success Green</code><code>"2" Warning Orange</code><code>"3" Error Red</code></param>
-        /// <param name="EnabledORDisabled">Enables or Disables the Button</param>
-        /// <remarks>Range 0-3 Sets Colored Button.
-        /// <code>"0" Checking Blue</code><code>"1" Success Green</code><code>"2" Warning Orange</code><code>"3" Error Red</code></remarks>
-        private void ButtonsColorSet(Button Elements, int Color, bool EnabledORDisabled)
-        {
-            Log.Debug("BUTTON COLOR SET: " + Elements.Name + " Setting Color Value: " + Color + " Is Enabled: " + EnabledORDisabled);
-
-            switch (Color)
-            {
-                /* Checking Blue */
-                case 0:
-                    Elements.ForeColor = Theming.BlueForeColorButton;
-                    Elements.BackColor = Theming.BlueBackColorButton;
-                    Elements.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-                    Elements.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
-                    Elements.Enabled = EnabledORDisabled;
-                    break;
-                /* Success Green */
-                case 1:
-                    Elements.ForeColor = Theming.GreenForeColorButton;
-                    Elements.BackColor = Theming.GreenBackColorButton;
-                    Elements.FlatAppearance.BorderColor = Theming.GreenBorderColorButton;
-                    Elements.FlatAppearance.MouseOverBackColor = Theming.GreenMouseOverBackColorButton;
-                    Elements.Enabled = EnabledORDisabled;
-                    break;
-                /* Warning Orange */
-                case 2:
-                    Elements.ForeColor = Theming.YellowForeColorButton;
-                    Elements.BackColor = Theming.YellowBackColorButton;
-                    Elements.FlatAppearance.BorderColor = Theming.YellowBorderColorButton;
-                    Elements.FlatAppearance.MouseOverBackColor = Theming.YellowMouseOverBackColorButton;
-                    Elements.Enabled = EnabledORDisabled;
-                    break;
-                /* Error Red */
-                case 3:
-                    Elements.ForeColor = Theming.RedForeColorButton;
-                    Elements.BackColor = Theming.RedBackColorButton;
-                    Elements.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-                    Elements.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
-                    Elements.Enabled = EnabledORDisabled;
-                    break;
-                default:
-                    Elements.ForeColor = Theming.BlueForeColorButton;
-                    Elements.BackColor = Theming.BlueBackColorButton;
-                    Elements.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-                    Elements.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
-                    Elements.Enabled = EnabledORDisabled;
-                    break;
-            }
-        }
-        /* Firewall Checks */
+        ///<summary>Button: Firewall Rules API</summary>
         private void ButtonFirewallRulesAPI_Click(object sender, EventArgs e)
         {
             if (!DisableButtonFRAPI)
@@ -667,7 +667,7 @@ namespace GameLauncher.App
                 ButtonsColorSet(ButtonFirewallRulesAPI, 1, false);
             }
         }
-
+        ///<summary>Button: Firewall Rules Check</summary>
         private void ButtonFirewallRulesCheck_Click(object sender, EventArgs e)
         {
             if (!DisableButtonFRC)
@@ -746,7 +746,7 @@ namespace GameLauncher.App
                 { ButtonsColorSet(ButtonFirewallRulesCheck, 3, true); }
             }
         }
-        /* Firewall Add */
+        ///<summary>Button: Firewall Rules Add All</summary>
         private void ButtonFirewallRulesAddAll_Click(object sender, EventArgs e)
         {
             if (!DisableButtonFRAA)
@@ -786,11 +786,18 @@ namespace GameLauncher.App
                     }
 
                     FileSettingsSave.SaveSettings();
-
+                    
                     if (Firewall())
-                    { ButtonsColorSet(ButtonFirewallRulesAddAll, 1, true); }
+                    {
+                        ButtonsColorSet(ButtonFirewallRulesAddAll, 1, true);
+                        DisableButtonFRRA = ButtonFirewallRulesAddLauncher.Enabled && ButtonFirewallRulesAddGame.Enabled;
+                        ButtonsColorSet(ButtonFirewallRulesRemoveAll, 2, DisableButtonFRRA);
+                    }
                     else
-                    { ButtonsColorSet(ButtonFirewallRulesAddAll, 3, false); }
+                    {
+                        ButtonsColorSet(ButtonFirewallRulesAddAll, 3, false);
+                        ButtonsColorSet(ButtonFirewallRulesRemoveAll, 3, false);
+                    }
                 }
                 else
                 {
@@ -798,7 +805,7 @@ namespace GameLauncher.App
                 }
             }
         }
-
+        ///<summary>Button: Firewall Rules Add Launcher</summary>
         private void ButtonFirewallRulesAddLauncher_Click(object sender, EventArgs e)
         {
             if (!DisableButtonFRAL)
@@ -832,7 +839,7 @@ namespace GameLauncher.App
                 }
             }
         }
-
+        ///<summary>Button: Firewall Rules Add Game</summary>
         private void ButtonFirewallRulesAddGame_Click(object sender, EventArgs e)
         {
             if (!DisableButtonFRAG)
@@ -866,7 +873,7 @@ namespace GameLauncher.App
                 }
             }
         }
-        /* Firewall Remove */
+        ///<summary>Button: Firewall Rules Remove All</summary>
         private void ButtonFirewallRulesRemoveAll_Click(object sender, EventArgs e)
         {
             if (!DisableButtonFRRA)
@@ -909,9 +916,16 @@ namespace GameLauncher.App
                     FileSettingsSave.SaveSettings();
 
                     if (Firewall())
-                    { ButtonsColorSet(ButtonFirewallRulesRemoveAll, 1, true); }
+                    {
+                        ButtonsColorSet(ButtonFirewallRulesRemoveAll, 1, true);
+                        DisableButtonFRAA = ButtonFirewallRulesRemoveLauncher.Enabled && ButtonFirewallRulesRemoveGame.Enabled;
+                        ButtonsColorSet(ButtonFirewallRulesAddAll, 2, DisableButtonFRAA);
+                    }
                     else
-                    { ButtonsColorSet(ButtonFirewallRulesRemoveAll, 3, false); }
+                    {
+                        ButtonsColorSet(ButtonFirewallRulesRemoveAll, 3, false);
+                        ButtonsColorSet(ButtonFirewallRulesAddAll, 3, false);
+                    }
                 }
                 else
                 {
@@ -919,7 +933,7 @@ namespace GameLauncher.App
                 }
             }
         }
-
+        ///<summary>Button: Firewall Rules Remove Launcher</summary>
         private void ButtonFirewallRulesRemoveLauncher_Click(object sender, EventArgs e)
         {
             if (!DisableButtonFRRL)
@@ -953,7 +967,7 @@ namespace GameLauncher.App
                 }
             }
         }
-
+        ///<summary>Button: Firewall Rules Remove Game</summary>
         private void ButtonFirewallRulesRemoveGame_Click(object sender, EventArgs e)
         {
             if (!DisableButtonFRRG)
@@ -987,7 +1001,7 @@ namespace GameLauncher.App
                 }
             }
         }
-
+        ///<summary>Theming, Function, EventHandlers, Etc. Meant to load critial functions before the forms loads</summary>
         private void SetVisuals()
         {
             /* Firewall Checks */

@@ -314,7 +314,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 settingFile.Write("WebCallMethod", WebCallMethod);
             }
 
-            if (UnixOS.Detected())
+            if (!UnixOS.Detected())
             {
                 if (settingFile.Read("FilePermission") != FilePermissionStatus)
                 {
