@@ -103,11 +103,12 @@ namespace GameLauncher.App
                     Elements.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
                     Elements.Enabled = EnabledORDisabled;
                     break;
+                /* Unknown Gray */
                 default:
-                    Elements.ForeColor = Theming.BlueForeColorButton;
-                    Elements.BackColor = Theming.BlueBackColorButton;
-                    Elements.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-                    Elements.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+                    Elements.ForeColor = Theming.GrayForeColorButton;
+                    Elements.BackColor = Theming.GrayBackColorButton;
+                    Elements.FlatAppearance.BorderColor = Theming.GrayBorderColorButton;
+                    Elements.FlatAppearance.MouseOverBackColor = Theming.GrayMouseOverBackColorButton;
                     Elements.Enabled = EnabledORDisabled;
                     break;
             }

@@ -224,23 +224,34 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Color GreenMouseOverBackColorButton = Color.FromArgb(44, 58, 76);
 
 
+        public static Color GrayBackColorButton = Color.FromArgb(22, 29, 38);
+
+        public static Color GrayBorderColorButton = Color.FromArgb(128, 128, 128);
+
+        public static Color GrayForeColorButton = Color.FromArgb(100, 100, 100);
+
+        public static Color GrayMouseOverBackColorButton = Color.FromArgb(44, 58, 76);
+
+
         /* Main Text Colors */
 
-        /* Silver */
+        ///<summary>Silver</summary>
         public static Color MainTextForeColor = Color.FromArgb(224, 224, 224);
-        /* Pinging Blue */
+        ///<summary>Pinging Blue</summary>
         public static Color SecondaryTextForeColor = Color.FromArgb(66, 179, 189);
-        /* Gray */
+        ///<summary>Gray</summary>
         public static Color ThirdTextForeColor = Color.FromArgb(132, 132, 132);
-        /* Dark Blue */
+        ///<summary>Dark Blue</summary>
         public static Color FourthTextForeColor = Color.FromArgb(44, 58, 76);
-        /* White */
+        ///<summary>White</summary>
         public static Color FivithTextForeColor = Color.FromArgb(255, 255, 255);
-        /* Grey (Slightly Darker) */
+        ///<summary>Grey</summary>
+        ///<remarks>Slightly Darker</remarks>
         public static Color SixTextForeColor = Color.FromArgb(128, 128, 128);
-        /* Successful Green */
+        ///<summary>Successful Green</summary>
         public static Color SeventhTextForeColor = Color.FromArgb(159, 193, 32);
-        /* Orange [Color Bind] */
+        ///<summary>Orange</summary>
+        ///<remarks>Color Bind</remarks>
         public static Color EighthTextForeColor = Color.FromArgb(230, 159, 0);
 
 
@@ -839,6 +850,46 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("RedMouseOverBackColorButton")))
                     {
                         RedMouseOverBackColorButton = ToColor(ThemeFile.Read("RedMouseOverBackColorButton"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GreenBackColorButton")))
+                    {
+                        GreenBackColorButton = ToColor(ThemeFile.Read("GreenBackColorButton"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GreenBorderColorButton")))
+                    {
+                        GreenBorderColorButton = ToColor(ThemeFile.Read("GreenBorderColorButton"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GreenForeColorButton")))
+                    {
+                        GreenForeColorButton = ToColor(ThemeFile.Read("GreenForeColorButton"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GreenMouseOverBackColorButton")))
+                    {
+                        GreenMouseOverBackColorButton = ToColor(ThemeFile.Read("GreenMouseOverBackColorButton"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GrayBackColorButton")))
+                    {
+                        GrayBackColorButton = ToColor(ThemeFile.Read("GrayBackColorButton"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GrayBorderColorButton")))
+                    {
+                        GrayBorderColorButton = ToColor(ThemeFile.Read("GrayBorderColorButton"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GrayForeColorButton")))
+                    {
+                        GrayForeColorButton = ToColor(ThemeFile.Read("GrayForeColorButton"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GrayMouseOverBackColorButton")))
+                    {
+                        GrayMouseOverBackColorButton = ToColor(ThemeFile.Read("GrayMouseOverBackColorButton"));
                     }
 
                     /* Text Colors */

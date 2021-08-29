@@ -447,10 +447,15 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         {
             if (Running())
             {
-                if (State == "Close")
+                try
                 {
-                    Client.ClearPresence();
+                    if (State == "Close")
+                    {
+                        Client.ClearPresence();
+                        Log.Core("DISCORD: Client RPC has now been Cleared");
+                    }
                 }
+                catch { }
                 Log.Core("DISCORD: Client RPC Service has been Closed.");
                 Client.Dispose();
                 Client = null;
