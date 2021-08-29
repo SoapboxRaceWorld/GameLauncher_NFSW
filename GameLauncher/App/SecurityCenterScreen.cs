@@ -684,6 +684,11 @@ namespace GameLauncher.App
                         ButtonsColorSet(ButtonFirewallRulesRemoveAll, 2, true);
                         DisableButtonFRRA = false;
                     }
+                    else if (!ButtonEnabler("Firewall", null, 0, 2) && !ButtonEnabler("Firewall", null, 1, 2) && !ButtonEnabler("Firewall", null, 2, 2))
+                    {
+                        ButtonsColorSet(ButtonFirewallRulesAddAll, 2, true);
+                        DisableButtonFRAA = false;
+                    }
                     else 
                     { 
                         ButtonsColorSet(ButtonFirewallRulesAddAll, 3, false); 
@@ -699,6 +704,11 @@ namespace GameLauncher.App
                         ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2, true);
                         DisableButtonFRRL = false;
                     }
+                    else if (!ButtonEnabler("Firewall", null, 0, 2) && !ButtonEnabler("Firewall", null, 1, 2))
+                    {
+                        ButtonsColorSet(ButtonFirewallRulesAddLauncher, 2, true);
+                        DisableButtonFRAL = false;
+                    }
                     else 
                     { 
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 3, false); 
@@ -713,6 +723,11 @@ namespace GameLauncher.App
                         DisableButtonFRAG = false;
                         ButtonsColorSet(ButtonFirewallRulesRemoveGame, 2, true);
                         DisableButtonFRRG = false;
+                    }
+                    else if (!ButtonEnabler("Firewall", null, 2, 2))
+                    {
+                        ButtonsColorSet(ButtonFirewallRulesAddGame, 2, true);
+                        DisableButtonFRAG = false;
                     }
                     else 
                     { 
