@@ -22,7 +22,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             if (!UnixOS.Detected())
             {
-                if (FirewallManager.IsServiceRunning)
+                if (FirewallService())
                 {
                     if (FirewallStatus())
                     {
@@ -33,7 +33,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         Log.Warning("WINDOWS FIREWALL: Turned Off [Not by Launcher]");
                     }
                 }
-                else if (!FirewallManager.IsServiceRunning)
+                else if (!FirewallService())
                 {
                     Log.Warning("WINDOWS FIREWALL: Service is Stopped [Not by Launcher]");
                 }
@@ -50,13 +50,13 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
 
         public static void CheckIfRuleExists(string Type, string Mode, string AppName, string AppPath, string groupKey, string description, FirewallProtocol protocol)
         {
-            if (RuleExist("Path", AppName, AppPath) == true && RuleExist("Name", AppName, AppPath) == false)
+            if (RuleExist("Path", AppName, AppPath) && !RuleExist("Name", AppName, AppPath))
             {
                 /* Inbound & Outbound */
                 RemoveRules(Type, Mode, "Non-" + AppName, AppPath, "Path Match");
             }
 
-            if (RuleExist(Mode, AppName, AppPath) == false)
+            if (!RuleExist(Mode, AppName, AppPath))
             {
                 /* Add Firewall Rules */
                 if (Type == "Add-Game" || Type == "Add-Launcher")
@@ -71,7 +71,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     Log.Info("WINDOWS FIREWALL: Unknown Mode State in 'CheckIfRuleExists' Function");
                 }
             }
-            else if (RuleExist(Mode, AppName, AppPath) == true)
+            else if (RuleExist(Mode, AppName, AppPath))
             {
                 /* Remove Firewall Rules */
                 if (Type == "Reset")
@@ -208,24 +208,29 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         public static void RemoveRules(string Type, string Mode, string AppName, string AppPath, string firewallLogNote)
         {
             bool ErrorFree = true;
-            var myRule = FindRules(Mode, AppName, AppPath).ToArray();
 
-            if (Enumerable.Any(myRule))
+            try
             {
-                foreach (var rule in myRule)
+                var myRule = FindRules(Mode, AppName, AppPath).ToArray();
+
+                if (Enumerable.Any(myRule))
                 {
-                    try
+                    foreach (var rule in myRule)
                     {
-                        FirewallManager.Instance.Rules.Remove(rule);
-                        Log.Warning("WINDOWS FIREWALL: Removed " + AppName + " {" + firewallLogNote + "} From Firewall!");
-                    }
-                    catch (Exception Error)
-                    {
-                        ErrorFree = false;
-                        LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
+                        try
+                        {
+                            FirewallManager.Instance.Rules.Remove(rule);
+                            Log.Warning("WINDOWS FIREWALL: Removed " + AppName + " {" + firewallLogNote + "} From Firewall!");
+                        }
+                        catch (Exception Error)
+                        {
+                            ErrorFree = false;
+                            LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
+                        }
                     }
                 }
             }
+            catch { ErrorFree = false; }
 
             if (Type == "Add-Game")
             {
@@ -255,36 +260,35 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
         {
             try
             {
-                if (FirewallWAS.IsSupported && FirewallWASRuleWin7.IsSupported)
+                if (FirewallService() && FirewallSupported())
                 {
-                    if (Mode == "Name")
+                    if (FirewallManager.Instance.Rules.Count != 0)
                     {
-                        return FirewallManager.Instance.Rules.Where(r => string.Equals(r.Name, AppName, StringComparison.OrdinalIgnoreCase)).ToArray();
-                    }
-                    else if (Mode == "Path")
-                    {
-                        return FirewallManager.Instance.Rules.Where(r => string.Equals(r.ApplicationName, AppPath, StringComparison.OrdinalIgnoreCase)).ToArray();
-                    }
-                    else
-                    {
-                        return Enumerable.Empty<IFirewallRule>();
+                        if (Mode == "Name")
+                        {
+                            return FirewallManager.Instance.Rules.Where(r => string.Equals(r.Name, AppName, StringComparison.OrdinalIgnoreCase)).ToArray();
+                        }
+                        else if (Mode == "Path")
+                        {
+                            return FirewallManager.Instance.Rules.Where(r => string.Equals(r.ApplicationName, AppPath, StringComparison.OrdinalIgnoreCase)).ToArray();
+                        }
                     }
                 }
-                else
-                {
-                    return Enumerable.Empty<IFirewallRule>();
-                }
+            }
+            catch (NotSupportedException Error)
+            {
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL [Not Supported]", null, Error, null, true);
             }
             catch (COMException Error)
             {
-                LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
-                return Enumerable.Empty<IFirewallRule>();
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL [COM]", null, Error, null, true);
             }
             catch (Exception Error)
             {
                 LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
-                return Enumerable.Empty<IFirewallRule>();
             }
+
+            return Enumerable.Empty<IFirewallRule>();
         }
 
         /* Checks if Windows Firewall is Enabled or not from a System Level */
@@ -298,19 +302,66 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
             {
                 try
                 {
-                    Type NetFwMgrType = Type.GetTypeFromProgID("HNetCfg.FwMgr", false);
+                    Type NetFwMgrType = Type.GetTypeFromProgID("HNetCfg.FwMgr", true);
                     INetFwMgr mgr = (INetFwMgr)Activator.CreateInstance(NetFwMgrType);
 
-                    return mgr.LocalPolicy.CurrentProfile.FirewallEnabled;
+                    if (bool.TryParse(mgr.LocalPolicy.CurrentProfile.FirewallEnabled.ToString(), out bool Result))
+                    {
+                        return mgr.LocalPolicy.CurrentProfile.FirewallEnabled;
+                    }
                 }
                 catch (COMException Error)
                 {
                     LogToFileAddons.OpenLog("WINDOWS FIREWALL Check", null, Error, null, true);
-                    return false;
                 }
                 catch (Exception Error)
                 {
                     LogToFileAddons.OpenLog("WINDOWS FIREWALL Check", null, Error, null, true);
+                }
+
+                return false;
+            }
+        }
+
+        public static bool FirewallSupported()
+        {
+            if (UnixOS.Detected())
+            {
+                return false;
+            }
+            else
+            {
+                FirewallAPIVersion APIVersion;
+                try { APIVersion = FirewallManager.Version; }
+                catch { APIVersion = FirewallAPIVersion.None; }
+
+                switch (APIVersion)
+                {
+                    case FirewallAPIVersion.FirewallWASWin8:
+                    case FirewallAPIVersion.FirewallWASWin7:
+                    case FirewallAPIVersion.FirewallWAS:
+                    case FirewallAPIVersion.FirewallLegacy:
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        }
+
+        public static bool FirewallService()
+        {
+            if (UnixOS.Detected())
+            {
+                return false;
+            }
+            else
+            {
+                if (bool.TryParse(FirewallManager.IsServiceRunning.ToString(), out bool Result))
+                {
+                    return FirewallManager.IsServiceRunning;
+                }
+                else
+                {
                     return false;
                 }
             }
@@ -326,7 +377,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 try
                 {
                     /* First Time Run */
-                    if (FirewallManager.IsServiceRunning && FirewallHelper.FirewallStatus())
+                    if (FirewallHelper.FirewallService() && FirewallHelper.FirewallStatus())
                     {
                         string GameName = "SBRW - Game";
                         string GamePath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
@@ -337,7 +388,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         /* Inbound & Outbound */
                         FirewallHelper.DoesRulesExist("Add-Game", "Path", GameName, GamePath, groupKeyGame, descriptionGame, FirewallProtocol.Any);
                     }
-                    else if (FirewallManager.IsServiceRunning && !FirewallHelper.FirewallStatus())
+                    else if (FirewallHelper.FirewallService() && !FirewallHelper.FirewallStatus())
                     {
                         FileSettingsSave.FirewallGameStatus = "Turned Off";
                     }
@@ -373,7 +424,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                 {
                     DiscordLauncherPresence.Status("Start Up", "Checking Firewall Exclusions");
 
-                    if (FirewallManager.IsServiceRunning && FirewallHelper.FirewallStatus())
+                    if (FirewallHelper.FirewallService() && FirewallHelper.FirewallStatus())
                     {
                         string LauncherName = "SBRW - Game Launcher";
                         string LauncherPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameLauncher));
@@ -388,7 +439,7 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         FirewallHelper.DoesRulesExist("Add-Launcher", "Path", LauncherName, LauncherPath, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
                         FirewallHelper.DoesRulesExist("Add-Launcher", "Path", UpdaterName, UpdaterPath, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
                     }
-                    else if (FirewallManager.IsServiceRunning && !FirewallHelper.FirewallStatus())
+                    else if (FirewallHelper.FirewallService() && !FirewallHelper.FirewallStatus())
                     {
                         FileSettingsSave.FirewallLauncherStatus = "Turned Off";
                     }

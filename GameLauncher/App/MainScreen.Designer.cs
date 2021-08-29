@@ -79,6 +79,7 @@
             this.ExtractingProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
             this.PlayProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
             this.Notification = new System.Windows.Forms.NotifyIcon(this.components);
+            this.ButtonSecurityCenter = new System.Windows.Forms.PictureBox();
             this.ShowPlayPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).BeginInit();
@@ -95,6 +96,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.MainPasswordBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ProgressBarOutline)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Banner)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ButtonSecurityCenter)).BeginInit();
             this.SuspendLayout();
             // 
             // Timeout
@@ -750,12 +752,24 @@
             this.Notification.Text = "notifyIcon1";
             this.Notification.Visible = true;
             // 
+            // ButtonSecurityCenter
+            // 
+            this.ButtonSecurityCenter.BackColor = System.Drawing.Color.Transparent;
+            this.ButtonSecurityCenter.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ButtonSecurityCenter.InitialImage = null;
+            this.ButtonSecurityCenter.Location = new System.Drawing.Point(767, 15);
+            this.ButtonSecurityCenter.Name = "ButtonSecurityCenter";
+            this.ButtonSecurityCenter.Size = new System.Drawing.Size(25, 25);
+            this.ButtonSecurityCenter.TabIndex = 176;
+            this.ButtonSecurityCenter.TabStop = false;
+            // 
             // MainScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.ButtonSecurityCenter);
             this.Controls.Add(this.InsiderBuildNumberText);
             this.Controls.Add(this.CurrentWindowInfo);
             this.Controls.Add(this.logo);
@@ -815,6 +829,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.MainPasswordBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ProgressBarOutline)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Banner)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ButtonSecurityCenter)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -871,5 +886,6 @@
         private System.Windows.Forms.Label InsiderBuildNumberText;
         private System.Windows.Forms.PictureBox ProgressBarOutline;
         private System.Windows.Forms.NotifyIcon Notification;
+        private System.Windows.Forms.PictureBox ButtonSecurityCenter;
     }
 }

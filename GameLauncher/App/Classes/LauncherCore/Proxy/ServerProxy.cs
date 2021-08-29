@@ -44,12 +44,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Proxy
 
                     HostConfiguration Configs = new HostConfiguration()
                     {
+                        AllowChunkedEncoding = false,
+                        RewriteLocalhost = false,
                         UrlReservations = new UrlReservations()
                         {
-                            CreateAutomatically = true,
-                        },
-                        AllowChunkedEncoding = false,
-                        RewriteLocalhost = false
+                            CreateAutomatically = true
+                        }
                     };
 
                     Host = new NancyHost(new Uri("http://127.0.0.1:" + ProxyPort), new NancyBootstrapper(), Configs);

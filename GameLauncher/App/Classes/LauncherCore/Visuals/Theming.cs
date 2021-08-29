@@ -56,13 +56,13 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         /* MainScreen Icons */
 
-        public static Bitmap UpdateIconError = Properties.Resources.icon_shield_error;
+        public static Bitmap UpdateIconError = Properties.Resources.icon_engine_error;
 
-        public static Bitmap UpdateIconSuccess = Properties.Resources.icon_shield_success;
+        public static Bitmap UpdateIconSuccess = Properties.Resources.icon_engine_success;
 
-        public static Bitmap UpdateIconUnknown = Properties.Resources.icon_shield_unknown;
+        public static Bitmap UpdateIconUnknown = Properties.Resources.icon_engine_unknown;
 
-        public static Bitmap UpdateIconWarning = Properties.Resources.icon_shield_warning;
+        public static Bitmap UpdateIconWarning = Properties.Resources.icon_engine_warning;
 
 
         public static Bitmap APIIconChecking = Properties.Resources.icon_api_checking;
@@ -132,6 +132,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Bitmap GearButtonClick = Properties.Resources.icon_gear_click;
 
         public static Bitmap GearButtonHover = Properties.Resources.icon_gear_hover;
+
+
+        public static Bitmap ShieldButtonUnknown = Properties.Resources.icon_shield_unknown;
+
+        public static Bitmap ShieldButtonSuccess = Properties.Resources.icon_shield_success;
+
+        public static Bitmap ShieldButtonWarning = Properties.Resources.icon_shield_warning;
+
+        public static Bitmap ShieldButtonError = Properties.Resources.icon_shield_error;
 
 
         public static Bitmap PlayButton = Properties.Resources.playbutton;
@@ -204,6 +213,15 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Color RedForeColorButton = Color.FromArgb(210, 4, 45); 
 
         public static Color RedMouseOverBackColorButton = Color.FromArgb(44, 58, 76);
+
+
+        public static Color GreenBackColorButton = Color.FromArgb(22, 29, 38);
+
+        public static Color GreenBorderColorButton = Color.FromArgb(159, 193, 32);
+
+        public static Color GreenForeColorButton = Color.FromArgb(119, 145, 22);
+
+        public static Color GreenMouseOverBackColorButton = Color.FromArgb(44, 58, 76);
 
 
         /* Main Text Colors */

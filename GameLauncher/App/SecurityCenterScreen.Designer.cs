@@ -31,21 +31,21 @@ namespace GameLauncher.App
         {
             this.SettingsGamePathText = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.ResetFirewallRulesButton = new System.Windows.Forms.Button();
+            this.ButtonFirewallRulesRemoveAll = new System.Windows.Forms.Button();
             this.ResetWindowsDefenderButton = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.ButtonFirewallRulesRemoveLauncher = new System.Windows.Forms.Button();
+            this.ButtonFirewallRulesRemoveGame = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
+            this.ButtonFirewallRulesAddGame = new System.Windows.Forms.Button();
+            this.ButtonFirewallRulesAddLauncher = new System.Windows.Forms.Button();
+            this.ButtonFirewallRulesAddAll = new System.Windows.Forms.Button();
+            this.ButtonFirewallRulesCheck = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
-            this.button13 = new System.Windows.Forms.Button();
+            this.ButtonFirewallRulesAPI = new System.Windows.Forms.Button();
             this.button14 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -75,20 +75,21 @@ namespace GameLauncher.App
             this.label1.Text = "WINDOWS DEFENDER:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // ResetFirewallRulesButton
+            // ButtonFirewallRulesRemoveAll
             // 
-            this.ResetFirewallRulesButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.ResetFirewallRulesButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.ResetFirewallRulesButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.ResetFirewallRulesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ResetFirewallRulesButton.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ResetFirewallRulesButton.ForeColor = System.Drawing.Color.Silver;
-            this.ResetFirewallRulesButton.Location = new System.Drawing.Point(550, 63);
-            this.ResetFirewallRulesButton.Name = "ResetFirewallRulesButton";
-            this.ResetFirewallRulesButton.Size = new System.Drawing.Size(221, 25);
-            this.ResetFirewallRulesButton.TabIndex = 195;
-            this.ResetFirewallRulesButton.Text = "Reset All SBRW Rules";
-            this.ResetFirewallRulesButton.UseVisualStyleBackColor = false;
+            this.ButtonFirewallRulesRemoveAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonFirewallRulesRemoveAll.Enabled = false;
+            this.ButtonFirewallRulesRemoveAll.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonFirewallRulesRemoveAll.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonFirewallRulesRemoveAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonFirewallRulesRemoveAll.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonFirewallRulesRemoveAll.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonFirewallRulesRemoveAll.Location = new System.Drawing.Point(550, 63);
+            this.ButtonFirewallRulesRemoveAll.Name = "ButtonFirewallRulesRemoveAll";
+            this.ButtonFirewallRulesRemoveAll.Size = new System.Drawing.Size(221, 25);
+            this.ButtonFirewallRulesRemoveAll.TabIndex = 195;
+            this.ButtonFirewallRulesRemoveAll.Text = "Remove All SBRW Rules";
+            this.ButtonFirewallRulesRemoveAll.UseVisualStyleBackColor = false;
             // 
             // ResetWindowsDefenderButton
             // 
@@ -105,35 +106,37 @@ namespace GameLauncher.App
             this.ResetWindowsDefenderButton.Text = "Reset All SBRW Exclusions";
             this.ResetWindowsDefenderButton.UseVisualStyleBackColor = false;
             // 
-            // button1
+            // ButtonFirewallRulesRemoveLauncher
             // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.Silver;
-            this.button1.Location = new System.Drawing.Point(550, 107);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(221, 25);
-            this.button1.TabIndex = 196;
-            this.button1.Text = "Update Launcher Rules";
-            this.button1.UseVisualStyleBackColor = false;
+            this.ButtonFirewallRulesRemoveLauncher.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonFirewallRulesRemoveLauncher.Enabled = false;
+            this.ButtonFirewallRulesRemoveLauncher.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonFirewallRulesRemoveLauncher.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonFirewallRulesRemoveLauncher.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonFirewallRulesRemoveLauncher.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonFirewallRulesRemoveLauncher.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonFirewallRulesRemoveLauncher.Location = new System.Drawing.Point(550, 107);
+            this.ButtonFirewallRulesRemoveLauncher.Name = "ButtonFirewallRulesRemoveLauncher";
+            this.ButtonFirewallRulesRemoveLauncher.Size = new System.Drawing.Size(221, 25);
+            this.ButtonFirewallRulesRemoveLauncher.TabIndex = 196;
+            this.ButtonFirewallRulesRemoveLauncher.Text = "Remove Launcher Rules";
+            this.ButtonFirewallRulesRemoveLauncher.UseVisualStyleBackColor = false;
             // 
-            // button2
+            // ButtonFirewallRulesRemoveGame
             // 
-            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.button2.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.button2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = System.Drawing.Color.Silver;
-            this.button2.Location = new System.Drawing.Point(550, 155);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(221, 25);
-            this.button2.TabIndex = 197;
-            this.button2.Text = "Update Game Rules";
-            this.button2.UseVisualStyleBackColor = false;
+            this.ButtonFirewallRulesRemoveGame.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonFirewallRulesRemoveGame.Enabled = false;
+            this.ButtonFirewallRulesRemoveGame.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonFirewallRulesRemoveGame.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonFirewallRulesRemoveGame.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonFirewallRulesRemoveGame.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonFirewallRulesRemoveGame.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonFirewallRulesRemoveGame.Location = new System.Drawing.Point(550, 155);
+            this.ButtonFirewallRulesRemoveGame.Name = "ButtonFirewallRulesRemoveGame";
+            this.ButtonFirewallRulesRemoveGame.Size = new System.Drawing.Size(221, 25);
+            this.ButtonFirewallRulesRemoveGame.TabIndex = 197;
+            this.ButtonFirewallRulesRemoveGame.Text = "Remove Game Rules";
+            this.ButtonFirewallRulesRemoveGame.UseVisualStyleBackColor = false;
             // 
             // button3
             // 
@@ -165,65 +168,69 @@ namespace GameLauncher.App
             this.button4.Text = "Update Launcher Exclusion";
             this.button4.UseVisualStyleBackColor = false;
             // 
-            // button5
+            // ButtonFirewallRulesAddGame
             // 
-            this.button5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.button5.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.button5.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button5.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.ForeColor = System.Drawing.Color.Silver;
-            this.button5.Location = new System.Drawing.Point(30, 155);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(221, 25);
-            this.button5.TabIndex = 201;
-            this.button5.Text = "Add Game Rules";
-            this.button5.UseVisualStyleBackColor = false;
+            this.ButtonFirewallRulesAddGame.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonFirewallRulesAddGame.Enabled = false;
+            this.ButtonFirewallRulesAddGame.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonFirewallRulesAddGame.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonFirewallRulesAddGame.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonFirewallRulesAddGame.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonFirewallRulesAddGame.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonFirewallRulesAddGame.Location = new System.Drawing.Point(30, 155);
+            this.ButtonFirewallRulesAddGame.Name = "ButtonFirewallRulesAddGame";
+            this.ButtonFirewallRulesAddGame.Size = new System.Drawing.Size(221, 25);
+            this.ButtonFirewallRulesAddGame.TabIndex = 201;
+            this.ButtonFirewallRulesAddGame.Text = "Add Game Rules";
+            this.ButtonFirewallRulesAddGame.UseVisualStyleBackColor = false;
             // 
-            // button6
+            // ButtonFirewallRulesAddLauncher
             // 
-            this.button6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.button6.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.button6.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button6.ForeColor = System.Drawing.Color.Silver;
-            this.button6.Location = new System.Drawing.Point(30, 107);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(221, 25);
-            this.button6.TabIndex = 200;
-            this.button6.Text = "Add Launcher Rules";
-            this.button6.UseVisualStyleBackColor = false;
+            this.ButtonFirewallRulesAddLauncher.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonFirewallRulesAddLauncher.Enabled = false;
+            this.ButtonFirewallRulesAddLauncher.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonFirewallRulesAddLauncher.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonFirewallRulesAddLauncher.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonFirewallRulesAddLauncher.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonFirewallRulesAddLauncher.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonFirewallRulesAddLauncher.Location = new System.Drawing.Point(30, 107);
+            this.ButtonFirewallRulesAddLauncher.Name = "ButtonFirewallRulesAddLauncher";
+            this.ButtonFirewallRulesAddLauncher.Size = new System.Drawing.Size(221, 25);
+            this.ButtonFirewallRulesAddLauncher.TabIndex = 200;
+            this.ButtonFirewallRulesAddLauncher.Text = "Add Launcher Rules";
+            this.ButtonFirewallRulesAddLauncher.UseVisualStyleBackColor = false;
             // 
-            // button7
+            // ButtonFirewallRulesAddAll
             // 
-            this.button7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.button7.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.button7.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button7.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button7.ForeColor = System.Drawing.Color.Silver;
-            this.button7.Location = new System.Drawing.Point(30, 63);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(221, 25);
-            this.button7.TabIndex = 202;
-            this.button7.Text = "Add All SBRW Rules";
-            this.button7.UseVisualStyleBackColor = false;
+            this.ButtonFirewallRulesAddAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonFirewallRulesAddAll.Enabled = false;
+            this.ButtonFirewallRulesAddAll.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonFirewallRulesAddAll.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonFirewallRulesAddAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonFirewallRulesAddAll.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonFirewallRulesAddAll.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonFirewallRulesAddAll.Location = new System.Drawing.Point(30, 63);
+            this.ButtonFirewallRulesAddAll.Name = "ButtonFirewallRulesAddAll";
+            this.ButtonFirewallRulesAddAll.Size = new System.Drawing.Size(221, 25);
+            this.ButtonFirewallRulesAddAll.TabIndex = 202;
+            this.ButtonFirewallRulesAddAll.Text = "Add All SBRW Rules";
+            this.ButtonFirewallRulesAddAll.UseVisualStyleBackColor = false;
             // 
-            // button8
+            // ButtonFirewallRulesCheck
             // 
-            this.button8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.button8.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.button8.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button8.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button8.ForeColor = System.Drawing.Color.Silver;
-            this.button8.Location = new System.Drawing.Point(293, 107);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(221, 25);
-            this.button8.TabIndex = 203;
-            this.button8.Text = "Check All Rules";
-            this.button8.UseVisualStyleBackColor = false;
+            this.ButtonFirewallRulesCheck.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonFirewallRulesCheck.Enabled = false;
+            this.ButtonFirewallRulesCheck.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonFirewallRulesCheck.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonFirewallRulesCheck.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonFirewallRulesCheck.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonFirewallRulesCheck.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonFirewallRulesCheck.Location = new System.Drawing.Point(293, 107);
+            this.ButtonFirewallRulesCheck.Name = "ButtonFirewallRulesCheck";
+            this.ButtonFirewallRulesCheck.Size = new System.Drawing.Size(221, 25);
+            this.ButtonFirewallRulesCheck.TabIndex = 203;
+            this.ButtonFirewallRulesCheck.Text = "Check All Rules";
+            this.ButtonFirewallRulesCheck.UseVisualStyleBackColor = false;
             // 
             // button9
             // 
@@ -285,20 +292,20 @@ namespace GameLauncher.App
             this.button12.Text = "Add Launcher Exclusion";
             this.button12.UseVisualStyleBackColor = false;
             // 
-            // button13
+            // ButtonFirewallRulesAPI
             // 
-            this.button13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.button13.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.button13.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.button13.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button13.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button13.ForeColor = System.Drawing.Color.Silver;
-            this.button13.Location = new System.Drawing.Point(293, 63);
-            this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(221, 25);
-            this.button13.TabIndex = 208;
-            this.button13.Text = "Check Firewall API";
-            this.button13.UseVisualStyleBackColor = false;
+            this.ButtonFirewallRulesAPI.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonFirewallRulesAPI.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonFirewallRulesAPI.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonFirewallRulesAPI.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonFirewallRulesAPI.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonFirewallRulesAPI.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonFirewallRulesAPI.Location = new System.Drawing.Point(293, 63);
+            this.ButtonFirewallRulesAPI.Name = "ButtonFirewallRulesAPI";
+            this.ButtonFirewallRulesAPI.Size = new System.Drawing.Size(221, 25);
+            this.ButtonFirewallRulesAPI.TabIndex = 208;
+            this.ButtonFirewallRulesAPI.Text = "Check Firewall API";
+            this.ButtonFirewallRulesAPI.UseVisualStyleBackColor = false;
             // 
             // button14
             // 
@@ -322,20 +329,20 @@ namespace GameLauncher.App
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.button14);
-            this.Controls.Add(this.button13);
+            this.Controls.Add(this.ButtonFirewallRulesAPI);
             this.Controls.Add(this.button11);
             this.Controls.Add(this.button12);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.button10);
-            this.Controls.Add(this.button8);
-            this.Controls.Add(this.button7);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button6);
+            this.Controls.Add(this.ButtonFirewallRulesCheck);
+            this.Controls.Add(this.ButtonFirewallRulesAddAll);
+            this.Controls.Add(this.ButtonFirewallRulesAddGame);
+            this.Controls.Add(this.ButtonFirewallRulesAddLauncher);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button4);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.ResetFirewallRulesButton);
+            this.Controls.Add(this.ButtonFirewallRulesRemoveGame);
+            this.Controls.Add(this.ButtonFirewallRulesRemoveLauncher);
+            this.Controls.Add(this.ButtonFirewallRulesRemoveAll);
             this.Controls.Add(this.ResetWindowsDefenderButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.SettingsGamePathText);
@@ -349,21 +356,21 @@ namespace GameLauncher.App
 
         private System.Windows.Forms.Label SettingsGamePathText;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button ResetFirewallRulesButton;
+        private System.Windows.Forms.Button ButtonFirewallRulesRemoveAll;
         private System.Windows.Forms.Button ResetWindowsDefenderButton;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button ButtonFirewallRulesRemoveLauncher;
+        private System.Windows.Forms.Button ButtonFirewallRulesRemoveGame;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button ButtonFirewallRulesAddGame;
+        private System.Windows.Forms.Button ButtonFirewallRulesAddLauncher;
+        private System.Windows.Forms.Button ButtonFirewallRulesAddAll;
+        private System.Windows.Forms.Button ButtonFirewallRulesCheck;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button10;
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
-        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Button ButtonFirewallRulesAPI;
         private System.Windows.Forms.Button button14;
     }
 }

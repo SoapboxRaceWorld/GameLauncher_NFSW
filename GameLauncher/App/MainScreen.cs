@@ -1421,6 +1421,19 @@ namespace GameLauncher
             }
         }
 
+        private void ButtonSecurityCenter_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                new SecurityCenterScreen().ShowDialog();
+            }
+            catch (Exception Error)
+            {
+                string ErrorMessage = "Security Center Screen Encountered an Error";
+                LogToFileAddons.OpenLog("Security Center Panel", ErrorMessage, Error, "Exclamation", false);
+            }
+        }
+
         private void SettingsButton_MouseEnter(object sender, EventArgs e)
         {
             SettingsButton.BackgroundImage = Theming.GearButtonHover;
@@ -3757,6 +3770,7 @@ namespace GameLauncher
             logo.BackgroundImage = Theming.LogoMain;
             SettingsButton.BackgroundImage = Theming.GearButton;
             CloseBTN.BackgroundImage = Theming.CloseButton;
+            ButtonSecurityCenter.Image = Theming.ShieldButtonUnknown;
 
             ProgressBarOutline.BackgroundImage = Theming.ProgressBarOutline;
             PlayProgress.Image = Theming.ProgressBarPreload;
@@ -3826,6 +3840,8 @@ namespace GameLauncher
             SettingsButton.MouseEnter += new EventHandler(SettingsButton_MouseEnter);
             SettingsButton.MouseLeave += new EventHandler(SettingsButton_MouseLeave);
             SettingsButton.Click += new EventHandler(SettingsButton_Click);
+
+            ButtonSecurityCenter.Click += new EventHandler(ButtonSecurityCenter_Click);
 
             LoginButton.MouseEnter += new EventHandler(LoginButton_MouseEnter);
             LoginButton.MouseLeave += new EventHandler(LoginButton_MouseLeave);
