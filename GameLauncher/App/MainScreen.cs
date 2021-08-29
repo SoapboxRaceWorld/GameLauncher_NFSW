@@ -3463,7 +3463,6 @@ namespace GameLauncher
             /* Windows Firewall Runner */
             if (!string.IsNullOrWhiteSpace(FileSettingsSave.FirewallGameStatus))
             {
-                FirewallFunctions.GameFiles();
                 FileORFolderPermissionsFunctions.Folders();
             }
 

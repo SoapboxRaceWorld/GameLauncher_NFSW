@@ -281,17 +281,6 @@ namespace GameLauncher.App
                 SettingsVFilesButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
             }
 
-            if ((!FirewallHelper.FirewallStatus() && !FirewallEnabled) || 
-                (FileSettingsSave.FirewallLauncherStatus != "Excluded" && FileSettingsSave.FirewallGameStatus != "Excluded") || 
-                FunctionStatus.IsFirewallResetDisabled || UnixOS.Detected())
-            {
-                FunctionStatus.IsFirewallResetDisabled = true;
-                ResetFirewallRulesButton.ForeColor = Theming.RedForeColorButton;
-                ResetFirewallRulesButton.BackColor = Theming.RedBackColorButton;
-                ResetFirewallRulesButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-                ResetFirewallRulesButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
-            }
-
             if ((FileSettingsSave.WindowsDefenderStatus != "Excluded") || UnixOS.Detected() || 
                 FunctionStatus.IsWindowsSecurityResetDisabled || (WindowsProductVersion.GetWindowsNumber() < 10.0) ||
                 (!SecurityCenter.Antivirus() && !SecurityCenter.Antispyware() && !SecurityCenter.RealTimeProtection()))
@@ -631,26 +620,7 @@ namespace GameLauncher.App
                 if (!UnixOS.Detected())
                 {
                     CheckGameFilesDirectoryPrevention();
-
-                    string GameName = "SBRW - Game";
-
-                    /* Remove current Firewall for the Game Files and Add new one (If Possible) */
-                    string OldGamePath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
-                    string NewGamePath = Strings.Encode(Path.Combine(_newGameFilesPath, "nfsw.exe"));
-
-                    string groupKeyGame = "Need for Speed: World";
-                    string descriptionGame = groupKeyGame;
-
-                    if (File.Exists(OldGamePath) && FirewallHelper.FirewallStatus() == true)
-                    {
-                        /* Inbound & Outbound */
-                        FirewallHelper.DoesRulesExist("Reset", "Path", GameName, OldGamePath, groupKeyGame, descriptionGame, FirewallProtocol.Any);
-
-                        if (File.Exists(NewGamePath))
-                        {
-                            FirewallHelper.DoesRulesExist("Add-Game", "Path", GameName, NewGamePath, groupKeyGame, descriptionGame, FirewallProtocol.Any);
-                        }
-                    }
+                    SecurityCenterScreen.CacheOldLocation = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
                 }
 
                 FileSettingsSave.GameInstallation = _newGameFilesPath;
@@ -1121,25 +1091,7 @@ namespace GameLauncher.App
                 /* Remove current Exclusion and Add new location for Exclusion */
                 FunctionStatus.WindowsDefender("Reset-Game", "Update Reset", FileSettingsSave.GameInstallation, _newGameFilesPath, "Updated Game Files");
 
-                string GameName = "SBRW - Game";
-
-                /* Remove current Firewall for the Game Files and Add new one (If Possible) */
-                string OldGamePath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
-                string NewGamePath = Strings.Encode(Path.Combine(_newGameFilesPath, "nfsw.exe"));
-
-                string groupKeyGame = "Need for Speed: World";
-                string descriptionGame = groupKeyGame;
-
-                if (File.Exists(OldGamePath) && FirewallHelper.FirewallStatus() == true)
-                {
-                    /* Inbound & Outbound */
-                    FirewallHelper.DoesRulesExist("Reset", "Path", GameName, OldGamePath, groupKeyGame, descriptionGame, FirewallProtocol.Any);
-
-                    if (File.Exists(NewGamePath))
-                    {
-                        FirewallHelper.DoesRulesExist("Add-Game", "Path", GameName, NewGamePath, groupKeyGame, descriptionGame, FirewallProtocol.Any);
-                    }
-                }
+                SecurityCenterScreen.CacheOldLocation = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
             }
 
             FileSettingsSave.GameInstallation = _newGameFilesPath;
@@ -1527,78 +1479,7 @@ namespace GameLauncher.App
 
         private void ResetFirewallRulesButton_Click(object sender, EventArgs e)
         {
-            if (FunctionStatus.IsFirewallResetDisabled)
-            {
-                if (!FirewallHelper.RuleExist("Path", "SBRW - Game", Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"))) ||
-                    !FirewallHelper.RuleExist("Path", "SBRW - Game Launcher", Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameLauncher))))
-                {
-                    if (UnixOS.Detected())
-                    {
-                        MessageBox.Show(null, "Firewall is Not Supported on Non-Windows Systems", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else if (!FirewallHelper.FirewallStatus() || !FirewallEnabled)
-                    {
-                        MessageBox.Show(null, "Firewall Service is Not Running. Please Either Enable or Exclude it Manually", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show(null, "You have already Reset Firewall Rules", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-                else if (UnixOS.Detected())
-                {
-                    MessageBox.Show(null, "Firewall is Not Supported on Non-Windows Systems", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else if (!FirewallHelper.FirewallStatus() || !FirewallEnabled)
-                {
-                    MessageBox.Show(null, "Firewall Service is Not Running. Please Either Enable or Exclude it Manually", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    MessageBox.Show(null, "Hello Developers! How do you do Today? Wait, You're not a Developer? Oh oh...", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-
-                ResetFirewallRulesButton.ForeColor = Theming.RedForeColorButton;
-                ResetFirewallRulesButton.BackColor = Theming.RedBackColorButton;
-                ResetFirewallRulesButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-                ResetFirewallRulesButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
-            }
-            else
-            {
-                DialogResult frameworkError = MessageBox.Show(null, "This will Reset the Firewall Rules that were done for you!" +
-                "\n\nClicking Yes and Launcher will Re-create the values Again on Next Launch." +
-                "\nClick No and Launcher will Not do any changes", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (frameworkError == DialogResult.Yes)
-                {
-                    if (!UnixOS.Detected())
-                    {
-                        string GameName = "SBRW - Game";
-                        string GamePath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
-
-                        string groupKeyGame = "Need for Speed: World";
-                        string descriptionGame = groupKeyGame;
-
-                        /* Inbound & Outbound */
-                        FirewallHelper.DoesRulesExist("Reset", "Path", GameName, GamePath, groupKeyGame, descriptionGame, FirewallProtocol.Any);
-
-                        string LauncherName = "SBRW - Game Launcher";
-                        string LauncherPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameLauncher));
-
-                        string UpdaterName = "SBRW - Game Launcher Updater";
-                        string UpdaterPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameUpdater));
-
-                        string groupKeyLauncher = "Game Launcher for Windows";
-                        string descriptionLauncher = "Soapbox Race World";
-
-                        /* Inbound & Outbound */
-                        FirewallHelper.DoesRulesExist("Reset", "Path", LauncherName, LauncherPath, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
-                        FirewallHelper.DoesRulesExist("Reset", "Path", UpdaterName, UpdaterPath, groupKeyLauncher, descriptionLauncher, FirewallProtocol.Any);
-                        FunctionStatus.IsFirewallResetDisabled = true;
-                        FileSettingsSave.FirewallGameStatus = FileSettingsSave.FirewallLauncherStatus = "Not Excluded";
-                    }
-                }
-            }
+            MessageBox.Show(null, "Moved to Security Center Screen", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void ResetWindowsDefenderButton_Click(object sender, EventArgs e)

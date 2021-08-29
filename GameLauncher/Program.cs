@@ -473,14 +473,6 @@ namespace GameLauncher
                         FileAccountSave.NullSafeAccount();
                         Log.Checking("INI FILES: Done");
 
-                        /* Windows Firewall Runner */
-                        if (!string.IsNullOrWhiteSpace(FileSettingsSave.FirewallLauncherStatus))
-                        {
-                            Log.Checking("FIREWALL: Running");
-                            FirewallFunctions.Launcher();
-                            Log.Checking("FIREWALL: Done");
-                        }
-
                         /* Windows 7 Fix */
                         if (WindowsProductVersion.GetWindowsNumber() == 6.1 && string.IsNullOrWhiteSpace(FileSettingsSave.Win7UpdatePatches))
                         {
