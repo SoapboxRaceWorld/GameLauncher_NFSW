@@ -21,17 +21,23 @@ namespace GameLauncher.App
 {
     public partial class RegisterScreen : Form
     {
+        private static bool IsRegisterScreenOpen = false;
         private bool _ticketRequired;
 
         public RegisterScreen()
         {
-            InitializeComponent();
-            DiscordLauncherPresence.Status("Register", ServerListUpdater.ServerName("Register"));
-            this.Closing += (x, y) =>
+            if (!IsRegisterScreenOpen)
             {
-                DiscordLauncherPresence.Status("Idle Ready", null);
-            };
-            SetVisuals();
+                IsRegisterScreenOpen = true;
+                InitializeComponent();
+                DiscordLauncherPresence.Status("Register", ServerListUpdater.ServerName("Register"));
+                this.Closing += (x, y) =>
+                {
+                    DiscordLauncherPresence.Status("Idle Ready", null);
+                    if (IsRegisterScreenOpen) { IsRegisterScreenOpen = false; }
+                };
+                SetVisuals();
+            }
         }
 
         private void RegisterButton_Click(object sender, EventArgs e)

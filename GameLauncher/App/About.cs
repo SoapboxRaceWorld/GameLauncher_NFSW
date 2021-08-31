@@ -12,14 +12,23 @@ namespace GameLauncher.App
 {
     public partial class About : Form
     {
+        private static bool IsAboutOpen = false;
         private readonly List<AboutNoteBlock> patchNoteBlocks = new List<AboutNoteBlock>();
         private static readonly string AboutXMLRevision = "2.1.8.A";
         private static readonly string AboutXML = "/Launcher/SBRW/Official/" + AboutXMLRevision + "/about.xml";
 
         public About()
         {
-            InitializeComponent();
-            SetVisuals();
+            if (!IsAboutOpen)
+            {
+                IsAboutOpen = true;
+                InitializeComponent();
+                SetVisuals();
+                this.Closing += (x, y) =>
+                {
+                    if (IsAboutOpen) { IsAboutOpen = false; }
+                };
+            }
         }
 
         private void SetVisuals()

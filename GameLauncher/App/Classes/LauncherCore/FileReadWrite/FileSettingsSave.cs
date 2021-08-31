@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Drawing;
+using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
+using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 
@@ -398,6 +401,91 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             }
 
             settingFile = new IniFile("Settings.ini");
+        }
+    }
+
+    class SavedSettingsCheck
+    {
+        public static SecurityCenterCodes SecurityCenter()
+        {
+            if (UnixOS.Detected())
+            {
+                return SecurityCenterCodes.Unix;
+            }
+            else if (FileSettingsSave.FirewallLauncherStatus == "Excluded" && FileSettingsSave.FirewallGameStatus == "Excluded")
+            {
+                return SecurityCenterCodes.Firewall_Updated;
+            }
+            else if ((FileSettingsSave.FirewallLauncherStatus == "Excluded" && FileSettingsSave.FirewallGameStatus == "Not Excluded") || 
+                (FileSettingsSave.FirewallLauncherStatus == "Unknown" && FileSettingsSave.FirewallGameStatus == "Unknown") ||
+                (FileSettingsSave.FirewallLauncherStatus == "Removed" && FileSettingsSave.FirewallGameStatus == "Removed"))
+            {
+                return SecurityCenterCodes.Firewall_Outdated;
+            }
+            else if ((FileSettingsSave.FirewallLauncherStatus == "Error" && FileSettingsSave.FirewallGameStatus == "Error") ||
+                (FileSettingsSave.FirewallLauncherStatus == "Not Supported" && FileSettingsSave.FirewallGameStatus == "Not Supported"))
+            {
+                return SecurityCenterCodes.Firewall_Error;
+            }
+            else if (FileSettingsSave.DefenderLauncherStatus == "Excluded" && FileSettingsSave.DefenderGameStatus == "Excluded")
+            {
+                return SecurityCenterCodes.Defender_Updated;
+            }
+            else if ((FileSettingsSave.DefenderLauncherStatus == "Excluded" && FileSettingsSave.DefenderGameStatus == "Not Excluded") ||
+                (FileSettingsSave.DefenderLauncherStatus == "Unknown" && FileSettingsSave.DefenderGameStatus == "Unknown") || 
+                (FileSettingsSave.DefenderLauncherStatus == "Removed" && FileSettingsSave.DefenderGameStatus == "Removed"))
+            {
+                return SecurityCenterCodes.Defender_Outdated;
+            }
+            else if ((FileSettingsSave.DefenderLauncherStatus == "Error" && FileSettingsSave.DefenderGameStatus == "Error") ||
+                (FileSettingsSave.DefenderLauncherStatus == "Not Supported" && FileSettingsSave.DefenderGameStatus == "Not Supported"))
+            {
+                return SecurityCenterCodes.Defender_Error;
+            }
+            else if (FileSettingsSave.FilePermissionStatus == "Set")
+            {
+                return SecurityCenterCodes.Permissions_Updated;
+            }
+            else if (FileSettingsSave.FilePermissionStatus == "Error")
+            {
+                return SecurityCenterCodes.Permissions_Error;
+            }
+            else if (FileSettingsSave.FilePermissionStatus == "Not Set")
+            {
+                return SecurityCenterCodes.Permissions_Outdated;
+            }
+            else if ((FileSettingsSave.FirewallLauncherStatus == "Not Excluded" && FileSettingsSave.FirewallGameStatus == "Not Excluded") || 
+                (FileSettingsSave.DefenderLauncherStatus == "Not Excluded" && FileSettingsSave.DefenderGameStatus == "Not Excluded"))
+            {
+                return SecurityCenterCodes.Unknown;
+            }
+            else
+            {
+                return SecurityCenterCodes.Unknown;
+            }
+        }
+
+        public static Image SecurityCenterIcon()
+        {
+            switch (SecurityCenter())
+            {
+                case SecurityCenterCodes.Firewall_Updated:
+                case SecurityCenterCodes.Defender_Updated:
+                case SecurityCenterCodes.Permissions_Updated:
+                    return Theming.ShieldButtonSuccess;
+                case SecurityCenterCodes.Firewall_Outdated:
+                case SecurityCenterCodes.Defender_Outdated:
+                case SecurityCenterCodes.Permissions_Outdated:
+                    return Theming.ShieldButtonWarning;
+                case SecurityCenterCodes.Firewall_Error:
+                case SecurityCenterCodes.Defender_Error:
+                case SecurityCenterCodes.Permissions_Error:
+                    return Theming.ShieldButtonError;
+                case SecurityCenterCodes.Unix:
+                    return Theming.ShieldButtonChecking;
+                default:
+                    return Theming.ShieldButtonUnknown;
+            }
         }
     }
 }

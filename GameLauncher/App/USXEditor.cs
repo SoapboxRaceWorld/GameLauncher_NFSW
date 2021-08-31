@@ -17,6 +17,7 @@ namespace GameLauncher.App
 {
     public partial class USXEditor : Form
     {
+        private static bool IsUSXEditorOpen = false;
         public static bool FileReadOnly = false;
         public static int AmountofCenterTimes = 0;
         public static bool ResolutionsListLoaded = false;
@@ -26,32 +27,37 @@ namespace GameLauncher.App
         {
             if (File.Exists(Locations.UserSettingsXML))
             {
-                DiscordLauncherPresence.Status("User XML Editor", null);
-                Log.Checking("UXE: Success, a UserSettings.xml file was found!");
-                if (new FileInfo(Locations.UserSettingsXML).IsReadOnly == true)
+                if (!IsUSXEditorOpen)
                 {
-                    FileReadOnly = true;
-                    Log.Warning("UXE: UserSettings.xml is Read-Only!");
-                }
-                else
-                {
-                    Log.Completed("UXE: UserSettings.xml can be modified!");
-                }
-
-                FileGameSettings.Read("Full File");
-                ResolutionsListUpdater.Get();
-                InitializeComponent();
-                SetVisuals();
-                this.Closing += (x, y) =>
-                {
-                    DiscordLauncherPresence.Status("Settings", null);
-
-                    if (Hover.Active)
+                    IsUSXEditorOpen = true;
+                    DiscordLauncherPresence.Status("User XML Editor", null);
+                    Log.Checking("UXE: Success, a UserSettings.xml file was found!");
+                    if (new FileInfo(Locations.UserSettingsXML).IsReadOnly == true)
                     {
-                        Hover.RemoveAll();
-                        Hover.Dispose();
+                        FileReadOnly = true;
+                        Log.Warning("UXE: UserSettings.xml is Read-Only!");
                     }
-                };
+                    else
+                    {
+                        Log.Completed("UXE: UserSettings.xml can be modified!");
+                    }
+
+                    FileGameSettings.Read("Full File");
+                    ResolutionsListUpdater.Get();
+                    InitializeComponent();
+                    SetVisuals();
+                    this.Closing += (x, y) =>
+                    {
+                        DiscordLauncherPresence.Status("Settings", null);
+                        if (IsUSXEditorOpen) { IsUSXEditorOpen = false; }
+
+                        if (Hover.Active)
+                        {
+                            Hover.RemoveAll();
+                            Hover.Dispose();
+                        }
+                    };
+                }
             }
             else
             {

@@ -353,8 +353,6 @@ namespace GameLauncher
 
         private void CloseBTN_Click(object sender, EventArgs e)
         {
-            CloseBTN.BackgroundImage = Theming.CloseButtonClick;
-
             FileSettingsSave.SaveSettings();
             FileAccountSave.SaveAccount();
 
@@ -394,14 +392,34 @@ namespace GameLauncher
             }
         }
 
-        private void CloseBTN_MouseEnter(object sender, EventArgs e)
+        private void ButtonClose_MouseDown(object sender, EventArgs e)
+        {
+            CloseBTN.BackgroundImage = Theming.CloseButtonClick;
+        }
+
+        private void ButtonClose_MouseEnter(object sender, EventArgs e)
         {
             CloseBTN.BackgroundImage = Theming.CloseButtonHover;
         }
 
-        private void CloseBTN_MouseLeave(object sender, EventArgs e)
+        private void ButtonClose_MouseLeaveANDMouseUp(object sender, EventArgs e)
         {
             CloseBTN.BackgroundImage = Theming.CloseButton;
+        }
+
+        private void ButtonSettings_MouseDown(object sender, EventArgs e)
+        {
+            SettingsButton.BackgroundImage = Theming.GearButtonClick;
+        }
+
+        private void ButtonSettings_MouseEnter(object sender, EventArgs e)
+        {
+            SettingsButton.BackgroundImage = Theming.GearButtonHover;
+        }
+
+        private void ButtonSettings_MouseLeaveANDMouseUp(object sender, EventArgs e)
+        {
+            SettingsButton.BackgroundImage = Theming.GearButton;
         }
 
         private void LoginEnter(object sender, KeyEventArgs e)
@@ -733,7 +751,7 @@ namespace GameLauncher
 
             System.Timers.Timer aTimer = new System.Timers.Timer(10000);
             aTimer.Elapsed += (x, y) => { Client.CancelAsync(); };
-            aTimer.Enabled = true;            
+            aTimer.Enabled = true;
 
             Client.DownloadStringCompleted += (sender2, e2) =>
             {
@@ -1432,16 +1450,6 @@ namespace GameLauncher
                 string ErrorMessage = "Security Center Screen Encountered an Error";
                 LogToFileAddons.OpenLog("Security Center Panel", ErrorMessage, Error, "Exclamation", false);
             }
-        }
-
-        private void SettingsButton_MouseEnter(object sender, EventArgs e)
-        {
-            SettingsButton.BackgroundImage = Theming.GearButtonHover;
-        }
-
-        private void SettingsButton_MouseLeave(object sender, EventArgs e)
-        {
-            SettingsButton.BackgroundImage = Theming.GearButton;
         }
 
         private void StartGame(string UserID, string LoginToken)
@@ -3763,7 +3771,7 @@ namespace GameLauncher
             logo.BackgroundImage = Theming.LogoMain;
             SettingsButton.BackgroundImage = Theming.GearButton;
             CloseBTN.BackgroundImage = Theming.CloseButton;
-            ButtonSecurityCenter.Image = Theming.ShieldButtonUnknown;
+            ButtonSecurityCenter.Image = SavedSettingsCheck.SecurityCenterIcon();
 
             ProgressBarOutline.BackgroundImage = Theming.ProgressBarOutline;
             PlayProgress.Image = Theming.ProgressBarPreload;
@@ -3826,12 +3834,16 @@ namespace GameLauncher
 
             SelectServerBtn.Click += new EventHandler(FunctionEvents.SelectServerBtn_Click);
 
-            CloseBTN.MouseEnter += new EventHandler(CloseBTN_MouseEnter);
-            CloseBTN.MouseLeave += new EventHandler(CloseBTN_MouseLeave);
+            CloseBTN.MouseEnter += new EventHandler(ButtonClose_MouseEnter);
+            CloseBTN.MouseLeave += new EventHandler(ButtonClose_MouseLeaveANDMouseUp);
+            CloseBTN.MouseUp += new MouseEventHandler(ButtonClose_MouseLeaveANDMouseUp);
+            CloseBTN.MouseDown += new MouseEventHandler(ButtonClose_MouseDown);
             CloseBTN.Click += new EventHandler(CloseBTN_Click);
 
-            SettingsButton.MouseEnter += new EventHandler(SettingsButton_MouseEnter);
-            SettingsButton.MouseLeave += new EventHandler(SettingsButton_MouseLeave);
+            SettingsButton.MouseEnter += new EventHandler(ButtonSettings_MouseEnter);
+            SettingsButton.MouseLeave += new EventHandler(ButtonSettings_MouseLeaveANDMouseUp);
+            SettingsButton.MouseUp += new MouseEventHandler(ButtonSettings_MouseLeaveANDMouseUp);
+            SettingsButton.MouseDown += new MouseEventHandler(ButtonSettings_MouseDown);
             SettingsButton.Click += new EventHandler(SettingsButton_Click);
 
             ButtonSecurityCenter.Click += new EventHandler(ButtonSecurityCenter_Click);

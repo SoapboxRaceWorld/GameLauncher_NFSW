@@ -29,6 +29,8 @@ namespace GameLauncher.App
         /* Global Functions             /
         /*******************************/
 
+        private static bool IsSettingsScreenOpen = false;
+
         private int _lastSelectedCdnId;
         private int _lastSelectedLanguage;
         private bool _disableProxy;
@@ -38,39 +40,167 @@ namespace GameLauncher.App
         private string _newLauncherPath;
         private string _newGameFilesPath;
         private string FinalCDNURL;
-        private readonly bool FirewallEnabled = UnixOS.Detected() ? false : FirewallManager.IsServiceRunning;
         private static Thread ThreadChangedCDN;
         private static Thread ThreadSavedCDN;
         private static Thread ThreadChecksums;
 
         public SettingsScreen()
         {
-            InitializeComponent();
-            SetVisuals();
-            this.Closing += (x, y) =>
+            if (!IsSettingsScreenOpen)
             {
-                DiscordLauncherPresence.Status("Idle Ready", null);
+                IsSettingsScreenOpen = false;
+                InitializeComponent();
+                SetVisuals();
+                this.Closing += (x, y) =>
+                {
+                    DiscordLauncherPresence.Status("Idle Ready", null);
 
-                if (ThreadChangedCDN != null)
-                {
-                    ThreadChangedCDN.Abort();
-                    ThreadChangedCDN = null;
-                }
-                if (ThreadSavedCDN != null)
-                {
-                    ThreadSavedCDN.Abort();
-                    ThreadSavedCDN = null;
-                }
-                if (ThreadChecksums != null)
-                {
-                    ThreadChecksums.Abort();
-                    ThreadChecksums = null;
-                }
-            };
+                    if (ThreadChangedCDN != null)
+                    {
+                        ThreadChangedCDN.Abort();
+                        ThreadChangedCDN = null;
+                    }
+                    if (ThreadSavedCDN != null)
+                    {
+                        ThreadSavedCDN.Abort();
+                        ThreadSavedCDN = null;
+                    }
+                    if (ThreadChecksums != null)
+                    {
+                        ThreadChecksums.Abort();
+                        ThreadChecksums = null;
+                    }
+                    if (IsSettingsScreenOpen) { IsSettingsScreenOpen = false; }
+                };
 
-            DiscordLauncherPresence.Status("Settings", null);
+                DiscordLauncherPresence.Status("Settings", null);
+            }
         }
-
+        /// <summary>
+        /// Sets the Color for Buttons
+        /// </summary>
+        /// <param name="Elements">Button Control Name</param>
+        /// <param name="Color">Range 0-3 Sets Colored Button.
+        /// <code>"0" Checking Blue</code><code>"1" Success Green</code><code>"2" Warning Orange</code><code>"3" Error Red</code></param>
+        /// <param name="EnabledORDisabled">Enables or Disables the Button</param>
+        /// <remarks>Range 0-3 Sets Colored Button.
+        /// <code>"0" Checking Blue</code><code>"1" Success Green</code><code>"2" Warning Orange</code><code>"3" Error Red</code></remarks>
+        private void ButtonsColorSet(Button Elements, int Color, bool EnabledORDisabled)
+        {
+            switch (Color)
+            {
+                /* Checking Blue */
+                case 0:
+                    if (Elements.InvokeRequired)
+                    {
+                        Elements.Invoke(new Action(delegate ()
+                        {
+                            Elements.ForeColor = Theming.BlueForeColorButton;
+                            Elements.BackColor = Theming.BlueBackColorButton;
+                            Elements.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+                            Elements.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+                            Elements.Enabled = EnabledORDisabled;
+                        }));
+                    }
+                    else
+                    {
+                        Elements.ForeColor = Theming.BlueForeColorButton;
+                        Elements.BackColor = Theming.BlueBackColorButton;
+                        Elements.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
+                        Elements.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+                        Elements.Enabled = EnabledORDisabled;
+                    }
+                    break;
+                /* Success Green */
+                case 1:
+                    if (Elements.InvokeRequired)
+                    {
+                        Elements.Invoke(new Action(delegate ()
+                        {
+                            Elements.ForeColor = Theming.GreenForeColorButton;
+                            Elements.BackColor = Theming.GreenBackColorButton;
+                            Elements.FlatAppearance.BorderColor = Theming.GreenBorderColorButton;
+                            Elements.FlatAppearance.MouseOverBackColor = Theming.GreenMouseOverBackColorButton;
+                            Elements.Enabled = EnabledORDisabled;
+                        }));
+                    }
+                    else
+                    {
+                        Elements.ForeColor = Theming.GreenForeColorButton;
+                        Elements.BackColor = Theming.GreenBackColorButton;
+                        Elements.FlatAppearance.BorderColor = Theming.GreenBorderColorButton;
+                        Elements.FlatAppearance.MouseOverBackColor = Theming.GreenMouseOverBackColorButton;
+                        Elements.Enabled = EnabledORDisabled;
+                    }
+                    break;
+                /* Warning Orange */
+                case 2:
+                    if (Elements.InvokeRequired)
+                    {
+                        Elements.Invoke(new Action(delegate ()
+                        {
+                            Elements.ForeColor = Theming.YellowForeColorButton;
+                            Elements.BackColor = Theming.YellowBackColorButton;
+                            Elements.FlatAppearance.BorderColor = Theming.YellowBorderColorButton;
+                            Elements.FlatAppearance.MouseOverBackColor = Theming.YellowMouseOverBackColorButton;
+                            Elements.Enabled = EnabledORDisabled;
+                        }));
+                    }
+                    else
+                    {
+                        Elements.ForeColor = Theming.YellowForeColorButton;
+                        Elements.BackColor = Theming.YellowBackColorButton;
+                        Elements.FlatAppearance.BorderColor = Theming.YellowBorderColorButton;
+                        Elements.FlatAppearance.MouseOverBackColor = Theming.YellowMouseOverBackColorButton;
+                        Elements.Enabled = EnabledORDisabled;
+                    }
+                    break;
+                /* Error Red */
+                case 3:
+                    if (Elements.InvokeRequired)
+                    {
+                        Elements.Invoke(new Action(delegate ()
+                        {
+                            Elements.ForeColor = Theming.RedForeColorButton;
+                            Elements.BackColor = Theming.RedBackColorButton;
+                            Elements.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                            Elements.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+                            Elements.Enabled = EnabledORDisabled;
+                        }));
+                    }
+                    else
+                    {
+                        Elements.ForeColor = Theming.RedForeColorButton;
+                        Elements.BackColor = Theming.RedBackColorButton;
+                        Elements.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
+                        Elements.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+                        Elements.Enabled = EnabledORDisabled;
+                    }
+                    break;
+                /* Unknown Gray */
+                default:
+                    if (Elements.InvokeRequired)
+                    {
+                        Elements.Invoke(new Action(delegate ()
+                        {
+                            Elements.ForeColor = Theming.GrayForeColorButton;
+                            Elements.BackColor = Theming.GrayBackColorButton;
+                            Elements.FlatAppearance.BorderColor = Theming.GrayBorderColorButton;
+                            Elements.FlatAppearance.MouseOverBackColor = Theming.GrayMouseOverBackColorButton;
+                            Elements.Enabled = EnabledORDisabled;
+                        }));
+                    }
+                    else
+                    {
+                        Elements.ForeColor = Theming.GrayForeColorButton;
+                        Elements.BackColor = Theming.GrayBackColorButton;
+                        Elements.FlatAppearance.BorderColor = Theming.GrayBorderColorButton;
+                        Elements.FlatAppearance.MouseOverBackColor = Theming.GrayMouseOverBackColorButton;
+                        Elements.Enabled = EnabledORDisabled;
+                    }
+                    break;
+            }
+        }
         /// <summary>
         /// Sets the Button, Image, Text, and Fonts. Enables/Disables Certain Elements of the Screen for Certain Platforms. Also contains functions that act as helper functions
         /// </summary>
@@ -112,17 +242,11 @@ namespace GameLauncher.App
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-            var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
+            float MainFontSize = UnixOS.Detected()? 9f : 9f * 100f / CreateGraphics().DpiY;
+            float SecondaryFontSize = UnixOS.Detected()? 8f : 8f * 100f / CreateGraphics().DpiY;
 
-            if (UnixOS.Detected())
-            {
-                MainFontSize = 9f;
-                SecondaryFontSize = 8f;
-            }
             Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
-            ResetFirewallRulesButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
-            ResetWindowsDefenderButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            ButtonSecurityPanel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsAboutButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsGamePathText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsGameFiles.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
@@ -162,55 +286,15 @@ namespace GameLauncher.App
             /********************************/
 
             /* Buttons */
-            SettingsGameFiles.ForeColor = Theming.BlueForeColorButton;
-            SettingsGameFiles.BackColor = Theming.BlueBackColorButton;
-            SettingsGameFiles.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            SettingsGameFiles.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
-
-            SettingsAboutButton.ForeColor = Theming.BlueForeColorButton;
-            SettingsAboutButton.BackColor = Theming.BlueBackColorButton;
-            SettingsAboutButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            SettingsAboutButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
-
-            SettingsVFilesButton.ForeColor = Theming.YellowForeColorButton;
-            SettingsVFilesButton.BackColor = Theming.YellowBackColorButton;
-            SettingsVFilesButton.FlatAppearance.BorderColor = Theming.YellowBorderColorButton;
-            SettingsVFilesButton.FlatAppearance.MouseOverBackColor = Theming.YellowMouseOverBackColorButton;
-
-            SettingsUEditorButton.ForeColor = Theming.YellowForeColorButton;
-            SettingsUEditorButton.BackColor = Theming.YellowBackColorButton;
-            SettingsUEditorButton.FlatAppearance.BorderColor = Theming.YellowBorderColorButton;
-            SettingsUEditorButton.FlatAppearance.MouseOverBackColor = Theming.YellowMouseOverBackColorButton;
-
-            SettingsClearCrashLogsButton.ForeColor = Theming.BlueForeColorButton;
-            SettingsClearCrashLogsButton.BackColor = Theming.BlueBackColorButton;
-            SettingsClearCrashLogsButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            SettingsClearCrashLogsButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
-
-            SettingsClearLauncherLogsButton.ForeColor = Theming.BlueForeColorButton;
-            SettingsClearLauncherLogsButton.BackColor = Theming.BlueBackColorButton;
-            SettingsClearLauncherLogsButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            SettingsClearLauncherLogsButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
-
-            SettingsClearCommunicationLogButton.ForeColor = Theming.BlueForeColorButton;
-            SettingsClearCommunicationLogButton.BackColor = Theming.BlueBackColorButton;
-            SettingsClearCommunicationLogButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            SettingsClearCommunicationLogButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
-
-            SettingsClearServerModCacheButton.ForeColor = Theming.BlueForeColorButton;
-            SettingsClearServerModCacheButton.BackColor = Theming.BlueBackColorButton;
-            SettingsClearServerModCacheButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            SettingsClearServerModCacheButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
-
-            ResetFirewallRulesButton.ForeColor = Theming.BlueForeColorButton;
-            ResetFirewallRulesButton.BackColor = Theming.BlueBackColorButton;
-            ResetFirewallRulesButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            ResetFirewallRulesButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
-
-            ResetWindowsDefenderButton.ForeColor = Theming.BlueForeColorButton;
-            ResetWindowsDefenderButton.BackColor = Theming.BlueBackColorButton;
-            ResetWindowsDefenderButton.FlatAppearance.BorderColor = Theming.BlueBorderColorButton;
-            ResetWindowsDefenderButton.FlatAppearance.MouseOverBackColor = Theming.BlueMouseOverBackColorButton;
+            ButtonsColorSet(SettingsGameFiles, 0, true);
+            ButtonsColorSet(SettingsAboutButton, 0, true);
+            ButtonsColorSet(SettingsVFilesButton, 0, false);
+            ButtonsColorSet(SettingsUEditorButton, 0, true);
+            ButtonsColorSet(SettingsClearCrashLogsButton, 0, false);
+            ButtonsColorSet(SettingsClearLauncherLogsButton, 0, true);
+            ButtonsColorSet(SettingsClearCommunicationLogButton, 0, false);
+            ButtonsColorSet(SettingsClearServerModCacheButton, 0, false);
+            ButtonsColorSet(ButtonSecurityPanel, 0, true);
 
             /* Label Links */
             SettingsGameFilesCurrent.LinkColor = Theming.SettingsLink;
@@ -263,6 +347,19 @@ namespace GameLauncher.App
             SettingsCancel.MouseUp += new MouseEventHandler(Graybutton_hover_MouseUp);
             SettingsCancel.MouseDown += new MouseEventHandler(Graybutton_click_MouseDown);
 
+            ButtonSecurityPanel.Click += new EventHandler(ButtonSecurityPanel_Click);
+            SettingsVFilesButton.Click += new EventHandler(SettingsVFilesButton_Click);
+            SettingsSave.Click += new EventHandler(SettingsSave_Click);
+            SettingsCancel.Click += new EventHandler(SettingsCancel_Click);
+            SettingsUEditorButton.Click += new EventHandler(SettingsUEditorButton_Click);
+            SettingsClearServerModCacheButton.Click += new EventHandler(SettingsClearServerModCacheButton_Click);
+            SettingsClearCommunicationLogButton.Click += new EventHandler(SettingsClearCommunicationLogButton_Click);
+            SettingsClearCrashLogsButton.Click += new EventHandler(SettingsClearCrashLogsButton_Click);
+            SettingsAboutButton.Click += new EventHandler(SettingsAboutButton_Click);
+            SettingsLauncherVersion.Click += new EventHandler(SettingsLauncherVersion_Click);
+            SettingsGameFiles.Click += new EventHandler(SettingsGameFiles_Click);
+            SettingsClearLauncherLogsButton.Click += new EventHandler(SettingsClearLauncherLogsButton_Click);
+
             /********************************/
             /* Load XML (Only one Section)   /
             /********************************/
@@ -275,10 +372,7 @@ namespace GameLauncher.App
 
             if (FunctionStatus.IsVerifyHashDisabled)
             {
-                SettingsVFilesButton.ForeColor = Theming.RedForeColorButton;
-                SettingsVFilesButton.BackColor = Theming.RedBackColorButton;
-                SettingsVFilesButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-                SettingsVFilesButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+                ButtonsColorSet(SettingsVFilesButton, 3, true);
             }
 
             /*******************************/
@@ -469,40 +563,32 @@ namespace GameLauncher.App
 
             if (File.Exists(Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "NFSWO_COMMUNICATION_LOG.txt"))))
             {
-                SettingsClearCommunicationLogButton.Enabled = true;
+                ButtonsColorSet(SettingsClearCommunicationLogButton, 2, true);
             }
             else
             {
-                SettingsClearCommunicationLogButton.ForeColor = Theming.RedForeColorButton;
-                SettingsClearCommunicationLogButton.BackColor = Theming.RedBackColorButton;
-                SettingsClearCommunicationLogButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-                SettingsClearCommunicationLogButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+                ButtonsColorSet(SettingsClearCommunicationLogButton, 3, false);
             }
 
             if (Directory.Exists(FileSettingsSave.GameInstallation + "/.data"))
             {
-                SettingsClearServerModCacheButton.Enabled = true;
+
+                ButtonsColorSet(SettingsClearServerModCacheButton, 2, true);
             }
             else
             {
-                SettingsClearServerModCacheButton.ForeColor = Theming.RedForeColorButton;
-                SettingsClearServerModCacheButton.BackColor = Theming.RedBackColorButton;
-                SettingsClearServerModCacheButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-                SettingsClearServerModCacheButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+                ButtonsColorSet(SettingsClearServerModCacheButton, 3, false);
             }
 
             var crashLogFilesDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
 
             if (crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp").Count() != 0)
             {
-                SettingsClearCrashLogsButton.Enabled = true;
+                ButtonsColorSet(SettingsClearCrashLogsButton, 2, true);
             }
             else
             {
-                SettingsClearCrashLogsButton.ForeColor = Theming.RedForeColorButton;
-                SettingsClearCrashLogsButton.BackColor = Theming.RedBackColorButton;
-                SettingsClearCrashLogsButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-                SettingsClearCrashLogsButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
+                ButtonsColorSet(SettingsClearCrashLogsButton, 3, false);
             }
 
             try
@@ -545,13 +631,16 @@ namespace GameLauncher.App
                         {
                             if (!Application.OpenForms["SettingsScreen"].Disposing)
                             {
+                                ButtonsColorSet(SettingsVFilesButton, 0, false);
                                 switch (APIChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat", 10))
                                 {
                                     case APIStatus.Online:
                                         FunctionStatus.DoesCDNSupportVerifyHash = true;
+                                        ButtonsColorSet(SettingsVFilesButton, (FileSettingsSave.GameIntegrity != "Good" ? 2 : 0), true);
                                         break;
                                     default:
                                         FunctionStatus.DoesCDNSupportVerifyHash = false;
+                                        ButtonsColorSet(SettingsVFilesButton, 3, true);
                                         break;
                                 }
                             }
@@ -586,6 +675,7 @@ namespace GameLauncher.App
         /* Settings Save */
         private void SettingsSave_Click(object sender, EventArgs e)
         {
+            SettingsSave.Text = "Saving";
             /* TODO null check */
             if (!string.IsNullOrWhiteSpace(((LangObject)SettingsLanguage.SelectedItem).INI_Value))
             {
@@ -608,8 +698,12 @@ namespace GameLauncher.App
             {
                 if (!UnixOS.Detected())
                 {
+                    /* Check if New Game! Files is not in Banned Folder Locations */
                     CheckGameFilesDirectoryPrevention();
-                    SecurityCenterScreen.CacheOldLocation = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
+                    /* Store Old Location for Security Panel to Use Later on */
+                    FileSettingsSave.GameInstallationOld = FileSettingsSave.GameInstallation;
+                    FileSettingsSave.FirewallGameStatus = "Not Excluded";
+                    ButtonsColorSet(ButtonSecurityPanel, 2, true);
                 }
 
                 FileSettingsSave.GameInstallation = _newGameFilesPath;
@@ -622,29 +716,30 @@ namespace GameLauncher.App
                     Log.Completed("CLEANLINKS: Done");
                 }
 
+                ButtonsColorSet(SettingsGameFiles, 1, true);
                 _restartRequired = true;
             }
 
             if (!string.IsNullOrWhiteSpace(((CDNList)SettingsCDNPick.SelectedItem).Url))
             {
                 string SelectedCDNFromList = ((CDNList)SettingsCDNPick.SelectedItem).Url;
-                string FinalCDNURL;
+                string LocalFinalCDNURL;
 
                 if (SelectedCDNFromList.EndsWith("/"))
                 {
                     char[] charsToTrim = { '/' };
-                    FinalCDNURL = SelectedCDNFromList.TrimEnd(charsToTrim);
+                    LocalFinalCDNURL = SelectedCDNFromList.TrimEnd(charsToTrim);
                 }
                 else
                 {
-                    FinalCDNURL = ((CDNList)SettingsCDNPick.SelectedItem).Url;
+                    LocalFinalCDNURL = ((CDNList)SettingsCDNPick.SelectedItem).Url;
                 }
 
-                if (FileSettingsSave.CDN != FinalCDNURL)
+                if (FileSettingsSave.CDN != LocalFinalCDNURL)
                 {
                     SettingsCDNCurrentText.Text = "CHANGED CDN";
-                    SettingsCDNCurrent.Text = FinalCDNURL;
-                    FileSettingsSave.CDN = FinalCDNURL;
+                    SettingsCDNCurrent.Text = LocalFinalCDNURL;
+                    FinalCDNURL = FileSettingsSave.CDN = LocalFinalCDNURL;
                     _restartRequired = true;
                 }
             }
@@ -720,16 +815,22 @@ namespace GameLauncher.App
             {
                 if (SettingsWordFilterCheck.Checked)
                 {
-                    if (File.Exists(FileSettingsSave.GameInstallation + "/profwords")) File.Move(FileSettingsSave.GameInstallation + "/profwords", FileSettingsSave.GameInstallation + "/profwords_dis");
+                    if (File.Exists(FileSettingsSave.GameInstallation + "/profwords"))
+                    {
+                        File.Move(FileSettingsSave.GameInstallation + "/profwords", FileSettingsSave.GameInstallation + "/profwords_dis");
+                    }
                 }
                 else
                 {
-                    if (File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis")) File.Move(FileSettingsSave.GameInstallation + "/profwords_dis", FileSettingsSave.GameInstallation + "/profwords");
+                    if (File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis"))
+                    {
+                        File.Move(FileSettingsSave.GameInstallation + "/profwords_dis", FileSettingsSave.GameInstallation + "/profwords");
+                    }
                 }
             }
             catch (Exception Error)
             {
-                LogToFileAddons.OpenLog("SETTINGS SAVE", null, Error, null, true);
+                LogToFileAddons.OpenLog("SETTINGS SAVE [Profwords]", null, Error, null, true);
             }
 
             /* Create Custom Settings.ini for LangPicker.asi module */
@@ -766,13 +867,44 @@ namespace GameLauncher.App
             FileSettingsSave.SaveSettings();
             FileGameSettings.Save("Suppress", "Language Only");
 
+            if (ThreadChecksums != null)
+            {
+                ThreadChecksums.Abort();
+                ThreadChecksums = null;
+            }
+
+            ThreadChecksums = new Thread(() =>
+            {
+                if (Application.OpenForms["SettingsScreen"] != null)
+                {
+                    if (!Application.OpenForms["SettingsScreen"].Disposing)
+                    {
+                        ButtonsColorSet(SettingsVFilesButton, 0, false);
+
+                        switch (APIChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat", 10))
+                        {
+                            case APIStatus.Online:
+                                FunctionStatus.DoesCDNSupportVerifyHash = true;
+                                ButtonsColorSet(SettingsVFilesButton, (FileSettingsSave.GameIntegrity != "Good" ? 2 : 0), true);
+                                break;
+                            default:
+                                FunctionStatus.DoesCDNSupportVerifyHash = false;
+                                ButtonsColorSet(SettingsVFilesButton, 3, true);
+                                break;
+                        }
+                    }
+                }
+            });
+
+            ThreadChecksums.Start();
+
             if (_restartRequired)
             {
                 MessageBox.Show(null, "In order to see settings changes, you need to restart the Launcher manually.", "GameLauncher", 
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
-            Close();
+            
+            SettingsSave.Text = "Saved";
         }
 
         /* Settings Cancel */
@@ -799,18 +931,21 @@ namespace GameLauncher.App
             {
                 try
                 {
-                    Directory.Delete(FileSettingsSave.GameInstallation + "/.data", true);
-                    Directory.Delete(FileSettingsSave.GameInstallation + "/MODS", true);
+                    if (Directory.Exists(FileSettingsSave.GameInstallation + "/.data"))
+                    {
+                        Directory.Delete(FileSettingsSave.GameInstallation + "/.data", true);
+                    }
+                    if (Directory.Exists(FileSettingsSave.GameInstallation + "/MODS"))
+                    {
+                        Directory.Delete(FileSettingsSave.GameInstallation + "/MODS", true);
+                    }
                     Log.Warning("LAUNCHER: User Confirmed to Delete Server Mods Cache");
-                    SettingsClearServerModCacheButton.ForeColor = Theming.RedForeColorButton;
-                    SettingsClearServerModCacheButton.BackColor = Theming.RedBackColorButton;
-                    SettingsClearServerModCacheButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-                    SettingsClearServerModCacheButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
-                    SettingsClearServerModCacheButton.Enabled = false;
+                    ButtonsColorSet(SettingsClearServerModCacheButton, 1, false);
                     MessageBox.Show(null, "Deleted Server Mods Cache", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception Error)
                 {
+                    ButtonsColorSet(SettingsClearServerModCacheButton, 3, true);
                     LogToFileAddons.OpenLog("SETTINGS CLEAR", "Unable to Delete Server Mods Cache", Error, "Exclamation", false);
                 }
             }
@@ -821,16 +956,16 @@ namespace GameLauncher.App
         {
             try
             {
-                File.Delete(FileSettingsSave.GameInstallation + "/NFSWO_COMMUNICATION_LOG.txt");
-                SettingsClearCommunicationLogButton.ForeColor = Theming.RedForeColorButton;
-                SettingsClearCommunicationLogButton.BackColor = Theming.RedBackColorButton;
-                SettingsClearCommunicationLogButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-                SettingsClearCommunicationLogButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
-                SettingsClearCommunicationLogButton.Enabled = false;
+                if (File.Exists(FileSettingsSave.GameInstallation + "/NFSWO_COMMUNICATION_LOG.txt"))
+                {
+                    File.Delete(FileSettingsSave.GameInstallation + "/NFSWO_COMMUNICATION_LOG.txt");
+                }
+                ButtonsColorSet(SettingsClearCommunicationLogButton, 1, false);
                 MessageBox.Show(null, "Deleted NFSWO Communication Log", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception Error)
             {
+                ButtonsColorSet(SettingsClearCommunicationLogButton, 3, true);
                 LogToFileAddons.OpenLog("SETTINGS CLEAR", "Unable to Delete NFSWO Communication Log", Error, "Exclamation", false);
             }
         }
@@ -857,15 +992,12 @@ namespace GameLauncher.App
                     file.Delete();
                 }
 
-                SettingsClearCrashLogsButton.ForeColor = Theming.RedForeColorButton;
-                SettingsClearCrashLogsButton.BackColor = Theming.RedBackColorButton;
-                SettingsClearCrashLogsButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-                SettingsClearCrashLogsButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
-                SettingsClearCrashLogsButton.Enabled = false;
+                ButtonsColorSet(SettingsClearCrashLogsButton, 1, false);
                 MessageBox.Show(null, "Deleted Crash Logs", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception Error)
             {
+                ButtonsColorSet(SettingsClearCrashLogsButton, 3, true);
                 LogToFileAddons.OpenLog("SETTINGS CLEAR", "Unable to Delete Crash Logs", Error, "Exclamation", false);
             }
         }
@@ -888,15 +1020,12 @@ namespace GameLauncher.App
                     }
                 }
 
-                SettingsClearLauncherLogsButton.ForeColor = Theming.RedForeColorButton;
-                SettingsClearLauncherLogsButton.BackColor = Theming.RedBackColorButton;
-                SettingsClearLauncherLogsButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-                SettingsClearLauncherLogsButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
-                SettingsClearLauncherLogsButton.Enabled = false;
+                ButtonsColorSet(SettingsClearLauncherLogsButton, 1, false);
                 MessageBox.Show(null, "Deleted Old Launcher Logs", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception Error)
             {
+                ButtonsColorSet(SettingsClearLauncherLogsButton, 3, true);
                 LogToFileAddons.OpenLog("SETTINGS CLEAR", "Unable to Delete Old Launcher Logs", Error, "Exclamation", false);
             }
         }
@@ -941,19 +1070,28 @@ namespace GameLauncher.App
         /* Settings Open Current CDN in Browser */
         private void SettingsCDNCurrent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(FileSettingsSave.CDN);
+            if (!string.IsNullOrWhiteSpace(FileSettingsSave.CDN))
+            {
+                Process.Start(FileSettingsSave.CDN);
+            }
         }
 
         /* Settings Open Current Launcher Path in Explorer */
         private void SettingsLauncherPathCurrent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(_newLauncherPath);
+            if (!string.IsNullOrWhiteSpace(_newLauncherPath))
+            {
+                Process.Start(_newLauncherPath);
+            }
         }
 
         /* Settings Open Current Game Files Path in Explorer */
         private void SettingsGameFilesCurrent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(_newGameFilesPath);
+            if (!string.IsNullOrWhiteSpace(_newGameFilesPath))
+            {
+                Process.Start(_newGameFilesPath);
+            }
         }
 
         /* Settings Open About Dialog */
@@ -970,22 +1108,26 @@ namespace GameLauncher.App
         /* Settings CDN Dropdown Menu Index */
         private void SettingsCDNPick_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (((CDNList)SettingsCDNPick.SelectedItem).IsSpecial && ((CDNList)SettingsCDNPick.SelectedItem).Url == null)
+            try
             {
-                SettingsCDNPick.SelectedIndex = _lastSelectedCdnId;
-                return;
-            }
-            else if (((CDNList)SettingsCDNPick.SelectedItem).Url != null)
-            {
-                IsChangedCDNDown();
-            }
-            else
-            {
-                SettingsCDNText.Text = "CDN:";
-                SettingsCDNText.ForeColor = Theming.FivithTextForeColor;
-            }
+                if (((CDNList)SettingsCDNPick.SelectedItem).IsSpecial && ((CDNList)SettingsCDNPick.SelectedItem).Url == null)
+                {
+                    SettingsCDNPick.SelectedIndex = _lastSelectedCdnId;
+                    return;
+                }
+                else if (((CDNList)SettingsCDNPick.SelectedItem).Url != null)
+                {
+                    IsChangedCDNDown();
+                }
+                else
+                {
+                    SettingsCDNText.Text = "CDN:";
+                    SettingsCDNText.ForeColor = Theming.FivithTextForeColor;
+                }
 
-            _lastSelectedCdnId = SettingsCDNPick.SelectedIndex;
+                _lastSelectedCdnId = SettingsCDNPick.SelectedIndex;
+            }
+            catch { }
         }
 
         private void SettingsLanguage_SelectedIndexChanged(object sender, EventArgs e)
@@ -1076,9 +1218,11 @@ namespace GameLauncher.App
             {
                 /* Check if New Game! Files is not in Banned Folder Locations */
                 CheckGameFilesDirectoryPrevention();
-
                 /* Store Old Location for Security Panel to Use Later on */
                 FileSettingsSave.GameInstallationOld = FileSettingsSave.GameInstallation;
+                FileSettingsSave.FirewallGameStatus = "Not Excluded";
+                FileSettingsSave.DefenderGameStatus = "Not Excluded";
+                ButtonsColorSet(ButtonSecurityPanel, 2, true);
             }
 
             FileSettingsSave.GameInstallation = _newGameFilesPath;
@@ -1091,6 +1235,7 @@ namespace GameLauncher.App
                 Log.Completed("CLEANLINKS: Done");
             }
 
+            ButtonsColorSet(SettingsGameFiles, 1, true);
             _restartRequired = true;
         }
 
@@ -1464,14 +1609,17 @@ namespace GameLauncher.App
             SettingsCancel.Image = Theming.GrayButtonHover;
         }
 
-        private void ResetFirewallRulesButton_Click(object sender, EventArgs e)
+        private void ButtonSecurityPanel_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(null, "Moved to Security Center Screen", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void ResetWindowsDefenderButton_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show(null, "Moved to Security Center", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try
+            {
+                new SecurityCenterScreen().ShowDialog();
+            }
+            catch (Exception Error)
+            {
+                string ErrorMessage = "Security Center Screen Encountered an Error";
+                LogToFileAddons.OpenLog("Security Center Panel", ErrorMessage, Error, "Exclamation", false);
+            }
         }
 
         /* Settings Verify Hash */
@@ -1479,6 +1627,7 @@ namespace GameLauncher.App
         {
             if (FunctionStatus.IsVerifyHashDisabled)
             {
+                ButtonsColorSet(SettingsVFilesButton, 3, true);
                 if (!File.Exists(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe")))
                 {
                     MessageBox.Show(null, "You need to Download the Game Files first before you can have access to run Verify Hash", 
@@ -1489,19 +1638,16 @@ namespace GameLauncher.App
                     MessageBox.Show(null, "You have already done a 'Verify GameFiles' Scan" +
                     "\nPlease Restart Launcher to do a new Verify GameFiles Scan", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
-                
-                SettingsVFilesButton.ForeColor = Theming.RedForeColorButton;
-                SettingsVFilesButton.BackColor = Theming.RedBackColorButton;
-                SettingsVFilesButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-                SettingsVFilesButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
             }
             else if (!FunctionStatus.DoesCDNSupportVerifyHash)
             {
+                ButtonsColorSet(SettingsVFilesButton, 3, true);
                 MessageBox.Show(null, "The current saved CDN does not support 'Verify GameFiles' Scan" +
                     "\nPlease Choose Another CDN from the list", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
+                ButtonsColorSet(SettingsVFilesButton, (FileSettingsSave.GameIntegrity != "Good" ? 2 : 0), true);
                 new VerifyHash().ShowDialog();
             }
         }

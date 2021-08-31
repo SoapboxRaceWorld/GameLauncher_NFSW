@@ -140,6 +140,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         public static Bitmap ShieldButtonUnknown = Properties.Resources.icon_shield_unknown;
 
+        public static Bitmap ShieldButtonChecking = Properties.Resources.icon_shield_checking;
+
         public static Bitmap ShieldButtonSuccess = Properties.Resources.icon_shield_success;
 
         public static Bitmap ShieldButtonWarning = Properties.Resources.icon_shield_warning;
@@ -585,6 +587,46 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("TwitterIconDisabled")))
                         {
                             TwitterIconDisabled = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("TwitterIconDisabled"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonUnknown")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknown")))
+                        {
+                            ShieldButtonUnknown = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknown"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonChecking")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonChecking")))
+                        {
+                            ShieldButtonChecking = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonChecking"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonSuccess")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccess")))
+                        {
+                            ShieldButtonSuccess = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccess"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonWarning")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarning")))
+                        {
+                            ShieldButtonWarning = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarning"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonError")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonError")))
+                        {
+                            ShieldButtonError = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonError"));
                         }
                     }
 

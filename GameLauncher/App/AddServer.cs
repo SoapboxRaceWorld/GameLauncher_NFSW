@@ -21,10 +21,22 @@ namespace GameLauncher.App
 {
     public partial class AddServer : Form
     {
+        private static bool IsAddServerOpen = false;
         public AddServer()
         {
-            InitializeComponent();
-            SetVisuals();
+            if (!IsAddServerOpen)
+            {
+                IsAddServerOpen = true;
+                InitializeComponent();
+                SetVisuals();
+                this.Closing += (x, CloseForm) =>
+                {
+                    if (IsAddServerOpen)
+                    {
+                        IsAddServerOpen = false;
+                    }
+                };
+            }
         }
 
         public void DrawErrorAroundTextBox(TextBox x)

@@ -61,8 +61,7 @@ namespace GameLauncher.App
             this.SettingsLanguage = new System.Windows.Forms.ComboBox();
             this.SettingsSave = new System.Windows.Forms.Button();
             this.SettingsCancel = new System.Windows.Forms.Button();
-            this.ResetWindowsDefenderButton = new System.Windows.Forms.Button();
-            this.ResetFirewallRulesButton = new System.Windows.Forms.Button();
+            this.ButtonSecurityPanel = new System.Windows.Forms.Button();
             this.SettingsClearLauncherLogsButton = new System.Windows.Forms.Button();
             this.SettingsAltWebCallsheckbox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
@@ -82,7 +81,6 @@ namespace GameLauncher.App
             this.SettingsClearServerModCacheButton.TabIndex = 107;
             this.SettingsClearServerModCacheButton.Text = "Clear Server Mods";
             this.SettingsClearServerModCacheButton.UseVisualStyleBackColor = false;
-            this.SettingsClearServerModCacheButton.Click += new System.EventHandler(this.SettingsClearServerModCacheButton_Click);
             // 
             // SettingsLauncherVersion
             // 
@@ -95,7 +93,6 @@ namespace GameLauncher.App
             this.SettingsLauncherVersion.TabIndex = 118;
             this.SettingsLauncherVersion.Text = "Version: vX.X.X.X";
             this.SettingsLauncherVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SettingsLauncherVersion.Click += new System.EventHandler(this.SettingsLauncherVersion_Click);
             // 
             // SettingsAboutButton
             // 
@@ -111,7 +108,6 @@ namespace GameLauncher.App
             this.SettingsAboutButton.TabIndex = 117;
             this.SettingsAboutButton.Text = "About";
             this.SettingsAboutButton.UseVisualStyleBackColor = true;
-            this.SettingsAboutButton.Click += new System.EventHandler(this.SettingsAboutButton_Click);
             // 
             // SettingsGameFiles
             // 
@@ -128,7 +124,6 @@ namespace GameLauncher.App
             this.SettingsGameFiles.Text = "Change GameFiles Path";
             this.SettingsGameFiles.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsGameFiles.UseVisualStyleBackColor = false;
-            this.SettingsGameFiles.Click += new System.EventHandler(this.SettingsGameFiles_Click);
             // 
             // SettingsClearCommunicationLogButton
             // 
@@ -145,7 +140,6 @@ namespace GameLauncher.App
             this.SettingsClearCommunicationLogButton.TabIndex = 106;
             this.SettingsClearCommunicationLogButton.Text = "Clear NFSWO Log";
             this.SettingsClearCommunicationLogButton.UseVisualStyleBackColor = false;
-            this.SettingsClearCommunicationLogButton.Click += new System.EventHandler(this.SettingsClearCommunicationLogButton_Click);
             // 
             // SettingsClearCrashLogsButton
             // 
@@ -162,7 +156,6 @@ namespace GameLauncher.App
             this.SettingsClearCrashLogsButton.TabIndex = 105;
             this.SettingsClearCrashLogsButton.Text = "Clear Crash Logs";
             this.SettingsClearCrashLogsButton.UseVisualStyleBackColor = false;
-            this.SettingsClearCrashLogsButton.Click += new System.EventHandler(this.SettingsClearCrashLogsButton_Click);
             // 
             // SettingsVFilesButton
             // 
@@ -179,7 +172,6 @@ namespace GameLauncher.App
             this.SettingsVFilesButton.Text = "Verify GameFiles";
             this.SettingsVFilesButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsVFilesButton.UseVisualStyleBackColor = false;
-            this.SettingsVFilesButton.Click += new System.EventHandler(this.SettingsVFilesButton_Click);
             // 
             // SettingsGamePathText
             // 
@@ -254,7 +246,6 @@ namespace GameLauncher.App
             this.SettingsUEditorButton.Text = "Edit UserSettings";
             this.SettingsUEditorButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsUEditorButton.UseVisualStyleBackColor = false;
-            this.SettingsUEditorButton.Click += new System.EventHandler(this.SettingsUEditorButton_Click);
             // 
             // SettingsWordFilterCheck
             // 
@@ -496,7 +487,6 @@ namespace GameLauncher.App
             this.SettingsSave.TabIndex = 114;
             this.SettingsSave.Text = "SAVE";
             this.SettingsSave.UseVisualStyleBackColor = false;
-            this.SettingsSave.Click += new System.EventHandler(this.SettingsSave_Click);
             // 
             // SettingsCancel
             // 
@@ -514,39 +504,21 @@ namespace GameLauncher.App
             this.SettingsCancel.TabIndex = 116;
             this.SettingsCancel.Text = "EXIT";
             this.SettingsCancel.UseVisualStyleBackColor = false;
-            this.SettingsCancel.Click += new System.EventHandler(this.SettingsCancel_Click);
             // 
-            // ResetWindowsDefenderButton
+            // ButtonSecurityPanel
             // 
-            this.ResetWindowsDefenderButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.ResetWindowsDefenderButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.ResetWindowsDefenderButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.ResetWindowsDefenderButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ResetWindowsDefenderButton.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ResetWindowsDefenderButton.ForeColor = System.Drawing.Color.Silver;
-            this.ResetWindowsDefenderButton.Location = new System.Drawing.Point(204, 294);
-            this.ResetWindowsDefenderButton.Name = "ResetWindowsDefenderButton";
-            this.ResetWindowsDefenderButton.Size = new System.Drawing.Size(154, 25);
-            this.ResetWindowsDefenderButton.TabIndex = 192;
-            this.ResetWindowsDefenderButton.Text = "Reset Defender";
-            this.ResetWindowsDefenderButton.UseVisualStyleBackColor = false;
-            this.ResetWindowsDefenderButton.Click += new System.EventHandler(this.ResetWindowsDefenderButton_Click);
-            // 
-            // ResetFirewallRulesButton
-            // 
-            this.ResetFirewallRulesButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.ResetFirewallRulesButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.ResetFirewallRulesButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.ResetFirewallRulesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ResetFirewallRulesButton.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ResetFirewallRulesButton.ForeColor = System.Drawing.Color.Silver;
-            this.ResetFirewallRulesButton.Location = new System.Drawing.Point(38, 294);
-            this.ResetFirewallRulesButton.Name = "ResetFirewallRulesButton";
-            this.ResetFirewallRulesButton.Size = new System.Drawing.Size(154, 25);
-            this.ResetFirewallRulesButton.TabIndex = 193;
-            this.ResetFirewallRulesButton.Text = "Reset Firewall";
-            this.ResetFirewallRulesButton.UseVisualStyleBackColor = false;
-            this.ResetFirewallRulesButton.Click += new System.EventHandler(this.ResetFirewallRulesButton_Click);
+            this.ButtonSecurityPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonSecurityPanel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonSecurityPanel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonSecurityPanel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonSecurityPanel.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonSecurityPanel.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonSecurityPanel.Location = new System.Drawing.Point(38, 294);
+            this.ButtonSecurityPanel.Name = "ButtonSecurityPanel";
+            this.ButtonSecurityPanel.Size = new System.Drawing.Size(154, 25);
+            this.ButtonSecurityPanel.TabIndex = 193;
+            this.ButtonSecurityPanel.Text = "Security Center";
+            this.ButtonSecurityPanel.UseVisualStyleBackColor = false;
             // 
             // SettingsClearLauncherLogsButton
             // 
@@ -562,7 +534,6 @@ namespace GameLauncher.App
             this.SettingsClearLauncherLogsButton.TabIndex = 194;
             this.SettingsClearLauncherLogsButton.Text = "Clear Launcher Logs";
             this.SettingsClearLauncherLogsButton.UseVisualStyleBackColor = false;
-            this.SettingsClearLauncherLogsButton.Click += new System.EventHandler(this.SettingsClearLauncherLogsButton_Click);
             // 
             // SettingsAltWebCallsheckbox
             // 
@@ -586,8 +557,7 @@ namespace GameLauncher.App
             this.ClientSize = new System.Drawing.Size(891, 529);
             this.Controls.Add(this.SettingsAltWebCallsheckbox);
             this.Controls.Add(this.SettingsClearLauncherLogsButton);
-            this.Controls.Add(this.ResetFirewallRulesButton);
-            this.Controls.Add(this.ResetWindowsDefenderButton);
+            this.Controls.Add(this.ButtonSecurityPanel);
             this.Controls.Add(this.SettingsLanguage);
             this.Controls.Add(this.ThemeName);
             this.Controls.Add(this.ThemeAuthor);
@@ -667,8 +637,7 @@ namespace GameLauncher.App
         private System.Windows.Forms.Label ThemeAuthor;
         private System.Windows.Forms.Label ThemeName;
         private System.Windows.Forms.ComboBox SettingsLanguage;
-        private System.Windows.Forms.Button ResetWindowsDefenderButton;
-        private System.Windows.Forms.Button ResetFirewallRulesButton;
+        private System.Windows.Forms.Button ButtonSecurityPanel;
         private System.Windows.Forms.Button SettingsClearLauncherLogsButton;
         private System.Windows.Forms.CheckBox SettingsAltWebCallsheckbox;
     }
