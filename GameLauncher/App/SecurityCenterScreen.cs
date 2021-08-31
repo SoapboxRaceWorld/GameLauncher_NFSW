@@ -67,8 +67,6 @@ namespace GameLauncher.App
         /// <code>"0" Checking Blue</code><code>"1" Success Green</code><code>"2" Warning Orange</code><code>"3" Error Red</code></remarks>
         private void ButtonsColorSet(Button Elements, int Color, bool EnabledORDisabled)
         {
-            Log.Debug("BUTTON COLOR SET: " + Elements.Name + " Setting Color Value: " + Color + " Is Enabled: " + EnabledORDisabled);
-
             switch (Color)
             {
                 /* Checking Blue */
@@ -113,8 +111,10 @@ namespace GameLauncher.App
                     break;
             }
         }
-
-        public static bool GetSecurityCenterStatus(string Query)
+        /// <summary>Checks WMI Query on if Windows Defender is Enabled</summary>
+        /// <param name="Query">Query a Specific Collection</param>
+        /// <returns><code>True or False</code></returns>
+        private static bool GetDefenderStatus(string Query)
         {
             if (!UnixOS.Detected())
             {
@@ -140,11 +140,11 @@ namespace GameLauncher.App
                 }
                 catch (ManagementException Error)
                 {
-                    LogToFileAddons.OpenLog("Windows Defender Status", null, Error, null, true);
+                    LogToFileAddons.OpenLog("Windows Defender Status [M.E.]", null, Error, null, true);
                 }
                 catch (COMException Error)
                 {
-                    LogToFileAddons.OpenLog("Windows Defender Status", null, Error, null, true);
+                    LogToFileAddons.OpenLog("Windows Defender Status [C.O.M.]", null, Error, null, true);
                 }
                 catch (Exception Error)
                 {
@@ -159,7 +159,22 @@ namespace GameLauncher.App
 
             return false;
         }
+        /// <summary>Checks Windows Defender on if it's Enabled or Disabled by the User or Third-Party Program</summary>
+        /// <remarks>Doesn't checks If the Service is Disabled or a Third-Party Program reports an Incorrect Value</remarks>
+        /// <returns><code>True or False</code></returns>
+        public static bool Defender()
+        {
+            if (!UnixOS.Detected())
+            {
+                return GetDefenderStatus("AntivirusEnabled") && 
+                    GetDefenderStatus("AntispywareEnabled") && 
+                    GetDefenderStatus("RealTimeProtectionEnabled");
+            }
 
+            return false;
+        }
+        /// <summary>Windows Defender: Checks Defender's Current Exclusion List</summary>
+        /// <returns>String-Array of Exclusions</returns>
         private static string[] ExclusionCheck()
         {
             if (!UnixOS.Detected())
@@ -183,11 +198,11 @@ namespace GameLauncher.App
                 }
                 catch (ManagementException Error)
                 {
-                    LogToFileAddons.OpenLog("Windows Defender Exclusion Path Check", null, Error, null, true);
+                    LogToFileAddons.OpenLog("Windows Defender Exclusion Path Check [M.E.]", null, Error, null, true);
                 }
                 catch (COMException Error)
                 {
-                    LogToFileAddons.OpenLog("Windows Defender Exclusion Path Check", null, Error, null, true);
+                    LogToFileAddons.OpenLog("Windows Defender Exclusion Path Check [C.O.M.]", null, Error, null, true);
                 }
                 catch (Exception Error)
                 {
@@ -202,82 +217,103 @@ namespace GameLauncher.App
 
             return Array.Empty<string>();
         }
-
-        public static void DefenderCommands(string Type, string PathOfFolder, bool Supress)
+        /// <summary>
+        /// Finds a Defender Exclusion in Defenders "Database"
+        /// </summary>
+        /// <param name="FilePath">Enter file Path</param>
+        /// <returns><code>True or False</code></returns>
+        private static bool ExclusionExist(string FilePath)
         {
-            Log.Checking("Windows Defender: ".ToUpper() + "Exclusion Checking");
-            switch (Type)
+            if (UnixOS.Detected())
             {
-                case "Add":
-                    if (!ExlusionBooleanCheck(PathOfFolder, 4, 0))
-                    {
-                        try
-                        {
-                            /* Remove current Exclusion and Add new location for Exclusion (Game Files Only!) */
-                            using (PowerShell ps = PowerShell.Create())
-                            {
-                                ps.AddScript($"Add-MpPreference -ExclusionPath \"{Strings.Encode(PathOfFolder)}\"");
-                                var result = ps.Invoke();
-                            }
-
-                            Log.Completed("Windows Defender: ".ToUpper() + "Folder is now Excluded. -> " + PathOfFolder);
-                        }
-                        catch (Exception Error)
-                        {
-                            string ErrorMessage = "Windows Defender Exclusion Encountered an Error:";
-                            LogToFileAddons.OpenLog("Windows Defender Exclusion Add Path", ErrorMessage, Error, "Error", false);
-                            FileSettingsSave.WindowsDefenderStatus = "Not Supported";
-                            FileSettingsSave.SaveSettings();
-                        }
-                    }
-                    else if (Supress)
-                    {
-                        Log.Completed("Windows Defender: ".ToUpper() + "This Folder is already Excluded. -> " + PathOfFolder);
-                    }
-                    else
-                    {
-                        Log.Completed("Windows Defender: ".ToUpper() + "This Folder is already Excluded. -> " + PathOfFolder);
-                        MessageBox.Show("This Folder is already Excluded.", "Security Center", MessageBoxButtons.OK);
-                    }
-                    break;
-                case "Remove":
-                    if (ExlusionBooleanCheck(PathOfFolder, 4, 0))
-                    {
-                        try
-                        {
-                            /* Remove current Exclusion and Add new location for Exclusion (Game Files Only!) */
-                            using (PowerShell ps = PowerShell.Create())
-                            {
-                                ps.AddScript($"Remove-MpPreference -ExclusionPath \"{Strings.Encode(PathOfFolder)}\"");
-                                var result = ps.Invoke();
-                            }
-
-                            Log.Completed("Windows Defender: ".ToUpper() + "Folder is no longer Excluded. -> " + PathOfFolder);
-                        }
-                        catch (Exception Error)
-                        {
-                            string ErrorMessage = "Windows Defender Exclusion Encountered an Error:";
-                            LogToFileAddons.OpenLog("Windows Defender Exclusion Remove Path", ErrorMessage, Error, "Error", false);
-                            FileSettingsSave.WindowsDefenderStatus = "Not Supported";
-                            FileSettingsSave.SaveSettings();
-                        }
-                    }
-                    else if (Supress)
-                    {
-                        Log.Completed("Windows Defender: ".ToUpper() + "This Folder is already not Excluded. -> " + PathOfFolder);
-                    }
-                    else
-                    {
-                        Log.Completed("Windows Defender: ".ToUpper() + "This Folder is already not Excluded. -> " + PathOfFolder);
-                        MessageBox.Show("This Folder is already not Excluded.", "Security Center", MessageBoxButtons.OK);
-                    }
-                    break;
-                case "Check":
-                    break;
-                default:
-                    Log.Warning("Windows Defender: ".ToUpper() + " Did you know, DavidCarbon made a mistake at a line of code?");
-                    break;
+                return true;
             }
+            else
+            {
+                if (ExclusionCheck() != null) 
+                {
+                    return ExclusionCheck().Any(FilePath.Contains);
+                    /*
+                    foreach (string ExistingPaths in ExclusionCheck())
+                    {
+                        if (ExistingPaths == FilePath)
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false; */
+                }
+                else { return false; }
+            }
+        }
+        /// <summary>Windows Defender: Add an Exclusion</summary>
+        /// <param name="AppName">Enter the name of the Application</param>
+        /// <param name="AppPath">Enter the Application Folder</param>
+        /// <returns><code>True or False</code></returns>
+        private static bool AddApplicationExclusion(string AppName, string AppPath)
+        {
+            bool Completed = false;
+            try
+            {
+                if (!ExclusionExist(AppPath))
+                {
+                    /* Remove current Exclusion and Add new location for Exclusion (Game Files Only!) */
+                    using (PowerShell AddScript = PowerShell.Create())
+                    {
+                        AddScript.AddScript($"Add-MpPreference -ExclusionPath \"{Strings.Encode(AppPath)}\"");
+                        AddScript.Invoke();
+                    }
+
+                    Completed = true;
+                    Log.Completed("Windows Defender: ".ToUpper() + "Folder is now Excluded. -> " + AppPath);
+                }
+                else { Log.Completed("WINDOWS FIREWALL: " + AppName + " Rule is already Added"); Completed = true; }
+            }
+            catch (COMException Error)
+            {
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL Add Script [C.O.M.]", null, Error, null, true);
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL Add Script", null, Error, null, true);
+            }
+
+            return Completed;
+        }
+        /// <summary>Windows Defender: Removes an Exclusion</summary>
+        /// <param name="AppName">Enter the name of the Application</param>
+        /// <param name="AppPath">Enter the Application Folder</param>
+        /// <returns><code>True or False</code></returns>
+        private static bool RemoveExclusion(string AppName, string AppPath)
+        {
+            bool Completed = false;
+            try
+            {
+                if (ExclusionExist(AppPath))
+                {
+                    /* Remove current Exclusion and Add new location for Exclusion (Game Files Only!) */
+                    using (PowerShell RemovalScript = PowerShell.Create())
+                    {
+                        RemovalScript.AddScript($"Remove-MpPreference -ExclusionPath \"{Strings.Encode(AppPath)}\"");
+                        RemovalScript.Invoke();
+                    }
+
+                    Completed = true;
+                    Log.Completed("Windows Defender: ".ToUpper() + "Folder is no longer Excluded. -> " + AppPath);
+                }
+                else { Log.Completed("WINDOWS FIREWALL: " + AppName + " Rule is already Removed"); Completed = true; }
+            }
+            catch (COMException Error)
+            {
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL Removal Script [C.O.M.]", null, Error, null, true);
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL Removal Script", null, Error, null, true);
+            }
+
+            return Completed;
         }
         /// <summary>
         /// Checks the Firewall API Version Dynamically
@@ -450,7 +486,15 @@ namespace GameLauncher.App
                 else { return false; }
             }
         }
-
+        /// <summary>Windows Firewall: Adds an Exclusion</summary>
+        /// <param name="AppName">Enter the name of the Application</param>
+        /// <param name="AppPath">Enter the Application Path (Must include exe)</param>
+        /// <param name="GroupKey">Sets the rule grouping string</param>
+        /// <param name="C_Description">Sets the description string of this rule</param>
+        /// <param name="C_Direction">Data direction in which this rule applies to</param>
+        /// <param name="C_Protocol">Sets the protocol that the rule applies to</param>
+        /// <param name="F_LogNote">Notes for Logging</param>
+        /// <returns><code>True or False</code></returns>
         private static bool AddApplicationRule(string AppName, string AppPath, string GroupKey, string C_Description,
                             FirewallDirection C_Direction, FirewallProtocol C_Protocol, string F_LogNote)
         {
@@ -499,15 +543,15 @@ namespace GameLauncher.App
                         Completed = true;
                     }
                 }
-                else { Log.Info("WINDOWS FIREWALL: " + AppName + " Rule is already Added"); Completed = true; }
+                else { Log.Completed("WINDOWS FIREWALL: " + AppName + " Rule is already Added"); Completed = true; }
             }
             catch (FirewallWASNotSupportedException Error)
             {
-                LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL [F.WAS.N.S.E]", null, Error, null, true);
             }
             catch (COMException Error)
             {
-                LogToFileAddons.OpenLog("WINDOWS FIREWALL", null, Error, null, true);
+                LogToFileAddons.OpenLog("WINDOWS FIREWALL [C.O.M]", null, Error, null, true);
             }
             catch (Exception Error)
             {
@@ -516,15 +560,24 @@ namespace GameLauncher.App
 
             return Completed;
         }
-        /// <summary>
-        /// Either Adds, Removes, or Checks the Firewall Rules for the System
-        /// </summary>
-        /// <param name="ModeType">Range 0-3 Sets the Check Status.<code>"0" Sets Launcher</code>
-        /// <code>"1" Sets Updater</code><code>"2" Sets Game</code><code>"3" returns the Firewall Status in a form of a Boolean</code></param>
+        /// <summary>Function Splitter For Firewall and Defender Checks</summary>
+        /// <param name="ModeType">Range 0-5 Sets the Check Status.
+        /// <code>"0" Sets Launcher Path</code>
+        /// <code>"1" Sets Updater Path</code><code>"2" Sets Current/New Game Path</code>
+        /// <code>"3" Sets Old Game Path</code>
+        /// <code>"4" Returns the Firewall Status in a form of a Boolean</code>
+        /// <code>"5" Returns the Defender Status in a form of a Boolean</code>
+        /// </param>
         /// <param name="ModeAPI">Range 0-2 Sets the Function Status. Each Function Returns a Boolean on if it was completed.
-        /// <code>"0" Adds Rule</code><code>"1" Removes Rule</code> <code>"2" Checks if Rule Exists</code></param>
+        /// <code>"0" Adds Rule</code>
+        /// <code>"1" Removes Rule</code>
+        /// <code>"2" Checks if Rule Exists</code>
+        /// <code>"3" Adds Exclusion</code>
+        /// <code>"4" Removes Exclusion</code>
+        /// <code>"5" Checks if Exclusion Exists</code>
+        /// </param>
         /// <returns><code>True or False</code></returns>
-        private static bool FirewallDataBase(int ModeType, int ModeAPI)
+        private static bool DataBase(int ModeType, int ModeAPI)
         {
             string AppName = string.Empty;
             string AppPath = string.Empty;
@@ -547,24 +600,28 @@ namespace GameLauncher.App
                     GroupKey = "Game Launcher for Windows";
                     Description = "Soapbox Race World";
                     break;
-                /* Game Files */
+                /* Current/New Game Files [2] Old Game Files [3]*/
                 case 2:
+                case 3:
                     AppName = "SBRW - Game";
-                    AppPath = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
+                    AppPath = ModeType == 3 ? Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"))
+                    : Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
                     GroupKey = "Need for Speed: World";
                     Description = GroupKey;
                     break;
-                case 3:
+                case 4:
                     return Firewall();
+                case 5:
+                    return Defender();
                 default:
                     return false;
             }
 
-            if (ModeType >= 0 && ModeType <= 2)
+            if (ModeType >= 0 && ModeType <= 3)
             {
                 switch (ModeAPI)
                 {
-                    /* Add */
+                    /* Firewall Rule Add */
                     case 0:
                         if (RuleExist("Path", AppName, AppPath) && !RuleExist("Name", AppName, AppPath))
                         {
@@ -578,7 +635,7 @@ namespace GameLauncher.App
                         /* Outbound */
                         return AddApplicationRule(AppName, AppPath, GroupKey, Description,
                             FirewallDirection.Outbound, FirewallProtocol.Any, "Outbound");
-                    /* Remove */
+                    /* Firewall Rule Removal */
                     case 1:
                         if (RuleExist("Path", AppName, AppPath) && !RuleExist("Name", AppName, AppPath))
                         {
@@ -591,9 +648,18 @@ namespace GameLauncher.App
                             return RemoveRules("Path", AppName, AppPath, "Path Match");
                         }
                         else { return false; }
-                    /* Check */
+                    /* Firewall Rule Check (Exists) */
                     case 2:
                         return RuleExist("Path", AppName, AppPath) && RuleExist("Name", AppName, AppPath);
+                    /* Defender Exclusion Add */
+                    case 3:
+                        return AddApplicationExclusion(AppName, AppPath);
+                    /* Defender Exclusion Removal */
+                    case 4:
+                        return RemoveExclusion(AppName, AppPath);
+                    /* Defender Exclusion Check (Exists) */
+                    case 5:
+                        return ExclusionExist(AppPath);
                     default:
                         return false;
                 }
@@ -601,61 +667,29 @@ namespace GameLauncher.App
             else { return false; }
         }
         /// <summary>
-        /// Exlcusion Splitter For Firewall and Defender Checks
-        /// </summary>
-        /// <param name="FolderPath">Enter Application File Path</param>
-        /// <param name="ModeType">Range 0-3 Sets the Check Status.<code>"0" Sets Launcher</code>
-        /// <code>"1" Sets Updater</code><code>"2" Sets Game</code><code>"3" returns the Firewall Status in a form of a Boolean</code></param>
-        /// <param name="ModeAPI">Range 0-2 Sets the Function Status. Each Function Returns a Boolean on if it was completed.
-        /// <code>"0" Adds Rule</code><code>"1" Removes Rule</code> <code>"2" Checks if Rule Exists</code></param>
-        /// <returns><code>True or False</code></returns>
-        private static bool ExlusionBooleanCheck(string FolderPath, int ModeType, int ModeAPI)
-        {
-            if (ModeType >= 0 && ModeType <= 3)
-            {
-                return FirewallDataBase(ModeType, ModeAPI);
-            }
-            else if (ModeType >= 4 && ModeType <= 7 && !string.IsNullOrWhiteSpace(FolderPath))
-            {
-                try
-                {
-                    if (GetSecurityCenterStatus("AntivirusEnabled") && GetSecurityCenterStatus("AntispywareEnabled") &&
-                        GetSecurityCenterStatus("RealTimeProtectionEnabled"))
-                    {
-                        if (ExclusionCheck() != null)
-                        {
-                            if (ExclusionCheck().Any()) { return ExclusionCheck().Contains(FolderPath); }
-                        }
-                    }
-                }
-                catch {  }
-            }
-
-            return false;
-        }
-        /// <summary>
         /// Used to Enable Buttons with only Booleans
         /// </summary>
-        /// <param name="WhichAPI"></param>
-        /// <param name="PathOfFolder"></param>
-        /// <param name="ModeType">Range 0-3 Sets the Check Status.<code>"0" Sets Launcher</code>
-        /// <code>"1" Sets Updater</code><code>"2" Sets Game</code><code>"3" returns the Firewall Status in a form of a Boolean</code></param>
+        /// <param name="ModeType">Range 0-5 Sets the Check Status.
+        /// <code>"0" Sets Launcher Path</code>
+        /// <code>"1" Sets Updater Path</code>
+        /// <code>"2" Sets Current/New Game Path</code>
+        /// <code>"3" Sets Old Game Path</code>
+        /// <code>"4" Returns the Firewall Status in a form of a Boolean</code>
+        /// <code>"5" Returns the Defender Status in a form of a Boolean</code>
+        /// </param>
         /// <param name="ModeAPI">Range 0-2 Sets the Function Status. Each Function Returns a Boolean on if it was completed.
-        /// <code>"0" Adds Rule</code><code>"1" Removes Rule</code> <code>"2" Checks if Rule Exists</code></param>
+        /// <code>"0" Adds Rule</code>
+        /// <code>"1" Removes Rule</code>
+        /// <code>"2" Checks if Rule Exists</code>
+        /// <code>"3" Adds Exclusion</code>
+        /// <code>"4" Removes Exclusion</code>
+        /// <code>"5" Checks if Exclusion Exists</code>
+        /// </param>
         /// <returns><code>True or False</code></returns>
-        private static bool ButtonEnabler(string WhichAPI, string PathOfFolder, int ModeType, int ModeAPI)
+        private static bool ButtonEnabler(int ModeType, int ModeAPI)
         {
-            switch (WhichAPI)
-            {
-                case "Defender":
-                    try { return ExlusionBooleanCheck(PathOfFolder, 4, 0); }
-                    catch { return false; }
-                case "Firewall":
-                    try { return ExlusionBooleanCheck(PathOfFolder, ModeType, ModeAPI); }
-                    catch { return false; }
-                default:
-                    return false;
-            }
+            try { return DataBase(ModeType, ModeAPI); }
+            catch { return false; }
         }
         ///<summary>Button: Firewall Rules API</summary>
         private void ButtonFirewallRulesAPI_Click(object sender, EventArgs e)
@@ -664,7 +698,7 @@ namespace GameLauncher.App
             {
                 DisableButtonFRAPI = true;
 
-                if (ButtonEnabler("Firewall", null, 3, 3))
+                if (ButtonEnabler(4, 20))
                 {
                     ButtonsColorSet(ButtonFirewallRulesCheck, 2, true);
                     DisableButtonFRC = false;
@@ -684,14 +718,14 @@ namespace GameLauncher.App
                     ButtonsColorSet(ButtonFirewallRulesCheck, 0, true);
 
                     /* Both */
-                    if (ButtonEnabler("Firewall", null, 0, 2) && ButtonEnabler("Firewall", null, 1, 2) && ButtonEnabler("Firewall", null, 2, 2))
+                    if (ButtonEnabler(0, 2) && ButtonEnabler(1, 2) && ButtonEnabler(2, 2))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddAll, 1, true);
                         DisableButtonFRAA = false;
                         ButtonsColorSet(ButtonFirewallRulesRemoveAll, 2, true);
                         DisableButtonFRRA = false;
                     }
-                    else if (!ButtonEnabler("Firewall", null, 0, 2) && !ButtonEnabler("Firewall", null, 1, 2) && !ButtonEnabler("Firewall", null, 2, 2))
+                    else if (!ButtonEnabler(0, 2) && !ButtonEnabler(1, 2) && !ButtonEnabler(2, 2))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddAll, 2, true);
                         DisableButtonFRAA = false;
@@ -704,14 +738,14 @@ namespace GameLauncher.App
                         DisableButtonFRRA = true;
                     }
                     /* Launcher */
-                    if (ButtonEnabler("Firewall", null, 0, 2) && ButtonEnabler("Firewall", null, 1, 2))
+                    if (ButtonEnabler(0, 2) && ButtonEnabler(1, 2))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 1, true);
                         DisableButtonFRAL = false;
                         ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2, true);
                         DisableButtonFRRL = false;
                     }
-                    else if (!ButtonEnabler("Firewall", null, 0, 2) && !ButtonEnabler("Firewall", null, 1, 2))
+                    else if (!ButtonEnabler(0, 2) && !ButtonEnabler(1, 2))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 2, true);
                         DisableButtonFRAL = false;
@@ -724,14 +758,14 @@ namespace GameLauncher.App
                         DisableButtonFRRL = true;
                     }
                     /* Game */
-                    if (ButtonEnabler("Firewall", null, 2, 2))
+                    if (ButtonEnabler(2, 2))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 1, true);
                         DisableButtonFRAG = false;
                         ButtonsColorSet(ButtonFirewallRulesRemoveGame, 2, true);
                         DisableButtonFRRG = false;
                     }
-                    else if (!ButtonEnabler("Firewall", null, 2, 2))
+                    else if (!ButtonEnabler(2, 2))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 2, true);
                         DisableButtonFRAG = false;
@@ -760,12 +794,12 @@ namespace GameLauncher.App
             {
                 DisableButtonFRAA = true;
 
-                if (ButtonEnabler("Firewall", null, 3, 3))
+                if (ButtonEnabler(4, 20))
                 {
                     ButtonsColorSet(ButtonFirewallRulesAddAll, 2, true);
 
                     /* Launcher & Updater */
-                    if (ButtonEnabler("Firewall", null, 0, 0) && ButtonEnabler("Firewall", null, 1, 0))
+                    if (ButtonEnabler(0, 0) && ButtonEnabler(1, 0))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 1, true);
                         ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2, true);
@@ -778,7 +812,7 @@ namespace GameLauncher.App
                         FileSettingsSave.FirewallLauncherStatus = "Error"; 
                     }
                     /* Game */
-                    if (ButtonEnabler("Firewall", null, 2, 0))
+                    if (ButtonEnabler(2, 0))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 1, true);
                         ButtonsColorSet(ButtonFirewallRulesRemoveGame, 2, true);
@@ -819,12 +853,12 @@ namespace GameLauncher.App
             {
                 DisableButtonFRAL = true;
 
-                if (ButtonEnabler("Firewall", null, 3, 3))
+                if (ButtonEnabler(4, 20))
                 {
                     ButtonsColorSet(ButtonFirewallRulesAddLauncher, 2, true);
 
                     /* Game */
-                    if (ButtonEnabler("Firewall", null, 2, 0))
+                    if (ButtonEnabler(2, 0))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 1, true);
                         ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2, true);
@@ -853,12 +887,12 @@ namespace GameLauncher.App
             {
                 DisableButtonFRAG = true;
 
-                if (ButtonEnabler("Firewall", null, 3, 3))
+                if (ButtonEnabler(4, 20))
                 {
                     ButtonsColorSet(ButtonFirewallRulesAddGame, 2, true);
 
                     /* Launcher & Updater */
-                    if (ButtonEnabler("Firewall", null, 0, 0) && ButtonEnabler("Firewall", null, 1, 0))
+                    if (ButtonEnabler(0, 0) && ButtonEnabler(1, 0))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 1, true);
                         ButtonsColorSet(ButtonFirewallRulesRemoveGame, 2, true);
@@ -887,12 +921,12 @@ namespace GameLauncher.App
             {
                 DisableButtonFRRA = true;
 
-                if (ButtonEnabler("Firewall", null, 3, 3))
+                if (ButtonEnabler(4, 20))
                 {
                     ButtonsColorSet(ButtonFirewallRulesRemoveAll, 2, true);
 
                     /* Launcher & Updater */
-                    if (ButtonEnabler("Firewall", null, 0, 1) && ButtonEnabler("Firewall", null, 1, 1))
+                    if (ButtonEnabler(0, 1) && ButtonEnabler(1, 1))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 2, true);
                         DisableButtonFRAL = true;
@@ -906,7 +940,7 @@ namespace GameLauncher.App
                         FileSettingsSave.FirewallLauncherStatus = "Error"; 
                     }
                     /* Game */
-                    if (ButtonEnabler("Firewall", null, 2, 1))
+                    if (ButtonEnabler(2, 1))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 2, true);
                         DisableButtonFRAG = true;
@@ -947,12 +981,12 @@ namespace GameLauncher.App
             {
                 DisableButtonFRRL = true;
 
-                if (ButtonEnabler("Firewall", null, 3, 3))
+                if (ButtonEnabler(4, 20))
                 {
                     ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2, true);
 
                     /* Launcher & Updater */
-                    if (ButtonEnabler("Firewall", null, 0, 1) && ButtonEnabler("Firewall", null, 1, 1))
+                    if (ButtonEnabler(0, 1) && ButtonEnabler(1, 1))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddLauncher, 2, true);
                         DisableButtonFRAL = false;
@@ -981,12 +1015,12 @@ namespace GameLauncher.App
             {
                 DisableButtonFRRG = true;
 
-                if (ButtonEnabler("Firewall", null, 3, 3))
+                if (ButtonEnabler(4, 20))
                 {
                     ButtonsColorSet(ButtonFirewallRulesRemoveGame, 0, true);
 
                     /* Game */
-                    if (ButtonEnabler("Firewall", null, 2, 1))
+                    if (ButtonEnabler(2, 1))
                     {
                         ButtonsColorSet(ButtonFirewallRulesAddGame, 2, true);
                         DisableButtonFRAG = false;
