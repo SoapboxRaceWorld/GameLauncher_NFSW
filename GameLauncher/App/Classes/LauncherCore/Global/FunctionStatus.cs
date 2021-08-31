@@ -557,28 +557,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                     }
                     FileSettingsSave.SaveSettings();
                     Log.Completed("LAUNCHER: Done Checking Game Path Location");
-
-                    Log.Checking("LAUNCHER: Windows Defender (If Applicable)");
-                    /* Windows Defender (Windows 10) */
-                    if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
-                    {
-                        DiscordLauncherPresence.Status("Start Up", "Checking Windows Security (Defender) Exclusions");
-
-                        if (!string.IsNullOrWhiteSpace(FileSettingsSave.WindowsDefenderStatus))
-                        {
-                            if (FileSettingsSave.WindowsDefenderStatus == "Not Excluded" || FileSettingsSave.WindowsDefenderStatus == "Unknown")
-                            {
-                                Log.Core("WINDOWS DEFENDER: Windows 10 Detected! Running Exclusions for Core Folders");
-                                WindowsDefender("Add-Launcher", "Complete Exclude", Locations.LauncherFolder, FileSettingsSave.GameInstallation, "Launcher");
-                                Log.Completed("WINDOWS DEFENDER: Windows Defender - Completed Exclusions for Core Folders");
-                            }
-                            else
-                            {
-                                Log.Core("WINDOWS DEFENDER: Found 'WindowsDefender' key! Its value is " + FileSettingsSave.WindowsDefenderStatus);
-                                Log.Completed("LAUNCHER: Windows Defender (If Applicable) Done");
-                            }
-                        }
-                    }
                 }
 
                 /* Check If Launcher Failed to Connect to any APIs */
@@ -627,110 +605,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 }
             }
         }
-
-        public static void WindowsDefender(string Type, string Mode, string Path, string SecondPath, string Notes)
-        {
-            try
-            {
-                if (SecurityCenter.Antivirus() && SecurityCenter.Antispyware() && SecurityCenter.RealTimeProtection())
-                {
-                    /* Create Windows Defender Exclusion */
-                    try
-                    {
-                        if (Type == "Add-Launcher" || Type == "Add-Game")
-                        {
-                            if (Mode == "Complete Exclude")
-                            {
-                                /* Add Exclusion to Windows Defender */
-                                using (PowerShell ps = PowerShell.Create())
-                                {
-                                    ps.AddScript($"Add-MpPreference -ExclusionPath \"{Strings.Encode(Path)}\"");
-                                    if (Directory.Exists(SecondPath))
-                                    {
-                                        ps.AddScript($"Add-MpPreference -ExclusionPath \"{Strings.Encode(SecondPath)}\"");
-                                    }
-                                    var result = ps.Invoke();
-                                }
-                            }
-                            else
-                            {
-                                Log.Warning("WINDOWS DEFENDER: Unknown Function Call in 'WindowsDefender' with Add Sub-Section. " +
-                                    "Please Check Code in Visual Studio");
-                            }
-
-                            FileSettingsSave.WindowsDefenderStatus = "Excluded";
-
-                            Log.Info("WINDOWS DEFENDER: Excluded " + Notes + " Folder");
-                        }
-                        else if (Type == "Reset-Launcher" || Type == "Reset-Game")
-                        {
-                            if (Mode == "Complete Reset")
-                            {
-                                /* Add Exclusion to Windows Defender */
-                                using (PowerShell ps = PowerShell.Create())
-                                {
-                                    ps.AddScript($"Remove-MpPreference -ExclusionPath \"{Strings.Encode(Path)}\"");
-                                    ps.AddScript($"Remove-MpPreference -ExclusionPath \"{Strings.Encode(SecondPath)}\"");
-                                    var result = ps.Invoke();
-                                }
-
-                                FileSettingsSave.WindowsDefenderStatus = "Not Excluded";
-                            }
-                            else if (Mode == "Update Reset")
-                            {
-                                /* Remove current Exclusion and Add new location for Exclusion (Game Files Only!) */
-                                using (PowerShell ps = PowerShell.Create())
-                                {
-                                    ps.AddScript($"Remove-MpPreference -ExclusionPath \"{Strings.Encode(Path)}\"");
-                                    if (Directory.Exists(SecondPath))
-                                    {
-                                        ps.AddScript($"Add-MpPreference -ExclusionPath \"{Strings.Encode(SecondPath)}\"");
-                                    }
-                                    var result = ps.Invoke();
-                                }
-                            }
-                            else
-                            {
-                                Log.Warning("WINDOWS DEFENDER: Unknown Function Call in 'WindowsDefender' with Reset Sub-Section. " +
-                                    "Please Check Code in Visual Studio");
-                            }
-
-                            Log.Warning("WINDOWS DEFENDER: " + Notes + " Folders");
-                        }
-                        else
-                        {
-                            Log.Warning("WINDOWS DEFENDER: Unknown Function Call in 'WindowsDefender'. Please Check Code in Visual Studio");
-                        }
-
-                        FileSettingsSave.SaveSettings();
-                    }
-                    catch (Exception Error)
-                    {
-                        LogToFileAddons.OpenLog("WINDOWS DEFENDER", null, Error, null, true);
-                        FileSettingsSave.WindowsDefenderStatus = "Not Excluded";
-                        FileSettingsSave.SaveSettings();
-                    }
-                }
-                else
-                {
-                    FileSettingsSave.WindowsDefenderStatus = "Not Supported";
-                    FileSettingsSave.SaveSettings();
-                }
-            }
-            catch (COMException Error)
-            {
-                LogToFileAddons.OpenLog("WINDOWS DEFENDER", null, Error, null, true);
-                FileSettingsSave.WindowsDefenderStatus = "Not Supported";
-                FileSettingsSave.SaveSettings();
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("WINDOWS DEFENDER", null, Error, null, true);
-                FileSettingsSave.WindowsDefenderStatus = "Not Supported";
-                FileSettingsSave.SaveSettings();
-            }
-        }
-
         /* Moved "runAsAdmin" Code to Gist */
         /* https://gist.githubusercontent.com/DavidCarbon/97494268b0175a81a5f89a5e5aebce38/raw/eec2f9f80aa4b350ab98d32383e1ee1f2e1c26fd/Self.cs */
     }

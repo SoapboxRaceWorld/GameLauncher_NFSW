@@ -3460,12 +3460,6 @@ namespace GameLauncher
                 FileSettingsSave.SaveSettings();
             }
 
-            /* Windows Firewall Runner */
-            if (!string.IsNullOrWhiteSpace(FileSettingsSave.FirewallGameStatus))
-            {
-                FileORFolderPermissionsFunctions.Folders();
-            }
-
             if (this.PlayProgressText.InvokeRequired)
             {
                 PlayProgressText.Invoke(new Action(delegate ()

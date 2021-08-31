@@ -281,17 +281,6 @@ namespace GameLauncher.App
                 SettingsVFilesButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
             }
 
-            if ((FileSettingsSave.WindowsDefenderStatus != "Excluded") || UnixOS.Detected() || 
-                FunctionStatus.IsWindowsSecurityResetDisabled || (WindowsProductVersion.GetWindowsNumber() < 10.0) ||
-                (!SecurityCenter.Antivirus() && !SecurityCenter.Antispyware() && !SecurityCenter.RealTimeProtection()))
-            {
-                FunctionStatus.IsWindowsSecurityResetDisabled = true;
-                ResetWindowsDefenderButton.ForeColor = Theming.RedForeColorButton;
-                ResetWindowsDefenderButton.BackColor = Theming.RedBackColorButton;
-                ResetWindowsDefenderButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-                ResetWindowsDefenderButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
-            }
-
             /*******************************/
             /* Load CDN List                /
             /*******************************/
@@ -1088,10 +1077,8 @@ namespace GameLauncher.App
                 /* Check if New Game! Files is not in Banned Folder Locations */
                 CheckGameFilesDirectoryPrevention();
 
-                /* Remove current Exclusion and Add new location for Exclusion */
-                FunctionStatus.WindowsDefender("Reset-Game", "Update Reset", FileSettingsSave.GameInstallation, _newGameFilesPath, "Updated Game Files");
-
-                SecurityCenterScreen.CacheOldLocation = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
+                /* Store Old Location for Security Panel to Use Later on */
+                FileSettingsSave.GameInstallationOld = FileSettingsSave.GameInstallation;
             }
 
             FileSettingsSave.GameInstallation = _newGameFilesPath;
@@ -1484,64 +1471,7 @@ namespace GameLauncher.App
 
         private void ResetWindowsDefenderButton_Click(object sender, EventArgs e)
         {
-            if (FunctionStatus.IsWindowsSecurityResetDisabled)
-            {
-                if (UnixOS.Detected())
-                {
-                    MessageBox.Show(null, "Windows Security (Defender) is Not Supported on Non-Windows Systems", "GameLauncher", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else if (WindowsProductVersion.GetWindowsNumber() < 10.0)
-                {
-                    MessageBox.Show(null, "Windows Security (Defender) does not Exist Before Windows 10." +
-                        "\nUnsupported Feature on Current Platform, Sorry.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else if (!SecurityCenter.Antivirus() && !SecurityCenter.Antispyware() && !SecurityCenter.RealTimeProtection())
-                {
-                    MessageBox.Show(null, "Windows Security (Defender) is Disabled or Turned Off." +
-                        "\nThis is not recommended, instead opt to turn it ON, to allow Launcher to create Exclusions", "GameLauncher", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else if ((!SecurityCenter.Antivirus() && !SecurityCenter.Antispyware() && !SecurityCenter.RealTimeProtection()) && 
-                    FunctionStatus.IsWindowsSecurityResetDisabled)
-                {
-                    MessageBox.Show(null, "You have already Reset Windows Security (Defender) Exclusions", "GameLauncher", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    MessageBox.Show(null, "It is Possible that Windows Defender is not Your Default AntiVirus Provider." +
-                        "\nPlease Manually Exclude it with the other AntiVirus Program", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-
-                ResetWindowsDefenderButton.ForeColor = Theming.RedForeColorButton;
-                ResetWindowsDefenderButton.BackColor = Theming.RedBackColorButton;
-                ResetWindowsDefenderButton.FlatAppearance.BorderColor = Theming.RedBorderColorButton;
-                ResetWindowsDefenderButton.FlatAppearance.MouseOverBackColor = Theming.RedMouseOverBackColorButton;
-            }
-            else
-            {
-                DialogResult frameworkError = MessageBox.Show(null, "This will Reset the Windows Security (Defender) Exclusions that were done for you!" +
-                "\n\nClicking Yes and Launcher will Re-create the values Again on Next Launch." +
-                "\nClick No and Launcher will Not do any changes", "GameLauncher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (frameworkError == DialogResult.Yes)
-                {
-                    if (!UnixOS.Detected())
-                    {
-                        if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
-                        {
-                            FunctionStatus.WindowsDefender("Reset-Launcher", "Complete Reset", Locations.LauncherFolder, FileSettingsSave.GameInstallation, 
-                                "Removed Game and Launcher");
-                            FunctionStatus.IsWindowsSecurityResetDisabled = true;
-                        }
-                        else
-                        {
-                            Log.Warning("SETTINGS: A Non-Windows 10 User has Mangaed to Enter this Sector!");
-                        }
-                    }
-                }
-            }
+            MessageBox.Show(null, "Moved to Security Center", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         /* Settings Verify Hash */

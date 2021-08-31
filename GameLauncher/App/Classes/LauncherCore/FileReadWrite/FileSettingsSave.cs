@@ -9,36 +9,55 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
     class FileSettingsSave
     {
         public static IniFile settingFile = new IniFile("Settings.ini");
-
-        public static string GameInstallation = !string.IsNullOrWhiteSpace(settingFile.Read("InstallationDirectory")) ? settingFile.Read("InstallationDirectory") : string.Empty;
-
+        ///<summary>Game Files Path</summary>
+        public static string GameInstallation = !string.IsNullOrWhiteSpace(settingFile.Read("InstallationDirectory")) ? 
+            settingFile.Read("InstallationDirectory") : string.Empty;
+        ///<summary>Cache Old Game Files Path</summary>
+        ///<remarks>Used for Firewall and Defender Checks</remarks>
+        public static string GameInstallationOld = !string.IsNullOrWhiteSpace(settingFile.Read("OldInstallationDirectory")) ? 
+            settingFile.Read("OldInstallationDirectory") : string.Empty;
+        ///<summary>CDN URL [Saved/Choosen]</summary>
         public static string CDN = !string.IsNullOrWhiteSpace(settingFile.Read("CDN")) ? settingFile.Read("CDN") : "http://localhost/";
-
+        ///<summary>Language [Saved/Choosen]</summary>
         public static string Lang = !string.IsNullOrWhiteSpace(settingFile.Read("Language")) ? settingFile.Read("Language") : "EN";
-
+        ///<summary>Launcher Proxy [Saved/Ticked]</summary>
         public static string Proxy = (!string.IsNullOrWhiteSpace(settingFile.Read("DisableProxy")) 
-                                      && (settingFile.Read("DisableProxy") == "1" || settingFile.Read("DisableProxy") == "0")) ? settingFile.Read("DisableProxy") : "0";
-
+                                      && (settingFile.Read("DisableProxy") == "1" || settingFile.Read("DisableProxy") == "0")) ? 
+            settingFile.Read("DisableProxy") : "0";
+        ///<summary>Launcher Discord RPC [Saved/Ticked]</summary>
         public static string RPC = (!string.IsNullOrWhiteSpace(settingFile.Read("DisableRPC")) 
-                                    && (settingFile.Read("DisableRPC") == "1" || settingFile.Read("DisableRPC") == "0")) ? settingFile.Read("DisableRPC") : "0";
-
-        public static string IgnoreVersion = !string.IsNullOrWhiteSpace(settingFile.Read("IgnoreUpdateVersion")) ? settingFile.Read("IgnoreUpdateVersion") : string.Empty;
-
-        public static string FirewallLauncherStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FirewallLauncher")) ? settingFile.Read("FirewallLauncher") : "Unknown";
-
-        public static string FirewallGameStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FirewallGame")) ? settingFile.Read("FirewallGame") : "Unknown";
-
-        public static string WindowsDefenderStatus = !string.IsNullOrWhiteSpace(settingFile.Read("WindowsDefender")) ? settingFile.Read("WindowsDefender") : "Unknown";
-
-        public static string Win7UpdatePatches = !string.IsNullOrWhiteSpace(settingFile.Read("PatchesApplied")) ? settingFile.Read("PatchesApplied") : string.Empty;
-
-        public static string FilePermissionStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FilePermission")) ? settingFile.Read("FilePermission") : "Not Set";
-
-        public static string GameIntegrity = !string.IsNullOrWhiteSpace(settingFile.Read("GameIntegrity")) ? settingFile.Read("GameIntegrity") : "Unknown";
-        
-        public static string WebCallMethod = (!string.IsNullOrWhiteSpace(settingFile.Read("WebCallMethod")) && (settingFile.Read("WebCallMethod") == "WebClient" || 
-            settingFile.Read("WebCallMethod") == "WebClientWithTimeout")) ? settingFile.Read("WebCallMethod") : "WebClient";
-
+                                    && (settingFile.Read("DisableRPC") == "1" || settingFile.Read("DisableRPC") == "0")) ? 
+            settingFile.Read("DisableRPC") : "0";
+        ///<summary>Launcher Version to Ignore [Saved/Clicked]</summary>
+        public static string IgnoreVersion = !string.IsNullOrWhiteSpace(settingFile.Read("IgnoreUpdateVersion")) ? 
+            settingFile.Read("IgnoreUpdateVersion") : string.Empty;
+        ///<summary>Firewall Status: Launcher [Saved/Ran]</summary>
+        public static string FirewallLauncherStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FirewallLauncher")) ? 
+            settingFile.Read("FirewallLauncher") : "Unknown";
+        ///<summary>Firewall Status: Game [Saved/Ran]</summary>
+        public static string FirewallGameStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FirewallGame")) ? 
+            settingFile.Read("FirewallGame") : "Unknown";
+        ///<summary>Defender Status: Launcher [Saved/Ran]</summary>
+        public static string DefenderLauncherStatus = !string.IsNullOrWhiteSpace(settingFile.Read("DefenderLauncher")) ? 
+            settingFile.Read("DefenderLauncher") : "Unknown";
+        ///<summary>Defender Status: Game [Saved/Ran]</summary>
+        public static string DefenderGameStatus = !string.IsNullOrWhiteSpace(settingFile.Read("DefenderGame")) ? 
+            settingFile.Read("DefenderGame") : "Unknown";
+        ///<summary>Windows 7: Specific KB Updates MessageBox [Saved/Clicked]</summary>
+        public static string Win7UpdatePatches = !string.IsNullOrWhiteSpace(settingFile.Read("PatchesApplied")) ? 
+            settingFile.Read("PatchesApplied") : string.Empty;
+        ///<summary>Windows: Folder or File Permission Status [Saved/Ran]</summary>
+        public static string FilePermissionStatus = !string.IsNullOrWhiteSpace(settingFile.Read("FilePermission")) ? 
+            settingFile.Read("FilePermission") : "Not Set";
+        ///<summary>Game Files are Corrupt in someway and will need to be Verified [Saved]</summary>
+        public static string GameIntegrity = !string.IsNullOrWhiteSpace(settingFile.Read("GameIntegrity")) ? 
+            settingFile.Read("GameIntegrity") : "Unknown";
+        ///<summary>Launcher WebCalls [Saved/Ticked]</summary>
+        ///<remarks>Does not affect Launcher Proxy</remarks>
+        public static string WebCallMethod = (!string.IsNullOrWhiteSpace(settingFile.Read("WebCallMethod")) && 
+            (settingFile.Read("WebCallMethod") == "WebClient" || settingFile.Read("WebCallMethod") == "WebClientWithTimeout")) ? 
+            settingFile.Read("WebCallMethod") : "WebClient";
+        /// <summary>Creates all the NullSafe Values for Settings.ini</summary>
         public static void NullSafeSettings()
         {
             /* Pervent Removal of Login Info Before Main Screen (Temporary Boolean) */
@@ -72,7 +91,15 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             if (settingFile.KeyExists("Firewall"))
             {
                 FirewallLauncherStatus = settingFile.Read("Firewall");
+                FirewallGameStatus = FirewallLauncherStatus;
                 settingFile.DeleteKey("Firewall");
+            }
+
+            if (settingFile.KeyExists("WindowsDefender"))
+            {
+                DefenderLauncherStatus = settingFile.Read("WindowsDefender");
+                DefenderGameStatus = DefenderLauncherStatus;
+                settingFile.DeleteKey("WindowsDefender");
             }
 
             /* Check if any Entries are missing */
@@ -84,6 +111,15 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             else if (!settingFile.KeyExists("InstallationDirectory"))
             {
                 settingFile.Write("InstallationDirectory", GameInstallation);
+            }
+
+            if (UnixOS.Detected() && settingFile.KeyExists("OldInstallationDirectory"))
+            {
+                settingFile.DeleteKey("OldInstallationDirectory");
+            }
+            else if (!UnixOS.Detected() && !settingFile.KeyExists("OldInstallationDirectory"))
+            {
+                settingFile.Write("OldInstallationDirectory", GameInstallationOld);
             }
 
             if (!settingFile.KeyExists("CDN"))
@@ -152,27 +188,33 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                     settingFile.Write("FirewallLauncher", FirewallLauncherStatus);
                 }
 
-                if (FirewallLauncherStatus != "Unknown")
-                {
-                    FirewallGameStatus = FirewallLauncherStatus;
-                }
-                else if (!settingFile.KeyExists("FirewallGame"))
+                if (!settingFile.KeyExists("FirewallGame"))
                 {
                     settingFile.Write("FirewallGame", FirewallGameStatus);
                 }
 
                 if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
                 {
-                    if (!settingFile.KeyExists("WindowsDefender"))
+                    if (!settingFile.KeyExists("DefenderLauncher"))
                     {
-                        settingFile.Write("WindowsDefender", WindowsDefenderStatus);
+                        settingFile.Write("DefenderLauncher", DefenderLauncherStatus);
+                    }
+
+                    if (!settingFile.KeyExists("DefenderGame"))
+                    {
+                        settingFile.Write("DefenderGame", DefenderGameStatus);
                     }
                 }
                 else if (WindowsProductVersion.GetWindowsNumber() < 10.0)
                 {
-                    if (settingFile.KeyExists("WindowsDefender") || !string.IsNullOrWhiteSpace(settingFile.Read("WindowsDefender")))
+                    if (settingFile.KeyExists("DefenderLauncher") || !string.IsNullOrWhiteSpace(settingFile.Read("DefenderLauncher")))
                     {
-                        settingFile.DeleteKey("WindowsDefender");
+                        settingFile.DeleteKey("DefenderLauncher");
+                    }
+
+                    if (settingFile.KeyExists("DefenderGame") || !string.IsNullOrWhiteSpace(settingFile.Read("DefenderGame")))
+                    {
+                        settingFile.DeleteKey("DefenderGame");
                     }
                 }
 
@@ -261,7 +303,7 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
             settingFile = new IniFile("Settings.ini");
         }
-
+        /// <summary>Saves all Current Values</summary>
         public static void SaveSettings()
         {
             if (settingFile.Read("CDN") != CDN)
@@ -299,6 +341,11 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
                 settingFile.Write("InstallationDirectory", GameInstallation);
             }
 
+            if (!UnixOS.Detected() && settingFile.Read("OldInstallationDirectory") != GameInstallationOld)
+            {
+                settingFile.Write("OldInstallationDirectory", GameInstallationOld);
+            }
+
             if (settingFile.Read("IgnoreUpdateVersion") != IgnoreVersion)
             {
                 settingFile.Write("IgnoreUpdateVersion", IgnoreVersion);
@@ -333,9 +380,14 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
 
                 if (WindowsProductVersion.GetWindowsNumber() >= 10.0)
                 {
-                    if (settingFile.Read("WindowsDefender") != WindowsDefenderStatus)
+                    if (settingFile.Read("DefenderLauncher") != DefenderLauncherStatus)
                     {
-                        settingFile.Write("WindowsDefender", WindowsDefenderStatus);
+                        settingFile.Write("DefenderLauncher", DefenderLauncherStatus);
+                    }
+
+                    if (settingFile.Read("DefenderGame") != DefenderGameStatus)
+                    {
+                        settingFile.Write("DefenderGame", DefenderGameStatus);
                     }
                 }
 

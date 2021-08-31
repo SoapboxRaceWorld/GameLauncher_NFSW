@@ -32,21 +32,21 @@ namespace GameLauncher.App
             this.TextWindowsFirewall = new System.Windows.Forms.Label();
             this.TextWindowsDefender = new System.Windows.Forms.Label();
             this.ButtonFirewallRulesRemoveAll = new System.Windows.Forms.Button();
-            this.ResetWindowsDefenderButton = new System.Windows.Forms.Button();
+            this.ButtonDefenderExclusionRemoveAll = new System.Windows.Forms.Button();
             this.ButtonFirewallRulesRemoveLauncher = new System.Windows.Forms.Button();
             this.ButtonFirewallRulesRemoveGame = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.ButtonDefenderExclusionRemoveGame = new System.Windows.Forms.Button();
+            this.ButtonDefenderExclusionRemoveLauncher = new System.Windows.Forms.Button();
             this.ButtonFirewallRulesAddGame = new System.Windows.Forms.Button();
             this.ButtonFirewallRulesAddLauncher = new System.Windows.Forms.Button();
             this.ButtonFirewallRulesAddAll = new System.Windows.Forms.Button();
             this.ButtonFirewallRulesCheck = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
-            this.button10 = new System.Windows.Forms.Button();
-            this.button11 = new System.Windows.Forms.Button();
-            this.button12 = new System.Windows.Forms.Button();
+            this.ButtonDefenderExclusionAddAll = new System.Windows.Forms.Button();
+            this.ButtonDefenderExclusionCheck = new System.Windows.Forms.Button();
+            this.ButtonDefenderExclusionAddGame = new System.Windows.Forms.Button();
+            this.ButtonDefenderExclusionAddLauncher = new System.Windows.Forms.Button();
             this.ButtonFirewallRulesAPI = new System.Windows.Forms.Button();
-            this.button14 = new System.Windows.Forms.Button();
+            this.ButtonDefenderExclusionAPI = new System.Windows.Forms.Button();
             this.TextFolderPermissions = new System.Windows.Forms.Label();
             this.ButtonClose = new System.Windows.Forms.PictureBox();
             this.ButtonFolderPermissonSet = new System.Windows.Forms.Button();
@@ -96,20 +96,20 @@ namespace GameLauncher.App
             this.ButtonFirewallRulesRemoveAll.Text = "Remove All SBRW Rules";
             this.ButtonFirewallRulesRemoveAll.UseVisualStyleBackColor = false;
             // 
-            // ResetWindowsDefenderButton
+            // ButtonDefenderExclusionRemoveAll
             // 
-            this.ResetWindowsDefenderButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.ResetWindowsDefenderButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.ResetWindowsDefenderButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.ResetWindowsDefenderButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ResetWindowsDefenderButton.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ResetWindowsDefenderButton.ForeColor = System.Drawing.Color.Silver;
-            this.ResetWindowsDefenderButton.Location = new System.Drawing.Point(263, 209);
-            this.ResetWindowsDefenderButton.Name = "ResetWindowsDefenderButton";
-            this.ResetWindowsDefenderButton.Size = new System.Drawing.Size(221, 25);
-            this.ResetWindowsDefenderButton.TabIndex = 194;
-            this.ResetWindowsDefenderButton.Text = "Remove All SBRW Exclusions";
-            this.ResetWindowsDefenderButton.UseVisualStyleBackColor = false;
+            this.ButtonDefenderExclusionRemoveAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonDefenderExclusionRemoveAll.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonDefenderExclusionRemoveAll.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonDefenderExclusionRemoveAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonDefenderExclusionRemoveAll.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonDefenderExclusionRemoveAll.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonDefenderExclusionRemoveAll.Location = new System.Drawing.Point(263, 209);
+            this.ButtonDefenderExclusionRemoveAll.Name = "ButtonDefenderExclusionRemoveAll";
+            this.ButtonDefenderExclusionRemoveAll.Size = new System.Drawing.Size(221, 25);
+            this.ButtonDefenderExclusionRemoveAll.TabIndex = 194;
+            this.ButtonDefenderExclusionRemoveAll.Text = "Remove All SBRW Exclusions";
+            this.ButtonDefenderExclusionRemoveAll.UseVisualStyleBackColor = false;
             // 
             // ButtonFirewallRulesRemoveLauncher
             // 
@@ -143,35 +143,35 @@ namespace GameLauncher.App
             this.ButtonFirewallRulesRemoveGame.Text = "Remove Game Rules";
             this.ButtonFirewallRulesRemoveGame.UseVisualStyleBackColor = false;
             // 
-            // button3
+            // ButtonDefenderExclusionRemoveGame
             // 
-            this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.button3.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.Color.Silver;
-            this.button3.Location = new System.Drawing.Point(263, 271);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(221, 25);
-            this.button3.TabIndex = 199;
-            this.button3.Text = "Remove Game Exclusion";
-            this.button3.UseVisualStyleBackColor = false;
+            this.ButtonDefenderExclusionRemoveGame.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonDefenderExclusionRemoveGame.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonDefenderExclusionRemoveGame.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonDefenderExclusionRemoveGame.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonDefenderExclusionRemoveGame.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonDefenderExclusionRemoveGame.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonDefenderExclusionRemoveGame.Location = new System.Drawing.Point(263, 271);
+            this.ButtonDefenderExclusionRemoveGame.Name = "ButtonDefenderExclusionRemoveGame";
+            this.ButtonDefenderExclusionRemoveGame.Size = new System.Drawing.Size(221, 25);
+            this.ButtonDefenderExclusionRemoveGame.TabIndex = 199;
+            this.ButtonDefenderExclusionRemoveGame.Text = "Remove Game Exclusion";
+            this.ButtonDefenderExclusionRemoveGame.UseVisualStyleBackColor = false;
             // 
-            // button4
+            // ButtonDefenderExclusionRemoveLauncher
             // 
-            this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.button4.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.button4.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button4.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.ForeColor = System.Drawing.Color.Silver;
-            this.button4.Location = new System.Drawing.Point(263, 240);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(221, 25);
-            this.button4.TabIndex = 198;
-            this.button4.Text = "Remove Launcher Exclusion";
-            this.button4.UseVisualStyleBackColor = false;
+            this.ButtonDefenderExclusionRemoveLauncher.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonDefenderExclusionRemoveLauncher.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonDefenderExclusionRemoveLauncher.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonDefenderExclusionRemoveLauncher.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonDefenderExclusionRemoveLauncher.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonDefenderExclusionRemoveLauncher.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonDefenderExclusionRemoveLauncher.Location = new System.Drawing.Point(263, 240);
+            this.ButtonDefenderExclusionRemoveLauncher.Name = "ButtonDefenderExclusionRemoveLauncher";
+            this.ButtonDefenderExclusionRemoveLauncher.Size = new System.Drawing.Size(221, 25);
+            this.ButtonDefenderExclusionRemoveLauncher.TabIndex = 198;
+            this.ButtonDefenderExclusionRemoveLauncher.Text = "Remove Launcher Exclusion";
+            this.ButtonDefenderExclusionRemoveLauncher.UseVisualStyleBackColor = false;
             // 
             // ButtonFirewallRulesAddGame
             // 
@@ -237,65 +237,65 @@ namespace GameLauncher.App
             this.ButtonFirewallRulesCheck.Text = "Check All Rules";
             this.ButtonFirewallRulesCheck.UseVisualStyleBackColor = false;
             // 
-            // button9
+            // ButtonDefenderExclusionAddAll
             // 
-            this.button9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.button9.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.button9.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.button9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button9.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button9.ForeColor = System.Drawing.Color.Silver;
-            this.button9.Location = new System.Drawing.Point(36, 209);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(221, 25);
-            this.button9.TabIndex = 205;
-            this.button9.Text = "Add All SBRW Exclusions";
-            this.button9.UseVisualStyleBackColor = false;
+            this.ButtonDefenderExclusionAddAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonDefenderExclusionAddAll.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonDefenderExclusionAddAll.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonDefenderExclusionAddAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonDefenderExclusionAddAll.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonDefenderExclusionAddAll.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonDefenderExclusionAddAll.Location = new System.Drawing.Point(36, 209);
+            this.ButtonDefenderExclusionAddAll.Name = "ButtonDefenderExclusionAddAll";
+            this.ButtonDefenderExclusionAddAll.Size = new System.Drawing.Size(221, 25);
+            this.ButtonDefenderExclusionAddAll.TabIndex = 205;
+            this.ButtonDefenderExclusionAddAll.Text = "Add All SBRW Exclusions";
+            this.ButtonDefenderExclusionAddAll.UseVisualStyleBackColor = false;
             // 
-            // button10
+            // ButtonDefenderExclusionCheck
             // 
-            this.button10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.button10.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.button10.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.button10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button10.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button10.ForeColor = System.Drawing.Color.Silver;
-            this.button10.Location = new System.Drawing.Point(490, 240);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(221, 25);
-            this.button10.TabIndex = 204;
-            this.button10.Text = "Check All Exclusions";
-            this.button10.UseVisualStyleBackColor = false;
+            this.ButtonDefenderExclusionCheck.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonDefenderExclusionCheck.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonDefenderExclusionCheck.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonDefenderExclusionCheck.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonDefenderExclusionCheck.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonDefenderExclusionCheck.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonDefenderExclusionCheck.Location = new System.Drawing.Point(490, 240);
+            this.ButtonDefenderExclusionCheck.Name = "ButtonDefenderExclusionCheck";
+            this.ButtonDefenderExclusionCheck.Size = new System.Drawing.Size(221, 25);
+            this.ButtonDefenderExclusionCheck.TabIndex = 204;
+            this.ButtonDefenderExclusionCheck.Text = "Check All Exclusions";
+            this.ButtonDefenderExclusionCheck.UseVisualStyleBackColor = false;
             // 
-            // button11
+            // ButtonDefenderExclusionAddGame
             // 
-            this.button11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.button11.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.button11.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.button11.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button11.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button11.ForeColor = System.Drawing.Color.Silver;
-            this.button11.Location = new System.Drawing.Point(36, 271);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(221, 25);
-            this.button11.TabIndex = 207;
-            this.button11.Text = "Add Game Exclusion";
-            this.button11.UseVisualStyleBackColor = false;
+            this.ButtonDefenderExclusionAddGame.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonDefenderExclusionAddGame.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonDefenderExclusionAddGame.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonDefenderExclusionAddGame.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonDefenderExclusionAddGame.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonDefenderExclusionAddGame.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonDefenderExclusionAddGame.Location = new System.Drawing.Point(36, 271);
+            this.ButtonDefenderExclusionAddGame.Name = "ButtonDefenderExclusionAddGame";
+            this.ButtonDefenderExclusionAddGame.Size = new System.Drawing.Size(221, 25);
+            this.ButtonDefenderExclusionAddGame.TabIndex = 207;
+            this.ButtonDefenderExclusionAddGame.Text = "Add Game Exclusion";
+            this.ButtonDefenderExclusionAddGame.UseVisualStyleBackColor = false;
             // 
-            // button12
+            // ButtonDefenderExclusionAddLauncher
             // 
-            this.button12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.button12.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.button12.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button12.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button12.ForeColor = System.Drawing.Color.Silver;
-            this.button12.Location = new System.Drawing.Point(36, 240);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(221, 25);
-            this.button12.TabIndex = 206;
-            this.button12.Text = "Add Launcher Exclusion";
-            this.button12.UseVisualStyleBackColor = false;
+            this.ButtonDefenderExclusionAddLauncher.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonDefenderExclusionAddLauncher.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonDefenderExclusionAddLauncher.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonDefenderExclusionAddLauncher.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonDefenderExclusionAddLauncher.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonDefenderExclusionAddLauncher.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonDefenderExclusionAddLauncher.Location = new System.Drawing.Point(36, 240);
+            this.ButtonDefenderExclusionAddLauncher.Name = "ButtonDefenderExclusionAddLauncher";
+            this.ButtonDefenderExclusionAddLauncher.Size = new System.Drawing.Size(221, 25);
+            this.ButtonDefenderExclusionAddLauncher.TabIndex = 206;
+            this.ButtonDefenderExclusionAddLauncher.Text = "Add Launcher Exclusion";
+            this.ButtonDefenderExclusionAddLauncher.UseVisualStyleBackColor = false;
             // 
             // ButtonFirewallRulesAPI
             // 
@@ -312,20 +312,20 @@ namespace GameLauncher.App
             this.ButtonFirewallRulesAPI.Text = "Check Firewall API";
             this.ButtonFirewallRulesAPI.UseVisualStyleBackColor = false;
             // 
-            // button14
+            // ButtonDefenderExclusionAPI
             // 
-            this.button14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.button14.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
-            this.button14.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
-            this.button14.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button14.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button14.ForeColor = System.Drawing.Color.Silver;
-            this.button14.Location = new System.Drawing.Point(490, 209);
-            this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(221, 25);
-            this.button14.TabIndex = 209;
-            this.button14.Text = "Check Defender API";
-            this.button14.UseVisualStyleBackColor = false;
+            this.ButtonDefenderExclusionAPI.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
+            this.ButtonDefenderExclusionAPI.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
+            this.ButtonDefenderExclusionAPI.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.ButtonDefenderExclusionAPI.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonDefenderExclusionAPI.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonDefenderExclusionAPI.ForeColor = System.Drawing.Color.Silver;
+            this.ButtonDefenderExclusionAPI.Location = new System.Drawing.Point(490, 209);
+            this.ButtonDefenderExclusionAPI.Name = "ButtonDefenderExclusionAPI";
+            this.ButtonDefenderExclusionAPI.Size = new System.Drawing.Size(221, 25);
+            this.ButtonDefenderExclusionAPI.TabIndex = 209;
+            this.ButtonDefenderExclusionAPI.Text = "Check Defender API";
+            this.ButtonDefenderExclusionAPI.UseVisualStyleBackColor = false;
             // 
             // TextFolderPermissions
             // 
@@ -392,22 +392,22 @@ namespace GameLauncher.App
             this.Controls.Add(this.ButtonFolderPermissonSet);
             this.Controls.Add(this.ButtonClose);
             this.Controls.Add(this.TextFolderPermissions);
-            this.Controls.Add(this.button14);
+            this.Controls.Add(this.ButtonDefenderExclusionAPI);
             this.Controls.Add(this.ButtonFirewallRulesAPI);
-            this.Controls.Add(this.button11);
-            this.Controls.Add(this.button12);
-            this.Controls.Add(this.button9);
-            this.Controls.Add(this.button10);
+            this.Controls.Add(this.ButtonDefenderExclusionAddGame);
+            this.Controls.Add(this.ButtonDefenderExclusionAddLauncher);
+            this.Controls.Add(this.ButtonDefenderExclusionAddAll);
+            this.Controls.Add(this.ButtonDefenderExclusionCheck);
             this.Controls.Add(this.ButtonFirewallRulesCheck);
             this.Controls.Add(this.ButtonFirewallRulesAddAll);
             this.Controls.Add(this.ButtonFirewallRulesAddGame);
             this.Controls.Add(this.ButtonFirewallRulesAddLauncher);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button4);
+            this.Controls.Add(this.ButtonDefenderExclusionRemoveGame);
+            this.Controls.Add(this.ButtonDefenderExclusionRemoveLauncher);
             this.Controls.Add(this.ButtonFirewallRulesRemoveGame);
             this.Controls.Add(this.ButtonFirewallRulesRemoveLauncher);
             this.Controls.Add(this.ButtonFirewallRulesRemoveAll);
-            this.Controls.Add(this.ResetWindowsDefenderButton);
+            this.Controls.Add(this.ButtonDefenderExclusionRemoveAll);
             this.Controls.Add(this.TextWindowsDefender);
             this.Controls.Add(this.TextWindowsFirewall);
             this.DoubleBuffered = true;
@@ -428,21 +428,21 @@ namespace GameLauncher.App
         private System.Windows.Forms.Label TextWindowsFirewall;
         private System.Windows.Forms.Label TextWindowsDefender;
         private System.Windows.Forms.Button ButtonFirewallRulesRemoveAll;
-        private System.Windows.Forms.Button ResetWindowsDefenderButton;
+        private System.Windows.Forms.Button ButtonDefenderExclusionRemoveAll;
         private System.Windows.Forms.Button ButtonFirewallRulesRemoveLauncher;
         private System.Windows.Forms.Button ButtonFirewallRulesRemoveGame;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button ButtonDefenderExclusionRemoveGame;
+        private System.Windows.Forms.Button ButtonDefenderExclusionRemoveLauncher;
         private System.Windows.Forms.Button ButtonFirewallRulesAddGame;
         private System.Windows.Forms.Button ButtonFirewallRulesAddLauncher;
         private System.Windows.Forms.Button ButtonFirewallRulesAddAll;
         private System.Windows.Forms.Button ButtonFirewallRulesCheck;
-        private System.Windows.Forms.Button button9;
-        private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.Button button11;
-        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button ButtonDefenderExclusionAddAll;
+        private System.Windows.Forms.Button ButtonDefenderExclusionCheck;
+        private System.Windows.Forms.Button ButtonDefenderExclusionAddGame;
+        private System.Windows.Forms.Button ButtonDefenderExclusionAddLauncher;
         private System.Windows.Forms.Button ButtonFirewallRulesAPI;
-        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.Button ButtonDefenderExclusionAPI;
         private System.Windows.Forms.Label TextFolderPermissions;
         private System.Windows.Forms.PictureBox ButtonClose;
         private System.Windows.Forms.Button ButtonFolderPermissonSet;

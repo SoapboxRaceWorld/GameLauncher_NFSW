@@ -1,92 +1,54 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.SystemPlatform.Unix;
 using System;
-using System.IO;
 using System.Management;
 using System.Runtime.InteropServices;
 
 namespace GameLauncher.App.Classes.SystemPlatform.Windows
 {
-    class SecurityCenter
-    {
-        public static bool Antivirus() => ManagementSearcher.GetSecurityCenterStatus("AntivirusEnabled");
-        public static bool Antispyware() => ManagementSearcher.GetSecurityCenterStatus("AntispywareEnabled");
-        public static bool RealTimeProtection() => ManagementSearcher.GetSecurityCenterStatus("RealTimeProtectionEnabled");
-    }
-
     class ManagementSearcher
     {
-        /* Checks AntiVirus is running (Windows 10 Only) */
-        public static bool GetSecurityCenterStatus(string Query)
-        {
-            try
-            {
-                ManagementObjectSearcher ObjectSearch = new ManagementObjectSearcher(Path.Combine("root", "Microsoft", "Windows", "Defender"),
-                    "SELECT * FROM MSFT_MpComputerStatus");
-                ManagementObjectCollection ObjectCollection = ObjectSearch.Get();
-
-                foreach (var Search in ObjectCollection)
-                {
-                    if (ObjectCollection != null)
-                    {
-                        if (bool.TryParse(Search.Properties[Query].Value.ToString(), out bool TrueOrFalse))
-                        {
-                            return (bool)Search.Properties[Query].Value;
-                        }
-                    }
-                }
-
-                return false;
-            }
-            catch (ManagementException Error)
-            {
-                LogToFileAddons.OpenLog("Security Center", null, Error, null, true);
-                return false;
-            }
-            catch (COMException Error)
-            {
-                LogToFileAddons.OpenLog("Security Center", null, Error, null, true);
-                return false;
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("Security Center", null, Error, null, true);
-                return false;
-            }
-        }
-
         /* Searches for Installed Windows Updates */
         public static bool GetInstalledHotFix(string identification)
         {
-            try
+            if (!UnixOS.Detected())
             {
-                ManagementObjectSearcher ObjectSearch = new ManagementObjectSearcher("SELECT HotFixID FROM Win32_QuickFixEngineering");
-                ManagementObjectCollection ObjectCollection = ObjectSearch.Get();
+                ManagementObjectSearcher ObjectPath = null;
+                ManagementObjectCollection ObjectCollection = null;
 
-                foreach (var Search in ObjectCollection)
+                try
                 {
-                    if (Search.Properties["HotFixID"].Value.ToString() == identification)
+                    ObjectPath = new ManagementObjectSearcher("SELECT HotFixID FROM Win32_QuickFixEngineering");
+                    ObjectCollection = ObjectPath.Get();
+
+                    foreach (ManagementBaseObject SearchBase in ObjectCollection)
                     {
-                        return true;
+                        if (SearchBase.Properties["HotFixID"].Value.ToString() == identification)
+                        {
+                            return true;
+                        }
                     }
                 }
+                catch (ManagementException Error)
+                {
+                    LogToFileAddons.OpenLog("Installed KB [M.E.]", null, Error, null, true);
+                }
+                catch (COMException Error)
+                {
+                    LogToFileAddons.OpenLog("Installed KB [C.O.M.]", null, Error, null, true);
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Installed KB", null, Error, null, true);
+                }
+                finally
+                {
+                    if (ObjectPath != null) { ObjectPath.Dispose(); }
+                    if (ObjectCollection != null) { ObjectCollection.Dispose(); }
+                }
+            }
 
-                return false;
-            }
-            catch (ManagementException Error)
-            {
-                LogToFileAddons.OpenLog("Installed KB", null, Error, null, true);
-                return false;
-            }
-            catch (COMException Error)
-            {
-                LogToFileAddons.OpenLog("Security Center", null, Error, null, true);
-                return false;
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("Installed KB", null, Error, null, true);
-                return false;
-            }
+            return false;
         }
     }
 }

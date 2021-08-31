@@ -215,7 +215,6 @@
     <Compile Include="App\Classes\LauncherCore\Proxy\ProxyException.cs" />
     <Compile Include="App\Classes\LauncherCore\Proxy\ProxyHandler.cs" />
     <Compile Include="App\Classes\SystemPlatform\Unix\UnixOS.cs" />
-    <Compile Include="App\Classes\SystemPlatform\Windows\FileORFolderPermissions.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\ManagementSearcher.cs" />
     <Compile Include="App\Classes\SystemPlatform\Windows\RedistributablePackage.cs" />
     <Compile Include="App\Classes\RemovedClasses.cs" />
