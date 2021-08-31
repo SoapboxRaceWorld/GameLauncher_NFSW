@@ -1,6 +1,7 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
@@ -70,21 +71,29 @@ namespace GameLauncher.App
         private static bool DisableButtonPRC = false;
         ///<summary>Disable Button: Permission Set</summary>
         private static bool DisableButtonPRAA = true;
+        ///<summary>RPC: Which State to do once Form Closes</summary>
+        private static string RPCStateCache;
 
-        public SecurityCenterScreen()
+        public SecurityCenterScreen(string RPCState)
         {
             if (!IsSecurityCenterOpen)
             {
                 IsSecurityCenterOpen = true;
+                RPCStateCache = RPCState;
                 InitializeComponent();
                 SetVisuals();
                 this.Closing += (x, y) =>
                 {
+                    DiscordLauncherPresence.Status(RPCStateCache, null);
+
                     if (IsSecurityCenterOpen) { IsSecurityCenterOpen = false; }
                     if (DisableButtonFRAPI) { DisableButtonFRAPI = false; }
                     if (DisableButtonDRAPI) { DisableButtonDRAPI = false; }
                     if (DisableButtonPRC) { DisableButtonPRC = false; }
+                    if (RPCStateCache != null) { RPCStateCache = null; }
                 };
+
+                DiscordLauncherPresence.Status("Security Center", null);
             }
         }
         /// <summary>

@@ -1613,7 +1613,7 @@ namespace GameLauncher.App
         {
             try
             {
-                new SecurityCenterScreen().ShowDialog();
+                new SecurityCenterScreen("Settings").ShowDialog();
             }
             catch (Exception Error)
             {

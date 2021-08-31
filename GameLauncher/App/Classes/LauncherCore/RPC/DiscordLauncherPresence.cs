@@ -216,7 +216,19 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
 
                 if (Download == false)
                 {
-                    if (State == "Register")
+                    if (State == "Security Center")
+                    {
+                        Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
+                        Presence.State = "On Security Center Screen";
+                        Presence.Assets = new Assets
+                        {
+                            LargeImageText = "Launcher",
+                            LargeImageKey = "nfsw",
+                            SmallImageText = string.Empty,
+                            SmallImageKey = "screen_security_center"
+                        };
+                    }
+                    else if (State == "Register")
                     {
                         Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
                         Presence.State = "On Registration Screen";
@@ -228,7 +240,7 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                             SmallImageKey = "screen_register"
                         };
                     }
-                    if (State == "Settings")
+                    else if (State == "Settings")
                     {
                         Presence.Details = "In-Launcher: " + Theming.PrivacyRPCBuild;
                         Presence.State = "On Settings Screen";

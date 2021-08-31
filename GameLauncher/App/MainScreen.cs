@@ -1443,7 +1443,7 @@ namespace GameLauncher
         {
             try
             {
-                new SecurityCenterScreen().ShowDialog();
+                new SecurityCenterScreen("Idle Ready").ShowDialog();
             }
             catch (Exception Error)
             {
