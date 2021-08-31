@@ -116,42 +116,45 @@ namespace GameLauncher.App
 
         public static bool GetSecurityCenterStatus(string Query)
         {
-            ManagementObjectSearcher ObjectPath = null;
-            ManagementObjectCollection ObjectCollection = null;
-
-            try
+            if (!UnixOS.Detected())
             {
-                ObjectPath = new ManagementObjectSearcher(Path.Combine("root", "Microsoft", "Windows", "Defender"),
-                    "SELECT * FROM MSFT_MpComputerStatus");
-                ObjectCollection = ObjectPath.Get();
+                ManagementObjectSearcher ObjectPath = null;
+                ManagementObjectCollection ObjectCollection = null;
 
-                foreach (ManagementBaseObject SearchBase in ObjectCollection)
+                try
                 {
-                    if (ObjectCollection != null)
+                    ObjectPath = new ManagementObjectSearcher(Path.Combine("root", "Microsoft", "Windows", "Defender"),
+                        "SELECT * FROM MSFT_MpComputerStatus");
+                    ObjectCollection = ObjectPath.Get();
+
+                    foreach (ManagementBaseObject SearchBase in ObjectCollection)
                     {
-                        if (bool.TryParse(SearchBase.Properties[Query].Value.ToString(), out bool TrueOrFalse))
+                        if (ObjectCollection != null)
                         {
-                            return (bool)SearchBase.Properties[Query].Value;
+                            if (bool.TryParse(SearchBase.Properties[Query].Value.ToString(), out bool TrueOrFalse))
+                            {
+                                return (bool)SearchBase.Properties[Query].Value;
+                            }
                         }
                     }
                 }
-            }
-            catch (ManagementException Error)
-            {
-                LogToFileAddons.OpenLog("Windows Defender Status", null, Error, null, true);
-            }
-            catch (COMException Error)
-            {
-                LogToFileAddons.OpenLog("Windows Defender Status", null, Error, null, true);
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("Windows Defender Status", null, Error, null, true);
-            }
-            finally
-            {
-                if (ObjectPath != null) { ObjectPath.Dispose(); }
-                if (ObjectCollection != null) { ObjectCollection.Dispose(); }
+                catch (ManagementException Error)
+                {
+                    LogToFileAddons.OpenLog("Windows Defender Status", null, Error, null, true);
+                }
+                catch (COMException Error)
+                {
+                    LogToFileAddons.OpenLog("Windows Defender Status", null, Error, null, true);
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Windows Defender Status", null, Error, null, true);
+                }
+                finally
+                {
+                    if (ObjectPath != null) { ObjectPath.Dispose(); }
+                    if (ObjectCollection != null) { ObjectCollection.Dispose(); }
+                }
             }
 
             return false;
@@ -159,39 +162,42 @@ namespace GameLauncher.App
 
         private static string[] ExclusionCheck()
         {
-            ManagementObjectSearcher ObjectPath = null;
-            ManagementObjectCollection ObjectCollection = null;
-
-            try
+            if (!UnixOS.Detected())
             {
-                ObjectPath = new ManagementObjectSearcher(Path.Combine("root", "Microsoft", "Windows", "Defender"),
-                    "SELECT * FROM MSFT_MpPreference");
-                ObjectCollection = ObjectPath.Get();
+                ManagementObjectSearcher ObjectPath = null;
+                ManagementObjectCollection ObjectCollection = null;
 
-                foreach (ManagementBaseObject SearchBase in ObjectCollection)
+                try
                 {
-                    if (ObjectCollection != null)
+                    ObjectPath = new ManagementObjectSearcher(Path.Combine("root", "Microsoft", "Windows", "Defender"),
+                        "SELECT * FROM MSFT_MpPreference");
+                    ObjectCollection = ObjectPath.Get();
+
+                    foreach (ManagementBaseObject SearchBase in ObjectCollection)
                     {
-                        return (string[])SearchBase.Properties["ExclusionPath"].Value;
+                        if (ObjectCollection != null)
+                        {
+                            return (string[])SearchBase.Properties["ExclusionPath"].Value;
+                        }
                     }
                 }
-            }
-            catch (ManagementException Error)
-            {
-                LogToFileAddons.OpenLog("Windows Defender Exclusion Path Check", null, Error, null, true);
-            }
-            catch (COMException Error)
-            {
-                LogToFileAddons.OpenLog("Windows Defender Exclusion Path Check", null, Error, null, true);
-            }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("Windows Defender Exclusion Path Check", null, Error, null, true);
-            }
-            finally
-            {
-                if (ObjectPath != null) { ObjectPath.Dispose(); }
-                if (ObjectCollection != null) { ObjectCollection.Dispose(); }
+                catch (ManagementException Error)
+                {
+                    LogToFileAddons.OpenLog("Windows Defender Exclusion Path Check", null, Error, null, true);
+                }
+                catch (COMException Error)
+                {
+                    LogToFileAddons.OpenLog("Windows Defender Exclusion Path Check", null, Error, null, true);
+                }
+                catch (Exception Error)
+                {
+                    LogToFileAddons.OpenLog("Windows Defender Exclusion Path Check", null, Error, null, true);
+                }
+                finally
+                {
+                    if (ObjectPath != null) { ObjectPath.Dispose(); }
+                    if (ObjectCollection != null) { ObjectCollection.Dispose(); }
+                }
             }
 
             return Array.Empty<string>();
@@ -609,7 +615,7 @@ namespace GameLauncher.App
             {
                 return FirewallDataBase(ModeType, ModeAPI);
             }
-            else if (!string.IsNullOrWhiteSpace(FolderPath))
+            else if (ModeType >= 4 && ModeType <= 7 && !string.IsNullOrWhiteSpace(FolderPath))
             {
                 try
                 {
@@ -1002,9 +1008,85 @@ namespace GameLauncher.App
                 }
             }
         }
+
+        private void ButtonClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void ButtonClose_MouseDown(object sender, EventArgs e)
+        {
+            ButtonClose.BackgroundImage = Theming.CloseButtonClick;
+        }
+
+        private void ButtonClose_MouseEnter(object sender, EventArgs e)
+        {
+            ButtonClose.BackgroundImage = Theming.CloseButtonHover;
+        }
+
+        private void ButtonClose_MouseLeaveANDMouseUp(object sender, EventArgs e)
+        {
+            ButtonClose.BackgroundImage = Theming.CloseButton;
+        }
         ///<summary>Theming, Function, EventHandlers, Etc. Meant to load critial functions before the forms loads</summary>
         private void SetVisuals()
         {
+            /*******************************/
+            /* Set Initial position & Icon  /
+            /*******************************/
+
+            FunctionStatus.CenterParent(this);
+
+            /********************************/
+            /* Set Theme Colors & Images     /
+            /********************************/
+
+            BackgroundImage = Theming.SecurityCenterScreen;
+            TransparencyKey = Theming.SecurityCenterScreenTransparencyKey;
+            ButtonClose.BackgroundImage = Theming.CloseButton;
+
+            TextWindowsFirewall.ForeColor = Theming.FivithTextForeColor;
+
+            /*******************************/
+            /* Set Colored Buttons          /
+            /*******************************/
+
+            ButtonsColorSet(ButtonFirewallRulesAPI, 2, true);
+            ButtonsColorSet(ButtonFirewallRulesCheck, 2017, false);
+            ButtonsColorSet(ButtonFirewallRulesAddAll, 2017, false);
+            ButtonsColorSet(ButtonFirewallRulesAddLauncher, 2017, false);
+            ButtonsColorSet(ButtonFirewallRulesAddGame, 2017, false);
+            ButtonsColorSet(ButtonFirewallRulesRemoveAll, 2017, false);
+            ButtonsColorSet(ButtonFirewallRulesRemoveLauncher, 2017, false);
+            ButtonsColorSet(ButtonFirewallRulesRemoveGame, 2017, false);
+
+            /*******************************/
+            /* Set Font                     /
+            /*******************************/
+
+            FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
+            FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
+
+            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 100f / CreateGraphics().DpiY;
+            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 100f / CreateGraphics().DpiY;
+
+            Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+            /* Text */
+            TextWindowsFirewall.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            /* Firewall */
+            ButtonFirewallRulesAPI.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            ButtonFirewallRulesCheck.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            ButtonFirewallRulesAddAll.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            ButtonFirewallRulesAddLauncher.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            ButtonFirewallRulesAddGame.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            ButtonFirewallRulesRemoveAll.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            ButtonFirewallRulesRemoveLauncher.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+            ButtonFirewallRulesRemoveGame.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
+
+            /*******************************/
+            /* Set Event Handlers           /
+            /*******************************/
+
             /* Firewall Checks */
             ButtonFirewallRulesAPI.Click += new EventHandler(ButtonFirewallRulesAPI_Click);
             ButtonFirewallRulesCheck.Click += new EventHandler(ButtonFirewallRulesCheck_Click);
@@ -1016,6 +1098,12 @@ namespace GameLauncher.App
             ButtonFirewallRulesRemoveAll.Click += new EventHandler(ButtonFirewallRulesRemoveAll_Click);
             ButtonFirewallRulesRemoveLauncher.Click += new EventHandler(ButtonFirewallRulesRemoveLauncher_Click);
             ButtonFirewallRulesRemoveGame.Click += new EventHandler(ButtonFirewallRulesRemoveGame_Click);
+            /* Close */
+            ButtonClose.MouseEnter += new EventHandler(ButtonClose_MouseEnter);
+            ButtonClose.MouseLeave += new EventHandler(ButtonClose_MouseLeaveANDMouseUp);
+            ButtonClose.MouseUp += new MouseEventHandler(ButtonClose_MouseLeaveANDMouseUp);
+            ButtonClose.MouseDown += new MouseEventHandler(ButtonClose_MouseDown);
+            ButtonClose.Click += new EventHandler(ButtonClose_Click);
         }
     }
 }

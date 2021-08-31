@@ -130,10 +130,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             form.Left = (Screen.PrimaryScreen.Bounds.Width - form.Width) / 2;
         }
 
-        public static void CenterParent(Form form)
+        public static void CenterParent(Form Screen)
         {
-            form.StartPosition = FormStartPosition.Manual;
-            form.Location = InformationCache.ParentScreenLocation;
+            Screen.StartPosition = FormStartPosition.Manual;
+            Screen.Location = InformationCache.ParentScreenLocation;
         }
 
         /* Check if Folder Location is Acceptable and Returns a Value

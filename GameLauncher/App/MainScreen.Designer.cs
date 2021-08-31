@@ -76,10 +76,10 @@
             this.MainPasswordBorder = new System.Windows.Forms.PictureBox();
             this.ProgressBarOutline = new System.Windows.Forms.PictureBox();
             this.Banner = new System.Windows.Forms.PictureBox();
-            this.ExtractingProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
-            this.PlayProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
             this.Notification = new System.Windows.Forms.NotifyIcon(this.components);
             this.ButtonSecurityCenter = new System.Windows.Forms.PictureBox();
+            this.ExtractingProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
+            this.PlayProgress = new GameLauncher.App.Classes.LauncherCore.Visuals.ProgressBarEx();
             this.ShowPlayPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsButton)).BeginInit();
@@ -712,6 +712,22 @@
             this.Banner.TabIndex = 22;
             this.Banner.TabStop = false;
             // 
+            // Notification
+            // 
+            this.Notification.Text = "notifyIcon1";
+            this.Notification.Visible = true;
+            // 
+            // ButtonSecurityCenter
+            // 
+            this.ButtonSecurityCenter.BackColor = System.Drawing.Color.Transparent;
+            this.ButtonSecurityCenter.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ButtonSecurityCenter.InitialImage = null;
+            this.ButtonSecurityCenter.Location = new System.Drawing.Point(770, 15);
+            this.ButtonSecurityCenter.Name = "ButtonSecurityCenter";
+            this.ButtonSecurityCenter.Size = new System.Drawing.Size(25, 25);
+            this.ButtonSecurityCenter.TabIndex = 176;
+            this.ButtonSecurityCenter.TabStop = false;
+            // 
             // ExtractingProgress
             // 
             this.ExtractingProgress.BackColor = System.Drawing.Color.Transparent;
@@ -746,22 +762,6 @@
             this.PlayProgress.RoundedCorners = false;
             this.PlayProgress.Size = new System.Drawing.Size(519, 13);
             this.PlayProgress.Text = "downloadProgress";
-            // 
-            // Notification
-            // 
-            this.Notification.Text = "notifyIcon1";
-            this.Notification.Visible = true;
-            // 
-            // ButtonSecurityCenter
-            // 
-            this.ButtonSecurityCenter.BackColor = System.Drawing.Color.Transparent;
-            this.ButtonSecurityCenter.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ButtonSecurityCenter.InitialImage = null;
-            this.ButtonSecurityCenter.Location = new System.Drawing.Point(767, 15);
-            this.ButtonSecurityCenter.Name = "ButtonSecurityCenter";
-            this.ButtonSecurityCenter.Size = new System.Drawing.Size(25, 25);
-            this.ButtonSecurityCenter.TabIndex = 176;
-            this.ButtonSecurityCenter.TabStop = false;
             // 
             // MainScreen
             // 

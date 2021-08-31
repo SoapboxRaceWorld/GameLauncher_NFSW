@@ -54,6 +54,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         public static Color USXEETransparencyKey = Color.FromArgb(255, 0, 255);
 
+        public static Bitmap SecurityCenterScreen = Properties.Resources.Background_Settings;
+
+        public static Color SecurityCenterScreenTransparencyKey = Color.FromArgb(255, 0, 255);
+
         /* MainScreen Icons */
 
         public static Bitmap UpdateIconError = Properties.Resources.icon_engine_error;
@@ -393,6 +397,14 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         if (File.Exists(ThemeFolder + "\\USXEScreen\\" + ThemeFile.Read("USXEScreenBG")))
                         {
                             USXEEditor = new Bitmap(ThemeFolder + "\\USXEScreen\\" + ThemeFile.Read("USXEScreenBG"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SecurityCenterScreenBG")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\SecurityCenterScreen\\" + ThemeFile.Read("SecurityCenterScreenBG")))
+                        {
+                            SecurityCenterScreen = new Bitmap(ThemeFolder + "\\SecurityCenterScreen\\" + ThemeFile.Read("SecurityCenterScreenBG"));
                         }
                     }
 
@@ -967,6 +979,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("USXEEScreenTransparencyKey")))
                     {
                         USXEETransparencyKey = ToColor(ThemeFile.Read("USXEEScreenTransparencyKey"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SecurityCenterScreenTransparencyKey")))
+                    {
+                        SecurityCenterScreenTransparencyKey = ToColor(ThemeFile.Read("SecurityCenterScreenTransparencyKey"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("InputForeColor")))
