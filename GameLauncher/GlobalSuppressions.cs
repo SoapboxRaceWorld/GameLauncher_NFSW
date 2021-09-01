@@ -6,4 +6,3 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "GSI/GMI JSON Uses Lower Starting Case", Scope = "module")]
-[assembly: SuppressMessage("Style", "IDE0075:Simplify conditional expression", Justification = "<Pending>", Scope = "member", Target = "~F:GameLauncher.App.SettingsScreen.FirewallEnabled")]
