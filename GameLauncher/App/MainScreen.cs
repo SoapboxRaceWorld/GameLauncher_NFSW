@@ -407,19 +407,34 @@ namespace GameLauncher
             CloseBTN.BackgroundImage = Theming.CloseButton;
         }
 
+        private void ButtonSecurityCenter_MouseDown(object sender, EventArgs e)
+        {
+            ButtonSecurityCenter.BackgroundImage = SavedSettingsCheck.SecurityCenterIcon(1);
+        }
+
+        private void ButtonSecurityCenter_MouseEnter(object sender, EventArgs e)
+        {
+            ButtonSecurityCenter.BackgroundImage = SavedSettingsCheck.SecurityCenterIcon(2);
+        }
+
+        private void ButtonSecurityCenter_MouseLeaveANDMouseUp(object sender, EventArgs e)
+        {
+            ButtonSecurityCenter.BackgroundImage = SavedSettingsCheck.SecurityCenterIcon(0);
+        }
+
         private void ButtonSettings_MouseDown(object sender, EventArgs e)
         {
-            SettingsButton.BackgroundImage = Theming.GearButtonClick;
+            SettingsButton.BackgroundImage = (FileSettingsSave.GameIntegrity == "Good")? Theming.GearButtonClick : Theming.GearButtonWarningClick;
         }
 
         private void ButtonSettings_MouseEnter(object sender, EventArgs e)
         {
-            SettingsButton.BackgroundImage = Theming.GearButtonHover;
+            SettingsButton.BackgroundImage = (FileSettingsSave.GameIntegrity == "Good") ? Theming.GearButtonHover : Theming.GearButtonWarningHover;
         }
 
         private void ButtonSettings_MouseLeaveANDMouseUp(object sender, EventArgs e)
         {
-            SettingsButton.BackgroundImage = Theming.GearButton;
+            SettingsButton.BackgroundImage = (FileSettingsSave.GameIntegrity == "Good") ? Theming.GearButton : Theming.GearButtonWarning;
         }
 
         private void LoginEnter(object sender, KeyEventArgs e)
@@ -1427,8 +1442,6 @@ namespace GameLauncher
         /* SETTINGS PAGE LAYOUT */
         private void SettingsButton_Click(object sender, EventArgs e)
         {
-            SettingsButton.BackgroundImage = Theming.GearButtonClick;
-
             try
             {
                 SettingsScreen.OpenScreen();
@@ -3762,9 +3775,9 @@ namespace GameLauncher
             TransparencyKey = Theming.MainScreenTransparencyKey;
 
             logo.BackgroundImage = Theming.LogoMain;
-            SettingsButton.BackgroundImage = Theming.GearButton;
+            SettingsButton.BackgroundImage = (FileSettingsSave.GameIntegrity == "Good") ? Theming.GearButton : Theming.GearButtonWarning;
             CloseBTN.BackgroundImage = Theming.CloseButton;
-            ButtonSecurityCenter.Image = SavedSettingsCheck.SecurityCenterIcon();
+            ButtonSecurityCenter.BackgroundImage = SavedSettingsCheck.SecurityCenterIcon(1);
 
             ProgressBarOutline.BackgroundImage = Theming.ProgressBarOutline;
             PlayProgress.Image = Theming.ProgressBarPreload;
@@ -3839,6 +3852,10 @@ namespace GameLauncher
             SettingsButton.MouseDown += new MouseEventHandler(ButtonSettings_MouseDown);
             SettingsButton.Click += new EventHandler(SettingsButton_Click);
 
+            ButtonSecurityCenter.MouseEnter += new EventHandler(ButtonSecurityCenter_MouseEnter);
+            ButtonSecurityCenter.MouseLeave += new EventHandler(ButtonSecurityCenter_MouseLeaveANDMouseUp);
+            ButtonSecurityCenter.MouseUp += new MouseEventHandler(ButtonSecurityCenter_MouseLeaveANDMouseUp);
+            ButtonSecurityCenter.MouseDown += new MouseEventHandler(ButtonSecurityCenter_MouseDown);
             ButtonSecurityCenter.Click += new EventHandler(ButtonSecurityCenter_Click);
 
             LoginButton.MouseEnter += new EventHandler(LoginButton_MouseEnter);

@@ -1743,7 +1743,18 @@ namespace GameLauncher.App
             /*******************************/
 
             FunctionStatus.CenterParent(this);
-            VersionLabel.Text = "Version: v" + Application.ProductVersion;
+
+            /*******************************/
+            /* Set Window Name              /
+            /*******************************/
+
+            Text = "Security Center - SBRW Launcher: v" + Application.ProductVersion;
+
+            /*******************************/
+            /* Set Hardcoded Text           /
+            /*******************************/
+
+            VersionLabel.Text = "Version : v" + Application.ProductVersion;
 
             /********************************/
             /* Set Theme Colors & Images     /
@@ -1756,6 +1767,7 @@ namespace GameLauncher.App
             TextWindowsFirewall.ForeColor = Theming.FivithTextForeColor;
             TextWindowsDefender.ForeColor = Theming.FivithTextForeColor;
             TextFolderPermissions.ForeColor = Theming.FivithTextForeColor;
+            VersionLabel.ForeColor = Theming.FivithTextForeColor;
 
             /*******************************/
             /* Set Colored Buttons          /
@@ -1795,6 +1807,7 @@ namespace GameLauncher.App
             TextWindowsFirewall.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             TextWindowsDefender.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             TextFolderPermissions.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            VersionLabel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Regular);
             /* Firewall */
             ButtonFirewallRulesAPI.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);
             ButtonFirewallRulesCheck.Font = new Font(DejaVuSansBold, SecondaryFontSize, FontStyle.Bold);

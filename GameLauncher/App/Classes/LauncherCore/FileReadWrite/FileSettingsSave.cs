@@ -465,26 +465,47 @@ namespace GameLauncher.App.Classes.LauncherCore.FileReadWrite
             }
         }
 
-        public static Image SecurityCenterIcon()
+        /// <summary>Returns the Shield Image for Security Panel Button
+        /// <code>"0" Regular Colored Image</code>
+        /// <code>"1" Clickage Colored Image</code>
+        /// <code>"2" Hover Colored Image</code>
+        /// </summary>
+        /// <param name="ImageState">
+        /// <code>"0" Regular Colored Image</code>
+        /// <code>"1" Clickage Colored Image</code>
+        /// <code>"2" Hover Colored Image</code>
+        /// </param>
+        /// <returns>Button Image</returns>
+        public static Image SecurityCenterIcon(int ImageState)
         {
             switch (SecurityCenter())
             {
                 case SecurityCenterCodes.Firewall_Updated:
                 case SecurityCenterCodes.Defender_Updated:
                 case SecurityCenterCodes.Permissions_Updated:
-                    return Theming.ShieldButtonSuccess;
+                    if (ImageState == 1){ return Theming.ShieldButtonSuccessClick; }
+                    else if (ImageState == 2) { return Theming.ShieldButtonSuccessHover; }
+                    else { return Theming.ShieldButtonSuccess; }
                 case SecurityCenterCodes.Firewall_Outdated:
                 case SecurityCenterCodes.Defender_Outdated:
                 case SecurityCenterCodes.Permissions_Outdated:
-                    return Theming.ShieldButtonWarning;
+                    if (ImageState == 1) { return Theming.ShieldButtonWarningClick; }
+                    else if (ImageState == 2) { return Theming.ShieldButtonWarningHover; }
+                    else { return Theming.ShieldButtonWarning; }
                 case SecurityCenterCodes.Firewall_Error:
                 case SecurityCenterCodes.Defender_Error:
                 case SecurityCenterCodes.Permissions_Error:
-                    return Theming.ShieldButtonError;
+                    if (ImageState == 1) { return Theming.ShieldButtonErrorClick; }
+                    else if (ImageState == 2) { return Theming.ShieldButtonErrorHover; }
+                    else { return Theming.ShieldButtonError; }
                 case SecurityCenterCodes.Unix:
-                    return Theming.ShieldButtonChecking;
+                    if (ImageState == 1) { return Theming.ShieldButtonCheckingClick; }
+                    else if (ImageState == 2) { return Theming.ShieldButtonCheckingHover; }
+                    else { return Theming.ShieldButtonChecking; }
                 default:
-                    return Theming.ShieldButtonUnknown;
+                    if (ImageState == 1) { return Theming.ShieldButtonUnknownClick; }
+                    else if (ImageState == 2) { return Theming.ShieldButtonUnknownHover; }
+                    else { return Theming.ShieldButtonUnknown; }
             }
         }
     }

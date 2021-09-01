@@ -138,15 +138,78 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Bitmap GearButtonHover = Properties.Resources.icon_gear_hover;
 
 
+        /// <summary>RGB: 230, 159, 0</summary>
+        /// <remarks>HEX: E69F00</remarks>
+        public static Bitmap GearButtonWarning = Properties.Resources.icon_gear_warning;
+
+        /// <summary>RGB: 230, 129, 0</summary>
+        /// <remarks>HEX: E68100</remarks>
+        public static Bitmap GearButtonWarningClick = Properties.Resources.icon_gear_warning_click;
+
+        /// <summary>RGB: 230, 99, 0</summary>
+        /// <remarks>HEX: E66300</remarks>
+        public static Bitmap GearButtonWarningHover = Properties.Resources.icon_gear_warning_hover;
+
+
+        /// <summary>RGB: 93, 93, 93</summary>
+        /// <remarks>HEX: 5D5D5D</remarks>
         public static Bitmap ShieldButtonUnknown = Properties.Resources.icon_shield_unknown;
 
+        /// <summary>RGB: 66, 66, 66</summary>
+        /// <remarks>HEX: 424242</remarks>
+        public static Bitmap ShieldButtonUnknownClick = Properties.Resources.icon_shield_unknown_click;
+
+        /// <summary>RGB: 132, 132, 132</summary>
+        /// <remarks>HEX: 848484</remarks>
+        public static Bitmap ShieldButtonUnknownHover = Properties.Resources.icon_shield_unknown_hover;
+
+        /// <summary>RGB: 66, 179, 189</summary>
+        /// <remarks>HEX: 42B3BD</remarks>
         public static Bitmap ShieldButtonChecking = Properties.Resources.icon_shield_checking;
 
+        /// <summary>RGB: 66, 159, 189</summary>
+        /// <remarks>HEX: 429FBD</remarks>
+        public static Bitmap ShieldButtonCheckingClick = Properties.Resources.icon_shield_checking_click;
+
+        /// <summary>RGB: 66, 129, 189</summary>
+        /// <remarks>HEX: 4281BD</remarks>
+        public static Bitmap ShieldButtonCheckingHover = Properties.Resources.icon_shield_checking_hover;
+
+        /// <summary>RGB: 159, 193, 32</summary>
+        /// <remarks>HEX: 9FC120</remarks>
         public static Bitmap ShieldButtonSuccess = Properties.Resources.icon_shield_success;
 
+        /// <summary>RGB: 127, 156, 29</summary>
+        /// <remarks>HEX: 7F9C1D</remarks>
+        public static Bitmap ShieldButtonSuccessClick = Properties.Resources.icon_shield_success_click;
+
+        /// <summary>RGB: 104, 255, 0</summary>
+        /// <remarks>HEX: 68FF08</remarks>
+        public static Bitmap ShieldButtonSuccessHover = Properties.Resources.icon_shield_success_hover;
+
+        /// <summary>RGB: 230, 159, 0</summary>
+        /// <remarks>HEX: E69F00</remarks>
         public static Bitmap ShieldButtonWarning = Properties.Resources.icon_shield_warning;
 
+        /// <summary>RGB: 230, 129, 0</summary>
+        /// <remarks>HEX: E68100</remarks>
+        public static Bitmap ShieldButtonWarningClick = Properties.Resources.icon_shield_warning_click;
+
+        /// <summary>RGB: 230, 99, 0</summary>
+        /// <remarks>HEX: E66300</remarks>
+        public static Bitmap ShieldButtonWarningHover = Properties.Resources.icon_shield_warning_hover;
+
+        /// <summary>RGB: 254, 0, 0</summary>
+        /// <remarks>HEX: FE0000</remarks>
         public static Bitmap ShieldButtonError = Properties.Resources.icon_shield_error;
+
+        /// <summary>RGB: 224, 0, 0</summary>
+        /// <remarks>HEX: E00000</remarks>
+        public static Bitmap ShieldButtonErrorClick = Properties.Resources.icon_shield_error_click;
+
+        /// <summary>RGB: 194, 0, 0</summary>
+        /// <remarks>HEX: C20000</remarks>
+        public static Bitmap ShieldButtonErrorHover = Properties.Resources.icon_shield_error_hover;
 
 
         public static Bitmap PlayButton = Properties.Resources.playbutton;
