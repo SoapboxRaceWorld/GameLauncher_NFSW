@@ -15,12 +15,35 @@ namespace GameLauncher.App
 {
     public partial class WelcomeScreen : Form
     {
+        private static bool IsWelcomeScreenOpen = false;
         private bool StatusCheck = false;
+
+        public static void OpenScreen()
+        {
+            if (IsWelcomeScreenOpen || Application.OpenForms["WelcomeScreen"] != null)
+            {
+                if (Application.OpenForms["WelcomeScreen"] != null) { Application.OpenForms["WelcomeScreen"].Activate(); }
+            }
+            else
+            {
+                try { new WelcomeScreen().ShowDialog(); }
+                catch (Exception Error)
+                {
+                    string ErrorMessage = "Welcome Screen Encountered an Error";
+                    LogToFileAddons.OpenLog("Welcome Screen", ErrorMessage, Error, "Exclamation", false);
+                }
+            }
+        }
 
         public WelcomeScreen()
         {
+            IsWelcomeScreenOpen = true;
             InitializeComponent();
             SetVisuals();
+            this.Closing += (x, CloseForm) =>
+            {
+                IsWelcomeScreenOpen = false;
+            };
         }
 
         private void SetVisuals()

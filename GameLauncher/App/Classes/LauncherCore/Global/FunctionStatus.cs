@@ -298,6 +298,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /// <param name="Boolen">True: Restarts Launcher | False: Closes Launcher</param>
         public static void ErrorCloseLauncher(string Notes, bool Boolen)
         {
+            SplashScreen.ThreadStatus("Stop");
+
             if (DiscordLauncherPresence.Running())
             {
                 DiscordLauncherPresence.Stop("Close");
@@ -335,6 +337,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         public static void FirstTimeRun()
         {
             LoadingComplete = true;
+            SplashScreen.ThreadStatus("Stop");
 
             if (!string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
             {

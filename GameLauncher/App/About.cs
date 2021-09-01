@@ -7,6 +7,7 @@ using System.Xml;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App
 {
@@ -17,18 +18,32 @@ namespace GameLauncher.App
         private static readonly string AboutXMLRevision = "2.1.8.A";
         private static readonly string AboutXML = "/Launcher/SBRW/Official/" + AboutXMLRevision + "/about.xml";
 
+        public static void OpenScreen()
+        {
+            if (Application.OpenForms["About"] != null || IsAboutOpen)
+            {
+                if (Application.OpenForms["About"] != null) { Application.OpenForms["About"].Activate(); }
+            }
+            else
+            {
+                try { new About().ShowDialog(); }
+                catch (Exception Error)
+                {
+                    string ErrorMessage = "About Screen Encountered an Error";
+                    LogToFileAddons.OpenLog("About Screen", ErrorMessage, Error, "Exclamation", false);
+                }
+            }
+        }
+
         public About()
         {
-            if (!IsAboutOpen)
+            IsAboutOpen = true;
+            InitializeComponent();
+            SetVisuals();
+            this.Closing += (x, y) =>
             {
-                IsAboutOpen = true;
-                InitializeComponent();
-                SetVisuals();
-                this.Closing += (x, y) =>
-                {
-                    if (IsAboutOpen) { IsAboutOpen = false; }
-                };
-            }
+                IsAboutOpen = false;
+            };
         }
 
         private void SetVisuals()

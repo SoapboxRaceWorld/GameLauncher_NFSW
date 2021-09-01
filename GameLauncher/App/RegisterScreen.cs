@@ -24,20 +24,34 @@ namespace GameLauncher.App
         private static bool IsRegisterScreenOpen = false;
         private bool _ticketRequired;
 
+        public static void OpenScreen()
+        {
+            if (IsRegisterScreenOpen || Application.OpenForms["RegisterScreen"] != null)
+            {
+                if (Application.OpenForms["RegisterScreen"] != null) { Application.OpenForms["RegisterScreen"].Activate(); }
+            }
+            else
+            {
+                try { new RegisterScreen().ShowDialog(); }
+                catch (Exception Error)
+                {
+                    string ErrorMessage = "Register Screen Encountered an Error";
+                    LogToFileAddons.OpenLog("Register Screen", ErrorMessage, Error, "Exclamation", false);
+                }
+            }
+        }
+
         public RegisterScreen()
         {
-            if (!IsRegisterScreenOpen)
+            IsRegisterScreenOpen = true;
+            InitializeComponent();
+            SetVisuals();
+            DiscordLauncherPresence.Status("Register", ServerListUpdater.ServerName("Register"));
+            this.Closing += (x, y) =>
             {
-                IsRegisterScreenOpen = true;
-                InitializeComponent();
-                DiscordLauncherPresence.Status("Register", ServerListUpdater.ServerName("Register"));
-                this.Closing += (x, y) =>
-                {
-                    DiscordLauncherPresence.Status("Idle Ready", null);
-                    if (IsRegisterScreenOpen) { IsRegisterScreenOpen = false; }
-                };
-                SetVisuals();
-            }
+                DiscordLauncherPresence.Status("Idle Ready", null);
+                IsRegisterScreenOpen = false;
+            };
         }
 
         private void RegisterButton_Click(object sender, EventArgs e)

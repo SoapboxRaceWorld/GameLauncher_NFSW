@@ -20,17 +20,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         /* ServerList Load Checks */
         public static void SelectServerBtn_Click(object sender, EventArgs e)
         {
-            new SelectServer().ShowDialog();
+            SelectServer.OpenScreen();
         }
 
         public static void AddServer_Click(object sender, EventArgs e)
         {
-            new AddServer().Show();
+            AddServer.OpenScreen();
         }
 
         public static void AboutButton_Click(object sender, EventArgs e)
         {
-            new About().ShowDialog();
+            About.OpenScreen();
         }
 
         public static void RegisterText_LinkClicked(object sender, EventArgs e)
@@ -52,7 +52,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                 }
                 else
                 {
-                    new RegisterScreen().ShowDialog();
+                    RegisterScreen.OpenScreen();
                 }
             }
             else

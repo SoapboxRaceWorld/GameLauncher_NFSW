@@ -1128,6 +1128,8 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                     LogToFileAddons.OpenLog("THEMING", null, Error, null, true);
                 }
             }
+
+            SplashScreen.ThreadStatus("Start");
         }
 
         /* Convert User Inputed String into a Valid RBG Spectrum Values */

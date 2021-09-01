@@ -23,48 +23,61 @@ namespace GameLauncher.App
         public static bool ResolutionsListLoaded = false;
         public static bool PresetLoaded = false;
 
-        public USXEditor()
+        public static void OpenScreen()
         {
-            if (File.Exists(Locations.UserSettingsXML))
+            if (IsUSXEditorOpen || Application.OpenForms["USXEditor"] != null)
             {
-                if (!IsUSXEditorOpen)
-                {
-                    IsUSXEditorOpen = true;
-                    DiscordLauncherPresence.Status("User XML Editor", null);
-                    Log.Checking("UXE: Success, a UserSettings.xml file was found!");
-                    if (new FileInfo(Locations.UserSettingsXML).IsReadOnly == true)
-                    {
-                        FileReadOnly = true;
-                        Log.Warning("UXE: UserSettings.xml is Read-Only!");
-                    }
-                    else
-                    {
-                        Log.Completed("UXE: UserSettings.xml can be modified!");
-                    }
-
-                    FileGameSettings.Read("Full File");
-                    ResolutionsListUpdater.Get();
-                    InitializeComponent();
-                    SetVisuals();
-                    this.Closing += (x, y) =>
-                    {
-                        DiscordLauncherPresence.Status("Settings", null);
-                        if (IsUSXEditorOpen) { IsUSXEditorOpen = false; }
-
-                        if (Hover.Active)
-                        {
-                            Hover.RemoveAll();
-                            Hover.Dispose();
-                        }
-                    };
-                }
+                if (Application.OpenForms["USXEditor"] != null) { Application.OpenForms["USXEditor"].Activate(); }
             }
             else
             {
-                MessageBox.Show(null, "How is this even possible? There is no UserSettings.xml file found!", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Log.Warning("UXE: No UserSettings.xml file was found!");
-                return;
+                if (File.Exists(Locations.UserSettingsXML))
+                {
+                    try { new USXEditor().ShowDialog(); }
+                    catch (Exception Error)
+                    {
+                        string ErrorMessage = "USX Editor Screen Encountered an Error";
+                        LogToFileAddons.OpenLog("USX Editor Screen", ErrorMessage, Error, "Exclamation", false);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(null, "How is this even possible? There is no UserSettings.xml file found!", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Log.Warning("UXE: No UserSettings.xml file was found!");
+                }
             }
+        }
+
+        public USXEditor()
+        {
+            IsUSXEditorOpen = true;
+            DiscordLauncherPresence.Status("User XML Editor", null);
+            Log.Checking("UXE: Success, a UserSettings.xml file was found!");
+            if (new FileInfo(Locations.UserSettingsXML).IsReadOnly == true)
+            {
+                FileReadOnly = true;
+                Log.Warning("UXE: UserSettings.xml is Read-Only!");
+            }
+            else
+            {
+                Log.Completed("UXE: UserSettings.xml can be modified!");
+            }
+
+            FileGameSettings.Read("Full File");
+            ResolutionsListUpdater.Get();
+            InitializeComponent();
+            SetVisuals();
+            this.Closing += (x, y) =>
+            {
+                DiscordLauncherPresence.Status("Settings", null);
+                if (IsUSXEditorOpen) { IsUSXEditorOpen = false; }
+
+                if (Hover.Active)
+                {
+                    Hover.RemoveAll();
+                    Hover.Dispose();
+                }
+            };
         }
 
         /* Settings Cancel */

@@ -14,11 +14,13 @@ using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using System.Net;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App
 {
     public partial class SelectServer : Form
     {
+        private static bool IsSelectServerOpen = false;
         private static int ID = 1;
         private static readonly Dictionary<int, ServerList> ServerListBook = new Dictionary<int, ServerList>();
 
@@ -28,8 +30,26 @@ namespace GameLauncher.App
         public static string ServerName;
         public static GetServerInformation ServerJsonData;
 
+        public static void OpenScreen()
+        {
+            if (IsSelectServerOpen || Application.OpenForms["SelectServer"] != null)
+            {
+                if (Application.OpenForms["SelectServer"] != null) { Application.OpenForms["SelectServer"].Activate(); }
+            }
+            else
+            {
+                try { new SelectServer().ShowDialog(); }
+                catch (Exception Error)
+                {
+                    string ErrorMessage = "Select Server Screen Encountered an Error";
+                    LogToFileAddons.OpenLog("Select Server", ErrorMessage, Error, "Exclamation", false);
+                }
+            }
+        }
+
         public SelectServer()
         {
+            IsSelectServerOpen = true;
             InitializeComponent();
             SetVisuals();
             this.Closing += (x, y) =>
@@ -39,6 +59,7 @@ namespace GameLauncher.App
                 ServersToPing.Clear();
                 ServerName = null;
                 ServerJsonData = null;
+                IsSelectServerOpen = false;
             };
         }
 
@@ -402,7 +423,7 @@ namespace GameLauncher.App
 
         private void BtnAddServer_Click(object sender, EventArgs e)
         {
-            new AddServer().Show();
+            AddServer.OpenScreen();
         }
 
         private void BtnSelectServer_Click(object sender, EventArgs e)

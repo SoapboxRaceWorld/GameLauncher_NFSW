@@ -56,7 +56,11 @@ namespace GameLauncher.App
 
             Shown += (x, y) =>
             {
-                Application.OpenForms["DebugScreen"].Activate();
+                try
+                {
+                    Application.OpenForms["DebugScreen"].Activate();
+                }
+                catch { }
                 this.BringToFront();
             };
         }

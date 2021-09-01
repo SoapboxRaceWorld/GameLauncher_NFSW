@@ -27,9 +27,6 @@ namespace GameLauncher
 {
     static class Program
     {
-        /* Global Thread for Splash Screen */
-        public static Thread SplashScreen;
-        public static bool IsSplashScreenLive = false;
         public static bool LauncherMustRestart = false;
 
         [STAThread]
@@ -210,16 +207,6 @@ namespace GameLauncher
             }
         }
 
-        private static void StartSplashScreen()
-        {
-            if (!IsSplashScreenLive)
-            {
-                Application.Run(new SplashScreen());
-            }
-
-            IsSplashScreenLive = true;
-        }
-
         private static void Start()
         {
             DiscordLauncherPresence.Start("Start Up", null);
@@ -299,9 +286,6 @@ namespace GameLauncher
                 {
                     /* (Start Process) Sets up Theming */
                     Theming.CheckIfThemeExists();
-
-                    SplashScreen = new Thread(new ThreadStart(StartSplashScreen));
-                    SplashScreen.Start();
                 }
 
                 LogToFileAddons.RemoveLogs();
@@ -440,13 +424,6 @@ namespace GameLauncher
                                 constructMsg += "(Or any other NTFS 'Local Disk' location such as 'D:')\n\n";
 
                                 MessageBox.Show(null, constructMsg, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                                /* Close Splash Screen (Just in Case) */
-                                if (IsSplashScreenLive)
-                                {
-                                    SplashScreen.Abort();
-                                }
-
                                 FunctionStatus.LauncherForceClose = true;
                                 break;
                         }

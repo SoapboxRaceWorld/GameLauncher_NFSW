@@ -4,7 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using WindowsFirewallHelper;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
@@ -44,37 +43,52 @@ namespace GameLauncher.App
         private static Thread ThreadSavedCDN;
         private static Thread ThreadChecksums;
 
+        public static void OpenScreen()
+        {
+            if (IsSettingsScreenOpen || Application.OpenForms["SettingsScreen"] != null)
+            {
+                if (Application.OpenForms["SettingsScreen"] != null) { Application.OpenForms["SettingsScreen"].Activate(); }
+            }
+            else
+            {
+                try { new SettingsScreen().ShowDialog(); }
+                catch (Exception Error)
+                {
+                    string ErrorMessage = "Settings Screen Encountered an Error";
+                    LogToFileAddons.OpenLog("Settings Screen", ErrorMessage, Error, "Exclamation", false);
+                }
+            }
+        }
+
         public SettingsScreen()
         {
-            if (!IsSettingsScreenOpen)
+            IsSettingsScreenOpen = false;
+            InitializeComponent();
+            SetVisuals();
+            this.Closing += (x, y) =>
             {
-                IsSettingsScreenOpen = false;
-                InitializeComponent();
-                SetVisuals();
-                this.Closing += (x, y) =>
+                DiscordLauncherPresence.Status("Idle Ready", null);
+
+                if (ThreadChangedCDN != null)
                 {
-                    DiscordLauncherPresence.Status("Idle Ready", null);
+                    ThreadChangedCDN.Abort();
+                    ThreadChangedCDN = null;
+                }
+                if (ThreadSavedCDN != null)
+                {
+                    ThreadSavedCDN.Abort();
+                    ThreadSavedCDN = null;
+                }
+                if (ThreadChecksums != null)
+                {
+                    ThreadChecksums.Abort();
+                    ThreadChecksums = null;
+                }
 
-                    if (ThreadChangedCDN != null)
-                    {
-                        ThreadChangedCDN.Abort();
-                        ThreadChangedCDN = null;
-                    }
-                    if (ThreadSavedCDN != null)
-                    {
-                        ThreadSavedCDN.Abort();
-                        ThreadSavedCDN = null;
-                    }
-                    if (ThreadChecksums != null)
-                    {
-                        ThreadChecksums.Abort();
-                        ThreadChecksums = null;
-                    }
-                    if (IsSettingsScreenOpen) { IsSettingsScreenOpen = false; }
-                };
+                IsSettingsScreenOpen = false;
+            };
 
-                DiscordLauncherPresence.Status("Settings", null);
-            }
+            DiscordLauncherPresence.Status("Settings", null);
         }
         /// <summary>
         /// Sets the Color for Buttons
@@ -916,7 +930,7 @@ namespace GameLauncher.App
         /* Settings UserSettings XML Editor */
         private void SettingsUEditorButton_Click(object sender, EventArgs e)
         {
-            new USXEditor().ShowDialog();
+            USXEditor.OpenScreen();
         }
 
         /* Settings Clear ModNet Cache */
@@ -1097,7 +1111,7 @@ namespace GameLauncher.App
         /* Settings Open About Dialog */
         private void SettingsAboutButton_Click(object sender, EventArgs e)
         {
-            new About().ShowDialog();
+            About.OpenScreen();
         }
 
         private void SettingsLauncherVersion_Click(object sender, EventArgs e)
@@ -1613,7 +1627,7 @@ namespace GameLauncher.App
         {
             try
             {
-                new SecurityCenterScreen("Settings").ShowDialog();
+                SecurityCenterScreen.OpenScreen("Settings");
             }
             catch (Exception Error)
             {
@@ -1648,7 +1662,7 @@ namespace GameLauncher.App
             else
             {
                 ButtonsColorSet(SettingsVFilesButton, (FileSettingsSave.GameIntegrity != "Good" ? 2 : 0), true);
-                new VerifyHash().ShowDialog();
+                VerifyHash.OpenScreen();
             }
         }
     }

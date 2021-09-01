@@ -74,27 +74,37 @@ namespace GameLauncher.App
         ///<summary>RPC: Which State to do once Form Closes</summary>
         private static string RPCStateCache;
 
-        public SecurityCenterScreen(string RPCState)
+        public static void OpenScreen(string RPCState)
         {
-            if (!IsSecurityCenterOpen)
+            if (IsSecurityCenterOpen || Application.OpenForms["SecurityCenterScreen"] != null)
             {
-                IsSecurityCenterOpen = true;
-                RPCStateCache = RPCState;
-                InitializeComponent();
-                SetVisuals();
-                this.Closing += (x, y) =>
-                {
-                    DiscordLauncherPresence.Status(RPCStateCache, null);
-
-                    if (IsSecurityCenterOpen) { IsSecurityCenterOpen = false; }
-                    if (DisableButtonFRAPI) { DisableButtonFRAPI = false; }
-                    if (DisableButtonDRAPI) { DisableButtonDRAPI = false; }
-                    if (DisableButtonPRC) { DisableButtonPRC = false; }
-                    if (RPCStateCache != null) { RPCStateCache = null; }
-                };
-
-                DiscordLauncherPresence.Status("Security Center", null);
+                if (Application.OpenForms["SecurityCenterScreen"] != null) { Application.OpenForms["SecurityCenterScreen"].Activate(); }
             }
+            else
+            {
+                RPCStateCache = RPCState;
+                try { new SecurityCenterScreen().ShowDialog();  }
+                catch (Exception Error)
+                {
+                    string ErrorMessage = "Security Center Screen Encountered an Error";
+                    LogToFileAddons.OpenLog("Security Center Panel", ErrorMessage, Error, "Exclamation", false);
+                }
+            }
+        }
+
+        public SecurityCenterScreen()
+        {
+            IsSecurityCenterOpen = true;
+            InitializeComponent();
+            SetVisuals();
+            this.Closing += (x, y) =>
+            {
+                DiscordLauncherPresence.Status(RPCStateCache, null);
+                IsSecurityCenterOpen = DisableButtonFRAPI = DisableButtonDRAPI = DisableButtonDRAPI = DisableButtonPRC = false;
+                RPCStateCache = null;
+            };
+
+            DiscordLauncherPresence.Status("Security Center", null);
         }
         /// <summary>
         /// Sets the Color for Buttons

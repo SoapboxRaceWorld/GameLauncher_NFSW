@@ -182,13 +182,6 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 }
             }
             Log.Completed("LAUNCHER UPDATE: Done");
-
-            /* (End Process) Close Splash Screen */
-            if (Program.IsSplashScreenLive)
-            {
-                Program.SplashScreen.Abort();
-            }
-
             Log.Info("FIRST TIME RUN: Moved to Function");
             /* Do First Time Run Checks */
             FunctionStatus.FirstTimeRun();

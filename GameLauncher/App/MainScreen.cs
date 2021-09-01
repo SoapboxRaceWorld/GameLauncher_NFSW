@@ -191,7 +191,7 @@ namespace GameLauncher
             /* Display Server List Dialog if Server IP Doesn't Exist */
             if (string.IsNullOrWhiteSpace(FileAccountSave.ChoosenGameServer))
             {
-                new SelectServer().ShowDialog();
+                SelectServer.OpenScreen();
 
                 if (SelectedServer.Data != null)
                 {
@@ -1347,6 +1347,7 @@ namespace GameLauncher
             MainPassword.Visible = hideElements;
             ForgotPassword.Visible = hideElements;
             SettingsButton.Visible = hideElements;
+            ButtonSecurityCenter.Visible = hideElements;
 
             AddServer.Enabled = hideElements;
             ServerPick.Enabled = hideElements;
@@ -1430,7 +1431,7 @@ namespace GameLauncher
 
             try
             {
-                new SettingsScreen().ShowDialog();
+                SettingsScreen.OpenScreen();
             }
             catch (Exception Error)
             {
@@ -1441,15 +1442,7 @@ namespace GameLauncher
 
         private void ButtonSecurityCenter_Click(object sender, EventArgs e)
         {
-            try
-            {
-                new SecurityCenterScreen("Idle Ready").ShowDialog();
-            }
-            catch (Exception Error)
-            {
-                string ErrorMessage = "Security Center Screen Encountered an Error";
-                LogToFileAddons.OpenLog("Security Center Panel", ErrorMessage, Error, "Exclamation", false);
-            }
+            SecurityCenterScreen.OpenScreen("Idle Ready");
         }
 
         private void StartGame(string UserID, string LoginToken)

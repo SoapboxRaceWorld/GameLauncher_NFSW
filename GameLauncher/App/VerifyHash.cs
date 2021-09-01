@@ -24,6 +24,7 @@ namespace GameLauncher.App
 {
     public partial class VerifyHash : Form
     {
+        private static bool IsVerifyHashOpen = false;
         /* VerifyHash */
         string[][] scannedHashes;
         public int filesToScan;
@@ -42,8 +43,26 @@ namespace GameLauncher.App
         public static bool DeletionErrorBypass = false;
         public static bool StillDownloading = false;
 
+        public static void OpenScreen()
+        {
+            if (IsVerifyHashOpen || Application.OpenForms["VerifyHash"] != null)
+            {
+                if (Application.OpenForms["VerifyHash"] != null) { Application.OpenForms["VerifyHash"].Activate(); }
+            }
+            else
+            {
+                try { new VerifyHash().ShowDialog(); }
+                catch (Exception Error)
+                {
+                    string ErrorMessage = "Verify Hash Screen Encountered an Error";
+                    LogToFileAddons.OpenLog("Verify Hash Screen", ErrorMessage, Error, "Exclamation", false);
+                }
+            }
+        }
+
         public VerifyHash()
         {
+            IsVerifyHashOpen = true;
             DiscordLauncherPresence.Status("Verify", null);
             InitializeComponent();
             SetVisuals();
@@ -57,11 +76,16 @@ namespace GameLauncher.App
                     }
                     else
                     {
+                        DiscordLauncherPresence.Status("Settings", null);
+                        IsVerifyHashOpen = false;
                         GameScanner(false);
                     }
                 }
-
-                DiscordLauncherPresence.Status("Settings", null);
+                else
+                {
+                    IsVerifyHashOpen = false;
+                    DiscordLauncherPresence.Status("Settings", null);
+                }
             };
         }
 

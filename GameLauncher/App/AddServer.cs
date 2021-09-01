@@ -22,21 +22,33 @@ namespace GameLauncher.App
     public partial class AddServer : Form
     {
         private static bool IsAddServerOpen = false;
+        /// <summary>Opens the Form. If the Form is already Open it will Give it Foucus</summary>
+        public static void OpenScreen()
+        {
+            if (IsAddServerOpen || Application.OpenForms["AddServer"] != null)
+            {
+                if (Application.OpenForms["AddServer"] != null) { Application.OpenForms["AddServer"].Activate(); }
+            }
+            else
+            {
+                try { new AddServer().ShowDialog(); }
+                catch (Exception Error)
+                {
+                    string ErrorMessage = "Add Server Screen Encountered an Error";
+                    LogToFileAddons.OpenLog("Add Server Screen", ErrorMessage, Error, "Exclamation", false);
+                }
+            }
+        }
+
         public AddServer()
         {
-            if (!IsAddServerOpen)
+            IsAddServerOpen = true;
+            InitializeComponent();
+            SetVisuals();
+            this.Closing += (x, CloseForm) =>
             {
-                IsAddServerOpen = true;
-                InitializeComponent();
-                SetVisuals();
-                this.Closing += (x, CloseForm) =>
-                {
-                    if (IsAddServerOpen)
-                    {
-                        IsAddServerOpen = false;
-                    }
-                };
-            }
+                IsAddServerOpen = false;
+            };
         }
 
         public void DrawErrorAroundTextBox(TextBox x)
