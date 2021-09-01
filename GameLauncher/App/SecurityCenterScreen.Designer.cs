@@ -51,6 +51,7 @@ namespace GameLauncher.App
             this.ButtonClose = new System.Windows.Forms.PictureBox();
             this.ButtonFolderPermissonSet = new System.Windows.Forms.Button();
             this.ButtonFolderPermissonCheck = new System.Windows.Forms.Button();
+            this.VersionLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ButtonClose)).BeginInit();
             this.SuspendLayout();
             // 
@@ -73,7 +74,7 @@ namespace GameLauncher.App
             this.TextWindowsDefender.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextWindowsDefender.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.TextWindowsDefender.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.TextWindowsDefender.Location = new System.Drawing.Point(33, 182);
+            this.TextWindowsDefender.Location = new System.Drawing.Point(33, 185);
             this.TextWindowsDefender.Name = "TextWindowsDefender";
             this.TextWindowsDefender.Size = new System.Drawing.Size(177, 14);
             this.TextWindowsDefender.TabIndex = 171;
@@ -104,7 +105,7 @@ namespace GameLauncher.App
             this.ButtonDefenderExclusionRemoveAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonDefenderExclusionRemoveAll.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonDefenderExclusionRemoveAll.ForeColor = System.Drawing.Color.Silver;
-            this.ButtonDefenderExclusionRemoveAll.Location = new System.Drawing.Point(263, 209);
+            this.ButtonDefenderExclusionRemoveAll.Location = new System.Drawing.Point(263, 211);
             this.ButtonDefenderExclusionRemoveAll.Name = "ButtonDefenderExclusionRemoveAll";
             this.ButtonDefenderExclusionRemoveAll.Size = new System.Drawing.Size(221, 25);
             this.ButtonDefenderExclusionRemoveAll.TabIndex = 194;
@@ -151,7 +152,7 @@ namespace GameLauncher.App
             this.ButtonDefenderExclusionRemoveGame.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonDefenderExclusionRemoveGame.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonDefenderExclusionRemoveGame.ForeColor = System.Drawing.Color.Silver;
-            this.ButtonDefenderExclusionRemoveGame.Location = new System.Drawing.Point(263, 271);
+            this.ButtonDefenderExclusionRemoveGame.Location = new System.Drawing.Point(263, 273);
             this.ButtonDefenderExclusionRemoveGame.Name = "ButtonDefenderExclusionRemoveGame";
             this.ButtonDefenderExclusionRemoveGame.Size = new System.Drawing.Size(221, 25);
             this.ButtonDefenderExclusionRemoveGame.TabIndex = 199;
@@ -166,7 +167,7 @@ namespace GameLauncher.App
             this.ButtonDefenderExclusionRemoveLauncher.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonDefenderExclusionRemoveLauncher.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonDefenderExclusionRemoveLauncher.ForeColor = System.Drawing.Color.Silver;
-            this.ButtonDefenderExclusionRemoveLauncher.Location = new System.Drawing.Point(263, 240);
+            this.ButtonDefenderExclusionRemoveLauncher.Location = new System.Drawing.Point(263, 242);
             this.ButtonDefenderExclusionRemoveLauncher.Name = "ButtonDefenderExclusionRemoveLauncher";
             this.ButtonDefenderExclusionRemoveLauncher.Size = new System.Drawing.Size(221, 25);
             this.ButtonDefenderExclusionRemoveLauncher.TabIndex = 198;
@@ -245,7 +246,7 @@ namespace GameLauncher.App
             this.ButtonDefenderExclusionAddAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonDefenderExclusionAddAll.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonDefenderExclusionAddAll.ForeColor = System.Drawing.Color.Silver;
-            this.ButtonDefenderExclusionAddAll.Location = new System.Drawing.Point(36, 209);
+            this.ButtonDefenderExclusionAddAll.Location = new System.Drawing.Point(36, 211);
             this.ButtonDefenderExclusionAddAll.Name = "ButtonDefenderExclusionAddAll";
             this.ButtonDefenderExclusionAddAll.Size = new System.Drawing.Size(221, 25);
             this.ButtonDefenderExclusionAddAll.TabIndex = 205;
@@ -260,7 +261,7 @@ namespace GameLauncher.App
             this.ButtonDefenderExclusionCheck.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonDefenderExclusionCheck.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonDefenderExclusionCheck.ForeColor = System.Drawing.Color.Silver;
-            this.ButtonDefenderExclusionCheck.Location = new System.Drawing.Point(490, 240);
+            this.ButtonDefenderExclusionCheck.Location = new System.Drawing.Point(490, 242);
             this.ButtonDefenderExclusionCheck.Name = "ButtonDefenderExclusionCheck";
             this.ButtonDefenderExclusionCheck.Size = new System.Drawing.Size(221, 25);
             this.ButtonDefenderExclusionCheck.TabIndex = 204;
@@ -275,7 +276,7 @@ namespace GameLauncher.App
             this.ButtonDefenderExclusionAddGame.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonDefenderExclusionAddGame.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonDefenderExclusionAddGame.ForeColor = System.Drawing.Color.Silver;
-            this.ButtonDefenderExclusionAddGame.Location = new System.Drawing.Point(36, 271);
+            this.ButtonDefenderExclusionAddGame.Location = new System.Drawing.Point(36, 273);
             this.ButtonDefenderExclusionAddGame.Name = "ButtonDefenderExclusionAddGame";
             this.ButtonDefenderExclusionAddGame.Size = new System.Drawing.Size(221, 25);
             this.ButtonDefenderExclusionAddGame.TabIndex = 207;
@@ -290,7 +291,7 @@ namespace GameLauncher.App
             this.ButtonDefenderExclusionAddLauncher.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonDefenderExclusionAddLauncher.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonDefenderExclusionAddLauncher.ForeColor = System.Drawing.Color.Silver;
-            this.ButtonDefenderExclusionAddLauncher.Location = new System.Drawing.Point(36, 240);
+            this.ButtonDefenderExclusionAddLauncher.Location = new System.Drawing.Point(36, 242);
             this.ButtonDefenderExclusionAddLauncher.Name = "ButtonDefenderExclusionAddLauncher";
             this.ButtonDefenderExclusionAddLauncher.Size = new System.Drawing.Size(221, 25);
             this.ButtonDefenderExclusionAddLauncher.TabIndex = 206;
@@ -320,7 +321,7 @@ namespace GameLauncher.App
             this.ButtonDefenderExclusionAPI.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonDefenderExclusionAPI.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonDefenderExclusionAPI.ForeColor = System.Drawing.Color.Silver;
-            this.ButtonDefenderExclusionAPI.Location = new System.Drawing.Point(490, 209);
+            this.ButtonDefenderExclusionAPI.Location = new System.Drawing.Point(490, 211);
             this.ButtonDefenderExclusionAPI.Name = "ButtonDefenderExclusionAPI";
             this.ButtonDefenderExclusionAPI.Size = new System.Drawing.Size(221, 25);
             this.ButtonDefenderExclusionAPI.TabIndex = 209;
@@ -333,7 +334,7 @@ namespace GameLauncher.App
             this.TextFolderPermissions.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextFolderPermissions.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.TextFolderPermissions.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.TextFolderPermissions.Location = new System.Drawing.Point(33, 308);
+            this.TextFolderPermissions.Location = new System.Drawing.Point(33, 313);
             this.TextFolderPermissions.Name = "TextFolderPermissions";
             this.TextFolderPermissions.Size = new System.Drawing.Size(177, 14);
             this.TextFolderPermissions.TabIndex = 210;
@@ -359,7 +360,7 @@ namespace GameLauncher.App
             this.ButtonFolderPermissonSet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonFolderPermissonSet.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonFolderPermissonSet.ForeColor = System.Drawing.Color.Silver;
-            this.ButtonFolderPermissonSet.Location = new System.Drawing.Point(36, 335);
+            this.ButtonFolderPermissonSet.Location = new System.Drawing.Point(36, 339);
             this.ButtonFolderPermissonSet.Name = "ButtonFolderPermissonSet";
             this.ButtonFolderPermissonSet.Size = new System.Drawing.Size(221, 25);
             this.ButtonFolderPermissonSet.TabIndex = 212;
@@ -374,12 +375,24 @@ namespace GameLauncher.App
             this.ButtonFolderPermissonCheck.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonFolderPermissonCheck.Font = new System.Drawing.Font("DejaVu Sans", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonFolderPermissonCheck.ForeColor = System.Drawing.Color.Silver;
-            this.ButtonFolderPermissonCheck.Location = new System.Drawing.Point(263, 335);
+            this.ButtonFolderPermissonCheck.Location = new System.Drawing.Point(263, 339);
             this.ButtonFolderPermissonCheck.Name = "ButtonFolderPermissonCheck";
             this.ButtonFolderPermissonCheck.Size = new System.Drawing.Size(221, 25);
             this.ButtonFolderPermissonCheck.TabIndex = 213;
             this.ButtonFolderPermissonCheck.Text = "Check Folder Permissions";
             this.ButtonFolderPermissonCheck.UseVisualStyleBackColor = false;
+            // 
+            // VersionLabel
+            // 
+            this.VersionLabel.AutoSize = true;
+            this.VersionLabel.BackColor = System.Drawing.Color.Transparent;
+            this.VersionLabel.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VersionLabel.Location = new System.Drawing.Point(36, 480);
+            this.VersionLabel.Name = "VersionLabel";
+            this.VersionLabel.Size = new System.Drawing.Size(107, 14);
+            this.VersionLabel.TabIndex = 214;
+            this.VersionLabel.Text = "Version: vX.X.X.X";
+            this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // SecurityCenterScreen
             // 
@@ -387,6 +400,7 @@ namespace GameLauncher.App
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(891, 529);
+            this.Controls.Add(this.VersionLabel);
             this.Controls.Add(this.ButtonFolderPermissonCheck);
             this.Controls.Add(this.ButtonFolderPermissonSet);
             this.Controls.Add(this.ButtonClose);
@@ -420,6 +434,7 @@ namespace GameLauncher.App
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             ((System.ComponentModel.ISupportInitialize)(this.ButtonClose)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -447,5 +462,6 @@ namespace GameLauncher.App
         private System.Windows.Forms.PictureBox ButtonClose;
         private System.Windows.Forms.Button ButtonFolderPermissonSet;
         private System.Windows.Forms.Button ButtonFolderPermissonCheck;
+        private System.Windows.Forms.Label VersionLabel;
     }
 }

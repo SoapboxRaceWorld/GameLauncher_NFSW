@@ -243,19 +243,26 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         ///<summary>Silver</summary>
         public static Color MainTextForeColor = Color.FromArgb(224, 224, 224);
+
         ///<summary>Pinging Blue</summary>
         public static Color SecondaryTextForeColor = Color.FromArgb(66, 179, 189);
+
         ///<summary>Gray</summary>
         public static Color ThirdTextForeColor = Color.FromArgb(132, 132, 132);
+
         ///<summary>Dark Blue</summary>
         public static Color FourthTextForeColor = Color.FromArgb(44, 58, 76);
+
         ///<summary>White</summary>
         public static Color FivithTextForeColor = Color.FromArgb(255, 255, 255);
+
         ///<summary>Grey</summary>
         ///<remarks>Slightly Darker</remarks>
         public static Color SixTextForeColor = Color.FromArgb(128, 128, 128);
+
         ///<summary>Successful Green</summary>
         public static Color SeventhTextForeColor = Color.FromArgb(159, 193, 32);
+
         ///<summary>Orange</summary>
         ///<remarks>Color Bind</remarks>
         public static Color EighthTextForeColor = Color.FromArgb(230, 159, 0);
@@ -302,8 +309,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         /* Successful Green*/
         public static Color Sucess = Color.FromArgb(159, 193, 32);
+
         /* Red */
         public static Color Error = Color.FromArgb(254, 0, 0);
+
         /* Orange [Color Bind] */
         public static Color Warning = Color.FromArgb(230, 159, 0);
 
@@ -317,8 +326,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
         /* LawnGreen */
         public static Color SettingsLink = Color.FromArgb(124, 252, 0);
+
         /* Silver */
         public static Color SettingsActiveLink = Color.FromArgb(224, 224, 224);
+
         /* Dark Goldenrod */
         public static Color SettingsCheckBoxes = Color.FromArgb(184, 134, 11);
 

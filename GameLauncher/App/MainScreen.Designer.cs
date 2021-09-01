@@ -148,7 +148,7 @@
             this.AddServer.ForeColor = System.Drawing.Color.Black;
             this.AddServer.Location = new System.Drawing.Point(833, 49);
             this.AddServer.Name = "AddServer";
-            this.AddServer.Size = new System.Drawing.Size(24, 24);
+            this.AddServer.Size = new System.Drawing.Size(25, 25);
             this.AddServer.TabIndex = 3;
             this.AddServer.Text = "+";
             this.AddServer.UseVisualStyleBackColor = false;
