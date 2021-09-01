@@ -434,23 +434,23 @@ namespace GameLauncher.App
             // ThemeAuthor
             // 
             this.ThemeAuthor.BackColor = System.Drawing.Color.Transparent;
-            this.ThemeAuthor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.ThemeAuthor.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.ThemeAuthor.Location = new System.Drawing.Point(35, 460);
             this.ThemeAuthor.Name = "ThemeAuthor";
-            this.ThemeAuthor.Size = new System.Drawing.Size(232, 14);
+            this.ThemeAuthor.Size = new System.Drawing.Size(323, 14);
             this.ThemeAuthor.TabIndex = 190;
-            this.ThemeAuthor.Text = "Theme Author: Launcher - Division";
+            this.ThemeAuthor.Text = "Theme Author: What a Long Theme Name :0 Wow!";
             this.ThemeAuthor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ThemeName
             // 
             this.ThemeName.BackColor = System.Drawing.Color.Transparent;
-            this.ThemeName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.ThemeName.Font = new System.Drawing.Font("DejaVu Sans", 9F);
             this.ThemeName.Location = new System.Drawing.Point(35, 440);
             this.ThemeName.Name = "ThemeName";
-            this.ThemeName.Size = new System.Drawing.Size(148, 14);
+            this.ThemeName.Size = new System.Drawing.Size(323, 14);
             this.ThemeName.TabIndex = 191;
-            this.ThemeName.Text = "Theme Name: Default";
+            this.ThemeName.Text = "Theme Name: Soapbox Race World - Launcher Gen";
             this.ThemeName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // SettingsLanguage

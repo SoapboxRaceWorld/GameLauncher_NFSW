@@ -181,6 +181,7 @@
     <Compile Include="App\Classes\LauncherCore\ModNet\JSON\JsonServerModNet.cs" />
     <Compile Include="App\Classes\LauncherCore\RPC\DiscordLauncherPresence.cs" />
     <Compile Include="App\Classes\LauncherCore\Support\BitmapHandler.cs" />
+    <Compile Include="App\Classes\LauncherCore\Support\SecurityCenter.cs" />
     <Compile Include="App\Classes\LauncherCore\Support\Strings.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\Email\IsEmailValid.cs" />
     <Compile Include="App\Classes\LauncherCore\Validator\JSON\IsJSONValid.cs" />

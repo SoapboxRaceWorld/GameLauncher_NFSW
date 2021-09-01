@@ -420,17 +420,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("Logo")))
                     {
-                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("Logo")))
+                        if (File.Exists(ThemeFolder + "\\Logos\\" + ThemeFile.Read("Logo")))
                         {
-                            LogoMain = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("Logo"));
+                            LogoMain = new Bitmap(ThemeFolder + "\\Logos\\" + ThemeFile.Read("Logo"));
                         }
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("LogoSplashScreen")))
                     {
-                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("LogoSplashScreen")))
+                        if (File.Exists(ThemeFolder + "\\Logos\\" + ThemeFile.Read("LogoSplashScreen")))
                         {
-                            LogoSplash = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("LogoSplashScreen"));
+                            LogoSplash = new Bitmap(ThemeFolder + "\\Logos\\" + ThemeFile.Read("LogoSplashScreen"));
                         }
                     }
 
@@ -664,46 +664,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonUnknown")))
-                    {
-                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknown")))
-                        {
-                            ShieldButtonUnknown = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknown"));
-                        }
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonChecking")))
-                    {
-                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonChecking")))
-                        {
-                            ShieldButtonChecking = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonChecking"));
-                        }
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonSuccess")))
-                    {
-                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccess")))
-                        {
-                            ShieldButtonSuccess = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccess"));
-                        }
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonWarning")))
-                    {
-                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarning")))
-                        {
-                            ShieldButtonWarning = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarning"));
-                        }
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonError")))
-                    {
-                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonError")))
-                        {
-                            ShieldButtonError = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonError"));
-                        }
-                    }
-
                     /* Image Buttons */
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GrayButton")))
@@ -802,6 +762,30 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GearButtonWarning")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonWarning")))
+                        {
+                            GearButtonWarning = new Bitmap(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonWarning"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GearButtonWarningClick")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonWarningClick")))
+                        {
+                            GearButtonWarningClick = new Bitmap(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonWarningClick"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("GearButtonWarningHover")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonWarningHover")))
+                        {
+                            GearButtonWarningHover = new Bitmap(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("GearButtonWarningHover"));
+                        }
+                    }
+
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("PlayButton")))
                     {
                         if (File.Exists(ThemeFolder + "\\Buttons\\" + ThemeFile.Read("PlayButton")))
@@ -826,7 +810,127 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         }
                     }
 
-                    /* Custom Inputs Borders */
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonUnknown")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknown")))
+                        {
+                            ShieldButtonUnknown = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknown"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonUnknownClick")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknownClick")))
+                        {
+                            ShieldButtonUnknownClick = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknownClick"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonUnknownHover")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknownHover")))
+                        {
+                            ShieldButtonUnknownHover = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonUnknownHover"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonChecking")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonChecking")))
+                        {
+                            ShieldButtonChecking = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonChecking"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonCheckingClick")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonCheckingClick")))
+                        {
+                            ShieldButtonCheckingClick = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonCheckingClick"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonCheckingHover")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonCheckingHover")))
+                        {
+                            ShieldButtonCheckingHover = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonCheckingHover"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonSuccess")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccess")))
+                        {
+                            ShieldButtonSuccess = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccess"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonSuccessClick")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccessClick")))
+                        {
+                            ShieldButtonSuccessClick = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccessClick"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonSuccessHover")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccessHover")))
+                        {
+                            ShieldButtonSuccessHover = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonSuccessHover"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonWarning")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarning")))
+                        {
+                            ShieldButtonWarning = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarning"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonWarningClick")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarningClick")))
+                        {
+                            ShieldButtonWarningClick = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarningClick"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonWarningHover")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarningHover")))
+                        {
+                            ShieldButtonWarningHover = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonWarningHover"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonError")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonError")))
+                        {
+                            ShieldButtonError = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonError"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonErrorClick")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonErrorClick")))
+                        {
+                            ShieldButtonErrorClick = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonErrorClick"));
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ShieldButtonErrorHover")))
+                    {
+                        if (File.Exists(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonErrorHover")))
+                        {
+                            ShieldButtonErrorHover = new Bitmap(ThemeFolder + "\\Icons\\" + ThemeFile.Read("ShieldButtonErrorHover"));
+                        }
+                    }
+
+                    /* Custom Inputs Borders for MainScreen */
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("BorderTicket")))
                     {
@@ -1102,19 +1206,19 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                         SecurityCenterScreenTransparencyKey = ToColor(ThemeFile.Read("SecurityCenterScreenTransparencyKey"));
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("InputForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("MainScreenInputForeColor")))
                     {
-                        Input = ToColor(ThemeFile.Read("InputForeColor"));
+                        Input = ToColor(ThemeFile.Read("MainScreenInputForeColor"));
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("LinkForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("MainScreenLinkForeColor")))
                     {
-                        Link = ToColor(ThemeFile.Read("LinkForeColor"));
+                        Link = ToColor(ThemeFile.Read("MainScreenLinkForeColor"));
                     }
 
-                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("ActiveLinkForeColor")))
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("MainScreenActiveLinkForeColor")))
                     {
-                        ActiveLink = ToColor(ThemeFile.Read("ActiveLinkForeColor"));
+                        ActiveLink = ToColor(ThemeFile.Read("MainScreenActiveLinkForeColor"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("SettingsLinkForeColor")))

@@ -409,17 +409,17 @@ namespace GameLauncher
 
         private void ButtonSecurityCenter_MouseDown(object sender, EventArgs e)
         {
-            ButtonSecurityCenter.BackgroundImage = SavedSettingsCheck.SecurityCenterIcon(1);
+            ButtonSecurityCenter.BackgroundImage = SecurityCenter.SecurityCenterIcon(1);
         }
 
         private void ButtonSecurityCenter_MouseEnter(object sender, EventArgs e)
         {
-            ButtonSecurityCenter.BackgroundImage = SavedSettingsCheck.SecurityCenterIcon(2);
+            ButtonSecurityCenter.BackgroundImage = SecurityCenter.SecurityCenterIcon(2);
         }
 
         private void ButtonSecurityCenter_MouseLeaveANDMouseUp(object sender, EventArgs e)
         {
-            ButtonSecurityCenter.BackgroundImage = SavedSettingsCheck.SecurityCenterIcon(0);
+            ButtonSecurityCenter.BackgroundImage = SecurityCenter.SecurityCenterIcon(0);
         }
 
         private void ButtonSettings_MouseDown(object sender, EventArgs e)
@@ -3777,7 +3777,7 @@ namespace GameLauncher
             logo.BackgroundImage = Theming.LogoMain;
             SettingsButton.BackgroundImage = (FileSettingsSave.GameIntegrity == "Good") ? Theming.GearButton : Theming.GearButtonWarning;
             CloseBTN.BackgroundImage = Theming.CloseButton;
-            ButtonSecurityCenter.BackgroundImage = SavedSettingsCheck.SecurityCenterIcon(1);
+            ButtonSecurityCenter.BackgroundImage = SecurityCenter.SecurityCenterIcon(1);
 
             ProgressBarOutline.BackgroundImage = Theming.ProgressBarOutline;
             PlayProgress.Image = Theming.ProgressBarPreload;

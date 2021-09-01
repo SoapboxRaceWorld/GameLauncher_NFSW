@@ -768,10 +768,10 @@ namespace GameLauncher.App
         /// <returns><code>True or False</code></returns>
         private bool DataBase(int ModeType, int ModeAPI)
         {
-            string AppName = string.Empty;
-            string AppPath = string.Empty;
-            string GroupKey = string.Empty;
-            string Description = string.Empty;
+            string AppName;
+            string AppPath;
+            string GroupKey;
+            string Description;
 
             switch (ModeType)
             {
