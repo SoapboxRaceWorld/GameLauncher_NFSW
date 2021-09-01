@@ -520,11 +520,10 @@ namespace GameLauncher.App
         /// <summary>
         /// Finds a Firewall Rule in Firewall "Database"
         /// </summary>
-        /// <param name="Mode">Used in Find Rules Helper Function. Choose and Type "Name" or "Path"</param>
-        /// <param name="Name">Used in Find Rules Helper Function. Enter name of Application</param>
-        /// <param name="Path">Used in Find Rules Helper Function. Enter file Path</param>
+        /// <param name="AppName">Used in Find Rules Helper Function. Enter name of Application</param>
+        /// <param name="AppPath">Used in Find Rules Helper Function. Enter file Path</param>
         /// <returns><code>True or False</code></returns>
-        private bool RuleExist(string Mode, string Name, string Path)
+        private bool RuleExist(string Mode, string AppName, string AppPath)
         {
             if (UnixOS.Detected())
             {
@@ -532,7 +531,7 @@ namespace GameLauncher.App
             }
             else
             {
-                if (FindRules(Mode, Name, Path) != null) { return FindRules(Mode, Name, Path).Any(); }
+                if (FindRules(Mode, AppName, AppPath) != null) { return FindRules(Mode, AppName, AppPath).Any(); }
                 else { return false; }
             }
         }
@@ -551,49 +550,50 @@ namespace GameLauncher.App
             bool Completed = false;
             try
             {
-                if (FirewallAPI() == FirewallAPIVersion.None)
+                FirewallAPIVersion CachedAPIVersion = FirewallAPI();
+                if (CachedAPIVersion == FirewallAPIVersion.None)
                 {
                     Log.Warning("WINDOWS FIREWALL: API Version not Supported");
                 }
-                else if (!RuleExist("Path", AppName, AppPath))
+                else if (CachedAPIVersion != FirewallAPIVersion.FirewallLegacy)
                 {
-                    if (FirewallAPI() != FirewallAPIVersion.FirewallLegacy)
+                    Log.Info("WINDOWS FIREWALL: Supported Firewall [WASRuleWin8]");
+                    FirewallWASRuleWin8 Rule = new FirewallWASRuleWin8(AppPath, FirewallAction.Allow, C_Direction,
+                        FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public)
                     {
-                        Log.Info("WINDOWS FIREWALL: Supported Firewall [WASRuleWin8]");
-                        FirewallWASRuleWin8 Rule = new FirewallWASRuleWin8(AppPath, FirewallAction.Allow, C_Direction,
-                            FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public)
-                        {
-                            ApplicationName = AppPath,
-                            Name = AppName,
-                            Grouping = GroupKey,
-                            Description = C_Description,
-                            NetworkInterfaceTypes = NetworkInterfaceTypes.Lan | NetworkInterfaceTypes.RemoteAccess | NetworkInterfaceTypes.Wireless,
-                            Protocol = C_Protocol
-                        };
+                        ApplicationName = AppPath,
+                        Name = AppName,
+                        Grouping = GroupKey,
+                        Description = C_Description,
+                        NetworkInterfaceTypes = NetworkInterfaceTypes.Lan | NetworkInterfaceTypes.RemoteAccess | NetworkInterfaceTypes.Wireless,
+                        Protocol = C_Protocol
+                    };
 
-                        if (C_Direction == FirewallDirection.Inbound)
-                        {
-                            Rule.EdgeTraversalOptions = EdgeTraversalAction.Allow;
-                        }
-
-                        FirewallManager.Instance.Rules.Add(Rule);
-                        Log.Completed("WINDOWS FIREWALL: Finished Adding " + AppName + " to Firewall! {" + F_LogNote + "}");
-                        Completed = true;
-                    }
-                    else
+                    if (C_Direction == FirewallDirection.Inbound)
                     {
-                        Log.Info("WINDOWS FIREWALL: Supported Firewall [LegacyStandard]");
-                        IFirewallRule Rule = FirewallManager.Instance.CreateApplicationRule(
-                            FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public,
-                            AppName, FirewallAction.Allow, AppPath, C_Protocol);
-                        Rule.Direction = C_Direction;
-
-                        FirewallManager.Instance.Rules.Add(Rule);
-                        Log.Completed("WINDOWS FIREWALL: Finished Adding " + AppName + " to Firewall! {" + F_LogNote + "}");
-                        Completed = true;
+                        Rule.EdgeTraversalOptions = EdgeTraversalAction.Allow;
                     }
+
+                    FirewallManager.Instance.Rules.Add(Rule);
+                    Log.Completed("WINDOWS FIREWALL: Finished Adding " + AppName + " to Firewall! {" + F_LogNote + "}");
+                    Completed = true;
                 }
-                else { Log.Completed("WINDOWS FIREWALL: " + AppName + " Rule is already Added"); Completed = true; }
+                else if (CachedAPIVersion == FirewallAPIVersion.FirewallLegacy)
+                {
+                    Log.Info("WINDOWS FIREWALL: Supported Firewall [LegacyStandard]");
+                    IFirewallRule Rule = FirewallManager.Instance.CreateApplicationRule(
+                        FirewallProfiles.Domain | FirewallProfiles.Private | FirewallProfiles.Public,
+                        AppName, FirewallAction.Allow, AppPath, C_Protocol);
+                    Rule.Direction = C_Direction;
+
+                    FirewallManager.Instance.Rules.Add(Rule);
+                    Log.Completed("WINDOWS FIREWALL: Finished Adding " + AppName + " to Firewall! {" + F_LogNote + "}");
+                    Completed = true;
+                }
+                else
+                {
+                    Log.Completed("WINDOWS FIREWALL: " + AppName + " Rule was not added due to Firewall API Version {" + F_LogNote + "}");
+                }
             }
             catch (FirewallWASNotSupportedException Error)
             {
@@ -849,12 +849,21 @@ namespace GameLauncher.App
                             RemoveRules("Path", "Non-" + AppName, AppPath, "Path Match");
                         }
 
-                        /* Inbound */
-                        AddApplicationRule(AppName, AppPath, GroupKey, Description,
-                            FirewallDirection.Inbound, FirewallProtocol.Any, "Inbound");
-                        /* Outbound */
-                        return AddApplicationRule(AppName, AppPath, GroupKey, Description,
-                            FirewallDirection.Outbound, FirewallProtocol.Any, "Outbound");
+                        if (!RuleExist("Path", AppName, AppPath) && !RuleExist("Name", AppName, AppPath))
+                        {
+                            /* Inbound */
+                            AddApplicationRule(AppName, AppPath, GroupKey, Description,
+                                FirewallDirection.Inbound, FirewallProtocol.Any, "Inbound");
+                            /* Outbound */
+                            return AddApplicationRule(AppName, AppPath, GroupKey, Description,
+                                FirewallDirection.Outbound, FirewallProtocol.Any, "Outbound");
+                        }
+                        else if (RuleExist("Path", AppName, AppPath) && RuleExist("Name", AppName, AppPath))
+                        {
+                            Log.Completed("WINDOWS FIREWALL: " + AppName + " Rule is already Added");
+                            return true;
+                        }
+                        else { Log.Completed("WINDOWS FIREWALL: " + AppName + " Rule wasn't added due to a Unknown Issue"); return false; }
                     /* Firewall Rule Removal */
                     case 1:
                         if (RuleExist("Path", AppName, AppPath) && !RuleExist("Name", AppName, AppPath))
