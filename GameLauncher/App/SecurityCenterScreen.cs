@@ -1,4 +1,5 @@
-﻿using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+﻿using GameLauncher.App.Classes.InsiderKit;
+using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
@@ -9,8 +10,6 @@ using GameLauncher.App.Classes.SystemPlatform.Windows;
 using NetFwTypeLib;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -19,9 +18,6 @@ using System.Management.Automation;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFirewallHelper;
 using WindowsFirewallHelper.Exceptions;
@@ -1318,16 +1314,26 @@ namespace GameLauncher.App
         {
             if (!DisableButtonDRAPI)
             {
-                DisableButtonDRAPI = true;
-
-                if (ButtonEnabler(5, 10))
+                if (EnableInsiderDeveloper.Allowed() || (WindowsProductVersion.GetWindowsNumber() >= 10 &&
+                    (MessageBox.Show(null, "There has been reports that some users are not able to run Windows Defender Checks." +
+                    "\nThis ranges from the Built-In to Third-Party Anti-Virus Software." +
+                    "\n\nIf this Window Closes or the Launcher Crashes with an Error Message" +
+                    "\n\nDo not run this Check, just simply ignore this section." +
+                    "\n\n\nClick Yes to Agree to a potential Launcher Crash" +
+                    "\nClick No to avoid a potential Launcher Crash", 
+                    "Windows Defender API Check - SBRW Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)))
                 {
-                    ButtonsColorSet(ButtonDefenderExclusionCheck, 2, true);
-                    DisableButtonDRC = false;
-                }
-                else { ButtonsColorSet(ButtonDefenderExclusionCheck, 3, false); DisableButtonDRC = true; }
+                    DisableButtonDRAPI = true;
 
-                ButtonsColorSet(ButtonDefenderExclusionAPI, 1, false);
+                    if (ButtonEnabler(5, 10))
+                    {
+                        ButtonsColorSet(ButtonDefenderExclusionCheck, 2, true);
+                        DisableButtonDRC = false;
+                    }
+                    else { ButtonsColorSet(ButtonDefenderExclusionCheck, 3, false); DisableButtonDRC = true; }
+
+                    ButtonsColorSet(ButtonDefenderExclusionAPI, 1, false);
+                }
             }
         }
         ///<summary>Button: Defender Exclusion Check</summary>
