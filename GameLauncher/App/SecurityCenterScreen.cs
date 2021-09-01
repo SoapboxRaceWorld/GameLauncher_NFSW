@@ -1743,6 +1743,7 @@ namespace GameLauncher.App
             /*******************************/
 
             FunctionStatus.CenterParent(this);
+            VersionLabel.Text = "Version: v" + Application.ProductVersion;
 
             /********************************/
             /* Set Theme Colors & Images     /
