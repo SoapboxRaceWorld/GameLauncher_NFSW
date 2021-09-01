@@ -160,17 +160,16 @@ namespace GameLauncher.App
             // SettingsVFilesButton
             // 
             this.SettingsVFilesButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.SettingsVFilesButton.FlatAppearance.BorderColor = System.Drawing.Color.DarkGoldenrod;
+            this.SettingsVFilesButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.SettingsVFilesButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.SettingsVFilesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SettingsVFilesButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsVFilesButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
+            this.SettingsVFilesButton.ForeColor = System.Drawing.Color.Silver;
             this.SettingsVFilesButton.Location = new System.Drawing.Point(234, 80);
             this.SettingsVFilesButton.Name = "SettingsVFilesButton";
             this.SettingsVFilesButton.Size = new System.Drawing.Size(124, 25);
             this.SettingsVFilesButton.TabIndex = 100;
             this.SettingsVFilesButton.Text = "Verify GameFiles";
-            this.SettingsVFilesButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsVFilesButton.UseVisualStyleBackColor = false;
             // 
             // SettingsGamePathText
@@ -234,17 +233,16 @@ namespace GameLauncher.App
             // SettingsUEditorButton
             // 
             this.SettingsUEditorButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
-            this.SettingsUEditorButton.FlatAppearance.BorderColor = System.Drawing.Color.DarkGoldenrod;
+            this.SettingsUEditorButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(181)))), ((int)(((byte)(191)))));
             this.SettingsUEditorButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
             this.SettingsUEditorButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SettingsUEditorButton.Font = new System.Drawing.Font("DejaVu Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SettingsUEditorButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
+            this.SettingsUEditorButton.ForeColor = System.Drawing.Color.Silver;
             this.SettingsUEditorButton.Location = new System.Drawing.Point(213, 180);
             this.SettingsUEditorButton.Name = "SettingsUEditorButton";
             this.SettingsUEditorButton.Size = new System.Drawing.Size(145, 25);
             this.SettingsUEditorButton.TabIndex = 103;
             this.SettingsUEditorButton.Text = "Edit UserSettings";
-            this.SettingsUEditorButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.SettingsUEditorButton.UseVisualStyleBackColor = false;
             // 
             // SettingsWordFilterCheck
