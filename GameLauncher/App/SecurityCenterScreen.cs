@@ -955,6 +955,7 @@ namespace GameLauncher.App
 
                 ButtonsColorSet(ButtonFirewallRulesAPI, 1, false);
             }
+            Log.Info("Logging 'Check Firewall API' button as clicked by user");
         }
         ///<summary>Button: Firewall Rules Check</summary>
         private void ButtonFirewallRulesCheck_Click(object sender, EventArgs e)
@@ -1027,6 +1028,7 @@ namespace GameLauncher.App
                 else
                 { ButtonsColorSet(ButtonFirewallRulesCheck, 3, true); }
             }
+            Log.Info("Logging 'Check All Rules' button as clicked by user");
         }
         ///<summary>Button: Firewall Rules Add All</summary>
         private void ButtonFirewallRulesAddAll_Click(object sender, EventArgs e)
