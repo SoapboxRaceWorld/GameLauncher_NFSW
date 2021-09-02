@@ -357,15 +357,53 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         public static Color AboutTextForeColor = Color.FromArgb(178, 210, 255);
 
 
-        /* CDN Drop Down Menu */
+        /* Drop Down Menu */
 
-        public static Color CDNMenuTextForeColor = Color.FromArgb(178, 210, 255);
+        public static Color DropMenuTextForeColor = Color.FromArgb(178, 210, 255);
 
-        public static Color CDNMenuBGForeColor = Color.FromArgb(44, 58, 76);
+        public static Color DropMenuBackgroundForeColor = Color.FromArgb(44, 58, 76);
 
-        public static Color CDNMenuTextForeColor_Category = Color.FromArgb(150, 194, 255);
+        public static Color DropMenuTextForeColor_Category = Color.FromArgb(150, 194, 255);
 
-        public static Color CDNMenuBGForeColor_Category = Color.FromArgb(31, 41, 54);
+        public static Color DropMenuBackgroundForeColor_Category = Color.FromArgb(31, 41, 54);
+
+
+        /* Drop Down Menu - Colors */
+
+        /// <summary>Color: PaleGreen</summary>
+        /// <remarks>
+        /// RGB: 152, 251, 152 <code></code>
+        /// HEX: 98FB98
+        /// </remarks>
+        public static Color DropMenuPingSuccess = Color.FromArgb(152, 251, 152);
+
+        /// <summary>Color: Khaki</summary>
+        /// <remarks>
+        /// RGB: 240, 230, 140 <code></code>
+        /// HEX: F0E68C
+        /// </remarks>
+        public static Color DropMenuPingChecking = Color.FromArgb(152, 251, 152);
+
+        /// <summary>Color: Khaki</summary>
+        /// <remarks>
+        /// RGB: 240, 128, 128 <code></code>
+        /// HEX: F08080
+        /// </remarks>
+        public static Color DropMenuPingError = Color.FromArgb(152, 251, 152);
+
+        /// <summary>
+        /// RGB: 240, 128, 128 <code></code>
+        /// HEX: E69F00</summary>
+        /// <remarks>Used as an Alert Color, but is currently used for Invalid GSI JSON</remarks>
+        public static Color DropMenuPingWarning = Color.FromArgb(230, 159, 0);
+
+        /// <summary>Color: Black</summary>
+        /// <remarks>Default Color Text</remarks>
+        public static Color DropMenuBlack = Color.FromArgb(0, 0, 0);
+
+        /// <summary>Color: White</summary>
+        /// <remarks>Default Color Background</remarks>
+        public static Color DropMenuWhite = Color.FromArgb(255, 255, 255);
 
 
         /* Status Colors */
@@ -1294,6 +1332,56 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("AboutTextForeColor")))
                     {
                         AboutTextForeColor = ToColor(ThemeFile.Read("AboutTextForeColor"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuTextForeColor")))
+                    {
+                        DropMenuTextForeColor = ToColor(ThemeFile.Read("DropMenuTextForeColor"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuBackgroundForeColor")))
+                    {
+                        DropMenuBackgroundForeColor = ToColor(ThemeFile.Read("DropMenuBackgroundForeColor"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuTextForeColorCategory")))
+                    {
+                        DropMenuTextForeColor_Category = ToColor(ThemeFile.Read("DropMenuTextForeColorCategory"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuBackgroundForeColorCategory")))
+                    {
+                        DropMenuBackgroundForeColor_Category = ToColor(ThemeFile.Read("DropMenuBackgroundForeColorCategory"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuPingSuccess")))
+                    {
+                        DropMenuPingSuccess = ToColor(ThemeFile.Read("DropMenuPingSuccess"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuPingChecking")))
+                    {
+                        DropMenuPingChecking = ToColor(ThemeFile.Read("DropMenuPingChecking"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuPingError")))
+                    {
+                        DropMenuPingError = ToColor(ThemeFile.Read("DropMenuPingError"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuPingWarning")))
+                    {
+                        DropMenuPingWarning = ToColor(ThemeFile.Read("DropMenuPingWarning"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuBlack")))
+                    {
+                        DropMenuBlack = ToColor(ThemeFile.Read("DropMenuBlack"));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(ThemeFile.Read("DropMenuWhite")))
+                    {
+                        DropMenuWhite = ToColor(ThemeFile.Read("DropMenuWhite"));
                     }
 
                     if (!string.IsNullOrWhiteSpace(ThemeFile.Read("PrivacyRPCBuild")))

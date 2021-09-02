@@ -54,7 +54,7 @@ namespace GameLauncher.App
         public void DrawErrorAroundTextBox(TextBox x)
         {
             x.BorderStyle = BorderStyle.Fixed3D;
-            Pen p = new Pen(Color.Red);
+            Pen p = new Pen(Theming.WinFormErrorTextForeColor);
             Graphics g = this.CreateGraphics();
             int variance = 1;
             g.DrawRectangle(p, new Rectangle(x.Location.X - variance, x.Location.Y - variance, x.Width + variance, x.Height + variance));
@@ -81,14 +81,9 @@ namespace GameLauncher.App
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-
-            if (UnixOS.Detected())
-            {
-                MainFontSize = 9f;
-            }
-
+            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 100f / CreateGraphics().DpiY;
             Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+
             OkBTN.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             CancelBTN.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             ServerNameLabel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
@@ -98,7 +93,7 @@ namespace GameLauncher.App
             ServerCategoryLabel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             ServerCategory.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             Error.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
-            Version.Font= new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+            Version.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
 
             /********************************/
             /* Set Theme Colors              /

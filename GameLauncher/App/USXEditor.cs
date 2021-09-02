@@ -322,6 +322,8 @@ namespace GameLauncher.App
 
         private void SettingsSave_Click(object sender, EventArgs e)
         {
+            if (!FileReadOnly) { SettingsSave.Text = "SAVING"; }
+
             FileGameSettingsData.ScreenWidth = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ? 
                                                numericResWidth.Value : Convert.ToDecimal(((JsonResolutions)comboResolutions.SelectedItem).Width));
             FileGameSettingsData.ScreenHeight = ValidWholeNumberRange("Resolution", (comboBoxPerformanceLevel.SelectedValue.ToString() == "5" || ResolutionsListLoaded == false) ?
@@ -372,6 +374,8 @@ namespace GameLauncher.App
             FileGameSettingsData.ShaderDetail = comboBoxShaderDetail.SelectedValue.ToString();
 
             FileGameSettings.Save("Display", "Full File");
+
+            if (!FileReadOnly) { SettingsSave.Text = "SAVED"; }
         }
 
         private int CheckValidRange(string Type, string Range, string Value)
@@ -762,6 +766,12 @@ namespace GameLauncher.App
         private void SetVisuals()
         {
             /*******************************/
+            /* Set Initial Position         /
+            /*******************************/
+
+            FunctionStatus.CenterParent(this);
+
+            /*******************************/
             /* Set Window Name              /
             /*******************************/
 
@@ -789,15 +799,10 @@ namespace GameLauncher.App
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-            var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
-
-            if (UnixOS.Detected())
-            {
-                MainFontSize = 9f;
-                SecondaryFontSize = 8f;
-            }
+            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 100f / CreateGraphics().DpiY;
+            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 100f / CreateGraphics().DpiY;
             Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Bold);
+
             labelVideoOptions.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsSave.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             SettingsCancel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
@@ -924,18 +929,11 @@ namespace GameLauncher.App
             /* Set Theme Colors & Images     /
             /********************************/
 
-            if (FileReadOnly == true)
-            {
-                SettingsSave.Text = "Read-Only";
-                SettingsSave.ForeColor = Theming.WinFormErrorTextForeColor;
-            }
-            else
-            {
-                SettingsSave.ForeColor = Theming.SeventhTextForeColor;
-            }
-
+            SettingsSave.Text = FileReadOnly ? "READ-ONLY" : "SAVE";
+            SettingsSave.ForeColor = FileReadOnly ? Theming.WinFormErrorTextForeColor :  Theming.SeventhTextForeColor;
             SettingsSave.Image = Theming.GreenButton;
             SettingsCancel.Image = Theming.GrayButton;
+            SettingsCancel.ForeColor = Theming.FivithTextForeColor;
             /* Titles */
             labelVideoOptions.ForeColor = Theming.SecondaryTextForeColor;
             labelAudioOptions.ForeColor = Theming.SecondaryTextForeColor;
@@ -1029,55 +1027,55 @@ namespace GameLauncher.App
             PresetButtonMax.ForeColor = Theming.MainTextForeColor;
             PresetButtonCustom.ForeColor = Theming.MainTextForeColor;
             /* Input Boxes */
-            numericResWidth.ForeColor = Theming.CDNMenuTextForeColor;
-            numericResWidth.BackColor = Theming.CDNMenuBGForeColor;
-            numericResHeight.ForeColor = Theming.CDNMenuTextForeColor;
-            numericResHeight.BackColor = Theming.CDNMenuBGForeColor;
-            numericBrightness.ForeColor = Theming.CDNMenuTextForeColor;
-            numericBrightness.BackColor = Theming.CDNMenuBGForeColor;
-            numericMVol.ForeColor = Theming.CDNMenuTextForeColor;
-            numericMVol.BackColor = Theming.CDNMenuBGForeColor;
-            numericSFxVol.ForeColor = Theming.CDNMenuTextForeColor;
-            numericSFxVol.BackColor = Theming.CDNMenuBGForeColor;
-            numericCarVol.ForeColor = Theming.CDNMenuTextForeColor;
-            numericCarVol.BackColor = Theming.CDNMenuBGForeColor;
-            numericSpeech.ForeColor = Theming.CDNMenuTextForeColor;
-            numericSpeech.BackColor = Theming.CDNMenuBGForeColor;
-            numericGMusic.ForeColor = Theming.CDNMenuTextForeColor;
-            numericGMusic.BackColor = Theming.CDNMenuBGForeColor;
-            numericFEMusic.ForeColor = Theming.CDNMenuTextForeColor;
-            numericFEMusic.BackColor = Theming.CDNMenuBGForeColor;
+            numericResWidth.ForeColor = Theming.DropMenuTextForeColor;
+            numericResWidth.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericResHeight.ForeColor = Theming.DropMenuTextForeColor;
+            numericResHeight.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericBrightness.ForeColor = Theming.DropMenuTextForeColor;
+            numericBrightness.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericMVol.ForeColor = Theming.DropMenuTextForeColor;
+            numericMVol.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericSFxVol.ForeColor = Theming.DropMenuTextForeColor;
+            numericSFxVol.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericCarVol.ForeColor = Theming.DropMenuTextForeColor;
+            numericCarVol.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericSpeech.ForeColor = Theming.DropMenuTextForeColor;
+            numericSpeech.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericGMusic.ForeColor = Theming.DropMenuTextForeColor;
+            numericGMusic.BackColor = Theming.DropMenuBackgroundForeColor;
+            numericFEMusic.ForeColor = Theming.DropMenuTextForeColor;
+            numericFEMusic.BackColor = Theming.DropMenuBackgroundForeColor;
             /* DropDown Menus */
-            comboBoxPerformanceLevel.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxPerformanceLevel.BackColor = Theming.CDNMenuBGForeColor;
-            comboResolutions.ForeColor = Theming.CDNMenuTextForeColor;
-            comboResolutions.BackColor = Theming.CDNMenuBGForeColor;
-            comboAudioMode.ForeColor = Theming.CDNMenuTextForeColor;
-            comboAudioMode.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxCamera.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxCamera.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxTransmisson.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxTransmisson.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxShaderFSAA.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxShaderFSAA.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxShadowDetail.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxShadowDetail.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxShaderDetail.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxShaderDetail.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxWorldGlobalDetail.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxWorldGlobalDetail.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxWorldRoadReflection.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxWorldRoadReflection.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxWorldRoadTexture.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxWorldRoadTexture.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxWorldRoadAniso.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxWorldRoadAniso.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxCarEnvironmentDetail.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxCarEnvironmentDetail.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxBaseTextureFilter.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxBaseTextureFilter.BackColor = Theming.CDNMenuBGForeColor;
-            comboBoxAnisotropicLevel.ForeColor = Theming.CDNMenuTextForeColor;
-            comboBoxAnisotropicLevel.BackColor = Theming.CDNMenuBGForeColor;
+            comboBoxPerformanceLevel.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxPerformanceLevel.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboResolutions.ForeColor = Theming.DropMenuTextForeColor;
+            comboResolutions.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboAudioMode.ForeColor = Theming.DropMenuTextForeColor;
+            comboAudioMode.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxCamera.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxCamera.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxTransmisson.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxTransmisson.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxShaderFSAA.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxShaderFSAA.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxShadowDetail.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxShadowDetail.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxShaderDetail.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxShaderDetail.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxWorldGlobalDetail.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxWorldGlobalDetail.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxWorldRoadReflection.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxWorldRoadReflection.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxWorldRoadTexture.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxWorldRoadTexture.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxWorldRoadAniso.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxWorldRoadAniso.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxCarEnvironmentDetail.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxCarEnvironmentDetail.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxBaseTextureFilter.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxBaseTextureFilter.BackColor = Theming.DropMenuBackgroundForeColor;
+            comboBoxAnisotropicLevel.ForeColor = Theming.DropMenuTextForeColor;
+            comboBoxAnisotropicLevel.BackColor = Theming.DropMenuBackgroundForeColor;
 
             /*******************************/
             /* Comboboxes                   /

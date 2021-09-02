@@ -211,14 +211,16 @@ namespace GameLauncher.App
 
             if (StatusCheck)
             {
-                WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs. Clicking 'Manual Bypass' will allow you to continue with the Error";
+                WelcomeText.Text = "Looks like the Game Launcher failed to Reach our APIs. " +
+                    "Clicking 'Manual Bypass' will allow you to continue with the Error";
                 APIErrorFormElements();
             }
             else
             {
                 APIErrorFormElements(false);
                 SettingsFormElements(true);
-                WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
+                WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. " +
+                    "Please specify where you want to download all required game files";
             }
         }
 
@@ -255,7 +257,8 @@ namespace GameLauncher.App
 
                     IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
                     LanguagePickerFile.Write("Language", ((LangObject)GameLangSource.SelectedItem).INI_Value);
-                    MessageBox.Show(null, "Please Note: If a Server does not provide a Language Pack, it will fallback to English instead.", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(null, "Please Note: If a Server does not provide a Language Pack, it will fallback to English instead.", 
+                        "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -304,7 +307,8 @@ namespace GameLauncher.App
         {
             APIErrorFormElements(false);
             SettingsFormElements();
-            WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. Please specify where you want to download all required game files";
+            WelcomeText.Text = "Howdy! Looks like it's the first time this launcher is started. " +
+                "Please specify where you want to download all required game files";
         }
 
         private void APIErrorFormElements(bool hideElements = true)
@@ -331,46 +335,49 @@ namespace GameLauncher.App
         {
             try
             {
-                var font = (sender as ComboBox).Font;
-                Brush backgroundColor;
-                Brush textColor;
-                Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
-                Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
-                Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
-                Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
-
-                var cdnListText = "";
+                string cdnListText = string.Empty;
 
                 if (sender is ComboBox cb)
                 {
-                    if (cb.Items[e.Index] is CDNList si)
+                    if (e.Index != -1 && cb.Items != null)
                     {
-                        cdnListText = si.Name;
+                        if (cb.Items[e.Index] is CDNList si)
+                        {
+                            cdnListText = si.Name;
+                        }
                     }
                 }
 
-                if (cdnListText.StartsWith("<GROUP>"))
+                if (!string.IsNullOrWhiteSpace(cdnListText))
                 {
-                    font = new Font(font, FontStyle.Bold);
-                    e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
-                    e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
-                }
-                else
-                {
-                    font = new Font(font, FontStyle.Bold);
-                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                    Font font = (sender as ComboBox).Font;
+                    Brush backgroundColor;
+                    Brush textColor;
+
+                    if (cdnListText.StartsWith("<GROUP>"))
                     {
-                        backgroundColor = SystemBrushes.Highlight;
-                        textColor = SystemBrushes.HighlightText;
+                        font = new Font(font, FontStyle.Bold);
+                        e.Graphics.FillRectangle(new SolidBrush(Theming.DropMenuBackgroundForeColor_Category), e.Bounds);
+                        e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font,
+                            new SolidBrush(Theming.DropMenuTextForeColor_Category), e.Bounds);
                     }
                     else
                     {
-                        backgroundColor = customBGColor;
-                        textColor = customTextColor;
-                    }
+                        font = new Font(font, FontStyle.Bold);
+                        if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                        {
+                            backgroundColor = SystemBrushes.Highlight;
+                            textColor = SystemBrushes.HighlightText;
+                        }
+                        else
+                        {
+                            backgroundColor = new SolidBrush(Theming.DropMenuBackgroundForeColor);
+                            textColor = new SolidBrush(Theming.DropMenuTextForeColor);
+                        }
 
-                    e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                    e.Graphics.DrawString(cdnListText, font, textColor, e.Bounds);
+                        e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                        e.Graphics.DrawString(cdnListText, font, textColor, e.Bounds);
+                    }
                 }
             }
             catch { }
@@ -380,46 +387,49 @@ namespace GameLauncher.App
         {
             try
             {
-                var font = (sender as ComboBox).Font;
-                Brush backgroundColor;
-                Brush textColor;
-                Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
-                Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
-                Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
-                Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
-
-                var langListText = "";
+                string langListText = string.Empty;
 
                 if (sender is ComboBox cb)
                 {
-                    if (cb.Items[e.Index] is LangObject si)
+                    if (e.Index != -1 && cb.Items != null)
                     {
-                        langListText = si.Name;
+                        if (cb.Items[e.Index] is LangObject si)
+                        {
+                            langListText = si.Name;
+                        }
                     }
                 }
 
-                if (langListText.StartsWith("<GROUP>"))
+                if (!string.IsNullOrWhiteSpace(langListText))
                 {
-                    font = new Font(font, FontStyle.Bold);
-                    e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
-                    e.Graphics.DrawString(langListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
-                }
-                else
-                {
-                    font = new Font(font, FontStyle.Bold);
-                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                    Font font = (sender as ComboBox).Font;
+                    Brush backgroundColor;
+                    Brush textColor;
+
+                    if (langListText.StartsWith("<GROUP>"))
                     {
-                        backgroundColor = SystemBrushes.Highlight;
-                        textColor = SystemBrushes.HighlightText;
+                        font = new Font(font, FontStyle.Bold);
+                        e.Graphics.FillRectangle(new SolidBrush(Theming.DropMenuBackgroundForeColor_Category), e.Bounds);
+                        e.Graphics.DrawString(langListText.Replace("<GROUP>", string.Empty), font,
+                            new SolidBrush(Theming.DropMenuTextForeColor_Category), e.Bounds);
                     }
                     else
                     {
-                        backgroundColor = customBGColor;
-                        textColor = customTextColor;
-                    }
+                        font = new Font(font, FontStyle.Bold);
+                        if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                        {
+                            backgroundColor = SystemBrushes.Highlight;
+                            textColor = SystemBrushes.HighlightText;
+                        }
+                        else
+                        {
+                            backgroundColor = new SolidBrush(Theming.DropMenuBackgroundForeColor);
+                            textColor = new SolidBrush(Theming.DropMenuTextForeColor);
+                        }
 
-                    e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                    e.Graphics.DrawString("    " + langListText, font, textColor, e.Bounds);
+                        e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                        e.Graphics.DrawString("    " + langListText, font, textColor, e.Bounds);
+                    }
                 }
             }
             catch { }

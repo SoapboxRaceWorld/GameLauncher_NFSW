@@ -12,7 +12,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
                 Height = 180,
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 Text = caption,
-                StartPosition = FormStartPosition.CenterScreen,
+                StartPosition = FormStartPosition.CenterParent,
                 MaximizeBox = false
             };
 

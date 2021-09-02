@@ -55,16 +55,9 @@ namespace GameLauncher.App
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            var MainFontSize = 10f * 100f / CreateGraphics().DpiY;
-            var SecondaryFontSize = 15f * 100f / CreateGraphics().DpiY;
-            var ThirdFontSize = 26f * 100f / CreateGraphics().DpiY;
-
-            if (UnixOS.Detected())
-            {
-                MainFontSize = 10f;
-                SecondaryFontSize = 15f;
-                ThirdFontSize = 26f;
-            }
+            float MainFontSize = UnixOS.Detected() ? 10f : 10f * 100f / CreateGraphics().DpiY;
+            float SecondaryFontSize = UnixOS.Detected() ? 15f : 15f * 100f / CreateGraphics().DpiY;
+            float ThirdFontSize = UnixOS.Detected() ? 26f : 26f * 100f / CreateGraphics().DpiY;
 
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             AboutText.Font = new Font(DejaVuSansBold, ThirdFontSize, FontStyle.Bold);
@@ -89,6 +82,15 @@ namespace GameLauncher.App
 
             PatchContainerPanel.BackColor = Theming.WinFormTBGForeColor;
             PatchContainerPanel.ForeColor = Theming.WinFormTextForeColor;
+
+            PatchTitle1.BackColor = Theming.AboutBGForeColor;
+            PatchTitle1.ForeColor = Theming.WinFormTextForeColor;
+
+            PatchTitle2.BackColor = Theming.AboutBGForeColor;
+            PatchTitle2.ForeColor = Theming.WinFormTextForeColor;
+
+            PatchTitle3.BackColor = Theming.AboutBGForeColor;
+            PatchTitle3.ForeColor = Theming.WinFormTextForeColor;
 
             PatchText1.BackColor = Theming.AboutBGForeColor;
             PatchText1.ForeColor = Theming.AboutTextForeColor;

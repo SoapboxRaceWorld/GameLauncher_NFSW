@@ -187,64 +187,70 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
         {
             try
             {
-                var font = (sender as ComboBox).Font;
-                Brush backgroundColor;
-                Brush textColor;
-
-                string serverListText = "";
+                string serverListText = string.Empty;
                 /* 0 = Offline | 1 = Online | 2 = Checking | 3 = GSI Error */
-                int onlineStatus = 2; 
+                int onlineStatus = 2;
 
                 if (sender is ComboBox cb)
                 {
-                    if (cb.Items[e.Index] is ServerList si)
+                    if (e.Index != -1 && cb.Items != null)
                     {
-                        serverListText = si.Name;
-                        onlineStatus = InformationCache.ServerStatusBook.ContainsKey(si.ID) ? InformationCache.ServerStatusBook[si.ID] : 2;
+                        if (cb.Items[e.Index] is ServerList si)
+                        {
+                            serverListText = si.Name;
+                            onlineStatus = InformationCache.ServerStatusBook.ContainsKey(si.ID) ? InformationCache.ServerStatusBook[si.ID] : 2;
+                        }
                     }
                 }
 
-                if (serverListText.StartsWith("<GROUP>"))
+                if (!string.IsNullOrWhiteSpace(serverListText))
                 {
-                    font = new Font(font, FontStyle.Bold);
-                    e.Graphics.FillRectangle(Brushes.White, e.Bounds);
-                    e.Graphics.DrawString(serverListText.Replace("<GROUP>", string.Empty), font, Brushes.Black, e.Bounds);
-                }
-                else
-                {
-                    font = new Font(font, FontStyle.Regular);
-                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                    Font font = (sender as ComboBox).Font;
+                    Brush backgroundColor;
+                    Brush textColor;
+
+                    if (serverListText.StartsWith("<GROUP>"))
                     {
-                        backgroundColor = SystemBrushes.Highlight;
-                        textColor = SystemBrushes.HighlightText;
+                        font = new Font(font, FontStyle.Bold);
+                        e.Graphics.FillRectangle(new SolidBrush(Theming.DropMenuWhite), e.Bounds);
+                        e.Graphics.DrawString(serverListText.Replace("<GROUP>", string.Empty), font, new SolidBrush(Theming.DropMenuBlack), e.Bounds);
                     }
                     else
                     {
-                        switch (onlineStatus)
+                        font = new Font(font, FontStyle.Regular);
+                        if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
                         {
-                            case 1:
-                                /* ONLINE */
-                                backgroundColor = Brushes.PaleGreen;
-                                break;
-                            case 2:
-                                /* CHECKING */
-                                backgroundColor = Brushes.Khaki;
-                                break;
-                            case 3:
-                                /* GSI ERROR */
-                                backgroundColor = new SolidBrush(Color.FromArgb(230, 159, 0));
-                                break;
-                            default:
-                                /* OFFLINE */
-                                backgroundColor = Brushes.LightCoral;
-                                break;
+                            backgroundColor = SystemBrushes.Highlight;
+                            textColor = SystemBrushes.HighlightText;
+                        }
+                        else
+                        {
+                            switch (onlineStatus)
+                            {
+                                case 1:
+                                    /* ONLINE */
+                                    backgroundColor = new SolidBrush(Theming.DropMenuPingSuccess);
+                                    break;
+                                case 2:
+                                    /* CHECKING */
+                                    backgroundColor = new SolidBrush(Theming.DropMenuPingChecking);
+                                    break;
+                                case 3:
+                                    /* GSI ERROR */
+                                    backgroundColor = new SolidBrush(Theming.DropMenuPingWarning);
+                                    break;
+                                default:
+                                    /* OFFLINE */
+                                    backgroundColor = new SolidBrush(Theming.DropMenuPingError);
+                                    break;
+                            }
+
+                            textColor = new SolidBrush(Theming.DropMenuBlack);
                         }
 
-                        textColor = Brushes.Black;
+                        e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                        e.Graphics.DrawString("    " + serverListText, font, textColor, e.Bounds);
                     }
-
-                    e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                    e.Graphics.DrawString("    " + serverListText, font, textColor, e.Bounds);
                 }
             }
             catch { }

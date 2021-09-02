@@ -185,7 +185,7 @@ namespace GameLauncher.App
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AddServer";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add Server - SBRW Launcher";
             this.ResumeLayout(false);
             this.PerformLayout();

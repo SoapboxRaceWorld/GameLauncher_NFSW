@@ -1019,14 +1019,9 @@ namespace GameLauncher.App
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-
-            if (UnixOS.Detected())
-            {
-                MainFontSize = 9f;
-            }
-
+            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 100f / CreateGraphics().DpiY;
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
+
             VerifyHashWelcome.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             ScanProgressText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             DownloadProgressText.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);

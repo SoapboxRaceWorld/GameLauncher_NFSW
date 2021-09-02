@@ -3714,19 +3714,12 @@ namespace GameLauncher
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-            var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
-            var ThirdFontSize = 10f * 100f / CreateGraphics().DpiY;
-            var FourthFontSize = 14f * 100f / CreateGraphics().DpiY;
-
-            if (UnixOS.Detected())
-            {
-                MainFontSize = 9f;
-                SecondaryFontSize = 8f;
-                ThirdFontSize = 10f;
-                FourthFontSize = 14f;
-            }
+            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 100f / CreateGraphics().DpiY;
+            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 100f / CreateGraphics().DpiY;
+            float ThirdFontSize = UnixOS.Detected() ? 10f : 10f * 100f / CreateGraphics().DpiY;
+            float FourthFontSize = UnixOS.Detected() ? 14f : 14f * 100f / CreateGraphics().DpiY;
             Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
+
             /* Front Screen */
             InsiderBuildNumberText.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             SelectServerBtn.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);

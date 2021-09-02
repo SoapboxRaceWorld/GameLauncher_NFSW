@@ -33,6 +33,12 @@ namespace GameLauncher.App
             Text = "Debug - SBRW Launcher: v" + Application.ProductVersion;
 
             /*******************************/
+            /* Set Initial Position         /
+            /*******************************/
+
+            FunctionStatus.CenterParent(this);
+
+            /*******************************/
             /* Set Font                     /
             /*******************************/
 

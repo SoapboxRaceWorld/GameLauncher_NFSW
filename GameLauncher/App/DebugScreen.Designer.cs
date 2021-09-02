@@ -88,7 +88,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DebugScreen";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Debug - SBRW Launcher";
             this.Load += new System.EventHandler(this.DebugScreen_Load);
             ((System.ComponentModel.ISupportInitialize)(this.data)).EndInit();

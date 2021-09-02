@@ -425,46 +425,49 @@ namespace GameLauncher.App
         {
             try
             {
-                var font = (sender as ComboBox).Font;
-                Brush backgroundColor;
-                Brush textColor;
-                Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
-                Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
-                Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
-                Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
-
-                var cdnListText = "";
+                string cdnListText = string.Empty;
 
                 if (sender is ComboBox cb)
                 {
-                    if (cb.Items[e.Index] is CDNList si)
+                    if (e.Index != -1 && cb.Items != null)
                     {
-                        cdnListText = si.Name;
-                    }
+                        if (cb.Items[e.Index] is CDNList si)
+                        {
+                            cdnListText = si.Name;
+                        }
+                    } 
                 }
 
-                if (cdnListText.StartsWith("<GROUP>"))
+                if (!string.IsNullOrWhiteSpace(cdnListText))
                 {
-                    font = new Font(font, FontStyle.Bold);
-                    e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
-                    e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
-                }
-                else
-                {
-                    font = new Font(font, FontStyle.Bold);
-                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                    Font font = (sender as ComboBox).Font;
+                    Brush backgroundColor;
+                    Brush textColor;
+
+                    if (cdnListText.StartsWith("<GROUP>"))
                     {
-                        backgroundColor = SystemBrushes.Highlight;
-                        textColor = SystemBrushes.HighlightText;
+                        font = new Font(font, FontStyle.Bold);
+                        e.Graphics.FillRectangle(new SolidBrush(Theming.DropMenuBackgroundForeColor_Category), e.Bounds);
+                        e.Graphics.DrawString(cdnListText.Replace("<GROUP>", string.Empty), font,
+                            new SolidBrush(Theming.DropMenuTextForeColor_Category), e.Bounds);
                     }
                     else
                     {
-                        backgroundColor = customBGColor;
-                        textColor = customTextColor;
-                    }
+                        font = new Font(font, FontStyle.Bold);
+                        if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                        {
+                            backgroundColor = SystemBrushes.Highlight;
+                            textColor = SystemBrushes.HighlightText;
+                        }
+                        else
+                        {
+                            backgroundColor = new SolidBrush(Theming.DropMenuBackgroundForeColor);
+                            textColor = new SolidBrush(Theming.DropMenuTextForeColor);
+                        }
 
-                    e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                    e.Graphics.DrawString("    " + cdnListText, font, textColor, e.Bounds);
+                        e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                        e.Graphics.DrawString("    " + cdnListText, font, textColor, e.Bounds);
+                    }
                 }
             }
             catch { }
@@ -478,46 +481,49 @@ namespace GameLauncher.App
         {
             try
             {
-                var font = (sender as ComboBox).Font;
-                Brush backgroundColor;
-                Brush textColor;
-                Brush customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor);
-                Brush customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor);
-                Brush cat_customTextColor = new SolidBrush(Theming.CDNMenuTextForeColor_Category);
-                Brush cat_customBGColor = new SolidBrush(Theming.CDNMenuBGForeColor_Category);
-
-                var langListText = "";
+                string langListText = string.Empty;
 
                 if (sender is ComboBox cb)
                 {
-                    if (cb.Items[e.Index] is LangObject si)
+                    if (e.Index != -1 && cb.Items != null)
                     {
-                        langListText = si.Name;
+                        if (cb.Items[e.Index] is LangObject si)
+                        {
+                            langListText = si.Name;
+                        }
                     }
                 }
 
-                if (langListText.StartsWith("<GROUP>"))
+                if (!string.IsNullOrWhiteSpace(langListText))
                 {
-                    font = new Font(font, FontStyle.Bold);
-                    e.Graphics.FillRectangle(cat_customBGColor, e.Bounds);
-                    e.Graphics.DrawString(langListText.Replace("<GROUP>", string.Empty), font, cat_customTextColor, e.Bounds);
-                }
-                else
-                {
-                    font = new Font(font, FontStyle.Bold);
-                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                    Font font = (sender as ComboBox).Font;
+                    Brush backgroundColor;
+                    Brush textColor;
+
+                    if (langListText.StartsWith("<GROUP>"))
                     {
-                        backgroundColor = SystemBrushes.Highlight;
-                        textColor = SystemBrushes.HighlightText;
+                        font = new Font(font, FontStyle.Bold);
+                        e.Graphics.FillRectangle(new SolidBrush(Theming.DropMenuBackgroundForeColor_Category), e.Bounds);
+                        e.Graphics.DrawString(langListText.Replace("<GROUP>", string.Empty), font,
+                            new SolidBrush(Theming.DropMenuTextForeColor_Category), e.Bounds);
                     }
                     else
                     {
-                        backgroundColor = customBGColor;
-                        textColor = customTextColor;
-                    }
+                        font = new Font(font, FontStyle.Bold);
+                        if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && e.State != DrawItemState.ComboBoxEdit)
+                        {
+                            backgroundColor = SystemBrushes.Highlight;
+                            textColor = SystemBrushes.HighlightText;
+                        }
+                        else
+                        {
+                            backgroundColor = new SolidBrush(Theming.DropMenuBackgroundForeColor);
+                            textColor = new SolidBrush(Theming.DropMenuTextForeColor);
+                        }
 
-                    e.Graphics.FillRectangle(backgroundColor, e.Bounds);
-                    e.Graphics.DrawString("    " + langListText, font, textColor, e.Bounds);
+                        e.Graphics.FillRectangle(backgroundColor, e.Bounds);
+                        e.Graphics.DrawString("    " + langListText, font, textColor, e.Bounds);
+                    }
                 }
             }
             catch { }
@@ -689,7 +695,7 @@ namespace GameLauncher.App
         /* Settings Save */
         private void SettingsSave_Click(object sender, EventArgs e)
         {
-            SettingsSave.Text = "Saving";
+            SettingsSave.Text = "SAVING";
             /* TODO null check */
             if (!string.IsNullOrWhiteSpace(((LangObject)SettingsLanguage.SelectedItem).INI_Value))
             {
@@ -734,6 +740,8 @@ namespace GameLauncher.App
                 _restartRequired = true;
             }
 
+            bool CDNUrlHasChanged = false;
+
             if (!string.IsNullOrWhiteSpace(((CDNList)SettingsCDNPick.SelectedItem).Url))
             {
                 string SelectedCDNFromList = ((CDNList)SettingsCDNPick.SelectedItem).Url;
@@ -755,6 +763,7 @@ namespace GameLauncher.App
                     SettingsCDNCurrent.Text = LocalFinalCDNURL;
                     FinalCDNURL = FileSettingsSave.CDN = LocalFinalCDNURL;
                     _restartRequired = true;
+                    CDNUrlHasChanged = true;
                 }
             }
             else
@@ -774,12 +783,32 @@ namespace GameLauncher.App
                         ServerProxy.Instance.Stop("Settings Screen");
                     }
 
-                    if (InformationCache.SelectedServerData.IPAddress.StartsWith("https") ||
-                        FileAccountSave.ChoosenGameServer.StartsWith("https") || 
-                        InformationCache.ModernAuthSecureChannel)
+                    bool DisplayMessageBox = false;
+
+                    try
+                    {
+                        if (InformationCache.SelectedServerData != null)
+                        {
+                            DisplayMessageBox = InformationCache.SelectedServerData.IPAddress.StartsWith("https");
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(FileAccountSave.ChoosenGameServer))
+                        {
+                            DisplayMessageBox = FileAccountSave.ChoosenGameServer.StartsWith("https");
+                        }
+
+                        if (bool.TryParse(InformationCache.ModernAuthSecureChannel.ToString(), out bool Result))
+                        {
+                            DisplayMessageBox = InformationCache.ModernAuthSecureChannel;
+                        }
+                    }
+                    catch { DisplayMessageBox = false; }
+
+                    if (DisplayMessageBox)
                     {
                         MessageBox.Show(null, ServerListUpdater.ServerName("Settings") + " requires Proxy to be Enabled." +
-                            "\nThe launcher will turn on Proxy, even if you have chosen to Disable it", "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            "\nThe launcher will turn on Proxy, even if you have chosen to Disable it", 
+                            "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
                 else
@@ -818,15 +847,15 @@ namespace GameLauncher.App
                 FileSettingsSave.WebCallMethod = (SettingsAltWebCallsheckbox.Checked == true) ? "WebClientWithTimeout" : "WebClient";
             }
 
-            /* Actually lets check those 2 files */
-            if (File.Exists(FileSettingsSave.GameInstallation + "/profwords") && File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis"))
-            {
-                File.Delete(FileSettingsSave.GameInstallation + "/profwords_dis");
-            }
-
-            /* Delete/Enable profwords filter here */
             try
             {
+                /* Actually lets check those 2 files */
+                if (File.Exists(FileSettingsSave.GameInstallation + "/profwords") && File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis"))
+                {
+                    File.Delete(FileSettingsSave.GameInstallation + "/profwords_dis");
+                }
+
+                /* Delete/Enable profwords filter here */
                 if (SettingsWordFilterCheck.Checked)
                 {
                     if (File.Exists(FileSettingsSave.GameInstallation + "/profwords"))
@@ -848,32 +877,35 @@ namespace GameLauncher.App
             }
 
             /* Create Custom Settings.ini for LangPicker.asi module */
-            if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom") 
+            if (!string.IsNullOrWhiteSpace(((LangObject)SettingsLanguage.SelectedItem).Category))
             {
-                if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts")) 
+                if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom")
                 {
+                    if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts"))
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
+                        }
+                        catch { }
+                    }
                     try
                     {
-                        Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
+                        IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                        LanguagePickerFile.Write("Language", ((LangObject)SettingsLanguage.SelectedItem).INI_Value);
                     }
-                    catch {}
+                    catch { }
                 }
-                try
+                else
                 {
-                    IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
-                    LanguagePickerFile.Write("Language", ((LangObject)SettingsLanguage.SelectedItem).INI_Value);
-                }
-                catch {}
-            }
-            else
-            {
-                if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini")) 
-                {
-                    try
+                    if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini"))
                     {
-                        File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                        try
+                        {
+                            File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                        }
+                        catch { }
                     }
-                    catch{}
                 }
             }
 
@@ -881,44 +913,47 @@ namespace GameLauncher.App
             FileSettingsSave.SaveSettings();
             FileGameSettings.Save("Suppress", "Language Only");
 
-            if (ThreadChecksums != null)
+            if (CDNUrlHasChanged)
             {
-                ThreadChecksums.Abort();
-                ThreadChecksums = null;
-            }
-
-            ThreadChecksums = new Thread(() =>
-            {
-                if (Application.OpenForms["SettingsScreen"] != null)
+                if (ThreadChecksums != null)
                 {
-                    if (!Application.OpenForms["SettingsScreen"].Disposing)
-                    {
-                        ButtonsColorSet(SettingsVFilesButton, 0, false);
+                    ThreadChecksums.Abort();
+                    ThreadChecksums = null;
+                }
 
-                        switch (APIChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat", 10))
+                ThreadChecksums = new Thread(() =>
+                {
+                    if (Application.OpenForms["SettingsScreen"] != null)
+                    {
+                        if (!Application.OpenForms["SettingsScreen"].Disposing)
                         {
-                            case APIStatus.Online:
-                                FunctionStatus.DoesCDNSupportVerifyHash = true;
-                                ButtonsColorSet(SettingsVFilesButton, (FileSettingsSave.GameIntegrity != "Good" ? 2 : 0), true);
-                                break;
-                            default:
-                                FunctionStatus.DoesCDNSupportVerifyHash = false;
-                                ButtonsColorSet(SettingsVFilesButton, 3, true);
-                                break;
+                            ButtonsColorSet(SettingsVFilesButton, 0, false);
+
+                            switch (APIChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat", 10))
+                            {
+                                case APIStatus.Online:
+                                    FunctionStatus.DoesCDNSupportVerifyHash = true;
+                                    ButtonsColorSet(SettingsVFilesButton, (FileSettingsSave.GameIntegrity != "Good" ? 2 : 0), true);
+                                    break;
+                                default:
+                                    FunctionStatus.DoesCDNSupportVerifyHash = false;
+                                    ButtonsColorSet(SettingsVFilesButton, 3, true);
+                                    break;
+                            }
                         }
                     }
-                }
-            });
+                });
 
-            ThreadChecksums.Start();
+                ThreadChecksums.Start();
+            }
+
+            SettingsSave.Text = "SAVED";
 
             if (_restartRequired)
             {
                 MessageBox.Show(null, "In order to see settings changes, you need to restart the Launcher manually.", "GameLauncher", 
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            
-            SettingsSave.Text = "Saved";
         }
 
         /* Settings Cancel */
@@ -1124,35 +1159,45 @@ namespace GameLauncher.App
         {
             try
             {
-                if (((CDNList)SettingsCDNPick.SelectedItem).IsSpecial && ((CDNList)SettingsCDNPick.SelectedItem).Url == null)
+                if (!string.IsNullOrWhiteSpace(((CDNList)SettingsCDNPick.SelectedItem).Url))
                 {
-                    SettingsCDNPick.SelectedIndex = _lastSelectedCdnId;
-                    return;
-                }
-                else if (((CDNList)SettingsCDNPick.SelectedItem).Url != null)
-                {
-                    IsChangedCDNDown();
+                    if (((CDNList)SettingsCDNPick.SelectedItem).IsSpecial)
+                    {
+                        SettingsCDNPick.SelectedIndex = _lastSelectedCdnId;
+                    }
+                    else
+                    {
+                        IsChangedCDNDown();
+
+                        _lastSelectedCdnId = SettingsCDNPick.SelectedIndex;
+                    }
                 }
                 else
                 {
                     SettingsCDNText.Text = "CDN:";
                     SettingsCDNText.ForeColor = Theming.FivithTextForeColor;
                 }
-
-                _lastSelectedCdnId = SettingsCDNPick.SelectedIndex;
             }
             catch { }
         }
 
         private void SettingsLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (((LangObject)SettingsLanguage.SelectedItem).IsSpecial) 
+            try
             {
-                SettingsLanguage.SelectedIndex = _lastSelectedLanguage;
-                return;
+                if (bool.TryParse(((LangObject)SettingsLanguage.SelectedItem).IsSpecial.ToString(), out bool Result))
+                {
+                    if (((LangObject)SettingsLanguage.SelectedItem).IsSpecial)
+                    {
+                        SettingsLanguage.SelectedIndex = _lastSelectedLanguage;
+                    }
+                    else
+                    {
+                        _lastSelectedLanguage = SettingsLanguage.SelectedIndex;
+                    }
+                }
             }
-
-            _lastSelectedLanguage = SettingsLanguage.SelectedIndex;
+            catch { }
         }
 
         /*******************************/

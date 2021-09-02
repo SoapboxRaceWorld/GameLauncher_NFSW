@@ -944,6 +944,8 @@ namespace GameLauncher.App
         {
             if (!DisableButtonFRAPI)
             {
+                Log.Info("Security Center Screen: ".ToUpper() + "[Check Firewall API] Button was clicked by user");
+
                 DisableButtonFRAPI = true;
 
                 if (ButtonEnabler(4, 20))
@@ -955,13 +957,14 @@ namespace GameLauncher.App
 
                 ButtonsColorSet(ButtonFirewallRulesAPI, 1, false);
             }
-            Log.Info("Logging 'Check Firewall API' button as clicked by user");
         }
         ///<summary>Button: Firewall Rules Check</summary>
         private void ButtonFirewallRulesCheck_Click(object sender, EventArgs e)
         {
             if (!DisableButtonFRC)
             {
+                Log.Info("Security Center Screen: ".ToUpper() + "[Check All Rules] Button was clicked by user");
+
                 if (Firewall())
                 {
                     ButtonsColorSet(ButtonFirewallRulesCheck, 0, true);
@@ -1028,7 +1031,6 @@ namespace GameLauncher.App
                 else
                 { ButtonsColorSet(ButtonFirewallRulesCheck, 3, true); }
             }
-            Log.Info("Logging 'Check All Rules' button as clicked by user");
         }
         ///<summary>Button: Firewall Rules Add All</summary>
         private void ButtonFirewallRulesAddAll_Click(object sender, EventArgs e)

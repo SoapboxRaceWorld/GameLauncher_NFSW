@@ -355,14 +355,8 @@ namespace GameLauncher.App
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-            var SecondaryFontSize = 8f * 100f / CreateGraphics().DpiY;
-
-            if (UnixOS.Detected())
-            {
-                MainFontSize = 9f;
-                SecondaryFontSize = 8f;
-            }
+            float MainFontSize = UnixOS.Detected() ? 9f : 9f * 100f / CreateGraphics().DpiY;
+            float SecondaryFontSize = UnixOS.Detected() ? 8f : 8f * 100f / CreateGraphics().DpiY;
             Font = new Font(DejaVuSans, SecondaryFontSize, FontStyle.Regular);
 
             /* Registering Panel */
@@ -373,6 +367,7 @@ namespace GameLauncher.App
             RegisterAgree.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             RegisterButton.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
             RegisterCancel.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
+            CurrentWindowInfo.Font = new Font(DejaVuSansBold, MainFontSize, FontStyle.Bold);
 
             /********************************/
             /* Set Theme Colors & Images     /
@@ -382,14 +377,31 @@ namespace GameLauncher.App
             BackgroundImage = Theming.RegisterScreen;
             TransparencyKey = Theming.RegisterScreenTransparencyKey;
 
+            CurrentWindowInfo.ForeColor = Theming.FivithTextForeColor;
+
+            RegisterEmail.BackColor = Theming.Input;
+            RegisterEmail.ForeColor = Theming.FivithTextForeColor;
             RegisterEmailBorder.Image = Theming.BorderEmail;
+
             RegisterPasswordBorder.Image = Theming.BorderPassword;
+            RegisterPassword.BackColor = Theming.Input;
+            RegisterPassword.ForeColor = Theming.FivithTextForeColor;
+
             RegisterConfirmPasswordBorder.Image = Theming.BorderPassword;
+            RegisterConfirmPassword.BackColor = Theming.Input;
+            RegisterConfirmPassword.ForeColor = Theming.FivithTextForeColor;
+
             RegisterTicketBorder.Image = Theming.BorderTicket;
+            RegisterTicket.BackColor = Theming.Input;
+            RegisterTicket.ForeColor = Theming.FivithTextForeColor;
+
             RegisterAgree.ForeColor = Theming.WinFormWarningTextForeColor;
 
             RegisterButton.BackgroundImage = Theming.GreenButton;
+            RegisterButton.ForeColor = Theming.SeventhTextForeColor;
+
             RegisterCancel.BackgroundImage = Theming.GrayButton;
+            RegisterCancel.ForeColor = Theming.FivithTextForeColor;
 
             /********************************/
             /* Events                        /
