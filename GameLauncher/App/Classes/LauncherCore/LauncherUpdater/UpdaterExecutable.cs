@@ -1,4 +1,5 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
+﻿using GameLauncher.App.Classes.LauncherCore.APICheckers;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.RPC;
@@ -18,7 +19,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
     class UpdaterExecutable
     {
         /* Hardcoded Default Version for Updater Version  */
-        private static string LatestUpdaterBuildVersion = "1.0.0.4";
+        private static string LatestUpdaterBuildVersion = "1.0.0.8";
         private static string VersionJSON;
 
         /* Check If Updater Exists or Requires an Update */
@@ -30,6 +31,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             /* Update this text file if a new GameLauncherUpdater.exe has been delployed - DavidCarbon */
             try
             {
+                bool IsGithubOnline = false;
                 FunctionStatus.TLS();
                 Uri URLCall = new Uri(URLs.GitHub_Updater);
                 ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
@@ -47,6 +49,12 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 try
                 {
                     VersionJSON = Client.DownloadString(URLCall);
+                    IsGithubOnline = true;
+                }
+                catch (WebException Error)
+                {
+                    APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                        Error, (HttpWebResponse)Error.Response);
                 }
                 catch (Exception Error)
                 {
@@ -60,9 +68,11 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     }
                 }
 
+                bool IsJsonValid = false;
+
                 try
                 {
-                    if (IsJSONValid.ValidJson(VersionJSON))
+                    if (IsJSONValid.ValidJson(VersionJSON) && IsGithubOnline)
                     {
                         GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON);
 
@@ -70,6 +80,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         {
                             Log.Info("LAUNCHER UPDATER: Setting Latest Version -> " + GHAPI.TagName);
                             LatestUpdaterBuildVersion = GHAPI.TagName;
+                            IsJsonValid = true;
                         }
 
                         Log.Info("LAUNCHER UPDATER: Latest Version -> " + LatestUpdaterBuildVersion);
@@ -89,7 +100,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     LogToFileAddons.OpenLog("LAUNCHER UPDATER", null, Error, null, true);
                 }
 
-                if (LatestUpdaterBuildVersion == "1.0.0.4")
+                if (!IsGithubOnline || !IsJsonValid)
                 {
                     Log.Info("LAUNCHER UPDATER: Fail Safe Latest Version -> " + LatestUpdaterBuildVersion);
                 }
@@ -115,7 +126,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 try
                 {
                     FunctionStatus.TLS();
-                    Uri URLCall = new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
+                    Uri URLCall = 
+                        new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                     var Client = new WebClient
                     {
@@ -129,12 +141,18 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     }
                     Client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
                     {
-                        
                         if (File.Exists(UpdaterPath))
                         {
-                            if (new FileInfo(UpdaterPath).Length == 0)
+                            try
                             {
-                                File.Delete(UpdaterPath);
+                                if (new FileInfo(UpdaterPath).Length == 0)
+                                {
+                                    File.Delete(UpdaterPath);
+                                }
+                            }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE Error #1]", null, Error, null, true);
                             }
                         }
                     };
@@ -143,9 +161,14 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     {
                         Client.DownloadFile(URLCall, UpdaterPath);
                     }
+                    catch (WebException Error)
+                    {
+                        APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                            Error, (HttpWebResponse)Error.Response);
+                    }
                     catch (Exception Error)
                     {
-                        LogToFileAddons.OpenLog("LAUNCHER UPDATER", null, Error, null, true);
+                        LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE DL #1]", null, Error, null, true);
                     }
                     finally
                     {
@@ -157,7 +180,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("LAUNCHER UPDATER", null, Error, null, true);
+                    LogToFileAddons.OpenLog("LAUNCHER UPDATER [!FileExists]", null, Error, null, true);
                 }
             }
             else if (File.Exists(UpdaterPath))
@@ -184,7 +207,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         File.Delete(Locations.NameUpdater);
 
                         FunctionStatus.TLS();
-                        Uri URLCall = new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
+                        Uri URLCall = 
+                            new Uri("https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe");
                         ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                         var Client = new WebClient
                         {
@@ -200,9 +224,16 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         {
                             if (File.Exists(UpdaterPath))
                             {
-                                if (new FileInfo(UpdaterPath).Length == 0)
+                                try
                                 {
-                                    File.Delete(UpdaterPath);
+                                    if (new FileInfo(UpdaterPath).Length == 0)
+                                    {
+                                        File.Delete(UpdaterPath);
+                                    }
+                                }
+                                catch (Exception Error)
+                                {
+                                    LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE Error #2]", null, Error, null, true);
                                 }
                             }
                         };
@@ -211,9 +242,15 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         {
                             Client.DownloadFile(URLCall, Locations.NameUpdater);
                         }
+                        catch (WebException Error)
+                        {
+                            APIChecker.StatusCodes(
+                                "https://github.com/SoapboxRaceWorld/GameLauncherUpdater/releases/latest/download/GameLauncherUpdater.exe",
+                                Error, (HttpWebResponse)Error.Response);
+                        }
                         catch (Exception Error)
                         {
-                            LogToFileAddons.OpenLog("LAUNCHER UPDATER", null, Error, null, true);
+                            LogToFileAddons.OpenLog("LAUNCHER UPDATER [EXE DL #2]", null, Error, null, true);
                         }
                         finally
                         {
@@ -226,7 +263,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 }
                 catch (Exception Error)
                 {
-                    LogToFileAddons.OpenLog("LAUNCHER UPDATER", null, Error, null, true);
+                    LogToFileAddons.OpenLog("LAUNCHER UPDATER [FileExists]", null, Error, null, true);
                 }
             }
 

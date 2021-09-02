@@ -25,9 +25,24 @@ namespace GameLauncher.App.Classes.LauncherCore.Logger
 
         public static void OpenLog(string From, string MessageDetails, Exception Error, string Icon, bool Suppress)
         {
-            Log.Error(From.ToUpper() + ": " + Error.Message);
-            Log.ErrorIC(From.ToUpper() + ": " + Error.HResult);
-            Log.ErrorFR(From.ToUpper() + ": " + Error.ToString());
+            try
+            {
+                Log.Error(From.ToUpper() + ": " + Error.Message);
+                Log.ErrorIC(From.ToUpper() + ": " + Error.HResult);
+                Log.ErrorFR(From.ToUpper() + ": " + Error.ToString());
+            }
+            catch { Log.Error("Unable to Log [" + From.ToUpper() + "] Details"); }
+
+            try
+            {
+                if (Error.GetBaseException() != null && (Error.GetBaseException() != Error))
+                {
+                    Log.Error(From.ToUpper() + " [Base]: " + Error.GetBaseException().Message);
+                    Log.ErrorIC(From.ToUpper() + " [Base]: " + Error.GetBaseException().HResult);
+                    Log.ErrorFR(From.ToUpper() + " [Base]: " + Error.GetBaseException().ToString());
+                }
+            }
+            catch { Log.Error("Unable to Log [" + From.ToUpper() + "{Base} ] Details"); }
 
             if (!Suppress)
             {

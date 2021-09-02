@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Logger;
@@ -156,6 +157,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                         {
                             Client.DownloadFile(URLCall, "VC_redist.x86.exe");
                         }
+                        catch (WebException Error)
+                        {
+                            APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                                Error, (HttpWebResponse)Error.Response);
+                        }
                         catch (Exception Error)
                         {
                             LogToFileAddons.OpenLog("REDISTRIBUTABLE", null, Error, null, true);
@@ -273,6 +279,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             try
                             {
                                 Client.DownloadFile(URLCall, "VC_redist.x64.exe");
+                            }
+                            catch (WebException Error)
+                            {
+                                APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                                    Error, (HttpWebResponse)Error.Response);
                             }
                             catch (Exception Error)
                             {

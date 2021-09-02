@@ -1,4 +1,5 @@
-﻿using GameLauncher.App.Classes.LauncherCore.Client.Web;
+﻿using GameLauncher.App.Classes.LauncherCore.APICheckers;
+using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
@@ -68,6 +69,11 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                     {
                         /* Download Up to Date Certificate Status */
                         RootCAJson = Client.DownloadString(URLCall);
+                    }
+                    catch (WebException Error)
+                    {
+                        APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                            Error, (HttpWebResponse)Error.Response);
                     }
                     catch (Exception Error)
                     {
@@ -207,6 +213,10 @@ namespace GameLauncher.App.Classes.SystemPlatform.Windows
                             {
                                 /* Download Up to Date Certificate Status */
                                 Client.DownloadFile(URLCall, CertSaveLocation);
+                            }
+                            catch (WebException Error)
+                            {
+                                APIChecker.StatusCodes(RootCAFileURL, Error, (HttpWebResponse)Error.Response);
                             }
                             catch (Exception Error)
                             {

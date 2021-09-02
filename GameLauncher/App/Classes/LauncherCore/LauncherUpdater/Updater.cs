@@ -28,7 +28,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
         private static string LatestLauncherBuild;
         public static bool UpgradeAvailable = false;
         private static string VersionJSON;
-        private static bool InvalidJSON = false;
+        private static bool ValidJSONDownload = false;
 
         public LauncherUpdateCheck(PictureBox statusImage, Label statusText, Label statusDescription)
         {
@@ -46,6 +46,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
             {
                 try
                 {
+                    bool IsAPIOnline = false;
                     FunctionStatus.TLS();
                     Uri URLCall = new Uri(URLs.Main + "/update.php?version=" + Application.ProductVersion);
                     ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
@@ -64,6 +65,12 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     try
                     {
                         VersionJSON = Client.DownloadString(URLCall);
+                        IsAPIOnline = true;
+                    }
+                    catch (WebException Error)
+                    {
+                        APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                            Error, (HttpWebResponse)Error.Response);
                     }
                     catch (Exception Error)
                     {
@@ -77,25 +84,24 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         }
                     }
 
-                    if (IsJSONValid.ValidJson(VersionJSON))
+                    if (IsJSONValid.ValidJson(VersionJSON) && IsAPIOnline)
                     {
                         UpdateCheckResponse MAPI = JsonConvert.DeserializeObject<UpdateCheckResponse>(VersionJSON);
 
                         if (MAPI.Payload.LatestVersion != null)
                         {
                             LatestLauncherBuild = MAPI.Payload.LatestVersion;
-                            Log.Info("LAUNCHER UPDATE: Latest Version -> " + MAPI.Payload.LatestVersion);
+                            Log.Info("LAUNCHER UPDATE: Latest Version -> " + LatestLauncherBuild);
+                            ValidJSONDownload = true;
                         }
                     }
                     else
                     {
-                        InvalidJSON = true;
                         Log.Warning("LAUNCHER UPDATE: Received Invalid JSON Data");
                     }
                 }
                 catch (Exception Error)
                 {
-                    InvalidJSON = true;
                     LogToFileAddons.OpenLog("LAUNCHER UPDATE", null, Error, null, true);
                 }
                 finally
@@ -107,7 +113,7 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                 }
             }
 
-            if (!VisualsAPIChecker.UnitedAPI() || InvalidJSON)
+            if (!VisualsAPIChecker.UnitedAPI() || !ValidJSONDownload)
             {
                 try
                 {
@@ -129,6 +135,12 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     try
                     {
                         VersionJSON = Client.DownloadString(URLCall);
+                        VisualsAPIChecker.GitHubAPI = true;
+                    }
+                    catch (WebException Error)
+                    {
+                        APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped),
+                            Error, (HttpWebResponse)Error.Response);
                     }
                     catch (Exception Error)
                     {
@@ -142,15 +154,15 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                         }
                     }
 
-                    if (IsJSONValid.ValidJson(VersionJSON))
+                    if (IsJSONValid.ValidJson(VersionJSON) && VisualsAPIChecker.GitHubAPI)
                     {
-                        InvalidJSON = false;
                         GitHubRelease GHAPI = JsonConvert.DeserializeObject<GitHubRelease>(VersionJSON);
 
                         if (GHAPI.TagName != null)
                         {
                             LatestLauncherBuild = GHAPI.TagName;
-                            Log.Info("LAUNCHER UPDATE: GitHub Latest Version -> " + GHAPI.TagName);
+                            Log.Info("LAUNCHER UPDATE: GitHub Latest Version -> " + LatestLauncherBuild);
+                            ValidJSONDownload = true;
                         }
 
                         if (GHAPI != null)
@@ -160,12 +172,11 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     }
                     else
                     {
-                        InvalidJSON = true;
+                        ValidJSONDownload = false;
                     }
                 }
                 catch (Exception Error)
                 {
-                    VisualsAPIChecker.GitHubAPI = false;
                     LogToFileAddons.OpenLog("LAUNCHER UPDATE [GITHUB]", null, Error, null, true);
                 }
                 finally
@@ -218,7 +229,8 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     {
                         FileSettingsSave.IgnoreVersion = String.Empty;
                         FileSettingsSave.SaveSettings();
-                        Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. You are currenly using a " + WhatBuildAmI + " Build!");
+                        Log.Info("IGNOREUPDATEVERSION: Cleared OLD IgnoreUpdateVersion Build Number. " +
+                            "You are currenly using a " + WhatBuildAmI + " Build!");
                     }
                 }
                 else if (Revisions == 0)
@@ -282,18 +294,18 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     FileSettingsSave.SaveSettings();
                 }
             }
-            else if (!VisualsAPIChecker.GitHubAPI)
-            {
-                text.Text = "Launcher Status:\n - API Version Error";
-                status.BackgroundImage = Theming.UpdateIconUnknown;
-                text.ForeColor = Theming.ThirdTextForeColor;
-                description.Text = "Version: v" + Application.ProductVersion;
-            }
-            else
+            else if (VisualsAPIChecker.GitHubAPI && !ValidJSONDownload)
             {
                 text.Text = "Launcher Status:\n - Invalid JSON";
                 status.BackgroundImage = Theming.UpdateIconError;
                 text.ForeColor = Theming.Error;
+                description.Text = "Version: v" + Application.ProductVersion;
+            }
+            else
+            {
+                text.Text = "Launcher Status:\n - API Version Error";
+                status.BackgroundImage = Theming.UpdateIconUnknown;
+                text.ForeColor = Theming.ThirdTextForeColor;
                 description.Text = "Version: v" + Application.ProductVersion;
             }
         }

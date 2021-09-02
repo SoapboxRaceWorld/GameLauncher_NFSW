@@ -1,5 +1,6 @@
 ﻿using GameLauncher.App.Classes.Auth;
 using GameLauncher.App.Classes.Hash;
+using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.Client.Auth;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Global;
@@ -130,6 +131,11 @@ namespace GameLauncher.App
                     try
                     {
                         serverReply = Client.DownloadString(URLCall);
+                    }
+                    catch (WebException Error)
+                    {
+                        APIChecker.StatusCodes(URLCall.GetComponents(UriComponents.HttpRequestUrl, UriFormat.SafeUnescaped), 
+                            Error, (HttpWebResponse)Error.Response);
                     }
                     catch (Exception Error)
                     {

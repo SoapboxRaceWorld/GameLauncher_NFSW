@@ -87,98 +87,101 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         public static void ForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webRecoveryUrl))
+            if (InformationCache.SelectedServerJSON != null)
             {
-                Process.Start(InformationCache.SelectedServerJSON.webRecoveryUrl);
-                MessageBox.Show(null, "A browser window has been opened to complete password recovery on " +
-                    InformationCache.SelectedServerJSON.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                string send = Prompt.ShowDialog("Please specify your email address.", "GameLauncher");
-
-                if (!string.IsNullOrWhiteSpace(send))
+                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.webRecoveryUrl))
                 {
-                    if (!IsEmailValid.Validate(send))
+                    Process.Start(InformationCache.SelectedServerJSON.webRecoveryUrl);
+                    MessageBox.Show(null, "A browser window has been opened to complete password recovery on " +
+                        InformationCache.SelectedServerJSON.serverName, "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    string send = Prompt.ShowDialog("Please specify your email address.", "GameLauncher");
+
+                    if (!string.IsNullOrWhiteSpace(send))
                     {
-                        MessageBox.Show(null, "Email Address is not Valid. Please Check and Try Again", "GameLauncher", 
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                    else
-                    {
-                        try
+                        if (!IsEmailValid.Validate(send))
                         {
-                            FunctionStatus.TLS();
-                            Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IPAddress + "/RecoveryPassword/forgotPassword");
-                            ServicePointManager.FindServicePoint(resetPasswordUrl).ConnectionLeaseTimeout = 
-                                (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
-
-                            HttpWebRequest Request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
-                            string postData = "email=" + send;
-                            byte[] data = Encoding.ASCII.GetBytes(postData);
-                            Request.Method = "POST";
-                            Request.ContentType = "application/x-www-form-urlencoded";
-                            Request.ContentLength = data.Length;
-                            Request.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
-
-                            using (var stream = Request.GetRequestStream())
+                            MessageBox.Show(null, "Email Address is not Valid. Please Check and Try Again", "GameLauncher",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                        else
+                        {
+                            try
                             {
-                                stream.Write(data, 0, data.Length);
-                            }
+                                FunctionStatus.TLS();
+                                Uri resetPasswordUrl = new Uri(InformationCache.SelectedServerData.IPAddress + "/RecoveryPassword/forgotPassword");
+                                ServicePointManager.FindServicePoint(resetPasswordUrl).ConnectionLeaseTimeout =
+                                    (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
-                            HttpWebResponse Response = (HttpWebResponse)Request.GetResponse();
-                            string ResponseBody = new StreamReader(Response.GetResponseStream()).ReadToEnd();
+                                HttpWebRequest Request = (HttpWebRequest)System.Net.WebRequest.Create(resetPasswordUrl);
+                                string postData = "email=" + send;
+                                byte[] data = Encoding.ASCII.GetBytes(postData);
+                                Request.Method = "POST";
+                                Request.ContentType = "application/x-www-form-urlencoded";
+                                Request.ContentLength = data.Length;
+                                Request.Timeout = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
-                            string DisplayMessage;
-                            if (!string.IsNullOrWhiteSpace(ResponseBody))
-                            {
-                                if (ResponseBody.Contains("ERROR"))
+                                using (var stream = Request.GetRequestStream())
                                 {
-                                    if (ResponseBody.ToUpper().Contains("INVALID EMAIL"))
+                                    stream.Write(data, 0, data.Length);
+                                }
+
+                                HttpWebResponse Response = (HttpWebResponse)Request.GetResponse();
+                                string ResponseBody = new StreamReader(Response.GetResponseStream()).ReadToEnd();
+
+                                string DisplayMessage;
+                                if (!string.IsNullOrWhiteSpace(ResponseBody))
+                                {
+                                    if (ResponseBody.Contains("ERROR"))
                                     {
-                                        DisplayMessage = "If an Account with the Email Exists, a Password Reset will be Sent to Your Inbox.";
+                                        if (ResponseBody.ToUpper().Contains("INVALID EMAIL"))
+                                        {
+                                            DisplayMessage = "If an Account with the Email Exists, a Password Reset will be Sent to Your Inbox.";
+                                        }
+                                        else if (ResponseBody.ToUpper().Contains("RECOVERY PASSWORD LINK ALREADY SENT"))
+                                        {
+                                            DisplayMessage = "Recovery Password Reset Link has already been sent. " +
+                                                "Please check your Spam Inbox or Try again in 1 Hour";
+                                        }
+                                        else
+                                        {
+                                            DisplayMessage = ResponseBody;
+                                        }
                                     }
-                                    else if (ResponseBody.ToUpper().Contains("RECOVERY PASSWORD LINK ALREADY SENT"))
+                                    else if (ResponseBody.ToUpper().Contains("RESET PASSWORD SENT TO"))
                                     {
-                                        DisplayMessage = "Recovery Password Reset Link has already been sent. " +
-                                            "Please check your Spam Inbox or Try again in 1 Hour";
+                                        DisplayMessage = "A Password Reset Link will be Sent to Your Inbox.";
                                     }
                                     else
                                     {
                                         DisplayMessage = ResponseBody;
                                     }
                                 }
-                                else if (ResponseBody.ToUpper().Contains("RESET PASSWORD SENT TO"))
-                                {
-                                    DisplayMessage = "A Password Reset Link will be Sent to Your Inbox.";
-                                }
                                 else
                                 {
-                                    DisplayMessage = ResponseBody;
+                                    DisplayMessage = "The Server received the Forgot Password Request, but has not Accepted your Request.";
                                 }
-                            }
-                            else
-                            {
-                                DisplayMessage = "The Server received the Forgot Password Request, but has not Accepted your Request.";
-                            }
 
-                            MessageBox.Show(null, DisplayMessage, "GameLauncher", 
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                        catch (WebException Error)
-                        {
-                            LogToFileAddons.OpenLog("REGISTRATION", "Unable to Send Email to Server.", Error, "Error", false);
-                        }
-                        catch (Exception Error)
-                        {
-                            LogToFileAddons.OpenLog("REGISTRATION", "Unable to Send Email.", Error, "Error", false);
+                                MessageBox.Show(null, DisplayMessage, "GameLauncher",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                            catch (WebException Error)
+                            {
+                                LogToFileAddons.OpenLog("REGISTRATION", "Unable to Send Email to Server.", Error, "Error", false);
+                            }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("REGISTRATION", "Unable to Send Email.", Error, "Error", false);
+                            }
                         }
                     }
-                }
-                else
-                {
-                    MessageBox.Show(null, "Email Address can not be empty. Please Check and Try Again", "GameLauncher", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    else
+                    {
+                        MessageBox.Show(null, "Email Address can not be empty. Please Check and Try Again", "GameLauncher",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
             }
         }

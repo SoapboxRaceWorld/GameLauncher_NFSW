@@ -59,10 +59,12 @@ namespace GameLauncher
 
         public static String getTempNa = Path.GetTempFileName();
 
+        private static Thread ServerCheckThread;
         private static int _lastSelectedServerId;
         private static int _nfswPid;
         private static Thread _nfswstarted;
         private static bool StillCheckingLastServer = false;
+        private static bool ServerChangeTriggered = false;
         private static int ProcessID = 0;
 
         private static DateTime _downloadStartTime;
@@ -239,34 +241,42 @@ namespace GameLauncher
 
                     try
                     {
-                        if (ServerListUpdater.CleanList.FindIndex(i => string.Equals(i.IPAddress, FileAccountSave.ChoosenGameServer)) != 0)
+                        if (ServerListUpdater.CleanList.Count != 0)
                         {
-                            Log.Core("SERVERLIST: Server found! Checking ID");
-                            var index = ServerListUpdater.CleanList.FindIndex(i => string.Equals(i.IPAddress, FileAccountSave.ChoosenGameServer));
-
-                            Log.Core("SERVERLIST: ID is " + index);
-                            if (index >= 0)
+                            if (ServerListUpdater.CleanList.FindIndex(i => string.Equals(i.IPAddress, FileAccountSave.ChoosenGameServer)) != 0)
                             {
-                                Log.Core("SERVERLIST: ID set correctly");
-                                ServerPick.SelectedIndex = index;
+                                Log.Core("SERVERLIST: Server found! Checking ID");
+                                var index = ServerListUpdater.CleanList.FindIndex(i => string.Equals(i.IPAddress, FileAccountSave.ChoosenGameServer));
+
+                                Log.Core("SERVERLIST: ID is " + index);
+                                if (index >= 0)
+                                {
+                                    Log.Core("SERVERLIST: ID set correctly");
+                                    ServerPick.SelectedIndex = index;
+                                }
+                                else
+                                {
+                                    ServerPick.SelectedIndex = 1;
+                                }
                             }
-                        }
-                        else
-                        {
-                            Log.Warning("SERVERLIST: Unable to find anything, assuming default");
-                            ServerPick.SelectedIndex = 1;
-                            Log.Warning("SERVERLIST: Deleting unknown entry");
-                            FileAccountSave.ChoosenGameServer = string.Empty;
-                            FileAccountSave.SaveAccount();
-                        }
+                            else
+                            {
+                                Log.Warning("SERVERLIST: Unable to find anything, assuming default");
+                                ServerPick.SelectedIndex = 1;
+                                Log.Warning("SERVERLIST: Deleting unknown entry");
+                                FileAccountSave.ChoosenGameServer = string.Empty;
+                                FileAccountSave.SaveAccount();
+                            }
 
-                        Log.Core("SERVERLIST: Triggering server change");
-                        if (ServerPick.SelectedIndex == 1)
-                        {
-                            ServerPick_SelectedIndexChanged(sender, e);
-                        }
+                            Log.Core("SERVERLIST: Triggering server change");
+                            if (ServerPick.SelectedIndex == 1)
+                            {
+                                ServerPick_SelectedIndexChanged(sender, e);
+                            }
 
-                        Log.Core("SERVERLIST: All done");
+                            Log.Completed("SERVERLIST: All done");
+                        }
+                        else { ServerPick_SelectedIndexChanged(sender, e); Log.Completed("SERVERLIST: Empty List. Not Setting Index"); }
                     }
                     catch (Exception Error)
                     {
@@ -371,7 +381,9 @@ namespace GameLauncher
             {
                 ServerProxy.Instance.Stop("Main Screen");
             }
-            
+
+            if (ServerCheckThread != null) { try { ServerCheckThread.Abort(); ServerCheckThread = null; } catch { } }
+
             Notification.Dispose();
 
             if (File.Exists(Locations.GameLinksFile))
@@ -680,11 +692,14 @@ namespace GameLauncher
 
         private void ServerPick_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (ServerCheckThread != null) { try { ServerCheckThread.Abort(); ServerCheckThread = null; } catch { } }
+            if (Banner.Image != null) { try { Banner.Image.Dispose(); } catch { } }
             MainEmailBorder.Image = Theming.BorderEmail;
             MainPasswordBorder.Image = Theming.BorderPassword;
             /* Disable Certain Functions */
             _loginEnabled = false;
             _serverEnabled = false;
+            InformationCache.SelectedServerJSON = null;
             FunctionStatus.AllowRegistration = false;
             InformationCache.ModernAuthHashType = string.Empty;
             InformationCache.ModernAuthSecureChannel = false;
@@ -693,6 +708,8 @@ namespace GameLauncher
             RegisterText.Enabled = false;
             /* Disable Social Panel when switching */
             DisableSocialPanelandClearIt();
+            /* Stops any actions for a Server */
+            ServerChangeTriggered = true;
 
             if (!ServerListUpdater.LoadedList && InformationCache.SelectedServerData == null)
             {
@@ -747,255 +764,293 @@ namespace GameLauncher
                 ServerInfoPanel.Visible = false;
             }
 
-            FunctionStatus.TLS();
-            Uri ServerURI = new Uri(InformationCache.SelectedServerData.IPAddress + "/GetServerInformation");
-            ServicePointManager.FindServicePoint(ServerURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-            var Client = new WebClient
+            ServerCheckThread = new Thread(() =>
             {
-                Encoding = Encoding.UTF8
-            };
-
-            if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
-            else
-            {
-                Client.Headers.Add("user-agent", "SBRW Launcher " +
-                Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-            }
-
-            Client.DownloadStringAsync(ServerURI);
-
-            System.Timers.Timer aTimer = new System.Timers.Timer(10000);
-            aTimer.Elapsed += (x, y) => { Client.CancelAsync(); };
-            aTimer.Enabled = true;
-
-            Client.DownloadStringCompleted += (sender2, e2) =>
-            {
-                aTimer.Enabled = false;
-                bool GSIErrorFree = true;
-
-                if (e2.Cancelled || e2.Error != null)
+                FunctionStatus.TLS();
+                Uri ServerURI = new Uri(InformationCache.SelectedServerData.IPAddress + "/GetServerInformation");
+                ServicePointManager.FindServicePoint(ServerURI).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                var Client = new WebClient
                 {
-                    InformationCache.SelectedServerJSON = null;
-                    ServerStatusIcon.BackgroundImage = Theming.ServerIconOffline;
-                    ServerStatusText.Text = "Server Status:\n - Offline ( OFF )";
-                    ServerStatusText.ForeColor = Theming.Error;
-                    ServerStatusDesc.Text = (e2.Error != null) ? 
-                    "Server Seems to be Offline" : 
-                    "Failed to Connect to Server";
+                    Encoding = Encoding.UTF8
+                };
 
-                    if (!InformationCache.ServerStatusBook.ContainsKey(InformationCache.SelectedServerData.ID))
-                    {
-                        InformationCache.ServerStatusBook.Add(
-                            InformationCache.SelectedServerData.ID, (e2.Error != null) ? 0 : 3);
-                    }
-                    else
-                    {
-                        InformationCache.ServerStatusBook
-                        [InformationCache.SelectedServerData.ID] = (e2.Error != null) ? 0 : 3;
-                    }
-
-                    if (e2.Error != null)
-                    {
-                        LogToFileAddons.OpenLog("JSON GSI", null, e2.Error, null, true);
-                    }
-
-                    if (Client != null)
-                    {
-                        Client.Dispose();
-                    }
-                }
+                if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                 else
                 {
-                    if (ServerListUpdater.ServerName("Ping") == "Offline Built-In Server")
+                    Client.Headers.Add("user-agent", "SBRW Launcher " +
+                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                }
+
+                Client.DownloadStringAsync(ServerURI);
+
+                System.Timers.Timer aTimer = new System.Timers.Timer(10000);
+                aTimer.Elapsed += (x, y) => { Client.CancelAsync(); try { aTimer.Dispose(); } catch { } ServerChangeTriggered = false; };
+                aTimer.Enabled = true;
+
+                Client.DownloadStringCompleted += (sender2, e2) =>
+                {
+                    aTimer.Enabled = false;
+                    try { aTimer.Dispose(); } catch { }
+
+                    bool GSIErrorFree = true;
+                    ServerChangeTriggered = false;
+
+                    if (e2.Cancelled || e2.Error != null)
                     {
-                        numPlayers = "∞";
-                        numRegistered = "∞";
-                    }
-                    else
-                    {
-                        try
+                        InformationCache.SelectedServerJSON = null;
+                        ServerStatusIcon.Invoke(new Action(delegate () { ServerStatusIcon.BackgroundImage = Theming.ServerIconOffline; }));
+                        ServerStatusText.Invoke(new Action(delegate () 
                         {
-                            InformationCache.SelectedServerJSON = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
-                        }
-                        catch (Exception Error)
+                            ServerStatusText.Text = "Server Status:\n - Offline ( OFF )";
+                            ServerStatusText.ForeColor = Theming.Error;
+                        }));
+                        ServerStatusDesc.Invoke(new Action(delegate ()
                         {
-                            if (EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed())
-                            {
-                                try { Log.Error("JSON GSI (Received): " + e2.Result); }
-                                catch { Log.Error("JSON GSI (Received): Unable to Get Result"); }
-                            }
-                            else
-                            {
-                                Log.Error("JSON GSI: Invalid");
-                            }
-                            
-                            LogToFileAddons.OpenLog("JSON GSI", null, Error, null, true);
-                            GSIErrorFree = false;
-                            InformationCache.SelectedServerJSON = null;
-                        }
+                            ServerStatusDesc.Text = (e2.Error != null) ? "Server Seems to be Offline" : "Failed to Connect to Server";
+                        }));
 
                         if (!InformationCache.ServerStatusBook.ContainsKey(InformationCache.SelectedServerData.ID))
                         {
                             InformationCache.ServerStatusBook.Add(
-                                InformationCache.SelectedServerData.ID, (!GSIErrorFree) ? 3 : 1);
+                                InformationCache.SelectedServerData.ID, (e2.Error != null) ? 0 : 3);
                         }
                         else
                         {
                             InformationCache.ServerStatusBook
-                            [InformationCache.SelectedServerData.ID] = (!GSIErrorFree) ? 3 : 1;
+                            [InformationCache.SelectedServerData.ID] = (e2.Error != null) ? 0 : 3;
                         }
 
-                        if (GSIErrorFree)
+                        if (e2.Error != null)
+                        {
+                            LogToFileAddons.OpenLog("JSON GSI", null, e2.Error, null, true);
+                        }
+
+                        if (Client != null)
+                        {
+                            Client.Dispose();
+                        }
+                    }
+                    else
+                    {
+                        if (ServerListUpdater.ServerName("Ping") == "Offline Built-In Server")
+                        {
+                            numPlayers = "∞";
+                            numRegistered = "∞";
+                        }
+                        else
                         {
                             try
                             {
-                                if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.bannerUrl))
+                                InformationCache.SelectedServerJSON = JsonConvert.DeserializeObject<GetServerInformation>(e2.Result);
+                            }
+                            catch (Exception Error)
+                            {
+                                if (EnableInsiderBetaTester.Allowed() || EnableInsiderDeveloper.Allowed())
                                 {
-                                    bool ServerBannerResult;
-
-                                    try
-                                    {
-                                        ServerBannerResult = Uri.TryCreate(InformationCache.SelectedServerJSON.bannerUrl, UriKind.Absolute, out Uri uriResult) &&
-                                        (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-                                    }
-                                    catch { ServerBannerResult = false; }
-
-                                    ImageUrl = ServerBannerResult ? InformationCache.SelectedServerJSON.bannerUrl : string.Empty;
+                                    try { Log.Error("JSON GSI (Received): " + e2.Result); }
+                                    catch { Log.Error("JSON GSI (Received): Unable to Get Result"); }
                                 }
                                 else
                                 {
-                                    ImageUrl = string.Empty;
+                                    Log.Error("JSON GSI: Invalid");
                                 }
+
+                                LogToFileAddons.OpenLog("JSON GSI", null, Error, null, true);
+                                GSIErrorFree = false;
+                                InformationCache.SelectedServerJSON = null;
                             }
-                            catch { }
 
-                            /* Social Panel Core */
-
-                            /* Discord Invite Display */
-                            try
+                            if (!InformationCache.ServerStatusBook.ContainsKey(InformationCache.SelectedServerData.ID))
                             {
-                                bool ServerDiscordLink;
+                                InformationCache.ServerStatusBook.Add(
+                                    InformationCache.SelectedServerData.ID, (!GSIErrorFree) ? 3 : 1);
+                            }
+                            else
+                            {
+                                InformationCache.ServerStatusBook
+                                [InformationCache.SelectedServerData.ID] = (!GSIErrorFree) ? 3 : 1;
+                            }
+
+                            if (GSIErrorFree)
+                            {
                                 try
                                 {
-                                    ServerDiscordLink = Uri.TryCreate(InformationCache.SelectedServerJSON.discordUrl, UriKind.Absolute, out Uri uriResult) &&
-                                                             (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-                                }
-                                catch { ServerDiscordLink = false; }
-
-                                DiscordIcon.BackgroundImage = ServerDiscordLink ? Theming.DiscordIcon : Theming.DiscordIconDisabled;
-                                DiscordInviteLink.Enabled = ServerDiscordLink;
-                                DiscordInviteLink.Text = ServerDiscordLink ? "Discord Invite" : string.Empty;
-                            }
-                            catch { }
-
-                            /* Homepage Display */
-                            try
-                            {
-                                bool ServerWebsiteLink;
-                                try
-                                {
-                                    ServerWebsiteLink = Uri.TryCreate(InformationCache.SelectedServerJSON.homePageUrl, UriKind.Absolute, out Uri uriResult) &&
-                                              (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-                                }
-                                catch { ServerWebsiteLink = false; }
-
-                                HomePageIcon.BackgroundImage = ServerWebsiteLink ? Theming.HomeIcon : Theming.HomeIconDisabled;
-                                HomePageLink.Enabled = ServerWebsiteLink;
-                                HomePageLink.Text = ServerWebsiteLink ? "Home Page" : string.Empty;
-                            }
-                            catch { }
-
-                            /* Facebook Group Display */
-                            try
-                            {
-                                bool ServerFacebookLink;
-                                try
-                                {
-                                    ServerFacebookLink = Uri.TryCreate(InformationCache.SelectedServerJSON.facebookUrl, UriKind.Absolute, out Uri uriResult) &&
-                                                         (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-                                }
-                                catch { ServerFacebookLink = false; }
-
-                                FacebookIcon.BackgroundImage = ServerFacebookLink ? Theming.FacebookIcon : Theming.FacebookIconDisabled;
-                                FacebookGroupLink.Enabled = ServerFacebookLink;
-                                FacebookGroupLink.Text = ServerFacebookLink ? "Facebook Page" : string.Empty;
-                            }
-                            catch { }
-
-                            /* Twitter Account Display */
-                            try
-                            {
-                                bool ServerTwitterLink = Uri.TryCreate(InformationCache.SelectedServerJSON.twitterUrl, UriKind.Absolute, out Uri uriResult) &&
-                                                         (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-
-                                TwitterIcon.BackgroundImage = ServerTwitterLink ? Theming.TwitterIcon : Theming.TwitterIconDisabled;
-                                TwitterAccountLink.Enabled = ServerTwitterLink;
-                                TwitterAccountLink.Text = ServerTwitterLink ? "Twitter Feed" : string.Empty;
-                            }
-                            catch { }
-
-                            /* Server Set Speedbug Timer Display */
-                            try
-                            {
-                                serverSecondsToShutDown =
-                                (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 7200;
-
-                                this.ServerShutDown.Text = string.Format("Gameplay Timer: " + TimeConversions.RelativeTime(serverSecondsToShutDown));
-                            }
-                            catch { }
-
-                            try
-                            {
-                                /* Scenery Group Display */
-                                switch (String.Join("", InformationCache.SelectedServerJSON.activatedHolidaySceneryGroups))
-                                {
-                                    case "SCENERY_GROUP_NEWYEARS":
-                                        this.SceneryGroupText.Text = "Scenery: New Years";
-                                        break;
-                                    case "SCENERY_GROUP_OKTOBERFEST":
-                                        this.SceneryGroupText.Text = "Scenery: OKTOBERFEST";
-                                        break;
-                                    case "SCENERY_GROUP_HALLOWEEN":
-                                        this.SceneryGroupText.Text = "Scenery: Halloween";
-                                        break;
-                                    case "SCENERY_GROUP_CHRISTMAS":
-                                        this.SceneryGroupText.Text = "Scenery: Christmas";
-                                        break;
-                                    case "SCENERY_GROUP_VALENTINES":
-                                        this.SceneryGroupText.Text = "Scenery: Valentines";
-                                        break;
-                                    default:
-                                        this.SceneryGroupText.Text = "Scenery: Normal";
-                                        break;
-                                }
-                            }
-                            catch { }
-
-                            try
-                            {
-                                if (ServerURI.Scheme == "https")
-                                {
-                                    InformationCache.ModernAuthSecureChannel = true;
-                                }
-                                else if (InformationCache.SelectedServerJSON.enforceLauncherProxy != null &&
-                                        !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.enforceLauncherProxy))
-                                {
-                                    InformationCache.ModernAuthSecureChannel = InformationCache.SelectedServerJSON.enforceLauncherProxy.ToLower() == "true";
-                                }
-                                else if (InformationCache.SelectedServerJSON.modernAuthSecureChannelOverRide != null &&
-                                         !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.modernAuthSecureChannelOverRide))
-                                {
-                                    if (InformationCache.SelectedServerJSON.modernAuthSecureChannelOverRide.ToLower() == "true")
+                                    if (!string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.bannerUrl))
                                     {
-                                        string CheckHttps = (InformationCache.SelectedServerData.IPAddress + "/GetServerInformation").Replace("http", "https");
-                                        switch (APIChecker.CheckStatus(CheckHttps, 10))
+                                        bool ServerBannerResult;
+
+                                        try
                                         {
-                                            case APIStatus.Online:
-                                                InformationCache.ModernAuthSecureChannel = true;
-                                                break;
-                                            default:
-                                                InformationCache.ModernAuthSecureChannel = false;
-                                                break;
+                                            ServerBannerResult = Uri.TryCreate(InformationCache.SelectedServerJSON.bannerUrl, UriKind.Absolute, out Uri uriResult) &&
+                                            (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                                        }
+                                        catch { ServerBannerResult = false; }
+
+                                        ImageUrl = ServerBannerResult ? InformationCache.SelectedServerJSON.bannerUrl : string.Empty;
+                                    }
+                                    else
+                                    {
+                                        ImageUrl = string.Empty;
+                                    }
+                                }
+                                catch { }
+
+                                /* Social Panel Core */
+
+                                /* Discord Invite Display */
+                                try
+                                {
+                                    bool ServerDiscordLink;
+                                    try
+                                    {
+                                        ServerDiscordLink = Uri.TryCreate(InformationCache.SelectedServerJSON.discordUrl, UriKind.Absolute, out Uri uriResult) &&
+                                                                 (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                                    }
+                                    catch { ServerDiscordLink = false; }
+                                    DiscordIcon.Invoke(new Action(delegate ()
+                                    {
+                                        DiscordIcon.BackgroundImage = ServerDiscordLink ? Theming.DiscordIcon : Theming.DiscordIconDisabled;
+                                    }));
+                                    DiscordInviteLink.Invoke(new Action(delegate ()
+                                    {
+                                        DiscordInviteLink.Enabled = ServerDiscordLink;
+                                        DiscordInviteLink.Text = ServerDiscordLink ? "Discord Invite" : string.Empty;
+                                    }));
+                                }
+                                catch { }
+
+                                /* Homepage Display */
+                                try
+                                {
+                                    bool ServerWebsiteLink;
+                                    try
+                                    {
+                                        ServerWebsiteLink = Uri.TryCreate(InformationCache.SelectedServerJSON.homePageUrl, UriKind.Absolute, out Uri uriResult) &&
+                                                  (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                                    }
+                                    catch { ServerWebsiteLink = false; }
+                                    HomePageIcon.Invoke(new Action(delegate ()
+                                    {
+                                        HomePageIcon.BackgroundImage = ServerWebsiteLink ? Theming.HomeIcon : Theming.HomeIconDisabled;
+                                    }));
+                                    HomePageLink.Invoke(new Action(delegate ()
+                                    {
+                                        HomePageLink.Enabled = ServerWebsiteLink;
+                                        HomePageLink.Text = ServerWebsiteLink ? "Home Page" : string.Empty;
+                                    }));
+                                }
+                                catch { }
+
+                                /* Facebook Group Display */
+                                try
+                                {
+                                    bool ServerFacebookLink;
+                                    try
+                                    {
+                                        ServerFacebookLink = Uri.TryCreate(InformationCache.SelectedServerJSON.facebookUrl, UriKind.Absolute, out Uri uriResult) &&
+                                                             (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                                    }
+                                    catch { ServerFacebookLink = false; }
+                                    FacebookIcon.Invoke(new Action(delegate ()
+                                    {
+                                        FacebookIcon.BackgroundImage = ServerFacebookLink ? Theming.FacebookIcon : Theming.FacebookIconDisabled;
+                                    }));
+                                    FacebookGroupLink.Invoke(new Action(delegate ()
+                                    {
+                                        FacebookGroupLink.Enabled = ServerFacebookLink;
+                                        FacebookGroupLink.Text = ServerFacebookLink ? "Facebook Page" : string.Empty;
+                                    }));
+                                }
+                                catch { }
+
+                                /* Twitter Account Display */
+                                try
+                                {
+                                    bool ServerTwitterLink = Uri.TryCreate(InformationCache.SelectedServerJSON.twitterUrl, UriKind.Absolute, out Uri uriResult) &&
+                                                             (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                                    TwitterIcon.Invoke(new Action(delegate ()
+                                    {
+                                        TwitterIcon.BackgroundImage = ServerTwitterLink ? Theming.TwitterIcon : Theming.TwitterIconDisabled;
+                                    }));
+                                    TwitterAccountLink.Invoke(new Action(delegate ()
+                                    {
+                                        TwitterAccountLink.Enabled = ServerTwitterLink;
+                                        TwitterAccountLink.Text = ServerTwitterLink ? "Twitter Feed" : string.Empty;
+                                    }));
+                                }
+                                catch { }
+
+                                /* Server Set Speedbug Timer Display */
+                                try
+                                {
+                                    serverSecondsToShutDown =
+                                    (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 7200;
+                                    ServerShutDown.Invoke(new Action(delegate ()
+                                    {
+                                        ServerShutDown.Text = string.Format("Gameplay Timer: " + TimeConversions.RelativeTime(serverSecondsToShutDown));
+                                    }));
+                                }
+                                catch { }
+
+                                try
+                                {
+                                    /* Scenery Group Display */
+                                    string SceneryStatus;
+                                    switch (String.Join("", InformationCache.SelectedServerJSON.activatedHolidaySceneryGroups))
+                                    {
+                                        case "SCENERY_GROUP_NEWYEARS":
+                                            SceneryStatus = "Scenery: New Years";
+                                            break;
+                                        case "SCENERY_GROUP_OKTOBERFEST":
+                                            SceneryStatus = "Scenery: OKTOBERFEST";
+                                            break;
+                                        case "SCENERY_GROUP_HALLOWEEN":
+                                            SceneryStatus = "Scenery: Halloween";
+                                            break;
+                                        case "SCENERY_GROUP_CHRISTMAS":
+                                            SceneryStatus = "Scenery: Christmas";
+                                            break;
+                                        case "SCENERY_GROUP_VALENTINES":
+                                            SceneryStatus = "Scenery: Valentines";
+                                            break;
+                                        default:
+                                            SceneryStatus = "Scenery: Normal";
+                                            break;
+                                    }
+                                    SceneryGroupText.Invoke(new Action(delegate () { SceneryGroupText.Text = SceneryStatus; }));
+                                }
+                                catch { }
+
+                                try
+                                {
+                                    if (ServerURI.Scheme == "https")
+                                    {
+                                        InformationCache.ModernAuthSecureChannel = true;
+                                    }
+                                    else if (InformationCache.SelectedServerJSON.enforceLauncherProxy != null &&
+                                            !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.enforceLauncherProxy))
+                                    {
+                                        InformationCache.ModernAuthSecureChannel = InformationCache.SelectedServerJSON.enforceLauncherProxy.ToLower() == "true";
+                                    }
+                                    else if (InformationCache.SelectedServerJSON.modernAuthSecureChannelOverRide != null &&
+                                             !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.modernAuthSecureChannelOverRide))
+                                    {
+                                        if (InformationCache.SelectedServerJSON.modernAuthSecureChannelOverRide.ToLower() == "true")
+                                        {
+                                            string CheckHttps = (InformationCache.SelectedServerData.IPAddress + "/GetServerInformation").Replace("http", "https");
+                                            switch (APIChecker.CheckStatus(CheckHttps, 10))
+                                            {
+                                                case APIStatus.Online:
+                                                    InformationCache.ModernAuthSecureChannel = true;
+                                                    break;
+                                                default:
+                                                    InformationCache.ModernAuthSecureChannel = false;
+                                                    break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            InformationCache.ModernAuthSecureChannel = false;
                                         }
                                     }
                                     else
@@ -1003,279 +1058,272 @@ namespace GameLauncher
                                         InformationCache.ModernAuthSecureChannel = false;
                                     }
                                 }
-                                else
-                                {
-                                    InformationCache.ModernAuthSecureChannel = false;
-                                }
-                            }
-                            catch { }
+                                catch { }
 
+                                try
+                                {
+                                    if (InformationCache.SelectedServerJSON.modernAuthSupport != null &&
+                                        !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.modernAuthSupport))
+                                    {
+                                        InformationCache.ModernAuthHashType = InformationCache.SelectedServerJSON.modernAuthSupport.ToLower();
+                                    }
+                                    else
+                                    {
+                                        InformationCache.ModernAuthHashType = string.Empty;
+                                    }
+                                }
+                                catch { }
+
+                                if (InformationCache.SelectedServerJSON.maxOnlinePlayers != 0)
+                                {
+                                    numPlayers = string.Format("{0} / {1}", InformationCache.SelectedServerJSON.onlineNumber, InformationCache.SelectedServerJSON.maxOnlinePlayers.ToString());
+                                    numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.numberOfRegistered);
+                                }
+                                else if (InformationCache.SelectedServerJSON.maxUsersAllowed != 0)
+                                {
+                                    numPlayers = string.Format("{0} / {1}", InformationCache.SelectedServerJSON.onlineNumber, InformationCache.SelectedServerJSON.maxUsersAllowed.ToString());
+                                    numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.numberOfRegistered);
+                                }
+                                else if ((InformationCache.SelectedServerJSON.maxUsersAllowed == 0) || (InformationCache.SelectedServerJSON.maxOnlinePlayers == 0))
+                                {
+                                    numPlayers = string.Format("{0}", InformationCache.SelectedServerJSON.onlineNumber);
+                                    numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.numberOfRegistered);
+                                }
+
+                                FunctionStatus.AllowRegistration = true;
+                            }
+                        }
+
+                        if (!GSIErrorFree)
+                        {
                             try
                             {
-                                if (InformationCache.SelectedServerJSON.modernAuthSupport != null &&
-                                    !string.IsNullOrWhiteSpace(InformationCache.SelectedServerJSON.modernAuthSupport))
+                                ServerStatusText.Invoke(new Action(delegate ()
                                 {
-                                    InformationCache.ModernAuthHashType = InformationCache.SelectedServerJSON.modernAuthSupport.ToLower();
+                                    ServerStatusText.Text = "Server Connection:\n - Unstable";
+                                    ServerStatusText.ForeColor = Theming.Warning;
+                                }));
+                                ServerStatusDesc.Invoke(new Action(delegate () { ServerStatusDesc.Text = "Recevied Invalid JSON Game Server Info."; }));
+                                ServerStatusIcon.Invoke(new Action(delegate () { ServerStatusIcon.BackgroundImage = Theming.ServerIconWarning; }));                                
+                            }
+                            catch { /* Sad Noises */ }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                ServerStatusText.Invoke(new Action(delegate ()
+                                {
+                                    ServerStatusText.Text = "Server Status:\n - Online ( ON )";
+                                    ServerStatusText.ForeColor = Theming.Sucess;
+                                }));
+                                ServerStatusIcon.Invoke(new Action(delegate () { ServerStatusIcon.BackgroundImage = Theming.ServerIconSuccess; }));
+                                /* Enable Login & Register Button */
+                                _loginEnabled = true;
+                                LoginButton.Invoke(new Action(delegate () { LoginButton.ForeColor = Theming.FivithTextForeColor; LoginButton.Enabled = true; }));
+                                RegisterText.Invoke(new Action(delegate () { RegisterText.Enabled = true; }));
+                                InformationCache.SelectedServerCategory = ((ServerList)ServerPick.SelectedItem).Category;
+                                InformationCache.RestartTimer =
+                                (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
+
+                                if (InformationCache.SelectedServerCategory.ToUpper() == "DEV" || InformationCache.SelectedServerCategory.ToUpper() == "OFFLINE")
+                                {
+                                    /* Disable Social Panel */
+                                    DisableSocialPanelandClearIt();
                                 }
                                 else
                                 {
-                                    InformationCache.ModernAuthHashType = string.Empty;
+                                    /* Enable Social Panel  */
+                                    ServerInfoPanel.Invoke(new Action(delegate ()
+                                    {
+                                        ServerInfoPanel.Visible = true;
+                                    }));
                                 }
                             }
-                            catch { }
-
-                            if (InformationCache.SelectedServerJSON.maxOnlinePlayers != 0)
+                            catch { /* ¯\_(ツ)_/¯ */ }
+                            finally
                             {
-                                numPlayers = string.Format("{0} / {1}", InformationCache.SelectedServerJSON.onlineNumber, InformationCache.SelectedServerJSON.maxOnlinePlayers.ToString());
-                                numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.numberOfRegistered);
-                            }
-                            else if (InformationCache.SelectedServerJSON.maxUsersAllowed != 0)
-                            {
-                                numPlayers = string.Format("{0} / {1}", InformationCache.SelectedServerJSON.onlineNumber, InformationCache.SelectedServerJSON.maxUsersAllowed.ToString());
-                                numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.numberOfRegistered);
-                            }
-                            else if ((InformationCache.SelectedServerJSON.maxUsersAllowed == 0) || (InformationCache.SelectedServerJSON.maxOnlinePlayers == 0))
-                            {
-                                numPlayers = string.Format("{0}", InformationCache.SelectedServerJSON.onlineNumber);
-                                numRegistered = string.Format("{0}", InformationCache.SelectedServerJSON.numberOfRegistered);
+                                if (Client != null)
+                                {
+                                    Client.Dispose();
+                                }
                             }
 
-                            FunctionStatus.AllowRegistration = true;
-                        }
-                    }
-
-                    if (!GSIErrorFree)
-                    {
-                        try
-                        {
-                            ServerStatusText.Text = "Server Connection:\n - Unstable";
-                            ServerStatusText.ForeColor = Theming.Warning;
-                            ServerStatusDesc.Text = "Recevied Invalid JSON Game Server Info.";
-                            ServerStatusIcon.BackgroundImage = Theming.ServerIconWarning;
-                        }
-                        catch { /* Sad Noises */ }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            ServerStatusText.Text = "Server Status:\n - Online ( ON )";
-                            ServerStatusText.ForeColor = Theming.Sucess;
-                            ServerStatusIcon.BackgroundImage = Theming.ServerIconSuccess;
-                            /* Enable Login & Register Button */
-                            _loginEnabled = true;
-                            LoginButton.ForeColor = Theming.FivithTextForeColor;
-                            LoginButton.Enabled = true;
-                            RegisterText.Enabled = true;
-                            InformationCache.SelectedServerCategory = ((ServerList)ServerPick.SelectedItem).Category;
-                            InformationCache.RestartTimer =
-                            (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 2 * 60 * 60;
-
-                            if (InformationCache.SelectedServerCategory.ToUpper() == "DEV" ||
-                                InformationCache.SelectedServerCategory.ToUpper() == "OFFLINE")
-                            {
-                                /* Disable Social Panel */
-                                DisableSocialPanelandClearIt();
-                            }
-                            else
-                            {
-                                /* Enable Social Panel  */
-                                ServerInfoPanel.Visible = true;
-                            }
-                        }
-                        catch { /* ¯\_(ツ)_/¯ */ }
-                        finally
-                        {
-                            if (Client != null)
-                            {
-                                Client.Dispose();
-                            }
-                        }
-
-
-                        /* For Thread Safety */
-                        if (this.ServerStatusDesc.InvokeRequired)
-                        {
+                            /* For Thread Safety */
                             ServerStatusDesc.Invoke(new Action(delegate ()
                             {
                                 ServerStatusDesc.Text = string.Format("Online: {0}\nRegistered: {1}", numPlayers, numRegistered);
                             }));
-                        }
-                        else
-                        {
-                            this.ServerStatusDesc.Text = string.Format("Online: {0}\nRegistered: {1}", numPlayers, numRegistered);
-                        }
 
-                        Ping CheckMate = null;
+                            Ping CheckMate = null;
 
-                        try
-                        {
-                            CheckMate = new Ping();
-                            CheckMate.PingCompleted += (_sender, _e) => {
-                                if (_e.Cancelled)
-                                {
-                                    Log.Warning("SERVER PING: Ping Canceled for " + ServerListUpdater.ServerName("Ping"));
-                                }
-                                else if (_e.Error != null)
-                                {
-                                    Log.Error("SERVER PING: Ping Failed for " + ServerListUpdater.ServerName("Ping") + " -> " + _e.Error.ToString());
-                                }
-                                else if (_e.Reply != null)
-                                {
-                                    if (_e.Reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
+                            try
+                            {
+                                CheckMate = new Ping();
+                                CheckMate.PingCompleted += (_sender, _e) => {
+                                    if (_e.Cancelled)
                                     {
-                                        if (this.ServerPingStatusText.InvokeRequired)
+                                        Log.Warning("SERVER PING: Ping Canceled for " + ServerListUpdater.ServerName("Ping"));
+                                    }
+                                    else if (_e.Error != null)
+                                    {
+                                        Log.Error("SERVER PING: Ping Failed for " + ServerListUpdater.ServerName("Ping") + " -> " + _e.Error.ToString());
+                                    }
+                                    else if (_e.Reply != null)
+                                    {
+                                        if (_e.Reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
                                         {
                                             ServerPingStatusText.Invoke(new Action(delegate () {
                                                 ServerPingStatusText.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), _e.Reply.RoundtripTime + "ms");
                                             }));
+
+                                            Log.Info("SERVER PING: " + _e.Reply.RoundtripTime + "ms for " + ServerListUpdater.ServerName("Ping"));
                                         }
                                         else
                                         {
-                                            this.ServerPingStatusText.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), _e.Reply.RoundtripTime + "ms");
+                                            Log.Warning("SERVER PING: " + ServerListUpdater.ServerName("Ping") + " is " + _e.Reply.Status);
                                         }
-
-                                        Log.Info("SERVER PING: " + _e.Reply.RoundtripTime + "ms for " + ServerListUpdater.ServerName("Ping"));
                                     }
                                     else
                                     {
-                                        Log.Warning("SERVER PING: " + ServerListUpdater.ServerName("Ping") + " is " + _e.Reply.Status);
+                                        Log.Warning("SERVER PING:  Unable to Ping " + ServerListUpdater.ServerName("Ping"));
                                     }
-                                }
-                                else
-                                {
-                                    Log.Warning("SERVER PING:  Unable to Ping " + ServerListUpdater.ServerName("Ping"));
-                                }
 
-                                ((AutoResetEvent)_e.UserState).Set();
-                            };
+                                    ((AutoResetEvent)_e.UserState).Set();
+                                };
 
-                            CheckMate.SendAsync(ServerURI.Host, 5000, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
-                        }
-                        catch (PingException Error)
-                        {
-                            LogToFileAddons.OpenLog("Pinging", null, Error, null, true);
-                        }
-                        catch (Exception Error)
-                        {
-                            LogToFileAddons.OpenLog("Ping", null, Error, null, true);
-                        }
-                        finally
-                        {
-                            if (CheckMate != null)
-                            {
-                                CheckMate.Dispose();
+                                CheckMate.SendAsync(ServerURI.Host, 5000, new byte[1], new PingOptions(30, true), new AutoResetEvent(false));
                             }
-                        }
-
-                        _serverEnabled = true;
-
-                        try
-                        {
-                            if (!Directory.Exists(".BannerCache")) { Directory.CreateDirectory(".BannerCache"); }
-
-                            if (!string.IsNullOrWhiteSpace(ImageUrl))
+                            catch (PingException Error)
                             {
-                                FunctionStatus.TLS();
-                                Uri URICall_A = new Uri(ImageUrl);
-                                ServicePointManager.FindServicePoint(URICall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                                var Client_A = new WebClient
+                                LogToFileAddons.OpenLog("Pinging", null, Error, null, true);
+                            }
+                            catch (Exception Error)
+                            {
+                                LogToFileAddons.OpenLog("Ping", null, Error, null, true);
+                            }
+                            finally
+                            {
+                                if (CheckMate != null)
                                 {
-                                    Encoding = Encoding.UTF8
-                                };
-
-                                if (!WebCalls.Alternative()) { Client_A = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
-                                else
-                                {
-                                    Client_A.Headers.Add("user-agent", "SBRW Launcher " +
-                                    Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                    CheckMate.Dispose();
                                 }
+                            }
 
-                                Client_A.DownloadDataAsync(URICall_A);
-                                Client_A.DownloadProgressChanged += (Object_A, Events_A) =>
-                                {
-                                    if (Events_A.TotalBytesToReceive > 2000000)
-                                    {
-                                        Client_A.CancelAsync();
-                                        Log.Warning("Unable to Cache " + ServerListUpdater.ServerName("Ping") + " Server Banner! {Over 2MB?}");
-                                    }
-                                };
+                            _serverEnabled = true;
 
-                                Client_A.DownloadDataCompleted += (Object_A, Events_A) =>
+                            try
+                            {
+                                if (!Directory.Exists(".BannerCache")) { Directory.CreateDirectory(".BannerCache"); }
+
+                                if (!string.IsNullOrWhiteSpace(ImageUrl))
                                 {
-                                    if (Events_A.Cancelled || Events_A.Error != null)
+                                    FunctionStatus.TLS();
+                                    Uri URICall_A = new Uri(ImageUrl);
+                                    ServicePointManager.FindServicePoint(URICall_A).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                                    var Client_A = new WebClient
                                     {
-                                        /* Load cached banner! */
-                                        Banner.Image = Banners.Grayscale(BannerCache);
-                                        if (Client_A != null)
-                                        {
-                                            Client_A.Dispose();
-                                        }
-                                        return;
-                                    }
+                                        Encoding = Encoding.UTF8
+                                    };
+
+                                    if (!WebCalls.Alternative()) { Client_A = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
                                     else
                                     {
-                                        try
+                                        Client_A.Headers.Add("user-agent", "SBRW Launcher " +
+                                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                                    }
+
+                                    Client_A.DownloadDataAsync(URICall_A);
+                                    Client_A.DownloadProgressChanged += (Object_A, Events_A) =>
+                                    {
+                                        if (ServerChangeTriggered)
                                         {
-                                            try
-                                            {
-                                                if (_serverRawBanner != null)
-                                                {
-                                                    _serverRawBanner.Dispose();
-                                                    _serverRawBanner.Close();
-                                                }
-                                            }
-                                            catch { }
-
-                                            _serverRawBanner = new MemoryStream(Events_A.Result)
-                                            {
-                                                Position = 0
-                                            };
-
-                                            Banner.Image = Image.FromStream(_serverRawBanner);
-
-
-                                            if (Banners.GetFileExtension(ImageUrl) == "gif")
-                                            {
-                                                Image.FromStream(_serverRawBanner).Save(BannerCache);
-                                            }
-                                            else
-                                            {
-                                                File.WriteAllBytes(BannerCache, _serverRawBanner.ToArray());
-                                            }
+                                            Client_A.CancelAsync();
+                                            Log.Info("BANNER: Stopping " + ServerListUpdater.ServerName("Ping") + " Server Banner Download");
                                         }
-                                        catch (Exception Error)
+                                        else if (Events_A.TotalBytesToReceive > 2000000)
                                         {
-                                            LogToFileAddons.OpenLog("Server Banner", null, Error, null, true);
-                                            Banner.BackColor = Theming.BannerBackColor;
+                                            Client_A.CancelAsync();
+                                            Log.Warning("BANNER: Unable to Cache " + ServerListUpdater.ServerName("Ping") + " Server Banner! {Over 2MB?}");
                                         }
-                                        finally
+                                    };
+
+                                    Client_A.DownloadDataCompleted += (Object_A, Events_A) =>
+                                    {
+                                        if (Events_A.Cancelled || Events_A.Error != null)
                                         {
+                                            /* Load cached banner! */
+                                            Banner.Image = Banners.Grayscale(BannerCache);
                                             if (Client_A != null)
                                             {
                                                 Client_A.Dispose();
                                             }
                                         }
-                                    }
-                                };
+                                        else
+                                        {
+                                            try
+                                            {
+                                                try
+                                                {
+                                                    if (_serverRawBanner != null)
+                                                    {
+                                                        _serverRawBanner.Dispose();
+                                                        _serverRawBanner.Close();
+                                                    }
+                                                }
+                                                catch { }
+
+                                                _serverRawBanner = new MemoryStream(Events_A.Result)
+                                                {
+                                                    Position = 0
+                                                };
+
+                                                Banner.Invoke(new Action(delegate () { Banner.Image = Image.FromStream(_serverRawBanner); }));
+                                                
+                                                if (Banners.GetFileExtension(ImageUrl) == "gif")
+                                                {
+                                                    Image.FromStream(_serverRawBanner).Save(BannerCache);
+                                                }
+                                                else
+                                                {
+                                                    File.WriteAllBytes(BannerCache, _serverRawBanner.ToArray());
+                                                }
+                                            }
+                                            catch (Exception Error)
+                                            {
+                                                LogToFileAddons.OpenLog("Server Banner", null, Error, null, true);
+                                                Banner.Invoke(new Action(delegate () { Banner.BackColor = Theming.BannerBackColor; }));
+                                            }
+                                            finally
+                                            {
+                                                if (Client_A != null)
+                                                {
+                                                    Client_A.Dispose();
+                                                }
+                                            }
+                                        }
+                                    };
+                                }
+                                else if (File.Exists(BannerCache))
+                                {
+                                    /* Load cached banner! */
+                                    Banner.Invoke(new Action(delegate () { Banner.Image = Banners.Grayscale(BannerCache); }));
+                                }
+                                else
+                                {
+                                    Banner.Invoke(new Action(delegate () { Banner.BackColor = Theming.BannerBackColor; }));
+                                }
                             }
-                            else if (File.Exists(BannerCache))
+                            catch (Exception Error)
                             {
-                                /* Load cached banner! */
-                                Banner.Image = Banners.Grayscale(BannerCache);
+                                LogToFileAddons.OpenLog("BANNER Cache", null, Error, null, true);
                             }
-                            else
-                            {
-                                Banner.BackColor = Theming.BannerBackColor;
-                            }
-                        }
-                        catch (Exception Error)
-                        {
-                            LogToFileAddons.OpenLog("BANNER Cache", null, Error, null, true);
                         }
                     }
-                }
-            };
+                };
+            });
+
+            ServerCheckThread.Start();
         }
 
         /* Main Screen Elements */
@@ -1284,23 +1332,26 @@ namespace GameLauncher
         private void DisableSocialPanelandClearIt()
         {
             /* Hides Social Panel */
-            ServerInfoPanel.Visible = false;
+            if (!ServerInfoPanel.InvokeRequired) { ServerInfoPanel.Visible = false; }
+            else { ServerInfoPanel.Invoke(new Action(delegate () { ServerInfoPanel.Visible = false; })); }
             /* Home */
-            HomePageIcon.BackgroundImage = Theming.HomeIconDisabled;
-            HomePageLink.Enabled = false;
+            if (!HomePageIcon.InvokeRequired) { HomePageIcon.BackgroundImage = Theming.HomeIconDisabled; HomePageLink.Enabled = false; }
+            else { HomePageIcon.Invoke(new Action(delegate () { HomePageIcon.BackgroundImage = Theming.HomeIconDisabled; HomePageLink.Enabled = false; })); }
             /* Discord */
-            DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled;
-            DiscordInviteLink.Enabled = false;
+            if (!DiscordIcon.InvokeRequired) { DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled; DiscordInviteLink.Enabled = false; }
+            else { DiscordIcon.Invoke(new Action(delegate () { DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled; DiscordInviteLink.Enabled = false; })); }
             /* Facebook */
-            FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled;
-            FacebookGroupLink.Enabled = false;
+            if (!FacebookIcon.InvokeRequired) { FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled; FacebookGroupLink.Enabled = false; }
+            else { FacebookIcon.Invoke(new Action(delegate () { FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled; FacebookGroupLink.Enabled = false; })); }
             /* Twitter */
-            TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled;
-            TwitterAccountLink.Enabled = false;
+            if (!TwitterIcon.InvokeRequired) { TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled; TwitterAccountLink.Enabled = false; }
+            else { TwitterIcon.Invoke(new Action(delegate () { TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled; TwitterAccountLink.Enabled = false; })); }
             /* Scenery */
-            SceneryGroupText.Text = "But It's Me!";
+            if (!SceneryGroupText.InvokeRequired) { SceneryGroupText.Text = "But It's Me!"; }
+            else { SceneryGroupText.Invoke(new Action(delegate () { SceneryGroupText.Text = "But It's Me!"; })); }
             /* Restart Timer */
-            ServerShutDown.Text = "Game Launcher!";
+            if (!ServerShutDown.InvokeRequired) { ServerShutDown.Text = "Game Launcher!"; }
+            else { ServerShutDown.Invoke(new Action(delegate () { ServerShutDown.Text = "Game Launcher!"; })); }
         }
 
         /*  After Successful Login, Hide Login Forms */

@@ -6,7 +6,6 @@ using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Globalization;
-using GameLauncher.App.Classes;
 using GameLauncher.App.Classes.InsiderKit;
 using GameLauncher.App.Classes.LauncherCore.ModNet;
 using GameLauncher.App.Classes.SystemPlatform.Windows;

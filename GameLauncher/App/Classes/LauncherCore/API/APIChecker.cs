@@ -76,6 +76,9 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
 
         public static APIStatus StatusCodes(string URI, WebException Error, HttpWebResponse Response)
         {
+            if (!string.IsNullOrWhiteSpace(Error.GetBaseException().Message)) 
+            { Log.Error("CORE: " + URI + " Additional Details -> " + Error.GetBaseException().Message); }
+
             if (!string.IsNullOrWhiteSpace(URI))
             {
                 switch (Error.Status)
@@ -201,7 +204,7 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
         public static bool WOPLCDNL = false;
         public static bool WOPLAPI() => (WOPLSL && WOPLCDNL);
 
-        public static bool GitHubAPI = true;
+        public static bool GitHubAPI = false;
 
         public static void PingAPIStatus()
         {
@@ -325,7 +328,6 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 /* (Start Process) Check ServerList Status */
                 ServerListUpdater.GetList();
             }
-
         }
 
         private static string OnlineListJson;
@@ -354,6 +356,11 @@ namespace GameLauncher.App.Classes.LauncherCore.APICheckers
                 {
                     OnlineListJson = Client.DownloadString(URLCall);
                     Log.UrlCall("JSON LIST: Retrived " + JSONUrl);
+                }
+                catch (WebException Error)
+                {
+                    APIChecker.StatusCodes(JSONUrl, Error, (HttpWebResponse)Error.Response);
+                    return false;
                 }
                 catch (Exception Error)
                 {
