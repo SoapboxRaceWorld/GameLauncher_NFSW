@@ -105,24 +105,29 @@ namespace GameLauncher.App
             data.AutoGenerateColumns = true;
 
             string Password = (!String.IsNullOrWhiteSpace(FileAccountSave.UserHashedPassword)) ? "True" : "False";
-            //string ProxyStatus = (!String.IsNullOrWhiteSpace(FileSettingsSave.Proxy)) ? "False" : "True";
-            //string RPCStatus = (!String.IsNullOrWhiteSpace(FileSettingsSave.RPC)) ? "False" : "True";
-            if (FileSettingsSave.Proxy == "0")
+
+            if (!String.IsNullOrWhiteSpace(FileSettingsSave.Proxy))
             {
-                ProxyStatus = "False";
-            }
-            else if (FileSettingsSave.Proxy == "1")
-            {
-                ProxyStatus = "True";
+                if (FileSettingsSave.Proxy == "0")
+                {
+                    ProxyStatus = "False";
+                }
+                else if (FileSettingsSave.Proxy == "1")
+                {
+                    ProxyStatus = "True";
+                }
             }
 
-            if (FileSettingsSave.RPC == "0")
+            if (!String.IsNullOrWhiteSpace(FileSettingsSave.RPC))
             {
-                RPCStatus = "False";
-            }
-            else if (FileSettingsSave.RPC == "1")
-            {
-                RPCStatus = "True";
+                if (FileSettingsSave.RPC == "0")
+                {
+                    RPCStatus = "False";
+                }
+                else if (FileSettingsSave.RPC == "1")
+                {
+                    RPCStatus = "True";
+                }
             }
 
             string Antivirus = String.Empty;
@@ -207,8 +212,6 @@ namespace GameLauncher.App
                 new ListType{ Name = "Credentials Saved", Value = Password},
                 new ListType{ Name = "Language", Value =  FileSettingsSave.Lang},
                 new ListType{ Name = "Skipping Update", Value = UpdateSkip},
-                //new ListType{ Name = "Disable Proxy", Value = FileSettingsSave.Proxy.ToString()},
-                //new ListType{ Name = "Disable RPC", Value = FileSettingsSave.RPC.ToString()},
                 new ListType{ Name = "Disable Proxy", Value = ProxyStatus},
                 new ListType{ Name = "Disable RPC", Value = RPCStatus},
                 new ListType{ Name = "Firewall Rule - Launcher", Value =  FileSettingsSave.FirewallLauncherStatus},
