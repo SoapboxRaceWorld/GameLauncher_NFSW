@@ -537,14 +537,7 @@ namespace GameLauncher.App
 
             if (File.Exists(FileSettingsSave.GameInstallation + "/profwords") || File.Exists(FileSettingsSave.GameInstallation + "/profwords_dis"))
             {
-                try
-                {
-                    SettingsWordFilterCheck.Checked = !File.Exists(FileSettingsSave.GameInstallation + "/profwords");
-                }
-                catch
-                {
-                    SettingsWordFilterCheck.Checked = false;
-                }
+                SettingsWordFilterCheck.Checked = !File.Exists(FileSettingsSave.GameInstallation + "/profwords");
             }
             else
             {
@@ -587,28 +580,54 @@ namespace GameLauncher.App
             }
             else
             {
-                ButtonsColorSet(SettingsClearCommunicationLogButton, 3, false);
+                ButtonsColorSet(SettingsClearCommunicationLogButton, 1, false);
             }
 
             if (Directory.Exists(FileSettingsSave.GameInstallation + "/.data"))
             {
-
                 ButtonsColorSet(SettingsClearServerModCacheButton, 2, true);
             }
             else
             {
-                ButtonsColorSet(SettingsClearServerModCacheButton, 3, false);
+                ButtonsColorSet(SettingsClearServerModCacheButton, 1, false);
             }
 
-            var crashLogFilesDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
-
-            if (crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp").Count() != 0)
+            try
             {
-                ButtonsColorSet(SettingsClearCrashLogsButton, 2, true);
+                DirectoryInfo CrashLogFilesDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
+
+                if (CrashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp", SearchOption.TopDirectoryOnly).Count() != 0)
+                {
+                    ButtonsColorSet(SettingsClearCrashLogsButton, 2, true);
+                }
+                else
+                {
+                    ButtonsColorSet(SettingsClearCrashLogsButton, 1, false);
+                }
             }
-            else
+            catch (Exception Error)
             {
                 ButtonsColorSet(SettingsClearCrashLogsButton, 3, false);
+                LogToFileAddons.OpenLog("SettingsScreen [SBRCrashDump_Check]", null, Error, null, true);
+            }
+
+            try
+            {
+                DirectoryInfo LauncherLogFilesDirectory = new DirectoryInfo(Locations.LogFolder);
+
+                if (LauncherLogFilesDirectory.EnumerateDirectories().Count() != 1)
+                {
+                    ButtonsColorSet(SettingsClearLauncherLogsButton, 2, true);
+                }
+                else
+                {
+                    ButtonsColorSet(SettingsClearLauncherLogsButton, 1, false);
+                }
+            }
+            catch (Exception Error)
+            {
+                ButtonsColorSet(SettingsClearLauncherLogsButton, 3, false);
+                LogToFileAddons.OpenLog("SettingsScreen [Launcher Log Check]", null, Error, null, true);
             }
 
             try
@@ -636,6 +655,7 @@ namespace GameLauncher.App
                 if (EnableInsiderDeveloper.Allowed())
                 {
                     FunctionStatus.DoesCDNSupportVerifyHash = true;
+                    ButtonsColorSet(SettingsVFilesButton, 4, true);
                 }
                 else
                 {
@@ -697,7 +717,7 @@ namespace GameLauncher.App
         {
             SettingsSave.Text = "SAVING";
             /* TODO null check */
-            if (!string.IsNullOrWhiteSpace(((LangObject)SettingsLanguage.SelectedItem).INI_Value))
+            if (SettingsLanguage.SelectedItem != null && !string.IsNullOrWhiteSpace(((LangObject)SettingsLanguage.SelectedItem).INI_Value))
             {
                 FileSettingsSave.Lang = ((LangObject)SettingsLanguage.SelectedItem).INI_Value;
                 FileGameSettingsData.Language = ((LangObject)SettingsLanguage.SelectedItem).XML_Value;
@@ -707,42 +727,68 @@ namespace GameLauncher.App
                 {
                     MessageBox.Show(null, "Please Note: If a Server does not provide a Language Pack, it will fallback to English Language Pack instead.",
                         "GameLauncher", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
 
-            if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !UnixOS.Detected())
-            {
-                WindowsDefenderGameFilesDirctoryChange();
-            }
-            else if (FileSettingsSave.GameInstallation != _newGameFilesPath)
-            {
-                if (!UnixOS.Detected())
+                    if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts"))
+                    {
+                        try { Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts"); }
+                        catch { }
+                    }
+
+                    if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini"))
+                    {
+                        try { File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini"); }
+                        catch { }
+                    }
+
+                    try
+                    {
+                        IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
+                        LanguagePickerFile.Write("Language", ((LangObject)SettingsLanguage.SelectedItem).INI_Value);
+                    }
+                    catch { }
+                }
+                /* Delete Custom Settings.ini for LangPicker.asi module */
+                else if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini"))
                 {
-                    /* Check if New Game! Files is not in Banned Folder Locations */
-                    CheckGameFilesDirectoryPrevention();
-                    /* Store Old Location for Security Panel to Use Later on */
-                    FileSettingsSave.GameInstallationOld = FileSettingsSave.GameInstallation;
-                    FileSettingsSave.FirewallGameStatus = "Not Excluded";
-                    ButtonsColorSet(ButtonSecurityPanel, 2, true);
+                    try { File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini"); }
+                    catch { }
                 }
-
-                FileSettingsSave.GameInstallation = _newGameFilesPath;
-
-                /* Clean Mods Files from New Dirctory (If it has .links in directory) */
-                string LinksPath = Strings.Encode(Path.Combine(_newGameFilesPath, ".links"));
-                if (File.Exists(LinksPath))
-                {
-                    ModNetHandler.CleanLinks(LinksPath, _newGameFilesPath);
-                    Log.Completed("CLEANLINKS: Done");
-                }
-
-                ButtonsColorSet(SettingsGameFiles, 1, true);
-                _restartRequired = true;
             }
 
-            bool CDNUrlHasChanged = false;
+            if (!string.IsNullOrWhiteSpace(_newGameFilesPath))
+            {
+                if (WindowsProductVersion.GetWindowsNumber() >= 10.0 && (FileSettingsSave.GameInstallation != _newGameFilesPath) && !UnixOS.Detected())
+                {
+                    WindowsDefenderGameFilesDirctoryChange();
+                }
+                else if (FileSettingsSave.GameInstallation != _newGameFilesPath)
+                {
+                    if (!UnixOS.Detected())
+                    {
+                        /* Check if New Game! Files is not in Banned Folder Locations */
+                        CheckGameFilesDirectoryPrevention();
+                        /* Store Old Location for Security Panel to Use Later on */
+                        FileSettingsSave.GameInstallationOld = FileSettingsSave.GameInstallation;
+                        FileSettingsSave.FirewallGameStatus = "Not Excluded";
+                        ButtonsColorSet(ButtonSecurityPanel, 2, true);
+                    }
 
-            if (!string.IsNullOrWhiteSpace(((CDNList)SettingsCDNPick.SelectedItem).Url))
+                    FileSettingsSave.GameInstallation = _newGameFilesPath;
+
+                    /* Clean Mods Files from New Dirctory (If it has .links in directory) */
+                    string LinksPath = Strings.Encode(Path.Combine(_newGameFilesPath, ".links"));
+                    if (File.Exists(LinksPath))
+                    {
+                        ModNetHandler.CleanLinks(LinksPath, _newGameFilesPath);
+                        Log.Completed("CLEANLINKS: Done");
+                    }
+
+                    ButtonsColorSet(SettingsGameFiles, 1, true);
+                    _restartRequired = true;
+                }
+            }
+
+            if (SettingsCDNPick.SelectedItem != null && !string.IsNullOrWhiteSpace(((CDNList)SettingsCDNPick.SelectedItem).Url))
             {
                 string SelectedCDNFromList = ((CDNList)SettingsCDNPick.SelectedItem).Url;
                 string LocalFinalCDNURL;
@@ -763,7 +809,36 @@ namespace GameLauncher.App
                     SettingsCDNCurrent.Text = LocalFinalCDNURL;
                     FinalCDNURL = FileSettingsSave.CDN = LocalFinalCDNURL;
                     _restartRequired = true;
-                    CDNUrlHasChanged = true;
+
+                    if (ThreadChecksums != null)
+                    {
+                        ThreadChecksums.Abort();
+                        ThreadChecksums = null;
+                    }
+
+                    ThreadChecksums = new Thread(() =>
+                    {
+                        if (Application.OpenForms["SettingsScreen"] != null)
+                        {
+                            if (!Application.OpenForms["SettingsScreen"].Disposing)
+                            {
+                                ButtonsColorSet(SettingsVFilesButton, 0, false);
+
+                                switch (APIChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat", 10))
+                                {
+                                    case APIStatus.Online:
+                                        FunctionStatus.DoesCDNSupportVerifyHash = true;
+                                        ButtonsColorSet(SettingsVFilesButton, (FileSettingsSave.GameIntegrity != "Good" ? 2 : 0), true);
+                                        break;
+                                    default:
+                                        FunctionStatus.DoesCDNSupportVerifyHash = false;
+                                        ButtonsColorSet(SettingsVFilesButton, 3, true);
+                                        break;
+                                }
+                            }
+                        }
+                    });
+                    ThreadChecksums.Start();
                 }
             }
             else
@@ -771,10 +846,9 @@ namespace GameLauncher.App
                 Log.Error("SETTINGS: Selected CDN does not contain a URL, unable to Save Contents");
             }
 
-            String disableProxy = (SettingsProxyCheckbox.Checked == true) ? "1" : "0";
-            if (FileSettingsSave.Proxy != disableProxy)
+            if (FileSettingsSave.Proxy != (SettingsProxyCheckbox.Checked ? "1" : "0"))
             {
-                FileSettingsSave.Proxy = (SettingsProxyCheckbox.Checked == true) ? "1" : "0";
+                FileSettingsSave.Proxy = SettingsProxyCheckbox.Checked ? "1" : "0";
 
                 if (FileSettingsSave.Proxy == "1")
                 {
@@ -820,10 +894,9 @@ namespace GameLauncher.App
                 }
             }
 
-            String disableRPC = (SettingsDiscordRPCCheckbox.Checked == true) ? "1" : "0";
-            if (FileSettingsSave.RPC != disableRPC)
+            if (FileSettingsSave.RPC != (SettingsDiscordRPCCheckbox.Checked ? "1" : "0"))
             {
-                FileSettingsSave.RPC = (SettingsDiscordRPCCheckbox.Checked == true) ? "1" : "0";
+                FileSettingsSave.RPC = SettingsDiscordRPCCheckbox.Checked ? "1" : "0";
 
                 if (FileSettingsSave.RPC == "1")
                 {
@@ -841,10 +914,9 @@ namespace GameLauncher.App
                 }
             }
 
-            String enableAltWebCalls = (SettingsAltWebCallsheckbox.Checked == true) ? "WebClientWithTimeout" : "WebClient";
-            if (FileSettingsSave.WebCallMethod != enableAltWebCalls)
+            if (FileSettingsSave.WebCallMethod != (SettingsAltWebCallsheckbox.Checked ? "WebClientWithTimeout" : "WebClient"))
             {
-                FileSettingsSave.WebCallMethod = (SettingsAltWebCallsheckbox.Checked == true) ? "WebClientWithTimeout" : "WebClient";
+                FileSettingsSave.WebCallMethod = SettingsAltWebCallsheckbox.Checked ? "WebClientWithTimeout" : "WebClient";
             }
 
             try
@@ -876,77 +948,9 @@ namespace GameLauncher.App
                 LogToFileAddons.OpenLog("SETTINGS SAVE [Profwords]", null, Error, null, true);
             }
 
-            /* Create Custom Settings.ini for LangPicker.asi module */
-            if (!string.IsNullOrWhiteSpace(((LangObject)SettingsLanguage.SelectedItem).Category))
-            {
-                if (((LangObject)SettingsLanguage.SelectedItem).Category == "Custom")
-                {
-                    if (!Directory.Exists(FileSettingsSave.GameInstallation + "/scripts"))
-                    {
-                        try
-                        {
-                            Directory.CreateDirectory(FileSettingsSave.GameInstallation + "/scripts");
-                        }
-                        catch { }
-                    }
-                    try
-                    {
-                        IniFile LanguagePickerFile = new IniFile(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
-                        LanguagePickerFile.Write("Language", ((LangObject)SettingsLanguage.SelectedItem).INI_Value);
-                    }
-                    catch { }
-                }
-                else
-                {
-                    if (File.Exists(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini"))
-                    {
-                        try
-                        {
-                            File.Delete(FileSettingsSave.GameInstallation + "/scripts/LangPicker.ini");
-                        }
-                        catch { }
-                    }
-                }
-            }
-
             /* Save Settings */
             FileSettingsSave.SaveSettings();
             FileGameSettings.Save("Suppress", "Language Only");
-
-            if (CDNUrlHasChanged)
-            {
-                if (ThreadChecksums != null)
-                {
-                    ThreadChecksums.Abort();
-                    ThreadChecksums = null;
-                }
-
-                ThreadChecksums = new Thread(() =>
-                {
-                    if (Application.OpenForms["SettingsScreen"] != null)
-                    {
-                        if (!Application.OpenForms["SettingsScreen"].Disposing)
-                        {
-                            ButtonsColorSet(SettingsVFilesButton, 0, false);
-
-                            switch (APIChecker.CheckStatus(FinalCDNURL + "/unpacked/checksums.dat", 10))
-                            {
-                                case APIStatus.Online:
-                                    FunctionStatus.DoesCDNSupportVerifyHash = true;
-                                    ButtonsColorSet(SettingsVFilesButton, (FileSettingsSave.GameIntegrity != "Good" ? 2 : 0), true);
-                                    break;
-                                default:
-                                    FunctionStatus.DoesCDNSupportVerifyHash = false;
-                                    ButtonsColorSet(SettingsVFilesButton, 3, true);
-                                    break;
-                            }
-                        }
-                    }
-                });
-
-                ThreadChecksums.Start();
-            }
-
             SettingsSave.Text = "SAVED";
 
             if (_restartRequired)
@@ -1024,21 +1028,21 @@ namespace GameLauncher.App
         {
             try
             {
-                var crashLogFilesDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
+                DirectoryInfo CrashLogFilesDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
 
-                foreach (var file in crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp"))
+                foreach (FileInfo LocatedFile in CrashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.dmp", SearchOption.TopDirectoryOnly))
                 {
-                    file.Delete();
+                    LocatedFile.Delete();
                 }
 
-                foreach (var file in crashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.txt"))
+                foreach (FileInfo LocatedFile in CrashLogFilesDirectory.EnumerateFiles("SBRCrashDump_CL0*.txt", SearchOption.TopDirectoryOnly))
                 {
-                    file.Delete();
+                    LocatedFile.Delete();
                 }
 
-                foreach (var file in crashLogFilesDirectory.EnumerateFiles("NFSCrashDump_CL0*.dmp"))
+                foreach (FileInfo LocatedFile in CrashLogFilesDirectory.EnumerateFiles("NFSCrashDump_CL0*.dmp", SearchOption.TopDirectoryOnly))
                 {
-                    file.Delete();
+                    LocatedFile.Delete();
                 }
 
                 ButtonsColorSet(SettingsClearCrashLogsButton, 1, false);

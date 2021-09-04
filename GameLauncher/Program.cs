@@ -28,9 +28,66 @@ namespace GameLauncher
     {
         public static bool LauncherMustRestart = false;
 
+        static void Application_ThreadException(object sender, ThreadExceptionEventArgs Error)
+        {
+            try
+            {
+                LogToFileAddons.OpenLog("Thread Exception", "SBRW Launcher will have to Close due to a Thread Exception: ", 
+                    Error.Exception, "Error", false);
+
+                try
+                {
+                    Process[] allOfThem = Process.GetProcessesByName("nfsw");
+                    foreach (var oneProcess in allOfThem)
+                    {
+                        Process.GetProcessById(oneProcess.Id).Kill();
+                    }
+                }
+                catch { }
+            }
+            finally
+            {
+                Application.Exit();
+            }
+        }
+
+        static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs Error)
+        {
+            try
+            {
+                LogToFileAddons.OpenLog("Unhandled Exception", "SBRW Launcher will have to Close due to a Unhandled Exception: ", 
+                    (Exception)Error.ExceptionObject, "Error", false);
+
+                try
+                {
+                    Process[] allOfThem = Process.GetProcessesByName("nfsw");
+                    foreach (var oneProcess in allOfThem)
+                    {
+                        Process.GetProcessById(oneProcess.Id).Kill();
+                    }
+                }
+                catch { }
+            }
+            finally
+            {
+                Application.Exit();
+            }
+        }
+
         [STAThread]
         static void Main()
         {
+            InformationCache.CurrentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
+
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+            Application.ThreadException += Application_ThreadException;
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(true);
+
             if (Debugger.IsAttached && !NFSW.IsRunning())
             {
                 Start();
@@ -93,7 +150,7 @@ namespace GameLauncher
                     }
                     else
                     {
-                        var mutex = new Mutex(false, "GameLauncherNFSW-MeTonaTOR");
+                        Mutex mutex = new Mutex(false, "GameLauncherNFSW-MeTonaTOR");
                         try
                         {
                             if (mutex.WaitOne(0, false))
@@ -273,13 +330,6 @@ namespace GameLauncher
             }
             else
             {
-                InformationCache.CurrentLanguage = CultureInfo.CurrentCulture.Name.Split('-')[0].ToUpper();
-                Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
-                Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
-
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(true);
-
                 /* Splash Screen */
                 if (!Debugger.IsAttached)
                 {
@@ -373,7 +423,7 @@ namespace GameLauncher
                         InformationCache.OSName = WindowsProductVersion.ConvertWindowsNumberToName();
                         Log.System("SYSTEM: Detected OS: " + InformationCache.OSName);
                         Log.System("SYSTEM: Windows Build: " + WindowsProductVersion.GetWindowsBuildNumber());
-                        Log.System("SYSTEM: NT Version: " + Environment.OSVersion);
+                        Log.System("SYSTEM: NT Version: " + Environment.OSVersion.VersionString);
                         Log.System("SYSTEM: Video Card: " + HardwareInfo.GPU.CardName());
                         Log.System("SYSTEM: Driver Version: " + HardwareInfo.GPU.DriverVersion());
                     }

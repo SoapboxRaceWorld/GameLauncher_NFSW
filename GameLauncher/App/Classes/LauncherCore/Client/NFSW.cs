@@ -7,9 +7,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
     {
         public static bool DetectByMutex()
         {
-            Mutex detectRunningNFSW = new Mutex(false, "Global\\{3E34CEFB-7B34-4e62-8034-33256B8BC2F7}");
+            Mutex detectRunningNFSW = null;
             try
             {
+                detectRunningNFSW = new Mutex(false, "Global\\{3E34CEFB-7B34-4e62-8034-33256B8BC2F7}");
+
                 if (!detectRunningNFSW.WaitOne(0, false))
                 {
                     return true;
@@ -28,6 +30,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client
                 if (detectRunningNFSW != null)
                 {
                     detectRunningNFSW.Close();
+                    detectRunningNFSW.Dispose();
                 }
             }
         }

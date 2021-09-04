@@ -13,6 +13,7 @@ using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 
 namespace GameLauncher.App
 {
@@ -33,21 +34,11 @@ namespace GameLauncher.App
             Text = "Debug - SBRW Launcher: v" + Application.ProductVersion;
 
             /*******************************/
-            /* Set Initial Position         /
-            /*******************************/
-
-            FunctionStatus.CenterParent(this);
-
-            /*******************************/
             /* Set Font                     /
             /*******************************/
 
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
-            var MainFontSize = 8f * 100f / CreateGraphics().DpiY;
-            if (UnixOS.Detected())
-            {
-                MainFontSize = 8f;
-            }
+            float MainFontSize = UnixOS.Detected() ? 8f : 8f * 100f / CreateGraphics().DpiY;
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
 
             /********************************/
@@ -97,38 +88,9 @@ namespace GameLauncher.App
             return virusCheckerName;
         }
 
-        public string ProxyStatus;
-        public string RPCStatus;
-
         private void DebugScreen_Load(object sender, EventArgs e)
         {
             data.AutoGenerateColumns = true;
-
-            string Password = (!String.IsNullOrWhiteSpace(FileAccountSave.UserHashedPassword)) ? "True" : "False";
-
-            if (!String.IsNullOrWhiteSpace(FileSettingsSave.Proxy))
-            {
-                if (FileSettingsSave.Proxy == "0")
-                {
-                    ProxyStatus = "False";
-                }
-                else if (FileSettingsSave.Proxy == "1")
-                {
-                    ProxyStatus = "True";
-                }
-            }
-
-            if (!String.IsNullOrWhiteSpace(FileSettingsSave.RPC))
-            {
-                if (FileSettingsSave.RPC == "0")
-                {
-                    RPCStatus = "False";
-                }
-                else if (FileSettingsSave.RPC == "1")
-                {
-                    RPCStatus = "True";
-                }
-            }
 
             string Antivirus = String.Empty;
             string Firewall = String.Empty;
@@ -148,17 +110,6 @@ namespace GameLauncher.App
                     Firewall = "Unknown";
                     AntiSpyware = "Unknown";
                 }
-            }
-
-            string OS = "";
-
-            if (UnixOS.Detected())
-            {
-                OS = UnixOS.FullName();
-            }
-            else
-            {
-                OS = Environment.OSVersion.VersionString;
             }
 
             string UpdateSkip = "";
@@ -195,7 +146,8 @@ namespace GameLauncher.App
                     Win32_Processor = (from x in new ManagementObjectSearcher("SELECT Name FROM Win32_Processor").Get().Cast<ManagementObject>()
                                        select x.GetPropertyValue("Name")).FirstOrDefault().ToString();
 
-                    Kernel32.GetDiskFreeSpaceEx(FileSettingsSave.GameInstallation, out lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
+                    Kernel32.GetDiskFreeSpaceEx(FileSettingsSave.GameInstallation, 
+                        out lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
                 }
                 catch (Exception Error)
                 {
@@ -209,11 +161,11 @@ namespace GameLauncher.App
             {
                 new ListType{ Name = "InstallationDirectory", Value = FileSettingsSave.GameInstallation},
                 new ListType{ Name = "Launcher Version", Value = Application.ProductVersion},
-                new ListType{ Name = "Credentials Saved", Value = Password},
+                new ListType{ Name = "Credentials Saved", Value = (!String.IsNullOrWhiteSpace(FileAccountSave.UserHashedPassword)) ? "True" : "False"},
                 new ListType{ Name = "Language", Value =  FileSettingsSave.Lang},
                 new ListType{ Name = "Skipping Update", Value = UpdateSkip},
-                new ListType{ Name = "Disable Proxy", Value = ProxyStatus},
-                new ListType{ Name = "Disable RPC", Value = RPCStatus},
+                new ListType{ Name = "Proxy Enabled", Value = ServerProxy.Running().ToString()},
+                new ListType{ Name = "RPC Enabled", Value = DiscordLauncherPresence.Running().ToString()},
                 new ListType{ Name = "Firewall Rule - Launcher", Value =  FileSettingsSave.FirewallLauncherStatus},
                 new ListType{ Name = "Firewall Rule - Game", Value =  FileSettingsSave.FirewallGameStatus},
                 new ListType{ Name = "", Value = "" },
@@ -242,7 +194,7 @@ namespace GameLauncher.App
             settings.AddRange(new[]
             {
                 new ListType{ Name = "HWID", Value = HardwareID.FingerPrint.Level_One_Value()},
-                new ListType{ Name = "Operating System", Value = OS},
+                new ListType{ Name = "Operating System", Value = (UnixOS.Detected())? UnixOS.FullName() : Environment.OSVersion.VersionString},
                 new ListType{ Name = "Environment Version", Value = Environment.OSVersion.Version.ToString() },
                 new ListType{ Name = "Screen Resolution", Value = Screen.PrimaryScreen.Bounds.Width + "x" + Screen.PrimaryScreen.Bounds.Height }
             });

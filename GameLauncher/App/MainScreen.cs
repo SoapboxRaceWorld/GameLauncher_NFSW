@@ -75,7 +75,6 @@ namespace GameLauncher
         private string _loginWelcomeTime = string.Empty;
         private string _loginToken = string.Empty;
         private string _userId = string.Empty;
-        private static int UpdateInterval = 60000;
         private static int serverSecondsToShutDown;
 
         public static String ModNetFileNameInUse = String.Empty;
@@ -366,11 +365,15 @@ namespace GameLauncher
             FileSettingsSave.SaveSettings();
             FileAccountSave.SaveAccount();
 
-            Process[] allOfThem = Process.GetProcessesByName("nfsw");
-            foreach (var oneProcess in allOfThem)
+            try
             {
-                Process.GetProcessById(oneProcess.Id).Kill();
+                Process[] allOfThem = Process.GetProcessesByName("nfsw");
+                foreach (var oneProcess in allOfThem)
+                {
+                    Process.GetProcessById(oneProcess.Id).Kill();
+                }
             }
+            catch { }
 
             if (DiscordLauncherPresence.Running())
             {
@@ -785,6 +788,7 @@ namespace GameLauncher
 
                 System.Timers.Timer aTimer = new System.Timers.Timer(10000);
                 aTimer.Elapsed += (x, y) => { Client.CancelAsync(); try { aTimer.Dispose(); } catch { } ServerChangeTriggered = false; };
+                aTimer.AutoReset = false;
                 aTimer.Enabled = true;
 
                 Client.DownloadStringCompleted += (sender2, e2) =>
@@ -1593,23 +1597,15 @@ namespace GameLauncher
 
         private void LaunchGame(string UserID, string LoginToken, string ServerIP, Form x)
         {
-            if (!ServerProxy.Running())
+            ProcessStartInfo TirePSI = new ProcessStartInfo() 
             {
-                UpdateInterval = 30000;
-            }
+                WorkingDirectory = FileSettingsSave.GameInstallation,
+                FileName = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe")),
+                Arguments = InformationCache.SelectedServerData.ID.ToUpper() + " " + ServerIP + " " + LoginToken + " " + UserID
+            };
+            if (UnixOS.Detected()) { TirePSI.UseShellExecute = false; }
 
-            var psi = new ProcessStartInfo();
-
-            if (UnixOS.Detected())
-            {
-                psi.UseShellExecute = false;
-            }
-
-            psi.WorkingDirectory = FileSettingsSave.GameInstallation;
-            psi.FileName = Strings.Encode(Path.Combine(FileSettingsSave.GameInstallation, "nfsw.exe"));
-            psi.Arguments = InformationCache.SelectedServerData.ID.ToUpper() + " " + ServerIP + " " + LoginToken + " " + UserID;
-
-            var nfswProcess = Process.Start(psi);
+            Process nfswProcess = Process.Start(TirePSI);
             nfswProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
 
             int processorAffinity = 0;
@@ -1621,51 +1617,34 @@ namespace GameLauncher
             nfswProcess.ProcessorAffinity = (IntPtr)processorAffinity;
 
             AntiCheat.process_id = nfswProcess.Id;
-            this.BeginInvoke((MethodInvoker)delegate
+            CloseBTN.Invoke(new Action(delegate ()
             {
                 CloseBTN.Visible = false;
-            });
+            }));
             FunctionStatus.LauncherBattlePass = true;
 
             /* TIMER HERE */
             System.Timers.Timer shutdowntimer = new System.Timers.Timer();
             shutdowntimer.Elapsed += (x2, y2) =>
             {
-                Process[] allOfThem = Process.GetProcessesByName("nfsw");
-
                 if (ProcessID == 0)
                 {
                     ProcessID++;
-
-                    if (ServerProxy.Running())
-                    {
-                        InformationCache.RestartTimer -= 120;
-                    }
-                    else
-                    {
-                        InformationCache.RestartTimer -= 60;
-                    }
+                    InformationCache.RestartTimer -= ServerProxy.Running() ? 120 : 60;
 
                     try
                     {
-                        this.BeginInvoke((MethodInvoker)delegate
+                        x.Invoke(new Action(delegate ()
                         {
-                            WindowState = FormWindowState.Minimized;
-                            ShowInTaskbar = false;
-                        });
+                            x.WindowState = FormWindowState.Minimized;
+                            x.ShowInTaskbar = false;
+                        }));
                     }
                     catch { }
                 }
                 else
                 {
-                    if (ServerProxy.Running())
-                    {
-                        InformationCache.RestartTimer -= 60;
-                    }
-                    else
-                    {
-                        InformationCache.RestartTimer -= 30;
-                    }
+                    InformationCache.RestartTimer -= ServerProxy.Running() ? 60 : 30;
                 }
 
                 if (!ServerProxy.Running())
@@ -1682,6 +1661,8 @@ namespace GameLauncher
                         AntiCheat.DisableChecks(true);
                     }
                 }
+
+                Process[] allOfThem = Process.GetProcessesByName("nfsw");
 
                 if (InformationCache.RestartTimer == 300)
                 {
@@ -1753,8 +1734,7 @@ namespace GameLauncher
                     }
                 }
             };
-
-            shutdowntimer.Interval = UpdateInterval;
+            shutdowntimer.Interval = !ServerProxy.Running() ? 30000 : 60000;
             shutdowntimer.Enabled = true;
 
             if (nfswProcess != null)
@@ -1770,10 +1750,10 @@ namespace GameLauncher
                     FunctionStatus.LauncherBattlePass = false;
                     try
                     {
-                        this.BeginInvoke((MethodInvoker)delegate
+                        CloseBTN.Invoke(new Action(delegate ()
                         {
                             CloseBTN.Visible = true;
-                        });
+                        }));
                     }
                     catch { }
 

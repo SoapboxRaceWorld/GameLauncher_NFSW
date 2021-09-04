@@ -74,7 +74,20 @@ namespace GameLauncher.App.Classes.LauncherCore.Logger
 
                 if (OpenLogFile == DialogResult.Yes)
                 {
-                    Process.Start(Locations.LogLauncher);
+                    try
+                    {
+                        if (File.Exists(Locations.LogLauncher))
+                        {
+                            Process.Start(Locations.LogLauncher);
+                        }
+                    }
+                    catch 
+                    {
+                        if (Directory.Exists(Locations.LogCurrentFolder))
+                        {
+                            Process.Start(Locations.LogCurrentFolder);
+                        }
+                    }
                 }
             }
         }

@@ -2,6 +2,7 @@
 using GameLauncher.App.Classes.LauncherCore.Client;
 using System;
 using GameLauncher.App.Classes.LauncherCore.Proxy;
+using GameLauncher.App.Classes.LauncherCore.Logger;
 
 namespace GameLauncher.App.Classes.LauncherCore.Support
 {
@@ -36,10 +37,12 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
                 var now = DateTime.Now - keyValue;
                 var timeSpan = TimeSpan.FromTicks((long)(now.Ticks / num)) - now;
 
+                int rDays = Convert.ToInt32(timeSpan.Days.ToString()) + 1;
                 int rHours = Convert.ToInt32(timeSpan.Hours.ToString()) + 1;
                 int rMinutes = Convert.ToInt32(timeSpan.Minutes.ToString()) + 1;
                 int rSeconds = Convert.ToInt32(timeSpan.Seconds.ToString()) + 1;
 
+                if (rDays > 1) return rDays.ToString() + " days remaining";
                 if (rHours > 1) return rHours.ToString() + " hours remaining";
                 if (rMinutes > 1) return rMinutes.ToString() + " minutes remaining";
                 if (rSeconds > 1) return rSeconds.ToString() + " seconds remaining";
@@ -52,37 +55,40 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
             }
         }
 
-        public static String RelativeTime(int seconds) 
+        public static String RelativeTime(int TimeSeconds) 
         {
-            int calcs;
+            int NoCalculus;
+            try
+            {
+                int Month = TimeSpan.FromDays(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)).Seconds;
+                if (TimeSeconds >= Month) 
+                { NoCalculus = TimeSeconds / Month; return NoCalculus == 1 ? "1 Month" : NoCalculus + " Months"; }
+                else if (TimeSeconds >= TimeSpan.FromDays(1).Seconds)
+                { NoCalculus = TimeSeconds / TimeSpan.FromDays(1).Seconds; return NoCalculus == 1 ? "1 Day" : NoCalculus + " Days"; }
+                else if (TimeSeconds >= TimeSpan.FromHours(1).Seconds)
+                { NoCalculus = TimeSeconds / TimeSpan.FromHours(1).Seconds; return NoCalculus == 1 ? "1 Hour" : NoCalculus + " Hours"; }
+                else if (TimeSeconds >= TimeSpan.FromMinutes(1).Seconds) 
+                { NoCalculus = TimeSeconds / TimeSpan.FromMinutes(1).Seconds; return NoCalculus == 1 ? "1 Minute" : NoCalculus + " Minute"; }
+                else if (TimeSeconds >= 0) 
+                { return TimeSeconds == 1 ? "1 Second" : TimeSeconds + " Seconds"; }
+                else 
+                { return "Unknown"; }
+            }
+            catch (Exception Error)
+            {
+                LogToFileAddons.OpenLog("Relative Time", null, Error, null, true);
 
-            if (seconds >= 2592000) 
-            {
-                calcs = seconds / 2592000;
-                return calcs == 1 ? "1 Month" : calcs + " Months";
-            }
-            else if (seconds >= 86400) 
-            {
-                calcs = seconds / 86400;
-                return calcs == 1 ? "1 Day" : calcs + " Days";
-            }
-            else if (seconds >= 3600) 
-            {
-                calcs = seconds / 3600;
-                return calcs == 1 ? "1 Hour" : calcs + " Hours";
-            }
-            else if (seconds >= 60) 
-            {
-                calcs = seconds / 60;
-                return calcs == 1 ? "1 Minute" : calcs + " Minute";
-            }
-            else if (seconds >= 0) 
-            {
-                return seconds == 1 ? "1 Second" : seconds + " Seconds";
-            }
-            else
-            {
-                return "Unknown";
+                if (TimeSeconds >= 2592000)
+                { NoCalculus = TimeSeconds / 2592000; return NoCalculus == 1 ? "1 Month" : NoCalculus + " Months"; }
+                else if (TimeSeconds >= 86400)
+                { NoCalculus = TimeSeconds / 86400; return NoCalculus == 1 ? "1 Day" : NoCalculus + " Days"; }
+                else if (TimeSeconds >= 3600)
+                { NoCalculus = TimeSeconds / 3600; return NoCalculus == 1 ? "1 Hour" : NoCalculus + " Hours"; }
+                else if (TimeSeconds >= 60)
+                { NoCalculus = TimeSeconds / 60; return NoCalculus == 1 ? "1 Minute" : NoCalculus + " Minute"; }
+                else if (TimeSeconds >= 0)
+                { return TimeSeconds == 1 ? "1 Second" : TimeSeconds + " Seconds"; }
+                else { return "Outta Time"; }
             }
         }
 
@@ -101,39 +107,39 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
                     AntiCheat.IAmSpeed = 500;
                 }
 
-                int seconds = InformationCache.RestartTimer;
+                int TimeSeconds = InformationCache.RestartTimer;
 
-                if (seconds >= 2592000)
+                if (TimeSeconds >= 2592000)
                 {
-                    InformationCache.RestartTimer = seconds - 2592000;
+                    InformationCache.RestartTimer = TimeSeconds - 2592000;
                 }
-                else if (seconds >= 86400)
+                else if (TimeSeconds >= 86400)
                 {
-                    InformationCache.RestartTimer = seconds - 86400;
+                    InformationCache.RestartTimer = TimeSeconds - 86400;
                 }
-                else if (seconds >= 3600)
+                else if (TimeSeconds >= 3600)
                 {
-                    InformationCache.RestartTimer = seconds - 3600;
+                    InformationCache.RestartTimer = TimeSeconds - 3600;
                 }
-                else if (seconds >= 1800)
+                else if (TimeSeconds >= 1800)
                 {
-                    InformationCache.RestartTimer = seconds - 1800;
+                    InformationCache.RestartTimer = TimeSeconds - 1800;
                 }
-                else if (seconds >= 900)
+                else if (TimeSeconds >= 900)
                 {
-                    InformationCache.RestartTimer = seconds - 900;
+                    InformationCache.RestartTimer = TimeSeconds - 900;
                 }
-                else if (seconds >= 600)
+                else if (TimeSeconds >= 600)
                 {
-                    InformationCache.RestartTimer = seconds - 600;
+                    InformationCache.RestartTimer = TimeSeconds - 600;
                 }
-                else if (seconds >= 300)
+                else if (TimeSeconds >= 300)
                 {
-                    InformationCache.RestartTimer = seconds - 300;
+                    InformationCache.RestartTimer = TimeSeconds - 300;
                 }
-                else if (seconds >= 60)
+                else if (TimeSeconds >= 60)
                 {
-                    InformationCache.RestartTimer = seconds - 60;
+                    InformationCache.RestartTimer = TimeSeconds - 60;
                 }
                 else
                 {

@@ -572,12 +572,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
                         "\nor" +
                         "\nClick No Continue", "GameLauncher has Stopped, Failed To Connect To API", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                    if (restartAppNoApis == DialogResult.No)
-                    {
-                        MessageBox.Show("Good Luck... \n No Really \n ...Good Luck", "GameLauncher Will Continue, When It Failed To Connect To API");
-                        Log.Warning("PRE-CHECK: User has Bypassed 'No Internet Connection' Check and Will Continue");
-                    }
-
                     if (restartAppNoApis == DialogResult.Yes)
                     {
                         LauncherForceClose = true;
