@@ -1250,10 +1250,12 @@ namespace GameLauncher
 
                                     Client_A.DownloadDataCompleted += (Object_A, Events_A) =>
                                     {
+                                        Banner.Invoke(new Action(delegate () { Banner.Image.Dispose(); }));
+
                                         if (Events_A.Cancelled || Events_A.Error != null)
                                         {
                                             /* Load cached banner! */
-                                            Banner.Image = Banners.Grayscale(BannerCache);
+                                            Banner.Invoke(new Action(delegate () { Banner.Image = Banners.Grayscale(BannerCache); }));
                                             if (Client_A != null)
                                             {
                                                 Client_A.Dispose();
@@ -1307,11 +1309,11 @@ namespace GameLauncher
                                 else if (File.Exists(BannerCache))
                                 {
                                     /* Load cached banner! */
-                                    Banner.Invoke(new Action(delegate () { Banner.Image = Banners.Grayscale(BannerCache); }));
+                                    Banner.Invoke(new Action(delegate () { Banner.Image.Dispose(); Banner.Image = Banners.Grayscale(BannerCache); }));
                                 }
                                 else
                                 {
-                                    Banner.Invoke(new Action(delegate () { Banner.BackColor = Theming.BannerBackColor; }));
+                                    Banner.Invoke(new Action(delegate () { Banner.Image.Dispose(); Banner.BackColor = Theming.BannerBackColor; }));
                                 }
                             }
                             catch (Exception Error)
