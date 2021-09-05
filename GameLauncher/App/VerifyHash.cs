@@ -166,116 +166,148 @@ namespace GameLauncher.App
         private void StartGameScanner()
         {
             DiscordLauncherPresence.Status("Verify Scan", null);
-
             Log.Info("VERIFY HASH: Checking and Deleting '.orig' Files and Symbolic Folders");
-
-            DirectoryInfo InstallationDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
 
             try
             {
-                foreach (var foundFolders in InstallationDirectory.GetDirectories())
+                DirectoryInfo InstallationDirectory = new DirectoryInfo(FileSettingsSave.GameInstallation);
+
+                foreach (DirectoryInfo FoldersWeFound in InstallationDirectory.GetDirectories())
                 {
-                    foreach (var file in InstallationDirectory.EnumerateFiles("*.orig"))
+                    foreach (FileInfo FoundFile in InstallationDirectory.EnumerateFiles("*.orig", SearchOption.AllDirectories))
                     {
                         try
                         {
-                            LogVerify.Deleted("File: " + file);
-                            file.Delete();
+                            FoundFile.Delete();
+                            LogVerify.Deleted("File: " + FoundFile.Name);
                         }
                         catch (Exception Error)
                         {
                             DeletionError++;
-                            LogVerify.Error("File: " + file + " Error: " + Error.Message);
-                            LogVerify.ErrorIC("File: " + file + " Error: " + Error.HResult);
-                            LogVerify.ErrorFR("File: " + file + " Error: " + Error.ToString());
+                            LogVerify.Error("File: " + FoundFile.Name + " Error: " + Error.Message);
+                            LogVerify.ErrorIC("File: " + FoundFile.Name + " Error: " + Error.HResult);
+                            LogVerify.ErrorFR("File: " + FoundFile.Name + " Error: " + Error.ToString());
                         }
                     }
 
-                    foreach (var file in foundFolders.EnumerateFiles("*.orig"))
+                    foreach (FileInfo FoundFile in FoldersWeFound.EnumerateFiles("*.orig", SearchOption.AllDirectories))
                     {
                         try
                         {
-                            LogVerify.Deleted("File: " + file);
-                            file.Delete();
+                            FoundFile.Delete();
+                            LogVerify.Deleted("File: " + FoundFile.Name);
                         }
                         catch (Exception Error)
                         {
                             DeletionError++;
-                            LogVerify.Error("File: " + file + " Error: " + Error.Message);
-                            LogVerify.ErrorIC("File: " + file + " Error: " + Error.HResult);
-                            LogVerify.ErrorFR("File: " + file + " Error: " + Error.ToString());
+                            LogVerify.Error("File: " + FoundFile.Name + " Error: " + Error.Message);
+                            LogVerify.ErrorIC("File: " + FoundFile.Name + " Error: " + Error.HResult);
+                            LogVerify.ErrorFR("File: " + FoundFile.Name + " Error: " + Error.ToString());
                         }
                     }
 
-                    foreach (var file in InstallationDirectory.EnumerateDirectories())
+                    foreach (DirectoryInfo FoundDirectory in InstallationDirectory.EnumerateDirectories())
                     {
-                        if (ModNetHandler.IsSymbolic(file.FullName))
+                        if (ModNetHandler.IsSymbolic(FoundDirectory.FullName))
                         {
-                            if (Directory.Exists(foundFolders.FullName))
+                            if (Directory.Exists(FoundDirectory.FullName))
                             {
                                 try
                                 {
-                                    LogVerify.Deleted("Folder: " + file);
-                                    Directory.Delete(file.FullName, true);
+                                    Directory.Delete(FoundDirectory.FullName, true);
+                                    LogVerify.Deleted("Folder: " + FoundDirectory.Name);
                                 }
                                 catch (Exception Error)
                                 {
                                     DeletionError++;
-                                    LogVerify.Error("Folder: " + file + " Error: " + Error.Message);
-                                    LogVerify.ErrorIC("Folder: " + file + " Error: " + Error.HResult);
-                                    LogVerify.ErrorFR("Folder: " + file + " Error: " + Error.ToString());
+                                    LogVerify.Error("Folder: " + FoundDirectory.Name + " Error: " + Error.Message);
+                                    LogVerify.ErrorIC("Folder: " + FoundDirectory.Name + " Error: " + Error.HResult);
+                                    LogVerify.ErrorFR("Folder: " + FoundDirectory.Name + " Error: " + Error.ToString());
                                 }
                             }
-                            else if (File.Exists(foundFolders.FullName))
+                            else if (File.Exists(FoundDirectory.FullName))
                             {
                                 try
                                 {
-                                    LogVerify.Deleted("File: " + file);
-                                    File.Delete(file.FullName);
+                                    File.Delete(FoundDirectory.FullName);
+                                    LogVerify.Deleted("File: " + FoundDirectory.Name);
                                 }
                                 catch (Exception Error)
                                 {
                                     DeletionError++;
-                                    LogVerify.Error("File: " + file + " Error: " + Error.Message);
-                                    LogVerify.ErrorIC("File: " + file + " Error: " + Error.HResult);
-                                    LogVerify.ErrorFR("File: " + file + " Error: " + Error.ToString());
+                                    LogVerify.Error("File: " + FoundDirectory.Name + " Error: " + Error.Message);
+                                    LogVerify.ErrorIC("File: " + FoundDirectory.Name + " Error: " + Error.HResult);
+                                    LogVerify.ErrorFR("File: " + FoundDirectory.Name + " Error: " + Error.ToString());
                                 }
                             }
                         }
                     }
 
-                    foreach (var file in foundFolders.EnumerateDirectories())
+                    foreach (DirectoryInfo FoundDirectory in FoldersWeFound.EnumerateDirectories())
                     {
-                        if (ModNetHandler.IsSymbolic(file.FullName))
+                        if (ModNetHandler.IsSymbolic(FoundDirectory.FullName))
                         {
-                            if (Directory.Exists(foundFolders.FullName))
+                            if (Directory.Exists(FoundDirectory.FullName))
                             {
                                 try
                                 {
-                                    LogVerify.Deleted("Folder: " + file);
-                                    Directory.Delete(file.FullName, true);
+                                    Directory.Delete(FoundDirectory.FullName, true);
+                                    LogVerify.Deleted("Folder: " + FoundDirectory.Name);
                                 }
                                 catch (Exception Error)
                                 {
                                     DeletionError++;
-                                    LogVerify.Error("Folder: " + file + " Error: " + Error.Message);
-                                    LogVerify.ErrorIC("Folder: " + file + " Error: " + Error.HResult);
-                                    LogVerify.ErrorFR("Folder: " + file + " Error: " + Error.ToString());
+                                    LogVerify.Error("Folder: " + FoundDirectory.Name + " Error: " + Error.Message);
+                                    LogVerify.ErrorIC("Folder: " + FoundDirectory.Name + " Error: " + Error.HResult);
+                                    LogVerify.ErrorFR("Folder: " + FoundDirectory.Name + " Error: " + Error.ToString());
                                 }
                             }
-                            else if (File.Exists(foundFolders.FullName))
+                            else if (File.Exists(FoundDirectory.FullName))
                             {
                                 try
                                 {
-                                    LogVerify.Deleted("File: " + file);
-                                    File.Delete(file.FullName);
+                                    File.Delete(FoundDirectory.FullName);
+                                    LogVerify.Deleted("File: " + FoundDirectory.Name);
                                 }
                                 catch (Exception Error)
                                 {
                                     DeletionError++;
-                                    LogVerify.Error("File: " + file + " Error: " + Error.Message);
-                                    LogVerify.ErrorIC("File: " + file + " Error: " + Error.HResult);
-                                    LogVerify.ErrorFR("File: " + file + " Error: " + Error.ToString());
+                                    LogVerify.Error("File: " + FoundDirectory.Name + " Error: " + Error.Message);
+                                    LogVerify.ErrorIC("File: " + FoundDirectory.Name + " Error: " + Error.HResult);
+                                    LogVerify.ErrorFR("File: " + FoundDirectory.Name + " Error: " + Error.ToString());
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (Directory.Exists(Path.Combine(FileSettingsSave.GameInstallation, "scripts")))
+                {
+                    DirectoryInfo ScriptsFolder = new DirectoryInfo(Path.Combine(FileSettingsSave.GameInstallation, "scripts"));
+
+                    if (ScriptsFolder.EnumerateFiles().Count() > 1)
+                    {
+                        if (MessageBox.Show("Verify Hash has found files in the Scripts folder.\n" + 
+                            "If you have installed custom Scripts or have not installed any Scripts" +
+                            "\n\nClick Yes, to Allow Deletion of Files" +
+                            "\nClick No, to Skip Deletion of Files", "VerifyHash", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            foreach (FileInfo FoundFile in ScriptsFolder.EnumerateFiles())
+                            {
+                                if (FoundFile.Name != "LangPicker.ini")
+                                {
+                                    try
+                                    {
+                                        File.Delete(FoundFile.FullName);
+                                        LogVerify.Deleted("File: " + FoundFile.Name);
+                                    }
+                                    catch (Exception Error)
+                                    {
+                                        DeletionError++;
+                                        LogVerify.Error("File: " + FoundFile.Name + " Error: " + Error.Message);
+                                        LogVerify.ErrorIC("File: " + FoundFile.Name + " Error: " + Error.HResult);
+                                        LogVerify.ErrorFR("File: " + FoundFile.Name + " Error: " + Error.ToString());
+                                    }
                                 }
                             }
                         }

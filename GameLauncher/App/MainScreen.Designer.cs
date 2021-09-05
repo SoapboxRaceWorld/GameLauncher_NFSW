@@ -470,7 +470,6 @@
             this.CloseBTN.Size = new System.Drawing.Size(25, 25);
             this.CloseBTN.TabIndex = 0;
             this.CloseBTN.TabStop = false;
-            this.CloseBTN.Click += new System.EventHandler(this.CloseBTN_Click);
             // 
             // ServerInfoPanel
             // 

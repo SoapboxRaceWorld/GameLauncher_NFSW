@@ -105,32 +105,6 @@ namespace GameLauncher
             Opacity = 0.9;
         }
 
-        public MainScreen()
-        {
-            InitializeComponent();
-            SetVisuals();
-            this.Closing += (x, y) =>
-            {
-                if (FunctionStatus.LauncherBattlePass)
-                {
-                    MessageBox.Show(null, "Please close the game before closing the GameLauncher.",
-                            "Please close the game before closing launcher.", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    y.Cancel = true;
-                }
-                else
-                {
-                    try
-                    {
-                        _downloader.Stop();
-                    }
-                    catch (Exception Error)
-                    {
-                        LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
-                    }
-                }
-            };
-        }
-
         private void MainScreen_Load(object sender, EventArgs e)
         {
             Log.Visuals("CORE: Entering mainScreen_Load");
@@ -338,15 +312,14 @@ namespace GameLauncher
 
                 Log.Visuals("CORE: Applyinng ContextMenu");
                 ContextMenu = new ContextMenu();
-                ContextMenu.MenuItems.Add(new MenuItem("About", FunctionEvents.AboutButton_Click));
+                ContextMenu.MenuItems.Add(new MenuItem("About", (O, K) => { About.OpenScreen(); }));
                 if (LauncherUpdateCheck.UpgradeAvailable)
                 {
-                    ContextMenu.MenuItems.Add(new MenuItem("Obsolete", (b, n) => { Process.Start("https://www.youtube.com/watch?v=LutDfASARmE"); }));
+                    ContextMenu.MenuItems.Add("-");
+                    ContextMenu.MenuItems.Add(new MenuItem("Obsolete", (N, O) => { Process.Start("https://www.youtube.com/watch?v=LutDfASARmE"); }));
                 }
                 ContextMenu.MenuItems.Add("-");
-                ContextMenu.MenuItems.Add(new MenuItem("Add Server", FunctionEvents.AddServer_Click));
-                ContextMenu.MenuItems.Add("-");
-                ContextMenu.MenuItems.Add(new MenuItem("Close launcher", CloseBTN_Click));
+                ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", CloseBTN_Click));
 
                 Notification.ContextMenu = ContextMenu;
                 Notification.Icon = new Icon(Icon, Icon.Width, Icon.Height);
@@ -360,17 +333,35 @@ namespace GameLauncher
             }
         }
 
-        private void CloseBTN_Click(object sender, EventArgs e)
+        private void ClosingTasks()
         {
             FileSettingsSave.SaveSettings();
             FileAccountSave.SaveAccount();
 
             try
+            { _downloader.Stop(); }
+            catch (Exception Error)
             {
-                Process[] allOfThem = Process.GetProcessesByName("nfsw");
-                foreach (var oneProcess in allOfThem)
+                LogToFileAddons.OpenLog("CDN DOWNLOADER", null, Error, null, true);
+            }
+
+            try
+            {
+                if (FunctionStatus.LauncherBattlePass)
+                { 
+                    Process.GetProcessById(_nfswPid).Kill(); 
+                }
+                else
                 {
-                    Process.GetProcessById(oneProcess.Id).Kill();
+                    Process[] allOfThem = Process.GetProcessesByName("nfsw");
+
+                    if (allOfThem != null && allOfThem.Any())
+                    {
+                        foreach (var oneProcess in allOfThem)
+                        {
+                            Process.GetProcessById(oneProcess.Id).Kill();
+                        }
+                    }
                 }
             }
             catch { }
@@ -389,10 +380,15 @@ namespace GameLauncher
 
             Notification.Dispose();
 
-            if (File.Exists(Locations.GameLinksFile))
+            if (File.Exists(Locations.GameLinksFile) && !FunctionStatus.LauncherBattlePass)
             {
                 ModNetHandler.CleanLinks(Locations.GameLinksFile, FileSettingsSave.GameInstallation);
             }
+        }
+
+        private void CloseBTN_Click(object sender, EventArgs e)
+        {
+            ClosingTasks();
 
             /* Leave this here. Its to properly close the launcher from Visual Studio (And Close the Launcher a well) 
              * If the Boolen is true it will restart the Application
@@ -2175,7 +2171,7 @@ namespace GameLauncher
                                 else
                                 {
                                     PlayProgressText.Text = ("ModNet: Up to Date " + ModNetList).ToUpper();
-                                    Log.Debug("MODNET CORE: " + ModNetList + " Is Up to Date!");
+                                    Log.Info("MODNET CORE: " + ModNetList + " Is Up to Date!");
                                 }
 
                                 Application.DoEvents();
@@ -2660,16 +2656,12 @@ namespace GameLauncher
                         else
                         {
                             CurrentWindowInfo.Text = string.Format(_loginWelcomeTime + "\n{0}", IsEmailValid.Mask(FileAccountSave.UserRawEmail)).ToUpper();
-                        }                        
+                        }
 
                         ContextMenu = new ContextMenu();
                         ContextMenu.MenuItems.Add(new MenuItem("Running Out of Time", (b, n) => { Process.Start("https://youtu.be/vq9-bmoI-RI"); }));
                         ContextMenu.MenuItems.Add("-");
-                        ContextMenu.MenuItems.Add(new MenuItem("Close Launcher", (sender2, e2) =>
-                        {
-                            MessageBox.Show(null, "Please close the game before closing the GameLauncher.", 
-                                "Please close the game before closing launcher.", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }));
+                        ContextMenu.MenuItems.Add(new MenuItem("Close Game and Launcher", CloseBTN_Click));
 
                         Update();
                         Refresh();
@@ -3728,6 +3720,16 @@ namespace GameLauncher
                     MainEmail.Text = TempEmailCache;
                 }
             }
+        }
+
+        public MainScreen()
+        {
+            InitializeComponent();
+            SetVisuals();
+            this.Closing += (x, y) =>
+            {
+                ClosingTasks();
+            };
         }
 
         private void SetVisuals()

@@ -430,7 +430,7 @@ namespace GameLauncher.App.Classes.LauncherCore.Client.Auth
                 }
                 if (Type == "InnerText")
                 {
-                    if (LocationData.SelectSingleNode(FullNodePath).InnerText == null)
+                    if (string.IsNullOrWhiteSpace(LocationData.SelectSingleNode(FullNodePath).InnerText))
                     {
                         if (EnableInsiderDeveloper.Allowed() || EnableInsiderBetaTester.Allowed())
                         {

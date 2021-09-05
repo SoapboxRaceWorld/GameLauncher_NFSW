@@ -18,8 +18,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
                 String pre = (si ? "kMGTPE" : "KMGTPE")[exp - 1] + (si ? "" : "i");
                 return String.Format("{0}{1}B", Convert.ToDecimal(byteCount / Math.Pow(unit, exp)).ToString("0.00"), pre);
             }
-            catch
+            catch (Exception Error)
             {
+                LogToFileAddons.OpenLog("Format File Size", null, Error, null, true);
                 return String.Empty;
             }
         }
@@ -49,8 +50,9 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
 
                 return "Just now";
             }
-            catch
+            catch (Exception Error)
             {
+                LogToFileAddons.OpenLog("Estimate Finish Time", null, Error, null, true);
                 return "N/A";
             }
         }

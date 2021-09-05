@@ -28,11 +28,6 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
             AddServer.OpenScreen();
         }
 
-        public static void AboutButton_Click(object sender, EventArgs e)
-        {
-            About.OpenScreen();
-        }
-
         public static void RegisterText_LinkClicked(object sender, EventArgs e)
         {
             if (FunctionStatus.AllowRegistration)

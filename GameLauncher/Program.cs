@@ -21,6 +21,7 @@ using GameLauncher.App.Classes.LauncherCore.Support;
 using System.Text;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using System.Linq;
 
 namespace GameLauncher
 {
@@ -38,9 +39,12 @@ namespace GameLauncher
                 try
                 {
                     Process[] allOfThem = Process.GetProcessesByName("nfsw");
-                    foreach (var oneProcess in allOfThem)
+                    if (allOfThem != null && allOfThem.Any())
                     {
-                        Process.GetProcessById(oneProcess.Id).Kill();
+                        foreach (var oneProcess in allOfThem)
+                        {
+                            Process.GetProcessById(oneProcess.Id).Kill();
+                        }
                     }
                 }
                 catch { }
@@ -61,9 +65,12 @@ namespace GameLauncher
                 try
                 {
                     Process[] allOfThem = Process.GetProcessesByName("nfsw");
-                    foreach (var oneProcess in allOfThem)
+                    if (allOfThem != null && allOfThem.Any())
                     {
-                        Process.GetProcessById(oneProcess.Id).Kill();
+                        foreach (var oneProcess in allOfThem)
+                        {
+                            Process.GetProcessById(oneProcess.Id).Kill();
+                        }
                     }
                 }
                 catch { }
