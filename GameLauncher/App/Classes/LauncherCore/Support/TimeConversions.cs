@@ -60,37 +60,33 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
         public static String RelativeTime(int TimeSeconds) 
         {
             int NoCalculus;
-            try
-            {
-                int Month = TimeSpan.FromDays(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)).Seconds;
-                if (TimeSeconds >= Month) 
-                { NoCalculus = TimeSeconds / Month; return NoCalculus == 1 ? "1 Month" : NoCalculus + " Months"; }
-                else if (TimeSeconds >= TimeSpan.FromDays(1).Seconds)
-                { NoCalculus = TimeSeconds / TimeSpan.FromDays(1).Seconds; return NoCalculus == 1 ? "1 Day" : NoCalculus + " Days"; }
-                else if (TimeSeconds >= TimeSpan.FromHours(1).Seconds)
-                { NoCalculus = TimeSeconds / TimeSpan.FromHours(1).Seconds; return NoCalculus == 1 ? "1 Hour" : NoCalculus + " Hours"; }
-                else if (TimeSeconds >= TimeSpan.FromMinutes(1).Seconds) 
-                { NoCalculus = TimeSeconds / TimeSpan.FromMinutes(1).Seconds; return NoCalculus == 1 ? "1 Minute" : NoCalculus + " Minute"; }
-                else if (TimeSeconds >= 0) 
-                { return TimeSeconds == 1 ? "1 Second" : TimeSeconds + " Seconds"; }
-                else 
-                { return "Unknown"; }
+            if (TimeSeconds >= 2592000)
+            { 
+                NoCalculus = TimeSeconds / 2592000; 
+                return NoCalculus == 1 ? "1 Month" : NoCalculus + " Months"; 
             }
-            catch (Exception Error)
-            {
-                LogToFileAddons.OpenLog("Relative Time", null, Error, null, true);
-
-                if (TimeSeconds >= 2592000)
-                { NoCalculus = TimeSeconds / 2592000; return NoCalculus == 1 ? "1 Month" : NoCalculus + " Months"; }
-                else if (TimeSeconds >= 86400)
-                { NoCalculus = TimeSeconds / 86400; return NoCalculus == 1 ? "1 Day" : NoCalculus + " Days"; }
-                else if (TimeSeconds >= 3600)
-                { NoCalculus = TimeSeconds / 3600; return NoCalculus == 1 ? "1 Hour" : NoCalculus + " Hours"; }
-                else if (TimeSeconds >= 60)
-                { NoCalculus = TimeSeconds / 60; return NoCalculus == 1 ? "1 Minute" : NoCalculus + " Minute"; }
-                else if (TimeSeconds >= 0)
-                { return TimeSeconds == 1 ? "1 Second" : TimeSeconds + " Seconds"; }
-                else { return "Outta Time"; }
+            else if (TimeSeconds >= 86400)
+            { 
+                NoCalculus = TimeSeconds / 86400; 
+                return NoCalculus == 1 ? "1 Day" : NoCalculus + " Days"; 
+            }
+            else if (TimeSeconds >= 3600)
+            { 
+                NoCalculus = TimeSeconds / 3600;
+                return NoCalculus == 1 ? "1 Hour" : NoCalculus + " Hours"; 
+            }
+            else if (TimeSeconds >= 60)
+            { 
+                NoCalculus = TimeSeconds / 60; 
+                return NoCalculus == 1 ? "1 Minute" : NoCalculus + " Minute"; 
+            }
+            else if (TimeSeconds >= 0)
+            { 
+                return TimeSeconds == 1 ? "1 Second" : TimeSeconds + " Seconds"; 
+            }
+            else 
+            { 
+                return "Outta Time"; 
             }
         }
 
