@@ -4005,7 +4005,7 @@ namespace GameLauncher
                                 }
                                 catch (Exception Error)
                                 {
-                                    LogToFileAddons.OpenLog("Pinging GSI", null, Error, null, true);
+                                    LogToFileAddons.OpenLog("Pinging GSI [DownloadString]", null, Error, null, true);
 
                                     if (!InformationCache.ServerStatusBook.ContainsKey(Servers.ID))
                                     {
@@ -4024,7 +4024,7 @@ namespace GameLauncher
                             }
                             catch (Exception Error)
                             {
-                                LogToFileAddons.OpenLog("Pinging GSI", null, Error, null, true);
+                                LogToFileAddons.OpenLog("Pinging GSI [WebClient]", null, Error, null, true);
                             }
                             finally
                             {

@@ -382,17 +382,17 @@ namespace GameLauncher.App.Classes.LauncherCore.Visuals
         /// RGB: 240, 230, 140 <code></code>
         /// HEX: F0E68C
         /// </remarks>
-        public static Color DropMenuPingChecking = Color.FromArgb(152, 251, 152);
+        public static Color DropMenuPingChecking = Color.FromArgb(240, 230, 140);
 
         /// <summary>Color: Khaki</summary>
         /// <remarks>
         /// RGB: 240, 128, 128 <code></code>
         /// HEX: F08080
         /// </remarks>
-        public static Color DropMenuPingError = Color.FromArgb(152, 251, 152);
+        public static Color DropMenuPingError = Color.FromArgb(240, 128, 128);
 
         /// <summary>
-        /// RGB: 240, 128, 128 <code></code>
+        /// RGB: 230, 159, 0 <code></code>
         /// HEX: E69F00</summary>
         /// <remarks>Used as an Alert Color, but is currently used for Invalid GSI JSON</remarks>
         public static Color DropMenuPingWarning = Color.FromArgb(230, 159, 0);
