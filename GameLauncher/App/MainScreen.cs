@@ -378,7 +378,7 @@ namespace GameLauncher
 
             if (ServerCheckThread != null) { try { ServerCheckThread.Abort(); ServerCheckThread = null; } catch { } }
 
-            Notification.Dispose();
+            try { Notification.Dispose(); } catch { }
 
             if (File.Exists(Locations.GameLinksFile) && !FunctionStatus.LauncherBattlePass)
             {
