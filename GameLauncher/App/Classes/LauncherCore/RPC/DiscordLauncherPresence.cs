@@ -3,6 +3,7 @@ using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
 using GameLauncher.App.Classes.LauncherCore.Global;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Logger;
+using GameLauncher.App.Classes.LauncherCore.Support;
 using GameLauncher.App.Classes.LauncherCore.Visuals;
 using GameLauncher.App.Classes.SystemPlatform.Windows;
 using System;
@@ -53,6 +54,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
         /// Sets the current Status of the Launcher's State
         /// </summary>
         /// <remarks>RPC Status</remarks>
+        /// <param name="State">Which RPC Status Text to Set</param>
+        /// <param name="Status">Additional RPC Status Details to Display</param>
         public static void Status(string State, string Status)
         {
             try
@@ -224,8 +227,8 @@ namespace GameLauncher.App.Classes.LauncherCore.RPC
                         {
                             LargeImageText = "Launcher",
                             LargeImageKey = "nfsw",
-                            SmallImageText = string.Empty,
-                            SmallImageKey = "screen_security_center"
+                            SmallImageText = SecurityCenter.SecurityCenterRPC(1),
+                            SmallImageKey = SecurityCenter.SecurityCenterRPC(0)
                         };
                     }
                     else if (State == "Register")

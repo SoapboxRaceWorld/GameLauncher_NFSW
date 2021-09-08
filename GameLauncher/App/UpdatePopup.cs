@@ -10,58 +10,41 @@ using System.Text;
 using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.SystemPlatform.Unix;
+using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
+using GameLauncher.App.Classes.LauncherCore.RPC;
 
 namespace GameLauncher.App
 {
     public partial class UpdatePopup : Form
     {
-        public UpdatePopup(string LatestLauncherBuild)
+        public UpdatePopup()
         {
-            if (FileSettingsSave.IgnoreVersion == LatestLauncherBuild)
-            {
-                /* No Update Popup */
-            }
-            else
-            {
-                InitializeComponent();
-                SetVisuals();
+            DiscordLauncherPresence.Status("Start Up", "New Version Is Available: " + LauncherUpdateCheck.LatestLauncherBuild);
+            InitializeComponent();
+            SetVisuals();
 
-                if (VisualsAPIChecker.UnitedAPI())
+            if (VisualsAPIChecker.UnitedAPI())
+            {
+                try
                 {
+                    FunctionStatus.TLS();
+                    Uri URLCall = new Uri(URLs.Main + "/launcher/changelog");
+                    ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    var Client = new WebClient
+                    {
+                        Encoding = Encoding.UTF8
+                    };
+                    if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
+                    else
+                    {
+                        Client.Headers.Add("user-agent", "SBRW Launcher " +
+                        Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
+                    }
+
                     try
                     {
-                        FunctionStatus.TLS();
-                        Uri URLCall = new Uri(URLs.Main + "/launcher/changelog");
-                        ServicePointManager.FindServicePoint(URLCall).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                        var Client = new WebClient
-                        {
-                            Encoding = Encoding.UTF8
-                        };
-                        if (!WebCalls.Alternative()) { Client = new WebClientWithTimeout { Encoding = Encoding.UTF8 }; }
-                        else
-                        {
-                            Client.Headers.Add("user-agent", "SBRW Launcher " +
-                            Application.ProductVersion + " (+https://github.com/SoapBoxRaceWorld/GameLauncher_NFSW)");
-                        }
-
-                        try
-                        {
-                            /* Download Up to Date Certificate Status */
-                            ChangelogText.Text = Client.DownloadString(URLCall);
-                        }
-                        catch (Exception Error)
-                        {
-                            LogToFileAddons.OpenLog("Update Popup", null, Error, null, true);
-                            ChangelogText.Text = "\n" + Error.Message;
-                            ChangelogBox.Text = "Changelog Error:";
-                        }
-                        finally
-                        {
-                            if (Client != null)
-                            {
-                                Client.Dispose();
-                            }
-                        }
+                        /* Download Up to Date Certificate Status */
+                        ChangelogText.Text = Client.DownloadString(URLCall);
                     }
                     catch (Exception Error)
                     {
@@ -69,26 +52,40 @@ namespace GameLauncher.App
                         ChangelogText.Text = "\n" + Error.Message;
                         ChangelogBox.Text = "Changelog Error:";
                     }
+                    finally
+                    {
+                        if (Client != null)
+                        {
+                            Client.Dispose();
+                        }
+                    }
                 }
-                else
+                catch (Exception Error)
                 {
-                    ChangelogText.Text = "\nUnited API Is Currently Down. Unable to Retrive Changelog";
+                    LogToFileAddons.OpenLog("Update Popup", null, Error, null, true);
+                    ChangelogText.Text = "\n" + Error.Message;
                     ChangelogBox.Text = "Changelog Error:";
                 }
-
-                ChangelogText.Select(0, 0);
-                ChangelogText.SelectionLength = 0;
-                ChangelogText.TabStop = false;
-
-                Bitmap bitmap1 = Bitmap.FromHicon(SystemIcons.Information.Handle);
-                UpdateIcon.Image = bitmap1;
-
-                UpdateText.Text = "An update is available. Would you like to update?\nYour version: " + Application.ProductVersion + "\nUpdated version: " + LatestLauncherBuild;
-
-                this.UpdateButton.DialogResult = DialogResult.OK;
-                this.IgnoreButton.DialogResult = DialogResult.Cancel;
-                this.SkipButton.DialogResult = DialogResult.Ignore;
             }
+            else
+            {
+                ChangelogText.Text = "\nUnited API Is Currently Down. Unable to Retrive Changelog";
+                ChangelogBox.Text = "Changelog Error:";
+            }
+
+            ChangelogText.Select(0, 0);
+            ChangelogText.SelectionLength = 0;
+            ChangelogText.TabStop = false;
+
+            Bitmap bitmap1 = Bitmap.FromHicon(SystemIcons.Information.Handle);
+            UpdateIcon.Image = bitmap1;
+
+            UpdateText.Text = "An update is available. Would you like to update?\nYour version: " + Application.ProductVersion +
+                "\nUpdated version: " + LauncherUpdateCheck.LatestLauncherBuild;
+
+            this.UpdateButton.DialogResult = DialogResult.OK;
+            this.IgnoreButton.DialogResult = DialogResult.Cancel;
+            this.SkipButton.DialogResult = DialogResult.Ignore;
         }
 
         private void SetVisuals()
@@ -100,12 +97,7 @@ namespace GameLauncher.App
             FontFamily DejaVuSans = FontWrapper.Instance.GetFontFamily("DejaVuSans.ttf");
             FontFamily DejaVuSansBold = FontWrapper.Instance.GetFontFamily("DejaVuSans-Bold.ttf");
 
-            var MainFontSize = 9f * 100f / CreateGraphics().DpiY;
-
-            if (UnixOS.Detected())
-            {
-                MainFontSize = 9f;
-            }
+            float MainFontSize = UnixOS.Detected()? 9f : 9f * 100f / CreateGraphics().DpiY;
 
             Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);
             ChangelogBox.Font = new Font(DejaVuSans, MainFontSize, FontStyle.Regular);

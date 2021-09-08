@@ -86,12 +86,10 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
         {
             switch (SecurityCenterSavedCodes())
             {
-                case SecurityCenterCodes.Firewall_Updated:
-                case SecurityCenterCodes.Defender_Updated:
-                case SecurityCenterCodes.Permissions_Updated:
-                    if (ImageState == 1) { return Theming.ShieldButtonSuccessClick; }
-                    else if (ImageState == 2) { return Theming.ShieldButtonSuccessHover; }
-                    else { return Theming.ShieldButtonSuccess; }
+                case SecurityCenterCodes.Unix:
+                    if (ImageState == 1) { return Theming.ShieldButtonCheckingClick; }
+                    else if (ImageState == 2) { return Theming.ShieldButtonCheckingHover; }
+                    else { return Theming.ShieldButtonChecking; }
                 case SecurityCenterCodes.Firewall_Outdated:
                 case SecurityCenterCodes.Defender_Outdated:
                 case SecurityCenterCodes.Permissions_Outdated:
@@ -104,14 +102,74 @@ namespace GameLauncher.App.Classes.LauncherCore.Support
                     if (ImageState == 1) { return Theming.ShieldButtonErrorClick; }
                     else if (ImageState == 2) { return Theming.ShieldButtonErrorHover; }
                     else { return Theming.ShieldButtonError; }
-                case SecurityCenterCodes.Unix:
-                    if (ImageState == 1) { return Theming.ShieldButtonCheckingClick; }
-                    else if (ImageState == 2) { return Theming.ShieldButtonCheckingHover; }
-                    else { return Theming.ShieldButtonChecking; }
+                case SecurityCenterCodes.Firewall_Updated:
+                case SecurityCenterCodes.Defender_Updated:
+                case SecurityCenterCodes.Permissions_Updated:
+                    if (ImageState == 1) { return Theming.ShieldButtonSuccessClick; }
+                    else if (ImageState == 2) { return Theming.ShieldButtonSuccessHover; }
+                    else { return Theming.ShieldButtonSuccess; }
                 default:
                     if (ImageState == 1) { return Theming.ShieldButtonUnknownClick; }
                     else if (ImageState == 2) { return Theming.ShieldButtonUnknownHover; }
                     else { return Theming.ShieldButtonUnknown; }
+            }
+        }
+
+        /// <summary>Returns the State of RPC for Security Panel Status
+        /// <code>"0" Icon File Name</code>
+        /// <code>"1" Status String</code>
+        /// </summary>
+        /// <returns>RPC String for Security Center Status</returns>
+        /// <param name="StringRequest">        
+        /// <code>"0" Icon File Name</code>
+        /// <code>"1" Status String</code></param>
+        /// <returns>RPC Status String</returns>
+        public static string SecurityCenterRPC(int StringRequest)
+        {
+            switch (StringRequest)
+            {
+                case 0:
+                    switch (SecurityCenterSavedCodes())
+                    {
+                        case SecurityCenterCodes.Unix:
+                            return "screen_security_center_unix";
+                        case SecurityCenterCodes.Firewall_Outdated:
+                        case SecurityCenterCodes.Defender_Outdated:
+                        case SecurityCenterCodes.Permissions_Outdated:
+                            return "screen_security_center_outdated";
+                        case SecurityCenterCodes.Firewall_Error:
+                        case SecurityCenterCodes.Defender_Error:
+                        case SecurityCenterCodes.Permissions_Error:
+                            return "screen_security_center_error";
+                        case SecurityCenterCodes.Firewall_Updated:
+                        case SecurityCenterCodes.Defender_Updated:
+                        case SecurityCenterCodes.Permissions_Updated:
+                            return "screen_security_center_updated";
+                        default:
+                            return "screen_security_center";
+                    }
+                case 1:
+                    switch (SecurityCenterSavedCodes())
+                    {
+                        case SecurityCenterCodes.Unix:
+                            return "Status: Unix";
+                        case SecurityCenterCodes.Firewall_Outdated:
+                        case SecurityCenterCodes.Defender_Outdated:
+                        case SecurityCenterCodes.Permissions_Outdated:
+                            return "Status: Requires Attention";
+                        case SecurityCenterCodes.Firewall_Error:
+                        case SecurityCenterCodes.Defender_Error:
+                        case SecurityCenterCodes.Permissions_Error:
+                            return "Status: Encountered an Error";
+                        case SecurityCenterCodes.Firewall_Updated:
+                        case SecurityCenterCodes.Defender_Updated:
+                        case SecurityCenterCodes.Permissions_Updated:
+                            return "Status: Good";
+                        default:
+                            return "Status: Unknown";
+                    }
+                default:
+                    return string.Empty;
             }
         }
     }

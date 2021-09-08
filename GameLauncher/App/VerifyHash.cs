@@ -528,7 +528,7 @@ namespace GameLauncher.App
                     {
                         DownloadProgressText.Invoke(new Action(delegate ()
                         {
-                            DownloadProgressText.Text = "Scan Complete. No Files Missing or Invalid!";
+                            DownloadProgressText.Visible = false;
                         }));
                     }
                     else { DownloadProgressText.Visible = false; }

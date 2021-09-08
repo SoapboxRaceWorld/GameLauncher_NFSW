@@ -1,5 +1,6 @@
 ﻿using GameLauncher.App.Classes.LauncherCore.APICheckers;
 using GameLauncher.App.Classes.LauncherCore.FileReadWrite;
+using GameLauncher.App.Classes.LauncherCore.LauncherUpdater;
 using GameLauncher.App.Classes.LauncherCore.Lists;
 using GameLauncher.App.Classes.LauncherCore.Lists.JSON;
 using GameLauncher.App.Classes.LauncherCore.Logger;
@@ -334,8 +335,11 @@ namespace GameLauncher.App.Classes.LauncherCore.Global
 
         public static void FirstTimeRun()
         {
-            LoadingComplete = true;
-            SplashScreen.ThreadStatus("Stop");
+            if (!LauncherUpdateCheck.UpdatePopupStoppedSplashScreen)
+            {
+                LoadingComplete = true;
+                SplashScreen.ThreadStatus("Stop");
+            }
 
             if (!string.IsNullOrWhiteSpace(FileSettingsSave.GameInstallation))
             {

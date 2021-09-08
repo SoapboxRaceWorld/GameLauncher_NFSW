@@ -15,6 +15,7 @@ using GameLauncher.App.Classes.LauncherCore.Logger;
 using GameLauncher.App.Classes.LauncherCore.Validator.JSON;
 using GameLauncher.App.Classes.LauncherCore.Client.Web;
 using GameLauncher.App.Classes.LauncherCore.Support;
+using GameLauncher.App.Classes.LauncherCore.Proxy;
 
 namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
 {
@@ -25,10 +26,13 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
         public Label description;
 
         public static string CurrentLauncherBuild = Application.ProductVersion;
-        private static string LatestLauncherBuild;
+        public static string LatestLauncherBuild;
         public static bool UpgradeAvailable = false;
+        private static bool SkipAvailableUpgrade = false;
         private static string VersionJSON;
         private static bool ValidJSONDownload = false;
+        public static int Revisions;
+        public static bool UpdatePopupStoppedSplashScreen = false;
 
         public LauncherUpdateCheck(PictureBox statusImage, Label statusText, Label statusDescription)
         {
@@ -192,18 +196,93 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     Log.Error("LAUNCHER UPDATE: Failed to retrive Latest Build information from two APIs ");
                 }
             }
+
             Log.Completed("LAUNCHER UPDATE: Done");
-            Log.Info("FIRST TIME RUN: Moved to Function");
-            /* Do First Time Run Checks */
-            FunctionStatus.FirstTimeRun();
+
+            if (!UpdateStatusResult())
+            {
+                Log.Info("FIRST TIME RUN: Moved to Function");
+                /* Do First Time Run Checks */
+                FunctionStatus.FirstTimeRun();
+            }
+            else
+            {
+                if (DiscordLauncherPresence.Running())
+                {
+                    DiscordLauncherPresence.Stop("Close");
+                }
+
+                if (ServerProxy.Running())
+                {
+                    ServerProxy.Instance.Stop("Force Close");
+                }
+
+                Application.Exit();
+            }
+        }
+
+        private static bool UpdateStatusResult()
+        {
+            bool StatusUpdate = false;
+            if (!string.IsNullOrWhiteSpace(LatestLauncherBuild))
+            {
+                Revisions = CurrentLauncherBuild.CompareTo(LatestLauncherBuild);
+
+                if (Revisions < 0)
+                {
+                    Log.Info("LAUNCHER POPUP: Checking if Popup is Required");
+
+                    if (FileSettingsSave.IgnoreVersion != LatestLauncherBuild)
+                    {
+                        FunctionStatus.LoadingComplete = true;
+                        SplashScreen.ThreadStatus("Stop");
+                        UpdatePopupStoppedSplashScreen = true;
+
+                        DialogResult UserResult = new UpdatePopup().ShowDialog();
+
+                        if (UserResult == DialogResult.OK)
+                        {
+                            StatusUpdate = true;
+                            string UpdaterPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameUpdater));
+                            if (File.Exists(UpdaterPath))
+                            {
+                                Process.Start(UpdaterPath);
+                            }
+                            else
+                            {
+                                Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
+                                MessageBox.Show(null, "A Web Browser has been opened to the Game Launcher's GitHub Latest Release Page " +
+                                    "to Download the New Version", "GameLauncher", MessageBoxButtons.OK);
+                            }
+                        }
+                        else if (UserResult == DialogResult.Ignore)
+                        {
+                            /* Save and Allow Version Update Skip Once user Reaches Main Screen */
+                            SkipAvailableUpgrade = true;
+                        }
+                    }
+                    else
+                    {
+                        Log.Completed("LAUNCHER POPUP: User Saved Skip Version Detected");
+                    }
+                }
+                else
+                {
+                    Log.Completed("LAUNCHER POPUP: Update to Date");
+                }
+            }
+            else
+            {
+                Log.Completed("LAUNCHER POPUP: Unable to run Update Popup (Null String)");
+            }
+
+            return StatusUpdate;
         }
 
         public void ChangeVisualStatus()
         {
             if (!string.IsNullOrWhiteSpace(LatestLauncherBuild))
             {
-                var Revisions = CurrentLauncherBuild.CompareTo(LatestLauncherBuild);
-
                 if (Revisions > 0)
                 {
                     string WhatBuildAmI;
@@ -254,44 +333,12 @@ namespace GameLauncher.App.Classes.LauncherCore.LauncherUpdater
                     text.ForeColor = Theming.Warning;
                     description.Text = "New: v" + LatestLauncherBuild + "\nCurrent: v" + Application.ProductVersion;
                     UpgradeAvailable = true;
-
-                    if (FileSettingsSave.IgnoreVersion == LatestLauncherBuild)
+                    if (SkipAvailableUpgrade)
                     {
-                        /* No Update Popup
-                           Blame DavidCarbon if this Breaks (to some degree), not Zacam...*/
+                        FileSettingsSave.IgnoreVersion = LatestLauncherBuild;
+                        FileSettingsSave.SaveSettings();
+                        Log.Info("IGNOREUPDATEVERSION: User had skipped latest Launcher Version!");
                     }
-                    else
-                    {
-                        DialogResult updateConfirm = new UpdatePopup(LatestLauncherBuild).ShowDialog();
-
-                        if (updateConfirm == DialogResult.OK)
-                        {
-                            string UpdaterPath = Strings.Encode(Path.Combine(Locations.LauncherFolder, Locations.NameUpdater));
-                            if (File.Exists(UpdaterPath))
-                            {
-                                Process.Start(UpdaterPath, Process.GetCurrentProcess().Id.ToString());
-                            }
-                            else
-                            {
-                                Process.Start(@"https://github.com/SoapboxRaceWorld/GameLauncher_NFSW/releases/latest");
-                                MessageBox.Show(null, "A Web Browser has been opened to the Game Launcher's GitHub Latest Release Page " +
-                                    "to Download the New Version", "GameLauncher", MessageBoxButtons.OK);
-                            }
-                        };
-
-                        /* Check if User clicked Ignore so it doesn't update "IgnoreUpdateVersion" */
-                        if (updateConfirm == DialogResult.Cancel)
-                        {
-                            FileSettingsSave.IgnoreVersion = String.Empty;
-                        };
-
-                        /* Write to Settings.ini to Skip Update */
-                        if (updateConfirm == DialogResult.Ignore)
-                        {
-                            FileSettingsSave.IgnoreVersion = LatestLauncherBuild;
-                        };
-                    }
-                    FileSettingsSave.SaveSettings();
                 }
             }
             else if (VisualsAPIChecker.GitHubAPI && !ValidJSONDownload)

@@ -798,16 +798,19 @@ namespace GameLauncher
                     if (e2.Cancelled || e2.Error != null)
                     {
                         InformationCache.SelectedServerJSON = null;
-                        ServerStatusIcon.Invoke(new Action(delegate () { ServerStatusIcon.BackgroundImage = Theming.ServerIconOffline; }));
-                        ServerStatusText.Invoke(new Action(delegate () 
+                        if (Application.OpenForms["MainScreen"] != null)
                         {
-                            ServerStatusText.Text = "Server Status:\n - Offline ( OFF )";
-                            ServerStatusText.ForeColor = Theming.Error;
-                        }));
-                        ServerStatusDesc.Invoke(new Action(delegate ()
-                        {
-                            ServerStatusDesc.Text = (e2.Error != null) ? "Server Seems to be Offline" : "Failed to Connect to Server";
-                        }));
+                            ServerStatusIcon.Invoke(new Action(delegate () { ServerStatusIcon.BackgroundImage = Theming.ServerIconOffline; }));
+                            ServerStatusText.Invoke(new Action(delegate ()
+                            {
+                                ServerStatusText.Text = "Server Status:\n - Offline ( OFF )";
+                                ServerStatusText.ForeColor = Theming.Error;
+                            }));
+                            ServerStatusDesc.Invoke(new Action(delegate ()
+                            {
+                                ServerStatusDesc.Text = (e2.Error != null) ? "Server Seems to be Offline" : "Failed to Connect to Server";
+                            }));
+                        }
 
                         if (!InformationCache.ServerStatusBook.ContainsKey(InformationCache.SelectedServerData.ID))
                         {
@@ -907,15 +910,18 @@ namespace GameLauncher
                                                                  (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                     }
                                     catch { ServerDiscordLink = false; }
-                                    DiscordIcon.Invoke(new Action(delegate ()
+                                    if (Application.OpenForms["MainScreen"] != null)
                                     {
-                                        DiscordIcon.BackgroundImage = ServerDiscordLink ? Theming.DiscordIcon : Theming.DiscordIconDisabled;
-                                    }));
-                                    DiscordInviteLink.Invoke(new Action(delegate ()
-                                    {
-                                        DiscordInviteLink.Enabled = ServerDiscordLink;
-                                        DiscordInviteLink.Text = ServerDiscordLink ? "Discord Invite" : string.Empty;
-                                    }));
+                                        DiscordIcon.Invoke(new Action(delegate ()
+                                        {
+                                            DiscordIcon.BackgroundImage = ServerDiscordLink ? Theming.DiscordIcon : Theming.DiscordIconDisabled;
+                                        }));
+                                        DiscordInviteLink.Invoke(new Action(delegate ()
+                                        {
+                                            DiscordInviteLink.Enabled = ServerDiscordLink;
+                                            DiscordInviteLink.Text = ServerDiscordLink ? "Discord Invite" : string.Empty;
+                                        }));
+                                    }
                                 }
                                 catch { }
 
@@ -929,15 +935,18 @@ namespace GameLauncher
                                                   (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                     }
                                     catch { ServerWebsiteLink = false; }
-                                    HomePageIcon.Invoke(new Action(delegate ()
+                                    if (Application.OpenForms["MainScreen"] != null)
                                     {
-                                        HomePageIcon.BackgroundImage = ServerWebsiteLink ? Theming.HomeIcon : Theming.HomeIconDisabled;
-                                    }));
-                                    HomePageLink.Invoke(new Action(delegate ()
-                                    {
-                                        HomePageLink.Enabled = ServerWebsiteLink;
-                                        HomePageLink.Text = ServerWebsiteLink ? "Home Page" : string.Empty;
-                                    }));
+                                        HomePageIcon.Invoke(new Action(delegate ()
+                                        {
+                                            HomePageIcon.BackgroundImage = ServerWebsiteLink ? Theming.HomeIcon : Theming.HomeIconDisabled;
+                                        }));
+                                        HomePageLink.Invoke(new Action(delegate ()
+                                        {
+                                            HomePageLink.Enabled = ServerWebsiteLink;
+                                            HomePageLink.Text = ServerWebsiteLink ? "Home Page" : string.Empty;
+                                        }));
+                                    }  
                                 }
                                 catch { }
 
@@ -951,15 +960,18 @@ namespace GameLauncher
                                                              (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                                     }
                                     catch { ServerFacebookLink = false; }
-                                    FacebookIcon.Invoke(new Action(delegate ()
+                                    if (Application.OpenForms["MainScreen"] != null)
                                     {
-                                        FacebookIcon.BackgroundImage = ServerFacebookLink ? Theming.FacebookIcon : Theming.FacebookIconDisabled;
-                                    }));
-                                    FacebookGroupLink.Invoke(new Action(delegate ()
-                                    {
-                                        FacebookGroupLink.Enabled = ServerFacebookLink;
-                                        FacebookGroupLink.Text = ServerFacebookLink ? "Facebook Page" : string.Empty;
-                                    }));
+                                        FacebookIcon.Invoke(new Action(delegate ()
+                                        {
+                                            FacebookIcon.BackgroundImage = ServerFacebookLink ? Theming.FacebookIcon : Theming.FacebookIconDisabled;
+                                        }));
+                                        FacebookGroupLink.Invoke(new Action(delegate ()
+                                        {
+                                            FacebookGroupLink.Enabled = ServerFacebookLink;
+                                            FacebookGroupLink.Text = ServerFacebookLink ? "Facebook Page" : string.Empty;
+                                        }));
+                                    }
                                 }
                                 catch { }
 
@@ -968,15 +980,18 @@ namespace GameLauncher
                                 {
                                     bool ServerTwitterLink = Uri.TryCreate(InformationCache.SelectedServerJSON.twitterUrl, UriKind.Absolute, out Uri uriResult) &&
                                                              (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-                                    TwitterIcon.Invoke(new Action(delegate ()
+                                    if (Application.OpenForms["MainScreen"] != null)
                                     {
-                                        TwitterIcon.BackgroundImage = ServerTwitterLink ? Theming.TwitterIcon : Theming.TwitterIconDisabled;
-                                    }));
-                                    TwitterAccountLink.Invoke(new Action(delegate ()
-                                    {
-                                        TwitterAccountLink.Enabled = ServerTwitterLink;
-                                        TwitterAccountLink.Text = ServerTwitterLink ? "Twitter Feed" : string.Empty;
-                                    }));
+                                        TwitterIcon.Invoke(new Action(delegate ()
+                                        {
+                                            TwitterIcon.BackgroundImage = ServerTwitterLink ? Theming.TwitterIcon : Theming.TwitterIconDisabled;
+                                        }));
+                                        TwitterAccountLink.Invoke(new Action(delegate ()
+                                        {
+                                            TwitterAccountLink.Enabled = ServerTwitterLink;
+                                            TwitterAccountLink.Text = ServerTwitterLink ? "Twitter Feed" : string.Empty;
+                                        }));
+                                    }
                                 }
                                 catch { }
 
@@ -985,10 +1000,13 @@ namespace GameLauncher
                                 {
                                     serverSecondsToShutDown =
                                     (InformationCache.SelectedServerJSON.secondsToShutDown != 0) ? InformationCache.SelectedServerJSON.secondsToShutDown : 7200;
-                                    ServerShutDown.Invoke(new Action(delegate ()
+                                    if (Application.OpenForms["MainScreen"] != null)
                                     {
-                                        ServerShutDown.Text = string.Format("Gameplay Timer: " + TimeConversions.RelativeTime(serverSecondsToShutDown));
-                                    }));
+                                        ServerShutDown.Invoke(new Action(delegate ()
+                                        {
+                                            ServerShutDown.Text = string.Format("Gameplay Timer: " + TimeConversions.RelativeTime(serverSecondsToShutDown));
+                                        }));
+                                    }
                                 }
                                 catch { }
 
@@ -1017,7 +1035,8 @@ namespace GameLauncher
                                             SceneryStatus = "Scenery: Normal";
                                             break;
                                     }
-                                    SceneryGroupText.Invoke(new Action(delegate () { SceneryGroupText.Text = SceneryStatus; }));
+                                    if (Application.OpenForms["MainScreen"] != null) 
+                                    { SceneryGroupText.Invoke(new Action(delegate () { SceneryGroupText.Text = SceneryStatus; })); }
                                 }
                                 catch { }
 
@@ -1094,7 +1113,7 @@ namespace GameLauncher
                             }
                         }
 
-                        if (!GSIErrorFree)
+                        if (!GSIErrorFree && Application.OpenForms["MainScreen"] != null)
                         {
                             try
                             {
@@ -1108,7 +1127,7 @@ namespace GameLauncher
                             }
                             catch { /* Sad Noises */ }
                         }
-                        else
+                        else if (Application.OpenForms["MainScreen"] != null)
                         {
                             try
                             {
@@ -1131,7 +1150,7 @@ namespace GameLauncher
                                     /* Disable Social Panel */
                                     DisableSocialPanelandClearIt();
                                 }
-                                else
+                                else if (Application.OpenForms["MainScreen"] != null)
                                 {
                                     /* Enable Social Panel  */
                                     ServerInfoPanel.Invoke(new Action(delegate ()
@@ -1150,10 +1169,13 @@ namespace GameLauncher
                             }
 
                             /* For Thread Safety */
-                            ServerStatusDesc.Invoke(new Action(delegate ()
+                            if (Application.OpenForms["MainScreen"] != null)
                             {
-                                ServerStatusDesc.Text = string.Format("Online: {0}\nRegistered: {1}", numPlayers, numRegistered);
-                            }));
+                                ServerStatusDesc.Invoke(new Action(delegate ()
+                                {
+                                    ServerStatusDesc.Text = string.Format("Online: {0}\nRegistered: {1}", numPlayers, numRegistered);
+                                }));
+                            }
 
                             Ping CheckMate = null;
 
@@ -1171,7 +1193,9 @@ namespace GameLauncher
                                     }
                                     else if (_e.Reply != null)
                                     {
-                                        if (_e.Reply.Status == IPStatus.Success && ServerListUpdater.ServerName("Ping") != "Offline Built-In Server")
+                                        if (_e.Reply.Status == IPStatus.Success && 
+                                        ServerListUpdater.ServerName("Ping") != "Offline Built-In Server" &&
+                                        Application.OpenForms["MainScreen"] != null)
                                         {
                                             ServerPingStatusText.Invoke(new Action(delegate () {
                                                 ServerPingStatusText.Text = string.Format("Your Ping to the Server \n{0}".ToUpper(), _e.Reply.RoundtripTime + "ms");
@@ -1250,68 +1274,74 @@ namespace GameLauncher
 
                                     Client_A.DownloadDataCompleted += (Object_A, Events_A) =>
                                     {
-                                        Banner.Invoke(new Action(delegate () { Banner.Image.Dispose(); }));
+                                        if (Application.OpenForms["MainScreen"] != null)
+                                        {
+                                            if (!Application.OpenForms["MainScreen"].Disposing)
+                                            {
+                                                Banner.Invoke(new Action(delegate () { Banner.Image.Dispose(); }));
 
-                                        if (Events_A.Cancelled || Events_A.Error != null)
-                                        {
-                                            /* Load cached banner! */
-                                            Banner.Invoke(new Action(delegate () { Banner.Image = Banners.Grayscale(BannerCache); }));
-                                            if (Client_A != null)
-                                            {
-                                                Client_A.Dispose();
-                                            }
-                                        }
-                                        else
-                                        {
-                                            try
-                                            {
-                                                try
+                                                if (Events_A.Cancelled || Events_A.Error != null)
                                                 {
-                                                    if (_serverRawBanner != null)
+                                                    /* Load cached banner! */
+                                                    Banner.Invoke(new Action(delegate () { Banner.Image = Banners.Grayscale(BannerCache); }));
+                                                    if (Client_A != null)
                                                     {
-                                                        _serverRawBanner.Dispose();
-                                                        _serverRawBanner.Close();
+                                                        Client_A.Dispose();
                                                     }
-                                                }
-                                                catch { }
-
-                                                _serverRawBanner = new MemoryStream(Events_A.Result)
-                                                {
-                                                    Position = 0
-                                                };
-
-                                                Banner.Invoke(new Action(delegate () { Banner.Image = Image.FromStream(_serverRawBanner); }));
-                                                
-                                                if (Banners.GetFileExtension(ImageUrl) == "gif")
-                                                {
-                                                    Image.FromStream(_serverRawBanner).Save(BannerCache);
                                                 }
                                                 else
                                                 {
-                                                    File.WriteAllBytes(BannerCache, _serverRawBanner.ToArray());
-                                                }
-                                            }
-                                            catch (Exception Error)
-                                            {
-                                                LogToFileAddons.OpenLog("Server Banner", null, Error, null, true);
-                                                Banner.Invoke(new Action(delegate () { Banner.BackColor = Theming.BannerBackColor; }));
-                                            }
-                                            finally
-                                            {
-                                                if (Client_A != null)
-                                                {
-                                                    Client_A.Dispose();
+                                                    try
+                                                    {
+                                                        try
+                                                        {
+                                                            if (_serverRawBanner != null)
+                                                            {
+                                                                _serverRawBanner.Dispose();
+                                                                _serverRawBanner.Close();
+                                                            }
+                                                        }
+                                                        catch { }
+
+                                                        _serverRawBanner = new MemoryStream(Events_A.Result)
+                                                        {
+                                                            Position = 0
+                                                        };
+
+                                                        Banner.Invoke(new Action(delegate () { Banner.Image = Image.FromStream(_serverRawBanner); }));
+
+                                                        if (Banners.GetFileExtension(ImageUrl) == "gif")
+                                                        {
+                                                            Image.FromStream(_serverRawBanner).Save(BannerCache);
+                                                        }
+                                                        else
+                                                        {
+                                                            File.WriteAllBytes(BannerCache, _serverRawBanner.ToArray());
+                                                        }
+                                                    }
+                                                    catch (Exception Error)
+                                                    {
+                                                        LogToFileAddons.OpenLog("Server Banner", null, Error, null, true);
+                                                        Banner.Invoke(new Action(delegate () { Banner.BackColor = Theming.BannerBackColor; }));
+                                                    }
+                                                    finally
+                                                    {
+                                                        if (Client_A != null)
+                                                        {
+                                                            Client_A.Dispose();
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
                                     };
                                 }
-                                else if (File.Exists(BannerCache))
+                                else if (File.Exists(BannerCache) && Application.OpenForms["MainScreen"] != null)
                                 {
                                     /* Load cached banner! */
                                     Banner.Invoke(new Action(delegate () { Banner.Image.Dispose(); Banner.Image = Banners.Grayscale(BannerCache); }));
                                 }
-                                else
+                                else if (Application.OpenForms["MainScreen"] != null)
                                 {
                                     Banner.Invoke(new Action(delegate () { Banner.Image.Dispose(); Banner.BackColor = Theming.BannerBackColor; }));
                                 }
@@ -1333,27 +1363,30 @@ namespace GameLauncher
         /* Social Panel | Ping or Offline or DEV Servers | */
         private void DisableSocialPanelandClearIt()
         {
-            /* Hides Social Panel */
-            if (!ServerInfoPanel.InvokeRequired) { ServerInfoPanel.Visible = false; }
-            else { ServerInfoPanel.Invoke(new Action(delegate () { ServerInfoPanel.Visible = false; })); }
-            /* Home */
-            if (!HomePageIcon.InvokeRequired) { HomePageIcon.BackgroundImage = Theming.HomeIconDisabled; HomePageLink.Enabled = false; }
-            else { HomePageIcon.Invoke(new Action(delegate () { HomePageIcon.BackgroundImage = Theming.HomeIconDisabled; HomePageLink.Enabled = false; })); }
-            /* Discord */
-            if (!DiscordIcon.InvokeRequired) { DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled; DiscordInviteLink.Enabled = false; }
-            else { DiscordIcon.Invoke(new Action(delegate () { DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled; DiscordInviteLink.Enabled = false; })); }
-            /* Facebook */
-            if (!FacebookIcon.InvokeRequired) { FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled; FacebookGroupLink.Enabled = false; }
-            else { FacebookIcon.Invoke(new Action(delegate () { FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled; FacebookGroupLink.Enabled = false; })); }
-            /* Twitter */
-            if (!TwitterIcon.InvokeRequired) { TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled; TwitterAccountLink.Enabled = false; }
-            else { TwitterIcon.Invoke(new Action(delegate () { TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled; TwitterAccountLink.Enabled = false; })); }
-            /* Scenery */
-            if (!SceneryGroupText.InvokeRequired) { SceneryGroupText.Text = "But It's Me!"; }
-            else { SceneryGroupText.Invoke(new Action(delegate () { SceneryGroupText.Text = "But It's Me!"; })); }
-            /* Restart Timer */
-            if (!ServerShutDown.InvokeRequired) { ServerShutDown.Text = "Game Launcher!"; }
-            else { ServerShutDown.Invoke(new Action(delegate () { ServerShutDown.Text = "Game Launcher!"; })); }
+            if (Application.OpenForms["MainScreen"] != null)
+            {
+                /* Hides Social Panel */
+                if (!ServerInfoPanel.InvokeRequired) { ServerInfoPanel.Visible = false; }
+                else { ServerInfoPanel.Invoke(new Action(delegate () { ServerInfoPanel.Visible = false; })); }
+                /* Home */
+                if (!HomePageIcon.InvokeRequired) { HomePageIcon.BackgroundImage = Theming.HomeIconDisabled; HomePageLink.Enabled = false; }
+                else { HomePageIcon.Invoke(new Action(delegate () { HomePageIcon.BackgroundImage = Theming.HomeIconDisabled; HomePageLink.Enabled = false; })); }
+                /* Discord */
+                if (!DiscordIcon.InvokeRequired) { DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled; DiscordInviteLink.Enabled = false; }
+                else { DiscordIcon.Invoke(new Action(delegate () { DiscordIcon.BackgroundImage = Theming.DiscordIconDisabled; DiscordInviteLink.Enabled = false; })); }
+                /* Facebook */
+                if (!FacebookIcon.InvokeRequired) { FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled; FacebookGroupLink.Enabled = false; }
+                else { FacebookIcon.Invoke(new Action(delegate () { FacebookIcon.BackgroundImage = Theming.FacebookIconDisabled; FacebookGroupLink.Enabled = false; })); }
+                /* Twitter */
+                if (!TwitterIcon.InvokeRequired) { TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled; TwitterAccountLink.Enabled = false; }
+                else { TwitterIcon.Invoke(new Action(delegate () { TwitterIcon.BackgroundImage = Theming.TwitterIconDisabled; TwitterAccountLink.Enabled = false; })); }
+                /* Scenery */
+                if (!SceneryGroupText.InvokeRequired) { SceneryGroupText.Text = "But It's Me!"; }
+                else { SceneryGroupText.Invoke(new Action(delegate () { SceneryGroupText.Text = "But It's Me!"; })); }
+                /* Restart Timer */
+                if (!ServerShutDown.InvokeRequired) { ServerShutDown.Text = "Game Launcher!"; }
+                else { ServerShutDown.Invoke(new Action(delegate () { ServerShutDown.Text = "Game Launcher!"; })); }
+            }
         }
 
         /*  After Successful Login, Hide Login Forms */
