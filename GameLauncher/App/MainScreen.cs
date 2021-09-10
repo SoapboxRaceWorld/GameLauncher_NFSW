@@ -1780,6 +1780,9 @@ namespace GameLauncher
                                 case 2017:
                                     ErrorMsg = "Server replied with Code: " + Tokens.UserId + " (0x" + exitCode.ToString("X") + ")";
                                     break;
+                                case -1:
+                                    ErrorMsg = "No DirectX resources. Please check if GPU has enough VRAM before playing";
+                                    break;
                                 case -3:
                                     ErrorMsg = "The Server was unable to resolve the request";
                                     break;
